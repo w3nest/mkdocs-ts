@@ -2,7 +2,13 @@
 const runTimeDependencies = {
     "externals": {
         "@youwol/rx-vdom": "^1.0.1",
-        "rxjs": "^7.5.6"
+        "@youwol/webpm-client": "^3.0.0",
+        "rxjs": "^7.5.6",
+        "marked": "^4.2.3",
+        "highlight.js": "11.2.0",
+        "@youwol/local-youwol-client": "^0.2.0",
+        "@youwol/os-top-banner": "^0.2.0",
+        "@youwol/rx-tree-views": "^0.3.1"
     },
     "includedInBundle": {}
 }
@@ -12,10 +18,40 @@ const externals = {
         "commonjs2": "@youwol/rx-vdom",
         "root": "@youwol/rx-vdom_APIv1"
     },
+    "@youwol/webpm-client": {
+        "commonjs": "@youwol/webpm-client",
+        "commonjs2": "@youwol/webpm-client",
+        "root": "@youwol/webpm-client_APIv3"
+    },
     "rxjs": {
         "commonjs": "rxjs",
         "commonjs2": "rxjs",
         "root": "rxjs_APIv7"
+    },
+    "marked": {
+        "commonjs": "marked",
+        "commonjs2": "marked",
+        "root": "marked_APIv4"
+    },
+    "highlight.js": {
+        "commonjs": "highlight.js",
+        "commonjs2": "highlight.js",
+        "root": "hljs_APIv11"
+    },
+    "@youwol/local-youwol-client": {
+        "commonjs": "@youwol/local-youwol-client",
+        "commonjs2": "@youwol/local-youwol-client",
+        "root": "@youwol/local-youwol-client_APIv02"
+    },
+    "@youwol/os-top-banner": {
+        "commonjs": "@youwol/os-top-banner",
+        "commonjs2": "@youwol/os-top-banner",
+        "root": "@youwol/os-top-banner_APIv02"
+    },
+    "@youwol/rx-tree-views": {
+        "commonjs": "@youwol/rx-tree-views",
+        "commonjs2": "@youwol/rx-tree-views",
+        "root": "@youwol/rx-tree-views_APIv03"
     }
 }
 const exportedSymbols = {
@@ -23,31 +59,61 @@ const exportedSymbols = {
         "apiKey": "1",
         "exportedSymbol": "@youwol/rx-vdom"
     },
+    "@youwol/webpm-client": {
+        "apiKey": "3",
+        "exportedSymbol": "@youwol/webpm-client"
+    },
     "rxjs": {
         "apiKey": "7",
         "exportedSymbol": "rxjs"
+    },
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
+    },
+    "highlight.js": {
+        "apiKey": "11",
+        "exportedSymbol": "hljs"
+    },
+    "@youwol/local-youwol-client": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/local-youwol-client"
+    },
+    "@youwol/os-top-banner": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/os-top-banner"
+    },
+    "@youwol/rx-tree-views": {
+        "apiKey": "03",
+        "exportedSymbol": "@youwol/rx-tree-views"
     }
 }
 
 const mainEntry : {entryFile: string,loadDependencies:string[]} = {
-    "entryFile": "./lib/index.ts",
+    "entryFile": "./index.ts",
     "loadDependencies": [
         "@youwol/rx-vdom",
-        "rxjs"
+        "@youwol/webpm-client",
+        "rxjs",
+        "marked",
+        "highlight.js",
+        "@youwol/local-youwol-client",
+        "@youwol/os-top-banner",
+        "@youwol/rx-tree-views"
     ]
 }
 
 const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {}
 
 const entries = {
-     '@youwol/mkdocs-ts': './lib/index.ts',
+     '@youwol/mkdocs-ts': './index.ts',
     ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`@youwol/mkdocs-ts/${e.name}`]:e.entryFile}), {})
 }
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
     version:'0.1.0-wip',
-    shortDescription:"",
+    shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
     sourceGithub:'https://github.com/youwol/mkdocs-ts',

@@ -1,6 +1,6 @@
 # @youwol/mkdocs-ts
 
-
+Typescript based mkdocs like solution
 
 This library is part of the hybrid cloud/local ecosystem
 [YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).

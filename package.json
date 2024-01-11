@@ -1,8 +1,8 @@
 {
     "name": "@youwol/mkdocs-ts",
-    "description": "",
+    "description": "Typescript based mkdocs like solution",
     "version": "0.1.0-wip",
-    "author": null,
+    "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/mkdocs-ts#README.md",
     "main": "dist/@youwol/mkdocs-ts.js",
     "types": "src/index.ts",
@@ -29,7 +29,13 @@
     },
     "dependencies": {
         "@youwol/rx-vdom": "^1.0.1",
-        "rxjs": "^7.5.6"
+        "@youwol/webpm-client": "^3.0.0",
+        "rxjs": "^7.5.6",
+        "marked": "^4.2.3",
+        "highlight.js": "11.2.0",
+        "@youwol/local-youwol-client": "^0.2.0",
+        "@youwol/os-top-banner": "^0.2.0",
+        "@youwol/rx-tree-views": "^0.3.1"
     },
     "devDependencies": {
         "@types/jest": "^29.5.6",
@@ -52,7 +58,13 @@
     "webpm": {
         "dependencies": {
             "@youwol/rx-vdom": "^1.0.1",
-            "rxjs": "^7.5.6"
+            "@youwol/webpm-client": "^3.0.0",
+            "rxjs": "^7.5.6",
+            "marked": "^4.2.3",
+            "highlight.js": "11.2.0",
+            "@youwol/local-youwol-client": "^0.2.0",
+            "@youwol/os-top-banner": "^0.2.0",
+            "@youwol/rx-tree-views": "^0.3.1"
         },
         "aliases": []
     }

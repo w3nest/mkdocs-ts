@@ -12,7 +12,13 @@ pkg_json = parse_json(folder_path / 'package.json')
 
 externals_deps = {
     "@youwol/rx-vdom": "^1.0.1",
-    "rxjs": "^7.5.6"
+    "@youwol/webpm-client": "^3.0.0",
+    "rxjs": "^7.5.6",
+    "marked": "^4.2.3",
+    "highlight.js": "11.2.0",
+    "@youwol/local-youwol-client": "^0.2.0",
+    "@youwol/os-top-banner": "^0.2.0",
+    "@youwol/rx-tree-views": "^0.3.1"
 }
 in_bundle_deps = {}
 dev_deps = {}

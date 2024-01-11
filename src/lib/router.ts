@@ -1,0 +1,240 @@
+import { from, map, mergeMap, Observable, ReplaySubject, Subject } from 'rxjs'
+import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { createRootNode, Node } from './navigation.node'
+import { ImmutableTree } from '@youwol/rx-tree-views'
+
+export const leftColumnWidth = '250px'
+export const rightColumnWidth = '250px'
+export const middleColumnWidth = '800px'
+export class NavigationNode {
+    name: string
+    html: ({
+        router,
+    }: {
+        router: Router
+    }) => Promise<HTMLElement | AnyVirtualDOM>
+    tableOfContent?: (p: {
+        html: HTMLElement
+        router: Router
+    }) => Promise<AnyVirtualDOM>
+}
+
+export type Destination = {
+    tableOfContent?: HTMLElement | AnyVirtualDOM
+    html: HTMLElement | AnyVirtualDOM
+    sectionId?: string
+}
+
+export class Router {
+    public readonly basePath: string
+    public readonly navigation
+
+    public readonly currentHtml$: Subject<HTMLElement> =
+        new ReplaySubject<HTMLElement>(1)
+    public readonly currentPage$: Subject<Destination> =
+        new ReplaySubject<Destination>(1)
+    public readonly currentNode$: Subject<NavigationNode> =
+        new ReplaySubject<NavigationNode>(1)
+
+    public readonly explorerState: ImmutableTree.State<Node>
+
+    public scrollableElement: HTMLElement
+
+    public readonly status: Record<
+        'Warning' | 'Error',
+        { [k: string]: unknown[] }
+    > = { Warning: {}, Error: {} }
+
+    constructor(params: { navigation; basePath: string }) {
+        Object.assign(this, params)
+
+        this.explorerState = new ImmutableTree.State({
+            rootNode: createRootNode(this.navigation, this),
+            expandedNodes: ['root'],
+        })
+
+        this.navigateTo({ path: this.getCurrentPath() })
+
+        window.onpopstate = (event: PopStateEvent) => {
+            const state = event.state
+            if (state) {
+                this.navigateTo(state)
+            } else {
+                this.navigateTo({ path: '/' })
+            }
+        }
+        this.currentHtml$.subscribe(() => {
+            console.log('Status', this.status)
+        })
+    }
+
+    getCurrentPath() {
+        const urlParams = new URLSearchParams(window.location.search)
+        return urlParams.get('nav') || '/'
+    }
+    navigateTo({ path }: { path: string }) {
+        const pagePath = path.split('.')[0]
+        const sectionId = path.split('.').slice(1).join('.')
+        const node = this.getNode({ path: pagePath })
+        if (node instanceof Promise) {
+            node.then((resolved: NavigationNode) => {
+                this.currentNode$.next(resolved)
+                return resolved.html({ router: this })
+            })
+                .then((html) => ({
+                    html,
+                    sectionId: sectionId == '' ? undefined : sectionId,
+                }))
+                .then((d) => this.currentPage$.next(d))
+        }
+        if (node instanceof Observable) {
+            node.pipe(
+                mergeMap((resolved: NavigationNode) => {
+                    this.currentNode$.next(resolved)
+                    return from(resolved.html({ router: this }))
+                }),
+                map((html) => ({
+                    html,
+                    sectionId: sectionId == '' ? undefined : sectionId,
+                })),
+            ).subscribe((d) => this.currentPage$.next(d))
+        }
+        this.expand(pagePath)
+        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
+    }
+
+    scrollTo(target: string | HTMLElement) {
+        if (!target) {
+            return
+        }
+        const div: HTMLElement =
+            target instanceof HTMLElement
+                ? target
+                : findElementById(this.scrollableElement, target)
+
+        if (!div) {
+            console.warn(`Can not scroll to element #${target}`)
+            return
+        }
+        this.scrollableElement.scrollTo({
+            top:
+                div.offsetTop -
+                this.scrollableElement.getBoundingClientRect().y,
+            left: 0,
+            behavior: 'smooth',
+        })
+        const currentPath = this.getCurrentPath().split('.')[0]
+        const path = `${currentPath}.${div.id}`
+        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
+    }
+
+    private getNode({
+        path,
+    }: {
+        path: string
+    }): Promise<NavigationNode> | Observable<NavigationNode> {
+        const parts = path.split('/').slice(1)
+        const node = parts.reduce(
+            ({ tree, path, keepGoing }, part) => {
+                if (!keepGoing) {
+                    return { tree, path, keepGoing }
+                }
+                const treePart = tree[`/${part}`]
+                if (!treePart && !tree['/**']) {
+                    console.error({ path, tree })
+                    throw Error(`Can not find target navigation ${path}`)
+                }
+                if (!treePart) {
+                    return {
+                        tree: tree['/**'],
+                        path: `${path}`,
+                        keepGoing: false,
+                    }
+                }
+                return {
+                    tree: treePart,
+                    path: `${path}/${part}`,
+                    keepGoing: true,
+                }
+            },
+            { tree: this.navigation, path: ``, keepGoing: true },
+        )
+        if (!node.keepGoing) {
+            const relative = path.split(node.path)[1]
+            return node.tree({ path: relative, appState: this })
+        }
+        return node.tree instanceof Promise
+            ? node.tree
+            : Promise.resolve(node.tree)
+    }
+
+    private expand(path: string) {
+        const parts = path.split('/')
+        const ids = parts
+            .map((p, i) => parts.slice(0, i + 1).join('/'))
+            .slice(1)
+        const getLastResolved = (ids: string[]) => {
+            const id = ids.slice(-1)[0]
+            const childNode = this.explorerState.getNode(id)
+            return childNode || getLastResolved(ids.slice(0, -1))
+        }
+        const node = getLastResolved(ids)
+        if (node.id == ids.slice(-1)[0]) {
+            this.explorerState.selectNodeAndExpand(node)
+            return
+        }
+
+        const idsRemaining = ids.slice(ids.indexOf(node.id))
+        if (idsRemaining.length == 0) {
+            this.explorerState.selectNodeAndExpand(node)
+            return
+        }
+        const expandRec = (ids: string[], node: Node) => {
+            if (ids.length == 0) {
+                return this.explorerState.selectNodeAndExpand(node)
+            }
+            const maybeChildResolved = this.explorerState.getNode(ids[0])
+            return maybeChildResolved
+                ? expandRec(ids.slice(1), maybeChildResolved)
+                : this.explorerState.getChildren(node, () => {
+                      const nodeNew = this.explorerState.getNode(ids[0])
+                      this.explorerState.selectNodeAndExpand(nodeNew)
+                      expandRec(ids.slice(1), nodeNew)
+                  })
+        }
+        expandRec(idsRemaining, node)
+    }
+
+    setDisplayedPage({ page }: { page: HTMLElement }) {
+        this.currentHtml$.next(page)
+    }
+
+    log({
+        severity,
+        category,
+        message,
+    }: {
+        severity: 'Warning' | 'Error'
+        category: string
+        message: unknown
+    }) {
+        if (!this.status[severity][category]) {
+            this.status[severity][category] = []
+        }
+        this.status[severity][category].push(message)
+    }
+}
+
+function findElementById(parent: HTMLElement, targetId: string): HTMLElement {
+    const divByCssQuery = parent.querySelector(
+        `#${targetId.replace('.', '\\.')}`,
+    )
+    if (divByCssQuery) {
+        return divByCssQuery as HTMLElement
+    }
+    const headings = [...parent.querySelectorAll('h1, h2, h3, h4, h5')]
+    const divByScan = headings.find((e) => e.id === targetId) as HTMLElement
+    if (divByScan) {
+        return divByScan
+    }
+}
