@@ -67,12 +67,12 @@ export class TOCView implements VirtualDOM<'div'> {
 
 export async function tocView({
     html,
-    appState,
+    router,
     domConvertor,
 }: {
     html: HTMLElement
-    appState: Router
+    router: Router
     domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
 }) {
-    return new TOCView({ router: appState, html, domConvertor })
+    return new TOCView({ router: router, html, domConvertor })
 }

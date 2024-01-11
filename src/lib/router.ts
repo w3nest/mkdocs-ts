@@ -161,7 +161,7 @@ export class Router {
         )
         if (!node.keepGoing) {
             const relative = path.split(node.path)[1]
-            return node.tree({ path: relative, appState: this })
+            return node.tree({ path: relative, router: this })
         }
         return node.tree instanceof Promise
             ? node.tree
