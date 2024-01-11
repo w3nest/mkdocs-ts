@@ -1,0 +1,59 @@
+{
+    "name": "@youwol/mkdocs-ts",
+    "description": "",
+    "version": "0.1.0-wip",
+    "author": null,
+    "homepage": "https://github.com/youwol/mkdocs-ts#README.md",
+    "main": "dist/@youwol/mkdocs-ts.js",
+    "types": "src/index.ts",
+    "scripts": {
+        "clean": "del-cli dist",
+        "auto-gen": "python template.py",
+        "build": "yarn build:dev",
+        "pre-build": "yarn clean",
+        "build:dev": "yarn pre-build && webpack --mode development",
+        "build:prod": "yarn pre-build && webpack --mode production",
+        "lint-check": "yarn lint-prettier-check && yarn lint-eslint-check",
+        "lint-prettier-check": "prettier --check ./src",
+        "lint-eslint-check": "eslint ./src",
+        "test": "jest -i",
+        "test-coverage": "jest -i --collect-coverage",
+        "doc": "typedoc",
+        "publish-npm-public": "yarn build:prod && yarn test-coverage && yarn publish --access public"
+    },
+    "prettier": "@youwol/prettier-config",
+    "eslintConfig": {
+        "extends": [
+            "@youwol"
+        ]
+    },
+    "dependencies": {
+        "@youwol/rx-vdom": "^1.0.1",
+        "rxjs": "^7.5.6"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.6",
+        "@types/node": "^18.9.1",
+        "@types/webpack": "^5.28.0",
+        "@youwol/eslint-config": "1.0.0",
+        "@youwol/jest-preset": "1.0.0",
+        "@youwol/prettier-config": "1.0.0",
+        "@youwol/tsconfig": "1.0.0",
+        "del-cli": "^5.1.0",
+        "isomorphic-fetch": "^3.0.0",
+        "ts-loader": "9.5.0",
+        "ts-node": "10.9.1",
+        "typedoc": "^0.25.2",
+        "typescript": "5.2.2",
+        "webpack": "^5.89.0",
+        "webpack-bundle-analyzer": "^4.9.1",
+        "webpack-cli": "5.1.4"
+    },
+    "webpm": {
+        "dependencies": {
+            "@youwol/rx-vdom": "^1.0.1",
+            "rxjs": "^7.5.6"
+        },
+        "aliases": []
+    }
+}
