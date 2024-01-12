@@ -3,9 +3,6 @@ import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import { createRootNode, Node } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
 
-export const leftColumnWidth = '250px'
-export const rightColumnWidth = '250px'
-export const middleColumnWidth = '800px'
 export class NavigationNode {
     name: string
     html: ({

@@ -31,9 +31,6 @@ export class PageView implements VirtualDOM<'div'> {
                 },
             },
         ]
-        this.connectedCallback = (e) => {
-            this.router.scrollableElement = e
-        }
     }
 }
 
