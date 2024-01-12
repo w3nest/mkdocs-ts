@@ -44,3 +44,49 @@ export class PageView implements VirtualDOM<'div'> {
         }
     }
 }
+
+export class PageFooterView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class = 'w-100 mkdocs-ts-footer d-flex align-items-center'
+    public readonly children: ChildrenLike
+
+    public readonly style = {
+        padding: '0.9rem',
+        backgroundColor: 'black',
+        color: 'white',
+    }
+    constructor() {
+        this.children = [
+            {
+                tag: 'div',
+                class: 'flex-grow-1',
+            },
+            {
+                tag: 'div',
+                class: 'd-flex align-items-center',
+                children: [
+                    {
+                        tag: 'div',
+                        innerText: 'Made with',
+                    },
+                    {
+                        tag: 'div',
+                        class: 'mx-2',
+                    },
+                    {
+                        tag: 'a',
+                        innerText: 'mkdocs-ts',
+                        target: '_blank',
+                        href: 'https://github.com/youwol/mkdocs-ts',
+                    },
+                ],
+            },
+            {
+                tag: 'div',
+                style: {
+                    flexGrow: 2,
+                },
+            },
+        ]
+    }
+}
