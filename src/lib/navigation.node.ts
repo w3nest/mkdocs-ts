@@ -1,7 +1,6 @@
 import { ImmutableTree } from '@youwol/rx-tree-views'
 import { Router } from './router'
 import { from, map } from 'rxjs'
-import { VirtualDOM } from '@youwol/rx-vdom'
 
 export class Node extends ImmutableTree.Node {
     public readonly name: string
@@ -88,22 +87,4 @@ export function createRootNode(navigation, router: Router) {
         children: createChildren(navigation, href, router),
         href,
     })
-}
-
-export class NavigationHeader implements VirtualDOM<'a'> {
-    public readonly node: Node
-    public readonly router: Router
-    public readonly tag = 'a'
-    public readonly innerText: string
-    public readonly href: string
-    public readonly onclick: (e: MouseEvent) => void
-    constructor(params: { node: Node; router: Router }) {
-        Object.assign(this, params)
-        this.innerText = this.node.name
-        this.href = `${this.router.basePath}?nav=` + this.node.href
-        this.onclick = (e) => {
-            e.preventDefault()
-            this.router.navigateTo({ path: this.node.href })
-        }
-    }
 }
