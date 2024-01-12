@@ -82,8 +82,8 @@ export function createChildren(navigation, hRefBase: string, router: Router) {
 export function createRootNode(navigation, router: Router) {
     const href = ''
     return new ExplicitNode({
-        id: 'root',
-        name: 'YouWol Doc',
+        id: 'mkdocs-ts-nav-root',
+        name: navigation.name,
         children: createChildren(navigation, href, router),
         href,
     })
