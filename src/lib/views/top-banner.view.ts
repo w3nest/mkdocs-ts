@@ -7,7 +7,8 @@ import { TopBannerView as TopBannerBase } from '@youwol/os-top-banner'
  */
 export class TopBannerView extends TopBannerBase {
     public readonly tag = 'div'
-    public readonly class = 'fv-text-primary fv-bg-background'
+    public readonly class =
+        'fv-text-primary fv-bg-background mkdocs-ts-top-banner'
 
     constructor({ name }: { name: string }) {
         super({
@@ -20,7 +21,7 @@ export class TopBannerView extends TopBannerBase {
                         children: [
                             {
                                 tag: 'div',
-                                class: 'd-flex mx-auto justify-content-center',
+                                class: 'd-flex mx-auto justify-content-center px-5',
                                 children: [
                                     {
                                         tag: 'div',

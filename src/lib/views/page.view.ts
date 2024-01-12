@@ -9,17 +9,9 @@ import { Router } from '../router'
 export class PageView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly tag = 'div'
-    public readonly class = 'h-100 w-100 overflow-auto'
+    public readonly class = 'w-100 mkdocs-ts-page'
     public readonly children: ChildrenLike
 
-    public readonly style = {
-        fontFamily: 'Lexend, sans-serif',
-        transition: 'margin-top 0.5s ease-in-out',
-        fontSize: '1.1rem',
-        lineHeight: 1.6,
-    }
-
-    thisDiv: HTMLElement
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void
 
     constructor(params: { router: Router }) {
