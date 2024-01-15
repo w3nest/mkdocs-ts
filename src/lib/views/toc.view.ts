@@ -20,6 +20,7 @@ export class TOCView implements VirtualDOM<'div'> {
         const headings = this.html.querySelectorAll('h1, h2, h3')
         const defaultConv = (heading: HTMLElement) => ({
             tag: 'div' as const,
+            class: 'fv-hover-text-focus',
             innerText: heading.innerText
                 ? heading.innerText
                 : heading.firstChild['innerText'],
@@ -32,8 +33,18 @@ export class TOCView implements VirtualDOM<'div'> {
             H3: '2em',
         }
         this.children = [
+            headingsArray.length > 0
+                ? {
+                      tag: 'div',
+                      innerText: 'Table of content',
+                      style: {
+                          fontWeight: 'bolder',
+                      },
+                  }
+                : undefined,
             {
                 tag: 'ul',
+                class: 'p-0',
                 children: headingsArray.map((heading: HTMLHeadingElement) => {
                     return {
                         tag: 'li' as const,
@@ -42,6 +53,11 @@ export class TOCView implements VirtualDOM<'div'> {
                         children: [
                             {
                                 tag: 'a' as const,
+                                class: 'fv-hover-text-focus',
+                                style: {
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                },
                                 href: `${
                                     this.router.basePath
                                 }?nav=${this.router.getCurrentPath()}.${

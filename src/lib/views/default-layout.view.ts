@@ -116,8 +116,10 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'h-100 px-1  scrollbar-on-hover '
-
+    public readonly class = 'w-100 scrollbar-on-hover '
+    public readonly style = {
+        maxHeight: '100%',
+    }
     public readonly children: ChildrenLike
 
     constructor(params: { router: Router }) {
