@@ -89,19 +89,22 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'h-100 overflow-auto mr-3'
+    public readonly class = 'h-100 w-100 overflow-auto'
     public readonly children: ChildrenLike
-
+    public readonly style = {
+        fontSize: '0.9rem',
+    }
     constructor(params: { router: Router }) {
         Object.assign(this, params)
 
         this.children = [
             new ImmutableTree.View({
                 state: this.router.explorerState,
-                headerView: (state, node) => {
+                headerView: (explorerState, node) => {
                     return new NavigationHeader({
                         node,
                         router: this.router,
+                        explorerState,
                     })
                 },
             }),
