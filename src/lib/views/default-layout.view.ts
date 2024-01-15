@@ -1,15 +1,27 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { NavigationView } from './navigation.view'
 import { Router } from '../router'
-import { ImmutableTree } from '@youwol/rx-tree-views'
-import { NavigationHeader } from './navigation.view'
 import { PageFooterView, PageView } from './page.view'
-import { combineLatest, debounceTime, from, mergeMap, of } from 'rxjs'
+import {
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    from,
+    mergeMap,
+    of,
+    Subject,
+} from 'rxjs'
+import { TopBannerView } from './top-banner.view'
+
+export type DisplayMode = 'Full' | 'Minimized'
 
 export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: AnyVirtualDOM[]
-    public readonly class = 'd-flex flex-column h-100 w-100 overflow-auto'
+    public readonly class = 'd-flex flex-column h-100 w-100 overflow-y-auto'
+
+    public readonly displayModeNav = new Subject<DisplayMode>()
+    public readonly displayModeToc = new Subject<DisplayMode>()
 
     public readonly style = {
         fontFamily: 'Lexend, sans-serif',
@@ -43,6 +55,25 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 },
                 connectedCallback: (e) => {
                     router.scrollableElement = e
+                    const resizeObserver = new ResizeObserver((entries) => {
+                        const width = entries[0].contentRect.width
+                        document.documentElement.style.fontSize =
+                            width < 1300 ? '14px' : '16px'
+
+                        if (width < 850) {
+                            this.displayModeNav.next('Minimized')
+                            this.displayModeToc.next('Minimized')
+                            return
+                        }
+                        if (width < 1100) {
+                            this.displayModeNav.next('Minimized')
+                            this.displayModeToc.next('Full')
+                            return
+                        }
+                        this.displayModeNav.next('Full')
+                        this.displayModeToc.next('Full')
+                    })
+                    resizeObserver.observe(e)
                 },
                 children: [
                     {
@@ -53,12 +84,26 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                         },
                         children: [
                             {
-                                ...wrapperSideNav('left'),
-                                children: [new NavigationView({ router })],
+                                source$: this.displayModeNav.pipe(
+                                    distinctUntilChanged(),
+                                ),
+                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
+                                    return mode === 'Minimized'
+                                        ? { tag: 'div' }
+                                        : {
+                                              ...wrapperSideNav('left'),
+                                              children: [
+                                                  new NavigationView({
+                                                      router,
+                                                  }),
+                                              ],
+                                          }
+                                },
                             },
                             {
                                 tag: 'div',
                                 style: {
+                                    width: '75%',
                                     maxWidth: '40rem',
                                     height: 'fit-content',
                                     minHeight: '100%',
@@ -67,8 +112,21 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                 children: [new PageView({ router: router })],
                             },
                             {
-                                ...wrapperSideNav('right'),
-                                children: [new TocWrapperView({ router })],
+                                source$: this.displayModeToc.pipe(
+                                    distinctUntilChanged(),
+                                ),
+                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
+                                    return mode === 'Minimized'
+                                        ? { tag: 'div' }
+                                        : {
+                                              ...wrapperSideNav('right'),
+                                              children: [
+                                                  new TocWrapperView({
+                                                      router,
+                                                  }),
+                                              ],
+                                          }
+                                },
                             },
                         ],
                     },
