@@ -100,6 +100,12 @@ export class Router {
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
+    navigateToParent() {
+        const path = this.getCurrentPath()
+        const parentPath = path.split('/').slice(0, -1).join('/')
+        this.navigateTo({ path: parentPath })
+    }
+
     scrollTo(target: string | HTMLElement) {
         if (!target) {
             return
