@@ -115,8 +115,8 @@ export class Router {
         }
         this.scrollableElement.scrollTo({
             top:
-                div.offsetTop -
-                this.scrollableElement.getBoundingClientRect().y,
+                div.offsetTop +
+                this.scrollableElement.getBoundingClientRect().top,
             left: 0,
             behavior: 'smooth',
         })
