@@ -60,6 +60,7 @@ export class HandlerView implements VirtualDOM<'div'> {
         }
     }
 }
+
 export class NavigationHeader implements VirtualDOM<'a'> {
     public readonly explorerState: ImmutableTree.State<Node>
     public readonly node: Node
@@ -74,6 +75,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         node: Node
         router: Router
         explorerState: ImmutableTree.State<Node>
+        withChildren?: AnyVirtualDOM[]
     }) {
         Object.assign(this, params)
         this.style =
@@ -90,27 +92,17 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         this.children = [
             {
                 tag: 'div',
-                style: {
-                    source$: this.explorerState.selectedNode$,
-                    vdomMap: (selected: Node) =>
-                        selected.id == this.node.id
-                            ? { fontWeight: 'bolder' }
-                            : { fontWeight: 'inherit' },
-                },
                 class: {
                     source$: this.explorerState.selectedNode$,
                     vdomMap: (selected: Node) =>
-                        selected.id == this.node.id ? 'fv-text-focus' : '',
+                        selected.id == this.node.id
+                            ? 'fv-text-focus font-weight-bold'
+                            : '',
                     wrapper: (d) => `${d} flex-grow-1 fv-hover-text-focus`,
                 },
                 innerText: this.node.name,
             },
-            !this.node.children || this.node.id == 'mkdocs-ts-nav-root'
-                ? undefined
-                : new HandlerView({
-                      node: this.node,
-                      expandedNodes$: this.explorerState.expandedNodes$,
-                  }),
+            ...(params.withChildren || []),
         ]
         this.href = `${this.router.basePath}?nav=` + this.node.href
         this.onclick = (e) => {
@@ -140,6 +132,13 @@ export class NavigationView implements VirtualDOM<'div'> {
                         node,
                         router: this.router,
                         explorerState,
+                        withChildren: (!node.children || node.id == '/') && [
+                            new HandlerView({
+                                node: node,
+                                expandedNodes$:
+                                    this.router.explorerState.expandedNodes$,
+                            }),
+                        ],
                     })
                 },
             }),
