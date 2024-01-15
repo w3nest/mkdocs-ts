@@ -130,7 +130,13 @@ export class Router {
     }: {
         path: string
     }): Promise<NavigationNode> | Observable<NavigationNode> {
-        const parts = path.split('/').slice(1)
+        const parts = path
+            .split('/')
+            .slice(1)
+            .filter((d) => d !== '')
+        if (parts.length === 0) {
+            return Promise.resolve(this.navigation)
+        }
         const node = parts.reduce(
             ({ tree, path, keepGoing }, part) => {
                 if (!keepGoing) {
@@ -171,6 +177,9 @@ export class Router {
             .map((p, i) => parts.slice(0, i + 1).join('/'))
             .slice(1)
         const getLastResolved = (ids: string[]) => {
+            if (ids.length == 0) {
+                return this.explorerState.getNode('/')
+            }
             const id = ids.slice(-1)[0]
             const childNode = this.explorerState.getNode(id)
             return childNode || getLastResolved(ids.slice(0, -1))

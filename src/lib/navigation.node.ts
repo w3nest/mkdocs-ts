@@ -82,7 +82,7 @@ export function createChildren(navigation, hRefBase: string, router: Router) {
 export function createRootNode(navigation, router: Router) {
     const href = ''
     return new ExplicitNode({
-        id: 'mkdocs-ts-nav-root',
+        id: '/',
         name: navigation.name,
         children: createChildren(navigation, href, router),
         href,

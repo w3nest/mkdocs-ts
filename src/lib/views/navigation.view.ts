@@ -77,7 +77,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
     }) {
         Object.assign(this, params)
         this.style =
-            this.node.id == 'mkdocs-ts-nav-root'
+            this.node.id == '/'
                 ? {
                       textDecoration: 'none',
                       color: 'black',
