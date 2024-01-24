@@ -107,7 +107,12 @@ export class Router {
     }
 
     scrollTo(target: string | HTMLElement) {
+        const br = this.scrollableElement.getBoundingClientRect()
         if (!target) {
+            this.scrollableElement.scrollTo({
+                top: br.top,
+                left: 0,
+            })
             return
         }
         const div: HTMLElement =
@@ -120,9 +125,7 @@ export class Router {
             return
         }
         this.scrollableElement.scrollTo({
-            top:
-                div.offsetTop +
-                this.scrollableElement.getBoundingClientRect().top,
+            top: div.offsetTop + br.top,
             left: 0,
             behavior: 'smooth',
         })
