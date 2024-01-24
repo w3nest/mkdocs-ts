@@ -213,8 +213,13 @@ export class Router {
                 ? expandRec(ids.slice(1), maybeChildResolved)
                 : this.explorerState.getChildren(node, () => {
                       const nodeNew = this.explorerState.getNode(ids[0])
-                      this.explorerState.selectNodeAndExpand(nodeNew)
-                      expandRec(ids.slice(1), nodeNew)
+                      if (!nodeNew) {
+                          console.warn(`Can not find node ${ids[0]}`)
+                      }
+                      if (nodeNew) {
+                          this.explorerState.selectNodeAndExpand(nodeNew)
+                          expandRec(ids.slice(1), nodeNew)
+                      }
                   })
         }
         expandRec(idsRemaining, node)
