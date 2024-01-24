@@ -1,5 +1,12 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import {
+    AnyVirtualDOM,
+    ChildrenLike,
+    RxHTMLElement,
+    VirtualDOM,
+} from '@youwol/rx-vdom'
 import { Router } from '../router'
+import { BehaviorSubject } from 'rxjs'
+import { DefaultLayoutView } from './default-layout.view'
 
 export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
@@ -11,15 +18,19 @@ export class TOCView implements VirtualDOM<'div'> {
         fontSize: '0.9rem',
         lineHeight: '1.5rem',
     }
+
+    public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
     constructor(params: {
         html: HTMLElement
         router: Router
         domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
     }) {
         Object.assign(this, params)
-        const headings = this.html.querySelectorAll('h1, h2, h3')
+        const headings: NodeListOf<HTMLElement> =
+            this.html.querySelectorAll('h1, h2, h3, h4')
         const defaultConv = (heading: HTMLElement) => ({
             tag: 'div' as const,
+            class: 'fv-hover-text-focus',
             innerText: heading.innerText
                 ? heading.innerText
                 : heading.firstChild['innerText'],
@@ -31,37 +42,92 @@ export class TOCView implements VirtualDOM<'div'> {
             H2: '1em',
             H3: '2em',
         }
+        this.router.scrollableElement.onscroll = () => {
+            this.getFirstVisible(headingsArray)
+        }
+
         this.children = [
+            headingsArray.length > 0 &&
+            DefaultLayoutView.displayModeToc.value === 'Full'
+                ? {
+                      tag: 'div',
+                      innerText: 'Table of content',
+                      style: {
+                          fontWeight: 'bolder',
+                      },
+                  }
+                : undefined,
             {
                 tag: 'ul',
-                children: headingsArray.map((heading: HTMLHeadingElement) => {
-                    return {
-                        tag: 'li' as const,
-                        class: heading.classList.value,
-                        style: { paddingLeft: padding[heading.tagName] },
-                        children: [
-                            {
-                                tag: 'a' as const,
-                                href: `${
-                                    this.router.basePath
-                                }?nav=${this.router.getCurrentPath()}.${
-                                    heading.id
-                                }`,
-                                children: [
-                                    (params.domConvertor || defaultConv)(
-                                        heading,
-                                    ),
-                                ],
-                                onclick: (ev) => {
-                                    ev.preventDefault()
-                                    this.router.scrollTo(heading)
+                class: 'p-0 h-100 scrollbar-on-hover ',
+                connectedCallback: (elem: RxHTMLElement<'ul'>) => {
+                    const headings = [...elem.querySelectorAll('li')]
+                    elem.ownSubscriptions(
+                        this.indexFirstVisibleHeading$.subscribe((index) => {
+                            const br = elem.getBoundingClientRect()
+                            const offset = headings[index]?.['offsetTop'] || 0
+                            elem.scrollTo({
+                                top: offset + br.top - br.height / 4,
+                                left: 0,
+                                behavior: 'smooth',
+                            })
+                        }),
+                    )
+                },
+                children: headingsArray.map(
+                    (heading: HTMLHeadingElement, index: number) => {
+                        const getItemClass = (firstIndex: number) => {
+                            if (index == firstIndex) {
+                                return 'fv-text-focus font-weight-bold'
+                            }
+                            return index < firstIndex
+                                ? 'text-dark'
+                                : 'fv-text-disabled'
+                        }
+                        return {
+                            tag: 'li' as const,
+                            class: heading.classList.value,
+                            style: { paddingLeft: padding[heading.tagName] },
+                            children: [
+                                {
+                                    tag: 'a' as const,
+                                    class: {
+                                        source$: this.indexFirstVisibleHeading$,
+                                        vdomMap: getItemClass,
+                                        wrapper: (d) =>
+                                            `fv-hover-text-focus ${d} `,
+                                    },
+                                    href: `${
+                                        this.router.basePath
+                                    }?nav=${this.router.getCurrentPath()}.${
+                                        heading.id
+                                    }`,
+                                    children: [
+                                        (params.domConvertor || defaultConv)(
+                                            heading,
+                                        ),
+                                    ],
+                                    onclick: (ev) => {
+                                        ev.preventDefault()
+                                        this.router.scrollTo(heading)
+                                    },
                                 },
-                            },
-                        ],
-                    }
-                }),
+                            ],
+                        }
+                    },
+                ),
             },
         ]
+    }
+    getFirstVisible(headings: HTMLElement[]) {
+        for (let i = 0; i < headings.length; i++) {
+            const rect = headings[i].getBoundingClientRect()
+
+            if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+                this.indexFirstVisibleHeading$.next(i)
+                return
+            }
+        }
     }
 }
 

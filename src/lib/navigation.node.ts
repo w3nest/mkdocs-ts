@@ -1,7 +1,6 @@
 import { ImmutableTree } from '@youwol/rx-tree-views'
 import { Router } from './router'
 import { from, map } from 'rxjs'
-import { VirtualDOM } from '@youwol/rx-vdom'
 
 export class Node extends ImmutableTree.Node {
     public readonly name: string
@@ -21,34 +20,40 @@ export class ExplicitNode extends Node {
 }
 
 export function createImplicitChildren(
-    generator: (p: {
-        path: string
-        router: Router
-    }) => Promise<{ name: string; children: string[] }>,
+    generator: (p: { path: string; router: Router }) => Promise<{
+        name: string
+        children: string[] | { name: string; leaf: boolean }[]
+    }>,
     hRefBase: string,
     path: string,
     withExplicit: ExplicitNode[],
     router: Router,
 ) {
     const node = generator({ path, router })
+
     return from(node).pipe(
         map(({ children }) => {
             return [
-                ...children.map((name: string) => {
-                    const href = hRefBase + '/' + name
-                    return new ExplicitNode({
-                        id: href,
-                        name,
-                        children: createImplicitChildren(
-                            generator,
+                ...children.map(
+                    (n: string | { name: string; leaf: boolean }) => {
+                        const href = hRefBase + '/' + n['name']
+                        return new ExplicitNode({
+                            id: href,
+                            name: typeof n == 'string' ? n : n.name,
+                            children:
+                                typeof n != 'string' && n.leaf
+                                    ? undefined
+                                    : createImplicitChildren(
+                                          generator,
+                                          href,
+                                          path + '/' + n['name'],
+                                          [],
+                                          router,
+                                      ),
                             href,
-                            path + '/' + name,
-                            [],
-                            router,
-                        ),
-                        href,
-                    })
-                }),
+                        })
+                    },
+                ),
                 ...withExplicit,
             ]
         }),
@@ -83,27 +88,9 @@ export function createChildren(navigation, hRefBase: string, router: Router) {
 export function createRootNode(navigation, router: Router) {
     const href = ''
     return new ExplicitNode({
-        id: 'root',
-        name: 'YouWol Doc',
+        id: '/',
+        name: navigation.name,
         children: createChildren(navigation, href, router),
         href,
     })
-}
-
-export class NavigationHeader implements VirtualDOM<'a'> {
-    public readonly node: Node
-    public readonly router: Router
-    public readonly tag = 'a'
-    public readonly innerText: string
-    public readonly href: string
-    public readonly onclick: (e: MouseEvent) => void
-    constructor(params: { node: Node; router: Router }) {
-        Object.assign(this, params)
-        this.innerText = this.node.name
-        this.href = `${this.router.basePath}?nav=` + this.node.href
-        this.onclick = (e) => {
-            e.preventDefault()
-            this.router.navigateTo({ path: this.node.href })
-        }
-    }
 }

@@ -3,9 +3,6 @@ import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import { createRootNode, Node } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
 
-export const leftColumnWidth = '250px'
-export const rightColumnWidth = '250px'
-export const middleColumnWidth = '800px'
 export class NavigationNode {
     name: string
     html: ({
@@ -103,8 +100,19 @@ export class Router {
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
+    navigateToParent() {
+        const path = this.getCurrentPath()
+        const parentPath = path.split('/').slice(0, -1).join('/')
+        this.navigateTo({ path: parentPath })
+    }
+
     scrollTo(target: string | HTMLElement) {
+        const br = this.scrollableElement.getBoundingClientRect()
         if (!target) {
+            this.scrollableElement.scrollTo({
+                top: br.top,
+                left: 0,
+            })
             return
         }
         const div: HTMLElement =
@@ -117,9 +125,7 @@ export class Router {
             return
         }
         this.scrollableElement.scrollTo({
-            top:
-                div.offsetTop -
-                this.scrollableElement.getBoundingClientRect().y,
+            top: div.offsetTop + br.top,
             left: 0,
             behavior: 'smooth',
         })
@@ -133,7 +139,13 @@ export class Router {
     }: {
         path: string
     }): Promise<NavigationNode> | Observable<NavigationNode> {
-        const parts = path.split('/').slice(1)
+        const parts = path
+            .split('/')
+            .slice(1)
+            .filter((d) => d !== '')
+        if (parts.length === 0) {
+            return Promise.resolve(this.navigation)
+        }
         const node = parts.reduce(
             ({ tree, path, keepGoing }, part) => {
                 if (!keepGoing) {
@@ -174,6 +186,9 @@ export class Router {
             .map((p, i) => parts.slice(0, i + 1).join('/'))
             .slice(1)
         const getLastResolved = (ids: string[]) => {
+            if (ids.length == 0) {
+                return this.explorerState.getNode('/')
+            }
             const id = ids.slice(-1)[0]
             const childNode = this.explorerState.getNode(id)
             return childNode || getLastResolved(ids.slice(0, -1))
@@ -198,8 +213,13 @@ export class Router {
                 ? expandRec(ids.slice(1), maybeChildResolved)
                 : this.explorerState.getChildren(node, () => {
                       const nodeNew = this.explorerState.getNode(ids[0])
-                      this.explorerState.selectNodeAndExpand(nodeNew)
-                      expandRec(ids.slice(1), nodeNew)
+                      if (!nodeNew) {
+                          console.warn(`Can not find node ${ids[0]}`)
+                      }
+                      if (nodeNew) {
+                          this.explorerState.selectNodeAndExpand(nodeNew)
+                          expandRec(ids.slice(1), nodeNew)
+                      }
                   })
         }
         expandRec(idsRemaining, node)

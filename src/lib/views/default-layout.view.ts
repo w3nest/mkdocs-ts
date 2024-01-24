@@ -1,111 +1,179 @@
-import { AnyVirtualDOM, VirtualDOM } from '@youwol/rx-vdom'
-import { leftColumnWidth, middleColumnWidth, Router } from '../router'
-import { ImmutableTree } from '@youwol/rx-tree-views'
-import { NavigationHeader } from '../navigation.node'
-import { PageView } from './page.view'
-import { combineLatest, debounceTime, from, mergeMap, of } from 'rxjs'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { NavigationView } from './navigation.view'
+import { Router } from '../router'
+import { PageFooterView, PageView } from './page.view'
+import {
+    BehaviorSubject,
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    from,
+    mergeMap,
+    of,
+} from 'rxjs'
+import { TopBannerView } from './top-banner.view'
+
+export type DisplayMode = 'Full' | 'Minimized'
 
 export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: AnyVirtualDOM[]
-    public readonly class = 'd-flex flex-column h-100 w-100 overflow-auto'
+    public readonly class = 'd-flex flex-column h-100 w-100 overflow-y-auto'
+
+    static displayModeNav = new BehaviorSubject<DisplayMode>('Full')
+    static displayModeToc = new BehaviorSubject<DisplayMode>('Full')
 
     public readonly style = {
         fontFamily: 'Lexend, sans-serif',
     }
-    constructor({
-        router,
-        topBanner,
-    }: {
-        router: Router
-        topBanner: AnyVirtualDOM
-    }) {
+    constructor({ router, name }: { router: Router; name: string }) {
+        const wrapperSideNav = (side: 'left' | 'right') => ({
+            tag: 'div' as const,
+            class: 'mkdocs-ts-side-nav',
+            style: {
+                marginRight: side == 'left' ? '3rem' : '0rem',
+                marginLeft: side == 'right' ? '3rem' : '0rem',
+                maxHeight: '80vh',
+                position: 'sticky' as const,
+                top: '0px',
+                width: '16rem',
+            },
+        })
         this.children = [
-            topBanner,
+            new TopBannerView({
+                name,
+                displayModeNav$: DefaultLayoutView.displayModeNav,
+                router,
+            }),
             {
                 tag: 'div',
-                class: 'flex-grow-1 d-flex justify-content-center p-5 w-100',
+                class: 'flex-grow-1 w-100 overflow-auto',
                 style: {
-                    marginTop: '1.5rem',
                     minHeight: '0px',
+                },
+                connectedCallback: (e) => {
+                    router.scrollableElement = e
+                    const resizeObserver = new ResizeObserver((entries) => {
+                        const width = entries[0].contentRect.width
+                        document.documentElement.style.fontSize =
+                            width < 1300 ? '14px' : '16px'
+
+                        if (width < 850) {
+                            DefaultLayoutView.displayModeNav.next('Minimized')
+                            DefaultLayoutView.displayModeToc.next('Minimized')
+                            return
+                        }
+                        if (width < 1100) {
+                            DefaultLayoutView.displayModeNav.next('Minimized')
+                            DefaultLayoutView.displayModeToc.next('Full')
+                            return
+                        }
+                        DefaultLayoutView.displayModeNav.next('Full')
+                        DefaultLayoutView.displayModeToc.next('Full')
+                    })
+                    resizeObserver.observe(e)
                 },
                 children: [
                     {
                         tag: 'div',
-                        class: 'flex-grow-1 d-flex justify-content-end',
+                        class: 'd-flex justify-content-center pt-5 w-100',
                         style: {
-                            minWidth: '0px',
+                            position: 'relative',
                         },
                         children: [
                             {
-                                tag: 'div',
-                                class: 'h-100 overflow-auto mr-3',
-                                style: {
-                                    minWidth: leftColumnWidth,
-                                    maxWidth: leftColumnWidth,
-                                    fontSize: '0.9rem',
+                                source$: DefaultLayoutView.displayModeNav.pipe(
+                                    distinctUntilChanged(),
+                                ),
+                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
+                                    return mode === 'Minimized'
+                                        ? { tag: 'div' }
+                                        : {
+                                              ...wrapperSideNav('left'),
+                                              children: [
+                                                  new NavigationView({
+                                                      router,
+                                                  }),
+                                              ],
+                                          }
                                 },
-                                children: [
-                                    new ImmutableTree.View({
-                                        state: router.explorerState,
-                                        headerView: (state, node) => {
-                                            return new NavigationHeader({
-                                                node,
-                                                router: router,
-                                            })
-                                        },
-                                    }),
-                                ],
                             },
-                        ],
-                    },
-                    {
-                        tag: 'div',
-                        style: {
-                            maxWidth: middleColumnWidth,
-                            minWidth: middleColumnWidth,
-                        },
-                        children: [new PageView({ router: router })],
-                    },
-                    {
-                        tag: 'div',
-                        class: 'flex-grow-1 d-flex justify-content-left',
-                        style: {
-                            minWidth: '0px',
-                        },
-                        children: [
                             {
                                 tag: 'div',
-                                class: 'h-100 px-1  scrollbar-on-hover ',
-                                children: [
-                                    {
-                                        source$: combineLatest([
-                                            router.currentNode$,
-                                            router.currentHtml$,
-                                        ]).pipe(
-                                            debounceTime(200),
-                                            mergeMap(([node, elem]) => {
-                                                return node.tableOfContent
-                                                    ? from(
-                                                          node.tableOfContent({
-                                                              html: elem,
-                                                              router: router,
-                                                          }),
-                                                      )
-                                                    : of(undefined)
-                                            }),
-                                        ),
-                                        vdomMap: (
-                                            toc?: AnyVirtualDOM,
-                                        ): AnyVirtualDOM => {
-                                            return toc || { tag: 'div' }
-                                        },
-                                    },
-                                ],
+                                style: {
+                                    width: '75%',
+                                    maxWidth: '40rem',
+                                    height: 'fit-content',
+                                    minHeight: '100%',
+                                    position: 'relative',
+                                },
+                                children: [new PageView({ router: router })],
+                            },
+                            {
+                                source$: DefaultLayoutView.displayModeToc.pipe(
+                                    distinctUntilChanged(),
+                                ),
+                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
+                                    return mode === 'Minimized'
+                                        ? { tag: 'div' }
+                                        : {
+                                              ...wrapperSideNav('right'),
+                                              children: [
+                                                  new TocWrapperView({
+                                                      router,
+                                                  }),
+                                              ],
+                                          }
+                                },
                             },
                         ],
+                    },
+                    {
+                        tag: 'footer',
+                        style: {
+                            position: 'sticky' as const,
+                            top: '100%',
+                        },
+                        children: [new PageFooterView()],
                     },
                 ],
+            },
+        ]
+    }
+}
+
+export class TocWrapperView implements VirtualDOM<'div'> {
+    public readonly router: Router
+
+    public readonly tag = 'div'
+    public readonly class = 'w-100 h-100'
+
+    public readonly children: ChildrenLike
+
+    constructor(params: { router: Router }) {
+        Object.assign(this, params)
+
+        this.children = [
+            {
+                source$: combineLatest([
+                    this.router.currentNode$,
+                    this.router.currentHtml$,
+                ]).pipe(
+                    debounceTime(200),
+                    mergeMap(([node, elem]) => {
+                        return node.tableOfContent
+                            ? from(
+                                  node.tableOfContent({
+                                      html: elem,
+                                      router: this.router,
+                                  }),
+                              )
+                            : of(undefined)
+                    }),
+                ),
+                vdomMap: (toc?: AnyVirtualDOM): AnyVirtualDOM => {
+                    return toc || { tag: 'div' }
+                },
             },
         ]
     }
