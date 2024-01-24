@@ -20,10 +20,7 @@ export class ExplicitNode extends Node {
 }
 
 export function createImplicitChildren(
-    generator: (p: {
-        path: string
-        router: Router
-    }) => Promise<{
+    generator: (p: { path: string; router: Router }) => Promise<{
         name: string
         children: string[] | { name: string; leaf: boolean }[]
     }>,
