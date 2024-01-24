@@ -23,31 +23,40 @@ export function createImplicitChildren(
     generator: (p: {
         path: string
         router: Router
-    }) => Promise<{ name: string; children: string[] }>,
+    }) => Promise<{
+        name: string
+        children: string[] | { name: string; leaf: boolean }[]
+    }>,
     hRefBase: string,
     path: string,
     withExplicit: ExplicitNode[],
     router: Router,
 ) {
     const node = generator({ path, router })
+
     return from(node).pipe(
         map(({ children }) => {
             return [
-                ...children.map((name: string) => {
-                    const href = hRefBase + '/' + name
-                    return new ExplicitNode({
-                        id: href,
-                        name,
-                        children: createImplicitChildren(
-                            generator,
+                ...children.map(
+                    (n: string | { name: string; leaf: boolean }) => {
+                        const href = hRefBase + '/' + n['name']
+                        return new ExplicitNode({
+                            id: href,
+                            name: typeof n == 'string' ? n : n.name,
+                            children:
+                                typeof n != 'string' && n.leaf
+                                    ? undefined
+                                    : createImplicitChildren(
+                                          generator,
+                                          href,
+                                          path + '/' + n['name'],
+                                          [],
+                                          router,
+                                      ),
                             href,
-                            path + '/' + name,
-                            [],
-                            router,
-                        ),
-                        href,
-                    })
-                }),
+                        })
+                    },
+                ),
                 ...withExplicit,
             ]
         }),
