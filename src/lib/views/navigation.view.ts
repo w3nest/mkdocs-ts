@@ -142,13 +142,15 @@ export class NavigationView implements VirtualDOM<'div'> {
                         node,
                         router: this.router,
                         explorerState,
-                        withChildren: (!node.children || node.id == '/') && [
-                            new HandlerView({
-                                node: node,
-                                expandedNodes$:
-                                    this.router.explorerState.expandedNodes$,
-                            }),
-                        ],
+                        withChildren: node.children &&
+                            node.id !== '/' && [
+                                new HandlerView({
+                                    node: node,
+                                    expandedNodes$:
+                                        this.router.explorerState
+                                            .expandedNodes$,
+                                }),
+                            ],
                     })
                 },
             }),
