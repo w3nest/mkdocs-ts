@@ -1,6 +1,12 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import {
+    AnyVirtualDOM,
+    ChildrenLike,
+    RxHTMLElement,
+    VirtualDOM,
+} from '@youwol/rx-vdom'
 import { Router } from '../router'
 import { BehaviorSubject } from 'rxjs'
+import { DefaultLayoutView } from './default-layout.view'
 
 export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
@@ -41,7 +47,8 @@ export class TOCView implements VirtualDOM<'div'> {
         }
 
         this.children = [
-            headingsArray.length > 0
+            headingsArray.length > 0 &&
+            DefaultLayoutView.displayModeToc.value === 'Full'
                 ? {
                       tag: 'div',
                       innerText: 'Table of content',
@@ -52,7 +59,21 @@ export class TOCView implements VirtualDOM<'div'> {
                 : undefined,
             {
                 tag: 'ul',
-                class: 'p-0',
+                class: 'p-0 h-100 scrollbar-on-hover ',
+                connectedCallback: (elem: RxHTMLElement<'ul'>) => {
+                    const headings = [...elem.querySelectorAll('li')]
+                    elem.ownSubscriptions(
+                        this.indexFirstVisibleHeading$.subscribe((index) => {
+                            const br = elem.getBoundingClientRect()
+                            const offset = headings[index]?.['offsetTop'] || 0
+                            elem.scrollTo({
+                                top: offset + br.top - br.height / 4,
+                                left: 0,
+                                behavior: 'smooth',
+                            })
+                        }),
+                    )
+                },
                 children: headingsArray.map(
                     (heading: HTMLHeadingElement, index: number) => {
                         const getItemClass = (firstIndex: number) => {
