@@ -20,8 +20,8 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly children: AnyVirtualDOM[]
     public readonly class = 'd-flex flex-column h-100 w-100 overflow-y-auto'
 
-    public readonly displayModeNav = new Subject<DisplayMode>()
-    public readonly displayModeToc = new Subject<DisplayMode>()
+    static displayModeNav = new BehaviorSubject<DisplayMode>('Full')
+    static displayModeToc = new BehaviorSubject<DisplayMode>('Full')
 
     public readonly style = {
         fontFamily: 'Lexend, sans-serif',
@@ -42,7 +42,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         this.children = [
             new TopBannerView({
                 name,
-                displayModeNav$: this.displayModeNav,
+                displayModeNav$: DefaultLayoutView.displayModeNav,
                 router,
             }),
             {
@@ -59,17 +59,17 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                             width < 1300 ? '14px' : '16px'
 
                         if (width < 850) {
-                            this.displayModeNav.next('Minimized')
-                            this.displayModeToc.next('Minimized')
+                            DefaultLayoutView.displayModeNav.next('Minimized')
+                            DefaultLayoutView.displayModeToc.next('Minimized')
                             return
                         }
                         if (width < 1100) {
-                            this.displayModeNav.next('Minimized')
-                            this.displayModeToc.next('Full')
+                            DefaultLayoutView.displayModeNav.next('Minimized')
+                            DefaultLayoutView.displayModeToc.next('Full')
                             return
                         }
-                        this.displayModeNav.next('Full')
-                        this.displayModeToc.next('Full')
+                        DefaultLayoutView.displayModeNav.next('Full')
+                        DefaultLayoutView.displayModeToc.next('Full')
                     })
                     resizeObserver.observe(e)
                 },
@@ -82,7 +82,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                         },
                         children: [
                             {
-                                source$: this.displayModeNav.pipe(
+                                source$: DefaultLayoutView.displayModeNav.pipe(
                                     distinctUntilChanged(),
                                 ),
                                 vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
@@ -110,7 +110,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                 children: [new PageView({ router: router })],
                             },
                             {
-                                source$: this.displayModeToc.pipe(
+                                source$: DefaultLayoutView.displayModeToc.pipe(
                                     distinctUntilChanged(),
                                 ),
                                 vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
