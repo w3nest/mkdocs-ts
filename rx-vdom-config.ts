@@ -18,3 +18,4 @@ type DevTags =
     | 'li'
     | 'span'
     | 'pre'
+    | 'footer'
