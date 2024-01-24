@@ -6,7 +6,6 @@ const runTimeDependencies = {
         "rxjs": "^7.5.6",
         "marked": "^4.2.3",
         "highlight.js": "11.2.0",
-        "@youwol/local-youwol-client": "^0.2.0",
         "@youwol/os-top-banner": "^0.2.0",
         "@youwol/rx-tree-views": "^0.3.1"
     },
@@ -37,11 +36,6 @@ const externals = {
         "commonjs": "highlight.js",
         "commonjs2": "highlight.js",
         "root": "hljs_APIv11"
-    },
-    "@youwol/local-youwol-client": {
-        "commonjs": "@youwol/local-youwol-client",
-        "commonjs2": "@youwol/local-youwol-client",
-        "root": "@youwol/local-youwol-client_APIv02"
     },
     "@youwol/os-top-banner": {
         "commonjs": "@youwol/os-top-banner",
@@ -75,10 +69,6 @@ const exportedSymbols = {
         "apiKey": "11",
         "exportedSymbol": "hljs"
     },
-    "@youwol/local-youwol-client": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/local-youwol-client"
-    },
     "@youwol/os-top-banner": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/os-top-banner"
@@ -97,7 +87,6 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "rxjs",
         "marked",
         "highlight.js",
-        "@youwol/local-youwol-client",
         "@youwol/os-top-banner",
         "@youwol/rx-tree-views"
     ]
