@@ -3,13 +3,13 @@ import { NavigationView } from './navigation.view'
 import { Router } from '../router'
 import { PageFooterView, PageView } from './page.view'
 import {
+    BehaviorSubject,
     combineLatest,
     debounceTime,
     distinctUntilChanged,
     from,
     mergeMap,
     of,
-    Subject,
 } from 'rxjs'
 import { TopBannerView } from './top-banner.view'
 
@@ -146,10 +146,8 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'w-100 scrollbar-on-hover '
-    public readonly style = {
-        maxHeight: '100%',
-    }
+    public readonly class = 'w-100 h-100'
+
     public readonly children: ChildrenLike
 
     constructor(params: { router: Router }) {
