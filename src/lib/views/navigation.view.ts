@@ -7,7 +7,12 @@ import {
 import { Router } from '../router'
 import { Node } from '../navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs'
+import {
+    DefaultLayoutView,
+    DisplayMode,
+    TocWrapperView,
+} from './default-layout.view'
 
 export class HandlerView implements VirtualDOM<'div'> {
     public readonly node: Node
@@ -273,6 +278,16 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
                 },
                 innerText: this.node.name,
             },
+            {
+                source$: DefaultLayoutView.displayModeToc.pipe(
+                    distinctUntilChanged(),
+                ),
+                vdomMap: (mode: DisplayMode) => {
+                    return mode !== 'Minimized'
+                        ? { tag: 'div' }
+                        : new ModalTocView({ router: this.router })
+                },
+            },
         ]
     }
 }
@@ -317,5 +332,54 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
                 })
             },
         }
+    }
+}
+
+export class ModalTocView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+    public readonly router: Router
+    public readonly expanded$ = new BehaviorSubject(false)
+    constructor(params: { router: Router }) {
+        Object.assign(this, params)
+        this.children = [
+            {
+                tag: 'div',
+                class: 'd-flex align-items-center fv-hover-text-focus fv-pointer',
+                onclick: () => this.expanded$.next(!this.expanded$.value),
+                children: [
+                    {
+                        tag: 'div',
+                        class: 'fas fa-list-ul',
+                    },
+                    {
+                        tag: 'div',
+                        class: 'pb-2 pt-1 mx-2',
+                        innerText: 'Table of Content',
+                    },
+                    {
+                        tag: 'div',
+                        class: {
+                            source$: this.expanded$,
+                            vdomMap: (expanded) =>
+                                expanded ? 'fa-chevron-up' : 'fa-chevron-down',
+                            wrapper: (d) => `fas ${d} flex-grow-1 text-right`,
+                        },
+                    },
+                ],
+            },
+            {
+                tag: 'div',
+                style: {
+                    maxHeight: '25vh',
+                    height: '10000px',
+                },
+                class: {
+                    source$: this.expanded$,
+                    vdomMap: (expanded) => (expanded ? 'd-block' : 'd-none'),
+                },
+                children: [new TocWrapperView({ router: this.router })],
+            },
+        ]
     }
 }
