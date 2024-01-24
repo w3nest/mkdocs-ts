@@ -5,7 +5,13 @@ import * as webpm from '@youwol/webpm-client'
 import { from } from 'rxjs'
 import { Router } from './router'
 
-export function fromMarkdown({ url }: { url: string }) {
+export function fromMarkdown({
+    url,
+    placeholders,
+}: {
+    url: string
+    placeholders?: { [k: string]: string }
+}) {
     setOptions({
         langPrefix: 'hljs language-',
         highlight: function (code, lang) {
@@ -14,21 +20,29 @@ export function fromMarkdown({ url }: { url: string }) {
     })
 
     return ({ router }: { router: Router }) => {
-        return fromMarkdownImpl({ url, router })
+        return fromMarkdownImpl({ url, router, placeholders })
     }
 }
 export async function fromMarkdownImpl({
     url,
     router,
+    placeholders,
 }: {
     url: string
     router: Router
+    placeholders?: { [k: string]: string }
 }) {
     const src = await fetch(url).then((resp) => resp.text())
-    const div = document.createElement('div')
-    div.innerHTML = parse(src)
 
-    return parseMd({ src, router })
+    if (!placeholders) {
+        return parseMd({ src, router })
+    }
+    const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
+
+    // Replace patterns with corresponding values
+    const replacedText = src.replace(regex, (match) => placeholders[match])
+
+    return parseMd({ src: replacedText, router })
 }
 
 export function parseMd({
