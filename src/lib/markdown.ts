@@ -54,7 +54,7 @@ export function parseMd({
     src: string
     router: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
-    views?: { [k: string]: any }
+    views?: { [k: string]: (e: Element) => AnyVirtualDOM }
 }): VirtualDOM<'div'> {
     const div = document.createElement('div')
     div.innerHTML = parse(src)
