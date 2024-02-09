@@ -26,12 +26,28 @@ export class PageView implements VirtualDOM<'div'> {
                         connectedCallback: (page) => {
                             this.router.scrollTo(sectionId)
                             this.router.setDisplayedPage({ page })
+                            replaceCrossReferences(page, this.router)
                         },
                     }
                 },
             },
         ]
     }
+}
+
+function replaceCrossReferences(div: HTMLDivElement, router: Router) {
+    // Navigation links
+    const links = div.querySelectorAll('a')
+    links.forEach((link) => {
+        if (link.href.includes('@nav')) {
+            const path = link.href.split('@nav')[1]
+            link.href = `/applications/py-youwol-doc/latest?nav=${path}`
+            link.onclick = (e: MouseEvent) => {
+                e.preventDefault()
+                router.navigateTo({ path })
+            }
+        }
+    })
 }
 
 export class PageFooterView implements VirtualDOM<'div'> {
