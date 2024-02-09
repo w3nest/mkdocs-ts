@@ -22,6 +22,15 @@ export type Destination = {
     sectionId?: string
 }
 
+export type Update<T> = {
+    from$: Observable<T>
+    then: (p: {
+        treeState: ImmutableTree.State<Node>
+        data: T
+        router: Router
+    }) => void
+}
+
 export class Router {
     public readonly basePath: string
     public readonly navigation
@@ -42,14 +51,24 @@ export class Router {
         { [k: string]: unknown[] }
     > = { Warning: {}, Error: {} }
 
-    constructor(params: { navigation; basePath: string }) {
+    constructor(params: {
+        navigation
+        basePath: string
+        update?: Update<unknown>
+    }) {
         Object.assign(this, params)
 
         this.explorerState = new ImmutableTree.State({
             rootNode: createRootNode(this.navigation, this),
             expandedNodes: ['root'],
         })
-
+        params.update?.from$.subscribe((d) => {
+            params.update.then({
+                treeState: this.explorerState,
+                data: d,
+                router: this,
+            })
+        })
         this.navigateTo({ path: this.getCurrentPath() })
 
         window.onpopstate = (event: PopStateEvent) => {
@@ -107,6 +126,9 @@ export class Router {
     }
 
     scrollTo(target: string | HTMLElement) {
+        if (!this.scrollableElement) {
+            return
+        }
         const br = this.scrollableElement.getBoundingClientRect()
         if (!target) {
             this.scrollableElement.scrollTo({
