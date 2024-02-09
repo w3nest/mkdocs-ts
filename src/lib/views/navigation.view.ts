@@ -3,11 +3,12 @@ import {
     VirtualDOM,
     CSSAttribute,
     AnyVirtualDOM,
+    AttributeLike,
 } from '@youwol/rx-vdom'
 import { Router } from '../router'
 import { Node } from '../navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged, Observable, of } from 'rxjs'
 import {
     DefaultLayoutView,
     DisplayMode,
@@ -77,7 +78,8 @@ export class NavigationHeader implements VirtualDOM<'a'> {
     public readonly router: Router
     public readonly tag = 'a'
     public readonly href: string
-    public readonly class = 'w-100 d-flex align-items-center fv-pointer pr-2'
+    public readonly class: AttributeLike<string>
+
     public readonly children: ChildrenLike
     public readonly style: CSSAttribute
     public readonly onclick: (e: MouseEvent) => void
@@ -86,8 +88,27 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         router: Router
         explorerState: ImmutableTree.State<Node>
         withChildren?: AnyVirtualDOM[]
+        withClass?: string | Observable<string>
+        withIcon?: AnyVirtualDOM
+        customView?: AnyVirtualDOM
     }) {
         Object.assign(this, params)
+        let withClass$: Observable<string>
+        if (!params.withClass) {
+            withClass$ = of('w-100 d-flex align-items-center fv-pointer pr-2')
+        }
+        if (params.withClass && typeof params.withClass == 'string') {
+            withClass$ = of(params.withClass)
+        }
+        if (params.withClass instanceof Observable) {
+            withClass$ = params.withClass
+        }
+
+        this.class = {
+            source$: withClass$,
+            vdomMap: (c: string) =>
+                c || 'w-100 d-flex align-items-center fv-pointer pr-2',
+        }
         this.style =
             this.node.id == '/'
                 ? {
@@ -99,7 +120,8 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                       textDecoration: 'none',
                       color: 'black',
                   }
-        this.children = [
+        const defaultChildren: AnyVirtualDOM[] = [
+            params.withIcon,
             {
                 tag: 'div',
                 class: {
@@ -114,6 +136,9 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             },
             ...(params.withChildren || []),
         ]
+        this.children = params.customView
+            ? [params.customView]
+            : defaultChildren
         this.href = `${this.router.basePath}?nav=` + this.node.href
         this.onclick = (e) => {
             e.preventDefault()
@@ -142,6 +167,9 @@ export class NavigationView implements VirtualDOM<'div'> {
                         node,
                         router: this.router,
                         explorerState,
+                        withClass: node.wrapperClass,
+                        withIcon: node.icon,
+                        customView: node.customView,
                         withChildren: node.children &&
                             node.id !== '/' && [
                                 new HandlerView({

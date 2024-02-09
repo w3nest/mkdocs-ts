@@ -1,21 +1,52 @@
 import { ImmutableTree } from '@youwol/rx-tree-views'
 import { Router } from './router'
-import { from, map } from 'rxjs'
+import { from, map, Observable } from 'rxjs'
+import { AnyVirtualDOM } from '@youwol/rx-vdom'
 
 export class Node extends ImmutableTree.Node {
     public readonly name: string
     public readonly href: string
 
-    protected constructor({ id, name, children, href }) {
+    public readonly wrapperClass: string
+    public readonly icon: AnyVirtualDOM
+    public readonly customView: AnyVirtualDOM
+    protected constructor({
+        id,
+        name,
+        children,
+        href,
+        wrapperClass,
+        icon,
+        customView,
+    }) {
         super({ id, children })
         this.name = name
         this.href = href
+        this.wrapperClass = wrapperClass
+        this.icon = icon
+        this.customView = customView
     }
 }
 
 export class ExplicitNode extends Node {
-    constructor({ id, name, children, href }) {
-        super({ id, name, children, href })
+    constructor({
+        id,
+        name,
+        children,
+        href,
+        wrapperClass,
+        icon,
+        customView,
+    }: {
+        id: string
+        name: string
+        href: string
+        children?: Node[] | Observable<Node[]>
+        wrapperClass?: string | Observable<string>
+        icon?: AnyVirtualDOM
+        customView?: AnyVirtualDOM
+    }) {
+        super({ id, name, children, href, wrapperClass, icon, customView })
     }
 }
 
@@ -35,8 +66,19 @@ export function createImplicitChildren(
         map(({ children }) => {
             return [
                 ...children.map(
-                    (n: string | { name: string; leaf: boolean }) => {
-                        const href = hRefBase + '/' + n['name']
+                    (
+                        n:
+                            | string
+                            | {
+                                  name: string
+                                  id?: string
+                                  wrapperClass?: string
+                                  icon?: AnyVirtualDOM
+                                  customView?: AnyVirtualDOM
+                                  leaf: boolean
+                              },
+                    ) => {
+                        const href = hRefBase + '/' + (n['id'] || n['name'])
                         return new ExplicitNode({
                             id: href,
                             name: typeof n == 'string' ? n : n.name,
@@ -46,11 +88,18 @@ export function createImplicitChildren(
                                     : createImplicitChildren(
                                           generator,
                                           href,
-                                          path + '/' + n['name'],
+                                          path + '/' + (n['id'] || n['name']),
                                           [],
                                           router,
                                       ),
                             href,
+                            wrapperClass:
+                                typeof n == 'string'
+                                    ? undefined
+                                    : n.wrapperClass,
+                            icon: typeof n == 'string' ? undefined : n.icon,
+                            customView:
+                                typeof n == 'string' ? undefined : n.customView,
                         })
                     },
                 ),
@@ -70,6 +119,9 @@ export function createChildren(navigation, hRefBase: string, router: Router) {
                 name: v['name'],
                 children: createChildren(navigation[k], hRefBase + k, router),
                 href,
+                wrapperClass: v['wrapperClass'],
+                icon: v['icon'],
+                customView: v['customView'],
             })
         })
     if (navigation['/**']) {
@@ -92,5 +144,8 @@ export function createRootNode(navigation, router: Router) {
         name: navigation.name,
         children: createChildren(navigation, href, router),
         href,
+        wrapperClass: '',
+        icon: undefined,
+        customView: undefined,
     })
 }
