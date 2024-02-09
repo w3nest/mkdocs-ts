@@ -49,10 +49,12 @@ export function parseMd({
     src,
     router,
     navigations,
+    views,
 }: {
     src: string
     router: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
+    views?: { [k: string]: any }
 }): VirtualDOM<'div'> {
     const div = document.createElement('div')
     div.innerHTML = parse(src)
@@ -94,6 +96,12 @@ export function parseMd({
                 }
             })
         }
+    })
+    Object.entries(views || {}).forEach(([k, v]) => {
+        const elems = div.querySelectorAll(k)
+        elems.forEach((elem) => {
+            elem.parentNode.replaceChild(render(v(elem)), elem)
+        })
     })
     return { tag: 'div', children: [div] }
 }
