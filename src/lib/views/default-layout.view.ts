@@ -26,7 +26,15 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly style = {
         fontFamily: 'Lexend, sans-serif',
     }
-    constructor({ router, name }: { router: Router; name: string }) {
+    constructor({
+        router,
+        name,
+        topBanner,
+    }: {
+        router: Router
+        name: string
+        topBanner?: ({ displayMode$ }) => AnyVirtualDOM
+    }) {
         const wrapperSideNav = (side: 'left' | 'right') => ({
             tag: 'div' as const,
             class: 'mkdocs-ts-side-nav',
@@ -40,11 +48,13 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             },
         })
         this.children = [
-            new TopBannerView({
-                name,
-                displayModeNav$: DefaultLayoutView.displayModeNav,
-                router,
-            }),
+            topBanner
+                ? topBanner({ displayMode$: DefaultLayoutView.displayModeNav })
+                : new TopBannerView({
+                      name,
+                      displayModeNav$: DefaultLayoutView.displayModeNav,
+                      router,
+                  }),
             {
                 tag: 'div',
                 class: 'flex-grow-1 w-100 overflow-auto',
