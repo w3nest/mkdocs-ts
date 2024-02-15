@@ -54,7 +54,7 @@ export class Router {
     constructor(params: {
         navigation
         basePath: string
-        update?: Update<unknown>
+        updates?: Update<unknown>[]
     }) {
         Object.assign(this, params)
 
@@ -62,13 +62,16 @@ export class Router {
             rootNode: createRootNode(this.navigation, this),
             expandedNodes: ['root'],
         })
-        params.update?.from$.subscribe((d) => {
-            params.update.then({
-                treeState: this.explorerState,
-                data: d,
-                router: this,
+        params.updates?.forEach((update) => {
+            update.from$.subscribe((d) => {
+                update.then({
+                    treeState: this.explorerState,
+                    data: d,
+                    router: this,
+                })
             })
         })
+
         this.navigateTo({ path: this.getCurrentPath() })
 
         window.onpopstate = (event: PopStateEvent) => {
