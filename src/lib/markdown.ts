@@ -50,11 +50,13 @@ export function parseMd({
     router,
     navigations,
     views,
+    emitHtmlUpdated,
 }: {
     src: string
     router: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
     views?: { [k: string]: (e: Element) => AnyVirtualDOM }
+    emitHtmlUpdated?: boolean
 }): VirtualDOM<'div'> {
     const div = document.createElement('div')
     div.innerHTML = parse(src)
@@ -103,5 +105,9 @@ export function parseMd({
             elem.parentNode.replaceChild(render(v(elem)), elem)
         })
     })
-    return { tag: 'div', children: [div] }
+    return {
+        tag: 'div',
+        children: [div],
+        connectedCallback: () => emitHtmlUpdated && router.emitHtmlUpdated(),
+    }
 }

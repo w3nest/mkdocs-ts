@@ -46,6 +46,8 @@ export class Router {
 
     public scrollableElement: HTMLElement
 
+    public readonly htmlUpdated$ = new Subject<unknown>()
+
     public readonly status: Record<
         'Warning' | 'Error',
         { [k: string]: unknown[] }
@@ -267,6 +269,10 @@ export class Router {
             this.status[severity][category] = []
         }
         this.status[severity][category].push(message)
+    }
+
+    emitHtmlUpdated() {
+        this.htmlUpdated$.next(true)
     }
 }
 
