@@ -1,11 +1,12 @@
 import {
     AnyVirtualDOM,
     ChildrenLike,
+    CSSAttribute,
     RxHTMLElement,
     VirtualDOM,
 } from '@youwol/rx-vdom'
 import { Router } from '../router'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { DefaultLayoutView } from './default-layout.view'
 
 export class TOCView implements VirtualDOM<'div'> {
@@ -20,30 +21,29 @@ export class TOCView implements VirtualDOM<'div'> {
     }
 
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
+
+    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
+
     constructor(params: {
         html: HTMLElement
         router: Router
         domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
     }) {
         Object.assign(this, params)
-        const headings: NodeListOf<HTMLElement> =
-            this.html.querySelectorAll('h1, h2, h3, h4')
-        const defaultConv = (heading: HTMLElement) => ({
-            tag: 'div' as const,
-            class: 'fv-hover-text-focus',
-            innerText: heading.innerText
-                ? heading.innerText
-                : heading.firstChild['innerText'],
-        })
+        const headingsArray = (): HTMLElement[] =>
+            Array.from(this.html.querySelectorAll('h1, h2, h3, h4'))
+        const headings$ = new BehaviorSubject<HTMLElement[]>(headingsArray())
 
-        const headingsArray = Array.from(headings)
-        const padding = {
-            H1: '0em',
-            H2: '1em',
-            H3: '2em',
+        this.connectedCallback = (elem) => {
+            elem.ownSubscriptions(
+                this.router.htmlUpdated$.subscribe(() => {
+                    headings$.next(headingsArray())
+                }),
+            )
         }
+
         this.router.scrollableElement.onscroll = () => {
-            this.getFirstVisible(headingsArray)
+            this.getFirstVisible(headings$.value)
         }
 
         this.children = [
@@ -74,48 +74,24 @@ export class TOCView implements VirtualDOM<'div'> {
                         }),
                     )
                 },
-                children: headingsArray.map(
-                    (heading: HTMLHeadingElement, index: number) => {
-                        const getItemClass = (firstIndex: number) => {
-                            if (index == firstIndex) {
-                                return 'fv-text-focus font-weight-bold'
-                            }
-                            return index < firstIndex
-                                ? 'text-dark'
-                                : 'fv-text-disabled'
-                        }
-                        return {
-                            tag: 'li' as const,
-                            class: heading.classList.value,
-                            style: { paddingLeft: padding[heading.tagName] },
-                            children: [
-                                {
-                                    tag: 'a' as const,
-                                    class: {
-                                        source$: this.indexFirstVisibleHeading$,
-                                        vdomMap: getItemClass,
-                                        wrapper: (d) =>
-                                            `fv-hover-text-focus ${d} `,
-                                    },
-                                    href: `${
-                                        this.router.basePath
-                                    }?nav=${this.router.getCurrentPath()}.${
-                                        heading.id
-                                    }`,
-                                    children: [
-                                        (params.domConvertor || defaultConv)(
-                                            heading,
-                                        ),
-                                    ],
-                                    onclick: (ev) => {
-                                        ev.preventDefault()
-                                        this.router.scrollTo(heading)
-                                    },
-                                },
-                            ],
-                        }
+                children: {
+                    policy: 'replace',
+                    source$: headings$,
+                    vdomMap: (headingsArray: HTMLElement[]) => {
+                        return headingsArray.map(
+                            (heading: HTMLHeadingElement, index: number) => {
+                                return new TocItemView({
+                                    heading,
+                                    index,
+                                    indexFirstVisibleHeading$:
+                                        this.indexFirstVisibleHeading$,
+                                    router: this.router,
+                                    domConvertor: params.domConvertor,
+                                })
+                            },
+                        )
                     },
-                ),
+                },
             },
         ]
     }
@@ -131,6 +107,65 @@ export class TOCView implements VirtualDOM<'div'> {
     }
 }
 
+class TocItemView implements VirtualDOM<'li'> {
+    public readonly tag = 'li'
+    public readonly class: string
+    public readonly style: CSSAttribute
+    public readonly children: ChildrenLike
+
+    constructor({
+        heading,
+        index,
+        indexFirstVisibleHeading$,
+        router,
+        domConvertor,
+    }: {
+        heading: HTMLHeadingElement
+        index: number
+        indexFirstVisibleHeading$: Observable<number>
+        router: Router
+        domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
+    }) {
+        const defaultConv = (heading: HTMLElement) => ({
+            tag: 'div' as const,
+            class: 'fv-hover-text-focus',
+            innerText: heading.innerText
+                ? heading.innerText
+                : heading.firstChild['innerText'],
+        })
+        const getItemClass = (firstIndex: number) => {
+            if (index == firstIndex) {
+                return 'fv-text-focus font-weight-bold'
+            }
+            return index < firstIndex ? 'text-dark' : 'fv-text-disabled'
+        }
+        const padding = {
+            H1: '0em',
+            H2: '1em',
+            H3: '2em',
+        }
+        this.style = { paddingLeft: padding[heading.tagName] }
+        this.class = heading.classList.value
+        this.children = [
+            {
+                tag: 'a' as const,
+                class: {
+                    source$: indexFirstVisibleHeading$,
+                    vdomMap: getItemClass,
+                    wrapper: (d) => `fv-hover-text-focus ${d} `,
+                },
+                href: `${
+                    router.basePath
+                }?nav=${router.getCurrentPath()}.${heading.id}`,
+                children: [(domConvertor || defaultConv)(heading)],
+                onclick: (ev) => {
+                    ev.preventDefault()
+                    router.scrollTo(heading)
+                },
+            },
+        ]
+    }
+}
 export async function tocView({
     html,
     router,
