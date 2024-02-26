@@ -9,6 +9,28 @@ import { Router } from '../router'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { DefaultLayoutView } from './default-layout.view'
 
+type H1 = 'H1'
+type H2 = 'H2'
+type H3 = 'H3'
+type H4 = 'H4'
+type H5 = 'H5'
+type SupportedHeading = H1 | H2 | H3 | H4 | H5
+const supportedHeadingTags: [H1, H2, H3, H4, H5] = [
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+]
+
+const headingsPadding: Record<SupportedHeading, string> = {
+    H1: '0em',
+    H2: '1em',
+    H3: '2em',
+    H4: '3em',
+    H5: '4em',
+}
+
 export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly html: HTMLElement
@@ -30,8 +52,12 @@ export class TOCView implements VirtualDOM<'div'> {
         domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
     }) {
         Object.assign(this, params)
+        const queryHeadings = supportedHeadingTags
+            .reduce((acc, e) => `${acc},${e}`, '')
+            .toLowerCase()
+            .slice(1)
         const headingsArray = (): HTMLElement[] =>
-            Array.from(this.html.querySelectorAll('h1, h2, h3, h4'))
+            Array.from(this.html.querySelectorAll(queryHeadings))
         const headings$ = new BehaviorSubject<HTMLElement[]>(headingsArray())
 
         this.connectedCallback = (elem) => {
@@ -139,12 +165,7 @@ class TocItemView implements VirtualDOM<'li'> {
             }
             return index < firstIndex ? 'text-dark' : 'fv-text-disabled'
         }
-        const padding = {
-            H1: '0em',
-            H2: '1em',
-            H3: '2em',
-        }
-        this.style = { paddingLeft: padding[heading.tagName] }
+        this.style = { paddingLeft: headingsPadding[heading.tagName] }
         this.class = heading.classList.value
         this.children = [
             {
