@@ -75,7 +75,7 @@ export function parseMd({
     emitHtmlUpdated?: boolean
 }): VirtualDOM<'div'> {
     views = { ...views, ...GlobalMarkdownViews.factory }
-    div.innerHTML = parse(src)
+    const div = fixedMarkedParse(src)
 
     // Custom views
     const customs = div.querySelectorAll('.language-custom-view')
@@ -126,4 +126,47 @@ export function parseMd({
         children: [div],
         connectedCallback: () => emitHtmlUpdated && router.emitHtmlUpdated(),
     }
+}
+
+function fixedMarkedParse(input: string) {
+    /**
+     * The library 'marked' parse the innerHTML of HTML elements as markdown, while their innerHTML should be preserved.
+     * The purpose of this function is to fix this behavior.
+     */
+    const divPatched = document.createElement('div')
+    divPatched.innerHTML = input
+    const replacedElements = []
+    Array.from(divPatched.children).forEach((child) => {
+        const attributes = Array.from(child.attributes).reduce(
+            (acc, it) => ({ ...acc, [it.name]: it.value }),
+            {},
+        )
+        const generatedId = `id_${Math.floor(Math.random() * 1e6)}`
+        replacedElements.push({
+            tag: child.tagName,
+            id: child.id,
+            generatedId,
+            innerHTML: child.innerHTML,
+            attributes,
+        })
+        child.id = generatedId
+        child.innerHTML = ''
+    })
+
+    const divResult = document.createElement('div')
+    divResult.innerHTML = parse(divPatched.innerHTML)
+    replacedElements.forEach((detail) => {
+        const elem = divResult.querySelector(`#${detail.generatedId}`)
+        if (!elem) {
+            console.error('Can not replace HTML element', {
+                text: divPatched.innerHTML,
+                element: detail,
+            })
+            return
+        }
+        elem.innerHTML = detail.innerHTML
+        elem.id = detail.id
+    })
+
+    return divResult
 }
