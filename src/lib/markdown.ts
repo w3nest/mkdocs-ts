@@ -4,6 +4,22 @@ import { AnyVirtualDOM, render, VirtualDOM } from '@youwol/rx-vdom'
 import * as webpm from '@youwol/webpm-client'
 import { from } from 'rxjs'
 import { Router } from './router'
+import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
+
+export class GlobalMarkdownViews {
+    /**
+     * Static factory for markdown inlined views.
+     */
+    static factory: { [k: string]: (e: Element) => AnyVirtualDOM } = {
+        'code-snippet': (elem: HTMLElement) => {
+            return new CodeSnippetView({
+                language: elem.getAttribute('language') as CodeLanguage,
+                highlightedLines: elem.getAttribute('highlightedLines'),
+                content: elem.innerHTML,
+            })
+        },
+    }
+}
 
 export function fromMarkdown({
     url,
@@ -58,7 +74,7 @@ export function parseMd({
     views?: { [k: string]: (e: Element) => AnyVirtualDOM }
     emitHtmlUpdated?: boolean
 }): VirtualDOM<'div'> {
-    const div = document.createElement('div')
+    views = { ...views, ...GlobalMarkdownViews.factory }
     div.innerHTML = parse(src)
 
     // Custom views
