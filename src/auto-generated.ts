@@ -46,6 +46,14 @@ const externals = {
         "commonjs": "@youwol/rx-tree-views",
         "commonjs2": "@youwol/rx-tree-views",
         "root": "@youwol/rx-tree-views_APIv03"
+    },
+    "rxjs/operators": {
+        "commonjs": "rxjs/operators",
+        "commonjs2": "rxjs/operators",
+        "root": [
+            "rxjs_APIv7",
+            "operators"
+        ]
     }
 }
 const exportedSymbols = {
@@ -101,7 +109,7 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.2.2-wip',
+    version:'0.2.3-wip',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
@@ -147,7 +155,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.2.2-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `@youwol/mkdocs-ts#0.2.3-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

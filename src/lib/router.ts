@@ -151,8 +151,9 @@ export class Router {
             console.warn(`Can not scroll to element #${target}`)
             return
         }
+        const tinyMarginPx = 5
         this.scrollableElement.scrollTo({
-            top: div.offsetTop + br.top,
+            top: div.offsetTop + br.top - tinyMarginPx,
             left: 0,
             behavior: 'smooth',
         })
