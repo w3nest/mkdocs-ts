@@ -46,6 +46,14 @@ const externals = {
         "commonjs": "@youwol/rx-tree-views",
         "commonjs2": "@youwol/rx-tree-views",
         "root": "@youwol/rx-tree-views_APIv03"
+    },
+    "rxjs/operators": {
+        "commonjs": "rxjs/operators",
+        "commonjs2": "rxjs/operators",
+        "root": [
+            "rxjs_APIv7",
+            "operators"
+        ]
     }
 }
 const exportedSymbols = {
