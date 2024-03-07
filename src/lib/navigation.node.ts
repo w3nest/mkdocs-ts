@@ -10,6 +10,8 @@ export class Node extends ImmutableTree.Node {
     public readonly wrapperClass: string
     public readonly icon: AnyVirtualDOM
     public readonly customView: AnyVirtualDOM
+    public readonly actions: AnyVirtualDOM[]
+
     protected constructor({
         id,
         name,
@@ -18,6 +20,7 @@ export class Node extends ImmutableTree.Node {
         wrapperClass,
         icon,
         customView,
+        actions,
     }) {
         super({ id, children })
         this.name = name
@@ -25,6 +28,7 @@ export class Node extends ImmutableTree.Node {
         this.wrapperClass = wrapperClass
         this.icon = icon
         this.customView = customView
+        this.actions = actions
     }
 }
 
@@ -37,6 +41,7 @@ export class ExplicitNode extends Node {
         wrapperClass,
         icon,
         customView,
+        actions,
     }: {
         id: string
         name: string
@@ -45,8 +50,18 @@ export class ExplicitNode extends Node {
         wrapperClass?: string | Observable<string>
         icon?: AnyVirtualDOM
         customView?: AnyVirtualDOM
+        actions?: AnyVirtualDOM[]
     }) {
-        super({ id, name, children, href, wrapperClass, icon, customView })
+        super({
+            id,
+            name,
+            children,
+            href,
+            wrapperClass,
+            icon,
+            customView,
+            actions,
+        })
     }
 }
 
@@ -75,6 +90,7 @@ export function createImplicitChildren(
                                   wrapperClass?: string
                                   icon?: AnyVirtualDOM
                                   customView?: AnyVirtualDOM
+                                  actions?: AnyVirtualDOM[]
                                   leaf: boolean
                               },
                     ) => {
@@ -100,6 +116,8 @@ export function createImplicitChildren(
                             icon: typeof n == 'string' ? undefined : n.icon,
                             customView:
                                 typeof n == 'string' ? undefined : n.customView,
+                            actions:
+                                typeof n == 'string' ? undefined : n.actions,
                         })
                     },
                 ),
@@ -122,6 +140,7 @@ export function createChildren(navigation, hRefBase: string, router: Router) {
                 wrapperClass: v['wrapperClass'],
                 icon: v['icon'],
                 customView: v['customView'],
+                actions: v['actions'],
             })
         })
     if (navigation['/**']) {
