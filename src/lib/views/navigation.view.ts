@@ -91,6 +91,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         withClass?: string | Observable<string>
         withIcon?: AnyVirtualDOM
         customView?: AnyVirtualDOM
+        actions?: AnyVirtualDOM[]
     }) {
         Object.assign(this, params)
         let withClass$: Observable<string>
@@ -134,6 +135,10 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                 },
                 innerText: this.node.name,
             },
+            {
+                tag: 'div',
+                children: params.actions || [],
+            },
             ...(params.withChildren || []),
         ]
         this.children = params.customView
@@ -170,6 +175,7 @@ export class NavigationView implements VirtualDOM<'div'> {
                         withClass: node.wrapperClass,
                         withIcon: node.icon,
                         customView: node.customView,
+                        actions: node.actions,
                         withChildren: node.children &&
                             node.id !== '/' && [
                                 new HandlerView({
