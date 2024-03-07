@@ -75,7 +75,7 @@ export function parseMd({
     emitHtmlUpdated?: boolean
 }): VirtualDOM<'div'> {
     views = { ...views, ...GlobalMarkdownViews.factory }
-    const div = fixedMarkedParse(src)
+    const div = fixedMarkedParseCustomViews({ input: src, views })
 
     // Custom views
     const customs = div.querySelectorAll('.language-custom-view')
@@ -128,15 +128,26 @@ export function parseMd({
     }
 }
 
-function fixedMarkedParse(input: string) {
+function fixedMarkedParseCustomViews({
+    input,
+    views,
+}: {
+    input: string
+    views: { [k: string]: (e: Element) => AnyVirtualDOM }
+}) {
     /**
-     * The library 'marked' parse the innerHTML of HTML elements as markdown, while their innerHTML should be preserved.
+     * The library 'marked' parse the innerHTML of HTML elements as markdown,
+     * while their innerHTML should be preserved for custom views.
      * The purpose of this function is to fix this behavior.
      */
     const divPatched = document.createElement('div')
     divPatched.innerHTML = input
     const replacedElements = []
     Array.from(divPatched.children).forEach((child) => {
+        const view_keys_lower = Object.keys(views).map((k) => k.toLowerCase())
+        if (!view_keys_lower.includes(child.tagName.toLowerCase())) {
+            return
+        }
         const attributes = Array.from(child.attributes).reduce(
             (acc, it) => ({ ...acc, [it.name]: it.value }),
             {},
