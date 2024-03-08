@@ -53,6 +53,8 @@ export class Router {
         { [k: string]: unknown[] }
     > = { Warning: {}, Error: {} }
 
+    private navigationResolved = false
+
     constructor(params: {
         navigation
         basePath: string
@@ -62,7 +64,7 @@ export class Router {
 
         this.explorerState = new ImmutableTree.State({
             rootNode: createRootNode(this.navigation, this),
-            expandedNodes: ['root'],
+            expandedNodes: ['/'],
         })
         params.updates?.forEach((update) => {
             update.from$.subscribe((d) => {
@@ -71,6 +73,9 @@ export class Router {
                     data: d,
                     router: this,
                 })
+                if (!this.navigationResolved) {
+                    this.expand(this.getCurrentPath())
+                }
             })
         })
 
@@ -242,11 +247,13 @@ export class Router {
                 : this.explorerState.getChildren(node, () => {
                       const nodeNew = this.explorerState.getNode(ids[0])
                       if (!nodeNew) {
-                          console.warn(`Can not find node ${ids[0]}`)
+                          console.warn(`Can not find node ${ids[0]} (yet?)`)
+                          this.navigationResolved = false
                       }
                       if (nodeNew) {
                           this.explorerState.selectNodeAndExpand(nodeNew)
                           expandRec(ids.slice(1), nodeNew)
+                          this.navigationResolved = true
                       }
                   })
         }

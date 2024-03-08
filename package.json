@@ -1,7 +1,7 @@
 {
     "name": "@youwol/mkdocs-ts",
     "description": "Typescript based mkdocs like solution",
-    "version": "0.2.4-wip",
+    "version": "0.2.5-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/mkdocs-ts#README.md",
     "main": "dist/@youwol/mkdocs-ts.js",

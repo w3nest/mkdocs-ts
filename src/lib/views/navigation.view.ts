@@ -73,9 +73,6 @@ export class HandlerView implements VirtualDOM<'div'> {
 }
 
 export class NavigationHeader implements VirtualDOM<'a'> {
-    public readonly explorerState: ImmutableTree.State<Node>
-    public readonly node: Node
-    public readonly router: Router
     public readonly tag = 'a'
     public readonly href: string
     public readonly class: AttributeLike<string>
@@ -83,26 +80,24 @@ export class NavigationHeader implements VirtualDOM<'a'> {
     public readonly children: ChildrenLike
     public readonly style: CSSAttribute
     public readonly onclick: (e: MouseEvent) => void
-    constructor(params: {
+    constructor({
+        node,
+        router,
+        withChildren,
+    }: {
         node: Node
         router: Router
-        explorerState: ImmutableTree.State<Node>
         withChildren?: AnyVirtualDOM[]
-        withClass?: string | Observable<string>
-        withIcon?: AnyVirtualDOM
-        customView?: AnyVirtualDOM
-        actions?: AnyVirtualDOM[]
     }) {
-        Object.assign(this, params)
         let withClass$: Observable<string>
-        if (!params.withClass) {
+        if (!node.wrapperClass) {
             withClass$ = of('w-100 d-flex align-items-center fv-pointer pr-2')
         }
-        if (params.withClass && typeof params.withClass == 'string') {
-            withClass$ = of(params.withClass)
+        if (node.wrapperClass && typeof node.wrapperClass == 'string') {
+            withClass$ = of(node.wrapperClass)
         }
-        if (params.withClass instanceof Observable) {
-            withClass$ = params.withClass
+        if (node.wrapperClass instanceof Observable) {
+            withClass$ = node.wrapperClass
         }
 
         this.class = {
@@ -111,7 +106,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                 c || 'w-100 d-flex align-items-center fv-pointer pr-2',
         }
         this.style =
-            this.node.id == '/'
+            node.id == '/'
                 ? {
                       textDecoration: 'none',
                       color: 'black',
@@ -122,32 +117,31 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                       color: 'black',
                   }
         const defaultChildren: AnyVirtualDOM[] = [
-            params.withIcon,
+            node.icon,
             {
                 tag: 'div',
                 class: {
-                    source$: this.explorerState.selectedNode$,
+                    source$: router.explorerState.selectedNode$,
                     vdomMap: (selected: Node) =>
-                        selected.id == this.node.id
+                        selected.id == node.id
                             ? 'fv-text-focus font-weight-bold'
                             : '',
                     wrapper: (d) => `${d} flex-grow-1 fv-hover-text-focus`,
+                    untilFirst: 'flex-grow-1 fv-hover-text-focus',
                 },
-                innerText: this.node.name,
+                innerText: node.name,
             },
             {
                 tag: 'div',
-                children: params.actions || [],
+                children: node.actions || [],
             },
-            ...(params.withChildren || []),
+            ...(withChildren || []),
         ]
-        this.children = params.customView
-            ? [params.customView]
-            : defaultChildren
-        this.href = `${this.router.basePath}?nav=` + this.node.href
+        this.children = node.customView ? [node.customView] : defaultChildren
+        this.href = `${router.basePath}?nav=` + node.href
         this.onclick = (e) => {
             e.preventDefault()
-            this.router.navigateTo({ path: this.node.href })
+            router.navigateTo({ path: node.href })
         }
     }
 }
@@ -171,11 +165,6 @@ export class NavigationView implements VirtualDOM<'div'> {
                     return new NavigationHeader({
                         node,
                         router: this.router,
-                        explorerState,
-                        withClass: node.wrapperClass,
-                        withIcon: node.icon,
-                        customView: node.customView,
-                        actions: node.actions,
                         withChildren: node.children &&
                             node.id !== '/' && [
                                 new HandlerView({
@@ -247,8 +236,9 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'h-100 ',
+                class: 'h-100 overflow-auto ',
                 style: {
+                    position: 'relative',
                     width: ExpandedNavigationView.menuWidth,
                     marginLeft: `-${ExpandedNavigationView.menuWidth}`,
                     backgroundColor: 'white',
@@ -291,6 +281,10 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
     public readonly node: Node
     public readonly tag = 'div'
     public readonly class = 'w-100 py-3 border px-2 bg-light text-dark'
+    public readonly style = {
+        position: 'sticky' as const,
+        top: '0px',
+    }
     public readonly children: ChildrenLike
     constructor(params: { router: Router; node: Node }) {
         Object.assign(this, params)
@@ -306,14 +300,7 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
                     this.router.navigateToParent()
                 },
             },
-            {
-                tag: 'div',
-                class: 'pb-2 pt-3',
-                style: {
-                    fontWeight: 'bolder',
-                },
-                innerText: this.node.name,
-            },
+            new NavigationHeader(params),
             {
                 source$: DefaultLayoutView.displayModeToc.pipe(
                     distinctUntilChanged(),
@@ -355,7 +342,6 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
                             new NavigationHeader({
                                 node: child,
                                 router: this.router,
-                                explorerState: this.router.explorerState,
                                 withChildren: child.children && [
                                     {
                                         tag: 'div',

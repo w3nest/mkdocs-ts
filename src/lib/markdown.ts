@@ -24,9 +24,11 @@ export class GlobalMarkdownViews {
 export function fromMarkdown({
     url,
     placeholders,
+    preprocessing,
 }: {
     url: string
     placeholders?: { [k: string]: string }
+    preprocessing?: (text: string) => string
 }) {
     setOptions({
         langPrefix: 'hljs language-',
@@ -36,19 +38,22 @@ export function fromMarkdown({
     })
 
     return ({ router }: { router: Router }) => {
-        return fromMarkdownImpl({ url, router, placeholders })
+        return fromMarkdownImpl({ url, router, placeholders, preprocessing })
     }
 }
 export async function fromMarkdownImpl({
     url,
     router,
     placeholders,
+    preprocessing,
 }: {
     url: string
     router: Router
     placeholders?: { [k: string]: string }
+    preprocessing?: (text: string) => string
 }) {
-    const src = await fetch(url).then((resp) => resp.text())
+    const srcRaw = await fetch(url).then((resp) => resp.text())
+    const src = preprocessing?.(srcRaw) || srcRaw
 
     if (!placeholders) {
         return parseMd({ src, router })
