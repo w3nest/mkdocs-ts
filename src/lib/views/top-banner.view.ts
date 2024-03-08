@@ -1,5 +1,5 @@
 import { TopBannerView as TopBannerBase } from '@youwol/os-top-banner'
-import { BehaviorSubject, distinctUntilChanged, Subject } from 'rxjs'
+import { distinctUntilChanged, Subject } from 'rxjs'
 import { DisplayMode } from './default-layout.view'
 import { ModalNavigationView } from './navigation.view'
 import { Router } from '../router'
@@ -14,7 +14,6 @@ export class TopBannerView extends TopBannerBase {
     public readonly class =
         'fv-text-primary fv-bg-background mkdocs-ts-top-banner'
 
-    public readonly navExpanded$ = new BehaviorSubject(false)
     constructor({
         name,
         displayModeNav$,
