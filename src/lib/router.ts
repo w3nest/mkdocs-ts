@@ -64,7 +64,7 @@ export class Router {
 
         this.explorerState = new ImmutableTree.State({
             rootNode: createRootNode(this.navigation, this),
-            expandedNodes: ['root'],
+            expandedNodes: ['/'],
         })
         params.updates?.forEach((update) => {
             update.from$.subscribe((d) => {
