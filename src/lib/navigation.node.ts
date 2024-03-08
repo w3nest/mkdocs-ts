@@ -7,7 +7,7 @@ export class Node extends ImmutableTree.Node {
     public readonly name: string
     public readonly href: string
 
-    public readonly wrapperClass: string
+    public readonly wrapperClass: string | Observable<string>
     public readonly icon: AnyVirtualDOM
     public readonly customView: AnyVirtualDOM
     public readonly actions: AnyVirtualDOM[]
