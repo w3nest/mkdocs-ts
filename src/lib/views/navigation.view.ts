@@ -236,8 +236,9 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'h-100 ',
+                class: 'h-100 overflow-auto ',
                 style: {
+                    position: 'relative',
                     width: ExpandedNavigationView.menuWidth,
                     marginLeft: `-${ExpandedNavigationView.menuWidth}`,
                     backgroundColor: 'white',
@@ -280,6 +281,10 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
     public readonly node: Node
     public readonly tag = 'div'
     public readonly class = 'w-100 py-3 border px-2 bg-light text-dark'
+    public readonly style = {
+        position: 'sticky' as const,
+        top: '0px',
+    }
     public readonly children: ChildrenLike
     constructor(params: { router: Router; node: Node }) {
         Object.assign(this, params)
