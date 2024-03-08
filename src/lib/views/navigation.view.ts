@@ -300,14 +300,7 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
                     this.router.navigateToParent()
                 },
             },
-            {
-                tag: 'div',
-                class: 'pb-2 pt-3',
-                style: {
-                    fontWeight: 'bolder',
-                },
-                innerText: this.node.name,
-            },
+            new NavigationHeader(params),
             {
                 source$: DefaultLayoutView.displayModeToc.pipe(
                     distinctUntilChanged(),
