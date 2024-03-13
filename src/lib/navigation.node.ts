@@ -84,7 +84,7 @@ export function createNavNode({
     })
 }
 
-export function createImplicitChildren$<TData>({
+export function createImplicitChildren$({
     asyncChildrenCb,
     hrefBase,
     withExplicit,
