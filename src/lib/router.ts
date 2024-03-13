@@ -1,20 +1,15 @@
-import { from, map, mergeMap, Observable, ReplaySubject, Subject } from 'rxjs'
+import { from, map, Observable, of, ReplaySubject, Subject } from 'rxjs'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
-import { createRootNode, Node } from './navigation.node'
+import {
+    createRootNode,
+    Navigation,
+    NavigationCommon,
+    NavNodeBase,
+    createImplicitChildren$,
+    CatchAllKey,
+    LazyNavResolver,
+} from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
-
-export class NavigationNode {
-    name: string
-    html: ({
-        router,
-    }: {
-        router: Router
-    }) => Promise<HTMLElement | AnyVirtualDOM>
-    tableOfContent?: (p: {
-        html: HTMLElement
-        router: Router
-    }) => Promise<AnyVirtualDOM>
-}
 
 export type Destination = {
     tableOfContent?: HTMLElement | AnyVirtualDOM
@@ -22,27 +17,19 @@ export type Destination = {
     sectionId?: string
 }
 
-export type Update<T> = {
-    from$: Observable<T>
-    then: (p: {
-        treeState: ImmutableTree.State<Node>
-        data: T
-        router: Router
-    }) => void
-}
-
 export class Router {
     public readonly basePath: string
-    public readonly navigation
+    public readonly retryNavPeriod: number = 1000
+    public readonly navigation: Navigation
 
     public readonly currentHtml$: Subject<HTMLElement> =
         new ReplaySubject<HTMLElement>(1)
     public readonly currentPage$: Subject<Destination> =
         new ReplaySubject<Destination>(1)
-    public readonly currentNode$: Subject<NavigationNode> =
-        new ReplaySubject<NavigationNode>(1)
+    public readonly currentNode$: Subject<NavigationCommon> =
+        new ReplaySubject<NavigationCommon>(1)
 
-    public readonly explorerState: ImmutableTree.State<Node>
+    public readonly explorerState: ImmutableTree.State<NavNodeBase>
 
     public scrollableElement: HTMLElement
 
@@ -53,29 +40,38 @@ export class Router {
         { [k: string]: unknown[] }
     > = { Warning: {}, Error: {} }
 
-    private navigationResolved = false
+    private navUpdates: { [href: string]: LazyNavResolver } = {}
 
     constructor(params: {
-        navigation
+        navigation: Navigation
         basePath: string
-        updates?: Update<unknown>[]
+        retryNavPeriod?: number
     }) {
         Object.assign(this, params)
-
+        const { rootNode, reactiveNavs } = createRootNode({
+            navigation: this.navigation,
+            router: this,
+        })
         this.explorerState = new ImmutableTree.State({
-            rootNode: createRootNode(this.navigation, this),
+            rootNode,
             expandedNodes: ['/'],
         })
-        params.updates?.forEach((update) => {
-            update.from$.subscribe((d) => {
-                update.then({
-                    treeState: this.explorerState,
-                    data: d,
+        Object.entries(reactiveNavs).forEach(([href, v]) => {
+            v.subscribe((asyncChildrenCb) => {
+                this.navUpdates[href] = asyncChildrenCb
+                const oldNode = this.explorerState.getNode(href)
+                const children = createImplicitChildren$({
+                    asyncChildrenCb,
+                    hrefBase: href,
+                    path: '',
+                    withExplicit: [],
                     router: this,
                 })
-                if (!this.navigationResolved) {
-                    this.expand(this.getCurrentPath())
-                }
+                const newNode = new oldNode.factory({
+                    ...oldNode,
+                    children,
+                })
+                this.explorerState.replaceNode(oldNode, newNode)
             })
         })
 
@@ -101,30 +97,27 @@ export class Router {
     navigateTo({ path }: { path: string }) {
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
-        const node = this.getNode({ path: pagePath })
-        if (node instanceof Promise) {
-            node.then((resolved: NavigationNode) => {
+
+        const nav = this.getNav({ path: pagePath })
+        if (!nav) {
+            console.log('Try to wait...')
+            setTimeout(() => this.navigateTo({ path }), this.retryNavPeriod)
+            return
+        }
+        // This part is to resolve the html content of the selected page.
+        nav.pipe(
+            map((resolved: NavigationCommon) => {
                 this.currentNode$.next(resolved)
                 return resolved.html({ router: this })
-            })
-                .then((html) => ({
-                    html,
-                    sectionId: sectionId == '' ? undefined : sectionId,
-                }))
-                .then((d) => this.currentPage$.next(d))
-        }
-        if (node instanceof Observable) {
-            node.pipe(
-                mergeMap((resolved: NavigationNode) => {
-                    this.currentNode$.next(resolved)
-                    return from(resolved.html({ router: this }))
-                }),
-                map((html) => ({
-                    html,
-                    sectionId: sectionId == '' ? undefined : sectionId,
-                })),
-            ).subscribe((d) => this.currentPage$.next(d))
-        }
+            }),
+            map((html) => ({
+                html,
+                sectionId: sectionId == '' ? undefined : sectionId,
+            })),
+        ).subscribe((d) => {
+            this.currentPage$.next(d)
+        })
+        // This part is to select the appropriate node in the navigation.
         this.expand(pagePath)
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
@@ -167,31 +160,33 @@ export class Router {
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
-    private getNode({
+    private getNav({
         path,
     }: {
         path: string
-    }): Promise<NavigationNode> | Observable<NavigationNode> {
+    }): Observable<NavigationCommon> | undefined {
         const parts = path
             .split('/')
             .slice(1)
             .filter((d) => d !== '')
+
         if (parts.length === 0) {
-            return Promise.resolve(this.navigation)
+            return of(this.navigation)
         }
+
         const node = parts.reduce(
             ({ tree, path, keepGoing }, part) => {
                 if (!keepGoing) {
                     return { tree, path, keepGoing }
                 }
                 const treePart = tree[`/${part}`]
-                if (!treePart && !tree['/**']) {
+                if (!treePart && !tree[CatchAllKey]) {
                     console.error({ path, tree })
                     throw Error(`Can not find target navigation ${path}`)
                 }
                 if (!treePart) {
                     return {
-                        tree: tree['/**'],
+                        tree: this.navUpdates[path] || tree[CatchAllKey],
                         path: `${path}`,
                         keepGoing: false,
                     }
@@ -204,13 +199,24 @@ export class Router {
             },
             { tree: this.navigation, path: ``, keepGoing: true },
         )
-        if (!node.keepGoing) {
-            const relative = path.split(node.path)[1]
-            return node.tree({ path: relative, router: this })
+        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver
+        if (node.tree instanceof Observable) {
+            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed
+            return undefined
         }
-        return node.tree instanceof Promise
-            ? node.tree
-            : Promise.resolve(node.tree)
+        // node.tree: Navigation | LazyNavResolver
+        if (typeof node.tree === 'function') {
+            // case: LazyNavResolver
+            const relative = path.split(node.path)[1]
+            const nav = node.tree({ path: relative, router: this })
+            return nav instanceof Observable
+                ? nav
+                : nav instanceof Promise
+                  ? from(nav)
+                  : of(nav)
+        }
+        // node.tree: Navigation
+        return of(node.tree)
     }
 
     private expand(path: string) {
@@ -232,28 +238,27 @@ export class Router {
             return
         }
 
-        const idsRemaining = ids.slice(ids.indexOf(node.id))
+        const idsRemaining = ids.slice(ids.indexOf(node.id) + 1)
         if (idsRemaining.length == 0) {
             this.explorerState.selectNodeAndExpand(node)
             return
         }
-        const expandRec = (ids: string[], node: Node) => {
+        const expandRec = (ids: string[], node: NavNodeBase) => {
             if (ids.length == 0) {
                 return this.explorerState.selectNodeAndExpand(node)
             }
             const maybeChildResolved = this.explorerState.getNode(ids[0])
             return maybeChildResolved
                 ? expandRec(ids.slice(1), maybeChildResolved)
-                : this.explorerState.getChildren(node, () => {
-                      const nodeNew = this.explorerState.getNode(ids[0])
+                : this.explorerState.getChildren(node, (_, children) => {
+                      const nodeNew = children.find(
+                          (child) => child.id === ids[0],
+                      )
                       if (!nodeNew) {
                           console.warn(`Can not find node ${ids[0]} (yet?)`)
-                          this.navigationResolved = false
                       }
                       if (nodeNew) {
-                          this.explorerState.selectNodeAndExpand(nodeNew)
                           expandRec(ids.slice(1), nodeNew)
-                          this.navigationResolved = true
                       }
                   })
         }
@@ -262,21 +267,6 @@ export class Router {
 
     setDisplayedPage({ page }: { page: HTMLElement }) {
         this.currentHtml$.next(page)
-    }
-
-    log({
-        severity,
-        category,
-        message,
-    }: {
-        severity: 'Warning' | 'Error'
-        category: string
-        message: unknown
-    }) {
-        if (!this.status[severity][category]) {
-            this.status[severity][category] = []
-        }
-        this.status[severity][category].push(message)
     }
 
     emitHtmlUpdated() {

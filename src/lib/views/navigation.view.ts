@@ -6,9 +6,9 @@ import {
     AttributeLike,
 } from '@youwol/rx-vdom'
 import { Router } from '../router'
-import { Node } from '../navigation.node'
+import { NavNodeBase } from '../navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
-import { BehaviorSubject, distinctUntilChanged, Observable, of } from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs'
 import {
     DefaultLayoutView,
     DisplayMode,
@@ -16,7 +16,7 @@ import {
 } from './default-layout.view'
 
 export class HandlerView implements VirtualDOM<'div'> {
-    public readonly node: Node
+    public readonly node: NavNodeBase
     public readonly expandedNodes$: BehaviorSubject<string[]>
 
     public readonly tag = 'div'
@@ -32,7 +32,7 @@ export class HandlerView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor(params: {
-        node: Node
+        node: NavNodeBase
         expandedNodes$: BehaviorSubject<string[]>
     }) {
         Object.assign(this, params)
@@ -85,26 +85,14 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         router,
         withChildren,
     }: {
-        node: Node
+        node: NavNodeBase
         router: Router
         withChildren?: AnyVirtualDOM[]
     }) {
-        let withClass$: Observable<string>
-        if (!node.wrapperClass) {
-            withClass$ = of('w-100 d-flex align-items-center fv-pointer pr-2')
-        }
-        if (node.wrapperClass && typeof node.wrapperClass == 'string') {
-            withClass$ = of(node.wrapperClass)
-        }
-        if (node.wrapperClass instanceof Observable) {
-            withClass$ = node.wrapperClass
-        }
+        this.class =
+            node.decoration?.wrapperClass ||
+            'w-100 d-flex align-items-center fv-pointer pr-2'
 
-        this.class = {
-            source$: withClass$,
-            vdomMap: (c: string) =>
-                c || 'w-100 d-flex align-items-center fv-pointer pr-2',
-        }
         this.style =
             node.id == '/'
                 ? {
@@ -116,13 +104,13 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                       textDecoration: 'none',
                       color: 'black',
                   }
-        const defaultChildren: AnyVirtualDOM[] = [
-            node.icon,
+        this.children = [
+            node.decoration?.icon,
             {
                 tag: 'div',
                 class: {
                     source$: router.explorerState.selectedNode$,
-                    vdomMap: (selected: Node) =>
+                    vdomMap: (selected: NavNodeBase) =>
                         selected.id == node.id
                             ? 'fv-text-focus font-weight-bold'
                             : '',
@@ -133,11 +121,10 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             },
             {
                 tag: 'div',
-                children: node.actions || [],
+                children: node.decoration?.actions || [],
             },
             ...(withChildren || []),
         ]
-        this.children = node.customView ? [node.customView] : defaultChildren
         this.href = `${router.basePath}?nav=` + node.href
         this.onclick = (e) => {
             e.preventDefault()
@@ -252,7 +239,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                 children: {
                     policy: 'replace',
                     source$: this.router.explorerState.selectedNode$,
-                    vdomMap: (node: Node) => {
+                    vdomMap: (node: NavNodeBase) => {
                         return [
                             new ModalNavParentView({
                                 router: this.router,
@@ -278,7 +265,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
 }
 export class ModalNavParentView implements VirtualDOM<'div'> {
     public readonly router: Router
-    public readonly node: Node
+    public readonly node: NavNodeBase
     public readonly tag = 'div'
     public readonly class = 'w-100 py-3 border px-2 bg-light text-dark'
     public readonly style = {
@@ -286,7 +273,7 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
         top: '0px',
     }
     public readonly children: ChildrenLike
-    constructor(params: { router: Router; node: Node }) {
+    constructor(params: { router: Router; node: NavNodeBase }) {
         Object.assign(this, params)
 
         this.children = [
@@ -317,10 +304,10 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
 
 export class ModalNavChildrenView implements VirtualDOM<'div'> {
     public readonly router: Router
-    public readonly node: Node
+    public readonly node: NavNodeBase
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    constructor(params: { router: Router; node: Node }) {
+    constructor(params: { router: Router; node: NavNodeBase }) {
         Object.assign(this, params)
         const node = this.node.children
             ? this.node
@@ -333,7 +320,7 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
         this.children = {
             policy: 'replace',
             source$: source$,
-            vdomMap: (children: Node[]) => {
+            vdomMap: (children: NavNodeBase[]) => {
                 return children.map((child) => {
                     return {
                         tag: 'div',

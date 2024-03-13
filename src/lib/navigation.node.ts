@@ -1,170 +1,231 @@
 import { ImmutableTree } from '@youwol/rx-tree-views'
 import { Router } from './router'
 import { from, map, Observable } from 'rxjs'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import {
+    AnyVirtualDOM,
+    AttributeLike,
+    ChildrenLike,
+    ChildLike,
+} from '@youwol/rx-vdom'
 
-export class Node extends ImmutableTree.Node {
+export type Decoration = {
+    wrapperClass?: AttributeLike<string>
+    icon?: ChildLike
+    actions?: ChildrenLike
+}
+
+export type NavNodeParams = {
+    id: string
+    name: string
+    href: string
+    data?: unknown
+    children?: NavNodeBase[] | Observable<NavNodeBase[]>
+    decoration?: Decoration
+}
+
+export class NavNodeBase extends ImmutableTree.Node {
     public readonly name: string
     public readonly href: string
+    public readonly data: unknown
+    public readonly decoration?: Decoration
 
-    public readonly wrapperClass: string | Observable<string>
-    public readonly icon: AnyVirtualDOM
-    public readonly customView: AnyVirtualDOM
-    public readonly actions: AnyVirtualDOM[]
-
-    protected constructor({
-        id,
-        name,
-        children,
-        href,
-        wrapperClass,
-        icon,
-        customView,
-        actions,
-    }) {
-        super({ id, children })
-        this.name = name
-        this.href = href
-        this.wrapperClass = wrapperClass
-        this.icon = icon
-        this.customView = customView
-        this.actions = actions
+    protected constructor(parameters: NavNodeParams) {
+        super({ id: parameters.id, children: parameters.children })
+        this.name = parameters.name
+        this.href = parameters.href
+        this.data = parameters.data
+        this.decoration = parameters.decoration
     }
 }
 
-export class ExplicitNode extends Node {
-    constructor({
-        id,
-        name,
-        children,
-        href,
-        wrapperClass,
-        icon,
-        customView,
-        actions,
-    }: {
-        id: string
-        name: string
-        href: string
-        children?: Node[] | Observable<Node[]>
-        wrapperClass?: string | Observable<string>
-        icon?: AnyVirtualDOM
-        customView?: AnyVirtualDOM
-        actions?: AnyVirtualDOM[]
-    }) {
-        super({
-            id,
-            name,
-            children,
-            href,
-            wrapperClass,
-            icon,
-            customView,
-            actions,
-        })
+export class NavNode extends NavNodeBase {
+    constructor(parameters: NavNodeParams) {
+        super(parameters)
     }
 }
 
-export function createImplicitChildren(
-    generator: (p: { path: string; router: Router }) => Promise<{
-        name: string
-        children: string[] | { name: string; leaf: boolean }[]
-    }>,
-    hRefBase: string,
-    path: string,
-    withExplicit: ExplicitNode[],
-    router: Router,
-) {
-    const node = generator({ path, router })
-
-    return from(node).pipe(
-        map(({ children }) => {
-            return [
-                ...children.map(
-                    (
-                        n:
-                            | string
-                            | {
-                                  name: string
-                                  id?: string
-                                  wrapperClass?: string
-                                  icon?: AnyVirtualDOM
-                                  customView?: AnyVirtualDOM
-                                  actions?: AnyVirtualDOM[]
-                                  leaf: boolean
-                              },
-                    ) => {
-                        const href = hRefBase + '/' + (n['id'] || n['name'])
-                        return new ExplicitNode({
-                            id: href,
-                            name: typeof n == 'string' ? n : n.name,
-                            children:
-                                typeof n != 'string' && n.leaf
-                                    ? undefined
-                                    : createImplicitChildren(
-                                          generator,
-                                          href,
-                                          path + '/' + (n['id'] || n['name']),
-                                          [],
-                                          router,
-                                      ),
-                            href,
-                            wrapperClass:
-                                typeof n == 'string'
-                                    ? undefined
-                                    : n.wrapperClass,
-                            icon: typeof n == 'string' ? undefined : n.icon,
-                            customView:
-                                typeof n == 'string' ? undefined : n.customView,
-                            actions:
-                                typeof n == 'string' ? undefined : n.actions,
-                        })
-                    },
-                ),
-                ...withExplicit,
-            ]
-        }),
-    )
+export type NavNodeInput = Omit<NavNodeParams, 'href' | 'children'> & {
+    leaf?: boolean
 }
 
-export function createChildren(navigation, hRefBase: string, router: Router) {
-    const explicitChildren = Object.entries(navigation)
-        .filter(([k]) => k.startsWith('/') && k !== '/**')
-        .map(([k, v]) => {
-            const href = hRefBase + k
-            return new ExplicitNode({
-                id: href,
-                name: v['name'],
-                children: createChildren(navigation[k], hRefBase + k, router),
-                href,
-                wrapperClass: v['wrapperClass'],
-                icon: v['icon'],
-                customView: v['customView'],
-                actions: v['actions'],
+export function createNavNode({
+    hrefBase,
+    path,
+    node,
+    asyncChildren,
+    router,
+}: {
+    hrefBase: string
+    path: string
+    node: NavNodeInput
+    asyncChildren: LazyNavResolver
+    router: Router
+}) {
+    const href =
+        path !== ''
+            ? `${hrefBase}/${path}/${node.id}`
+            : `${hrefBase}/${node.id}`
+
+    return new NavNode({
+        id: href,
+        href,
+        name: node.name,
+        children: node.leaf
+            ? undefined
+            : createImplicitChildren$({
+                  asyncChildrenCb: asyncChildren,
+                  hrefBase,
+                  path: path !== '' ? `${path}/${node.id}` : node.id,
+                  withExplicit: [],
+                  router,
+              }),
+        data: node.data,
+        decoration: node.decoration,
+    })
+}
+
+export function createImplicitChildren$<TData>({
+    asyncChildrenCb,
+    hrefBase,
+    withExplicit,
+    router,
+    path,
+}: {
+    asyncChildrenCb: LazyNavResolver
+    path: string
+    hrefBase: string
+    withExplicit: NavNode[]
+    router: Router
+}) {
+    const resolved = asyncChildrenCb({ path: path, router })
+
+    const toChildren = (from: NavNodeInput[]) => [
+        ...from.map((n) => {
+            return createNavNode({
+                hrefBase: hrefBase,
+                path,
+                node: n,
+                asyncChildren: asyncChildrenCb,
+                router,
             })
-        })
-    if (navigation['/**']) {
-        const node = navigation['/**']
-        return createImplicitChildren(
-            node,
-            hRefBase,
-            '',
-            explicitChildren,
-            router,
+        }),
+        ...withExplicit,
+    ]
+    if (resolved instanceof Observable) {
+        return resolved.pipe(
+            map(({ children }) => {
+                return toChildren(children)
+            }),
         )
     }
+    if (resolved instanceof Promise) {
+        return from(resolved).pipe(
+            map(({ children }) => {
+                return toChildren(children)
+            }),
+        )
+    }
+    return toChildren(resolved.children)
+}
 
+export function createChildren({
+    navigation,
+    hRefBase,
+    router,
+    reactiveNavs,
+}: {
+    navigation: Navigation
+    hRefBase: string
+    router: Router
+    reactiveNavs: { [_href: string]: Observable<LazyNavResolver> }
+}) {
+    const explicitChildren = Object.entries(navigation)
+        .filter(([k]) => k.startsWith('/') && k !== CatchAllKey)
+        .map(([k, v]: [string, Navigation]) => {
+            const href = hRefBase + k
+            return new NavNode({
+                id: href,
+                name: v['name'],
+                children: createChildren({
+                    navigation: navigation[k],
+                    hRefBase: hRefBase + k,
+                    router,
+                    reactiveNavs,
+                }),
+                href,
+                decoration: v['decoration'],
+            })
+        })
+    if (
+        navigation[CatchAllKey] &&
+        !(navigation[CatchAllKey] instanceof Observable)
+    ) {
+        return createImplicitChildren$({
+            asyncChildrenCb: navigation[CatchAllKey],
+            hrefBase: hRefBase,
+            path: '',
+            withExplicit: explicitChildren,
+            router,
+        })
+    }
+    if (
+        navigation[CatchAllKey] &&
+        navigation[CatchAllKey] instanceof Observable
+    ) {
+        reactiveNavs[hRefBase] = navigation[CatchAllKey]
+    }
     return explicitChildren.length == 0 ? undefined : explicitChildren
 }
-export function createRootNode(navigation, router: Router) {
+export function createRootNode({
+    navigation,
+    router,
+}: {
+    navigation: Navigation
+    router: Router
+}) {
     const href = ''
-    return new ExplicitNode({
+    const reactiveNavs: { [k: string]: ReactiveLazyNavResolver } = {}
+    const rootNode = new NavNode({
         id: '/',
         name: navigation.name,
-        children: createChildren(navigation, href, router),
+        children: createChildren({
+            navigation,
+            hRefBase: href,
+            router,
+            reactiveNavs,
+        }),
         href,
-        wrapperClass: '',
-        icon: undefined,
-        customView: undefined,
     })
+    return {
+        rootNode,
+        reactiveNavs,
+    }
+}
+
+export type Resolvable<T> = T | Promise<T> | Observable<T>
+
+export type NavigationCommon = {
+    html: ({ router }) => AnyVirtualDOM
+    tableOfContent?: (p: {
+        html: HTMLElement
+        router: Router
+    }) => Promise<AnyVirtualDOM>
+}
+
+export type CatchAllNav = Resolvable<
+    NavigationCommon & { children: NavNodeInput[] }
+>
+
+export type LazyNavResolver = (p: {
+    path: string
+    router: Router
+}) => CatchAllNav
+export type ReactiveLazyNavResolver = Observable<LazyNavResolver>
+
+export const CatchAllKey = '...'
+export type Navigation = NavigationCommon & {
+    name: string
+    decoration?: Decoration
+    [CatchAllKey]?: LazyNavResolver | ReactiveLazyNavResolver
+    [key: `/${string}`]: Navigation
 }
