@@ -109,7 +109,7 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.3.1-wip',
+    version:'0.3.1',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
@@ -155,7 +155,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.3.1-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `@youwol/mkdocs-ts#0.3.1~dist/@youwol/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
