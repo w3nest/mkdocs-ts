@@ -166,6 +166,41 @@ export class Router {
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
+    refresh({
+        resolverPath,
+        path,
+        redirectTo,
+    }: {
+        resolverPath: string
+        path?: string
+        redirectTo?: string
+    }) {
+        const currentPath = this.getCurrentPath()
+        path = path || this.getCurrentPath()
+        const resolver =
+            this.navUpdates[resolverPath] ||
+            this.navigation[resolverPath][CatchAllKey]
+        const oldNode = this.explorerState.getNode(path)
+        const children = createImplicitChildren$({
+            resolver: resolver,
+            hrefBase: resolverPath,
+            path: path.split(resolverPath)[1],
+            withExplicit: [],
+            router: this,
+        })
+        const newNode = new oldNode.factory({
+            ...oldNode,
+            children,
+        }) as NavNodeBase
+        this.explorerState.replaceNode(oldNode, newNode)
+        //this.explorerState.selectNodeAndExpand(newNode)
+        if (redirectTo) {
+            this.navigateTo({ path })
+            return
+        }
+        this.navigateTo({ path: currentPath })
+    }
+
     private getNav({
         path,
     }: {
