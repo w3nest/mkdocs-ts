@@ -57,11 +57,11 @@ export class Router {
             expandedNodes: ['/'],
         })
         Object.entries(reactiveNavs).forEach(([href, v]) => {
-            v.subscribe((asyncChildrenCb) => {
-                this.navUpdates[href] = asyncChildrenCb
+            v.subscribe((resolver) => {
+                this.navUpdates[href] = resolver
                 const oldNode = this.explorerState.getNode(href)
                 const children = createImplicitChildren$({
-                    asyncChildrenCb,
+                    resolver: resolver,
                     hrefBase: href,
                     path: '',
                     withExplicit: [],
@@ -94,6 +94,12 @@ export class Router {
         const urlParams = new URLSearchParams(window.location.search)
         return urlParams.get('nav') || '/'
     }
+
+    getParentPath() {
+        const currentPath = this.getCurrentPath()
+        return currentPath.split('/').slice(0, -1).join('/')
+    }
+
     navigateTo({ path }: { path: string }) {
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
@@ -158,6 +164,41 @@ export class Router {
         const currentPath = this.getCurrentPath().split('.')[0]
         const path = `${currentPath}.${div.id}`
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
+    }
+
+    refresh({
+        resolverPath,
+        path,
+        redirectTo,
+    }: {
+        resolverPath: string
+        path?: string
+        redirectTo?: string
+    }) {
+        const currentPath = this.getCurrentPath()
+        path = path || this.getCurrentPath()
+        const resolver =
+            this.navUpdates[resolverPath] ||
+            this.navigation[resolverPath][CatchAllKey]
+        const oldNode = this.explorerState.getNode(path)
+        const children = createImplicitChildren$({
+            resolver: resolver,
+            hrefBase: resolverPath,
+            path: path.split(resolverPath)[1],
+            withExplicit: [],
+            router: this,
+        })
+        const newNode = new oldNode.factory({
+            ...oldNode,
+            children,
+        }) as NavNodeBase
+        this.explorerState.replaceNode(oldNode, newNode)
+        //this.explorerState.selectNodeAndExpand(newNode)
+        if (redirectTo) {
+            this.navigateTo({ path })
+            return
+        }
+        this.navigateTo({ path: currentPath })
     }
 
     private getNav({

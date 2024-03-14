@@ -73,6 +73,8 @@ export class HandlerView implements VirtualDOM<'div'> {
 }
 
 export class NavigationHeader implements VirtualDOM<'a'> {
+    static DefaultWrapperClass: string =
+        'w-100 d-flex align-items-center fv-pointer pr-2'
     public readonly tag = 'a'
     public readonly href: string
     public readonly class: AttributeLike<string>
@@ -91,7 +93,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
     }) {
         this.class =
             node.decoration?.wrapperClass ||
-            'w-100 d-flex align-items-center fv-pointer pr-2'
+            NavigationHeader.DefaultWrapperClass
 
         this.style =
             node.id == '/'
