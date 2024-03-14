@@ -73,7 +73,7 @@ export function createNavNode({
         children: node.leaf
             ? undefined
             : createImplicitChildren$({
-                  asyncChildrenCb: asyncChildren,
+                  resolver: asyncChildren,
                   hrefBase,
                   path: path !== '' ? `${path}/${node.id}` : node.id,
                   withExplicit: [],
@@ -85,19 +85,21 @@ export function createNavNode({
 }
 
 export function createImplicitChildren$({
-    asyncChildrenCb,
+    resolver,
     hrefBase,
     withExplicit,
     router,
     path,
 }: {
-    asyncChildrenCb: LazyNavResolver
+    resolver: LazyNavResolver
     path: string
     hrefBase: string
     withExplicit: NavNode[]
     router: Router
 }) {
-    const resolved = asyncChildrenCb({ path: path, router })
+    // remove starting '/' (multiple too)
+    path = path.replace(/^\/+/, '')
+    const resolved = resolver({ path: path, router })
 
     const toChildren = (from: NavNodeInput[]) => [
         ...from.map((n) => {
@@ -105,7 +107,7 @@ export function createImplicitChildren$({
                 hrefBase: hrefBase,
                 path,
                 node: n,
-                asyncChildren: asyncChildrenCb,
+                asyncChildren: resolver,
                 router,
             })
         }),
@@ -161,7 +163,7 @@ export function createChildren({
         !(navigation[CatchAllKey] instanceof Observable)
     ) {
         return createImplicitChildren$({
-            asyncChildrenCb: navigation[CatchAllKey],
+            resolver: navigation[CatchAllKey],
             hrefBase: hRefBase,
             path: '',
             withExplicit: explicitChildren,

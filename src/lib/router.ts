@@ -57,11 +57,11 @@ export class Router {
             expandedNodes: ['/'],
         })
         Object.entries(reactiveNavs).forEach(([href, v]) => {
-            v.subscribe((asyncChildrenCb) => {
-                this.navUpdates[href] = asyncChildrenCb
+            v.subscribe((resolver) => {
+                this.navUpdates[href] = resolver
                 const oldNode = this.explorerState.getNode(href)
                 const children = createImplicitChildren$({
-                    asyncChildrenCb,
+                    resolver: resolver,
                     hrefBase: href,
                     path: '',
                     withExplicit: [],
