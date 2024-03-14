@@ -94,6 +94,12 @@ export class Router {
         const urlParams = new URLSearchParams(window.location.search)
         return urlParams.get('nav') || '/'
     }
+
+    getParentPath() {
+        const currentPath = this.getCurrentPath()
+        return currentPath.split('/').slice(0, -1).join('/')
+    }
+
     navigateTo({ path }: { path: string }) {
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
