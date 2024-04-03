@@ -1,4 +1,13 @@
-import { from, map, Observable, of, ReplaySubject, Subject } from 'rxjs'
+import {
+    from,
+    map,
+    Observable,
+    of,
+    ReplaySubject,
+    Subject,
+    switchMap,
+    take,
+} from 'rxjs'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import {
     createRootNode,
@@ -112,9 +121,16 @@ export class Router {
         }
         // This part is to resolve the html content of the selected page.
         nav.pipe(
-            map((resolved: NavigationCommon) => {
+            switchMap((resolved: NavigationCommon) => {
                 this.currentNode$.next(resolved)
-                return resolved.html({ router: this })
+                const html = resolved.html({ router: this })
+                if (html instanceof Promise) {
+                    return from(html)
+                }
+                if (html instanceof Observable) {
+                    return html.pipe(take(1))
+                }
+                return of(html)
             }),
             map((html) => ({
                 html,
