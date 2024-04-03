@@ -207,7 +207,7 @@ export function createRootNode({
 export type Resolvable<T> = T | Promise<T> | Observable<T>
 
 export type NavigationCommon = {
-    html: ({ router }) => AnyVirtualDOM
+    html: ({ router }) => Resolvable<AnyVirtualDOM>
     tableOfContent?: (p: {
         html: HTMLElement
         router: Router
