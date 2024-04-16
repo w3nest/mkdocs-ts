@@ -1,0 +1,6 @@
+- try remove `basePath` from `Router` constructor class
+- attributes `html` & `toc` must get the `data` attribute of associated node
+- better handle flexibility in layout rendering
+- better handle named parameters in function
+- be able to check cross-links
+- in custom markdown views, handle how `innerHTML` should be considered (as MD, as HTML, etc)

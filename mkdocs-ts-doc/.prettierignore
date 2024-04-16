@@ -11,4 +11,4 @@ LICENSE
 yarn-error.log
 /*.iml
 src/auto-generated.ts
-mkdocs-ts-doc
+

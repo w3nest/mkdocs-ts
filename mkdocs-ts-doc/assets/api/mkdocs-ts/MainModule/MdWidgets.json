@@ -1,0 +1,347 @@
+{
+    "name": "MdWidgets",
+    "documentation": {
+        "sections": [
+            {
+                "content": "Gathers markdown widgets definition.",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "",
+    "attributes": [],
+    "types": [
+        {
+            "name": "CodeSnippetView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The widget for code snippet.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CodeSnippetView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The children of the associated HTML element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.children",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 95,
+                        "endLine": 96,
+                        "references": {
+                            "children": "@nav/api/MainModule/MdWidgets.CodeSnippetView.children",
+                            "VirtualDOM.children": "-1"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class list of the associated HTML element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.class",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "public readonly class = 'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3'",
+                        "implementation": "",
+                        "startLine": 85,
+                        "endLine": 86,
+                        "references": {
+                            "class": "@nav/api/MainModule/MdWidgets.CodeSnippetView.class",
+                            "VirtualDOM.class": "-1"
+                        }
+                    }
+                },
+                {
+                    "name": "codeMirrorConfiguration",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The code mirror configuration.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.codeMirrorConfiguration",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }",
+                        "implementation": "",
+                        "startLine": 75,
+                        "endLine": 76,
+                        "references": {
+                            "codeMirrorConfiguration": "@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The style of the associated HTML element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.style",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "public readonly style = {\n        fontSize: 'small',\n    }",
+                        "implementation": "",
+                        "startLine": 89,
+                        "endLine": 90,
+                        "references": {
+                            "style": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style",
+                            "VirtualDOM.style": "-1"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the associated HTML element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.tag",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 71,
+                        "endLine": 72,
+                        "references": {
+                            "tag": "@nav/api/MainModule/MdWidgets.CodeSnippetView.tag",
+                            "VirtualDOM.tag": "-1"
+                        }
+                    }
+                },
+                {
+                    "name": "hlLineClass",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Class appended to the line DOM for highlighted lines.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.hlLineClass",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "static hlLineClass = 'mkdocs-ts-bg-highlight'",
+                        "implementation": "",
+                        "startLine": 66,
+                        "endLine": 67,
+                        "references": {
+                            "hlLineClass": "@nav/api/MainModule/MdWidgets.CodeSnippetView.hlLineClass"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "new CodeSnippetView",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initialize the widget.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **content**: The snippet's content.\n*  **highlightedLines**: Highligthed lines, *e.g.*  `[5 10 20-25  28 30]`\n*  **language**: The target language. Supported languages are:\n     *  python\n     *  javascript\n     *  markdown\n     *  html\n     *  yaml\n     *  css\n     *  xml",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CodeSnippetView.new CodeSnippetView",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                        "declaration": "constructor({\n        language,\n        content,\n        highlightedLines,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string | Observable<string>\n    })",
+                        "implementation": "constructor({\n        language,\n        content,\n        highlightedLines,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string | Observable<string>\n    }) {\n        const content$ = typeof content == 'string' ? of(content) : content\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.children = [\n            {\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, _]: [string, unknown]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                            }\n                            const editor = window['CodeMirror'](\n                                htmlElement,\n                                config,\n                            )\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n\n                            editor.refresh()\n                        },\n                    }\n                },\n            },\n        ]\n    }",
+                        "startLine": 112,
+                        "endLine": 160,
+                        "references": {
+                            "new CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView.constructor",
+                            "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
+                            "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                "declaration": "export class CodeSnippetView implements VirtualDOM<'div'>",
+                "implementation": "export class CodeSnippetView implements VirtualDOM<'div'> {\n    static cmDependencies$: Record<\n        CodeLanguage,\n        Observable<WindowOrWorkerGlobalScope> | undefined\n    > = {\n        python: undefined,\n        javascript: undefined,\n        markdown: undefined,\n        html: undefined,\n        yaml: undefined,\n        css: undefined,\n        unknown: undefined,\n    }\n    static fetchCmDependencies$(\n        language: CodeLanguage,\n    ): Observable<WindowOrWorkerGlobalScope> {\n        if (CodeSnippetView.cmDependencies$[language]) {\n            return CodeSnippetView.cmDependencies$[language]\n        }\n        const scripts = {\n            python: ['codemirror#5.52.0~mode/python.min.js'],\n            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],\n            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],\n            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],\n            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],\n            css: ['codemirror#5.52.0~mode/css.min.js'],\n            xml: ['codemirror#5.52.0~mode/xml.min.js'],\n            htmlmixed: [\n                'codemirror#5.52.0~mode/htmlmixed.min.js',\n                'codemirror#5.52.0~mode/css.min.js',\n                'codemirror#5.52.0~mode/xml.min.js',\n                'codemirror#5.52.0~mode/javascript.min.js',\n            ],\n            unknown: [],\n        }\n        CodeSnippetView.cmDependencies$[language] = from(\n            install({\n                modules: ['codemirror'],\n                scripts: scripts[language],\n                css: ['codemirror#5.52.0~codemirror.min.css'],\n            }),\n        ).pipe(shareReplay(1))\n        return CodeSnippetView.cmDependencies$[language]\n    }\n\n    /**\n     * Class appended to the line DOM for highlighted lines.\n     */\n    static hlLineClass = 'mkdocs-ts-bg-highlight'\n\n    /**\n     * The tag of the associated HTML element.\n     */\n    public readonly tag = 'div'\n    /**\n     * The code mirror configuration.\n     */\n    public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }\n\n    /**\n     * The class list of the associated HTML element.\n     */\n    public readonly class = 'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3'\n    /**\n     * The style of the associated HTML element.\n     */\n    public readonly style = {\n        fontSize: 'small',\n    }\n    /**\n     * The children of the associated HTML element.\n     */\n    public readonly children: ChildrenLike\n\n    /**\n     * Initialize the widget.\n     *\n     * @param _args arguments\n     * @param _args.language The target language. Supported languages are:\n     *      *  python\n     *      *  javascript\n     *      *  markdown\n     *      *  html\n     *      *  yaml\n     *      *  css\n     *      *  xml\n     * @param _args.content The snippet's content.\n     * @param _args.highlightedLines Highligthed lines, *e.g.* `[5 10 20-25  28 30]`\n     */\n    constructor({\n        language,\n        content,\n        highlightedLines,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string | Observable<string>\n    }) {\n        const content$ = typeof content == 'string' ? of(content) : content\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.children = [\n            {\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, _]: [string, unknown]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                            }\n                            const editor = window['CodeMirror'](\n                                htmlElement,\n                                config,\n                            )\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n\n                            editor.refresh()\n                        },\n                    }\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 18,
+                "endLine": 161,
+                "references": {
+                    "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
+                    "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
+                    "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
+                    "VirtualDOM.style": "-1",
+                    "VirtualDOM.tag": "-1"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [],
+    "files": [
+        {
+            "name": "code-snippet.view.ts",
+            "path": "src/lib/md-widgets/code-snippet.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [],
+    "semantic": {
+        "role": "",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

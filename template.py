@@ -51,7 +51,21 @@ template = Template(
             )
         ]
     ),
-    userGuide=True
+    userGuide=True,
+    inPackageJson={
+        "eslintConfig": {
+            "extends": [
+                "@youwol"
+            ],
+            "ignorePatterns": ["/dist/", "/coverage/","mkdocs-ts-doc"],
+            "overrides": [{
+                "files": ["bin/index.js"],
+                "env": {
+                    "node": True
+                }
+            }]
+        }
+    }
 )
 
 generate_template(template)
@@ -59,7 +73,12 @@ shutil.copyfile(
     src=folder_path / '.template' / 'src' / 'auto-generated.ts',
     dst=folder_path / 'src' / 'auto-generated.ts'
 )
-for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENSE', 'package.json',
+for file in ['README.md',
+             '.gitignore',
+             '.npmignore',
+             # '.prettierignore', add '**/assets/**/*.md'
+             'LICENSE',
+             'package.json',
              # 'tsconfig.json', add `"exclude": ["mkdocs-ts-doc"]`
              'jest.config.ts', 'webpack.config.ts']:
     shutil.copyfile(
