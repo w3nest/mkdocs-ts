@@ -1,3 +1,7 @@
+/**
+ * This file gathers views related to navigation.
+ */
+
 import {
     ChildrenLike,
     VirtualDOM,
@@ -135,6 +139,9 @@ export class NavigationHeader implements VirtualDOM<'a'> {
     }
 }
 
+/**
+ * The 'regular' navigation view (when the screen size is large enough).
+ */
 export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
@@ -170,11 +177,20 @@ export class NavigationView implements VirtualDOM<'div'> {
     }
 }
 
+/**
+ * The 'collapsed' navigation view (when the screen size is not large enough).
+ *
+ * It can be either in a state 'expanded' (the modal is displayed on the left, see {@link ExpandedNavigationView}),
+ * or not (only the drop-down button to expand the modal is visible).
+ */
 export class ModalNavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
     public readonly children: ChildrenLike
+    /**
+     * Wether the modal is expanded or not.
+     */
     public readonly expanded$ = new BehaviorSubject(false)
     constructor(params: { router: Router }) {
         Object.assign(this, params)
@@ -199,6 +215,9 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
     }
 }
 
+/**
+ * The modal navigation view when expanded.
+ */
 export class ExpandedNavigationView implements VirtualDOM<'div'> {
     static menuWidth = '250px'
     public readonly router: Router
@@ -265,6 +284,10 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
         }
     }
 }
+
+/**
+ * The part of {@link ExpandedNavigationView} that allows to navigate back to parent.
+ */
 export class ModalNavParentView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly node: NavNodeBase
@@ -304,6 +327,9 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
     }
 }
 
+/**
+ * The part of {@link ExpandedNavigationView} that allows to navigate forward to children.
+ */
 export class ModalNavChildrenView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly node: NavNodeBase
@@ -346,6 +372,9 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
     }
 }
 
+/**
+ * The TOC with the {@link ExpandedNavigationView} if it can not be displayed as standalone entity on screen.
+ */
 export class ModalTocView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike

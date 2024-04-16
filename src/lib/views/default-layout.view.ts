@@ -15,6 +15,16 @@ import { TopBannerView } from './top-banner.view'
 
 export type DisplayMode = 'Full' | 'Minimized'
 
+/**
+ * Defines the default layout:
+ * *  A top banner at the top.
+ * *  Navigation on the left-side.
+ * *  Page's html content as main content.
+ * *  On the right the table of content.
+ *
+ * Depending on the screen size, the navigation and TOC can be collapsed into a top-banner menu.
+ *
+ */
 export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: AnyVirtualDOM[]
@@ -26,6 +36,13 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly style = {
         fontFamily: 'Lexend, sans-serif',
     }
+
+    /**
+     *
+     * @param router The router
+     * @param name The name of the application
+     * @param topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
+     */
     constructor({
         router,
         name,

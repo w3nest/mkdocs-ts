@@ -1,3 +1,7 @@
+/**
+ * This file gathers entry points related to Mardown parsing.
+ *
+ */
 import { parse, setOptions } from 'marked'
 import highlight from 'highlight.js'
 import { AnyVirtualDOM, render, VirtualDOM } from '@youwol/rx-vdom'
@@ -6,6 +10,20 @@ import { from } from 'rxjs'
 import { Router } from './router'
 import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
 
+/**
+ * Represesents global mardown views that can be used when using {@link parseMd}.
+ *
+ * By default, it is populated with `code-snippet`, it is referenced in the markdown documentation like that:
+ *
+ *
+ * More information in {@link CodeSnippetView}.
+ *
+ * The definition of a custom view is provided using a function that:
+ * *  Takes as single argument the HTML element as declared in the markdown file
+ * *  Returns a virtual dom defining the corresponding implementation of the HTML element.
+ *
+ *
+ */
 export class GlobalMarkdownViews {
     /**
      * Static factory for markdown inlined views.
@@ -21,15 +39,27 @@ export class GlobalMarkdownViews {
     }
 }
 
-export function fromMarkdown({
+/**
+ * Fetch & parse a Markdown file from specified with a URL.
+ *
+ * @param _args
+ * @param _args.url The URL of the file.
+ * @param _args.placeholders Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
+ * in the source by their corresponding values.
+ * @param _args.preprocessing Preprocessing step. This callback is called to transform the source before parsing is executed.
+ * @param _args.views Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
+ */
+export function fetchMarkdown({
     url,
     placeholders,
     preprocessing,
+    views,
 }: {
     url: string
     placeholders?: { [k: string]: string }
     preprocessing?: (text: string) => string
-}) {
+    views?: { [k: string]: (e: Element) => AnyVirtualDOM }
+}): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
     setOptions({
         langPrefix: 'hljs language-',
         highlight: function (code, lang) {
@@ -38,34 +68,62 @@ export function fromMarkdown({
     })
 
     return ({ router }: { router: Router }) => {
-        return fromMarkdownImpl({ url, router, placeholders, preprocessing })
+        return fromMarkdownImpl({
+            url,
+            router,
+            placeholders,
+            preprocessing,
+            views,
+        })
     }
 }
+
+export function fromMarkdown(p) {
+    return fetchMarkdown(p)
+}
+
 export async function fromMarkdownImpl({
     url,
     router,
     placeholders,
     preprocessing,
+    views,
 }: {
     url: string
     router: Router
     placeholders?: { [k: string]: string }
     preprocessing?: (text: string) => string
-}) {
+    views?: { [k: string]: (e: Element) => AnyVirtualDOM }
+}): Promise<VirtualDOM<'div'>> {
     const srcRaw = await fetch(url).then((resp) => resp.text())
     const src = preprocessing?.(srcRaw) || srcRaw
 
     if (!placeholders) {
-        return parseMd({ src, router })
+        return parseMd({ src, router, views })
     }
     const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
 
     // Replace patterns with corresponding values
     const replacedText = src.replace(regex, (match) => placeholders[match])
 
-    return parseMd({ src: replacedText, router })
+    return parseMd({ src: replacedText, router, views })
 }
 
+/**
+ * Parse a Markdown file specified with a URL.
+ *
+ * Note that custom views provided using the attribute `views ̀ comes in addition to those registered globally in
+ * {@link GlobalMarkdownViews}.
+ *
+ * @param _args
+ * @param _args.src Markdown source.
+ * @param _args.router The router instance.
+ * @param _args.navigations Specify custom redirections for HTMLAnchorElement.
+ * @param _args.views Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
+ * @param _args.emitHtmlUpdated if true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
+ *
+ * @returns A virtual DOM encapsulating the parsed Markdown.
+ */
 export function parseMd({
     src,
     router,
@@ -74,7 +132,7 @@ export function parseMd({
     emitHtmlUpdated,
 }: {
     src: string
-    router: Router
+    router?: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
     views?: { [k: string]: (e: Element) => AnyVirtualDOM }
     emitHtmlUpdated?: boolean

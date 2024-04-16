@@ -13,7 +13,7 @@ export type CodeLanguage =
     | 'unknown'
 
 /**
- * @category View
+ * The widget for code snippet.
  */
 export class CodeSnippetView implements VirtualDOM<'div'> {
     static cmDependencies$: Record<
@@ -59,11 +59,11 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     static hlLineClass = 'bg-warning'
 
     /**
-     * @group Immutable DOM Constants
+     * The tag of the associated HTML element.
      */
     public readonly tag = 'div'
     /**
-     * @group Configurations
+     * The code mirror configuration.
      */
     public readonly codeMirrorConfiguration = {
         lineNumbers: true,
@@ -73,22 +73,37 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     }
 
     /**
-     * @group Immutable DOM Constants
+     * The class list of the associated HTML element.
      */
     public readonly class = 'w-100 overflow-auto'
 
     /**
-     * @group Immutable DOM Constants
+     * The style of the associated HTML element.
      */
     public readonly style = {
         fontSize: 'smaller',
     }
 
     /**
-     * @group Immutable DOM Constants
+     * The children of the associated HTML element.
      */
     public readonly children: ChildrenLike
 
+    /**
+     * Initialize the widget.
+     *
+     * @param _args arguments
+     * @param _args.language The target language. Supported languages are:
+     *      *  python
+     *      *  javascript
+     *      *  markdown
+     *      *  html
+     *      *  yaml
+     *      *  css
+     *      *  xml
+     * @param _args.content The snippet's content.
+     * @param _args.highlightedLines Highligthed lines, *e.g.* `[5 10 20-25  28 30]`
+     */
     constructor({
         language,
         content,

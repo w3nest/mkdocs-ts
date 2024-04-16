@@ -1,3 +1,7 @@
+/**
+ * This file gathers views related to table of content.
+ */
+
 import {
     AnyVirtualDOM,
     ChildrenLike,
@@ -31,6 +35,9 @@ const headingsPadding: Record<SupportedHeading, string> = {
     H5: '4em',
 }
 
+/**
+ * The table of content view when the screen is large enough to display it, otherwise see {@link ModalTocView}
+ */
 export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly html: HTMLElement
