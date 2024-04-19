@@ -41,7 +41,7 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
     links.forEach((link) => {
         if (link.href.includes('@nav')) {
             const path = link.href.split('@nav')[1]
-            link.href = `/applications/py-youwol-doc/latest?nav=${path}`
+            link.href = `${router.basePath}?nav=${path}`
             link.onclick = (e: MouseEvent) => {
                 e.preventDefault()
                 router.navigateTo({ path })
