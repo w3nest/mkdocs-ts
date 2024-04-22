@@ -1,0 +1,203 @@
+
+/* Keep headings consistent. */
+h1.mkapi-header{
+    font-weight: 400;
+    line-height: 1.5;
+    color: inherit;
+    text-transform: none;
+}
+
+h1.mkapi-header {
+    font-size: 1.6rem;
+}
+h2.mkapi-header {
+    font-size: 1.2rem;
+}
+h3.mkapi-header {
+    font-size: 1.15rem;
+}
+h4.mkapi-header {
+    font-size: 1.1rem;
+}
+h5.mkapi-header {
+    font-size: 1.05rem;
+}
+h6.mkapi-header {
+    font-size: 1rem;
+}
+
+/* Symbols in Navigation and ToC. */
+:root,
+[data-md-color-scheme='default'] {
+    --doc-symbol-attribute-fg-color: #953800;
+    --doc-symbol-function-fg-color: #8250df;
+    --doc-symbol-method-fg-color: #8250df;
+    --doc-symbol-constructor-fg-color: #4f02d3;
+    --doc-symbol-class-fg-color: #0550ae;
+    --doc-symbol-module-fg-color: #5cad0f;
+    --doc-symbol-type-alias-fg-color: #ae7305;
+    --doc-symbol-interface-fg-color: #aeab05;
+
+    --doc-symbol-attribute-bg-color: #9538001a;
+    --doc-symbol-function-bg-color: #8250df1a;
+    --doc-symbol-method-bg-color: #8250df1a;
+    --doc-symbol-constructor-bg-color: #4f02d31a;
+    --doc-symbol-class-bg-color: #0550ae1a;
+    --doc-symbol-module-bg-color: #5cad0f1a;
+    --doc-symbol-type-alias-bg-color: #ae6a051a;
+    --doc-symbol-interface-bg-color: #aeab051a;
+}
+[data-md-color-scheme='slate'] {
+    --doc-symbol-attribute-fg-color: #ffa657;
+    --doc-symbol-function-fg-color: #d2a8ff;
+    --doc-symbol-method-fg-color: #d2a8ff;
+    --doc-symbol-constructor-fg-color: #605bfc;
+    --doc-symbol-class-fg-color: #79c0ff;
+    --doc-symbol-module-fg-color: #baff79;
+    --doc-symbol-type-alias-fg-color: #fca409;
+    --doc-symbol-interface-fg-color: #fcdc09;
+
+    --doc-symbol-attribute-bg-color: #ffa6571a;
+    --doc-symbol-function-bg-color: #d2a8ff1a;
+    --doc-symbol-constructor-bg-color: #605bfc1a;
+    --doc-symbol-method-bg-color: #d2a8ff1a;
+    --doc-symbol-class-bg-color: #79c0ff1a;
+    --doc-symbol-module-bg-color: #baff791a;
+    --doc-symbol-type-alias-bg-color: #fca4091a;
+    --doc-symbol-interface-bg-color: #fcdc091a;
+}
+code.doc-symbol {
+    border-radius: 0.1rem;
+    font-size: 0.85em;
+    padding: 0 0.3em;
+    font-weight: bold;
+}
+/**
+Flags
+ */
+.mkapi-semantic-flag::before{
+    padding: 0.2em;
+    margin-right: 0.2em;
+    font-size: 0.8em;
+}
+/**
+Module
+ */
+.mkapi-semantic-flag.mkapi-role-module::before {
+    content: 'mode';
+    color: var(--doc-symbol-module-fg-color);
+    background-color: var(--doc-symbol-module-bg-color);
+}
+.mkapi-semantic-color.mkapi-role-module{
+    color: var(--doc-symbol-module-fg-color);
+    background-color: var(--doc-symbol-module-bg-color);
+}
+.mkapi-semantic-border-color.mkapi-role-module{
+    border-color: var(--doc-symbol-module-fg-color);
+}
+/**
+Class
+ */
+.mkapi-semantic-flag.mkapi-role-class::before {
+    content: 'class';
+    color: var(--doc-symbol-class-fg-color);
+    background-color: var(--doc-symbol-class-bg-color);
+}
+.mkapi-semantic-color.mkapi-role-class{
+    color: var(--doc-symbol-class-fg-color);
+    background-color: var(--doc-symbol-class-bg-color);
+}
+.mkapi-semantic-border-color.mkapi-role-class{
+    border-color: var(--doc-symbol-class-fg-color) !important;
+}
+
+/**
+Constructor
+ */
+.mkapi-semantic-color.mkapi-role-constructor{
+    color: var(--doc-symbol-constructor-fg-color);
+    background-color: var(--doc-symbol-constructor-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-constructor::before {
+    content: 'init';
+    color: var(--doc-symbol-constructor-fg-color);
+    background-color: var(--doc-symbol-constructor-bg-color);
+}
+/**
+Interface
+ */
+.mkapi-semantic-color.mkapi-role-interface{
+    color: var(--doc-symbol-interface-fg-color);
+    background-color: var(--doc-symbol-interface-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-interface::before {
+    content: 'inter';
+    color: var(--doc-symbol-interface-fg-color);
+    background-color: var(--doc-symbol-interface-bg-color);
+}
+.mkapi-semantic-border-color.mkapi-role-interface{
+    border-color: var(--doc-symbol-interface-fg-color) !important;
+}
+/**
+Type Alias
+ */
+.mkapi-semantic-color.mkapi-role-type-alias{
+    color: var(--doc-symbol-type-alias-fg-color);
+    background-color: var(--doc-symbol-type-alias-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-type-alias::before {
+    content: 'alias';
+    color: var(--doc-symbol-type-alias-fg-color);
+    background-color: var(--doc-symbol-type-alias-bg-color);
+}
+.mkapi-semantic-border-color.mkapi-role-type-alias{
+    border-color: var(--doc-symbol-type-alias-fg-color) !important;
+}
+/**
+Function
+ */
+.mkapi-semantic-color.mkapi-role-function{
+    color: var(--doc-symbol-function-fg-color);
+    background-color: var(--doc-symbol-function-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-function::before {
+    content: 'func';
+    color: var(--doc-symbol-function-fg-color);
+    background-color: var(--doc-symbol-function-bg-color);
+}
+/**
+Method
+ */
+.mkapi-semantic-color.mkapi-role-method{
+    color: var(--doc-symbol-method-fg-color);
+    background-color: var(--doc-symbol-method-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-method::before {
+    content: 'meth';
+    color: var(--doc-symbol-method-fg-color);
+    background-color: var(--doc-symbol-method-bg-color);
+}
+/**
+Attribute
+ */
+.mkapi-semantic-color.mkapi-role-attribute{
+    color: var(--doc-symbol-attribute-fg-color);
+    background-color: var(--doc-symbol-attribute-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-attribute::before {
+    content: 'attr';
+    color: var(--doc-symbol-attribute-fg-color);
+    background-color: var(--doc-symbol-attribute-bg-color);
+}
+/**
+Globals
+ */
+.mkapi-semantic-color.mkapi-role-global{
+    color: var(--doc-symbol-attribute-fg-color);
+    background-color: var(--doc-symbol-attribute-bg-color);
+}
+.mkapi-semantic-flag.mkapi-role-global::before {
+    content: 'glob';
+    color: var(--doc-symbol-attribute-fg-color);
+    background-color: var(--doc-symbol-attribute-bg-color);
+}

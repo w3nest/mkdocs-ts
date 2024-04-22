@@ -1,0 +1,44 @@
+
+html {
+    font-size: 18px;
+}
+.CodeMirror {
+    height: auto !important;
+}
+
+/* Initially hide the scrollbar for the element */
+.scrollbar-on-hover {
+    overflow: hidden;
+}
+
+/* Display the scrollbar when the element is being hovered */
+.scrollbar-on-hover:hover {
+    overflow: auto;
+}
+
+
+.mkdocs-ts-side-nav {
+    width: 20rem;
+    line-height: 1.5rem;
+    font-size: 0.9rem;
+    position: sticky;
+    top: 0px;
+}
+
+.fv-tree-arianeLine {
+    display: none;
+}
+.fv-tree-expand {
+    display: none !important;
+}
+.mkdocs-ts-top-banner {
+    max-height: 50px;
+}
+
+.mkdocs-ts-page {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+.mkdocs-ts-expand-nav-node {
+    transition: transform 0.5s ease 0s;
+}
