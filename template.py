@@ -80,7 +80,8 @@ for file in ['README.md',
              'LICENSE',
              'package.json',
              # 'tsconfig.json', add `"exclude": ["mkdocs-ts-doc"]`
-             'jest.config.ts', 'webpack.config.ts']:
+             # 'jest.config.ts',  add `testPathIgnorePatterns: ['mkdocs-ts-doc']`
+             'webpack.config.ts']:
     shutil.copyfile(
         src=folder_path / '.template' / file,
         dst=folder_path / file
