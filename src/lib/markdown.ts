@@ -11,29 +11,56 @@ import { Router } from './router'
 import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
 
 /**
- * Represesents global mardown views that can be used when using {@link parseMd}.
+ * Type definition for custom view generators.
+ */
+export type viewGenerator = (e: HTMLElement) => AnyVirtualDOM
+
+/**
+ * Options for parsing Markdown content.
+ */
+export type ParsingArguments = {
+    /**
+     * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
+     * in the source by their corresponding values.
+     */
+    placeholders?: { [k: string]: string }
+    /**
+     * Preprocessing step. This callback is called to transform the source before parsing is executed.
+     * @param text original text
+     * @return transformed text
+     */
+    preprocessing?: (text: string) => string
+    /**
+     *  Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
+     */
+    views?: { [k: string]: viewGenerator }
+    /**
+     * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
+     */
+    emitHtmlUpdated?: boolean
+}
+/**
+ * Represents global Markdown views that can be referenced when using {@link parseMd}.
  *
- * By default, it is populated with `code-snippet`, it is referenced in the markdown documentation like that:
- *
- *
- * More information in {@link CodeSnippetView}.
+ * By default, it is populated with `code-snippet`, more information in {@link CodeSnippetView}.
  *
  * The definition of a custom view is provided using a function that:
- * *  Takes as single argument the HTML element as declared in the markdown file
+ * *  Takes as single argument the HTML element as declared in the markdown file.
+ * The raw text content within the DOM element can be accessed using `elem.textContent` and attributes using
+ * `elem.getAttribute`.
  * *  Returns a virtual dom defining the corresponding implementation of the HTML element.
- *
  *
  */
 export class GlobalMarkdownViews {
     /**
      * Static factory for markdown inlined views.
      */
-    static factory: { [k: string]: (e: Element) => AnyVirtualDOM } = {
+    static factory: { [k: string]: viewGenerator } = {
         'code-snippet': (elem: HTMLElement) => {
             return new CodeSnippetView({
                 language: elem.getAttribute('language') as CodeLanguage,
                 highlightedLines: elem.getAttribute('highlightedLines'),
-                content: elem.innerHTML,
+                content: elem.textContent,
             })
         },
     }
@@ -42,24 +69,14 @@ export class GlobalMarkdownViews {
 /**
  * Fetch & parse a Markdown file from specified with a URL.
  *
- * @param _args
- * @param _args.url The URL of the file.
- * @param _args.placeholders Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
- * in the source by their corresponding values.
- * @param _args.preprocessing Preprocessing step. This callback is called to transform the source before parsing is executed.
- * @param _args.views Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
+ * @param params see {@link ParsingArguments} for additional options.
+ * @param params.url The URL of the file.
  */
-export function fetchMarkdown({
-    url,
-    placeholders,
-    preprocessing,
-    views,
-}: {
-    url: string
-    placeholders?: { [k: string]: string }
-    preprocessing?: (text: string) => string
-    views?: { [k: string]: (e: Element) => AnyVirtualDOM }
-}): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
+export function fetchMarkdown(
+    params: {
+        url: string
+    } & ParsingArguments,
+): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
     setOptions({
         langPrefix: 'hljs language-',
         highlight: function (code, lang) {
@@ -68,13 +85,15 @@ export function fetchMarkdown({
     })
 
     return ({ router }: { router: Router }) => {
-        return fromMarkdownImpl({
-            url,
-            router,
-            placeholders,
-            preprocessing,
-            views,
-        })
+        return fetch(params.url)
+            .then((resp) => resp.text())
+            .then((src) => {
+                return parseMd({
+                    src,
+                    router,
+                    ...params,
+                })
+            })
     }
 }
 
@@ -93,20 +112,11 @@ export async function fromMarkdownImpl({
     router: Router
     placeholders?: { [k: string]: string }
     preprocessing?: (text: string) => string
-    views?: { [k: string]: (e: Element) => AnyVirtualDOM }
+    views?: { [k: string]: viewGenerator }
 }): Promise<VirtualDOM<'div'>> {
-    const srcRaw = await fetch(url).then((resp) => resp.text())
-    const src = preprocessing?.(srcRaw) || srcRaw
+    const src = await fetch(url).then((resp) => resp.text())
 
-    if (!placeholders) {
-        return parseMd({ src, router, views })
-    }
-    const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
-
-    // Replace patterns with corresponding values
-    const replacedText = src.replace(regex, (match) => placeholders[match])
-
-    return parseMd({ src: replacedText, router, views })
+    return parseMd({ src, router, views, placeholders, preprocessing })
 }
 
 /**
@@ -115,13 +125,10 @@ export async function fromMarkdownImpl({
  * Note that custom views provided using the attribute `views ̀ comes in addition to those registered globally in
  * {@link GlobalMarkdownViews}.
  *
- * @param _args
- * @param _args.src Markdown source.
- * @param _args.router The router instance.
- * @param _args.navigations Specify custom redirections for HTMLAnchorElement.
- * @param _args.views Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
- * @param _args.emitHtmlUpdated if true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
- *
+ * @param args see {@link ParsingArguments} for additional options.
+ * @param args.src Markdown source.
+ * @param args.router The router instance.
+ * @param args.navigations Specify custom redirections for HTMLAnchorElement.
  * @returns A virtual DOM encapsulating the parsed Markdown.
  */
 export function parseMd({
@@ -129,18 +136,29 @@ export function parseMd({
     router,
     navigations,
     views,
+    placeholders,
+    preprocessing,
     emitHtmlUpdated,
 }: {
     src: string
     router?: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
-    views?: { [k: string]: (e: Element) => AnyVirtualDOM }
-    emitHtmlUpdated?: boolean
-}): VirtualDOM<'div'> {
+} & ParsingArguments): VirtualDOM<'div'> {
+    if (typeof src !== 'string') {
+        console.error('Given MD source is not a string', src)
+        return {
+            tag: 'div',
+            innerText: 'Error: given MD source is not a string"',
+        }
+    }
+    src = preprocessing?.(src) || src
+    if (placeholders) {
+        const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
+        src = src.replace(regex, (match) => placeholders[match])
+    }
     views = { ...views, ...GlobalMarkdownViews.factory }
-    const div = fixedMarkedParseCustomViews({ input: src, views })
+    const div = fixedMarkedParseCustomViews({ input: src, views: views })
 
-    // Custom views
     const customs = div.querySelectorAll('.language-custom-view')
     customs.forEach((custom) => {
         const fct = new Function(custom['innerText'])()({ webpm })
@@ -159,14 +177,6 @@ export function parseMd({
     // Navigation links
     const links = div.querySelectorAll('a')
     links.forEach((link) => {
-        if (link.href.includes('@nav')) {
-            const path = link.href.split('@nav')[1]
-            link.href = `/applications/py-youwol-doc/latest?nav=${path}`
-            link.onclick = (e: MouseEvent) => {
-                e.preventDefault()
-                router.navigateTo({ path })
-            }
-        }
         if (navigations) {
             Object.entries(navigations).forEach(([k, v]) => {
                 if (link.href.includes(`@${k}`)) {
@@ -181,7 +191,7 @@ export function parseMd({
     Object.entries(views || {}).forEach(([k, v]) => {
         const elems = div.querySelectorAll(k)
         elems.forEach((elem) => {
-            elem.parentNode.replaceChild(render(v(elem)), elem)
+            elem.parentNode.replaceChild(render(v(elem as HTMLElement)), elem)
         })
     })
     return {
