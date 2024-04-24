@@ -308,7 +308,7 @@ export type ReactiveLazyNavResolver = Observable<LazyNavResolver>
  * Key representing an implicit 'catch-all' navigation referenced in {@link Navigation}.
  *
  */
-export const CatchAllKey = '...' as const
+export const CatchAllKey = '...'
 
 /**
  * Represents a node in the navigation.
