@@ -177,6 +177,14 @@ export function parseMd({
     // Navigation links
     const links = div.querySelectorAll('a')
     links.forEach((link) => {
+        if (link.href.includes('@nav') && router) {
+            const path = link.href.split('@nav')[1]
+            link.href = `${router.basePath}?nav=${path}`
+            link.onclick = (e: MouseEvent) => {
+                e.preventDefault()
+                router.navigateTo({ path })
+            }
+        }
         if (navigations) {
             Object.entries(navigations).forEach(([k, v]) => {
                 if (link.href.includes(`@${k}`)) {
@@ -201,6 +209,87 @@ export function parseMd({
     }
 }
 
+export function patchSrc({
+    src,
+    views,
+    idGenerator,
+}: {
+    src: string
+    views
+    idGenerator?: () => string
+}) {
+    let patchedSrc = ''
+    const lines = src.split('\n')
+    const contents = {}
+
+    function extractInlinedElem(line: string, tagName: string, id: string) {
+        const regex = new RegExp(
+            `<${tagName}\\s*([^>]*)>([\\s\\S]*?)<\\/${tagName}>`,
+            'i',
+        )
+        const match = line.match(regex)
+
+        if (!match) {
+            return null
+        }
+        const patchedLine = line.replace(
+            regex,
+            `<${tagName} id="${id}" $1></${tagName}>`,
+        )
+        const content = match[2].trim()
+        return { patchedLine, content }
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i]
+        const processor = Object.keys(views).find((viewId) =>
+            line.trim().includes(`<${viewId}`),
+        )
+        if (!processor) {
+            patchedSrc += line + '\n'
+            continue
+        }
+
+        const id = idGenerator
+            ? idGenerator()
+            : `id_${Math.floor(Math.random() * 1e6)}`
+        if (line.includes(`</${processor}>`)) {
+            const { patchedLine, content } = extractInlinedElem(
+                line,
+                processor,
+                id,
+            )
+            patchedSrc += patchedLine + '\n'
+            contents[id] = content
+            continue
+        }
+        patchedSrc += `${line.trim().slice(0, -1)} id="${id}"></${processor}>\n`
+        let acc = ''
+        for (let j = i + 1; j < lines.length; j++) {
+            const newLine = lines[j]
+            if (!newLine.includes(`</${processor}>`)) {
+                acc += newLine + '\n'
+                continue
+            }
+            // If there was a content, remove the last '\n'
+            if (acc !== '') {
+                acc = acc.slice(0, -1)
+            }
+            i = j
+            const restOfLine = newLine.split(`</${processor}>`)[1].trim()
+            if (restOfLine !== '') {
+                patchedSrc += restOfLine + `\n`
+            }
+            contents[id] = acc
+            break
+        }
+    }
+    return {
+        // remove the last '\n'
+        patchedInput: patchedSrc.slice(0, -1),
+        contents,
+    }
+}
 function fixedMarkedParseCustomViews({
     input,
     views,
@@ -214,42 +303,21 @@ function fixedMarkedParseCustomViews({
      * The purpose of this function is to fix this behavior.
      */
     const divPatched = document.createElement('div')
-    divPatched.innerHTML = input
-    const replacedElements = []
-    Array.from(divPatched.children).forEach((child) => {
-        const view_keys_lower = Object.keys(views).map((k) => k.toLowerCase())
-        if (!view_keys_lower.includes(child.tagName.toLowerCase())) {
-            return
-        }
-        const attributes = Array.from(child.attributes).reduce(
-            (acc, it) => ({ ...acc, [it.name]: it.value }),
-            {},
-        )
-        const generatedId = `id_${Math.floor(Math.random() * 1e6)}`
-        replacedElements.push({
-            tag: child.tagName,
-            id: child.id,
-            generatedId,
-            innerHTML: child.innerHTML,
-            attributes,
-        })
-        child.id = generatedId
-        child.innerHTML = ''
-    })
+    const { patchedInput, contents } = patchSrc({ src: input, views })
 
     const divResult = document.createElement('div')
-    divResult.innerHTML = parse(divPatched.innerHTML)
-    replacedElements.forEach((detail) => {
-        const elem = divResult.querySelector(`#${detail.generatedId}`)
+    divResult.innerHTML = parse(patchedInput)
+    Object.entries(contents).forEach(([id, content]) => {
+        const elem = divResult.querySelector(`#${id}`)
         if (!elem) {
             console.error('Can not replace HTML element', {
                 text: divPatched.innerHTML,
-                element: detail,
+                element: content,
             })
             return
         }
-        elem.innerHTML = detail.innerHTML
-        elem.id = detail.id
+        elem.textContent = content as string
+        elem.id = id
     })
 
     return divResult
