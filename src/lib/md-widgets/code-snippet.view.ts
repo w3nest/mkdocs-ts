@@ -41,6 +41,13 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
             html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],
             yaml: ['codemirror#5.52.0~mode/yaml.min.js'],
             css: ['codemirror#5.52.0~mode/css.min.js'],
+            xml: ['codemirror#5.52.0~mode/xml.min.js'],
+            htmlmixed: [
+                'codemirror#5.52.0~mode/htmlmixed.min.js',
+                'codemirror#5.52.0~mode/css.min.js',
+                'codemirror#5.52.0~mode/xml.min.js',
+                'codemirror#5.52.0~mode/javascript.min.js',
+            ],
             unknown: [],
         }
         CodeSnippetView.cmDependencies$[language] = from(
@@ -129,6 +136,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                             htmlElement: RxHTMLElement<'div'>,
                         ) => {
                             const config = {
+                                mode: language,
                                 ...this.codeMirrorConfiguration,
                                 value: content,
                             }
