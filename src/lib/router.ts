@@ -103,10 +103,11 @@ export class Router {
      */
     constructor(params: {
         navigation: Navigation
-        basePath: string
+        basePath?: string
         retryNavPeriod?: number
     }) {
         Object.assign(this, params)
+        this.basePath = this.basePath || document.location.pathname
         const { rootNode, reactiveNavs } = createRootNode({
             navigation: this.navigation,
             router: this,
