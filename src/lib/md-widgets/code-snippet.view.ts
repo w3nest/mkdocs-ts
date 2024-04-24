@@ -63,7 +63,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     /**
      * Class appended to the line DOM for highlighted lines.
      */
-    static hlLineClass = 'bg-warning'
+    static hlLineClass = 'mkdocs-ts-bg-highlight'
 
     /**
      * The tag of the associated HTML element.
@@ -82,15 +82,13 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     /**
      * The class list of the associated HTML element.
      */
-    public readonly class = 'w-100 overflow-auto'
-
+    public readonly class = 'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3'
     /**
      * The style of the associated HTML element.
      */
     public readonly style = {
-        fontSize: 'smaller',
+        fontSize: 'small',
     }
-
     /**
      * The children of the associated HTML element.
      */
