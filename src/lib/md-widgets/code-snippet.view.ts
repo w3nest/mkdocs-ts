@@ -130,7 +130,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                         ) => {
                             const config = {
                                 ...this.codeMirrorConfiguration,
-                                value: replaceSpecialHtmlChars(content),
+                                value: content,
                             }
                             const editor = window['CodeMirror'](
                                 htmlElement,
@@ -173,18 +173,4 @@ function parseLineIndices(input?: string): number[] {
     indices = [...new Set(indices)].sort((a, b) => a - b)
 
     return indices
-}
-
-function replaceSpecialHtmlChars(from: string) {
-    const specialCharsDict = {
-        '&gt;': '>',
-        '&lt;': '<',
-        '&amp;': '&',
-    }
-    const specialCharsRegex = new RegExp(
-        Object.keys(specialCharsDict).join('|'),
-        'g',
-    )
-
-    return from.replace(specialCharsRegex, (match) => specialCharsDict[match])
 }
