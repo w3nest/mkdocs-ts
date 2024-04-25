@@ -113,24 +113,6 @@ export function fromMarkdown(p) {
     return fetchMarkdown(p)
 }
 
-export async function fromMarkdownImpl({
-    url,
-    router,
-    placeholders,
-    preprocessing,
-    views,
-}: {
-    url: string
-    router: Router
-    placeholders?: { [k: string]: string }
-    preprocessing?: (text: string) => string
-    views?: { [k: string]: viewGenerator }
-}): Promise<VirtualDOM<'div'>> {
-    const src = await fetch(url).then((resp) => resp.text())
-
-    return parseMd({ src, router, views, placeholders, preprocessing })
-}
-
 /**
  * Parse a Markdown file specified with a URL.
  *
