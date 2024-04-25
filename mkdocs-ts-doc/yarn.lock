@@ -1432,7 +1432,7 @@
     "@youwol/http-primitives" "^0.2.0"
     rxjs "^7.5.6"
 
-"@youwol/http-primitives@^0.2.0", "@youwol/http-primitives@^0.2.4":
+"@youwol/http-primitives@^0.2.0", "@youwol/http-primitives@^0.2.3", "@youwol/http-primitives@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@youwol/http-primitives/-/http-primitives-0.2.4.tgz#4d41aab6d12f72f03d1982c3b93acadea2c700ae"
   integrity sha512-ZYHOUFHbW1cYOqLsXG9cIeIrZInNYtS8r6KS5FyMIEvtDl13Sdxumt0yctwPDOj4jMJWYPU1EVhoAFgoxhaw4w==
@@ -1451,11 +1451,12 @@
     jest-junit "^16.0.0"
     ts-jest "^29.1.2"
 
-"@youwol/mkdocs-ts@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.3.2.tgz#fda00033aef959c6094350418dd6b7bc770ad091"
-  integrity sha512-3YVmEGkyr8o31CdvFm7d+2I6bm8n8NgvY1LRWKrP1bUhWLMzCUxfcsiCu+siwk7nZoAJiLVFbLcVo9L46A75Dw==
+"@youwol/mkdocs-ts@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.3.3.tgz#de03ae2166cedc98745bcaf1d1031279b7544296"
+  integrity sha512-X1GfeUaiCbVjOARyLaaJgJZ2FhcSbuW6O84qduHhBcvqENwcpu9Ht/Ut3KJcZbrVelj5jqQCyiLO/mNmzV2r/w==
   dependencies:
+    "@youwol/http-primitives" "^0.2.3"
     "@youwol/os-top-banner" "^0.2.0"
     "@youwol/rx-tree-views" "^0.3.3"
     "@youwol/rx-vdom" "^1.0.1"

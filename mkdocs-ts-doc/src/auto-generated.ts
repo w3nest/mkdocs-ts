@@ -2,7 +2,7 @@
 const runTimeDependencies = {
     "externals": {
         "rxjs": "^7.5.6",
-        "@youwol/mkdocs-ts": "^0.3.2",
+        "@youwol/mkdocs-ts": "^0.3.3",
         "@youwol/webpm-client": "^3.0.0"
     },
     "includedInBundle": {}
@@ -45,7 +45,7 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts-doc',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHMtZG9j',
-    version:'0.3.3-wip',
+    version:'0.3.3',
     shortDescription:"Documentation app for project @youwol/mkdocs-ts.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts-doc&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts-doc',
@@ -91,7 +91,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts-doc#0.3.3-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
+            `@youwol/mkdocs-ts-doc#0.3.3~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
