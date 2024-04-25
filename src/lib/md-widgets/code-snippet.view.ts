@@ -13,7 +13,7 @@ export type CodeLanguage =
     | 'unknown'
 
 /**
- * @category View
+ * The widget for code snippet.
  */
 export class CodeSnippetView implements VirtualDOM<'div'> {
     static cmDependencies$: Record<
@@ -41,6 +41,13 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
             html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],
             yaml: ['codemirror#5.52.0~mode/yaml.min.js'],
             css: ['codemirror#5.52.0~mode/css.min.js'],
+            xml: ['codemirror#5.52.0~mode/xml.min.js'],
+            htmlmixed: [
+                'codemirror#5.52.0~mode/htmlmixed.min.js',
+                'codemirror#5.52.0~mode/css.min.js',
+                'codemirror#5.52.0~mode/xml.min.js',
+                'codemirror#5.52.0~mode/javascript.min.js',
+            ],
             unknown: [],
         }
         CodeSnippetView.cmDependencies$[language] = from(
@@ -56,14 +63,14 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     /**
      * Class appended to the line DOM for highlighted lines.
      */
-    static hlLineClass = 'bg-warning'
+    static hlLineClass = 'mkdocs-ts-bg-highlight'
 
     /**
-     * @group Immutable DOM Constants
+     * The tag of the associated HTML element.
      */
     public readonly tag = 'div'
     /**
-     * @group Configurations
+     * The code mirror configuration.
      */
     public readonly codeMirrorConfiguration = {
         lineNumbers: true,
@@ -73,22 +80,35 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     }
 
     /**
-     * @group Immutable DOM Constants
+     * The class list of the associated HTML element.
      */
-    public readonly class = 'w-100 overflow-auto'
-
+    public readonly class = 'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3'
     /**
-     * @group Immutable DOM Constants
+     * The style of the associated HTML element.
      */
     public readonly style = {
-        fontSize: 'smaller',
+        fontSize: 'small',
     }
-
     /**
-     * @group Immutable DOM Constants
+     * The children of the associated HTML element.
      */
     public readonly children: ChildrenLike
 
+    /**
+     * Initialize the widget.
+     *
+     * @param _args arguments
+     * @param _args.language The target language. Supported languages are:
+     *      *  python
+     *      *  javascript
+     *      *  markdown
+     *      *  html
+     *      *  yaml
+     *      *  css
+     *      *  xml
+     * @param _args.content The snippet's content.
+     * @param _args.highlightedLines Highligthed lines, *e.g.* `[5 10 20-25  28 30]`
+     */
     constructor({
         language,
         content,
@@ -114,8 +134,9 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                             htmlElement: RxHTMLElement<'div'>,
                         ) => {
                             const config = {
+                                mode: language,
                                 ...this.codeMirrorConfiguration,
-                                value: replaceSpecialHtmlChars(content),
+                                value: content,
                             }
                             const editor = window['CodeMirror'](
                                 htmlElement,
@@ -158,18 +179,4 @@ function parseLineIndices(input?: string): number[] {
     indices = [...new Set(indices)].sort((a, b) => a - b)
 
     return indices
-}
-
-function replaceSpecialHtmlChars(from: string) {
-    const specialCharsDict = {
-        '&gt;': '>',
-        '&lt;': '<',
-        '&amp;': '&',
-    }
-    const specialCharsRegex = new RegExp(
-        Object.keys(specialCharsDict).join('|'),
-        'g',
-    )
-
-    return from.replace(specialCharsRegex, (match) => specialCharsDict[match])
 }

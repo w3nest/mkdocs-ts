@@ -7,7 +7,8 @@ const runTimeDependencies = {
         "marked": "^4.2.3",
         "highlight.js": "11.2.0",
         "@youwol/os-top-banner": "^0.2.0",
-        "@youwol/rx-tree-views": "^0.3.3"
+        "@youwol/rx-tree-views": "^0.3.3",
+        "@youwol/http-primitives": "^0.2.3"
     },
     "includedInBundle": {}
 }
@@ -47,6 +48,11 @@ const externals = {
         "commonjs2": "@youwol/rx-tree-views",
         "root": "@youwol/rx-tree-views_APIv03"
     },
+    "@youwol/http-primitives": {
+        "commonjs": "@youwol/http-primitives",
+        "commonjs2": "@youwol/http-primitives",
+        "root": "@youwol/http-primitives_APIv02"
+    },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
         "commonjs2": "rxjs/operators",
@@ -84,6 +90,10 @@ const exportedSymbols = {
     "@youwol/rx-tree-views": {
         "apiKey": "03",
         "exportedSymbol": "@youwol/rx-tree-views"
+    },
+    "@youwol/http-primitives": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/http-primitives"
     }
 }
 
@@ -96,11 +106,21 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "marked",
         "highlight.js",
         "@youwol/os-top-banner",
-        "@youwol/rx-tree-views"
+        "@youwol/rx-tree-views",
+        "@youwol/http-primitives"
     ]
 }
 
-const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {}
+const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {
+    "CodeApi": {
+        "entryFile": "./lib/code-api/index.ts",
+        "loadDependencies": [
+            "@youwol/rx-vdom",
+            "@youwol/http-primitives"
+        ],
+        "name": "CodeApi"
+    }
+}
 
 const entries = {
      '@youwol/mkdocs-ts': './index.ts',
@@ -109,7 +129,7 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.3.3-wip',
+    version:'0.3.4-wip',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
@@ -155,7 +175,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.3.3-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `@youwol/mkdocs-ts#0.3.4-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

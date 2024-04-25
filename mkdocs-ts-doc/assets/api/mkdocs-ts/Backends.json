@@ -1,0 +1,54 @@
+{
+    "name": "Backends",
+    "documentation": {
+        "sections": [
+            {
+                "content": "Backends available to parse code API.\n\nBackend API generators are in charge to convert project's sources files into a set of 'API' files,\neach file representing one module of the project.\n\n**Conditions for Generation**:\n   - The language is organized hierarchically into modules.\n   - Modules can contain entities grouped as  [CodeApi.Type](@nav/api/CodeApi.Type) ,  [CodeApi.Callable](@nav/api/CodeApi.Callable) ,\n     or  [CodeApi.Attribute](@nav/api/CodeApi.Attribute) .\n   - For each entity, it should be possible to construct a  [CodeApi.Code](@nav/api/CodeApi.Code)  attribute, which includes:\n     - Extracting documentation from the source code.\n     - Extracting declaration and optionally implementation from the source code.\n     - Extracting the list of known types involved from a declaration (if applicable).\n   - For  [CodeApi.Type](@nav/api/CodeApi.Type) , it should be possible to extract associated lists of  [CodeApi.Attribute](@nav/api/CodeApi.Attribute)  and\n    [CodeApi.Callable](@nav/api/CodeApi.Callable) .\n   - All entities have a  [CodeApi.Semantic](@nav/api/CodeApi.Semantic)  property providing language-specific semantic information\n   (e.g.,  `role` ,  `class` ,  `interface` ,  `abstract class` , etc., for  [CodeApi.Type](@nav/api/CodeApi.Type) ).\n   - All entities are associated with  [CodeApi.Documentation](@nav/api/CodeApi.Documentation) .",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "",
+    "attributes": [],
+    "types": [],
+    "callables": [],
+    "files": [
+        {
+            "name": "index.ts",
+            "path": "src/backends/ts-typedoc/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Backend for generating API data for TypeScript projects using TypeDoc as the primary documentation generator.\n\nThis parser supports a subset of the tags available in TypeDoc. Many tags are omitted because their meaning is\nimplied by the entity declaration. For example, tags like `@interface`, `@public`, `@private`, `@property`,\n`@readonly`, and `@virtual` are unnecessary as their semantics are inherent in the code structure.\n\nSome tags are related to grouping, such as `@group`, `@category`, `@categoryDescription`, and\n`@groupDescription`. Currently, entities are grouped based on the files they belong to, with the possibility of\nincluding documentation sections at the beginning of each file. Additional semantic grouping is not yet supported.\n\nIn practical terms, the essentials tags used are:\n[`@param`](https://typedoc.org/tags/param/), [`@returns`](https://typedoc.org/tags/returns/),\n[`@typeParams`](https://typedoc.org/tags/typeParam/), [`@module`](https://typedoc.org/tags/module/),\n[`@link`](https://typedoc.org/tags/link/).\n\n**Comparison**:\n\nOverall the documentation displayed by `@youwol/mkdocs-ts` is lighter than its typedoc counterpart,\nbut some resolution are (rarely) failing.\n\nSee for instance the `parseCallable` function:\n*  <a target=\"_blank\" href=\"/api/assets-gateway/cdn-backend/resources/QHlvdXdvbC9ta2RvY3MtdHM=/0.3.3/dist/docs/functions/Backends.TsTypedoc.parseCallable.html\">\n    Within typedoc</a>\n*  And here: \n\nThe missing type `SignaturesTrait` is an artifact due to loss of type information when using typedoc,\ngoing further will likely imply to manage our-self the entire process of code parsing using typescript AST API.\n\n**Important Notes**:\n- The parser does not handle namespaces. This functionality needs to be implemented separately\n(namespaces can be treated as modules in all practical terms concerning documentation purposes).\n- Only documented and exported symbols are included in the API documentation.\n\n**Hints**:\nWhen documenting a function with named parameters, you can document them as follows:\n\n```javascript\n/* Foo documentation",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [
+        {
+            "name": "TsTypedoc",
+            "path": "mkdocs-ts/Backends.TsTypedoc",
+            "isLeaf": true
+        }
+    ],
+    "semantic": {
+        "role": "",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

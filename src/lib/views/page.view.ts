@@ -6,6 +6,9 @@ import {
 } from '@youwol/rx-vdom'
 import { Router } from '../router'
 
+/**
+ * The main content of the page.
+ */
 export class PageView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly tag = 'div'
@@ -41,7 +44,7 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
     links.forEach((link) => {
         if (link.href.includes('@nav')) {
             const path = link.href.split('@nav')[1]
-            link.href = `/applications/py-youwol-doc/latest?nav=${path}`
+            link.href = `${router.basePath}?nav=${path}`
             link.onclick = (e: MouseEvent) => {
                 e.preventDefault()
                 router.navigateTo({ path })
@@ -50,6 +53,9 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
     })
 }
 
+/**
+ * The page footer.
+ */
 export class PageFooterView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'w-100 mkdocs-ts-footer d-flex align-items-center'

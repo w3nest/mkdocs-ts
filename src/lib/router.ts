@@ -20,24 +20,66 @@ import {
 } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
 
+/**
+ * Gathers the resolved elements when navigating to a specific path.
+ */
 export type Destination = {
+    /**
+     * The table of content view.
+     */
     tableOfContent?: HTMLElement | AnyVirtualDOM
+    /**
+     * The main page view.
+     */
     html: HTMLElement | AnyVirtualDOM
+    /**
+     * The typedocNodes's ID if provided in the URL.
+     */
     sectionId?: string
 }
 
+/**
+ * Represents the router of the application.
+ */
 export class Router {
+    /**
+     * The base path on which the router is defined.
+     *
+     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.
+     */
     public readonly basePath: string
+
+    /**
+     * When using a dynamic definition of the routes (see {@link Navigation}),
+     * it may be the case that the routes are not yet available when navigating to a page.
+     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.
+     */
     public readonly retryNavPeriod: number = 1000
+
+    /**
+     * Definition of the navigation.
+     */
     public readonly navigation: Navigation
 
+    /**
+     * Observable that emit the current main HTML page.
+     */
     public readonly currentHtml$: Subject<HTMLElement> =
         new ReplaySubject<HTMLElement>(1)
+    /**
+     * Observable that emit the current page.
+     */
     public readonly currentPage$: Subject<Destination> =
         new ReplaySubject<Destination>(1)
+    /**
+     * Observable that emit the current navigation node.
+     */
     public readonly currentNode$: Subject<NavigationCommon> =
         new ReplaySubject<NavigationCommon>(1)
 
+    /**
+     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)
+     */
     public readonly explorerState: ImmutableTree.State<NavNodeBase>
 
     public scrollableElement: HTMLElement
@@ -51,12 +93,21 @@ export class Router {
 
     private navUpdates: { [href: string]: LazyNavResolver } = {}
 
+    /**
+     * Initialize a router instance.
+     *
+     * @param params see corresponding documentation in the class's attributes
+     * @param params.navigation navigation object
+     * @param params.basePath the base path
+     * @param params.retryNavPeriod wehn to retry
+     */
     constructor(params: {
         navigation: Navigation
-        basePath: string
+        basePath?: string
         retryNavPeriod?: number
     }) {
         Object.assign(this, params)
+        this.basePath = this.basePath || document.location.pathname
         const { rootNode, reactiveNavs } = createRootNode({
             navigation: this.navigation,
             router: this,
@@ -99,16 +150,27 @@ export class Router {
         })
     }
 
-    getCurrentPath() {
+    /**
+     * Returns the current navigation path.
+     */
+    getCurrentPath(): string {
         const urlParams = new URLSearchParams(window.location.search)
         return urlParams.get('nav') || '/'
     }
 
-    getParentPath() {
+    /**
+     * Returns the parent path of the current navigation path.
+     */
+    getParentPath(): string {
         const currentPath = this.getCurrentPath()
         return currentPath.split('/').slice(0, -1).join('/')
     }
 
+    /**
+     * Navigate to a specific path.
+     *
+     * @param path The path to navigate to.
+     */
     navigateTo({ path }: { path: string }) {
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
@@ -144,12 +206,20 @@ export class Router {
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
+    /**
+     * Navigate to the parent node.
+     */
     navigateToParent() {
         const path = this.getCurrentPath()
         const parentPath = path.split('/').slice(0, -1).join('/')
         this.navigateTo({ path: parentPath })
     }
 
+    /**
+     * Scroll the main HTML content to focus on an HTML element.
+     *
+     * @param target The target HTML element, or its id.
+     */
     scrollTo(target: string | HTMLElement) {
         if (!this.scrollableElement) {
             return
@@ -326,6 +396,10 @@ export class Router {
         this.currentHtml$.next(page)
     }
 
+    /**
+     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the
+     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.
+     */
     emitHtmlUpdated() {
         this.htmlUpdated$.next(true)
     }

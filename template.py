@@ -2,7 +2,7 @@ import shutil
 from pathlib import Path
 
 from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
-    RunTimeDeps, Bundles, MainModule
+    RunTimeDeps, Bundles, MainModule, AuxiliaryModule
 from youwol.pipelines.pipeline_typescript_weback_npm.regular import generate_template
 from youwol.utils import parse_json
 
@@ -17,7 +17,8 @@ externals_deps = {
     "marked": "^4.2.3",
     "highlight.js": "11.2.0",
     "@youwol/os-top-banner": "^0.2.0",
-    "@youwol/rx-tree-views": "^0.3.3"
+    "@youwol/rx-tree-views": "^0.3.3",
+    "@youwol/http-primitives": "^0.2.3",
 }
 in_bundle_deps = {}
 dev_deps = {}
@@ -41,9 +42,30 @@ template = Template(
             entryFile='./index.ts',
             loadDependencies=list(externals_deps.keys()),
             aliases=[]
-        )
+        ),
+        auxiliaryModules=[
+            AuxiliaryModule(
+                name='CodeApi',
+                entryFile='./lib/code-api/index.ts',
+                loadDependencies=["@youwol/rx-vdom", "@youwol/http-primitives" ],
+            )
+        ]
     ),
-    userGuide=True
+    userGuide=True,
+    inPackageJson={
+        "eslintConfig": {
+            "extends": [
+                "@youwol"
+            ],
+            "ignorePatterns": ["/dist/", "/coverage/","mkdocs-ts-doc"],
+            "overrides": [{
+                "files": ["bin/index.js"],
+                "env": {
+                    "node": True
+                }
+            }]
+        }
+    }
 )
 
 generate_template(template)
@@ -51,8 +73,15 @@ shutil.copyfile(
     src=folder_path / '.template' / 'src' / 'auto-generated.ts',
     dst=folder_path / 'src' / 'auto-generated.ts'
 )
-for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENSE', 'package.json',
-             'tsconfig.json', 'jest.config.ts', 'webpack.config.ts']:
+for file in ['README.md',
+             '.gitignore',
+             '.npmignore',
+             # '.prettierignore', add '**/assets/**/*.md'
+             'LICENSE',
+             'package.json',
+             # 'tsconfig.json', add `"exclude": ["mkdocs-ts-doc"]`
+             # 'jest.config.ts',  add `testPathIgnorePatterns: ['mkdocs-ts-doc']`
+             'webpack.config.ts']:
     shutil.copyfile(
         src=folder_path / '.template' / file,
         dst=folder_path / file

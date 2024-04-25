@@ -5,9 +5,10 @@ import { ModalNavigationView } from './navigation.view'
 import { Router } from '../router'
 
 /**
- * Top banner of the application
+ * Simple top banner definition, including:
+ * *  Eventually a dropdown menu to expand the {@link ModalNavigationView} (on small screen)
+ * *  A title
  *
- * @category View.TopBanner
  */
 export class TopBannerView extends TopBannerBase {
     public readonly tag = 'div'

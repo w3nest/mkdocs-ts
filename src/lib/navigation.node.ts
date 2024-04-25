@@ -8,18 +8,52 @@ import {
     ChildLike,
 } from '@youwol/rx-vdom'
 
+/**
+ * Defines attributes regarding the visual rendering of the node if the navigation view.
+ */
 export type Decoration = {
+    /**
+     * Optional class added as wrapper to the HTML element representing the node.
+     */
     wrapperClass?: AttributeLike<string>
+    /**
+     * Optional icon, inserted before the node's name.
+     */
     icon?: ChildLike
+    /**
+     * Optional actions, inserted after the node's name.
+     */
     actions?: ChildrenLike
 }
 
+/**
+ * Fully resolved navigation node when using {@link CatchAllNav}.
+ * In practical usage, consumers of the library only needs to provide {@link NavNodeInput}.
+ */
 export type NavNodeParams = {
+    /**
+     * Id of the node.
+     */
     id: string
+    /**
+     * Name of the node.
+     */
     name: string
+    /**
+     * Hyperlink reference.
+     */
     href: string
+    /**
+     * Optional data associated to the node.
+     */
     data?: unknown
+    /**
+     * Optional children.
+     */
     children?: NavNodeBase[] | Observable<NavNodeBase[]>
+    /**
+     * Optional decoration.
+     */
     decoration?: Decoration
 }
 
@@ -44,7 +78,13 @@ export class NavNode extends NavNodeBase {
     }
 }
 
+/**
+ * Arguments defining the children part of a navigation node when using dynamic {@link CatchAllNav}.
+ */
 export type NavNodeInput = Omit<NavNodeParams, 'href' | 'children'> & {
+    /**
+     * Whether the node is a leaf (no children expected).
+     */
     leaf?: boolean
 }
 
@@ -204,30 +244,96 @@ export function createRootNode({
     }
 }
 
+/**
+ * Represents something resolvable.
+ *
+ * Important:
+ *     When an observable is provided, only its **first emission** is accounted.
+ */
 export type Resolvable<T> = T | Promise<T> | Observable<T>
 
+/**
+ * The common part of a navigation node, whether it is static or dynamic.
+ */
 export type NavigationCommon = {
+    /**
+     * This function represents the view of the main content.
+     *
+     * @param router Router instance.
+     * @returns A resolvable view
+     */
     html: ({ router }) => Resolvable<AnyVirtualDOM>
+    /**
+     * This function represents the view of the table of content in the page.
+     *
+     * @param p arguments of the view generator:
+     *   *  html : Content of the HTML page
+     *   *  router : Router instance.
+     * @returns A promise on the view
+     */
     tableOfContent?: (p: {
         html: HTMLElement
         router: Router
     }) => Promise<AnyVirtualDOM>
 }
 
+/**
+ * Node definition when using implicit 'catch-all' sub-navigation resolver,
+ * see {@link Navigation}.
+ */
 export type CatchAllNav = Resolvable<
     NavigationCommon & { children: NavNodeInput[] }
 >
 
+/**
+ * Represents a lazy navigation resolver, used when the navigation is only known at runtime.
+ *
+ * It is a function that takes the target path and router's instance as parameters, and returns
+ * the instance of {@link CatchAllNav} that explicits node attributes (`name`, `id`, `children`, *etc.*).
+ */
 export type LazyNavResolver = (p: {
+    // The targeted path in the navigation
     path: string
+    // Router instance
     router: Router
 }) => CatchAllNav
+
+/**
+ * Represents a reactive lazy navigation resolver, used when changes in a navigation node children are expected
+ * (within {@link Navigation}).
+ */
 export type ReactiveLazyNavResolver = Observable<LazyNavResolver>
 
+/**
+ * Key representing an implicit 'catch-all' navigation referenced in {@link Navigation}.
+ *
+ */
 export const CatchAllKey = '...'
+
+/**
+ * Represents a node in the navigation.
+ */
 export type Navigation = NavigationCommon & {
+    /**
+     * Name of the node.
+     */
     name: string
+
+    /**
+     * Decoration configuration for the node.
+     */
     decoration?: Decoration
+
+    /**
+     * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.
+     *
+     * The sub-paths defined in it can also be made reaction (using {@link ReactiveLazyNavResolver})
+     * if changes in organisation over time are expected.
+     */
     [CatchAllKey]?: LazyNavResolver | ReactiveLazyNavResolver
+
+    /**
+     * Static sub-navigation resolver.
+     */
     [key: `/${string}`]: Navigation
 }

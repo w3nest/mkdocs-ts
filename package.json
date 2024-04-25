@@ -1,7 +1,7 @@
 {
     "name": "@youwol/mkdocs-ts",
     "description": "Typescript based mkdocs like solution",
-    "version": "0.3.3-wip",
+    "version": "0.3.4-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/mkdocs-ts#README.md",
     "main": "dist/@youwol/mkdocs-ts.js",
@@ -25,6 +25,21 @@
     "eslintConfig": {
         "extends": [
             "@youwol"
+        ],
+        "ignorePatterns": [
+            "/dist/",
+            "/coverage/",
+            "mkdocs-ts-doc"
+        ],
+        "overrides": [
+            {
+                "files": [
+                    "bin/index.js"
+                ],
+                "env": {
+                    "node": true
+                }
+            }
         ]
     },
     "dependencies": {
@@ -34,7 +49,8 @@
         "marked": "^4.2.3",
         "highlight.js": "11.2.0",
         "@youwol/os-top-banner": "^0.2.0",
-        "@youwol/rx-tree-views": "^0.3.3"
+        "@youwol/rx-tree-views": "^0.3.3",
+        "@youwol/http-primitives": "^0.2.3"
     },
     "devDependencies": {
         "@types/jest": "^29.5.6",
@@ -63,7 +79,8 @@
             "marked": "^4.2.3",
             "highlight.js": "11.2.0",
             "@youwol/os-top-banner": "^0.2.0",
-            "@youwol/rx-tree-views": "^0.3.3"
+            "@youwol/rx-tree-views": "^0.3.3",
+            "@youwol/http-primitives": "^0.2.3"
         },
         "aliases": []
     }
