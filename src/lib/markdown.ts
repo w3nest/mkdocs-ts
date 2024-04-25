@@ -13,7 +13,10 @@ import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
 /**
  * Type definition for custom view generators.
  */
-export type viewGenerator = (e: HTMLElement) => AnyVirtualDOM
+export type ViewGenerator = (
+    elem: HTMLElement,
+    options: { router?: Router } & ParsingArguments,
+) => AnyVirtualDOM
 
 /**
  * Options for parsing Markdown content.
@@ -33,7 +36,7 @@ export type ParsingArguments = {
     /**
      *  Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
      */
-    views?: { [k: string]: viewGenerator }
+    views?: { [k: string]: ViewGenerator }
     /**
      * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
      */
@@ -55,7 +58,7 @@ export class GlobalMarkdownViews {
     /**
      * Static factory for markdown inlined views.
      */
-    static factory: { [k: string]: viewGenerator } = {
+    static factory: { [k: string]: ViewGenerator } = {
         'code-snippet': (elem: HTMLElement) => {
             return new CodeSnippetView({
                 language: elem.getAttribute('language') as CodeLanguage,
@@ -196,10 +199,20 @@ export function parseMd({
             })
         }
     })
+    const options = {
+        router,
+        preprocessing,
+        placeholders,
+        views,
+        emitHtmlUpdated,
+    }
     Object.entries(views || {}).forEach(([k, v]) => {
         const elems = div.querySelectorAll(k)
         elems.forEach((elem) => {
-            elem.parentNode.replaceChild(render(v(elem as HTMLElement)), elem)
+            elem.parentNode.replaceChild(
+                render(v(elem as HTMLElement, options)),
+                elem,
+            )
         })
     })
     return {
@@ -295,7 +308,7 @@ function fixedMarkedParseCustomViews({
     views,
 }: {
     input: string
-    views: { [k: string]: (e: Element) => AnyVirtualDOM }
+    views: { [k: string]: ViewGenerator }
 }) {
     /**
      * The library 'marked' parse the innerHTML of HTML elements as markdown,
