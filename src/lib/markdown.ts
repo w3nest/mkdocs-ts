@@ -12,6 +12,15 @@ import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
 
 /**
  * Type definition for custom view generators.
+ *
+ * The function takes as arguments:
+ * *  **elem**: The HTMLElement in Markdown that triggered the generator.
+ * *  **options**: The options that were provided to the MD parser.
+ *
+ * It returns the generated virtual DOM.
+ *
+ *  See details in the documentation of {@link parseMd} to register views.
+ *
  */
 export type ViewGenerator = (
     elem: HTMLElement,
@@ -34,7 +43,7 @@ export type ParsingArguments = {
      */
     preprocessing?: (text: string) => string
     /**
-     *  Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
+     *  Custom views generators corresponding to HTMLElement referenced in the Mardown source.
      */
     views?: { [k: string]: ViewGenerator }
     /**
@@ -127,6 +136,22 @@ export async function fromMarkdownImpl({
  *
  * Note that custom views provided using the attribute `views ̀ comes in addition to those registered globally in
  * {@link GlobalMarkdownViews}.
+ *
+ * **Notes on custom views**
+ *
+ * Custom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.
+ *
+ *
+ * For instance, a custom view `foo-view` can be referenced in the Markdown:
+ *  ```
+ *  # An example of custom-view
+ *
+ *  This is a custom view:
+ *  <foo-view barAttr='bar' bazAttr="baz">some content</foo-view>
+ *  ```
+ *  When parsed, it will be replaced by its corresponding generated view if `foo-view` is included in this
+ *  `views` mapping provided to this function. The associated generator can access attributes (here `barAttr` &
+ *  `bazAttr`) as well as the original text content (`some content`).
  *
  * @param args see {@link ParsingArguments} for additional options.
  * @param args.src Markdown source.
