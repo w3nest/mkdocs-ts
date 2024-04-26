@@ -12,8 +12,20 @@ import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
 
 /**
  * Type definition for custom view generators.
+ *
+ * The function takes as arguments:
+ * *  **elem**: The HTMLElement in Markdown that triggered the generator.
+ * *  **options**: The options that were provided to the MD parser.
+ *
+ * It returns the generated virtual DOM.
+ *
+ *  See details in the documentation of {@link parseMd} to register views.
+ *
  */
-export type viewGenerator = (e: HTMLElement) => AnyVirtualDOM
+export type ViewGenerator = (
+    elem: HTMLElement,
+    options: { router?: Router } & ParsingArguments,
+) => AnyVirtualDOM
 
 /**
  * Options for parsing Markdown content.
@@ -31,9 +43,9 @@ export type ParsingArguments = {
      */
     preprocessing?: (text: string) => string
     /**
-     *  Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.
+     *  Custom views generators corresponding to HTMLElement referenced in the Mardown source.
      */
-    views?: { [k: string]: viewGenerator }
+    views?: { [k: string]: ViewGenerator }
     /**
      * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
      */
@@ -55,7 +67,7 @@ export class GlobalMarkdownViews {
     /**
      * Static factory for markdown inlined views.
      */
-    static factory: { [k: string]: viewGenerator } = {
+    static factory: { [k: string]: ViewGenerator } = {
         'code-snippet': (elem: HTMLElement) => {
             return new CodeSnippetView({
                 language: elem.getAttribute('language') as CodeLanguage,
@@ -101,29 +113,27 @@ export function fromMarkdown(p) {
     return fetchMarkdown(p)
 }
 
-export async function fromMarkdownImpl({
-    url,
-    router,
-    placeholders,
-    preprocessing,
-    views,
-}: {
-    url: string
-    router: Router
-    placeholders?: { [k: string]: string }
-    preprocessing?: (text: string) => string
-    views?: { [k: string]: viewGenerator }
-}): Promise<VirtualDOM<'div'>> {
-    const src = await fetch(url).then((resp) => resp.text())
-
-    return parseMd({ src, router, views, placeholders, preprocessing })
-}
-
 /**
  * Parse a Markdown file specified with a URL.
  *
  * Note that custom views provided using the attribute `views ̀ comes in addition to those registered globally in
  * {@link GlobalMarkdownViews}.
+ *
+ * **Notes on custom views**
+ *
+ * Custom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.
+ *
+ *
+ * For instance, a custom view `foo-view` can be referenced in the Markdown:
+ *  ```
+ *  # An example of custom-view
+ *
+ *  This is a custom view:
+ *  <foo-view barAttr='bar' bazAttr="baz">some content</foo-view>
+ *  ```
+ *  When parsed, it will be replaced by its corresponding generated view if `foo-view` is included in this
+ *  `views` mapping provided to this function. The associated generator can access attributes (here `barAttr` &
+ *  `bazAttr`) as well as the original text content (`some content`).
  *
  * @param args see {@link ParsingArguments} for additional options.
  * @param args.src Markdown source.
@@ -196,10 +206,20 @@ export function parseMd({
             })
         }
     })
+    const options = {
+        router,
+        preprocessing,
+        placeholders,
+        views,
+        emitHtmlUpdated,
+    }
     Object.entries(views || {}).forEach(([k, v]) => {
         const elems = div.querySelectorAll(k)
         elems.forEach((elem) => {
-            elem.parentNode.replaceChild(render(v(elem as HTMLElement)), elem)
+            elem.parentNode.replaceChild(
+                render(v(elem as HTMLElement, options)),
+                elem,
+            )
         })
     })
     return {
@@ -295,7 +315,7 @@ function fixedMarkedParseCustomViews({
     views,
 }: {
     input: string
-    views: { [k: string]: (e: Element) => AnyVirtualDOM }
+    views: { [k: string]: ViewGenerator }
 }) {
     /**
      * The library 'marked' parse the innerHTML of HTML elements as markdown,

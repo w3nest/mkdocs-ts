@@ -95,13 +95,13 @@
                     "path": "GlobalMarkdownViews.factory",
                     "code": {
                         "filePath": "src/lib/markdown.ts",
-                        "declaration": "static factory: { [k: string]: viewGenerator } = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines: elem.getAttribute('highlightedLines'),\n                content: elem.textContent,\n            })\n        },\n    }",
+                        "declaration": "static factory: { [k: string]: ViewGenerator } = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines: elem.getAttribute('highlightedLines'),\n                content: elem.textContent,\n            })\n        },\n    }",
                         "implementation": "",
-                        "startLine": 58,
-                        "endLine": 59,
+                        "startLine": 70,
+                        "endLine": 71,
                         "references": {
                             "factory": "@nav/api/MainModule.GlobalMarkdownViews.factory",
-                            "viewGenerator": "@nav/api/MainModule.viewGenerator"
+                            "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
                         }
                     }
                 }
@@ -110,12 +110,12 @@
             "code": {
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export class GlobalMarkdownViews",
-                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * Static factory for markdown inlined views.\n     */\n    static factory: { [k: string]: viewGenerator } = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines: elem.getAttribute('highlightedLines'),\n                content: elem.textContent,\n            })\n        },\n    }\n}",
-                "startLine": 54,
-                "endLine": 68,
+                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * Static factory for markdown inlined views.\n     */\n    static factory: { [k: string]: ViewGenerator } = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines: elem.getAttribute('highlightedLines'),\n                content: elem.textContent,\n            })\n        },\n    }\n}",
+                "startLine": 66,
+                "endLine": 80,
                 "references": {
                     "GlobalMarkdownViews": "@nav/api/MainModule.GlobalMarkdownViews",
-                    "viewGenerator": "@nav/api/MainModule.viewGenerator"
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
                 }
             },
             "semantic": {
@@ -1006,13 +1006,13 @@
             "callables": [],
             "code": {
                 "filePath": "src/lib/markdown.ts",
-                "declaration": "export type ParsingArguments = {\n    /**\n     * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys\n     * in the source by their corresponding values.\n     */\n    placeholders?: { [k: string]: string }\n    /**\n     * Preprocessing step. This callback is called to transform the source before parsing is executed.\n     * @param text original text\n     * @return transformed text\n     */\n    preprocessing?: (text: string) => string\n    /**\n     *  Custom views referenced in the source. See details in the documentation of {@link parseMd} to register views.\n     */\n    views?: { [k: string]: viewGenerator }\n    /**\n     * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.\n     */\n    emitHtmlUpdated?: boolean\n}",
+                "declaration": "export type ParsingArguments = {\n    /**\n     * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys\n     * in the source by their corresponding values.\n     */\n    placeholders?: { [k: string]: string }\n    /**\n     * Preprocessing step. This callback is called to transform the source before parsing is executed.\n     * @param text original text\n     * @return transformed text\n     */\n    preprocessing?: (text: string) => string\n    /**\n     *  Custom views generators corresponding to HTMLElement referenced in the Mardown source.\n     */\n    views?: { [k: string]: ViewGenerator }\n    /**\n     * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.\n     */\n    emitHtmlUpdated?: boolean\n}",
                 "implementation": "",
-                "startLine": 21,
-                "endLine": 22,
+                "startLine": 33,
+                "endLine": 34,
                 "references": {
                     "ParsingArguments": "@nav/api/MainModule.ParsingArguments",
-                    "viewGenerator": "@nav/api/MainModule.viewGenerator"
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
                 }
             },
             "semantic": {
@@ -1086,7 +1086,7 @@
                 "endLine": 254,
                 "references": {
                     "Resolvable": "@nav/api/MainModule.Resolvable",
-                    "T": "650"
+                    "T": "635"
                 }
             },
             "semantic": {
@@ -1097,11 +1097,11 @@
             }
         },
         {
-            "name": "viewGenerator",
+            "name": "ViewGenerator",
             "documentation": {
                 "sections": [
                     {
-                        "content": "Type definition for custom view generators.",
+                        "content": "Type definition for custom view generators.\n\nThe function takes as arguments:\n*  **elem**: The HTMLElement in Markdown that triggered the generator.\n*  **options**: The options that were provided to the MD parser.\n\nIt returns the generated virtual DOM.\n\n See details in the documentation of  [parseMd](@nav/api/MainModule.parseMd)  to register views.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1112,17 +1112,19 @@
                     }
                 ]
             },
-            "path": "viewGenerator",
+            "path": "ViewGenerator",
             "attributes": [],
             "callables": [],
             "code": {
                 "filePath": "src/lib/markdown.ts",
-                "declaration": "export type viewGenerator = (e: HTMLElement) => AnyVirtualDOM",
+                "declaration": "export type ViewGenerator = (\n    elem: HTMLElement,\n    options: { router?: Router } & ParsingArguments,\n) => AnyVirtualDOM",
                 "implementation": "",
-                "startLine": 16,
-                "endLine": 17,
+                "startLine": 25,
+                "endLine": 26,
                 "references": {
-                    "viewGenerator": "@nav/api/MainModule.viewGenerator"
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
+                    "Router": "@nav/api/MainModule.Router",
+                    "ParsingArguments": "@nav/api/MainModule.ParsingArguments"
                 }
             },
             "semantic": {
@@ -1166,8 +1168,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function fetchMarkdown(\n    params: {\n        url: string\n    } & ParsingArguments,\n): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>>",
                 "implementation": "export function fetchMarkdown(\n    params: {\n        url: string\n    } & ParsingArguments,\n): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {\n    setOptions({\n        langPrefix: 'hljs language-',\n        highlight: function (code, lang) {\n            return highlight.highlightAuto(code, [lang]).value\n        },\n    })\n\n    return ({ router }: { router: Router }) => {\n        return fetch(params.url)\n            .then((resp) => resp.text())\n            .then((src) => {\n                return parseMd({\n                    src,\n                    router,\n                    ...params,\n                })\n            })\n    }\n}",
-                "startLine": 75,
-                "endLine": 99,
+                "startLine": 87,
+                "endLine": 111,
                 "references": {
                     "fetchMarkdown": "@nav/api/MainModule.fetchMarkdown",
                     "ParsingArguments": "@nav/api/MainModule.ParsingArguments",
@@ -1221,7 +1223,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Parse a Markdown file specified with a URL.\n\nNote that custom views provided using the attribute `views ̀ comes in addition to those registered globally in\n [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews) .",
+                        "content": "Parse a Markdown file specified with a URL.\n\nNote that custom views provided using the attribute  `views ̀ comes in addition to those registered globally in\n{@link GlobalMarkdownViews}.\n\n**Notes on custom views**\n\nCustom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.\n\n\nFor instance, a custom view ` foo-view ` can be referenced in the Markdown:\n ```\n # An example of custom-view\n\n This is a custom view:\n <foo-view barAttr='bar' bazAttr=\"baz\">some content</foo-view>\n ```\n When parsed, it will be replaced by its corresponding generated view if ` foo-view ` is included in this\n ` views ` mapping provided to this function. The associated generator can access attributes (here ` barAttr ` &\n ` bazAttr `) as well as the original text content (` some content`).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1258,9 +1260,9 @@
             "code": {
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function parseMd({\n    src,\n    router,\n    navigations,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n}: {\n    src: string\n    router?: Router\n    navigations?: { [k: string]: (e: HTMLAnchorElement) => void }\n} & ParsingArguments): VirtualDOM<'div'>",
-                "implementation": "export function parseMd({\n    src,\n    router,\n    navigations,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n}: {\n    src: string\n    router?: Router\n    navigations?: { [k: string]: (e: HTMLAnchorElement) => void }\n} & ParsingArguments): VirtualDOM<'div'> {\n    if (typeof src !== 'string') {\n        console.error('Given MD source is not a string', src)\n        return {\n            tag: 'div',\n            innerText: 'Error: given MD source is not a string\"',\n        }\n    }\n    src = preprocessing?.(src) || src\n    if (placeholders) {\n        const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')\n        src = src.replace(regex, (match) => placeholders[match])\n    }\n    views = { ...views, ...GlobalMarkdownViews.factory }\n    const div = fixedMarkedParseCustomViews({ input: src, views: views })\n\n    const customs = div.querySelectorAll('.language-custom-view')\n    customs.forEach((custom) => {\n        const fct = new Function(custom['innerText'])()({ webpm })\n        const view = render({\n            tag: 'div',\n            children: [\n                {\n                    source$: from(fct),\n                    vdomMap: (vDom) => vDom as AnyVirtualDOM,\n                },\n            ],\n        })\n        custom.parentNode.parentNode.replaceChild(view, custom.parentNode)\n    })\n\n    // Navigation links\n    const links = div.querySelectorAll('a')\n    links.forEach((link) => {\n        if (link.href.includes('@nav') && router) {\n            const path = link.href.split('@nav')[1]\n            link.href = `${router.basePath}?nav=${path}`\n            link.onclick = (e: MouseEvent) => {\n                e.preventDefault()\n                router.navigateTo({ path })\n            }\n        }\n        if (navigations) {\n            Object.entries(navigations).forEach(([k, v]) => {\n                if (link.href.includes(`@${k}`)) {\n                    link.onclick = (e: MouseEvent) => {\n                        e.preventDefault()\n                        v(link)\n                    }\n                }\n            })\n        }\n    })\n    Object.entries(views || {}).forEach(([k, v]) => {\n        const elems = div.querySelectorAll(k)\n        elems.forEach((elem) => {\n            elem.parentNode.replaceChild(render(v(elem as HTMLElement)), elem)\n        })\n    })\n    return {\n        tag: 'div',\n        children: [div],\n        connectedCallback: () => emitHtmlUpdated && router.emitHtmlUpdated(),\n    }\n}",
-                "startLine": 134,
-                "endLine": 211,
+                "implementation": "export function parseMd({\n    src,\n    router,\n    navigations,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n}: {\n    src: string\n    router?: Router\n    navigations?: { [k: string]: (e: HTMLAnchorElement) => void }\n} & ParsingArguments): VirtualDOM<'div'> {\n    if (typeof src !== 'string') {\n        console.error('Given MD source is not a string', src)\n        return {\n            tag: 'div',\n            innerText: 'Error: given MD source is not a string\"',\n        }\n    }\n    src = preprocessing?.(src) || src\n    if (placeholders) {\n        const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')\n        src = src.replace(regex, (match) => placeholders[match])\n    }\n    views = { ...views, ...GlobalMarkdownViews.factory }\n    const div = fixedMarkedParseCustomViews({ input: src, views: views })\n\n    const customs = div.querySelectorAll('.language-custom-view')\n    customs.forEach((custom) => {\n        const fct = new Function(custom['innerText'])()({ webpm })\n        const view = render({\n            tag: 'div',\n            children: [\n                {\n                    source$: from(fct),\n                    vdomMap: (vDom) => vDom as AnyVirtualDOM,\n                },\n            ],\n        })\n        custom.parentNode.parentNode.replaceChild(view, custom.parentNode)\n    })\n\n    // Navigation links\n    const links = div.querySelectorAll('a')\n    links.forEach((link) => {\n        if (link.href.includes('@nav') && router) {\n            const path = link.href.split('@nav')[1]\n            link.href = `${router.basePath}?nav=${path}`\n            link.onclick = (e: MouseEvent) => {\n                e.preventDefault()\n                router.navigateTo({ path })\n            }\n        }\n        if (navigations) {\n            Object.entries(navigations).forEach(([k, v]) => {\n                if (link.href.includes(`@${k}`)) {\n                    link.onclick = (e: MouseEvent) => {\n                        e.preventDefault()\n                        v(link)\n                    }\n                }\n            })\n        }\n    })\n    const options = {\n        router,\n        preprocessing,\n        placeholders,\n        views,\n        emitHtmlUpdated,\n    }\n    Object.entries(views || {}).forEach(([k, v]) => {\n        const elems = div.querySelectorAll(k)\n        elems.forEach((elem) => {\n            elem.parentNode.replaceChild(\n                render(v(elem as HTMLElement, options)),\n                elem,\n            )\n        })\n    })\n    return {\n        tag: 'div',\n        children: [div],\n        connectedCallback: () => emitHtmlUpdated && router.emitHtmlUpdated(),\n    }\n}",
+                "startLine": 144,
+                "endLine": 231,
                 "references": {
                     "parseMd": "@nav/api/MainModule.parseMd",
                     "Router": "@nav/api/MainModule.Router",
