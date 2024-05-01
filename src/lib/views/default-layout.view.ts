@@ -31,12 +31,20 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly class =
         'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto'
 
-    static displayModeNav = new BehaviorSubject<DisplayMode>('Full')
-    static displayModeToc = new BehaviorSubject<DisplayMode>('Full')
+    /**
+     * The display mode regarding the navigation panel.
+     */
+    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')
+    /**
+     * The display mode regarding the table of content.
+     */
+    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')
 
     public readonly style = {
-        fontFamily: 'Lexend, sans-serif',
+        position: 'relative' as const,
     }
+
+    public readonly connectedCallback: (e: HTMLElement) => undefined
 
     /**
      *
@@ -65,12 +73,45 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 width: '16em',
             },
         })
+        this.connectedCallback = (e: HTMLElement) => {
+            const resizeObserver = new ResizeObserver((entries) => {
+                const width = entries[0].contentRect.width
+                e.classList.remove(
+                    'mkdocs-DefaultLayoutView',
+                    'mkdocs-DefaultLayoutView-s',
+                    'mkdocs-DefaultLayoutView-xs',
+                    'mkdocs-DefaultLayoutView-xxs',
+                )
+
+                if (width < 1300) {
+                    e.classList.add('mkdocs-DefaultLayoutView-s')
+                }
+
+                if (width < 850) {
+                    e.classList.add('mkdocs-DefaultLayoutView-xxs')
+                    this.displayModeNav$.next('Minimized')
+                    this.displayModeToc$.next('Minimized')
+                    return
+                }
+                if (width < 1100) {
+                    e.classList.add('mkdocs-DefaultLayoutView-xs')
+                    this.displayModeNav$.next('Minimized')
+                    this.displayModeToc$.next('Full')
+                    return
+                }
+                e.classList.add('mkdocs-DefaultLayoutView')
+                this.displayModeNav$.next('Full')
+                this.displayModeToc$.next('Full')
+            })
+            resizeObserver.observe(e)
+        }
         this.children = [
             topBanner
-                ? topBanner({ displayMode$: DefaultLayoutView.displayModeNav })
+                ? topBanner({ displayMode$: this.displayModeNav$ })
                 : new TopBannerView({
                       name,
-                      displayModeNav$: DefaultLayoutView.displayModeNav,
+                      displayModeNav$: this.displayModeNav$,
+                      displayModeToc$: this.displayModeToc$,
                       router,
                   }),
             {
@@ -81,25 +122,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 },
                 connectedCallback: (e) => {
                     router.scrollableElement = e
-                    const resizeObserver = new ResizeObserver((entries) => {
-                        const width = entries[0].contentRect.width
-                        document.documentElement.style.fontSize =
-                            width < 1300 ? '14px' : '16px'
-
-                        if (width < 850) {
-                            DefaultLayoutView.displayModeNav.next('Minimized')
-                            DefaultLayoutView.displayModeToc.next('Minimized')
-                            return
-                        }
-                        if (width < 1100) {
-                            DefaultLayoutView.displayModeNav.next('Minimized')
-                            DefaultLayoutView.displayModeToc.next('Full')
-                            return
-                        }
-                        DefaultLayoutView.displayModeNav.next('Full')
-                        DefaultLayoutView.displayModeToc.next('Full')
-                    })
-                    resizeObserver.observe(e)
                 },
                 children: [
                     {
@@ -110,7 +132,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                         },
                         children: [
                             {
-                                source$: DefaultLayoutView.displayModeNav.pipe(
+                                source$: this.displayModeNav$.pipe(
                                     distinctUntilChanged(),
                                 ),
                                 vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
@@ -138,7 +160,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                 children: [new PageView({ router: router })],
                             },
                             {
-                                source$: DefaultLayoutView.displayModeToc.pipe(
+                                source$: this.displayModeToc$.pipe(
                                     distinctUntilChanged(),
                                 ),
                                 vdomMap: (mode: DisplayMode): AnyVirtualDOM => {

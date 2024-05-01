@@ -18,10 +18,12 @@ export class TopBannerView extends TopBannerBase {
     constructor({
         name,
         displayModeNav$,
+        displayModeToc$,
         router,
     }: {
         name: string
         displayModeNav$: Subject<DisplayMode>
+        displayModeToc$: Subject<DisplayMode>
         router: Router
     }) {
         super({
@@ -42,6 +44,7 @@ export class TopBannerView extends TopBannerBase {
                                         ? { tag: 'div' }
                                         : new ModalNavigationView({
                                               router,
+                                              displayModeToc$: displayModeToc$,
                                           })
                                 },
                             },
