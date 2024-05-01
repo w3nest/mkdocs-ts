@@ -19,6 +19,7 @@ externals_deps = {
     "@youwol/os-top-banner": "^0.2.0",
     "@youwol/rx-tree-views": "^0.3.3",
     "@youwol/http-primitives": "^0.2.3",
+    "esprima": "^4.0.1"
 }
 in_bundle_deps = {}
 dev_deps = {
@@ -50,6 +51,11 @@ template = Template(
                 name='CodeApi',
                 entryFile='./lib/code-api/index.ts',
                 loadDependencies=["@youwol/rx-vdom", "@youwol/http-primitives" ],
+            ),
+            AuxiliaryModule(
+                name='Notebook',
+                entryFile='./lib/notebook/index.ts',
+                loadDependencies=["@youwol/rx-vdom", "rxjs", "@youwol/rx-tree-views", "esprima"],
             )
         ]
     ),
