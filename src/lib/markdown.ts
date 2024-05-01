@@ -135,6 +135,8 @@ export function fromMarkdown(p) {
  *  `views` mapping provided to this function. The associated generator can access attributes (here `barAttr` &
  *  `bazAttr`) as well as the original text content (`some content`).
  *
+ *  The generator functions are called in the order of their corresponding elements in the Markdown source.
+ *
  * @param args see {@link ParsingArguments} for additional options.
  * @param args.src Markdown source.
  * @param args.router The router instance.
@@ -167,7 +169,10 @@ export function parseMd({
         src = src.replace(regex, (match) => placeholders[match])
     }
     views = { ...views, ...GlobalMarkdownViews.factory }
-    const div = fixedMarkedParseCustomViews({ input: src, views: views })
+    const { div, replacedViews } = fixedMarkedParseCustomViews({
+        input: src,
+        views: views,
+    })
 
     const customs = div.querySelectorAll('.language-custom-view')
     customs.forEach((custom) => {
@@ -213,15 +218,23 @@ export function parseMd({
         views,
         emitHtmlUpdated,
     }
-    Object.entries(views || {}).forEach(([k, v]) => {
-        const elems = div.querySelectorAll(k)
-        elems.forEach((elem) => {
+    const viewsTagUpperCase = Object.entries(views).reduce(
+        (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),
+        {},
+    )
+    Object.entries(replacedViews).forEach(([k, _]) => {
+        const elem = div.querySelector(`#${k}`)
+        if (!elem) {
+            return
+        }
+        const factory = viewsTagUpperCase[elem.tagName]
+        factory &&
             elem.parentNode.replaceChild(
-                render(v(elem as HTMLElement, options)),
+                render(factory(elem as HTMLElement, options)),
                 elem,
             )
-        })
     })
+
     return {
         tag: 'div',
         children: [div],
@@ -285,9 +298,18 @@ export function patchSrc({
         }
         patchedSrc += `${line.trim().slice(0, -1)} id="${id}"></${processor}>\n`
         let acc = ''
+        let openedCount = 1
         for (let j = i + 1; j < lines.length; j++) {
             const newLine = lines[j]
-            if (!newLine.includes(`</${processor}>`)) {
+            if (newLine.includes(`<${processor}`)) {
+                acc += newLine + '\n'
+                openedCount++
+                continue
+            }
+            if (newLine.includes(`</${processor}>`)) {
+                openedCount--
+            }
+            if (openedCount > 0) {
                 acc += newLine + '\n'
                 continue
             }
@@ -340,5 +362,5 @@ function fixedMarkedParseCustomViews({
         elem.id = id
     })
 
-    return divResult
+    return { div: divResult, replacedViews: contents }
 }
