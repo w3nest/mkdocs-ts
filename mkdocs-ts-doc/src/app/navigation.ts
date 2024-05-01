@@ -3,6 +3,7 @@ import {
     Router,
     Views,
     installCodeApiModule,
+    installNotebookModule,
 } from '@youwol/mkdocs-ts'
 import { setup } from '../auto-generated'
 
@@ -13,15 +14,20 @@ const project = {
     docBasePath: `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/api`,
 }
 
+const url = (restOfPath: string) =>
+    `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/${restOfPath}`
+
 function fromMd(file: string) {
     return fromMarkdown({
-        url: `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/${file}`,
+        url: url(file),
         placeholders: {
             '{{project}}': project.name,
         },
     })
 }
 const CodeApiModule = await installCodeApiModule()
+const NotebookModule = await installNotebookModule()
+
 export const navigation = {
     name: project.name,
     tableOfContent,
@@ -59,6 +65,21 @@ export const navigation = {
             name: 'Code API',
             tableOfContent,
             html: fromMd('tutorials.code-api.md'),
+        },
+        '/notebook': {
+            name: 'Notebook',
+            tableOfContent,
+            html: ({ router }) =>
+                new NotebookModule.NotebookPage({
+                    url: url('tutorials.notebook.md'),
+                    router,
+                    options: {
+                        runAtStart: true,
+                        defaultCellAttributes: {
+                            lineNumbers: false,
+                        },
+                    },
+                }),
         },
     },
     '/api': {

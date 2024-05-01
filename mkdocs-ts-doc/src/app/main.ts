@@ -12,6 +12,7 @@ await setup.installMainModule({
             'fontawesome#5.12.1~css/all.min.css',
             '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
             `@youwol/mkdocs-ts#${setup.runTimeDependencies.externals['@youwol/mkdocs-ts']}~assets/mkdocs-ts.css`,
+            `@youwol/mkdocs-ts#${setup.runTimeDependencies.externals['@youwol/mkdocs-ts']}~assets/notebook.css`,
         ],
         displayLoadingScreen: true,
     },
