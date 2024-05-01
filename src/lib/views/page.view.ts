@@ -56,7 +56,7 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
 /**
  * The page footer.
  */
-export class PageFooterView implements VirtualDOM<'div'> {
+export class FooterView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'w-100 mkdocs-FooterView d-flex align-items-center'
     public readonly children: ChildrenLike

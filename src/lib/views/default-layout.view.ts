@@ -1,7 +1,7 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { NavigationView } from './navigation.view'
 import { Router } from '../router'
-import { PageFooterView, PageView } from './page.view'
+import { FooterView, PageView } from './page.view'
 import {
     BehaviorSubject,
     combineLatest,
@@ -162,7 +162,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                             position: 'sticky' as const,
                             top: '100%',
                         },
-                        children: [new PageFooterView()],
+                        children: [new FooterView()],
                     },
                 ],
             },
