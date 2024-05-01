@@ -39,6 +39,21 @@ export type Destination = {
 }
 
 /**
+ * A simple proxy for mocking browser navigation to new URL.
+ * Can be useful in testing or documenting contexts where actual re-location is not desirable.
+ */
+export interface MockBrowserLocation {
+    /**
+     * Initial path.
+     */
+    initialPath: string
+    /**
+     * History of navigation.
+     */
+    history?: { url: string; data: unknown }[]
+}
+
+/**
  * Represents the router of the application.
  */
 export class Router {
@@ -94,20 +109,30 @@ export class Router {
     private navUpdates: { [href: string]: LazyNavResolver } = {}
 
     /**
+     * If this attribute is set, navigation to nodes do not trigger browser re-location.
+     *
+     * See {@link MockBrowserLocation}.
+     */
+    public readonly mockBrowserLocation?: MockBrowserLocation
+
+    /**
      * Initialize a router instance.
      *
-     * @param params see corresponding documentation in the class's attributes
-     * @param params.navigation navigation object
-     * @param params.basePath the base path
-     * @param params.retryNavPeriod wehn to retry
+     * @param params See corresponding documentation in the class's attributes.
+     * @param params.navigation See {@link Router.navigation}.
+     * @param params.basePath Deprecated should not be used.
+     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.
+     * @param params.mockBrowserLocation See {@link Router.mockBrowserLocation}.
      */
     constructor(params: {
         navigation: Navigation
         basePath?: string
         retryNavPeriod?: number
+        mockBrowserLocation?: { initialPath: string }
     }) {
         Object.assign(this, params)
         this.basePath = this.basePath || document.location.pathname
+        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])
         const { rootNode, reactiveNavs } = createRootNode({
             navigation: this.navigation,
             router: this,
@@ -154,7 +179,9 @@ export class Router {
      * Returns the current navigation path.
      */
     getCurrentPath(): string {
-        const urlParams = new URLSearchParams(window.location.search)
+        const urlParams = new URLSearchParams(
+            this.mockBrowserLocation?.initialPath || window.location.search,
+        )
         return urlParams.get('nav') || '/'
     }
 
@@ -203,7 +230,10 @@ export class Router {
         })
         // This part is to select the appropriate node in the navigation.
         this.expand(pagePath)
-        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
+        const url = `${this.basePath}?nav=${path}`
+        this.mockBrowserLocation
+            ? this.mockBrowserLocation.history.push({ url, data: { path } })
+            : history.pushState({ path }, undefined, url)
     }
 
     /**
