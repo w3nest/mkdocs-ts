@@ -25,11 +25,11 @@ export class HandlerView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly class =
-        'd-flex flex-column justify-content-center rounded-circle mkdocs-ts-expand-nav-node  fv-hover-bg-background-alt fv-hover-text-focus fv-hover-xx-lighter'
+        'mkdocs-HandlerView d-flex flex-column justify-content-center rounded-circle mkdocs-ts-expand-nav-node  fv-hover-bg-background-alt fv-hover-text-focus fv-hover-xx-lighter'
     public readonly style = {
-        width: '1.1rem',
-        height: '1.1rem',
-        fontSize: '0.8rem',
+        width: '1.1em',
+        height: '1.1em',
+        fontSize: '0.8em',
     }
 
     public readonly onclick: (ev: MouseEvent) => void
@@ -78,7 +78,7 @@ export class HandlerView implements VirtualDOM<'div'> {
 
 export class NavigationHeader implements VirtualDOM<'a'> {
     static DefaultWrapperClass: string =
-        'w-100 d-flex align-items-center fv-pointer pr-2'
+        'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pr-2'
     public readonly tag = 'a'
     public readonly href: string
     public readonly class: AttributeLike<string>
@@ -146,11 +146,9 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'h-100 w-100 overflow-auto'
+    public readonly class = 'mkdocs-NavigationView h-100 w-100 overflow-auto'
     public readonly children: ChildrenLike
-    public readonly style = {
-        fontSize: '0.9rem',
-    }
+
     constructor(params: { router: Router }) {
         Object.assign(this, params)
 
@@ -188,6 +186,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly children: ChildrenLike
+    public readonly class = 'mkdocs-ModalNavigationView'
     /**
      * Wether the modal is expanded or not.
      */
@@ -223,16 +222,14 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = ''
+    public readonly class = 'mkdocs-ExpandedNavigationView h-100 w-100 border'
     public readonly children: ChildrenLike
     public readonly style = {
         top: '0px',
         left: '0px',
         position: 'absolute' as const,
-        height: '100vh',
-        width: '100vw',
         backgroundColor: 'rgba(0,0,0,0)',
-        zIndex: 1,
+        zIndex: 10,
         transition: 'background-color 0.2s ease 0s',
     }
     public readonly onclick: (elem: MouseEvent) => void
@@ -292,7 +289,8 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly node: NavNodeBase
     public readonly tag = 'div'
-    public readonly class = 'w-100 py-3 border px-2 bg-light text-dark'
+    public readonly class =
+        'mkdocs-ModalNavParentView w-100 py-3 border px-2 bg-light text-dark'
     public readonly style = {
         position: 'sticky' as const,
         top: '0px',
@@ -334,6 +332,7 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly node: NavNodeBase
     public readonly tag = 'div'
+    public readonly class = 'mkdocs-ModalNavChildrenView'
     public readonly children: ChildrenLike
     constructor(params: { router: Router; node: NavNodeBase }) {
         Object.assign(this, params)
@@ -379,6 +378,7 @@ export class ModalTocView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     public readonly router: Router
+    public readonly class = 'mkdocs-ModalTocView'
     public readonly expanded$ = new BehaviorSubject(false)
     constructor(params: { router: Router }) {
         Object.assign(this, params)

@@ -42,11 +42,10 @@ export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly html: HTMLElement
     public readonly tag = 'div'
-    public readonly class = 'h-100'
+    public readonly class = 'mkdocs-TOCView h-100'
     public readonly children: ChildrenLike
     public readonly style = {
-        fontSize: '0.9rem',
-        lineHeight: '1.5rem',
+        lineHeight: '1.5em',
     }
 
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)

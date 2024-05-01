@@ -28,7 +28,8 @@ export type DisplayMode = 'Full' | 'Minimized'
 export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: AnyVirtualDOM[]
-    public readonly class = 'd-flex flex-column h-100 w-100 overflow-y-auto'
+    public readonly class =
+        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto'
 
     static displayModeNav = new BehaviorSubject<DisplayMode>('Full')
     static displayModeToc = new BehaviorSubject<DisplayMode>('Full')
@@ -54,14 +55,14 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     }) {
         const wrapperSideNav = (side: 'left' | 'right') => ({
             tag: 'div' as const,
-            class: 'mkdocs-ts-side-nav',
+            class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',
             style: {
-                marginRight: side == 'left' ? '3rem' : '0rem',
-                marginLeft: side == 'right' ? '3rem' : '0rem',
+                marginRight: side == 'left' ? '3em' : '0em',
+                marginLeft: side == 'right' ? '3em' : '0em',
                 maxHeight: '80vh',
                 position: 'sticky' as const,
                 top: '0px',
-                width: '16rem',
+                width: '16em',
             },
         })
         this.children = [
@@ -129,7 +130,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                 tag: 'div',
                                 style: {
                                     width: '75%',
-                                    maxWidth: '40rem',
+                                    maxWidth: '40em',
                                     height: 'fit-content',
                                     minHeight: '100%',
                                     position: 'relative',
@@ -173,7 +174,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'w-100 h-100'
+    public readonly class = 'mkdocs-TocWrapperView w-100 h-100'
 
     public readonly children: ChildrenLike
 

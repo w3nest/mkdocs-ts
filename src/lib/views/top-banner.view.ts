@@ -13,7 +13,7 @@ import { Router } from '../router'
 export class TopBannerView extends TopBannerBase {
     public readonly tag = 'div'
     public readonly class =
-        'fv-text-primary fv-bg-background mkdocs-ts-top-banner'
+        'mkdocs-TopBannerView fv-text-primary fv-bg-background'
 
     constructor({
         name,
@@ -53,8 +53,8 @@ export class TopBannerView extends TopBannerBase {
                                 tag: 'div',
                                 class: 'd-flex align-items-center',
                                 style: {
-                                    width: '12.1rem',
-                                    padding: '1.2rem 0 1.2rem 0',
+                                    width: '12.1em',
+                                    padding: '1.2em 0 1.2em 0',
                                 },
                                 children: [
                                     {
@@ -70,7 +70,7 @@ export class TopBannerView extends TopBannerBase {
                                         innerText: name,
                                         style: {
                                             fontWeight: 700,
-                                            fontSize: '1.2rem',
+                                            fontSize: '1.2em',
                                         },
                                     },
                                 ],
@@ -84,8 +84,8 @@ export class TopBannerView extends TopBannerBase {
                             {
                                 tag: 'div',
                                 style: {
-                                    width: '12.1rem',
-                                    padding: '1.2rem 0 1.2rem 0',
+                                    width: '12.1em',
+                                    padding: '1.2em 0 1.2em 0',
                                 },
                             },
                         ],
