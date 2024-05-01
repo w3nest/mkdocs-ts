@@ -21,7 +21,9 @@ externals_deps = {
     "@youwol/http-primitives": "^0.2.3",
 }
 in_bundle_deps = {}
-dev_deps = {}
+dev_deps = {
+    "codemirror": "^5.52.0",
+}
 
 template = Template(
     path=folder_path,
