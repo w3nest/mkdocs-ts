@@ -1,17 +1,50 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes, notebookViews } from './notebook-page'
-import { CellTrait, ExecArgs, State } from './state'
+import { CellTrait, ExecArgs, Output, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { BehaviorSubject } from 'rxjs'
-import { parseMd, ParsingArguments } from '../markdown'
+import { BehaviorSubject, filter, Observable, ReplaySubject } from 'rxjs'
+import { parseMd, MdParsingOptions } from '../markdown'
 import { JsCellAttributes } from './js-cell-view'
+import { executeJsStatement } from './js-execution'
 
 /**
  * All attributes available for a Markdown cell are the common ones for now.
  */
 export type MdCellAttributes = CellCommonAttributes
 
+export class InlinedCode implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly style = {
+        display: 'inline-block' as const,
+    }
+    public readonly src: string
+    public readonly scope: Scope
+    public readonly children: ChildrenLike
+    public readonly invalidated$: Observable<unknown>
+
+    constructor(params: {
+        src: string
+        scope: Scope
+        invalidated$: Observable<unknown>
+    }) {
+        Object.assign(this, params)
+        const output$ = new ReplaySubject<Output>()
+
+        executeJsStatement({
+            src: this.src,
+            scope: this.scope,
+            output$,
+            invalidated$: this.invalidated$,
+        })
+        this.children = [
+            {
+                source$: output$.pipe(filter((d) => d != undefined)),
+                vdomMap: (vDom: AnyVirtualDOM) => vDom,
+            },
+        ]
+    }
+}
 /**
  *
  * Represents a Markdown cell within a {@link NotebookPage}.
@@ -39,14 +72,20 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
      */
     public readonly content$: BehaviorSubject<string>
 
+    public readonly parserOptions: MdParsingOptions
+    public readonly invalidated$: Observable<unknown>
+
     constructor(params: {
         cellId: string
         content: string
         state: State
-        parserOptions: ParsingArguments
+        parserOptions: MdParsingOptions
         cellAttributes: MdCellAttributes
     }) {
         Object.assign(this, params)
+        this.invalidated$ = this.state.invalidated$.pipe(
+            filter((cellId) => cellId === this.cellId),
+        )
         this.editorView = new SnippetEditorView({
             language: 'markdown',
             readOnly: false,
@@ -71,14 +110,32 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
      *
      * @param args See {@link ExecArgs}.
      */
-    async execute({ scope, owningState, cellId, src, output$ }: ExecArgs) {
+    async execute({
+        scope,
+        owningState,
+        cellId,
+        src,
+        output$,
+    }: ExecArgs): Promise<Scope> {
         const state = new State({
             initialScope: scope,
             parent: { state: owningState, cellId },
         })
+        const patchSrc = src
+            .replace(/\${/g, '<js-inlined>')
+            .replace(/}\$/g, '</js-inlined>')
+
         const vdom = parseMd({
-            src: src,
+            src: patchSrc,
+            ...this.parserOptions,
             views: {
+                'js-inlined': (elem) => {
+                    return new InlinedCode({
+                        src: elem.textContent,
+                        scope,
+                        invalidated$: this.invalidated$,
+                    })
+                },
                 ...notebookViews({
                     state: state,
                     cellOptions: {

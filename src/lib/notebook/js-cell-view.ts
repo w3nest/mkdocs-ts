@@ -1,15 +1,21 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, filter, Observable } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { CellTrait, ExecArgs, State } from './state'
+import { CellTrait, ExecArgs, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { executeJs } from './js-execution'
 
 /**
  * All attributes available for a javascript cell are the common ones for now.
  */
-export type JsCellAttributes = CellCommonAttributes
+export type JsCellAttributes = CellCommonAttributes & {
+    /**
+     * If the cell is reactive, Observables & Promises referenced are automatically resolved.
+     * It uses a 'combineLatest' policy.
+     */
+    reactive: true
+}
 
 /**
  *
@@ -37,6 +43,7 @@ export class JsCellView implements VirtualDOM<'div'>, CellTrait {
      * Observable over the source content of the cell.
      */
     public readonly content$: BehaviorSubject<string>
+    public readonly invalidated$: Observable<unknown>
 
     constructor(params: {
         cellId: string
@@ -45,6 +52,9 @@ export class JsCellView implements VirtualDOM<'div'>, CellTrait {
         cellAttributes: JsCellAttributes
     }) {
         Object.assign(this, params)
+        this.invalidated$ = this.state.invalidated$.pipe(
+            filter((cellId) => cellId === this.cellId),
+        )
         this.editorView = new SnippetEditorView({
             language: 'javascript',
             readOnly: this.cellAttributes.readOnly,
@@ -69,7 +79,11 @@ export class JsCellView implements VirtualDOM<'div'>, CellTrait {
      *
      * @param args See {@link ExecArgs}.
      */
-    async execute(args: ExecArgs) {
-        return await executeJs(args)
+    async execute(args: ExecArgs): Promise<Scope> {
+        return await executeJs({
+            ...args,
+            reactive: this.cellAttributes.reactive,
+            invalidated$: this.invalidated$,
+        })
     }
 }

@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject } from 'rxjs'
+import { BehaviorSubject, Subject, Subscription, filter } from 'rxjs'
 import { OutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
 import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
@@ -90,6 +90,11 @@ export class State {
     public readonly scopes$: {
         [k: string]: BehaviorSubject<Scope | undefined>
     } = {}
+
+    /**
+     * Observable that emits the ID of invalidated cells.
+     */
+    public readonly invalidated$ = new Subject<string>()
     /**
      * Observables over the cell's output keyed by the cell's ID.
      */
@@ -142,6 +147,19 @@ export class State {
         parent?: { state: State; cellId: string }
     }) {
         Object.assign(this, params)
+        if (params.parent) {
+            params.parent.state.invalidated$
+                .pipe(filter((cellId) => cellId === params.parent.cellId))
+                .subscribe(() => {
+                    if (this.ids.length === 0) {
+                        return
+                    }
+                    this.unreadyCells({ afterCellId: this.ids[0] })
+                    Object.values(this.outputs$).forEach((output$) =>
+                        output$.next(undefined),
+                    )
+                })
+        }
     }
 
     appendCell(cell: CellTrait) {
@@ -233,14 +251,18 @@ export class State {
         })
         return scope
     }
-
+    private invalidateCells(cellId: string) {
+        this.invalidated$.next(cellId)
+    }
     unreadyCells({ afterCellId }: { afterCellId: string }) {
         const index = this.ids.indexOf(afterCellId)
+        this.invalidateCells(afterCellId)
         const remainingIds = this.ids.slice(index + 1)
         remainingIds.forEach((id) => {
             this.cellsStatus$[id].next('unready')
             this.scopes$[id].next(undefined)
             this.executing$[id].next(false)
+            this.invalidateCells(id)
         })
     }
 }

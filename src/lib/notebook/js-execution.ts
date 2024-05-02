@@ -1,8 +1,64 @@
-import { Subject } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { display } from './display-utils'
 import { parseScript } from 'esprima'
-import { Scope } from './state'
+import { Output, Scope } from './state'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
+
+function extractKeys(obj: { [k: string]: unknown } | string[]) {
+    return (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
+        (acc, e) => `${acc} ${e},`,
+        '',
+    )
+}
+/**
+ * Execute a given javascript statement. This execution is reactive by default.
+ *
+ * @param _args
+ * @param _args.src The source to execute
+ * @param _args.scope The entering scope.
+ * @param _args.output$ Subject in which output views are sent (when using `display` function).
+ * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
+ * @returns Promise over the scope at exit
+ */
+export async function executeJsStatement({
+    src,
+    scope,
+    output$,
+    invalidated$,
+}: {
+    src: string
+    scope: Scope
+    output$: Subject<Output>
+    invalidated$: Observable<unknown>
+}) {
+    const ast = parseProgram(src)
+    const declarations = extractGlobalDeclarations(ast)
+    const patchedReactive = patchReactiveCell({
+        ast,
+        scope,
+        declarations,
+        src: `display(${src})`,
+    })
+
+    const srcPatched = `
+return async (scope, {display, invalidated$, output$}) => {
+    // header
+const {${extractKeys(scope.const)}} = scope.const
+let {${extractKeys(scope.let)}} = scope.let
+
+    // original src
+    
+${patchedReactive.wrapped}
+    
+}
+    `
+    const displayInOutput = (element: HTMLElement) => display(element, output$)
+    return await new Function(srcPatched)()(scope, {
+        display: displayInOutput,
+        invalidated$,
+        output$,
+    })
+}
 
 /**
  * Execute a given javascript source content.
@@ -11,65 +67,153 @@ import { AnyVirtualDOM } from '@youwol/rx-vdom'
  * @param _args.src The source to execute
  * @param _args.scope The entering scope.
  * @param _args.output$ Subject in which output views are sent (when using `display` function).
+ * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
+ * @param _args.reactive If true, observables & promises are resolved before cell execution using a `combineLatest`
+ * policy.
  * @returns Promise over the scope at exit
  */
 export async function executeJs({
     src,
     scope,
     output$,
+    reactive,
+    invalidated$,
 }: {
     src: string
     scope: Scope
     output$: Subject<AnyVirtualDOM>
+    reactive?: boolean
+    invalidated$: Observable<unknown>
 }): Promise<Scope> {
-    const extractKeys = (obj: { [k: string]: unknown } | string[]) =>
-        (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
-            (acc, e) => `${acc} ${e},`,
-            '',
-        )
-
     const ast = parseProgram(src)
     const declarations = extractGlobalDeclarations(ast)
 
-    const footer = `
+    let footer = `
 return { 
     const:{ ${extractKeys(scope.const)} ${extractKeys(declarations.const)} },
     let:{ ${extractKeys(scope.let)} ${extractKeys(declarations.let)} }
 }
     `
-
+    let wrapped = src
+    if (reactive) {
+        const patched = patchReactiveCell({ ast, scope, declarations, src })
+        footer = patched ? patched.footer : footer
+        wrapped = patched ? patched.wrapped : wrapped
+    }
     const srcPatched = `
-return async (scope, {display}) => {
+return async (scope, {display, output$, invalidated$}) => {
     // header
 const {${extractKeys(scope.const)}} = scope.const
 let {${extractKeys(scope.let)}} = scope.let
 
     // original src
     
-${src}
-
+${wrapped}
+    
     // footer
-    // e.g
 ${footer}
 }
     `
     const displayInOutput = (element: HTMLElement) => display(element, output$)
-    return await new Function(srcPatched)()(scope, { display: displayInOutput })
+    return await new Function(srcPatched)()(scope, {
+        display: displayInOutput,
+        invalidated$,
+        output$,
+    })
 }
-/////
+
+function patchReactiveCell({
+    ast,
+    scope,
+    declarations,
+    src,
+}: {
+    ast: unknown
+    scope: Scope
+    declarations: { const: string[]; let: string[] }
+    src: string
+}) {
+    const undefs = extractUndefinedReferences(ast)
+
+    const observables = Object.entries({
+        ...scope.const,
+        ...scope.let,
+    }).filter(
+        ([k, v]) =>
+            undefs.includes(k) &&
+            (v instanceof Observable || v instanceof Promise),
+    ) as unknown as [string, Observable<unknown> | Promise<unknown>][]
+
+    if (observables.length === 0) {
+        return undefined
+    }
+    const keys = observables.reduce((acc, [k, v]) => {
+        return v instanceof Observable
+            ? `${acc}${k},`
+            : `${acc}rxjs.from(${k}),`
+    }, '')
+    const footerInner = `
+return { 
+    const:{ ${extractKeys(declarations.const)} },
+    let:{ ${extractKeys(declarations.let)} }
+}
+    `
+    const extractKeysOutter = (
+        obj: { [k: string]: unknown } | string[],
+        type: 'const' | 'let',
+    ) =>
+        (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
+            (acc, e) =>
+                `${acc} ${e}: scope$.pipe( rxjs.map((scope) => scope.${type}.${e})),`,
+            '',
+        )
+
+    const footer = `
+return { 
+    const:{ ${extractKeys(scope.const)} ${extractKeysOutter(declarations.const, 'const')} },
+    let:{ ${extractKeys(scope.let)} ${extractKeysOutter(declarations.let, 'let')} }
+}
+    `
+
+    const wrapped = `
+const scope$ = rxjs.combineLatest([${keys}]).pipe( 
+    rxjs.takeUntil(invalidated$),
+    rxjs.map(([${keys}]) => {
+        output$.next(undefined)
+        ${src}
+        // Footer
+        ${footerInner}
+    }), 
+    rxjs.shareReplay({bufferSize:1, refCount: true}))
+scope$.subscribe()
+            `
+
+    return { wrapped, footer }
+}
+
 function find_children({
     node,
     skipKeys,
+    skipNode,
     match,
+    leafs,
 }: {
     node: unknown
-    skipKeys: string[]
+    skipKeys?: string[]
+    skipNode?: (n) => boolean
+    leafs?: (n) => unknown[]
     match: (node: unknown) => boolean
 }) {
     const references = []
-
+    skipKeys = skipKeys || []
+    skipNode = skipNode || (() => false)
     function traverse(obj: unknown) {
         if (!obj) {
+            return
+        }
+        if (leafs && leafs(obj)) {
+            traverse(leafs(obj))
+            //references.push(...leafs(obj))
             return
         }
         if (typeof obj === 'object') {
@@ -77,7 +221,7 @@ function find_children({
                 references.push(obj)
             }
             for (const [k, value] of Object.entries(obj)) {
-                if (!skipKeys.includes(k)) {
+                if (!skipKeys.includes(k) && !skipNode(obj)) {
                     traverse(value)
                 }
             }
@@ -126,4 +270,61 @@ export function extractGlobalDeclarations(body): {
         const: [...new Set(consts)],
         let: [...new Set(lets)],
     }
+}
+
+export function extractUndefinedReferences(body, scope: string[] = []) {
+    let allIds = find_children({
+        node: body,
+        skipNode: (n) =>
+            ['BlockStatement', 'FunctionDeclaration'].includes(n.type),
+        match: (d) => d['type'] === 'Identifier',
+        leafs: (n) => {
+            if (n.type === 'CallExpression') {
+                return [n.callee.object, ...n.arguments]
+            }
+            if (n.type === 'FunctionDeclaration') {
+                return [n.body]
+            }
+            if (n.type === 'ObjectExpression') {
+                return n.properties.map((p) => p.value)
+            }
+            if (n.type === 'MemberExpression') {
+                return [n.object]
+            }
+        },
+    }).map((n) => n.name)
+    allIds = [...new Set(allIds)]
+    const declarations = extractGlobalDeclarations(body)
+    scope = [...declarations.let, ...declarations.const, ...scope]
+    const undefs = allIds.filter((id) => !scope.includes(id))
+
+    const blocks = find_children({
+        node: body,
+        match: (n) => n['type'] === 'BlockStatement',
+        skipNode: (n) => ['FunctionDeclaration'].includes(n.type),
+    })
+    const undefsBlocks = blocks
+        .map((b) => extractUndefinedReferences(b.body, scope))
+        .flat()
+
+    const fcts = find_children({
+        node: body,
+        match: (n) => n['type'] === 'FunctionDeclaration',
+    })
+    const undefsFct = fcts
+        .map((b) => {
+            let params = find_children({
+                node: b,
+                skipKeys: ['body'],
+                match: (d) => d['type'] === 'Identifier',
+            }).map((n) => n.name)
+            params = [...new Set(params)]
+            return extractUndefinedReferences(b.body.body, [
+                ...scope,
+                ...params,
+            ])
+        })
+        .flat()
+
+    return [undefs, ...undefsBlocks, ...undefsFct].flat()
 }

@@ -83,11 +83,15 @@ export const notebookViews = ({
         },
         'js-cell': (elem) => {
             const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
+            const reactive = elem.getAttribute('reactive')
             const cell = new JsCellView({
                 cellId: id,
                 content: elem.textContent,
                 state: state,
-                cellAttributes: getCellOptions(elem, cellOptions),
+                cellAttributes: {
+                    ...getCellOptions(elem, cellOptions),
+                    reactive,
+                },
             })
             state.appendCell(cell)
             return cell
