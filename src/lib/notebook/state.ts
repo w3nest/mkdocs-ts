@@ -2,6 +2,7 @@ import { BehaviorSubject, Subject, Subscription, filter } from 'rxjs'
 import { OutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
 import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
+import { Views } from '.'
 
 export type CellStatus = 'unready' | 'ready' | 'success' | 'error'
 
@@ -26,7 +27,7 @@ export type Scope = {
  */
 export const emptyScope: Scope = {
     let: {},
-    const: { webpm },
+    const: { webpm, Views },
 }
 
 /**

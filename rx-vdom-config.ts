@@ -19,3 +19,4 @@ type DevTags =
     | 'span'
     | 'pre'
     | 'footer'
+    | 'input'
