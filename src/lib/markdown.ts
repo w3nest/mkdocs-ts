@@ -43,9 +43,28 @@ export type MdParsingOptions = {
      */
     preprocessing?: (text: string) => string
     /**
-     *  Custom views generators corresponding to HTMLElement referenced in the Mardown source.
+     *  Custom views generators corresponding to HTMLElement referenced in the Markdown source.
      */
     views?: { [k: string]: ViewGenerator }
+
+    /**
+     * Whether to parse Latex equations.
+     * If `true` the MathJax module needs to be loaded by the consumer before parsing occurs.
+     *
+     * Using the webpm client:
+     * ````js
+     * import { install } from '@youwol/webpm-client'
+     *
+     * await install({
+     *     modules: ['mathjax#^3.1.4'],
+     * })
+     * ```
+     *
+     * Within the markdown page, equation blocks are written between `$$` and inline elements between
+     * `\\(` and `\\)`
+     */
+    latex?: boolean
+
     /**
      * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
      */
@@ -151,6 +170,7 @@ export function parseMd({
     placeholders,
     preprocessing,
     emitHtmlUpdated,
+    latex,
 }: {
     src: string
     router?: Router
@@ -173,6 +193,8 @@ export function parseMd({
         input: src,
         views: views,
     })
+
+    latex && window['MathJax'] && window['MathJax'].typeset([div])
 
     const customs = div.querySelectorAll('.language-custom-view')
     customs.forEach((custom) => {
@@ -215,6 +237,7 @@ export function parseMd({
         router,
         preprocessing,
         placeholders,
+        latex,
         views,
         emitHtmlUpdated,
     }
@@ -222,17 +245,15 @@ export function parseMd({
         (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),
         {},
     )
-    Object.entries(replacedViews).forEach(([k, _]) => {
+    Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {
         const elem = div.querySelector(`#${k}`)
         if (!elem) {
             return
         }
+        elem.textContent = content
         const factory = viewsTagUpperCase[elem.tagName]
         factory &&
-            elem.parentNode.replaceChild(
-                render(factory(elem as HTMLElement, options)),
-                elem,
-            )
+            elem.parentNode.replaceChild(render(factory(elem, options)), elem)
     })
 
     return {
@@ -358,7 +379,6 @@ function fixedMarkedParseCustomViews({
             })
             return
         }
-        elem.textContent = content as string
         elem.id = id
     })
 
