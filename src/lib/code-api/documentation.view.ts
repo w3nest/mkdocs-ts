@@ -3,6 +3,8 @@ import { parseMd } from '../index'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
+import { NotebookTypes, installNotebookModule } from '../../index'
+import { from } from 'rxjs'
 
 export class DocumentationView implements VirtualDOM<'div'> {
     public readonly documentation?: Documentation
@@ -22,6 +24,7 @@ export class DocumentationView implements VirtualDOM<'div'> {
             return new SectionView({
                 section,
                 router: this.router,
+                configuration: this.configuration,
             })
         })
     }
@@ -29,16 +32,21 @@ export class DocumentationView implements VirtualDOM<'div'> {
 
 export class SectionView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly children: ChildrenLike
+    public readonly children: ChildrenLike = []
     public readonly class = 'mkapi-section'
 
     constructor({
         section,
         router,
+        configuration,
     }: {
         section: DocumentationSection
         router: Router
+        configuration: Configuration
     }) {
+        if (!section) {
+            return
+        }
         const redirect = (
             link: HTMLAnchorElement,
             target: string,
@@ -70,16 +78,26 @@ export class SectionView implements VirtualDOM<'div'> {
             'yw-nav-meth': (link: HTMLAnchorElement) =>
                 redirect(link, '@yw-nav-meth:', 3),
         }
-        this.children = section
-            ? [
-                  section.title && new SectionHeader(section),
-                  parseMd({
+
+        this.children = [
+            section.title && new SectionHeader(section),
+            configuration.notebook
+                ? {
+                      source$: from(installNotebookModule()),
+                      vdomMap: (mdle: typeof NotebookTypes) => {
+                          return new mdle.NotebookPage({
+                              src: section.content,
+                              router,
+                              options: { runAtStart: true },
+                          })
+                      },
+                  }
+                : parseMd({
                       src: section.content,
                       router: router,
                       navigations,
                   }),
-              ]
-            : []
+        ]
     }
 }
 
