@@ -9,6 +9,7 @@ import * as webpm from '@youwol/webpm-client'
 import { from } from 'rxjs'
 import { Router } from './router'
 import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
+import { NoteLevel, NoteView } from './md-widgets'
 
 /**
  * Type definition for custom view generators.
@@ -92,6 +93,14 @@ export class GlobalMarkdownViews {
                 language: elem.getAttribute('language') as CodeLanguage,
                 highlightedLines: elem.getAttribute('highlightedLines'),
                 content: elem.textContent,
+            })
+        },
+        note: (elem: HTMLElement, parsingArgs) => {
+            return new NoteView({
+                level: elem.getAttribute('level') as NoteLevel,
+                label: elem.getAttribute('label'),
+                content: elem.textContent,
+                parsingArgs,
             })
         },
     }
