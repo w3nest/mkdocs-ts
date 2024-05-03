@@ -1,0 +1,119 @@
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { BehaviorSubject, Subject } from 'rxjs'
+
+/**
+ * Represents a range view.
+ *
+ * <js-cell>
+ * let range = new Views.Range()
+ * display(range)
+ * display(range.value$)
+ * </js-cell>
+ *
+ * To setup min, max and step:
+ * <js-cell>
+ * display(new Views.Range({min:0, max:100, step: 1}))
+ * </js-cell>
+ *
+ * The range can optionally emit while dragging, it may be relevant to debounce the `value$` observable
+ * when consuming it:
+ * <js-cell>
+ * range = new Views.Range({emitDrag: true})
+ * display(range)
+ * display(range.value$.pipe(rxjs.debounceTime(100)))
+ * </js-cell>
+ */
+export class Range implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    /**
+     * Classes associated to the view.
+     */
+    public readonly class = 'mknb-Range'
+    public readonly children: ChildrenLike
+    public readonly value$: Subject<number>
+    /**
+     * Default value.
+     */
+    public readonly value: number = 0.5
+    /**
+     * Minimum value.
+     */
+    public readonly min: number = 0
+    /**
+     * Maximum value.
+     */
+    public readonly max: number = 1
+    /**
+     * Step.
+     */
+    public readonly step = 0.01
+    /**
+     * If `true`, data are emitted in `value$` while dragging the slider.
+     */
+    public readonly emitDrag: boolean = true
+    constructor(
+        params: {
+            min?: number
+            max?: number
+            step?: number
+            value?: number
+            value$?: Subject<number>
+            emitDrag?: boolean
+        } = {},
+    ) {
+        Object.assign(this, params)
+        if (!params.value) {
+            this.value = 0.5 * (this.max - this.min)
+        }
+        if (!this.value$) {
+            this.value$ = new BehaviorSubject(this.value)
+        }
+        const getValue = (from: string) => {
+            const v = parseFloat(from)
+            if (v < this.min) {
+                return this.min
+            }
+            if (v > this.max) {
+                return this.max
+            }
+            return v
+        }
+        const options = {
+            min: `${this.min}`,
+            max: `${this.max}`,
+            step: `${this.step}`,
+        }
+        this.children = [
+            {
+                tag: 'input',
+                type: 'number',
+                ...options,
+                value: {
+                    source$: this.value$,
+                    vdomMap: (v: number) => `${v}`,
+                },
+                onchange: (ev: MouseEvent) => {
+                    this.value$.next(getValue(ev.target['value']))
+                },
+            },
+            { tag: 'i', class: 'mx-1' },
+            {
+                tag: 'input',
+                type: 'range',
+                ...options,
+                value: {
+                    source$: this.value$,
+                    vdomMap: (v: number) => `${v}`,
+                },
+                onchange: (ev: MouseEvent) => {
+                    this.value$.next(getValue(ev.target['value']))
+                },
+                oninput: (ev: MouseEvent) => {
+                    if (this.emitDrag) {
+                        this.value$.next(getValue(ev.target['value']))
+                    }
+                },
+            },
+        ]
+    }
+}
