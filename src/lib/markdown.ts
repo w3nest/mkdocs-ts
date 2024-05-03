@@ -24,13 +24,13 @@ import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
  */
 export type ViewGenerator = (
     elem: HTMLElement,
-    options: { router?: Router } & ParsingArguments,
+    options: { router?: Router } & MdParsingOptions,
 ) => AnyVirtualDOM
 
 /**
  * Options for parsing Markdown content.
  */
-export type ParsingArguments = {
+export type MdParsingOptions = {
     /**
      * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
      * in the source by their corresponding values.
@@ -81,13 +81,13 @@ export class GlobalMarkdownViews {
 /**
  * Fetch & parse a Markdown file from specified with a URL.
  *
- * @param params see {@link ParsingArguments} for additional options.
+ * @param params see {@link MdParsingOptions} for additional options.
  * @param params.url The URL of the file.
  */
 export function fetchMarkdown(
     params: {
         url: string
-    } & ParsingArguments,
+    } & MdParsingOptions,
 ): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
     setOptions({
         langPrefix: 'hljs language-',
@@ -137,7 +137,7 @@ export function fromMarkdown(p) {
  *
  *  The generator functions are called in the order of their corresponding elements in the Markdown source.
  *
- * @param args see {@link ParsingArguments} for additional options.
+ * @param args see {@link MdParsingOptions} for additional options.
  * @param args.src Markdown source.
  * @param args.router The router instance.
  * @param args.navigations Specify custom redirections for HTMLAnchorElement.
@@ -155,7 +155,7 @@ export function parseMd({
     src: string
     router?: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
-} & ParsingArguments): VirtualDOM<'div'> {
+} & MdParsingOptions): VirtualDOM<'div'> {
     if (typeof src !== 'string') {
         console.error('Given MD source is not a string', src)
         return {
