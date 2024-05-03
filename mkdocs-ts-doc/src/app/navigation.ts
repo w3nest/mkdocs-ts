@@ -91,7 +91,10 @@ export const navigation = {
                 modulePath: path,
                 router,
                 project,
-                configuration: CodeApiModule.configurationTsTypedoc,
+                configuration: {
+                    ...CodeApiModule.configurationTsTypedoc,
+                    notebook: true,
+                },
             }),
     },
 }
