@@ -272,11 +272,14 @@ export class Router {
             return
         }
         const tinyMarginPx = 5
-        this.scrollableElement.scrollTo({
-            top: div.offsetTop + br.top - tinyMarginPx,
-            left: 0,
-            behavior: 'smooth',
-        })
+        setTimeout(() => {
+            this.scrollableElement.scrollTo({
+                top: div.offsetTop + br.top - tinyMarginPx,
+                left: 0,
+                behavior: 'smooth',
+            })
+        }, 0)
+
         const currentPath = this.getCurrentPath().split('.')[0]
         const path = `${currentPath}.${div.id}`
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
