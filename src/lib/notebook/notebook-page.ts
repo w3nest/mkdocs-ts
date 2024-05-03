@@ -1,5 +1,5 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd, ParsingArguments, ViewGenerator } from '../markdown'
+import { parseMd, MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
 import { emptyScope, State } from './state'
@@ -45,6 +45,11 @@ export type NotebookOptions = {
      * The default values for cell's attribute.
      */
     defaultCellAttributes?: CellCommonAttributes
+
+    /**
+     * Options for markdown parsing.
+     */
+    markdown?: MdParsingOptions
 }
 
 function getCellOptions(
@@ -126,14 +131,15 @@ export class NotebookPage implements VirtualDOM<'div'> {
      */
     public readonly class = 'mknb-NotebookPage'
     public readonly url: string
-    public readonly parsingArguments?: ParsingArguments
     public readonly views: { [k: string]: ViewGenerator }
     public readonly router: Router
-    public readonly children: ChildrenLike
+    public readonly children: ChildrenLike = []
     /**
      * State manager.
      */
     public readonly state: State = new State({ initialScope: emptyScope })
+
+    public readonly options: NotebookOptions
 
     /**
      * Constructs the page.
@@ -151,13 +157,21 @@ export class NotebookPage implements VirtualDOM<'div'> {
         url?: string
         src?: string
         router: Router
-        parsingArguments?: ParsingArguments
         options?: NotebookOptions
     }) {
         Object.assign(this, params)
-        const source$ = params.src
-            ? of(params.src)
-            : from(fetch(this.url).then((resp) => resp.text())).pipe(take(1))
+        if (params.src === undefined && params.url === undefined) {
+            console.error(
+                'Neither url or src parameter provided to the notebook page.',
+            )
+            return
+        }
+        const source$ =
+            params.src !== undefined
+                ? of(params.src)
+                : from(fetch(this.url).then((resp) => resp.text())).pipe(
+                      take(1),
+                  )
         const cellOptions = {
             ...defaultCellAttributes,
             ...(params.options?.defaultCellAttributes || {}),
@@ -169,9 +183,9 @@ export class NotebookPage implements VirtualDOM<'div'> {
                     const vdom = parseMd({
                         src,
                         router: this.router,
-                        ...(this.parsingArguments || {}),
+                        ...(this.options?.markdown || {}),
                         views: {
-                            ...(this.parsingArguments?.views || {}),
+                            ...(this.options?.markdown?.views || {}),
                             ...notebookViews({
                                 state: this.state,
                                 cellOptions,
