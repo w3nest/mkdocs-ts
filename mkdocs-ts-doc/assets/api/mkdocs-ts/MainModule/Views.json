@@ -23,22 +23,94 @@
                 ]
             },
             "path": "DefaultLayoutView",
-            "attributes": [],
+            "attributes": [
+                {
+                    "name": "displayModeNav$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The display mode regarding the navigation panel.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DefaultLayoutView.displayModeNav$",
+                    "code": {
+                        "filePath": "src/lib/views/default-layout.view.ts",
+                        "declaration": "public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')",
+                        "implementation": "",
+                        "startLine": 37,
+                        "endLine": 38,
+                        "references": {
+                            "displayModeNav$": "@nav/api/MainModule/Views.DefaultLayoutView.displayModeNav$",
+                            "DisplayMode": "@nav/api/MainModule/Views.DisplayMode"
+                        }
+                    }
+                },
+                {
+                    "name": "displayModeToc$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The display mode regarding the table of content.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DefaultLayoutView.displayModeToc$",
+                    "code": {
+                        "filePath": "src/lib/views/default-layout.view.ts",
+                        "declaration": "public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')",
+                        "implementation": "",
+                        "startLine": 41,
+                        "endLine": 42,
+                        "references": {
+                            "displayModeToc$": "@nav/api/MainModule/Views.DefaultLayoutView.displayModeToc$",
+                            "DisplayMode": "@nav/api/MainModule/Views.DisplayMode"
+                        }
+                    }
+                }
+            ],
             "callables": [],
             "code": {
                 "filePath": "src/lib/views/default-layout.view.ts",
                 "declaration": "export class DefaultLayoutView implements VirtualDOM<'div'>",
-                "implementation": "export class DefaultLayoutView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: AnyVirtualDOM[]\n    public readonly class = 'd-flex flex-column h-100 w-100 overflow-y-auto'\n\n    static displayModeNav = new BehaviorSubject<DisplayMode>('Full')\n    static displayModeToc = new BehaviorSubject<DisplayMode>('Full')\n\n    public readonly style = {\n        fontFamily: 'Lexend, sans-serif',\n    }\n\n    /**\n     *\n     * @param router The router\n     * @param name The name of the application\n     * @param topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.\n     */\n    constructor({\n        router,\n        name,\n        topBanner,\n    }: {\n        router: Router\n        name: string\n        topBanner?: ({ displayMode$ }) => AnyVirtualDOM\n    }) {\n        const wrapperSideNav = (side: 'left' | 'right') => ({\n            tag: 'div' as const,\n            class: 'mkdocs-ts-side-nav',\n            style: {\n                marginRight: side == 'left' ? '3rem' : '0rem',\n                marginLeft: side == 'right' ? '3rem' : '0rem',\n                maxHeight: '80vh',\n                position: 'sticky' as const,\n                top: '0px',\n                width: '16rem',\n            },\n        })\n        this.children = [\n            topBanner\n                ? topBanner({ displayMode$: DefaultLayoutView.displayModeNav })\n                : new TopBannerView({\n                      name,\n                      displayModeNav$: DefaultLayoutView.displayModeNav,\n                      router,\n                  }),\n            {\n                tag: 'div',\n                class: 'flex-grow-1 w-100 overflow-auto',\n                style: {\n                    minHeight: '0px',\n                },\n                connectedCallback: (e) => {\n                    router.scrollableElement = e\n                    const resizeObserver = new ResizeObserver((entries) => {\n                        const width = entries[0].contentRect.width\n                        document.documentElement.style.fontSize =\n                            width < 1300 ? '14px' : '16px'\n\n                        if (width < 850) {\n                            DefaultLayoutView.displayModeNav.next('Minimized')\n                            DefaultLayoutView.displayModeToc.next('Minimized')\n                            return\n                        }\n                        if (width < 1100) {\n                            DefaultLayoutView.displayModeNav.next('Minimized')\n                            DefaultLayoutView.displayModeToc.next('Full')\n                            return\n                        }\n                        DefaultLayoutView.displayModeNav.next('Full')\n                        DefaultLayoutView.displayModeToc.next('Full')\n                    })\n                    resizeObserver.observe(e)\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex justify-content-center pt-5 w-100',\n                        style: {\n                            position: 'relative',\n                        },\n                        children: [\n                            {\n                                source$: DefaultLayoutView.displayModeNav.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('left'),\n                                              children: [\n                                                  new NavigationView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '75%',\n                                    maxWidth: '40rem',\n                                    height: 'fit-content',\n                                    minHeight: '100%',\n                                    position: 'relative',\n                                },\n                                children: [new PageView({ router: router })],\n                            },\n                            {\n                                source$: DefaultLayoutView.displayModeToc.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('right'),\n                                              children: [\n                                                  new TocWrapperView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                        ],\n                    },\n                    {\n                        tag: 'footer',\n                        style: {\n                            position: 'sticky' as const,\n                            top: '100%',\n                        },\n                        children: [new PageFooterView()],\n                    },\n                ],\n            },\n        ]\n    }\n}",
+                "implementation": "export class DefaultLayoutView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: AnyVirtualDOM[]\n    public readonly class =\n        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto'\n\n    /**\n     * The display mode regarding the navigation panel.\n     */\n    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')\n    /**\n     * The display mode regarding the table of content.\n     */\n    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')\n\n    public readonly style = {\n        position: 'relative' as const,\n    }\n\n    public readonly connectedCallback: (e: HTMLElement) => undefined\n\n    /**\n     *\n     * @param router The router\n     * @param name The name of the application\n     * @param topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.\n     */\n    constructor({\n        router,\n        name,\n        topBanner,\n    }: {\n        router: Router\n        name: string\n        topBanner?: ({ displayMode$ }) => AnyVirtualDOM\n    }) {\n        const wrapperSideNav = (side: 'left' | 'right') => ({\n            tag: 'div' as const,\n            class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',\n            style: {\n                marginRight: side == 'left' ? '3em' : '0em',\n                marginLeft: side == 'right' ? '3em' : '0em',\n                maxHeight: '80vh',\n                position: 'sticky' as const,\n                top: '0px',\n                width: '16em',\n            },\n        })\n        this.connectedCallback = (e: HTMLElement) => {\n            const resizeObserver = new ResizeObserver((entries) => {\n                const width = entries[0].contentRect.width\n                e.classList.remove(\n                    'mkdocs-DefaultLayoutView',\n                    'mkdocs-DefaultLayoutView-s',\n                    'mkdocs-DefaultLayoutView-xs',\n                    'mkdocs-DefaultLayoutView-xxs',\n                )\n\n                if (width < 1300) {\n                    e.classList.add('mkdocs-DefaultLayoutView-s')\n                }\n\n                if (width < 850) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xxs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Minimized')\n                    return\n                }\n                if (width < 1100) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Full')\n                    return\n                }\n                e.classList.add('mkdocs-DefaultLayoutView')\n                this.displayModeNav$.next('Full')\n                this.displayModeToc$.next('Full')\n            })\n            resizeObserver.observe(e)\n        }\n        this.children = [\n            topBanner\n                ? topBanner({ displayMode$: this.displayModeNav$ })\n                : new TopBannerView({\n                      name,\n                      displayModeNav$: this.displayModeNav$,\n                      displayModeToc$: this.displayModeToc$,\n                      router,\n                  }),\n            {\n                tag: 'div',\n                class: 'flex-grow-1 w-100 overflow-auto',\n                style: {\n                    minHeight: '0px',\n                },\n                connectedCallback: (e) => {\n                    router.scrollableElement = e\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex justify-content-center pt-5 w-100',\n                        style: {\n                            position: 'relative',\n                        },\n                        children: [\n                            {\n                                source$: this.displayModeNav$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('left'),\n                                              children: [\n                                                  new NavigationView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '75%',\n                                    maxWidth: '40em',\n                                    height: 'fit-content',\n                                    minHeight: '100%',\n                                    position: 'relative',\n                                },\n                                children: [new PageView({ router: router })],\n                            },\n                            {\n                                source$: this.displayModeToc$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('right'),\n                                              children: [\n                                                  new TocWrapperView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                        ],\n                    },\n                    {\n                        tag: 'footer',\n                        style: {\n                            position: 'sticky' as const,\n                            top: '100%',\n                        },\n                        children: [new FooterView()],\n                    },\n                ],\n            },\n        ]\n    }\n}",
                 "startLine": 28,
-                "endLine": 171,
+                "endLine": 194,
                 "references": {
                     "DefaultLayoutView": "@nav/api/MainModule/Views.DefaultLayoutView",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
                     "VirtualDOM.class": "-1",
+                    "VirtualDOM.connectedCallback": "-1",
+                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
                     "VirtualDOM.style": "-1",
-                    "VirtualDOM.tag": "-1",
-                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode"
+                    "VirtualDOM.tag": "-1"
                 }
             },
             "semantic": {
@@ -70,11 +142,12 @@
             "code": {
                 "filePath": "src/lib/views/navigation.view.ts",
                 "declaration": "export class ExpandedNavigationView implements VirtualDOM<'div'>",
-                "implementation": "export class ExpandedNavigationView implements VirtualDOM<'div'> {\n    static menuWidth = '250px'\n    public readonly router: Router\n\n    public readonly tag = 'div'\n    public readonly class = ''\n    public readonly children: ChildrenLike\n    public readonly style = {\n        top: '0px',\n        left: '0px',\n        position: 'absolute' as const,\n        height: '100vh',\n        width: '100vw',\n        backgroundColor: 'rgba(0,0,0,0)',\n        zIndex: 1,\n        transition: 'background-color 0.2s ease 0s',\n    }\n    public readonly onclick: (elem: MouseEvent) => void\n    public readonly connectedCallback = (elem: HTMLElement) => {\n        setTimeout(() => (elem.style.backgroundColor = 'rgba(0,0,0,0.4)'), 0)\n    }\n    constructor(params: { router: Router; collapse: () => void }) {\n        Object.assign(this, params)\n        this.children = [\n            {\n                tag: 'div',\n                class: 'h-100 overflow-auto ',\n                style: {\n                    position: 'relative',\n                    width: ExpandedNavigationView.menuWidth,\n                    marginLeft: `-${ExpandedNavigationView.menuWidth}`,\n                    backgroundColor: 'white',\n                    transition: 'margin 0.2s ease 0s',\n                },\n                onclick: (ev) => {\n                    ev.stopPropagation()\n                },\n                connectedCallback: (elem) =>\n                    setTimeout(() => (elem.style.marginLeft = '0px'), 0),\n                children: {\n                    policy: 'replace',\n                    source$: this.router.explorerState.selectedNode$,\n                    vdomMap: (node: NavNodeBase) => {\n                        return [\n                            new ModalNavParentView({\n                                router: this.router,\n                                node,\n                            }),\n                            new ModalNavChildrenView({\n                                router: this.router,\n                                node,\n                            }),\n                        ]\n                    },\n                },\n            },\n        ]\n        this.onclick = (elem) => {\n            const htmlElement = elem.target as HTMLElement\n            htmlElement.children[0]['style'].marginLeft =\n                `-${ExpandedNavigationView.menuWidth}`\n            htmlElement.style.backgroundColor = 'rgba(0,0,0,0)'\n            setTimeout(() => params.collapse(), 200)\n        }\n    }\n}",
+                "implementation": "export class ExpandedNavigationView implements VirtualDOM<'div'> {\n    static menuWidth = '250px'\n    public readonly router: Router\n\n    public readonly tag = 'div'\n    public readonly class = 'mkdocs-ExpandedNavigationView h-100 w-100 border'\n    public readonly children: ChildrenLike\n    public readonly style = {\n        top: '0px',\n        left: '0px',\n        position: 'absolute' as const,\n        backgroundColor: 'rgba(0,0,0,0)',\n        zIndex: 10,\n        transition: 'background-color 0.2s ease 0s',\n    }\n    public readonly displayModeToc$: Observable<DisplayMode>\n    public readonly onclick: (elem: MouseEvent) => void\n    public readonly connectedCallback = (elem: HTMLElement) => {\n        setTimeout(() => (elem.style.backgroundColor = 'rgba(0,0,0,0.4)'), 0)\n    }\n    constructor(params: {\n        router: Router\n        collapse: () => void\n        displayModeToc$: Observable<DisplayMode>\n    }) {\n        Object.assign(this, params)\n        this.children = [\n            {\n                tag: 'div',\n                class: 'h-100 overflow-auto ',\n                style: {\n                    position: 'relative',\n                    width: ExpandedNavigationView.menuWidth,\n                    marginLeft: `-${ExpandedNavigationView.menuWidth}`,\n                    backgroundColor: 'white',\n                    transition: 'margin 0.2s ease 0s',\n                },\n                onclick: (ev) => {\n                    ev.stopPropagation()\n                },\n                connectedCallback: (elem) =>\n                    setTimeout(() => (elem.style.marginLeft = '0px'), 0),\n                children: {\n                    policy: 'replace',\n                    source$: this.router.explorerState.selectedNode$,\n                    vdomMap: (node: NavNodeBase) => {\n                        return [\n                            new ModalNavParentView({\n                                router: this.router,\n                                node,\n                                displayModeToc$: this.displayModeToc$,\n                            }),\n                            new ModalNavChildrenView({\n                                router: this.router,\n                                node,\n                            }),\n                        ]\n                    },\n                },\n            },\n        ]\n        this.onclick = (elem) => {\n            const htmlElement = elem.target as HTMLElement\n            htmlElement.children[0]['style'].marginLeft =\n                `-${ExpandedNavigationView.menuWidth}`\n            htmlElement.style.backgroundColor = 'rgba(0,0,0,0)'\n            setTimeout(() => params.collapse(), 200)\n        }\n    }\n}",
                 "startLine": 221,
-                "endLine": 287,
+                "endLine": 291,
                 "references": {
                     "ExpandedNavigationView": "@nav/api/MainModule/Views.ExpandedNavigationView",
+                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
                     "VirtualDOM.class": "-1",
@@ -82,6 +155,46 @@
                     "VirtualDOM.style": "-1",
                     "VirtualDOM.tag": "-1",
                     "VirtualDOM.connectedCallback": "-1"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "FooterView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The page footer.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "FooterView",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/views/page.view.ts",
+                "declaration": "export class FooterView implements VirtualDOM<'div'>",
+                "implementation": "export class FooterView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class = 'w-100 mkdocs-FooterView d-flex align-items-center'\n    public readonly children: ChildrenLike\n\n    public readonly style = {\n        padding: '0.9em',\n        backgroundColor: 'black',\n        color: 'white',\n    }\n    constructor() {\n        this.children = [\n            {\n                tag: 'div',\n                class: 'flex-grow-1',\n            },\n            {\n                tag: 'div',\n                class: 'd-flex align-items-center',\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: 'Made with',\n                    },\n                    {\n                        tag: 'div',\n                        class: 'mx-2',\n                    },\n                    {\n                        tag: 'a',\n                        innerText: 'mkdocs-ts',\n                        target: '_blank',\n                        href: 'https://github.com/youwol/mkdocs-ts',\n                    },\n                ],\n            },\n            {\n                tag: 'div',\n                style: {\n                    flexGrow: 2,\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 59,
+                "endLine": 104,
+                "references": {
+                    "FooterView": "@nav/api/MainModule/Views.FooterView",
+                    "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
+                    "VirtualDOM.style": "-1",
+                    "VirtualDOM.tag": "-1"
                 }
             },
             "semantic": {
@@ -113,14 +226,15 @@
             "code": {
                 "filePath": "src/lib/views/navigation.view.ts",
                 "declaration": "export class ModalNavChildrenView implements VirtualDOM<'div'>",
-                "implementation": "export class ModalNavChildrenView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly node: NavNodeBase\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    constructor(params: { router: Router; node: NavNodeBase }) {\n        Object.assign(this, params)\n        const node = this.node.children\n            ? this.node\n            : this.router.explorerState.getParent(this.node.id)\n\n        const source$ = this.router.explorerState.getChildren$(node)\n        // Following call trigger children resolution if needed\n        this.router.explorerState.getChildren(node)\n\n        this.children = {\n            policy: 'replace',\n            source$: source$,\n            vdomMap: (children: NavNodeBase[]) => {\n                return children.map((child) => {\n                    return {\n                        tag: 'div',\n                        class: 'border-bottom px-3 py-2',\n                        children: [\n                            new NavigationHeader({\n                                node: child,\n                                router: this.router,\n                                withChildren: child.children && [\n                                    {\n                                        tag: 'div',\n                                        class: 'fas fa-chevron-right',\n                                    },\n                                ],\n                            }),\n                        ],\n                    }\n                })\n            },\n        }\n    }\n}",
-                "startLine": 333,
-                "endLine": 374,
+                "implementation": "export class ModalNavChildrenView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly node: NavNodeBase\n    public readonly tag = 'div'\n    public readonly class = 'mkdocs-ModalNavChildrenView'\n    public readonly children: ChildrenLike\n    constructor(params: { router: Router; node: NavNodeBase }) {\n        Object.assign(this, params)\n        const node = this.node.children\n            ? this.node\n            : this.router.explorerState.getParent(this.node.id)\n\n        const source$ = this.router.explorerState.getChildren$(node)\n        // Following call trigger children resolution if needed\n        this.router.explorerState.getChildren(node)\n\n        this.children = {\n            policy: 'replace',\n            source$: source$,\n            vdomMap: (children: NavNodeBase[]) => {\n                return children.map((child) => {\n                    return {\n                        tag: 'div',\n                        class: 'border-bottom px-3 py-2',\n                        children: [\n                            new NavigationHeader({\n                                node: child,\n                                router: this.router,\n                                withChildren: child.children && [\n                                    {\n                                        tag: 'div',\n                                        class: 'fas fa-chevron-right',\n                                    },\n                                ],\n                            }),\n                        ],\n                    }\n                })\n            },\n        }\n    }\n}",
+                "startLine": 342,
+                "endLine": 384,
                 "references": {
                     "ModalNavChildrenView": "@nav/api/MainModule/Views.ModalNavChildrenView",
                     "NavNodeBase": "@nav/api/MainModule.NavNodeBase",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
                     "VirtualDOM.tag": "-1"
                 }
             },
@@ -153,11 +267,12 @@
             "code": {
                 "filePath": "src/lib/views/navigation.view.ts",
                 "declaration": "export class ModalNavParentView implements VirtualDOM<'div'>",
-                "implementation": "export class ModalNavParentView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly node: NavNodeBase\n    public readonly tag = 'div'\n    public readonly class = 'w-100 py-3 border px-2 bg-light text-dark'\n    public readonly style = {\n        position: 'sticky' as const,\n        top: '0px',\n    }\n    public readonly children: ChildrenLike\n    constructor(params: { router: Router; node: NavNodeBase }) {\n        Object.assign(this, params)\n\n        this.children = [\n            {\n                tag: 'i',\n                class:\n                    this.node.id === '/'\n                        ? 'fas fa-arrow-left fv-text-disabled'\n                        : 'fas fa-arrow-left fv-hover-text-focus fv-pointer',\n                onclick: () => {\n                    this.router.navigateToParent()\n                },\n            },\n            new NavigationHeader(params),\n            {\n                source$: DefaultLayoutView.displayModeToc.pipe(\n                    distinctUntilChanged(),\n                ),\n                vdomMap: (mode: DisplayMode) => {\n                    return mode !== 'Minimized'\n                        ? { tag: 'div' }\n                        : new ModalTocView({ router: this.router })\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 291,
-                "endLine": 329,
+                "implementation": "export class ModalNavParentView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly node: NavNodeBase\n    public readonly tag = 'div'\n    public readonly class =\n        'mkdocs-ModalNavParentView w-100 py-3 border px-2 bg-light text-dark'\n    public readonly style = {\n        position: 'sticky' as const,\n        top: '0px',\n    }\n    public readonly children: ChildrenLike\n    public readonly displayModeToc$: Observable<DisplayMode>\n\n    constructor(params: {\n        router: Router\n        node: NavNodeBase\n        displayModeToc$: Observable<DisplayMode>\n    }) {\n        Object.assign(this, params)\n\n        this.children = [\n            {\n                tag: 'i',\n                class:\n                    this.node.id === '/'\n                        ? 'fas fa-arrow-left fv-text-disabled'\n                        : 'fas fa-arrow-left fv-hover-text-focus fv-pointer',\n                onclick: () => {\n                    this.router.navigateToParent()\n                },\n            },\n            new NavigationHeader(params),\n            {\n                source$: this.displayModeToc$.pipe(distinctUntilChanged()),\n                vdomMap: (mode: DisplayMode) => {\n                    return mode !== 'Minimized'\n                        ? { tag: 'div' }\n                        : new ModalTocView({ router: this.router })\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 295,
+                "endLine": 338,
                 "references": {
                     "ModalNavParentView": "@nav/api/MainModule/Views.ModalNavParentView",
+                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
                     "NavNodeBase": "@nav/api/MainModule.NavNodeBase",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
@@ -218,8 +333,8 @@
                         "filePath": "src/lib/views/navigation.view.ts",
                         "declaration": "public readonly expanded$ = new BehaviorSubject(false)",
                         "implementation": "",
-                        "startLine": 194,
-                        "endLine": 195,
+                        "startLine": 189,
+                        "endLine": 190,
                         "references": {
                             "expanded$": "@nav/api/MainModule/Views.ModalNavigationView.expanded$"
                         }
@@ -230,13 +345,15 @@
             "code": {
                 "filePath": "src/lib/views/navigation.view.ts",
                 "declaration": "export class ModalNavigationView implements VirtualDOM<'div'>",
-                "implementation": "export class ModalNavigationView implements VirtualDOM<'div'> {\n    public readonly router: Router\n\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    /**\n     * Wether the modal is expanded or not.\n     */\n    public readonly expanded$ = new BehaviorSubject(false)\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n\n        this.children = [\n            {\n                source$: this.expanded$,\n                vdomMap: (expanded) => {\n                    return expanded\n                        ? new ExpandedNavigationView({\n                              router: this.router,\n                              collapse: () => this.expanded$.next(false),\n                          })\n                        : {\n                              tag: 'div',\n                              class: 'fas fa-bars p-1 fv-pointer fv-hover-text-focus',\n                              onclick: () => this.expanded$.next(true),\n                          }\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 186,
+                "implementation": "export class ModalNavigationView implements VirtualDOM<'div'> {\n    public readonly router: Router\n\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = 'mkdocs-ModalNavigationView'\n    /**\n     * Wether the modal is expanded or not.\n     */\n    public readonly expanded$ = new BehaviorSubject(false)\n    public readonly displayModeToc$: Observable<DisplayMode>\n    constructor(params: {\n        router: Router\n        displayModeToc$: Observable<DisplayMode>\n    }) {\n        Object.assign(this, params)\n\n        this.children = [\n            {\n                source$: this.expanded$,\n                vdomMap: (expanded) => {\n                    return expanded\n                        ? new ExpandedNavigationView({\n                              router: this.router,\n                              collapse: () => this.expanded$.next(false),\n                              displayModeToc$: this.displayModeToc$,\n                          })\n                        : {\n                              tag: 'div',\n                              class: 'fas fa-bars p-1 fv-pointer fv-hover-text-focus',\n                              onclick: () => this.expanded$.next(true),\n                          }\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 180,
                 "endLine": 217,
                 "references": {
                     "ModalNavigationView": "@nav/api/MainModule/Views.ModalNavigationView",
+                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
                     "VirtualDOM.tag": "-1"
                 }
             },
@@ -269,13 +386,14 @@
             "code": {
                 "filePath": "src/lib/views/navigation.view.ts",
                 "declaration": "export class ModalTocView implements VirtualDOM<'div'>",
-                "implementation": "export class ModalTocView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly router: Router\n    public readonly expanded$ = new BehaviorSubject(false)\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n        this.children = [\n            {\n                tag: 'div',\n                class: 'd-flex align-items-center fv-hover-text-focus fv-pointer',\n                onclick: () => this.expanded$.next(!this.expanded$.value),\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'fas fa-list-ul',\n                    },\n                    {\n                        tag: 'div',\n                        class: 'pb-2 pt-1 mx-2',\n                        innerText: 'Table of Content',\n                    },\n                    {\n                        tag: 'div',\n                        class: {\n                            source$: this.expanded$,\n                            vdomMap: (expanded) =>\n                                expanded ? 'fa-chevron-up' : 'fa-chevron-down',\n                            wrapper: (d) => `fas ${d} flex-grow-1 text-right`,\n                        },\n                    },\n                ],\n            },\n            {\n                tag: 'div',\n                style: {\n                    maxHeight: '25vh',\n                    height: '10000px',\n                },\n                class: {\n                    source$: this.expanded$,\n                    vdomMap: (expanded) => (expanded ? 'd-block' : 'd-none'),\n                },\n                children: [new TocWrapperView({ router: this.router })],\n            },\n        ]\n    }\n}",
-                "startLine": 378,
-                "endLine": 426,
+                "implementation": "export class ModalTocView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly router: Router\n    public readonly class = 'mkdocs-ModalTocView'\n    public readonly expanded$ = new BehaviorSubject(false)\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n        this.children = [\n            {\n                tag: 'div',\n                class: 'd-flex align-items-center fv-hover-text-focus fv-pointer',\n                onclick: () => this.expanded$.next(!this.expanded$.value),\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'fas fa-list-ul',\n                    },\n                    {\n                        tag: 'div',\n                        class: 'pb-2 pt-1 mx-2',\n                        innerText: 'Table of Content',\n                    },\n                    {\n                        tag: 'div',\n                        class: {\n                            source$: this.expanded$,\n                            vdomMap: (expanded) =>\n                                expanded ? 'fa-chevron-up' : 'fa-chevron-down',\n                            wrapper: (d) => `fas ${d} flex-grow-1 text-right`,\n                        },\n                    },\n                ],\n            },\n            {\n                tag: 'div',\n                style: {\n                    maxHeight: '25vh',\n                    height: '10000px',\n                },\n                class: {\n                    source$: this.expanded$,\n                    vdomMap: (expanded) => (expanded ? 'd-block' : 'd-none'),\n                },\n                children: [new TocWrapperView({ router: this.router })],\n            },\n        ]\n    }\n}",
+                "startLine": 388,
+                "endLine": 437,
                 "references": {
                     "ModalTocView": "@nav/api/MainModule/Views.ModalTocView",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
                     "VirtualDOM.tag": "-1"
                 }
             },
@@ -308,55 +426,14 @@
             "code": {
                 "filePath": "src/lib/views/navigation.view.ts",
                 "declaration": "export class NavigationView implements VirtualDOM<'div'>",
-                "implementation": "export class NavigationView implements VirtualDOM<'div'> {\n    public readonly router: Router\n\n    public readonly tag = 'div'\n    public readonly class = 'h-100 w-100 overflow-auto'\n    public readonly children: ChildrenLike\n    public readonly style = {\n        fontSize: '0.9rem',\n    }\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n\n        this.children = [\n            new ImmutableTree.View({\n                state: this.router.explorerState,\n                headerView: (explorerState, node) => {\n                    return new NavigationHeader({\n                        node,\n                        router: this.router,\n                        withChildren: node.children &&\n                            node.id !== '/' && [\n                                new HandlerView({\n                                    node: node,\n                                    expandedNodes$:\n                                        this.router.explorerState\n                                            .expandedNodes$,\n                                }),\n                            ],\n                    })\n                },\n            }),\n        ]\n    }\n}",
-                "startLine": 145,
-                "endLine": 179,
+                "implementation": "export class NavigationView implements VirtualDOM<'div'> {\n    public readonly router: Router\n\n    public readonly tag = 'div'\n    public readonly class = 'mkdocs-NavigationView h-100 w-100 overflow-auto'\n    public readonly children: ChildrenLike\n\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n\n        this.children = [\n            new ImmutableTree.View({\n                state: this.router.explorerState,\n                headerView: (explorerState, node) => {\n                    return new NavigationHeader({\n                        node,\n                        router: this.router,\n                        withChildren: node.children &&\n                            node.id !== '/' && [\n                                new HandlerView({\n                                    node: node,\n                                    expandedNodes$:\n                                        this.router.explorerState\n                                            .expandedNodes$,\n                                }),\n                            ],\n                    })\n                },\n            }),\n        ]\n    }\n}",
+                "startLine": 141,
+                "endLine": 173,
                 "references": {
                     "NavigationView": "@nav/api/MainModule/Views.NavigationView",
                     "Router": "@nav/api/MainModule.Router",
                     "VirtualDOM.children": "-1",
                     "VirtualDOM.class": "-1",
-                    "VirtualDOM.style": "-1",
-                    "VirtualDOM.tag": "-1"
-                }
-            },
-            "semantic": {
-                "role": "class",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "PageFooterView",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "The page footer.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "PageFooterView",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/lib/views/page.view.ts",
-                "declaration": "export class PageFooterView implements VirtualDOM<'div'>",
-                "implementation": "export class PageFooterView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class = 'w-100 mkdocs-ts-footer d-flex align-items-center'\n    public readonly children: ChildrenLike\n\n    public readonly style = {\n        padding: '0.9rem',\n        backgroundColor: 'black',\n        color: 'white',\n    }\n    constructor() {\n        this.children = [\n            {\n                tag: 'div',\n                class: 'flex-grow-1',\n            },\n            {\n                tag: 'div',\n                class: 'd-flex align-items-center',\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: 'Made with',\n                    },\n                    {\n                        tag: 'div',\n                        class: 'mx-2',\n                    },\n                    {\n                        tag: 'a',\n                        innerText: 'mkdocs-ts',\n                        target: '_blank',\n                        href: 'https://github.com/youwol/mkdocs-ts',\n                    },\n                ],\n            },\n            {\n                tag: 'div',\n                style: {\n                    flexGrow: 2,\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 59,
-                "endLine": 104,
-                "references": {
-                    "PageFooterView": "@nav/api/MainModule/Views.PageFooterView",
-                    "VirtualDOM.children": "-1",
-                    "VirtualDOM.class": "-1",
-                    "VirtualDOM.style": "-1",
                     "VirtualDOM.tag": "-1"
                 }
             },
@@ -389,7 +466,7 @@
             "code": {
                 "filePath": "src/lib/views/page.view.ts",
                 "declaration": "export class PageView implements VirtualDOM<'div'>",
-                "implementation": "export class PageView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly tag = 'div'\n    public readonly class = 'w-100 mkdocs-ts-page'\n    public readonly children: ChildrenLike\n\n    public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void\n\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n        this.children = [\n            {\n                source$: this.router.currentPage$,\n                vdomMap: ({ html, sectionId }) => {\n                    return {\n                        tag: 'div',\n                        children: [html as AnyVirtualDOM],\n                        connectedCallback: (page) => {\n                            this.router.scrollTo(sectionId)\n                            this.router.setDisplayedPage({ page })\n                            replaceCrossReferences(page, this.router)\n                        },\n                    }\n                },\n            },\n        ]\n    }\n}",
+                "implementation": "export class PageView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly tag = 'div'\n    public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page'\n    public readonly children: ChildrenLike\n\n    public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void\n\n    constructor(params: { router: Router }) {\n        Object.assign(this, params)\n        this.children = [\n            {\n                source$: this.router.currentPage$,\n                vdomMap: ({ html, sectionId }) => {\n                    return {\n                        tag: 'div',\n                        children: [html as AnyVirtualDOM],\n                        connectedCallback: (page) => {\n                            this.router.scrollTo(sectionId)\n                            this.router.setDisplayedPage({ page })\n                            replaceCrossReferences(page, this.router)\n                        },\n                    }\n                },\n            },\n        ]\n    }\n}",
                 "startLine": 12,
                 "endLine": 40,
                 "references": {
@@ -430,9 +507,9 @@
             "code": {
                 "filePath": "src/lib/views/toc.view.ts",
                 "declaration": "export class TOCView implements VirtualDOM<'div'>",
-                "implementation": "export class TOCView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly html: HTMLElement\n    public readonly tag = 'div'\n    public readonly class = 'h-100'\n    public readonly children: ChildrenLike\n    public readonly style = {\n        fontSize: '0.9rem',\n        lineHeight: '1.5rem',\n    }\n\n    public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)\n\n    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void\n\n    constructor(params: {\n        html: HTMLElement\n        router: Router\n        domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM\n    }) {\n        Object.assign(this, params)\n        const queryHeadings = supportedHeadingTags\n            .reduce((acc, e) => `${acc},${e}`, '')\n            .toLowerCase()\n            .slice(1)\n        const headingsArray = (): HTMLElement[] =>\n            Array.from(this.html.querySelectorAll(queryHeadings))\n        const headings$ = new BehaviorSubject<HTMLElement[]>(headingsArray())\n\n        this.connectedCallback = (elem) => {\n            elem.ownSubscriptions(\n                this.router.htmlUpdated$.subscribe(() => {\n                    headings$.next(headingsArray())\n                }),\n            )\n        }\n\n        this.router.scrollableElement.onscroll = () => {\n            this.getFirstVisible(headings$.value)\n        }\n\n        this.children = [\n            headingsArray.length > 0 &&\n            DefaultLayoutView.displayModeToc.value === 'Full'\n                ? {\n                      tag: 'div',\n                      innerText: 'Table of content',\n                      style: {\n                          fontWeight: 'bolder',\n                      },\n                  }\n                : undefined,\n            {\n                tag: 'ul',\n                class: 'p-0 h-100 scrollbar-on-hover ',\n                connectedCallback: (elem: RxHTMLElement<'ul'>) => {\n                    const headings = [...elem.querySelectorAll('li')]\n                    elem.ownSubscriptions(\n                        this.indexFirstVisibleHeading$.subscribe((index) => {\n                            const br = elem.getBoundingClientRect()\n                            const offset = headings[index]?.['offsetTop'] || 0\n                            elem.scrollTo({\n                                top: offset + br.top - br.height / 4,\n                                left: 0,\n                                behavior: 'smooth',\n                            })\n                        }),\n                    )\n                },\n                children: {\n                    policy: 'replace',\n                    source$: headings$,\n                    vdomMap: (headingsArray: HTMLElement[]) => {\n                        return headingsArray.map(\n                            (heading: HTMLHeadingElement, index: number) => {\n                                return new TocItemView({\n                                    heading,\n                                    index,\n                                    indexFirstVisibleHeading$:\n                                        this.indexFirstVisibleHeading$,\n                                    router: this.router,\n                                    domConvertor: params.domConvertor,\n                                })\n                            },\n                        )\n                    },\n                },\n            },\n        ]\n    }\n    getFirstVisible(headings: HTMLElement[]) {\n        for (let i = 0; i < headings.length; i++) {\n            const rect = headings[i].getBoundingClientRect()\n\n            if (rect.top >= 0 && rect.bottom <= window.innerHeight) {\n                this.indexFirstVisibleHeading$.next(i)\n                return\n            }\n        }\n    }\n}",
-                "startLine": 41,
-                "endLine": 142,
+                "implementation": "export class TOCView implements VirtualDOM<'div'> {\n    public readonly router: Router\n    public readonly html: HTMLElement\n    public readonly tag = 'div'\n    public readonly class = 'mkdocs-TOCView h-100'\n    public readonly children: ChildrenLike\n    public readonly style = {\n        lineHeight: '1.5em',\n    }\n\n    public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)\n    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void\n\n    constructor(params: {\n        html: HTMLElement\n        router: Router\n        domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM\n    }) {\n        Object.assign(this, params)\n        const queryHeadings = supportedHeadingTags\n            .reduce((acc, e) => `${acc},${e}`, '')\n            .toLowerCase()\n            .slice(1)\n        const headingsArray = (): HTMLElement[] =>\n            Array.from(this.html.querySelectorAll(queryHeadings))\n        const headings$ = new BehaviorSubject<HTMLElement[]>(headingsArray())\n\n        this.connectedCallback = (elem) => {\n            elem.ownSubscriptions(\n                this.router.htmlUpdated$.subscribe(() => {\n                    headings$.next(headingsArray())\n                }),\n            )\n        }\n\n        this.router.scrollableElement.onscroll = () => {\n            this.getFirstVisible(headings$.value)\n        }\n\n        this.children = [\n            {\n                tag: 'ul',\n                class: 'p-0 h-100 scrollbar-on-hover ',\n                connectedCallback: (elem: RxHTMLElement<'ul'>) => {\n                    const headings = [...elem.querySelectorAll('li')]\n                    elem.ownSubscriptions(\n                        this.indexFirstVisibleHeading$.subscribe((index) => {\n                            const br = elem.getBoundingClientRect()\n                            const offset = headings[index]?.['offsetTop'] || 0\n                            elem.scrollTo({\n                                top: offset + br.top - br.height / 4,\n                                left: 0,\n                                behavior: 'smooth',\n                            })\n                        }),\n                    )\n                },\n                children: {\n                    policy: 'replace',\n                    source$: headings$,\n                    vdomMap: (headingsArray: HTMLElement[]) => {\n                        return headingsArray.map(\n                            (heading: HTMLHeadingElement, index: number) => {\n                                return new TocItemView({\n                                    heading,\n                                    index,\n                                    indexFirstVisibleHeading$:\n                                        this.indexFirstVisibleHeading$,\n                                    router: this.router,\n                                    domConvertor: params.domConvertor,\n                                })\n                            },\n                        )\n                    },\n                },\n            },\n        ]\n    }\n    getFirstVisible(headings: HTMLElement[]) {\n        for (let i = 0; i < headings.length; i++) {\n            const rect = headings[i].getBoundingClientRect()\n\n            if (rect.top >= 0 && rect.bottom <= window.innerHeight) {\n                this.indexFirstVisibleHeading$.next(i)\n                return\n            }\n        }\n    }\n}",
+                "startLine": 40,
+                "endLine": 129,
                 "references": {
                     "TOCView": "@nav/api/MainModule/Views.TOCView",
                     "Router": "@nav/api/MainModule.Router",
@@ -472,9 +549,9 @@
             "code": {
                 "filePath": "src/lib/views/top-banner.view.ts",
                 "declaration": "export class TopBannerView extends TopBannerBase",
-                "implementation": "export class TopBannerView extends TopBannerBase {\n    public readonly tag = 'div'\n    public readonly class =\n        'fv-text-primary fv-bg-background mkdocs-ts-top-banner'\n\n    constructor({\n        name,\n        displayModeNav$,\n        router,\n    }: {\n        name: string\n        displayModeNav$: Subject<DisplayMode>\n        router: Router\n    }) {\n        super({\n            innerView: {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center h-100',\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex mx-auto align-items-center justify-content-center px-5',\n                        children: [\n                            {\n                                source$: displayModeNav$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode) => {\n                                    return mode === 'Full'\n                                        ? { tag: 'div' }\n                                        : new ModalNavigationView({\n                                              router,\n                                          })\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                class: 'mx-3',\n                            },\n                            {\n                                tag: 'div',\n                                class: 'd-flex align-items-center',\n                                style: {\n                                    width: '12.1rem',\n                                    padding: '1.2rem 0 1.2rem 0',\n                                },\n                                children: [\n                                    {\n                                        tag: 'a',\n                                        class: 'fas fa-book-reader',\n                                    },\n                                    {\n                                        tag: 'div',\n                                        class: 'mx-3',\n                                    },\n                                    {\n                                        tag: 'div',\n                                        innerText: name,\n                                        style: {\n                                            fontWeight: 700,\n                                            fontSize: '1.2rem',\n                                        },\n                                    },\n                                ],\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '800px',\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '12.1rem',\n                                    padding: '1.2rem 0 1.2rem 0',\n                                },\n                            },\n                        ],\n                    },\n                ],\n            },\n        })\n    }\n}",
+                "implementation": "export class TopBannerView extends TopBannerBase {\n    public readonly tag = 'div'\n    public readonly class =\n        'mkdocs-TopBannerView fv-text-primary fv-bg-background'\n\n    constructor({\n        name,\n        displayModeNav$,\n        displayModeToc$,\n        router,\n    }: {\n        name: string\n        displayModeNav$: Subject<DisplayMode>\n        displayModeToc$: Subject<DisplayMode>\n        router: Router\n    }) {\n        super({\n            innerView: {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center h-100',\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex mx-auto align-items-center justify-content-center px-5',\n                        children: [\n                            {\n                                source$: displayModeNav$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode) => {\n                                    return mode === 'Full'\n                                        ? { tag: 'div' }\n                                        : new ModalNavigationView({\n                                              router,\n                                              displayModeToc$: displayModeToc$,\n                                          })\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                class: 'mx-3',\n                            },\n                            {\n                                tag: 'div',\n                                class: 'd-flex align-items-center',\n                                style: {\n                                    width: '12.1em',\n                                    padding: '1.2em 0 1.2em 0',\n                                },\n                                children: [\n                                    {\n                                        tag: 'a',\n                                        class: 'fas fa-book-reader',\n                                    },\n                                    {\n                                        tag: 'div',\n                                        class: 'mx-3',\n                                    },\n                                    {\n                                        tag: 'div',\n                                        innerText: name,\n                                        style: {\n                                            fontWeight: 700,\n                                            fontSize: '1.2em',\n                                        },\n                                    },\n                                ],\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '800px',\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '12.1em',\n                                    padding: '1.2em 0 1.2em 0',\n                                },\n                            },\n                        ],\n                    },\n                ],\n            },\n        })\n    }\n}",
                 "startLine": 13,
-                "endLine": 98,
+                "endLine": 101,
                 "references": {
                     "TopBannerView": "@nav/api/MainModule/Views.TopBannerView",
                     "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",

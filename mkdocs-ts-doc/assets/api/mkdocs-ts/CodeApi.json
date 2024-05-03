@@ -41,10 +41,10 @@
             "path": "configurationTsTypedoc",
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
-                "declaration": "configurationTsTypedoc: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${startLine}`\n    },\n    externalTypes: {},\n    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,\n}",
+                "declaration": "configurationTsTypedoc: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${startLine}`\n    },\n    externalTypes: {},\n    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,\n    notebook: false,\n}",
                 "implementation": "",
-                "startLine": 42,
-                "endLine": 43,
+                "startLine": 47,
+                "endLine": 48,
                 "references": {
                     "configurationTsTypedoc": "@nav/api/CodeApi.configurationTsTypedoc",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -650,15 +650,49 @@
                             "externalTypes": "@nav/api/CodeApi.Configuration.externalTypes"
                         }
                     }
+                },
+                {
+                    "name": "notebook",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "If  `true` , use the  [Notebook](@nav/api/Notebook)  module to parse the markdown content of the API files.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Configuration.notebook",
+                    "code": {
+                        "filePath": "src/lib/code-api/configurations.ts",
+                        "declaration": "notebook?: boolean",
+                        "implementation": "",
+                        "startLine": 41,
+                        "endLine": 42,
+                        "references": {
+                            "notebook": "@nav/api/CodeApi.Configuration.notebook"
+                        }
+                    }
                 }
             ],
             "callables": [],
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "export interface Configuration",
-                "implementation": "export interface Configuration {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: { [k: string]: string }\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n}",
+                "implementation": "export interface Configuration {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: { [k: string]: string }\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true`, use the {@link Notebook} module to parse the markdown content of the API files.\n     */\n    notebook?: boolean\n}",
                 "startLine": 13,
-                "endLine": 38,
+                "endLine": 43,
                 "references": {
                     "Configuration": "@nav/api/CodeApi.Configuration",
                     "Project": "@nav/api/CodeApi.Project"
