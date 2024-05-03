@@ -78,6 +78,9 @@ export const navigation = {
                         defaultCellAttributes: {
                             lineNumbers: false,
                         },
+                        markdown: {
+                            latex: true,
+                        },
                     },
                 }),
         },
