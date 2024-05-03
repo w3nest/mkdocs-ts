@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, Subscription, filter } from 'rxjs'
+import { BehaviorSubject, Subject, filter, ReplaySubject } from 'rxjs'
 import { OutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
 import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
@@ -99,7 +99,7 @@ export class State {
     /**
      * Observables over the cell's output keyed by the cell's ID.
      */
-    public readonly outputs$: { [k: string]: Subject<Output> } = {}
+    public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}
     /**
      * Observables over the cell's source keyed by the cell's ID.
      */
@@ -168,7 +168,7 @@ export class State {
         this.cellIds$.next(this.ids)
         this.cells.push(cell)
         if (!this.outputs$[cell.cellId]) {
-            this.outputs$[cell.cellId] = new Subject()
+            this.outputs$[cell.cellId] = new ReplaySubject()
             this.executing$[cell.cellId] = new BehaviorSubject(false)
             this.src$[cell.cellId] = cell.content$
         }
@@ -195,7 +195,7 @@ export class State {
         style: CSSAttribute
     }): OutputsView {
         if (!this.outputs$[cellId]) {
-            this.outputs$[cellId] = new Subject()
+            this.outputs$[cellId] = new ReplaySubject()
             this.executing$[cellId] = new BehaviorSubject(false)
         }
         const view = new OutputsView({
