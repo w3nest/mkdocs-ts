@@ -7,6 +7,7 @@ It is a good to display code for illustration, documentation and collaboration.
 For anything serious, we recommend developing libraries using your favorite IDEA and stack, the code written
 in notebooks are neither optimized nor standardized.
 
+
 ## Create a notebook
 
 Notebook are pages within `@youwol/mkdocs-ts` navigation structure, it wraps a Markdown page:
@@ -19,7 +20,7 @@ const { MkDocs, RxDom } = await webpm.install({
     ]
 })
 const src =  `
-# An example
+### Loading example
 
 <js-cell>
 display(1)
@@ -166,6 +167,139 @@ display_foo("hello bar")
 </js-cell>
 
 ### Reactivity
+<js-cell cell-id="171">
+const timer = new rxjs.timer(0, 1000)
+</js-cell>
 
 
+<js-cell cell-id="174" reactive="true">
+display(`Got a tick, index: ${timer}`)
+const date = new Date().toLocaleString()
+</js-cell>
 
+<js-cell cell-id="179" reactive="true">
+display(`Its is: ${date}`)
+</js-cell>
+
+### Views
+<note level='info'>
+This section introduces the creation of views, here the concepts are presented alongside the use of
+`@youwol/rx-vdom`, a tiny library for creating reactive HTMLElement. However, you can load and use any similar library,
+as long as they can create HTMLElement (that can be used in the `display` function).
+</note>
+
+The notebook module comes with a predefined set of views.
+This section explains the general behaviors of such views, for more information regarding available views,
+their options and how to tune them, please refer to [this page](@nav/api/Notebook/Views).
+
+The `Views` object is available in the cells, all elements are rx-vdom VirtualDOM that can be directly rendered 
+using the `display` function:
+<js-cell>
+const range = new Views.Range()
+display(range)
+</js-cell>
+
+All views have a `value$` generator, it emits each time the value change. It can be used as it or transformed using 
+the various operators of RxJS:
+<js-cell>
+display(range.value$)
+const debounced = range.value$.pipe(rxjs.debounceTime(200))
+</js-cell>
+
+Because `value$` and associated transforms are observables, they can be used within a reactive cell:
+<js-cell reactive="true">
+display(`The value is: ${debounced}`)
+</js-cell>
+
+The views can also be initialized by providing the `value$` generator (that may be owned by another component):
+<js-cell>
+const range2 = new Views.Range({max:2, value$:range.value$})
+display(range2)
+</js-cell>
+
+
+To gather view elements in layout:
+<js-cell>
+const vdom = {
+    tag: 'div',
+    class: 'd-flex justify-content-around',
+    children:[
+        range,
+        range2
+    ]
+}
+display(vdom)
+</js-cell>
+
+From an observable and a reactive cell it is possible to easily create view (note that any ways to create HTMLElement
+can be used here):
+<js-cell reactive='true'>
+const size = '25px'
+const styleRect = {
+    backgroundColor:'red',
+    width:size, height:size,
+    left:`${50*debounced}%`,  
+    position: 'absolute'  
+}
+display({
+    tag: 'div',
+    class: 'w-100',
+    style: { position: 'relative', height:size },
+    children:[{
+        tag: 'div',
+        style: styleRect
+    }]
+})
+</js-cell>
+
+This approach is convenient but has an overhead: all the view is recreated from scratch each time a new debounced value 
+is emitted. Using rx-vdom it is possible to create a view that only update the style attribute of the
+inner div (the following cell is not reactive):
+
+<js-cell>
+display({
+    tag: 'div',
+    class: 'w-100',
+    style: { position: 'relative', height:'25px' },
+    children:[{
+        tag: 'div',
+        style:{ 
+            source$: styleRect,
+            vdomMap: (style) => style
+        }
+    }]
+})
+</js-cell>
+
+<note level='hint'>
+It is also possible to have reactive children defined in the virtual DOM using `@youwol/rx-vdom`.
+At the end of the day this library is tiny and capable (this very application is constructed from it)
+fitting naturally within the notebook. We encourage the reader navigate to its
+<a target="_blank" href="https://l.youwol.com/doc/@youwol/rx-vdom">documentation</a> for details.
+</note>
+
+# Misc
+
+## Latex
+
+To enable parsing latex:
+*  Install the `MathJax` package before parsing occurs (either statically from your node modules, or dynamically 
+   using *e.g.*  webpm).
+*  Provide in the [NotebookPage](@nav/api/Notebook.NotebookPage) constructor the `options.markdown.latex:true` 
+   parameter.
+
+
+<md-cell>
+When \\(a \ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\),
+and they are:
+$$
+x = {-b \pm \sqrt{b^2-4ac} \over 2a}.
+$$
+
+</md-cell>
+
+## Markdown Cell
+
+<md-cell>
+The value is ${debounced}$.
+</md-cell>
