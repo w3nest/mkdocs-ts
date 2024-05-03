@@ -4,7 +4,8 @@ const runTimeDependencies = {
         "rxjs": "^7.5.6",
         "@youwol/rx-vdom": "^1.0.1",
         "@youwol/mkdocs-ts": "^0.3.3",
-        "@youwol/webpm-client": "^3.0.0"
+        "@youwol/webpm-client": "^3.0.0",
+        "mathjax": "^3.1.4"
     },
     "includedInBundle": {}
 }
@@ -12,7 +13,8 @@ const externals = {
     "rxjs": "window['rxjs_APIv7']",
     "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
     "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv03']",
-    "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']"
+    "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
+    "mathjax": "window['Mathjax_APIv3']"
 }
 const exportedSymbols = {
     "rxjs": {
@@ -30,6 +32,10 @@ const exportedSymbols = {
     "@youwol/webpm-client": {
         "apiKey": "3",
         "exportedSymbol": "@youwol/webpm-client"
+    },
+    "mathjax": {
+        "apiKey": "3",
+        "exportedSymbol": "Mathjax"
     }
 }
 
@@ -39,7 +45,8 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "rxjs",
         "@youwol/rx-vdom",
         "@youwol/mkdocs-ts",
-        "@youwol/webpm-client"
+        "@youwol/webpm-client",
+        "mathjax"
     ]
 }
 
