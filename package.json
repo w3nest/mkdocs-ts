@@ -12,14 +12,16 @@
         "build": "yarn build:dev",
         "pre-build": "yarn clean",
         "build:dev": "yarn pre-build && webpack --mode development",
-        "build:prod": "yarn pre-build && webpack --mode production",
+        "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
         "lint-check": "yarn lint-prettier-check && yarn lint-eslint-check",
         "lint-prettier-check": "prettier --check ./src",
         "lint-eslint-check": "eslint ./src",
         "test": "jest -i",
         "test-coverage": "jest -i --collect-coverage",
         "doc": "typedoc",
-        "publish-npm-public": "yarn build:prod && yarn test-coverage && yarn publish --access public"
+        "publish-npm-public": "yarn build:prod && yarn test-coverage && yarn publish --access public",
+        "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
+        "build-css": "yarn build-css-default"
     },
     "prettier": "@youwol/prettier-config",
     "eslintConfig": {
@@ -50,7 +52,8 @@
         "highlight.js": "11.2.0",
         "@youwol/os-top-banner": "^0.2.0",
         "@youwol/rx-tree-views": "^0.3.3",
-        "@youwol/http-primitives": "^0.2.3"
+        "@youwol/http-primitives": "^0.2.3",
+        "esprima": "^4.0.1"
     },
     "devDependencies": {
         "@types/jest": "^29.5.6",
@@ -69,7 +72,9 @@
         "typescript": "5.3.3",
         "webpack": "^5.89.0",
         "webpack-bundle-analyzer": "^4.9.1",
-        "webpack-cli": "5.1.4"
+        "webpack-cli": "5.1.4",
+        "sass": "^1.69.7",
+        "codemirror": "^5.52.0"
     },
     "webpm": {
         "dependencies": {
@@ -80,7 +85,8 @@
             "highlight.js": "11.2.0",
             "@youwol/os-top-banner": "^0.2.0",
             "@youwol/rx-tree-views": "^0.3.3",
-            "@youwol/http-primitives": "^0.2.3"
+            "@youwol/http-primitives": "^0.2.3",
+            "esprima": "^4.0.1"
         },
         "aliases": []
     }

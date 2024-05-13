@@ -1,0 +1,85 @@
+.CodeMirror {
+    height: auto !important;
+}
+
+.mkdocs-DefaultLayoutView, .mkdocs-DefaultLayoutView-s, .mkdocs-DefaultLayoutView-xs, .mkdocs-DefaultLayoutView-xxs{
+    font-family: serif;
+}
+
+.mkdocs-DefaultLayoutView{
+    font-size: 16px;
+}
+
+.mkdocs-DefaultLayoutView-s, .mkdocs-DefaultLayoutView-xs, .mkdocs-DefaultLayoutView-xxs{
+    font-size: 15px;
+}
+
+.mkdocs-NavigationView{
+    font-size: 1em;
+    line-height: 1.7em;
+}
+
+.mkdocs-WrapperSideNav{
+    width: 20em;
+    line-height: 1.5em;
+    font-size: 0.9em;
+    position: sticky;
+    top: 0px;
+}
+
+.mkdocs-WrapperSideNav li{
+    list-style-type: none;
+}
+
+.mkdocs-NavigationView .fv-tree-arianeLine {
+    display: none;
+}
+.mkdocs-NavigationView .fv-tree-expand {
+    display: none !important;
+}
+.mkdocs-TopBannerView {
+    max-height: 50px;
+}
+
+.mkdocs-PageView {
+    font-size: 1em;
+    line-height: 1.6;
+}
+.mkdocs-ts-expand-nav-node {
+    transition: transform 0.5s ease 0s;
+}
+
+.mkdocs-ts-bg-highlight {
+    background-color: #eab5191a;
+}
+
+.mkdocs-PageView h1,
+.mkdocs-PageView h2,
+.mkdocs-PageView h3,
+.mkdocs-PageView h4,
+.mkdocs-PageView h5,
+.mkdocs-PageView h6 {
+    font-weight: bolder;
+    line-height: 1.5;
+    color: inherit;
+    text-transform: none;
+}
+
+.mkdocs-PageView h1 {
+    font-size: 1.6em;
+}
+.mkdocs-PageView h2 {
+    font-size: 1.2em;
+}
+.mkdocs-PageView h3 {
+    font-size: 1.15em;
+}
+.mkdocs-PageView h4 {
+    font-size: 1.1em;
+}
+.mkdocs-PageView h5 {
+    font-size: 1.05em;
+}
+.mkdocs-PageView h6 {
+    font-size: 1em;
+}

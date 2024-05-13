@@ -23,6 +23,7 @@ externals_deps = {
 }
 in_bundle_deps = {}
 dev_deps = {
+    "sass": "^1.69.7",
     "codemirror": "^5.52.0",
 }
 
@@ -61,6 +62,11 @@ template = Template(
     ),
     userGuide=True,
     inPackageJson={
+        "scripts" :{
+            "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
+            "build-css": "yarn build-css-default",
+            "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
+        },
         "eslintConfig": {
             "extends": [
                 "@youwol"

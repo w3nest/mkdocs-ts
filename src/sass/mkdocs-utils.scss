@@ -1,0 +1,108 @@
+
+@function interpolate($color1, $color2, $weight) {
+    // Extract RGB values for color1
+    $red1: red($color1);
+    $green1: green($color1);
+    $blue1: blue($color1);
+
+    // Extract RGB values for color2
+    $red2: red($color2);
+    $green2: green($color2);
+    $blue2: blue($color2);
+
+    // Interpolate RGB values
+    $red: $red1 + ($red2 - $red1) * $weight;
+    $green: $green1 + ($green2 - $green1) * $weight;
+    $blue: $blue1 + ($blue2 - $blue1) * $weight;
+
+    // Return the interpolated color
+    @return rgb($red, $green, $blue);
+}
+
+// Generate 5 colors between color1 and color2
+@for $i from 1 through 5 {
+    .mkdocs-bg-#{$i} {
+        background-color: interpolate($color-bg, $color-text, calc($i / 6)); // Divide by 6 to get 5 colors
+    }
+    .mkdocs-text-#{5-$i} {
+        color: interpolate($color-bg, $color-text, calc($i / 6)); // Divide by 6 to get 5 colors
+    }
+}
+
+$colorsMap: (
+    "danger": $color-danger,
+    "warning": $color-warning,
+    "success": $color-success,
+    "info": $color-info,
+    "focus": $color-focus,
+);
+
+.mkdocs-disabled{
+    opacity: 0.5
+}
+
+$filters: (
+    "darker":0.9,
+    "x-darker":0.8,
+    "xx-darker":0.7,
+    "lighter":1.1,
+    "x-lighter":1.2,
+    "xx-lighter":1.3,
+);
+
+@each $nickName, $value in $filters{
+    .mkdocs-#{$nickName}{
+        filter: brightness($value) !important;
+    }
+    .mkdocs-hover-#{$nickName}:hover{
+        filter: brightness($value) !important;
+    }
+}
+
+
+@each $nickName, $color in $colorsMap{
+    .mkdocs-card-#{$nickName}{
+        color: $color !important;
+        background-color:  #{$color}1a !important;
+    }
+    .mkdocs-bg-#{$nickName}{
+         background-color:  #{$color}1a !important;
+    }
+    .mkdocs-text-#{$nickName}{
+        color: $color !important;
+    }
+    .mkdocs-border-#{$nickName}{
+        border: solid 1px $color !important;
+    }
+    .mkdocs-border-left-#{$nickName}{
+        border-left: solid 1px $color !important;
+    }
+    .mkdocs-border-right-#{$nickName}{
+        border-right: solid 1px $color !important;
+    }
+    .mkdocs-border-top-#{$nickName}{
+        border-top: solid 1px $color !important;
+    }
+    .mkdocs-border-bottom-#{$nickName}{
+        border-bottom: solid 1px $color !important;
+    }
+    @each $nickName, $color in $colorsMap{
+        .mkdocs-hover-bg-#{$nickName}:hover{
+            background-color: $color !important;
+        }
+    }
+    @each $nickName, $color in $colorsMap{
+        .mkdocs-hover-text-#{$nickName}:hover{
+            color: $color !important;
+        }
+    }
+    @each $nickName, $color in $colorsMap{
+        .mkdocs-hover-border-#{$nickName}:hover{
+            border: solid 1px $color
+        }
+    }
+}
+
+.mkdocs-pointer{
+    cursor: pointer;
+}

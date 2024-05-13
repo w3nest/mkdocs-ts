@@ -5,3 +5,9 @@
 .mknb-JsCellView .CodeMirror{
     background-color: aliceblue;
 }
+.mknb-NotebookPage p{
+    text-align: justify
+}
+.mknb-CellTagsView{
+    font-size:small
+}
