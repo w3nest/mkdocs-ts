@@ -1,10 +1,8 @@
 
-.mknb-MdCellView .CodeMirror{
-    background-color: aliceblue;
+.mknb-CellView .CodeMirror{
+    background-color: rgba(0,0,0,0);
 }
-.mknb-JsCellView .CodeMirror{
-    background-color: aliceblue;
-}
+
 .mknb-NotebookPage p{
     text-align: justify
 }

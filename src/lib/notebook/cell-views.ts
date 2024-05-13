@@ -96,9 +96,9 @@ export class CellView implements VirtualDOM<'div'> {
     }) {
         Object.assign(this, params)
         const backgrounds: Record<CellStatus, string> = {
-            ready: 'bg-primary',
-            success: 'bg-success',
-            error: 'bg-danger',
+            ready: 'mkdocs-bg-info',
+            success: 'mkdocs-bg-success',
+            error: 'mkdocs-bg-danger',
             unready: '',
         }
 
@@ -276,12 +276,14 @@ export class CellTagsView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: params.cellAttributes.readOnly
-                    ? 'fas fa-lock'
-                    : 'fas fa-pen',
+                    ? 'fas fa-lock mr-1'
+                    : 'fas fa-pen mr-1',
             },
             {
                 tag: 'div',
-                class: 'mx-1',
+                class: params.cellAttributes['reactive']
+                    ? 'fas fa-bolt mr-1'
+                    : '',
             },
             {
                 tag: 'div',
