@@ -55,6 +55,7 @@ let y = 3
 `,
         scope,
         output$: undefined,
+        load: undefined,
         invalidated$,
     })
     expect(scope).toEqual({
@@ -68,6 +69,7 @@ const foo = { z: x + y}
 `,
         scope,
         output$: undefined,
+        load: undefined,
         invalidated$,
     })
     expect(scope).toEqual({
@@ -80,6 +82,7 @@ const bar = { a: x + foo.z + y }
 `,
         scope,
         output$: undefined,
+        load: undefined,
         invalidated$,
     })
     expect(scope).toEqual({

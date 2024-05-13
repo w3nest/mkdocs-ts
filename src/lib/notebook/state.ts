@@ -1,8 +1,26 @@
-import { BehaviorSubject, Subject, filter, ReplaySubject } from 'rxjs'
+import {
+    BehaviorSubject,
+    Subject,
+    filter,
+    ReplaySubject,
+    switchMap,
+    from,
+    map,
+    firstValueFrom,
+} from 'rxjs'
 import { OutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
 import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
-import { Views } from '.'
+import {
+    CellCommonAttributes,
+    defaultCellAttributes,
+    JsCellExecutor,
+    NotebookPage,
+    Views,
+} from '.'
+import { Router } from '../router'
+import { fromFetch } from 'rxjs/fetch'
+import { parseMd } from '../markdown'
 
 export type CellStatus = 'unready' | 'ready' | 'success' | 'error'
 
@@ -20,14 +38,6 @@ export type Scope = {
      * The `const` variables: keyed by their name and mapped to their values.
      */
     const: { [k: string]: unknown }
-}
-
-/**
- * The empty scope, `webpm` is included to allow resources installation.
- */
-export const emptyScope: Scope = {
-    let: {},
-    const: { webpm, Views },
 }
 
 /**
@@ -49,6 +59,15 @@ export type ExecArgs = {
      * Source to execute.
      */
     src: string
+
+    /**
+     * The function used to load a submodule from a notebook page.
+     *
+     * @param path Navigation path of the submodule.
+     * @returns The exported symbols.
+     */
+    load: (path: string) => Promise<{ [k: string]: unknown }>
+
     /**
      * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.
      */
@@ -143,11 +162,30 @@ export class State {
      */
     public readonly parent?: { state: State; cellId: string }
 
+    /**
+     * The application router, used to import modules from other notebook pages.
+     */
+    public readonly router: Router
+
+    public readonly modules: {
+        [k: string]: { state: State; exports: Scope }
+    } = {}
+
     constructor(params: {
-        initialScope: Scope
+        initialScope?: Scope
+        router: Router
         parent?: { state: State; cellId: string }
     }) {
         Object.assign(this, params)
+        this.initialScope = {
+            let: params.initialScope?.let || {},
+            const: {
+                webpm,
+                Views,
+                ...(params.initialScope?.const || {}),
+            },
+        }
+
         if (params.parent) {
             params.parent.state.invalidated$
                 .pipe(filter((cellId) => cellId === params.parent.cellId))
@@ -234,6 +272,7 @@ export class State {
             src: this.src$[id].value,
             scope: scope$.getValue(),
             output$,
+            load: this.loadModule(id),
             cellId: id,
             owningState: this,
         })
@@ -255,6 +294,16 @@ export class State {
     private invalidateCells(cellId: string) {
         this.invalidated$.next(cellId)
     }
+
+    private dispose() {
+        this.cells.forEach((cell) => {
+            this.invalidateCells(cell.cellId)
+        })
+        Object.values(this.modules).forEach(({ state }) => {
+            state.dispose()
+        })
+    }
+
     unreadyCells({ afterCellId }: { afterCellId: string }) {
         const index = this.ids.indexOf(afterCellId)
         this.invalidateCells(afterCellId)
@@ -266,4 +315,91 @@ export class State {
             this.invalidateCells(id)
         })
     }
+
+    private loadModule(cellId: string) {
+        const components = ({
+            state,
+        }: {
+            state: State
+            cellOptions: CellCommonAttributes
+        }) => {
+            return {
+                'js-cell': (elem) => {
+                    const id =
+                        elem.getAttribute('cell-id') || elem.getAttribute('id')
+                    const reactive = elem.getAttribute('reactive')
+                    const cell = new JsCellExecutor({
+                        cellId: id,
+                        content$: new BehaviorSubject(elem.textContent),
+                        state: state,
+                        cellAttributes: {
+                            reactive,
+                        },
+                    })
+                    state.appendCell(cell)
+                    return { tag: 'div' as const }
+                },
+            }
+        }
+
+        return (path: string) => {
+            const router = this.router
+            if (this.modules[path]) {
+                this.modules[path].state.dispose()
+            }
+            const module$ = router.getNav({ path }).pipe(
+                switchMap((nav) => {
+                    const nbPage = nav.html({
+                        router,
+                    }) as unknown as NotebookPage
+                    return fromFetch(nbPage.url)
+                }),
+                switchMap((resp) => resp.text()),
+                switchMap((src) => {
+                    const state = new State({
+                        router,
+                        parent: { state: this, cellId },
+                    })
+                    parseMd({
+                        src: extractExportedCode(src),
+                        router,
+                        views: {
+                            ...components({
+                                state,
+                                cellOptions: defaultCellAttributes,
+                            }),
+                        },
+                    })
+                    return from(state.execute(state.ids.slice(-1)[0])).pipe(
+                        map((scope) => {
+                            this.modules[path] = { exports: scope, state }
+                            return this.modules[path]
+                        }),
+                    )
+                }),
+            )
+
+            return firstValueFrom(module$).then(({ exports }) => ({
+                ...exports.const,
+                ...exports.let,
+            }))
+        }
+    }
+}
+
+function extractExportedCode(text: string) {
+    let acc = ''
+    let exported = false
+    text.split('\n').forEach((line) => {
+        if (line.startsWith('<js-cell')) {
+            exported = true
+        }
+        if (exported) {
+            acc += `${line}\n`
+        }
+        if (line.startsWith('</js-cell>')) {
+            exported = false
+        }
+    })
+    return acc
 }

@@ -320,7 +320,12 @@ export class Router {
         this.navigateTo({ path: currentPath })
     }
 
-    private getNav({
+    /**
+     * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.
+     *
+     * @param path The target path.
+     */
+    public getNav({
         path,
     }: {
         path: string

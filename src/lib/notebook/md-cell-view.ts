@@ -120,6 +120,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
         const state = new State({
             initialScope: scope,
             parent: { state: owningState, cellId },
+            router: this.state.router,
         })
         const patchSrc = src
             .replace(/\${/g, '<js-inlined>')

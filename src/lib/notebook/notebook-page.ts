@@ -2,7 +2,7 @@ import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { parseMd, MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
-import { emptyScope, State } from './state'
+import { State } from './state'
 import { JsCellView } from './js-cell-view'
 import { MdCellView } from './md-cell-view'
 
@@ -137,7 +137,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
     /**
      * State manager.
      */
-    public readonly state: State = new State({ initialScope: emptyScope })
+    public readonly state: State
 
     public readonly options: NotebookOptions
 
@@ -166,6 +166,8 @@ export class NotebookPage implements VirtualDOM<'div'> {
             )
             return
         }
+        this.state = new State({ router: this.router })
+
         const source$ =
             params.src !== undefined
                 ? of(params.src)

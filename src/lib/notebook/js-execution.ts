@@ -67,6 +67,7 @@ ${patchedReactive.wrapped}
  * @param _args.src The source to execute
  * @param _args.scope The entering scope.
  * @param _args.output$ Subject in which output views are sent (when using `display` function).
+ * @param _args.load The function used to load a submodule from another notebook page.
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
  * @param _args.reactive If true, observables & promises are resolved before cell execution using a `combineLatest`
  * policy.
@@ -76,12 +77,14 @@ export async function executeJs({
     src,
     scope,
     output$,
+    load,
     reactive,
     invalidated$,
 }: {
     src: string
     scope: Scope
     output$: Subject<AnyVirtualDOM>
+    load: (path: string) => Promise<{ [k: string]: unknown }>
     reactive?: boolean
     invalidated$: Observable<unknown>
 }): Promise<Scope> {
@@ -101,7 +104,7 @@ return {
         wrapped = patched ? patched.wrapped : wrapped
     }
     const srcPatched = `
-return async (scope, {display, output$, invalidated$}) => {
+return async (scope, {display, output$, load, invalidated$}) => {
     // header
 const {${extractKeys(scope.const)}} = scope.const
 let {${extractKeys(scope.let)}} = scope.let
@@ -117,6 +120,7 @@ ${footer}
     const displayInOutput = (element: HTMLElement) => display(element, output$)
     return await new Function(srcPatched)()(scope, {
         display: displayInOutput,
+        load,
         invalidated$,
         output$,
     })

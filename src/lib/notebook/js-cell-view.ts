@@ -19,35 +19,39 @@ export type JsCellAttributes = CellCommonAttributes & {
 
 /**
  *
- * Represents a Javascript cell within a {@link NotebookPage}.
+ * Represents the execution side of a Javascript cell within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `js-cell`, in this case
- * associated attributes are provided as DOM attributes; see {@link CellCommonAttributes}.
+ * This implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook
+ * pages to retrieve exported symbols.
+ * However, this implementation is typically inherited from {@link JsCellView} to provide the regular views of
+ * a javascript cell.
  */
-export class JsCellView implements VirtualDOM<'div'>, CellTrait {
-    public readonly tag = 'div'
-    /**
-     * Classes associated to the view.
-     */
-    public readonly class = 'mknb-JsCellView'
-    public readonly children: ChildrenLike
+export class JsCellExecutor implements CellTrait {
     public readonly cellId: string
-    public readonly cellAttributes: JsCellAttributes
+    /**
+     * Initial source code.
+     */
+    public readonly content: string
+
+    /**
+     * Emit when the cell is invalidated.
+     */
+    public readonly invalidated$: Observable<unknown>
     /**
      * State manager, owned by the parent {@link NotebookPage}.
      */
     public readonly state: State
-    public readonly content: string
-    public readonly editorView: CodeSnippetView
+
+    public readonly cellAttributes: JsCellAttributes
+
     /**
      * Observable over the source content of the cell.
      */
     public readonly content$: BehaviorSubject<string>
-    public readonly invalidated$: Observable<unknown>
 
     constructor(params: {
         cellId: string
-        content: string
+        content$: BehaviorSubject<string>
         state: State
         cellAttributes: JsCellAttributes
     }) {
@@ -55,23 +59,6 @@ export class JsCellView implements VirtualDOM<'div'>, CellTrait {
         this.invalidated$ = this.state.invalidated$.pipe(
             filter((cellId) => cellId === this.cellId),
         )
-        this.editorView = new SnippetEditorView({
-            language: 'javascript',
-            readOnly: this.cellAttributes.readOnly,
-            content: this.content,
-            lineNumbers: this.cellAttributes.lineNumbers,
-            onExecute: () => this.state.execute(this.cellId).then(() => {}),
-        })
-        this.content$ = this.editorView.content$
-        this.children = [
-            new FutureCellView({
-                language: 'javascript',
-                cellId: this.cellId,
-                state: this.state,
-                editorView: this.editorView,
-                cellAttributes: this.cellAttributes,
-            }),
-        ]
     }
 
     /**
@@ -85,5 +72,51 @@ export class JsCellView implements VirtualDOM<'div'>, CellTrait {
             reactive: this.cellAttributes.reactive,
             invalidated$: this.invalidated$,
         })
+    }
+}
+
+/**
+ *
+ * Represents a Javascript cell within a {@link NotebookPage}.
+ *
+ * They are typically included from a DOM definition with tag name `js-cell`, in this case
+ * associated attributes are provided as DOM attributes; see {@link CellCommonAttributes}.
+ */
+export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    /**
+     * Classes associated to the view.
+     */
+    public readonly class = 'mknb-JsCellView'
+    public readonly children: ChildrenLike
+
+    public readonly editorView: CodeSnippetView
+
+    constructor(params: {
+        cellId: string
+        content: string
+        state: State
+        cellAttributes: JsCellAttributes
+    }) {
+        const editorView = new SnippetEditorView({
+            language: 'javascript',
+            readOnly: params.cellAttributes.readOnly,
+            content: params.content,
+            lineNumbers: params.cellAttributes.lineNumbers,
+            onExecute: () => this.state.execute(this.cellId).then(() => {}),
+        })
+
+        super({ ...params, content$: editorView.content$ })
+        this.editorView = editorView
+
+        this.children = [
+            new FutureCellView({
+                language: 'javascript',
+                cellId: this.cellId,
+                state: this.state,
+                editorView: this.editorView,
+                cellAttributes: this.cellAttributes,
+            }),
+        ]
     }
 }
