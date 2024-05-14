@@ -176,7 +176,7 @@ export class SnippetEditorView extends CodeSnippetView {
         onExecute,
     }: {
         content: string
-        language: 'markdown' | 'javascript'
+        language: 'markdown' | 'javascript' | 'python'
         readOnly: boolean
         lineNumbers: boolean
         onExecute: () => void
@@ -271,6 +271,7 @@ export class CellTagsView implements VirtualDOM<'div'> {
         const lang = {
             javascript: 'js',
             markdown: 'md',
+            python: 'py',
         }
         this.children = [
             {

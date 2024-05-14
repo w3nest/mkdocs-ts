@@ -16,6 +16,7 @@ import {
     defaultCellAttributes,
     JsCellExecutor,
     NotebookPage,
+    PyCellExecutor,
     Views,
 } from '.'
 import { Router } from '../router'
@@ -38,6 +39,11 @@ export type Scope = {
      * The `const` variables: keyed by their name and mapped to their values.
      */
     const: { [k: string]: unknown }
+
+    /**
+     * The exported globals of python runtime.
+     */
+    python: { [k: string]: unknown }
 }
 
 /**
@@ -184,6 +190,7 @@ export class State {
                 Views,
                 ...(params.initialScope?.const || {}),
             },
+            python: {},
         }
 
         if (params.parent) {
@@ -339,6 +346,18 @@ export class State {
                     state.appendCell(cell)
                     return { tag: 'div' as const }
                 },
+                'py-cell': (elem) => {
+                    const id =
+                        elem.getAttribute('cell-id') || elem.getAttribute('id')
+                    const cell = new PyCellExecutor({
+                        cellId: id,
+                        content$: new BehaviorSubject(elem.textContent),
+                        state: state,
+                        cellAttributes: {},
+                    })
+                    state.appendCell(cell)
+                    return { tag: 'div' as const }
+                },
             }
         }
 
@@ -382,6 +401,7 @@ export class State {
             return firstValueFrom(module$).then(({ exports }) => ({
                 ...exports.const,
                 ...exports.let,
+                ...exports.python,
             }))
         }
     }
@@ -391,13 +411,13 @@ function extractExportedCode(text: string) {
     let acc = ''
     let exported = false
     text.split('\n').forEach((line) => {
-        if (line.startsWith('<js-cell')) {
+        if (line.startsWith('<js-cell') || line.startsWith('<py-cell')) {
             exported = true
         }
         if (exported) {
             acc += `${line}\n`
         }
-        if (line.startsWith('</js-cell>')) {
+        if (line.startsWith('</js-cell>') || line.startsWith('</py-cell>')) {
             exported = false
         }
     })

@@ -4,7 +4,7 @@ import { parseScript } from 'esprima'
 import { Output, Scope } from './state'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 
-function extractKeys(obj: { [k: string]: unknown } | string[]) {
+export function extractKeys(obj: { [k: string]: unknown } | string[]) {
     return (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
         (acc, e) => `${acc} ${e},`,
         '',
@@ -94,7 +94,8 @@ export async function executeJs({
     let footer = `
 return { 
     const:{ ${extractKeys(scope.const)} ${extractKeys(declarations.const)} },
-    let:{ ${extractKeys(scope.let)} ${extractKeys(declarations.let)} }
+    let:{ ${extractKeys(scope.let)} ${extractKeys(declarations.let)} },
+    python:{ ${extractKeys(scope.python)} },
 }
     `
     let wrapped = src
@@ -106,7 +107,7 @@ return {
     const srcPatched = `
 return async (scope, {display, output$, load, invalidated$}) => {
     // header
-const {${extractKeys(scope.const)}} = scope.const
+const {${extractKeys({ ...scope.const, ...scope.python })}} = {...scope.const, ...scope.python}
 let {${extractKeys(scope.let)}} = scope.let
 
     // original src
@@ -175,7 +176,8 @@ return {
     const footer = `
 return { 
     const:{ ${extractKeys(scope.const)} ${extractKeysOutter(declarations.const, 'const')} },
-    let:{ ${extractKeys(scope.let)} ${extractKeysOutter(declarations.let, 'let')} }
+    let:{ ${extractKeys(scope.let)} ${extractKeysOutter(declarations.let, 'let')} },
+    python:{ ${extractKeys(scope.python)} },
 }
     `
 

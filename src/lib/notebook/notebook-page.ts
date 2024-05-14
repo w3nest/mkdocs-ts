@@ -5,6 +5,7 @@ import { from, of, take } from 'rxjs'
 import { State } from './state'
 import { JsCellView } from './js-cell-view'
 import { MdCellView } from './md-cell-view'
+import { PyCellView } from './py-cell-view'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -108,6 +109,17 @@ export const notebookViews = ({
                 content: elem.textContent,
                 state: state,
                 parserOptions,
+                cellAttributes: getCellOptions(elem, cellOptions),
+            })
+            state.appendCell(cell)
+            return cell
+        },
+        'py-cell': (elem) => {
+            const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
+            const cell = new PyCellView({
+                cellId: id,
+                content: elem.textContent,
+                state: state,
                 cellAttributes: getCellOptions(elem, cellOptions),
             })
             state.appendCell(cell)

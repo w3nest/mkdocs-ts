@@ -46,7 +46,7 @@ const { MkDocs } = await webpm.install({
 })
 
 test('execute', async () => {
-    let scope = { const: {}, let: {} }
+    let scope = { const: {}, let: {}, python: {} }
     const invalidated$ = new Subject()
     scope = await executeJs({
         src: `
