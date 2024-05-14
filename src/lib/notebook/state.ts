@@ -23,7 +23,13 @@ import { Router } from '../router'
 import { fromFetch } from 'rxjs/fetch'
 import { parseMd } from '../markdown'
 
-export type CellStatus = 'unready' | 'ready' | 'success' | 'error'
+export type CellStatus =
+    | 'unready'
+    | 'ready'
+    | 'success'
+    | 'error'
+    | 'pending'
+    | 'executing'
 
 /**
  * Represents the scope of a cell.
@@ -262,18 +268,20 @@ export class State {
             this.parent.state.unreadyCells({ afterCellId: this.parent.cellId })
         }
     }
-    async execute(id: string) {
+    async execute(id: string, rootExecution: boolean = true) {
         if (this.ids.length === 0) {
             return this.initialScope
         }
         const index = this.ids.indexOf(id)
+        this.cellsStatus$[id].next('pending')
         if (!this.scopes$[id].value) {
-            await this.execute(this.ids[index - 1])
+            await this.execute(this.ids[index - 1], false)
         }
         const scope$ = this.scopes$[id]
         const output$ = this.outputs$[id]
 
         output$.next(undefined)
+        this.cellsStatus$[id].next('executing')
         this.executing$[id].next(true)
         const scope = await this.cells[index].execute({
             src: this.src$[id].value,
@@ -292,7 +300,7 @@ export class State {
         }
         nextId && this.scopes$[nextId].next(scope)
         remainingIds.forEach((id) => {
-            this.cellsStatus$[id].next('unready')
+            rootExecution && this.cellsStatus$[id].next('unready')
             this.scopes$[id].next(undefined)
             this.executing$[id].next(false)
         })

@@ -97,6 +97,8 @@ export class CellView implements VirtualDOM<'div'> {
         Object.assign(this, params)
         const backgrounds: Record<CellStatus, string> = {
             ready: 'mkdocs-bg-info',
+            pending: 'mkdocs-bg-info',
+            executing: 'mkdocs-bg-info',
             success: 'mkdocs-bg-success',
             error: 'mkdocs-bg-danger',
             unready: '',
@@ -110,7 +112,9 @@ export class CellView implements VirtualDOM<'div'> {
         const style$ = {
             source$: this.state.cellsStatus$[this.cellId],
             vdomMap: (status: CellStatus) => {
-                return status === 'unready' ? { opacity: 0.4 } : { opacity: 1 }
+                return ['unready', 'pending'].includes(status)
+                    ? { opacity: 0.4 }
+                    : { opacity: 1 }
             },
             wrapper: (d) => ({
                 ...d,
@@ -124,6 +128,7 @@ export class CellView implements VirtualDOM<'div'> {
             children: [
                 params.editorView,
                 new CellTagsView({
+                    cellStatus$: this.state.cellsStatus$[this.cellId],
                     language: params.language,
                     cellAttributes: params.cellAttributes,
                 }),
@@ -221,8 +226,8 @@ export class CellHeaderView implements VirtualDOM<'div'> {
         this.children = [
             {
                 source$: this.state.cellsStatus$[this.cellId],
-                vdomMap: (s) => {
-                    if (s === 'success') {
+                vdomMap: (s: CellStatus) => {
+                    if (['success', 'pending', 'executing'].includes(s)) {
                         return { tag: 'div' }
                     }
                     const classList =
@@ -258,6 +263,7 @@ export class CellTagsView implements VirtualDOM<'div'> {
         top: '0px',
         right: '0px',
     }
+
     /**
      *
      * @param params
@@ -265,6 +271,7 @@ export class CellTagsView implements VirtualDOM<'div'> {
      * @param params.attributes Cell attributes.
      */
     constructor(params: {
+        cellStatus$: Observable<CellStatus>
         language: string
         cellAttributes: CellCommonAttributes
     }) {
@@ -274,6 +281,22 @@ export class CellTagsView implements VirtualDOM<'div'> {
             python: 'py',
         }
         this.children = [
+            {
+                tag: 'i',
+                class: {
+                    source$: params.cellStatus$,
+                    vdomMap: (status: CellStatus) => {
+                        switch (status) {
+                            case 'pending':
+                                return 'fas fa-clock mr-1'
+                            case 'executing':
+                                return 'fas fa-cog fa-spin mr-1'
+                            default:
+                                return ''
+                        }
+                    },
+                },
+            },
             {
                 tag: 'div',
                 class: params.cellAttributes.readOnly
