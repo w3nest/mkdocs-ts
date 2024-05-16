@@ -85,6 +85,7 @@ export const notebookViews = ({
                 cellId,
                 style,
                 classList,
+                fullScreen: elem.getAttribute('full-screen') === 'true',
             })
         },
         'js-cell': (elem) => {

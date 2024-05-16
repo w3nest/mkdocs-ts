@@ -8,7 +8,7 @@ import {
     map,
     firstValueFrom,
 } from 'rxjs'
-import { OutputsView } from './cell-views'
+import { OutputsView, DeportedOutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
 import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
 import {
@@ -240,19 +240,22 @@ export class State {
         cellId,
         classList,
         style,
+        fullScreen,
     }: {
         cellId: string
         classList: string
         style: CSSAttribute
+        fullScreen: boolean
     }): OutputsView {
         if (!this.outputs$[cellId]) {
             this.outputs$[cellId] = new ReplaySubject()
             this.executing$[cellId] = new BehaviorSubject(false)
         }
-        const view = new OutputsView({
+        const view = new DeportedOutputsView({
             output$: this.outputs$[cellId],
             style,
             classList,
+            fullScreen,
         })
         this.deportedOutputsViews.push(cellId)
         return view

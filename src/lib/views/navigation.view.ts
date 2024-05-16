@@ -249,7 +249,6 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'h-100 overflow-auto ',
                 style: {
-                    position: 'relative',
                     width: ExpandedNavigationView.menuWidth,
                     marginLeft: `-${ExpandedNavigationView.menuWidth}`,
                     backgroundColor: 'white',

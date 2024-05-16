@@ -40,10 +40,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      */
     public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')
 
-    public readonly style = {
-        position: 'relative' as const,
-    }
-
     public readonly connectedCallback: (e: HTMLElement) => undefined
 
     /**
@@ -127,9 +123,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                     {
                         tag: 'div',
                         class: 'd-flex justify-content-center pt-5 w-100',
-                        style: {
-                            position: 'relative',
-                        },
                         children: [
                             {
                                 source$: this.displayModeNav$.pipe(
@@ -155,7 +148,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                     maxWidth: '40em',
                                     height: 'fit-content',
                                     minHeight: '100%',
-                                    position: 'relative',
                                 },
                                 children: [new PageView({ router: router })],
                             },
