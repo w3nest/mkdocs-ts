@@ -662,7 +662,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "If  `true` , use the  [Notebook](@nav/api/Notebook)  module to parse the markdown content of the API files.",
+                                "content": "If  `true` , use the  [Notebook](@nav/api/Notebook)  module to parse the code documentation included in the API files.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -690,7 +690,7 @@
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "export interface Configuration",
-                "implementation": "export interface Configuration {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: { [k: string]: string }\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true`, use the {@link Notebook} module to parse the markdown content of the API files.\n     */\n    notebook?: boolean\n}",
+                "implementation": "export interface Configuration {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: { [k: string]: string }\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true`, use the {@link Notebook} module to parse the code documentation included in the API files.\n     */\n    notebook?: boolean\n}",
                 "startLine": 13,
                 "endLine": 43,
                 "references": {
