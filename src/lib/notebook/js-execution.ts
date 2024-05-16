@@ -54,12 +54,13 @@ ${patchedReactive.wrapped}
     
 }
     `
-    const displayInOutput = (element: HTMLElement) => display(element, output$)
-    return await new Function(srcPatched)()(scope, {
+    const scopeOut = await new Function(srcPatched)()(scope, {
         display: displayInOutput,
         invalidated$,
         output$,
     })
+    console.log('JS statement execution done', { scopeIn: scope, scopeOut })
+    return scopeOut
 }
 
 /**
@@ -122,13 +123,14 @@ ${wrapped}
 ${footer}
 }
     `
-    const displayInOutput = (element: HTMLElement) => display(element, output$)
-    return await new Function(srcPatched)()(scope, {
+    const scopeOut = await new Function(srcPatched)()(scope, {
         display: displayInOutput,
         load,
         invalidated$,
         output$,
     })
+    console.log('JS cell execution done', { src, scopeIn: scope, scopeOut })
+    return scopeOut
 }
 
 function patchReactiveCell({

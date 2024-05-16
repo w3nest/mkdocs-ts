@@ -74,19 +74,19 @@ export async function executePy({
         }, '')
 
     const footer = `
-return { 
-    const:{ ${extractKeys(scope.const)} },
-    let:{ ${extractKeys(scope.let)} },
-    python: pyScope.toJs({dict_converter:  Object.fromEntries})
-}
+return pyScope.toJs({dict_converter:  Object.fromEntries})
     `
     const wrapped = `const pyScope = await scope.const.pyodide.runPythonAsync(\`
 from mknb_cell import display, ${extractKeys(scope.let)} ${extractKeys(scope.const).slice(0, -1)}
 from mknb import pyFctWrapperJs
 ${pyHeader}
+initial_globals = list(globals().keys())
 ${src}
-    
-{ k: pyFctWrapperJs(v) for k, v in globals().items() if not k.startswith('__') and k not in ['display'] and callable(v)}
+final_globals = list(globals().keys())
+new_globals = [k for k in final_globals if k not in initial_globals]
+
+python_scope = { k: pyFctWrapperJs(globals()[k]) for k in new_globals if callable(globals()[k])}
+python_scope
 \`)`
 
     const srcPatched = `
@@ -101,9 +101,16 @@ ${wrapped}
 ${footer}
 }
     `
-    return await new Function(srcPatched)()(scope, {
+    const pyScopeOut = await new Function(srcPatched)()(scope, {
         display: displayInOutput,
         invalidated$,
         output$,
     })
+    const scopeOut = {
+        let: scope.let,
+        const: scope.const,
+        python: { ...scope.python, ...pyScopeOut },
+    }
+    console.log('Py cell execution done', { src, scopeIn: scope, scopeOut })
+    return scopeOut
 }
