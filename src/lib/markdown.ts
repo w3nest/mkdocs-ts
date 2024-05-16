@@ -193,7 +193,7 @@ export function parseMd({
         }
     }
     src = preprocessing?.(src) || src
-    if (placeholders) {
+    if (placeholders && Object.keys(placeholders).length > 0) {
         const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
         src = src.replace(regex, (match) => placeholders[match])
     }
@@ -361,6 +361,52 @@ export function patchSrc({
         patchedInput: patchedSrc.slice(0, -1),
         contents,
     }
+}
+
+/**
+ * This function takes an input text, remove the escaped parts:
+ * *  a line start with triple back-quote: this line is escaped as well as all the following line until one starts
+ * with triple back-quote.
+ * *  a line include a single back quote: the remaining of the line as well as all the following line until a corresponding
+ * single back-quote is found.
+ *
+ * When a part of the input is escaped it is replace by a string `__ESCAPED_${ID}` where ID is a unique ID,
+ * the function returned the escaped text as well as a dict that gathers the escaped elements.
+ */
+export function removeEscapedText(src: string): {
+    escapedContent: string
+    replaced: { [k: string]: string }
+} {
+    let escapedContent = src // Initialize the escaped content with the source text
+    const replaced = {} // Initialize an object to store the replaced escaped elements
+
+    // Regular expression patterns to match escaped parts
+    const tripleBackquotePattern = /```([\s\S]*?)```/g
+
+    // Replace triple back-quote escaped parts
+    escapedContent = escapedContent.replace(
+        tripleBackquotePattern,
+        (match, _) => {
+            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+            replaced[id] = match // Store the escaped part in the replaced object
+            return id // Replace the escaped part with the unique ID
+        },
+    )
+
+    // Regular expression pattern to match single back-quoted escaped parts spanning multiple lines
+    const multilineBackquotePattern = /`([\s\S]*?)`/g
+
+    // Replace single back-quote escaped parts
+    escapedContent = escapedContent.replace(
+        multilineBackquotePattern,
+        (match, _) => {
+            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+            replaced[id] = match // Store the escaped part in the replaced object
+            return id // Replace the escaped part with the unique ID
+        },
+    )
+
+    return { escapedContent, replaced }
 }
 function fixedMarkedParseCustomViews({
     input,
