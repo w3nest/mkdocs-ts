@@ -4,5 +4,6 @@
  * @module Views
  */
 
+export * from './constants'
 export * from './range'
 export * from './text'
