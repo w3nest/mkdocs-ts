@@ -5,3 +5,4 @@
  */
 
 export * from './range'
+export * from './text'
