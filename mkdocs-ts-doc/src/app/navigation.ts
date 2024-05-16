@@ -6,6 +6,7 @@ import {
     installNotebookModule,
 } from '@youwol/mkdocs-ts'
 import { setup } from '../auto-generated'
+import { firstValueFrom } from 'rxjs'
 
 const tableOfContent = Views.tocView
 
@@ -17,16 +18,36 @@ const project = {
 const url = (restOfPath: string) =>
     `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/${restOfPath}`
 
+const placeholders = {
+    '{{project}}': project.name,
+    '{{mkdocs-version}}': setup.version,
+}
 function fromMd(file: string) {
     return fromMarkdown({
         url: url(file),
-        placeholders: {
-            '{{project}}': project.name,
-        },
+        placeholders,
     })
 }
 const CodeApiModule = await installCodeApiModule()
 const NotebookModule = await installNotebookModule()
+const notebookOptions = {
+    runAtStart: true,
+    defaultCellAttributes: {
+        lineNumbers: false,
+    },
+    markdown: {
+        latex: true,
+        placeholders,
+    },
+}
+await Promise.all([
+    firstValueFrom(
+        NotebookModule.SnippetEditorView.fetchCmDependencies$('javascript'),
+    ),
+    firstValueFrom(
+        NotebookModule.SnippetEditorView.fetchCmDependencies$('python'),
+    ),
+])
 
 export const navigation = {
     name: project.name,
@@ -73,16 +94,48 @@ export const navigation = {
                 new NotebookModule.NotebookPage({
                     url: url('tutorials.notebook.md'),
                     router,
-                    options: {
-                        runAtStart: true,
-                        defaultCellAttributes: {
-                            lineNumbers: false,
-                        },
-                        markdown: {
-                            latex: true,
-                        },
-                    },
+                    options: notebookOptions,
                 }),
+            '/import': {
+                name: 'Import',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.import.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+                '/from-page': {
+                    name: 'From a page',
+                    tableOfContent,
+                    html: ({ router }) =>
+                        new NotebookModule.NotebookPage({
+                            url: url('tutorials.notebook.import.from-page.md'),
+                            router,
+                            options: notebookOptions,
+                        }),
+                },
+            },
+            '/python': {
+                name: 'Python',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.python.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+                '/utils': {
+                    name: 'Utils',
+                    tableOfContent,
+                    html: ({ router }) =>
+                        new NotebookModule.NotebookPage({
+                            url: url('tutorials.notebook.python.utils.md'),
+                            router,
+                            options: { ...notebookOptions, runAtStart: false },
+                        }),
+                },
+            },
         },
     },
     '/api': {

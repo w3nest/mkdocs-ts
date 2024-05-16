@@ -1,29 +1,40 @@
 # Notebook
 
-Notebook allows to insert pages including code that can eventually be displayed, modified and run.
+A notebook page within **mkdocs-ts** is an interactive page that allows users to combine code, visualizations, 
+explanatory text, and other media elements in a single interface.
+It provides a convenient way to demonstrate code, view the results, and document analysis or findings in a structured 
+and easily shareable format. You can find examples of notebooks
+<a href="/applications/@youwol/gallery/latest" target="_blank">here</a>.
 
-It is a good to display code for illustration, documentation and collaboration.
+<note level="info">
+Although the format offers convenience and attractiveness, boasting a wide range of capabilities, the code generated
+within the notebook is not optimized, not standardized (they are not ESM module). The coding environment is also
+far from what is usually proposed in common IDE.
+Its strength lies in presenting the usage of multiple interactive components, which are themselves constructed 
+from standard technology stacks.
+</note>
 
-For anything serious, we recommend developing libraries using your favorite IDEA and stack, the code written
-in notebooks are neither optimized nor standardized.
 
+## Create a project
 
-## Create a notebook
-
-Notebook are pages within `@youwol/mkdocs-ts` navigation structure, it wraps a Markdown page:
+Notebook are pages within `@youwol/mkdocs-ts` navigation structure, it wraps Markdown source code or Markdown file 
+referenced by a URL. 
+The following cell presents an example of it, creating a simple document including one notebook page
+(from the Markdown source `src`):
 
 <js-cell language='javascript'>
 const { MkDocs, RxDom } = await webpm.install({
-    modules:[
-        '@youwol/mkdocs-ts#0.3.4 as MkDocs',
-        '@youwol/rx-vdom#1.0.1 as RxDom'
+    modules:[ '@youwol/mkdocs-ts#{{mkdocs-version}} as MkDocs' ],
+    css: [
+        `@youwol/mkdocs-ts#{{mkdocs-version}}~assets/mkdocs-light.css`,
+        `@youwol/mkdocs-ts#{{mkdocs-version}}~assets/notebook.css`,
     ]
 })
 const src =  `
-### Loading example
+### Hello world
 
 <js-cell>
-display(1)
+display('Hello World')
 </js-cell>
 `
 const NotebookModule = await MkDocs.installNotebookModule()
@@ -58,34 +69,42 @@ display({
 })
 </js-cell>
 
-Global options for a notebook page are availables, see [here](@nav/api/Notebook.NotebookPage).
+Global options for a notebook page are available, see [here](@nav/api/Notebook.NotebookPage).
 
-When instantiating the `html` attribute of a navigation node using `NotebookPage` multiple widgets becomes available
-for markdown:
-*  **`<js-cell></js-cell>`** : It defines a javascript cell. Its content can be displayed or not, and its output can
-be displayed or not, as well as inserted at any position in your document.
-*  **`<py-cell></py-cell>`** : It's a TODO, just like a javascript cell but code are written in python, more on that 
-in the dedicated page.
+In the above example, a single Javascript cell is included using the DOM element `js-cell`, others are available
+(*e.g.* `py-cell`, `md-cell`), they will be introduced in what follows.
 
-When editing the notebook, the associated project is usually served using a dev. server for automatic refresh when 
-sources changed. Also, it comes in complement with what already exist in `mkdocs-ts`, in particular regarding 
-the edition of Markdown (custom widgets, *etc*).
+Because the notebook feature is supported by **mkdocs-ts**, it is possible to create projects with multiple pages,
+and also import symbols from one page to another (more on that in a bit).
+
+Usually projects are divided in:
+*  One or more typescript files that defines the navigation, router and application object 
+(respectively the `nav`, `router` and `app` variables referenced in the above cell).
+The `html` attribute of navigation nodes referencing URL of markdown files.
+*  A folder that include the markdown files, in which the notebook contents are written.
+
+The project is usually served by a dev-server that automatically reload the application when either the typescript 
+or Markdown sources changed.
+
 
 ## Essential concepts
 
-This section presents the essential concepts of the notebook, it is backed up by dedicated pages to dive inside 
-particular topic.
+This section covers the fundamental concepts of the notebook, with additional child pages available for
+delving deeper into specific topics.
 
-Notebook pages essentially comes down to a list of coding cells that depends on each others. 
-To make it simple for now, one cell can be executed if all the previous cells have been executed as well.
-When modifying and running a particular cell, the following cells become `invalidated` and must be re-executed.
+Notebook pages primarily consist of a series of coding cells. Each cell can access variables defined in the 
+preceding ones. 
+When modifying and running a particular cell, the subsequent cells become invalidated and must be re-executed.
+
+In the upcoming sections, the focus will primarily be on JavaScript cells to explore the foundations.
+However, if you're interested in Python cells, you can visit this [page](@nav//tutorials/notebook/python).
 
 ### Scope
 
 Within a particular notebook page, all the top levels symbols exposed by the javascript cells are accessible to the 
 following cells.
 
-<js-cell cell-id="60">
+<js-cell>
 const x = 1 // 'x' is accessible in following cells
 let y = 2  // so is 'y'
 {
@@ -93,25 +112,28 @@ let y = 2  // so is 'y'
 }
 </js-cell>
 
-It is possible to bring into the scope esm or python libraries, backends or symbols from another notebook page, 
-refer to the [impots](@nav/notebook/imports) section for explanation on that topic.
+It is possible to bring into the scope ESM or python libraries, backends as well as symbols from another notebook page, 
+refer to the [imports page](@nav/notebook/imports) for explanation on that topic.
 
 
 ### Output
 
-Each cell has in its scope a  ̀display` function to render outputs of a cell.
+Each cell includes a `display` function within its scope to render outputs.
 
-The display function can handle:
-*  **`string` | `boolean` | `number`**: They are rendered directly.
-*  **`HTMLElement`**: They are appended just as they are.
-*  **`VirtualDOM`**: The native reactive extension of DOM element within a notebook page (more on that in the next section).
-*  **`Observable`**: They are rxjs observable, a kind of 'pipe' that emits value over time. The output subscribe to it
-and display the outgoing data using the rules explained here (more on that in the reactive section too).
-*  **`Unknown Data`**: The fallback if none of the previous rules applied.
+This function can handle various types of data:
+* **`string` | `boolean` | `number`**: These are rendered directly.
+* **`HTMLElement`**: They are appended as they are.
+* **`VirtualDOM`**: This represents the native reactive extension of DOM elements within a notebook page 
+(more on that in the next section).
+* **`Observable`**: These are <a href="https://rxjs.dev/" target="_blank">RxJS</a> observables,
+which emit values over time. 
+The output subscribes to it and displays the outgoing data using the rules explained here 
+(more on that in the reactive section too).
+* **`Unknown Data`**: This serves as a fallback if none of the previous rules apply.
 
 The following cell illustrates the different options:
 
-<js-cell cell-id="86">
+<js-cell>
 // Elementary types
 display("An elementary type (string)")
 
@@ -135,15 +157,31 @@ display({id: 'foo', values:[42], metadata:{ bar:(x) => 2*x}})
 
 </js-cell>
 
+It is possible to provide multiple arguments to `display`, in such case the arguments are rendered in a row (as much as
+the screen size allows):
+
+
+<js-cell>
+// Elementary types
+display(
+    "Display in a row", 
+    { tag:'div', class: 'mx-1' },
+    { tag:'div', innerText:'A VirtualDOM', class:"p-2 rounded border bg-light" },
+    { tag:'div', class: 'mx-1' },
+    rxjs.timer(0, 100)
+)
+</js-cell>
+
+
+
 **Deported outputs**
 
-Cell's outputs are by default generated right after the code cells (if displayed, otherwise at its location).
-You can change this behavior using an explicit `<cell-output cell-id='an_id'></cell-output>` to control the position
-of the output. The `cell-id` attribute should be explicitely provided to one coding cell, *e.g.* 
-`<js-cell cell-id='an_id'></js-cell>`. You can provide custom style to the cell-output.
+Cell's outputs are by default generated right after the code cells.
+You can change this behavior using an explicit `cell-output` DOM element cross referecing a `cell-id` of a Javascript 
+or Python cell. You can also provide custom style to the cell-output:
 
 
-<md-cell cell-id="md-117">
+<md-cell>
 For instance this output:
 <cell-output cell-id='foo' class="text-primary" style="display:inline-block;">
 </cell-output> 
@@ -157,31 +195,52 @@ display(new rxjs.timer(0,1000))
 Because the `display` function is bound to one cell, it is possible to reuse the output view of one cell
 in others by retrieving an instance of it:
 
-<js-cell cell-id="140">
+<js-cell>
 const display_foo = display
 display("Hello foo")
 </js-cell>
 
-<js-cell cell-id="145">
-display_foo("hello bar")
+The 'Hello bar' message above is actually generated by:
+<js-cell>
+display_foo("Hello bar")
 </js-cell>
 
+Deported output can also set `full-screen='true'` option to provide a menu allowing to extend the rendering area.
+
 ### Reactivity
-<js-cell cell-id="171">
+
+The primary approach to bring reactivity between cells is to use RxJS observables.
+The `js-cell` can use a `reactive="true"` attribute that will automatically unwrap observables or pormises 
+referenced within the cell, and provides the current value in place of the observable.
+
+For instance, the following cell referenced an observable:
+<js-cell>
 const timer = new rxjs.timer(0, 1000)
 </js-cell>
 
-
-<js-cell cell-id="174" reactive="true">
+And this next one has been set with `reactive="true"`:
+<js-cell reactive="true">
 display(`Got a tick, index: ${timer}`)
 const date = new Date().toLocaleString()
 </js-cell>
 
-<js-cell cell-id="179" reactive="true">
+As can be seen the cell is re-executed each time `timer` emits, its value within the cell is the current value
+(and not the observable).
+
+<note level='warning'>
+Because of its reactivity, the `date` variable is not a string for upcoming cells:
+it is an observable of string (its value changes each time `timer` emits).
+This is true for every variable defined within a reactive cell.
+</note> 
+
+It is then possible to use the variable `date` just like a standard string when using a reactive cell as well:
+
+<js-cell reactive="true">
 display(`Its is: ${date}`)
 </js-cell>
 
 ### Views
+
 <note level='info'>
 This section introduces the creation of views, here the concepts are presented alongside the use of
 `@youwol/rx-vdom`, a tiny library for creating reactive HTMLElement. However, you can load and use any similar library,
@@ -190,16 +249,16 @@ as long as they can create HTMLElement (that can be used in the `display` functi
 
 The notebook module comes with a predefined set of views.
 This section explains the general behaviors of such views, for more information regarding available views,
-their options and how to tune them, please refer to [this page](@nav/api/Notebook/Views).
+their options, and how to tune them, please refer to [this page](@nav/api/Notebook/Views).
 
-The `Views` object is available in the cells, all elements are rx-vdom VirtualDOM that can be directly rendered 
-using the `display` function:
+The `Views` object is available in the cells, all elements are `@youwol/rx-vdom`
+VirtualDOM that can be directly rendered  using the `display` function:
 <js-cell>
 const range = new Views.Range()
 display(range)
 </js-cell>
 
-All views have a `value$` generator, it emits each time the value change. It can be used as it or transformed using 
+Most views have a `value$` observable, it emits each time the value change. It can be used as it or transformed using 
 the various operators of RxJS:
 <js-cell>
 display(range.value$)
@@ -252,9 +311,11 @@ display({
 })
 </js-cell>
 
-This approach is convenient but has an overhead: all the view is recreated from scratch each time a new debounced value 
-is emitted. Using rx-vdom it is possible to create a view that only update the style attribute of the
-inner div (the following cell is not reactive):
+<note level='info'>
+The above approach is convenient but has an overhead: all the view is recreated from scratch each time a new debounced 
+value is emitted. 
+It is possible to make the changes more granular, as proposed in the next cell (which is not reactive).
+</note>
 
 <js-cell>
 display({
@@ -278,9 +339,9 @@ fitting naturally within the notebook. We encourage the reader navigate to its
 <a target="_blank" href="https://l.youwol.com/doc/@youwol/rx-vdom">documentation</a> for details.
 </note>
 
-# Misc
+## Misc
 
-## Latex
+### Latex
 
 To enable parsing latex:
 *  Install the `MathJax` package before parsing occurs (either statically from your node modules, or dynamically 
@@ -298,8 +359,17 @@ $$
 
 </md-cell>
 
-## Markdown Cell
+### Markdown Cell
+
+Markdown cell allows to provide example of Markdown source, they can themselves reference nested cells of other type.
+In markdown cell it is also possible to inline expressions referenced from the current scope by providing a single 
+expression like the following:
 
 <md-cell>
-The value is ${debounced}$.
+The value of the previously defined slider is ${debounced}$.
 </md-cell>
+
+<note level="info">
+Inlined expressions are automatically 'reactive': it displays the result of the expression
+using the current values of referenced promises or observables.
+</note>
