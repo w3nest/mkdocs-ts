@@ -31,6 +31,8 @@ export async function executeJsStatement({
     output$: Subject<Output>
     invalidated$: Observable<unknown>
 }) {
+    const displayInOutput = (...element: HTMLElement[]) =>
+        display(output$, ...element)
     const ast = parseProgram(src)
     const declarations = extractGlobalDeclarations(ast)
     const patchedReactive = patchReactiveCell({
@@ -90,6 +92,8 @@ export async function executeJs({
 }): Promise<Scope> {
     const ast = parseProgram(src)
     const declarations = extractGlobalDeclarations(ast)
+    const displayInOutput = (...element: HTMLElement[]) =>
+        display(output$, ...element)
 
     let footer = `
 return { 

@@ -63,7 +63,8 @@ export async function executePy({
     const pyodide = scope.const.pyodide
     registerMknbModule(pyodide)
 
-    const displayInOutput = (element: HTMLElement) => display(element, output$)
+    const displayInOutput = (...element: HTMLElement[]) =>
+        display(output$, ...element)
     registerMknbCellModule(pyodide, displayInOutput, scope)
 
     const pyHeader = [...Object.keys(scope.let), ...Object.keys(scope.const)]

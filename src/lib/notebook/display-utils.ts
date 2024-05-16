@@ -49,22 +49,30 @@ export function displayViewFactory(
  * @param output$ The Subject in which the associated rendered element is emitted.
  */
 export function display(
-    element: Observable<unknown> | unknown,
     output$: Subject<AnyVirtualDOM>,
+    ...elements: (unknown | Observable<unknown>)[]
 ) {
-    if (element instanceof Observable) {
-        const vdom: AnyVirtualDOM = {
-            tag: 'div' as const,
-            children: [
-                {
-                    source$: element,
-                    vdomMap: (value) => displayViewFactory(value),
-                },
-            ],
+    const views: AnyVirtualDOM[] = elements.map((element) => {
+        if (element instanceof Observable) {
+            return {
+                tag: 'div' as const,
+                children: [
+                    {
+                        source$: element,
+                        vdomMap: (value) => displayViewFactory(value),
+                    },
+                ],
+            }
         }
-        output$.next(vdom)
+        return displayViewFactory(element)
+    })
+    if (views.length == 1) {
+        output$.next(views[0])
         return
     }
-    const vdom = displayViewFactory(element)
-    output$.next(vdom)
+    output$.next({
+        tag: 'div',
+        class: 'd-flex align-items-center',
+        children: views,
+    })
 }
