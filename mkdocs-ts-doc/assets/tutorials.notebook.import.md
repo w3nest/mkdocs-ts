@@ -230,11 +230,13 @@ If this application is running from the local py-youwol server, you can access i
 </note>
 
 <note level="hint">
-Interested in trying the local py-youwol server?
+Interested in trying the local py-youwol server? 
 * Run `pipx run youwol`.
 * Reload this
 <a href="http://localhost:2000/applications/@youwol/mkdocs-ts-doc/latest?nav=/tutorials/notebook/import.python-modules" 
 target="_blank">page</a>.
+
+⚠️ Not yet available for Windows hosts. We are working on it...
 
 Refer to the py-youwol 
 <a href="https://platform.youwol.com/applications/@youwol/py-youwol-doc/0.1.10-wip?nav=/how-to/install-youwol" 
