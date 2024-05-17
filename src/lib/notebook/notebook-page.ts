@@ -2,7 +2,7 @@ import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { parseMd, MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
-import { State } from './state'
+import { Scope, State } from './state'
 import { JsCellView } from './js-cell-view'
 import { MdCellView } from './md-cell-view'
 import { PyCellView } from './py-cell-view'
@@ -147,6 +147,11 @@ export class NotebookPage implements VirtualDOM<'div'> {
     public readonly views: { [k: string]: ViewGenerator }
     public readonly router: Router
     public readonly children: ChildrenLike = []
+
+    /**
+     * Initial scope provided to the first executing cell.
+     */
+    public readonly initialScope: Partial<Scope>
     /**
      * State manager.
      */
@@ -162,7 +167,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
      * @param params.src Markdown source content. To fetch from a URL leave it empty & provide instead
      * the `url` attribute.
      * @param params.router Application's router.
-     * @param params.parsingArguments Markdown parsing arguments.
+     * @param params.initialScope Initial scope provided to the first executing cell.
      * @param params.options Global options for the page, in particular defined the default attribute for the various
      * cells.
      */
@@ -170,6 +175,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
         url?: string
         src?: string
         router: Router
+        initialScope?: Partial<Scope>
         options?: NotebookOptions
     }) {
         Object.assign(this, params)
@@ -179,7 +185,10 @@ export class NotebookPage implements VirtualDOM<'div'> {
             )
             return
         }
-        this.state = new State({ router: this.router })
+        this.state = new State({
+            router: this.router,
+            initialScope: this.initialScope,
+        })
 
         const source$ =
             params.src !== undefined

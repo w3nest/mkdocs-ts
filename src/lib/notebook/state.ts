@@ -184,7 +184,7 @@ export class State {
     } = {}
 
     constructor(params: {
-        initialScope?: Scope
+        initialScope?: Partial<Scope>
         router: Router
         parent?: { state: State; cellId: string }
     }) {
@@ -196,7 +196,7 @@ export class State {
                 Views,
                 ...(params.initialScope?.const || {}),
             },
-            python: {},
+            python: params.initialScope?.python || {},
         }
 
         if (params.parent) {
