@@ -7,7 +7,7 @@ import { CellCommonAttributes } from './notebook-page'
 import { executeJs } from './js-execution'
 
 /**
- * All attributes available for a javascript cell are the common ones for now.
+ * All attributes available for a javascript cell: the common ones + 'reactive'.
  */
 export type JsCellAttributes = CellCommonAttributes & {
     /**
@@ -80,7 +80,7 @@ export class JsCellExecutor implements CellTrait {
  * Represents a Javascript cell within a {@link NotebookPage}.
  *
  * They are typically included from a DOM definition with tag name `js-cell`, in this case
- * associated attributes are provided as DOM attributes; see {@link CellCommonAttributes}.
+ * associated attributes are provided as DOM attributes; see {@link JsCellAttributes}.
  */
 export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
     public readonly tag = 'div'

@@ -15,13 +15,18 @@ import { BehaviorSubject, Subject } from 'rxjs'
  * display(new Views.Range({min:0, max:100, step: 1}))
  * </js-cell>
  *
- * The range can optionally emit while dragging, it may be relevant to debounce the `value$` observable
- * when consuming it:
+ * The range can optionally **not** emit while dragging:
  * <js-cell>
- * range = new Views.Range({emitDrag: true})
+ * range = new Views.Range({emitDrag: false})
  * display(range)
- * display(range.value$.pipe(rxjs.debounceTime(100)))
  * </js-cell>
+ *
+ * <note level='info'>
+ * When emitting on drag, it may be relevant to debounce the values, *e.g.*:
+ *
+ * `range.value$.pipe(rxjs.debounceTime(100))`.
+ *
+ * </note>
  */
 export class Range implements VirtualDOM<'div'> {
     public readonly tag = 'div'
