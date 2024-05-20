@@ -19,12 +19,13 @@ externals_deps = {
     "@youwol/os-top-banner": "^0.2.0",
     "@youwol/rx-tree-views": "^0.3.3",
     "@youwol/http-primitives": "^0.2.3",
-    "esprima": "^4.0.1"
+    "esprima": "^4.0.1",
+    # It is only used for typing, not included in dev. dependencies to install it from consuming library.
+    "codemirror": "^5.52.0",
 }
 in_bundle_deps = {}
 dev_deps = {
     "sass": "^1.69.7",
-    "codemirror": "^5.52.0",
 }
 
 template = Template(
