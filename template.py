@@ -65,7 +65,7 @@ template = Template(
     inPackageJson={
         "scripts" :{
             "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
-            "build-css": "yarn build-css-default",
+            "build-css": "yarn build-css-default && prettier ./assets -w",
             "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
         },
         "eslintConfig": {
