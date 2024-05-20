@@ -9,3 +9,7 @@
 .mknb-CellTagsView{
     font-size:small
 }
+/*In the Notebook text widget we don't want the p padding*/
+.mknb-Text p{
+    margin: 0px
+}
