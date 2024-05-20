@@ -51,3 +51,22 @@ test('patchSrc test no content & rest of line', () => {
     )
     expect(r.contents['generatedId']).toBe('')
 })
+
+test('escape text', () => {
+    const input =
+        ' abc `escaped 1` \n def `escape 2\n escape 3` ghi\n```escape 4``` jkl\n```escape 5\nescape 6```\n mno'
+    const out = removeEscapedText(input)
+    expect(out.escapedContent).toBe(
+        ' abc __ESCAPED_2 \n' +
+            ' def __ESCAPED_3 ghi\n' +
+            '__ESCAPED_0 jkl\n' +
+            '__ESCAPED_1\n' +
+            ' mno',
+    )
+    expect(out.replaced).toEqual({
+        __ESCAPED_0: '```escape 4```',
+        __ESCAPED_1: '```escape 5\nescape 6```',
+        __ESCAPED_2: '`escaped 1`',
+        __ESCAPED_3: '`escape 2\n escape 3`',
+    })
+})

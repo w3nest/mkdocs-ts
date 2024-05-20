@@ -61,6 +61,7 @@ let y = 3
     expect(scope).toEqual({
         const: { x: 2 },
         let: { y: 3 },
+        python: {},
     })
     scope = await executeJs({
         src: `
@@ -75,6 +76,7 @@ const foo = { z: x + y}
     expect(scope).toEqual({
         const: { x: 2, foo: { z: 6 } },
         let: { y: 4 },
+        python: {},
     })
     scope = await executeJs({
         src: `
@@ -88,6 +90,7 @@ const bar = { a: x + foo.z + y }
     expect(scope).toEqual({
         const: { x: 2, foo: { z: 6 }, bar: { a: 12 } },
         let: { y: 4 },
+        python: {},
     })
 })
 
