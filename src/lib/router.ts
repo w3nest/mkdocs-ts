@@ -162,12 +162,14 @@ export class Router {
 
         this.navigateTo({ path: this.getCurrentPath() })
 
-        window.onpopstate = (event: PopStateEvent) => {
-            const state = event.state
-            if (state) {
-                this.navigateTo(state)
-            } else {
-                this.navigateTo({ path: '/' })
+        if (this.mockBrowserLocation === undefined) {
+            window.onpopstate = (event: PopStateEvent) => {
+                const state = event.state
+                if (state) {
+                    this.navigateTo(state)
+                } else {
+                    this.navigateTo({ path: '/' })
+                }
             }
         }
         this.currentHtml$.subscribe(() => {
@@ -299,10 +301,11 @@ export class Router {
             this.navUpdates[resolverPath] ||
             this.navigation[resolverPath][CatchAllKey]
         const oldNode = this.explorerState.getNode(path)
+        const relative = path.split(resolverPath)[1].replace(/^\/+/, '')
         const children = createImplicitChildren$({
             resolver: resolver,
             hrefBase: resolverPath,
-            path: path.split(resolverPath)[1],
+            path: relative,
             withExplicit: [],
             router: this,
         })
@@ -370,8 +373,8 @@ export class Router {
         }
         // node.tree: Navigation | LazyNavResolver
         if (typeof node.tree === 'function') {
-            // case: LazyNavResolver
-            const relative = path.split(node.path)[1]
+            // case: LazyNavResolver, remove starting '/'
+            const relative = path.split(node.path)[1].replace(/^\/+/, '')
             const nav = node.tree({ path: relative, router: this })
             return nav instanceof Observable
                 ? nav
