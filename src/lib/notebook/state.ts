@@ -240,11 +240,13 @@ export class State {
         cellId,
         classList,
         style,
+        inlined,
         fullScreen,
     }: {
         cellId: string
         classList: string
         style: CSSAttribute
+        inlined: boolean
         fullScreen: boolean
     }): OutputsView {
         if (!this.outputs$[cellId]) {
@@ -256,6 +258,7 @@ export class State {
             style,
             classList,
             fullScreen,
+            inlined,
         })
         this.deportedOutputsViews.push(cellId)
         return view

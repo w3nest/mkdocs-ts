@@ -392,9 +392,13 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
         fullScreen?: boolean
         style?: CSSAttribute
         classList?: string
+        inlined?: boolean
     }) {
-        Object.assign(this, params)
-        this.class = `${this.class} ${params.classList}`
+        this.output$ = params.output$
+        this.fullScreen = params.fullScreen
+        if (params.inlined) {
+            this.style = { display: 'inline-block' }
+        }
         const outputs$ = new BehaviorSubject([])
         this.output$.subscribe((out: Output) => {
             if (out === undefined) {
@@ -417,7 +421,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                     }
                     return {
                         tag: 'div',
-                        class: 'w-100 d-flex',
+                        class: 'w-100 d-flex pb-1',
                         children: [
                             { tag: 'div', class: 'flex-grow-1' },
                             {
@@ -458,13 +462,14 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                         tag: 'div' as const,
                         style: {
                             backgroundColor: 'rgb(255,255,255)',
+                            ...params.style,
                         },
                         class: {
                             source$: this.mode$,
                             vdomMap: (mode: OutputMode) =>
                                 mode === 'normal'
-                                    ? ''
-                                    : 'p-2 border rounded h-75 w-75 mx-auto',
+                                    ? params.classList
+                                    : `p-2 border rounded h-75 w-75 mx-auto ${params.classList}`,
                         },
                         children: content,
                         onclick: (ev) => ev.stopPropagation(),

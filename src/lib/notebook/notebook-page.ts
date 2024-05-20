@@ -81,11 +81,13 @@ export const notebookViews = ({
             const cellId = elem.getAttribute('cell-id')
             const style = parseStyle(elem.getAttribute('style'))
             const classList = elem.getAttribute('class') || ''
+            const inlined = elem.getAttribute('inlined') || false
             return state.registerDeportedOutputsView({
                 cellId,
                 style,
                 classList,
                 fullScreen: elem.getAttribute('full-screen') === 'true',
+                inlined,
             })
         },
         'js-cell': (elem) => {
