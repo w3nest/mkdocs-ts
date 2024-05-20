@@ -352,7 +352,12 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
 
         const source$ = this.router.explorerState.getChildren$(node)
         // Following call trigger children resolution if needed
-        this.router.explorerState.getChildren(node)
+        try {
+            this.router.explorerState.getChildren(node)
+        } catch (e) {
+            this.children = []
+            return
+        }
 
         this.children = {
             policy: 'replace',
@@ -422,7 +427,6 @@ export class ModalTocView implements VirtualDOM<'div'> {
                 tag: 'div',
                 style: {
                     maxHeight: '25vh',
-                    height: '10000px',
                 },
                 class: {
                     source$: this.expanded$,
