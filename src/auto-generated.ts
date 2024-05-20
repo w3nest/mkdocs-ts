@@ -8,7 +8,9 @@ const runTimeDependencies = {
         "highlight.js": "11.2.0",
         "@youwol/os-top-banner": "^0.2.0",
         "@youwol/rx-tree-views": "^0.3.3",
-        "@youwol/http-primitives": "^0.2.3"
+        "@youwol/http-primitives": "^0.2.3",
+        "esprima": "^4.0.1",
+        "codemirror": "^5.52.0"
     },
     "includedInBundle": {}
 }
@@ -53,12 +55,30 @@ const externals = {
         "commonjs2": "@youwol/http-primitives",
         "root": "@youwol/http-primitives_APIv02"
     },
+    "esprima": {
+        "commonjs": "esprima",
+        "commonjs2": "esprima",
+        "root": "esprima_APIv4"
+    },
+    "codemirror": {
+        "commonjs": "codemirror",
+        "commonjs2": "codemirror",
+        "root": "CodeMirror_APIv5"
+    },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
         "commonjs2": "rxjs/operators",
         "root": [
             "rxjs_APIv7",
             "operators"
+        ]
+    },
+    "rxjs/fetch": {
+        "commonjs": "rxjs/fetch",
+        "commonjs2": "rxjs/fetch",
+        "root": [
+            "rxjs_APIv7",
+            "fetch"
         ]
     }
 }
@@ -94,6 +114,14 @@ const exportedSymbols = {
     "@youwol/http-primitives": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/http-primitives"
+    },
+    "esprima": {
+        "apiKey": "4",
+        "exportedSymbol": "esprima"
+    },
+    "codemirror": {
+        "apiKey": "5",
+        "exportedSymbol": "CodeMirror"
     }
 }
 
@@ -107,7 +135,9 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "highlight.js",
         "@youwol/os-top-banner",
         "@youwol/rx-tree-views",
-        "@youwol/http-primitives"
+        "@youwol/http-primitives",
+        "esprima",
+        "codemirror"
     ]
 }
 
@@ -119,6 +149,16 @@ const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDepen
             "@youwol/http-primitives"
         ],
         "name": "CodeApi"
+    },
+    "Notebook": {
+        "entryFile": "./lib/notebook/index.ts",
+        "loadDependencies": [
+            "@youwol/rx-vdom",
+            "rxjs",
+            "@youwol/rx-tree-views",
+            "esprima"
+        ],
+        "name": "Notebook"
     }
 }
 
