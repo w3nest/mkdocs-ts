@@ -42,6 +42,9 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
 
     public readonly connectedCallback: (e: HTMLElement) => undefined
 
+    public readonly style = {
+        position: 'relative' as const,
+    }
     /**
      *
      * @param router The router
