@@ -112,7 +112,7 @@ export class GlobalMarkdownViews {
  * @param params see {@link MdParsingOptions} for additional options.
  * @param params.url The URL of the file.
  */
-export function fetchMarkdown(
+export function fetchMd(
     params: {
         url: string
     } & MdParsingOptions,
@@ -137,6 +137,9 @@ export function fetchMarkdown(
     }
 }
 
+export function fetchMarkdown(p) {
+    return fetchMd(p)
+}
 export function fromMarkdown(p) {
     return fetchMarkdown(p)
 }
