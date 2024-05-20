@@ -1,4 +1,3 @@
-
 $color-bg: white;
 $color-text: black;
 $color-danger: #f84d3d;
@@ -7,6 +6,5 @@ $color-success: #5cad0f;
 $color-info: #9b9b9b;
 $color-focus: #1a7bf6;
 
-
-@import "./mkdocs-utils.scss";
-@import "./mkdocs-components";
+@import './mkdocs-utils.scss';
+@import './mkdocs-components';

@@ -2,24 +2,29 @@
     height: auto !important;
 }
 
-.mkdocs-DefaultLayoutView, .mkdocs-DefaultLayoutView-s, .mkdocs-DefaultLayoutView-xs, .mkdocs-DefaultLayoutView-xxs{
+.mkdocs-DefaultLayoutView,
+.mkdocs-DefaultLayoutView-s,
+.mkdocs-DefaultLayoutView-xs,
+.mkdocs-DefaultLayoutView-xxs {
     font-family: serif;
 }
 
-.mkdocs-DefaultLayoutView{
+.mkdocs-DefaultLayoutView {
     font-size: 16px;
 }
 
-.mkdocs-DefaultLayoutView-s, .mkdocs-DefaultLayoutView-xs, .mkdocs-DefaultLayoutView-xxs{
+.mkdocs-DefaultLayoutView-s,
+.mkdocs-DefaultLayoutView-xs,
+.mkdocs-DefaultLayoutView-xxs {
     font-size: 15px;
 }
 
-.mkdocs-NavigationView{
+.mkdocs-NavigationView {
     font-size: 1em;
     line-height: 1.7em;
 }
 
-.mkdocs-WrapperSideNav{
+.mkdocs-WrapperSideNav {
     width: 20em;
     line-height: 1.5em;
     font-size: 0.9em;
@@ -27,7 +32,7 @@
     top: 0px;
 }
 
-.mkdocs-WrapperSideNav li{
+.mkdocs-WrapperSideNav li {
     list-style-type: none;
 }
 
