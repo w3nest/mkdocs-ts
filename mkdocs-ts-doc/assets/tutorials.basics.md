@@ -1,331 +1,490 @@
-# Basics
+# Getting Started
 
-## Creating a Simple Application
+## A Simple Application
 
-In `mkdocs-ts`, a document is essentially defined by a [Navigation](@nav/api/MainModule.Navigation) object. Here's a simple example:
+To start building your application, you need to install the following resources:
 
-<code-snippet language='javascript'>
-import { Navigation, Router, Views } from '@youwol/mkdocs-ts'
-import { render } from '@youwol/rx-vdom'
+<js-cell>
+const { MkDocs } = await webpm.install({
+    modules:[ '@youwol/mkdocs-ts#{{mkdocs-version}} as MkDocs' ],
+    css: [
+        'bootstrap#4.4.1~bootstrap.min.css',
+        'fontawesome#5.12.1~css/all.min.css',
+        '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
+        '@youwol/mkdocs-ts#0.3.5-wip~assets/mkdocs-light.css',
+    ]
+})
+display(MkDocs)
+</js-cell>
 
+Creating an application with @youwol/mkdocs-ts involves defining a  [Navigation](@nav/api/MainModule.Navigation) object. 
+This object represents a tree structure where nodes (called navigation nodes) are associated with:
+*  A target URL
+*  A main content view
+*  An optional table of content
+
+
+Here's a simple example:
+
+<js-cell cell-id="example0">
 // Define the table of contents view
-const tableOfContent = Views.tocView
+const tableOfContent = MkDocs.Views.tocView
 
 // Define the navigation structure
-const navigation: Navigation = {
+let navigation = {
     name: 'Root Node',
     tableOfContent,
     html: () => ({
-        tag: 'div',
-        innerText: 'HTML view of the root page',
+        tag: 'h1',
+        innerText: 'Root page',
     }),
     '/node-1': {
         name: 'First child',
         tableOfContent,
         html: () => ({
-            tag: 'div',
-            innerText: 'HTML view of the "First child" page',
+            tag: 'h1',
+            innerText: 'First page',
         }),
     },
     '/node-2': {
         name: 'Second child',
         tableOfContent,
         html: () => ({
-            tag: 'div',
-            innerText: 'HTML view of the "Second child" page',
+            tag: 'h1',
+            innerText: 'Second page',
         }),
     },
 }
-</code-snippet>
 
-The `Navigation` object is a recursive structure defining nodes, each associated with a name, main HTML content
-(using the `html` attribute), and optionally a table of contents. Views are declarative, defined by a virtual DOM 
-from the library `@youwol/rx-vdom`. A default `tableOfContent` view is provided by the library, and it is 
-also possible to define custom ones.
+// For real scenario the following parameters is not needed.
+// Here it is used to not re-locate the browser when navigating in this example.
+const mockBrowserLocation = {
+    initialPath:'https://foo.com/?nav=/',
+    history:[]
+}
+let router = new MkDocs.Router({ 
+    navigation,
+    mockBrowserLocation
+})
 
-Nodes can define children using attributes starting with a **`/`**. The name of the attribute defines the associated 
-part in the URL.
+let app = new MkDocs.Views.DefaultLayoutView({
+    router,
+    name: 'Example',
+})
 
-Creating an application using the navigation object is straightforward:
+display({
+    tag: 'div',
+    class:'border p-1',
+    style:{height:'100%'},
+    children:[app]
+})
+</js-cell>
 
-<code-snippet language='javascript' highlightedLines="5 9-12">
-import { render } from '@youwol/rx-vdom'
-import { Router, Views } from '@youwol/mkdocs-ts'
-import { navigation } from './navigation' // or from another file
+<cell-output cell-id="example0" full-screen="true" style="height:500px;">
+</cell-output>
 
-// Create a router with the navigation object and base path
-const router = new Router({ navigation })
+Key points:
+*  The `html` property of a navigation node is provided as VirtualDOM (from the `@youwol/rx-vdom` library). 
+   Typically, the `html` definition comes from Markdown source, as explained in the next section.
+*  To define a child node, use a property name starting with `/`. This name defines the corresponding part of the URL.
+*  the `name` property of a navigation node specifies to the displayed name.
+*  the `router` object is the navigation resolver. Its is provided at all places where re-routing can occur.
+    See [Router](@nav/api/MainModule.Router) for more information.
 
-// Render the application
-const app = render(
-    new Views.DefaultLayoutView({
-        router,
-        name: 'Demo App',
-    }),
-)
-</code-snippet>
+<note level="warning" label="Important">
+When defining child nodes (e.g., `/node-1`), avoid using spaces or special characters not allowed in URLs 
+unless encoded.
+</note>
 
-This code sets up a router with the provided navigation object and base path, then renders the application using the 
-default layout view.
-
+<note level='hint' label='Code factorization'>
+To slightly simplify up-coming cells, the next function is defined to display an application:
+<js-cell>
+const displayApp = (navigation, display) => {
+    const app = new MkDocs.Views.DefaultLayoutView({
+        router: new MkDocs.Router({
+            navigation,
+            mockBrowserLocation
+        }),
+        name: 'Example',
+    })
+    display({
+        tag: 'div',
+        class:'border p-1',
+        style:{height:'100%'},
+        children:[app]
+    })
+}
+</js-cell>
+</note>
 
 ## Main HTML Content
 
-The definition of the main HTML content in `@youwol/mkdocs-ts` is flexible. 
-It can accommodate views returned by promises or observables, and the virtual DOM structure returned can directly
-include any HTMLElement, allowing you to render elements created by other libraries.
+The definition of the main HTML content in **@youwol/mkdocs-ts** is flexible.
+It can handle views returned by promises or observables, and the virtual DOM structure can directly include any
+HTMLElement, allowing you to render elements created by other libraries.
 
 ### Using Markdown for Views
 
-Markdown is a first-class citizen of `@youwol/mkdocs-ts`, and utilities are provided by the library. 
-Here's an introduction to using Markdown for rendering pages:
+Markdown is a first-class citizen of **@youwol/mkdocs-ts**, and the library provides utilities for rendering pages 
+using Markdown. Here's an introduction:
 
-<code-snippet language='javascript' highlightedLines="0 3-5 9-13">
-import { parseMd } from '@youwol/mkdocs-ts'
-
+<js-cell cell-id="example1">
 const mdSrc = `
 # Including Markdown
 
 Just a simple example.
 `
 
-const navigation: Navigation = {
+navigation = {
     name: 'Root Node',
-    html: ({ router }: { router: Router }) => parseMd({
+    tableOfContent,
+    html: ({ router }) => MkDocs.parseMd({
         src: mdSrc,
         router
     }),
 }
+displayApp(navigation, display)
+</js-cell>
 
-const app = render(
-    new Views.DefaultLayoutView({
-        router: new Router({ navigation, basePath: '/my-domain/my-app' }),
-        name: 'Demo App',
-    })
-)
-</code-snippet>
+<cell-output cell-id="example1" full-screen="true" style="height:500px;">
+</cell-output>
 
-Markdown sources can also be retrieved from URLs, allowing you to split them into dedicated assets:
+Markdown sources are typically defined in dedicated files that can be accessed from a known URL. 
+The following example fetches the root markdown source of this application:
 
-<code-snippet language='javascript' highlightedLines="0 4">
-import { fetchMd } from '@youwol/mkdocs-ts'
+<js-cell cell-id="example2">
 
-const navigation: Navigation = {
+const docBasePath = '{{assetsBasePath}}'
+
+navigation = {
     name: 'Root Node',
-    html: fetchMd({ url: '/url/to/file.md' }),
+    tableOfContent,
+    html: MkDocs.fetchMd({ url: `${docBasePath}/index.md` }),
 }
+displayApp(navigation, display)
 
-const app = render(
-    new Views.DefaultLayoutView({
-        router: new Router({ navigation, basePath: '/my-domain/my-app' }),
-        name: 'Demo App',
-    })
-)
-</code-snippet>
+</js-cell>
+<cell-output cell-id="example2" full-screen="true" style="height:500px;">
+</cell-output>
 
-This allows you to fetch Markdown content from external sources and include it within your documentation 
-pages seamlessly.
-
-More information regarding Markdown parsing (in particular regarding the definition of custom views) is proposed
-[here](@nav/tutorials/markdown).
+<note level="hint">
+The Markdown parser provided by **@youwol/mkdocs-ts** offers additional features compared to standard parsers. 
+It allows parsing LaTeX expressions, creating custom views, performing pre-processing, and more. 
+For details, refer to the dedicated [page](@nav/tutorials/markdown).
+</note>
 
 
-### Using external libraries for views
 
-To include an HTML element from a library, the `html` attribute can be defined as:
+### Using external libraries
+
+Since VirtualDOM can accommodate regular HTMLElements as children, you can include views generated by external 
+libraries. 
+
+The following example lazily loads the TweakPane library from WebPM's CDN and creates a simple view:
 
 
-<code-snippet language='javascript' highlightedLines="0 7">
-import { CustomWidget } from 'some-lib'
+<js-cell cell-id="example3">
 
-const html = ({router, node}:{router: MyRouter, data:{param: string}): VirtualDOM => {
-    return {
-        tag: 'div',
-        children: [
-            // CustomWidget needs to be a standard HTMLElement
-            new CustomWidget(/* some arguments */)
-        ]
+navigation = {
+    name: 'Root Node',
+    html: async (router) => {
+        // doing so will load 'tweakpane' lazily, when accessing the page.
+        const {TP} = await webpm.install({modules:['tweakpane#^4.0.1 as TP']})
+        const pane = new TP.Pane()
+        const PARAMS = {
+            factor: 123,
+            title: 'hello',
+            color: '#ff0055',
+        };        
+        pane.addBinding(PARAMS, 'factor');
+        pane.addBinding(PARAMS, 'title');
+        pane.addBinding(PARAMS, 'color');        
+        return { tag: 'div', children:[pane.element] }
     }
 }
-const navigation: Navigation = {
-    name: 'Root Node',
-    html
-}
 
-const app = render(
-    new Views.DefaultLayoutView({
-        router: new Router({ navigation }),
-        name: 'Demo App',
-    })
-)
-</code-snippet>
+displayApp(navigation, display)
+</js-cell>
 
-It is also possible to lazy load external libraries when loading a particular page of the document. 
-For instance, using the `@youwol/webpm-client` package manager:
+<cell-output cell-id="example3" full-screen="true" style="height:500px;">
+</cell-output>
 
-<code-snippet language='javascript'>
-import { install } from '@youwol/webpm-client'
-
-const html = async ({router}:{router: MyRouter}): VirtualDOM => {
-    const { someLib } = await install({
-        modules:['some-lib#latest as someLib']
-    })
-    return {
-        tag: 'div',
-        children: [
-            // CustomWidget needs to be a standard HTMLElement
-            new someLib.CustomWidget(router.config.param1)
-        ]
-    }
-}
-</code-snippet>
 
 ### Cross navigation
 
-Cross navigation is enabled using regular `HTMLAnchorElement`, its `href` attribute must be prefixed with `@nav` and
-followed by the path of the page, optionally extended by the section id (separated from the page path by a dot).
+Cross navigation is enabled using regular HTMLAnchorElement. The href attribute must be prefixed with @nav followed 
+by the page path, optionally extended by the section ID (separated from the page path by a dot).
+
+<js-cell cell-id="example4">
+
+const rootSrc = `
+# Cross ref
+
+Here is a [cross reference](@nav/node-1).
+`
+navigation = {
+    name: 'Root Node',
+    tableOfContent,
+    html: ({router}) => {
+        return MkDocs.parseMd({router, src: rootSrc})
+    },
+    '/node-1': {
+        name: 'Node 1',
+        tableOfContent,
+        html: ({router}) => MkDocs.parseMd({router, src:'# Referenced page'})
+    }
+}
+
+displayApp(navigation, display)
+</js-cell>
+
+<cell-output cell-id="example4" full-screen="true" style="height:500px;">
+</cell-output>
+
 
 ## Navigation
 
 ### View Customization
 
+You can customize the navigation view to include custom icons, styles, or actions by providing a decoration attribute 
+to the navigation node definition. For more details, refer to the [Decoration API](@nav/api/MainModule.Decoration).
 
-<code-snippet language='javascript' highlightedLines="21-27">
-import { Navigation, Router, Views } from '@youwol/mkdocs-ts'
-import { render } from '@youwol/rx-vdom'
+The following example demonstrates how to add a custom icon (<i class='fas fa-tools'></i>) to a node and display a 
+context menu when clicking on another icon (<i class='fas fa-ellipsis-h'></i>).
+Decoration can define icons and/or actions for a navigation node. Let's start by creating a simple 'popup' panel 
+to be displayed when <i class='fas fa-ellipsis-h'></i> is clicked.
+In real scenario, this panel lists available actions for the related navigation node. 
+The context menu position is computed using the **@floating-ui/dom** library.
 
-// Define the table of contents view
-const tableOfContent = Views.tocView
 
-// Define the navigation structure
-const navigation: Navigation = {
+<js-cell>
+const { FloatingUI, RxDom } = await webpm.install({
+    modules:[
+        "@floating-ui/dom#^1.6.3 as FloatingUI",
+        "@youwol/rx-vdom#^1.0.1 as RxDom"
+    ]
+})
+const showCtxMenu = (ev) => {
+    // rough implementation of context menu using @floating-ui/dom
+    ev.stopPropagation()
+    ev.preventDefault()
+    const refElement = ev.target
+    const popup = RxDom.render({
+        tag: 'div',
+        class:'ctx-menu rounded p-2 bg-secondary text-light',
+        style: {    
+            position: 'absolute',
+            zIndex:100
+        },
+        innerText: 'Context Menu',
+    })
+    document.querySelectorAll('.ctx-menu').forEach((c) => c.remove())
+    document.body.appendChild(popup)
+    const cleanup = FloatingUI.autoUpdate(refElement, popup, () => {
+        FloatingUI.computePosition(refElement, popup, {
+            placement: 'bottom',
+            middleware: [FloatingUI.flip()],
+        }).then(({ x, y }) => {
+            Object.assign(popup.style, {
+                left: `${x}px`,
+                top: `${y}px`,
+            })
+        })
+    })
+}
+</js-cell>
+
+To incorporate the context menu view and define an icon for the node:
+
+<js-cell cell-id="example5">
+
+navigation = {
     name: 'Root Node',
     tableOfContent,
-    html: () => ({
-        tag: 'div',
-        innerText: 'HTML view of the root page',
-    }),
-    '/node-1': {
-        name: 'First child',
+    html: ({router}) => {
+        return MkDocs.parseMd({router, src:"# Nav. item Customization"})
+    },
+    '/config': {
+        name: 'Configuration',
         tableOfContent,
-        html: () => ({
-            tag: 'div',
-            innerText: 'HTML view of the "First child" page',
-        }),
+        html: ({router}) => MkDocs.parseMd({router, src:'# Configuration'}),
         decoration: {
             icon: {
                 tag: 'i',
-                class: 'fas fa-pastafarianism'
+                class: 'fas fa-tools px-1'
             },
-            wrapperClass: 'bg-primary',
-        }
-    },
+            actions: [{
+                tag: 'i',
+                class: 'fas fa-ellipsis-h px-1 mkdocs-hover-text-warning',
+                onclick: (ev) => showCtxMenu(ev)
+            }]
+        },
+    }
 }
-</code-snippet>
 
-The above code snippet insert an icon and a wrapper class on `node-1`.
-More information of can be found [here](@nav/api/MainModule.Decoration).
+displayApp(navigation, display)
+</js-cell>
+
+<cell-output cell-id="example5" full-screen="true" style="height:500px;">
+</cell-output>
+
 
 ### Dynamic 
 
-To specify a node within the navigation for which children are not known in advance, you can use the **`...`** 
-attribute. 
-This attribute catches all navigation routes below the specified node. A callback function is provided to the **`...`**
-attribute to dynamically define the node with its children. 
-In this case, children are defined explicitly using the children attribute.
+Up until now, the navigation structure in our examples has been static, with all pages and their hierarchy known in 
+advance. However, this isn't always the case, and **@youwol/mkdocs-ts** provides a formalism to handle dynamic 
+scenarios.
 
-To illustrate this topic, let's examine a pseudo example to render a file explorer-like interface. 
-This example relies on the functions `getItemInfo` and `getFolderContent`, which are not provided here and are assumed
-to be calls to a backend.
+In this example, we'll create a document with a **File System** node that represents a structure typically queried using
+HTTP requests (for which responses are not known in advance). For simplicity, we'll mock the file structure and content.
+
+Here is the mocked file system structure:
+<js-cell>
+const mockFS = {
+    '': {
+        files:[{id:'foo', name:'foo.txt'}],
+        folders:[{id:'baz', name:'baz'}]
+    },
+    'baz': {
+        files:[{id:'bar', name:'bar.txt'}],
+        folders:[]
+    }
+}
+const filesContent = {
+    'foo': '# Foo \n This is the content of the **foo** file.',
+    'baz/bar': '# Bar \n This is the content of the **bar** file.'
+}
+</js-cell>
+
+Next, we'll define a helper function to generate the main HTML content when a folder is selected. 
+This function lists the files in the folder and uses anchor elements to link to the files:
+
+<js-cell>
+const filesView = (elem) => {
+    const path = elem.getAttribute('parent-folder')
+    const { files } = mockFS[path]
+    return {
+        tag: 'div',
+        children: files.map((file) => ({
+            tag:'a',
+            href: `@nav/fs/${path}/${file.id}`,
+            class: 'd-flex align-items-center',
+            children:[
+                {   tag: 'i',
+                    class: 'fas fa-file'
+                },
+                { tag:'i', class:'mx-2'},
+                {   tag: 'div',
+                    innerText: file.name
+                }
+            ]
+        }))
+    }
+}
+</js-cell>
+
+The key element for defining dynamic navigation is a function that takes the **path** of the selected node 
+(and the application's router object if needed) and returns a [CatchAllNav](@nav/api/MainModule.CatchAllNav)
+navigation node:
 
 
-<code-snippet language='javascript' highlightedLines="51-57">
-import { Navigation, Router, Views } from '@youwol/mkdocs-ts'
-import { render } from '@youwol/rx-vdom'
-import { getItemInfo, getFolderContent} from './path/to/explorer/client.ts'
-
-
-const tableOfContent = Views.tocView
-
-async function resolveImplicitNavigation({path}) {
-    const info = await getItemInfo(path)
-    if(info.isFile){
+<js-cell>
+const resolveDynamicNavigation = async ({path}) => {
+    // A file is selected
+    if(filesContent[path]){
         return {
-            name: info.name,
-            html: parseMd({src: `# file at ${path}`}),
+            name: path,
+            html: ({router}) => MkDocs.parseMd({src:filesContent[path], router}),
             tableOfContent,
-            children:[]
         }
     }
-    const {files, folders} = await getFolderContent(path)
+    // Otherwise, it is a folder
+    const {files, folders} = mockFS[path]
     return {
-        name: info.name,
-        html: parseMd({src: `# folder at ${path}`}),
+        name: path,
+        html: ({router}) => MkDocs.parseMd({
+            src: `
+# folder at ${path}
+
+Below are the files of the folder:
+
+<filesView parent-folder='${path}'></filesView>
+`,
+            views: {
+                filesView: filesView
+            }
+        }),
         tableOfContent,
         children: [
             ...folders.map( folder => ({
                 name: folder.name, 
-                id: folder.id
+                id: folder.id,
+                decoration: {
+                    icon:{class:'fas fa-folder px-1'}
+                }
             })),
             ...files.map( file => ({
                 name: file.name, 
-                id: folder.id,
-                isLeaf: true
+                id: file.id,
+                leaf: true,
+                decoration: {
+                    icon:{class:'fas fa-file px-1'}
+                }
             }))
        ],
     }
 }
+</js-cell>
 
-// Define the navigation structure
-const navigation: Navigation = {
+<note level="info">
+
+The `filesView` helper is directly referenced within the markdown content of the folder's `html` definition.
+It uses the 'custom view' feature of Markdown parsing, which are explained in detail on the Markdown 
+dedicated [page](@nav/tutorials/markdown).
+</note>
+
+Finally, to integrate the implicit navigation resolver, the function above is referenced within its parent node using 
+the **`...`** catch-all key:
+
+<js-cell cell-id="example6">
+navigation = {
     name: 'Root Node',
     tableOfContent,
-    html: () => ({
-        tag: 'div',
-        innerText: 'HTML view of the root page',
-    }),
-    '/files-explorer': {
-        name: 'Files explorer',
+    html: ({router}) => {
+        return MkDocs.parseMd({router, src:`
+# Embedding a files system
+
+<note level='info'>Navigate to the [File System](@nav/fs) node to display the 'dynamic' children. </note>
+`})},
+    '/fs': {
+        name: 'Files system',
         tableOfContent,
-        html: () => ({
-            tag: 'div',
-            innerText: 'This node gather a files explorer like interface',
-        }),
-        '...': ({ path, router }: { path: string; router: Router }) => {
-            // below is the definition of 'dynamic' children.
-            // The path provided is relative to the current node 
-            // e.g. for a global path '/node-1/foo/bar/baz'
-            // it becomes '/foo/bar/baz'.
-            resolveImplicitNavigation({path})
-        }
-    },
+        html: ({router}) => {
+            return MkDocs.parseMd({router, src:`
+# File System
+
+This is an example of dynamic navigation: navigation nodes
+are not known in advance.
+`})},
+        '...': resolveDynamicNavigation
+    }
 }
-</code-snippet>
 
-In this example, the **`...`** attribute is used to define dynamic children for the node `/files-explorer`. 
-The callback function resolveImplicitNavigation is called to dynamically resolve the children based on the provided path.
+displayApp(navigation, display)
 
-In case the navigation is expected to change while using the application, it is possible to provide an observable
-instead of a function to the *catch-all* attribute (**`...`**). For instance, to refresh the files explorer every second:
+</js-cell>
 
+<cell-output cell-id="example6" full-screen="true" style="height:500px;">
+</cell-output>
 
-<code-snippet language='javascript' highlightedLines="7-8">
-import { timer, map } from 'rxjs'
-// Code omitted
+<note level="warning" label="Important">
+The path provided to the 'catch-all' callback is relative to the parent node in which it is defined. 
+For example, for the global path `/fs/foo/bar/baz`, it becomes `foo/bar/baz` (since `fs` is the parent node of the
+reactive navigation).
+</note>
 
-const navigation: Navigation = {
-    // Code omitted
-    '/files-explorer': {
-        // Code omitted
-        '...': timer(0,1000).pipe(
-            map(() => ({ path, router }: { path: string; router: Router }) => {
-                // below is the definition of 'dynamic' children.
-                // The path provided is relative to the current node
-                // e.g. for a global path '/node-1/foo/bar/baz'
-                // it becomes '/foo/bar/baz'.
-                resolveImplicitNavigation({path})
-            })
-        )
-    },
-}
-</code-snippet>
+<note level="hint">
+The callback definition for the **`...`** catch-all accommodates returning `Promise` or `Observable`.
+The latter allows the navigation structure to change at runtime (e.g., when the user performs an action).
+</note>
+

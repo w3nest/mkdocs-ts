@@ -1,83 +1,248 @@
 # Markdown
 
-The markdown format is natively supported within `mkdocs-ts`, it is extended with non-standard features to increase
-flexibility. Technical information can be found [here](@nav/api/MainModule.markdown.ts).
+When creating documents, it is usual to extensively use Markdown format. You can include Markdown content by 
+using the [parseMd](@nav/api/MainModule.parseMd) or [fetchMd](@nav/api/MainModule.fetchMd) functions
+(parsing from source or from URL respectively).
 
-The most important feature we want to highhlight here is the ability to inject custom views defined in
-typescript into Markdown content.
+The Markdown engine support most of the standard elements of Markdown, a recap is provided in the next section.
+The [Extended syntax](@nav/tutorials/markdown.extended-synthax) section covers some specifics of the engine.
 
-Here is an example:
+## Standard synthax
 
-<code-snippet language="javascript" highlightedLines="2 8 23-24">
+### Headings
+You can create a heading by adding one or more `#` symbols before your heading text.
 
-const timerWidget = (declaration: HTMLElement) => {
-    const delta = parseInt(declaration.getAttribute('delta'))
+<md-cell>
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+</md-cell>
+
+### Emphasis
+
+You can add emphasis by making text italic or bold.
+
+<md-cell>
+*Italic* or _Italic_
+**Bold** or __Bold__
+***Bold and Italic*** or ___Bold and Italic___
+</md-cell>
+
+
+### Lists
+
+**Unordered Lists**
+
+You can create an unordered list by preceding list items with `-`, `*`, or `+`.
+
+<md-cell>
+- Item 1
+- Item 2
+  - Subitem 1
+  - Subitem 2
+* Item 3
+* Item 4
++ Item 5
++ Item 6
+</md-cell>
+
+**Ordered Lists**
+
+You can create an ordered list by preceding list items with numbers.
+
+<md-cell>
+1. First item
+2. Second item
+3. Third item
+   1. Subitem 1
+   2. Subitem 2
+</md-cell>
+
+### Links
+
+You can create a link by wrapping the link text in brackets `[ ]`, and then wrapping the URL in parentheses `( )`.
+
+<md-cell>
+[Link text](https://en.wikipedia.org/wiki/Markdown)
+</md-cell>
+
+### Images
+
+You can create an image by adding an exclamation mark `!` before the link.
+
+<md-cell>
+![Alt text](../assets/Markdown-mark.png)
+</md-cell>
+
+### Blockquotes
+
+You can create a blockquote by preceding a line with the > character.
+
+<md-cell>
+> This is a blockquote.
+> 
+> This is the second paragraph in the blockquote.
+</md-cell>
+
+### Code
+
+**Inline code**
+
+You can create inline code by wrapping text in backticks \`.
+
+<md-cell>
+Here is some `inline code`.
+</md-cell>
+
+**Code Blocks**
+
+You can create a code block by indenting lines with four spaces or one tab, or by wrapping text in triple backticks ```.
+
+<md-cell>
+```javascript
+const foo = 42
+```
+</md-cell>
+
+### Horizontal Rules
+
+You can create a horizontal rule by using three or more dashes `---`, asterisks `***`, or underscores `___` on a line 
+by themselves.
+<md-cell>
+A
+
+---
+B
+
+***
+C
+
+___
+D
+</md-cell>
+
+### Tables
+
+You can create tables by using pipes `|` and dashes `-` to separate columns and rows.
+
+<md-cell>
+| Header 1 | Header 2 |
+| -------- | -------- |
+| Row 1 Col 1 | Row 1 Col 2 |
+| Row 2 Col 1 | Row 2 Col 2 |
+</md-cell>
+
+### Task Lists
+
+You can create a task list by preceding list items with `[ ]` for incomplete tasks or `[x]` for completed tasks.
+<md-cell>
+- [x] Completed task
+- [ ] Incomplete task
+</md-cell>
+
+### Strikethrough
+
+You can add strikethrough text by wrapping text in double tildes `~~`.
+<md-cell>
+~~Strikethrough~~
+</md-cell>
+
+### Inline HTML
+
+You can also include HTML directly in your Markdown.
+
+<md-cell>
+<p>This is a paragraph in HTML.</p>
+</md-cell>
+
+## Extended synthax
+
+### Enabling Latex
+
+To enable parsing latex:
+*  Make the <a href="https://www.mathjax.org/" target="_blank">MathJax</a> module available.
+*  Provide the options `latex:true` to the [parseMd](@nav/api/MainModule.parseMd) or 
+   [fetchMd](@nav/api/MainModule.fetchMd) functions.
+
+<md-cell>
+When \\(a \ne 0 \\), there are two solutions to \\\\(ax^2 + bx + c = 0\\\\),
+and they are:
+$$
+x = {-b \pm \sqrt{b^2-4ac} \over 2a}.
+$$
+</md-cell>
+
+### Custom views
+
+You can create custom HTML views within your JavaScript/TypeScript code and reference them within Markdown sources.
+A custom view is defined as a function that takes a DOM element declared in the Markdown source as an argument and 
+returns a Virtual DOM (from the library **@youwol/rx-vdom**).
+
+For instance, the following snippet defines a clock view. This view expects an introduction text (retrieved from 
+the DOM element's `textContent`) and a `tickPeriod` attribute:
+
+<js-cell>
+
+const clockView = (declaration) => {
+    const delta = parseInt(declaration.getAttribute('tickPeriod'))
+    const introduction = declaration.textContent
     return {
         tag: 'div',
         children:[
             {
                 tag: 'div',
-                innerText: declaration.textContent
+                innerText: introduction
             },
             {
                 tag: 'div',
                 innerText: {
                     source$: rxjs.timer(0, delta),
-                    vdomMap: (_tick) => new Date().toLocalString()
+                    vdomMap: (_tick) => new Date().toLocaleString()
                 }
             }
         ],
     }
 }
-const page = parseMd({src:` # An example of custom widget in MD
+</js-cell>
 
-    <timerWidget delta="1000">This text is an introduction</timerWidget>
+To use the custom view within Markdown, declare the DOM element with the expected attributes:
 
-`}, views:{timerWidget})
+<js-cell>
+const { MkDocs } = await webpm.install({
+    modules:['@youwol/mkdocs-ts#0.3.5-wip as MkDocs']
+})
+let src = `
+# Custom view 
 
-</code-snippet>
+<clockView tickPeriod='1000'>clock-view introduction</clockView>
+`
+display(MkDocs.parseMd({
+    src,
+    views: {clockView}
+}))
+</js-cell>
 
-Explanation:
 
-1. **`timerWidget` Function**:
+**Global declarations**
 
-   - The `timerWidget` function is defined to create a custom widget for displaying time updates.
-   - It takes a parameter `declaration`, which is an HTMLElement representing the `<timerWidget>` element in the
-     Markdown content.
-   - It returns a virtual DOM structure representing the custom widget.
-   - The widget consists of a `<div>` containing two child `<div>` elements:
-     - The first child displays the text content of the `<timerWidget>` element (as defined in the Markdown).
-     - The second child displays the current time, updated every specified interval (the `delta` attribute value).
+You can define custom views globally so that they don't need to be included with the views attribute of 
+`parseMd` or `fetchMd`.
 
-2. **`page` Object**:
-   - The `page` object is created by parsing Markdown content using the `parseMd` function.
-   - The Markdown content contains an example usage of the custom `<timerWidget>` element.
-   - The `views` parameter of `parseMd` is provided with a mapping for the `timerWidget` function,
-     allowing it to be used as a custom element within the Markdown content.
+<js-cell>
+Object.assign(MkDocs.GlobalMarkdownViews.factory, {clockView})
 
-In summary, the provided code snippet demonstrates how to define and use a custom widget (`<timerWidget>`)
-within Markdown content. The `timerWidget` function defines the behavior and structure of the custom widget,
-and it is integrated into the Markdown parsing process using the `views` parameter of the `parseMd` function.
+src = `
+# Global custom view 
 
-To register custom views to be accessible whenever the `parseMd` function is used, it is possible to register them
-globally:
+<clockView tickPeriod='1000'>clock-view introduction</clockView>
+`
+display(MkDocs.parseMd({
+    src
+}))
+</js-cell>
 
-<code-snippet language="javascript" highlightedLines="13-16">
-
-const timerWidget = (declaration: HTMLElement) => {
-    return {
-        tag: 'div',
-        innerText: {
-            source$: rxjs.timer(0, parseInt(declaration.getAttribute('delta'))),
-            vdomMap: (\_tick) => new Date().toLocalString()
-        }
-    }
-}
-
-GlobalMarkdownViews.factory = {
-    ...GlobalMarkdownViews.factory,
-    timerWidget
-}
-const page = parseMd({src:`    # An example of custom widget in MD
-    <timerWidget delta="1000"></timerWidget>`})
-</code-snippet>
+By using this approach, the clockView custom view is globally available for use in Markdown sources without needing 
+to specify it in the views attribute every time.

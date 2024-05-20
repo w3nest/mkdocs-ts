@@ -7,6 +7,7 @@ import {
 } from '@youwol/mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
+import { example1 } from './js-plaground-examples'
 
 const tableOfContent = Views.tocView
 
@@ -21,6 +22,8 @@ const url = (restOfPath: string) =>
 const placeholders = {
     '{{project}}': project.name,
     '{{mkdocs-version}}': setup.version,
+    '{{URL-example1}}': `/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}`,
+    '{{assetsBasePath}}': `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets`,
 }
 function fromMd(file: string) {
     return fromMarkdown({
@@ -75,12 +78,22 @@ export const navigation = {
         '/basics': {
             name: 'Getting started',
             tableOfContent,
-            html: fromMd('tutorials.basics.md'),
+            html: ({ router }) =>
+                new NotebookModule.NotebookPage({
+                    url: url('tutorials.basics.md'),
+                    router,
+                    options: notebookOptions,
+                }),
         },
         '/markdown': {
             name: 'Markdown',
             tableOfContent,
-            html: fromMd('tutorials.markdown.md'),
+            html: ({ router }) =>
+                new NotebookModule.NotebookPage({
+                    url: url('tutorials.markdown.md'),
+                    router,
+                    options: notebookOptions,
+                }),
         },
         '/code-api': {
             name: 'Code API',
