@@ -249,7 +249,11 @@ function find_children({
 }
 
 export function parseProgram(src: string) {
-    const ast = parseScript(`(async function({webpm}, {display}){${src}})()`)
+    // Missing the case of '...' not suported by esprima
+    const srcPatched = src.replace(/\?\./g, '.')
+    const ast = parseScript(
+        `(async function({webpm}, {display}){${srcPatched}})()`,
+    )
     return ast.body[0].expression.callee.body.body
 }
 
