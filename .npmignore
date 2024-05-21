@@ -2,4 +2,5 @@ coverage
 junit.xml
 dist/docs
 src/tests
+mkdocs-ts-doc
 cdn.zip
