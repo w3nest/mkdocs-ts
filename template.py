@@ -90,7 +90,7 @@ shutil.copyfile(
 )
 for file in ['README.md',
              '.gitignore',
-             '.npmignore',
+             # '.npmignore', add 'mkdocs-ts-doc'
              # '.prettierignore', add '**/assets/**/*.md'
              'LICENSE',
              'package.json',
