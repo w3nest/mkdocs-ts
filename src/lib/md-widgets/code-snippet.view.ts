@@ -1,7 +1,8 @@
-import { combineLatest, from, Observable, of } from 'rxjs'
+import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs'
 import { install } from '@youwol/webpm-client'
 import { shareReplay } from 'rxjs/operators'
 import { ChildrenLike, RxHTMLElement, VirtualDOM } from '@youwol/rx-vdom'
+import { type Editor } from 'codemirror'
 
 export type CodeLanguage =
     | 'python'
@@ -94,6 +95,8 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
      */
     public readonly children: ChildrenLike
 
+    public readonly content$: BehaviorSubject<string>
+
     /**
      * Initialize the widget.
      *
@@ -107,19 +110,24 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
      *      *  css
      *      *  xml
      * @param _args.content The snippet's content.
-     * @param _args.highlightedLines Highligthed lines, *e.g.* `[5 10 20-25  28 30]`
+     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`
+     * @param _args.cmConfig The code mirror editor configuration, it is merged with the
+     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).
      */
     constructor({
         language,
         content,
         highlightedLines,
+        cmConfig,
     }: {
         language: CodeLanguage
         highlightedLines?: string
-        content: string | Observable<string>
+        content: string //| Observable<string>
+        cmConfig?: { [k: string]: unknown }
     }) {
         const content$ = typeof content == 'string' ? of(content) : content
         const linesToHighlight = parseLineIndices(highlightedLines)
+        this.content$ = new BehaviorSubject<string>(content)
         this.children = [
             {
                 source$: combineLatest([
@@ -137,11 +145,15 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                                 mode: language,
                                 ...this.codeMirrorConfiguration,
                                 value: content,
+                                ...cmConfig,
                             }
                             const editor = window['CodeMirror'](
                                 htmlElement,
                                 config,
-                            )
+                            ) as Editor
+                            editor.on('change', (args) => {
+                                this.content$.next(args.getValue())
+                            })
                             linesToHighlight.forEach(function (lineNumber) {
                                 editor.addLineClass(
                                     lineNumber,

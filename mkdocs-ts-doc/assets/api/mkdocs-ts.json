@@ -61,6 +61,24 @@
                     }
                 ]
             }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/lib/notebook/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including  and .\nThese cells are identified within the markdown source using specific DOM elements (`js-cell`, `md-cell`),\nand their attributes are passed to the corresponding constructors (refer to  and\n for details).\n\nMost of the implementation logic regarding synchronization are included in the  class.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
         }
     ],
     "children": [
@@ -77,6 +95,11 @@
         {
             "name": "MainModule",
             "path": "mkdocs-ts.MainModule",
+            "isLeaf": false
+        },
+        {
+            "name": "Notebook",
+            "path": "mkdocs-ts.Notebook",
             "isLeaf": false
         }
     ],

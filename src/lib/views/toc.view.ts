@@ -11,7 +11,6 @@ import {
 } from '@youwol/rx-vdom'
 import { Router } from '../router'
 import { BehaviorSubject, Observable } from 'rxjs'
-import { DefaultLayoutView } from './default-layout.view'
 
 type H1 = 'H1'
 type H2 = 'H2'
@@ -42,15 +41,13 @@ export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly html: HTMLElement
     public readonly tag = 'div'
-    public readonly class = 'h-100'
+    public readonly class = 'mkdocs-TOCView h-100'
     public readonly children: ChildrenLike
     public readonly style = {
-        fontSize: '0.9rem',
-        lineHeight: '1.5rem',
+        lineHeight: '1.5em',
     }
 
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
-
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
 
     constructor(params: {
@@ -80,16 +77,6 @@ export class TOCView implements VirtualDOM<'div'> {
         }
 
         this.children = [
-            headingsArray.length > 0 &&
-            DefaultLayoutView.displayModeToc.value === 'Full'
-                ? {
-                      tag: 'div',
-                      innerText: 'Table of content',
-                      style: {
-                          fontWeight: 'bolder',
-                      },
-                  }
-                : undefined,
             {
                 tag: 'ul',
                 class: 'p-0 h-100 scrollbar-on-hover ',

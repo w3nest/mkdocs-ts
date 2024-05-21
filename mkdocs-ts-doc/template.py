@@ -14,8 +14,10 @@ pkg_json_mkdocs = parse_json(folder_path / '..' / 'package.json')
 
 externals_deps = {
     "rxjs": "^7.5.6",
-    "@youwol/mkdocs-ts": "^0.3.3",
-    "@youwol/webpm-client": "^3.0.0"
+    "@youwol/rx-vdom": "^1.0.1",
+    "@youwol/mkdocs-ts": "^0.4.1",
+    "@youwol/webpm-client": "^3.0.0",
+    "mathjax": "^3.1.4"
 }
 in_bundle_deps = {}
 dev_deps = {}

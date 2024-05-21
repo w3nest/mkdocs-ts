@@ -34,6 +34,11 @@ export interface Configuration {
         path: string
         startLine: number
     }) => string
+
+    /**
+     * If `true`, use the {@link Notebook} module to parse the code documentation included in the API files.
+     */
+    notebook?: boolean
 }
 
 /**
@@ -53,4 +58,5 @@ export const configurationTsTypedoc: Configuration = {
     },
     externalTypes: {},
     css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,
+    notebook: false,
 }

@@ -19,9 +19,14 @@ externals_deps = {
     "@youwol/os-top-banner": "^0.2.0",
     "@youwol/rx-tree-views": "^0.3.3",
     "@youwol/http-primitives": "^0.2.3",
+    "esprima": "^4.0.1",
+    # It is only used for typing, not included in dev. dependencies to install it from consuming library.
+    "codemirror": "^5.52.0",
 }
 in_bundle_deps = {}
-dev_deps = {}
+dev_deps = {
+    "sass": "^1.69.7",
+}
 
 template = Template(
     path=folder_path,
@@ -48,11 +53,21 @@ template = Template(
                 name='CodeApi',
                 entryFile='./lib/code-api/index.ts',
                 loadDependencies=["@youwol/rx-vdom", "@youwol/http-primitives" ],
+            ),
+            AuxiliaryModule(
+                name='Notebook',
+                entryFile='./lib/notebook/index.ts',
+                loadDependencies=["@youwol/rx-vdom", "rxjs", "@youwol/rx-tree-views", "esprima"],
             )
         ]
     ),
     userGuide=True,
     inPackageJson={
+        "scripts" :{
+            "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
+            "build-css": "yarn build-css-default && prettier ./assets -w",
+            "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
+        },
         "eslintConfig": {
             "extends": [
                 "@youwol"
@@ -75,7 +90,7 @@ shutil.copyfile(
 )
 for file in ['README.md',
              '.gitignore',
-             '.npmignore',
+             # '.npmignore', add 'mkdocs-ts-doc'
              # '.prettierignore', add '**/assets/**/*.md'
              'LICENSE',
              'package.json',

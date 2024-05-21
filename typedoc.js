@@ -3,6 +3,7 @@ module.exports = {
     entryPoints: [
         './src/index.ts',
         './src/lib/code-api/index.ts',
+        './src/lib/notebook/index.ts',
         './src/backends/index.ts',
     ],
     exclude: ['src/tests'],

@@ -9,6 +9,7 @@ import * as webpm from '@youwol/webpm-client'
 import { from } from 'rxjs'
 import { Router } from './router'
 import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
+import { NoteLevel, NoteView } from './md-widgets'
 
 /**
  * Type definition for custom view generators.
@@ -24,13 +25,13 @@ import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
  */
 export type ViewGenerator = (
     elem: HTMLElement,
-    options: { router?: Router } & ParsingArguments,
+    options: { router?: Router } & MdParsingOptions,
 ) => AnyVirtualDOM
 
 /**
  * Options for parsing Markdown content.
  */
-export type ParsingArguments = {
+export type MdParsingOptions = {
     /**
      * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
      * in the source by their corresponding values.
@@ -43,9 +44,28 @@ export type ParsingArguments = {
      */
     preprocessing?: (text: string) => string
     /**
-     *  Custom views generators corresponding to HTMLElement referenced in the Mardown source.
+     *  Custom views generators corresponding to HTMLElement referenced in the Markdown source.
      */
     views?: { [k: string]: ViewGenerator }
+
+    /**
+     * Whether to parse Latex equations.
+     * If `true` the MathJax module needs to be loaded by the consumer before parsing occurs.
+     *
+     * Using the webpm client:
+     * ````js
+     * import { install } from '@youwol/webpm-client'
+     *
+     * await install({
+     *     modules: ['mathjax#^3.1.4'],
+     * })
+     * ```
+     *
+     * Within the markdown page, equation blocks are written between `$$` and inline elements between
+     * `\\(` and `\\)`
+     */
+    latex?: boolean
+
     /**
      * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
      */
@@ -75,19 +95,27 @@ export class GlobalMarkdownViews {
                 content: elem.textContent,
             })
         },
+        note: (elem: HTMLElement, parsingArgs) => {
+            return new NoteView({
+                level: elem.getAttribute('level') as NoteLevel,
+                label: elem.getAttribute('label'),
+                content: elem.textContent,
+                parsingArgs,
+            })
+        },
     }
 }
 
 /**
  * Fetch & parse a Markdown file from specified with a URL.
  *
- * @param params see {@link ParsingArguments} for additional options.
+ * @param params see {@link MdParsingOptions} for additional options.
  * @param params.url The URL of the file.
  */
-export function fetchMarkdown(
+export function fetchMd(
     params: {
         url: string
-    } & ParsingArguments,
+    } & MdParsingOptions,
 ): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
     setOptions({
         langPrefix: 'hljs language-',
@@ -109,6 +137,9 @@ export function fetchMarkdown(
     }
 }
 
+export function fetchMarkdown(p) {
+    return fetchMd(p)
+}
 export function fromMarkdown(p) {
     return fetchMarkdown(p)
 }
@@ -135,7 +166,9 @@ export function fromMarkdown(p) {
  *  `views` mapping provided to this function. The associated generator can access attributes (here `barAttr` &
  *  `bazAttr`) as well as the original text content (`some content`).
  *
- * @param args see {@link ParsingArguments} for additional options.
+ *  The generator functions are called in the order of their corresponding elements in the Markdown source.
+ *
+ * @param args see {@link MdParsingOptions} for additional options.
  * @param args.src Markdown source.
  * @param args.router The router instance.
  * @param args.navigations Specify custom redirections for HTMLAnchorElement.
@@ -149,11 +182,12 @@ export function parseMd({
     placeholders,
     preprocessing,
     emitHtmlUpdated,
+    latex,
 }: {
     src: string
     router?: Router
     navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
-} & ParsingArguments): VirtualDOM<'div'> {
+} & MdParsingOptions): VirtualDOM<'div'> {
     if (typeof src !== 'string') {
         console.error('Given MD source is not a string', src)
         return {
@@ -162,12 +196,17 @@ export function parseMd({
         }
     }
     src = preprocessing?.(src) || src
-    if (placeholders) {
+    if (placeholders && Object.keys(placeholders).length > 0) {
         const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
         src = src.replace(regex, (match) => placeholders[match])
     }
     views = { ...views, ...GlobalMarkdownViews.factory }
-    const div = fixedMarkedParseCustomViews({ input: src, views: views })
+    const { div, replacedViews } = fixedMarkedParseCustomViews({
+        input: src,
+        views: views,
+    })
+
+    latex && window['MathJax'] && window['MathJax'].typeset([div])
 
     const customs = div.querySelectorAll('.language-custom-view')
     customs.forEach((custom) => {
@@ -210,18 +249,25 @@ export function parseMd({
         router,
         preprocessing,
         placeholders,
+        latex,
         views,
         emitHtmlUpdated,
     }
-    Object.entries(views || {}).forEach(([k, v]) => {
-        const elems = div.querySelectorAll(k)
-        elems.forEach((elem) => {
-            elem.parentNode.replaceChild(
-                render(v(elem as HTMLElement, options)),
-                elem,
-            )
-        })
+    const viewsTagUpperCase = Object.entries(views).reduce(
+        (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),
+        {},
+    )
+    Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {
+        const elem = div.querySelector(`#${k}`)
+        if (!elem) {
+            return
+        }
+        elem.textContent = content
+        const factory = viewsTagUpperCase[elem.tagName]
+        factory &&
+            elem.parentNode.replaceChild(render(factory(elem, options)), elem)
     })
+
     return {
         tag: 'div',
         children: [div],
@@ -285,9 +331,18 @@ export function patchSrc({
         }
         patchedSrc += `${line.trim().slice(0, -1)} id="${id}"></${processor}>\n`
         let acc = ''
+        let openedCount = 1
         for (let j = i + 1; j < lines.length; j++) {
             const newLine = lines[j]
-            if (!newLine.includes(`</${processor}>`)) {
+            if (newLine.includes(`<${processor}`)) {
+                acc += newLine + '\n'
+                openedCount++
+                continue
+            }
+            if (newLine.includes(`</${processor}>`)) {
+                openedCount--
+            }
+            if (openedCount > 0) {
                 acc += newLine + '\n'
                 continue
             }
@@ -309,6 +364,52 @@ export function patchSrc({
         patchedInput: patchedSrc.slice(0, -1),
         contents,
     }
+}
+
+/**
+ * This function takes an input text, remove the escaped parts:
+ * *  a line start with triple back-quote: this line is escaped as well as all the following line until one starts
+ * with triple back-quote.
+ * *  a line include a single back quote: the remaining of the line as well as all the following line until a corresponding
+ * single back-quote is found.
+ *
+ * When a part of the input is escaped it is replace by a string `__ESCAPED_${ID}` where ID is a unique ID,
+ * the function returned the escaped text as well as a dict that gathers the escaped elements.
+ */
+export function removeEscapedText(src: string): {
+    escapedContent: string
+    replaced: { [k: string]: string }
+} {
+    let escapedContent = src // Initialize the escaped content with the source text
+    const replaced = {} // Initialize an object to store the replaced escaped elements
+
+    // Regular expression patterns to match escaped parts
+    const tripleBackquotePattern = /```([\s\S]*?)```/g
+
+    // Replace triple back-quote escaped parts
+    escapedContent = escapedContent.replace(
+        tripleBackquotePattern,
+        (match, _) => {
+            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+            replaced[id] = match // Store the escaped part in the replaced object
+            return id // Replace the escaped part with the unique ID
+        },
+    )
+
+    // Regular expression pattern to match single back-quoted escaped parts spanning multiple lines
+    const multilineBackquotePattern = /`([\s\S]*?)`/g
+
+    // Replace single back-quote escaped parts
+    escapedContent = escapedContent.replace(
+        multilineBackquotePattern,
+        (match, _) => {
+            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+            replaced[id] = match // Store the escaped part in the replaced object
+            return id // Replace the escaped part with the unique ID
+        },
+    )
+
+    return { escapedContent, replaced }
 }
 function fixedMarkedParseCustomViews({
     input,
@@ -336,9 +437,8 @@ function fixedMarkedParseCustomViews({
             })
             return
         }
-        elem.textContent = content as string
         elem.id = id
     })
 
-    return divResult
+    return { div: divResult, replacedViews: contents }
 }

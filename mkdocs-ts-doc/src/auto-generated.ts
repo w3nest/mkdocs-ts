@@ -1,29 +1,41 @@
 
 const runTimeDependencies = {
     "externals": {
-        "rxjs": "^7.5.6",
-        "@youwol/mkdocs-ts": "^0.3.3",
-        "@youwol/webpm-client": "^3.0.0"
+        "@youwol/mkdocs-ts": "^0.4.1",
+        "@youwol/rx-vdom": "^1.0.1",
+        "@youwol/webpm-client": "^3.0.0",
+        "mathjax": "^3.1.4",
+        "rxjs": "^7.5.6"
     },
     "includedInBundle": {}
 }
 const externals = {
-    "rxjs": "window['rxjs_APIv7']",
-    "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv03']",
-    "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']"
+    "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv04']",
+    "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
+    "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
+    "mathjax": "window['Mathjax_APIv3']",
+    "rxjs": "window['rxjs_APIv7']"
 }
 const exportedSymbols = {
-    "rxjs": {
-        "apiKey": "7",
-        "exportedSymbol": "rxjs"
-    },
     "@youwol/mkdocs-ts": {
-        "apiKey": "03",
+        "apiKey": "04",
         "exportedSymbol": "@youwol/mkdocs-ts"
+    },
+    "@youwol/rx-vdom": {
+        "apiKey": "1",
+        "exportedSymbol": "@youwol/rx-vdom"
     },
     "@youwol/webpm-client": {
         "apiKey": "3",
         "exportedSymbol": "@youwol/webpm-client"
+    },
+    "mathjax": {
+        "apiKey": "3",
+        "exportedSymbol": "Mathjax"
+    },
+    "rxjs": {
+        "apiKey": "7",
+        "exportedSymbol": "rxjs"
     }
 }
 
@@ -31,8 +43,10 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "entryFile": "./main.ts",
     "loadDependencies": [
         "rxjs",
+        "@youwol/rx-vdom",
         "@youwol/mkdocs-ts",
-        "@youwol/webpm-client"
+        "@youwol/webpm-client",
+        "mathjax"
     ]
 }
 
@@ -45,13 +59,13 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts-doc',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHMtZG9j',
-    version:'0.3.5-wip',
+    version:'0.4.2-wip',
     shortDescription:"Documentation app for project @youwol/mkdocs-ts.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts-doc&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts-doc',
     sourceGithub:'https://github.com/youwol/mkdocs-ts-doc',
     userGuide:'https://l.youwol.com/doc/@youwol/mkdocs-ts-doc',
-    apiVersion:'03',
+    apiVersion:'04',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -76,7 +90,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts-doc_APIv03`]
+            return window[`@youwol/mkdocs-ts-doc_APIv04`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -91,7 +105,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts-doc#0.3.5-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
+            `@youwol/mkdocs-ts-doc#0.4.2-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -102,7 +116,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts-doc/${entry.name}_APIv03`]
+            return window[`@youwol/mkdocs-ts-doc/${entry.name}_APIv04`]
         })
     },
     getCdnDependencies(name?: string){

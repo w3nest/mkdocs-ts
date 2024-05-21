@@ -12,7 +12,7 @@ import { Router } from '../router'
 export class PageView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly tag = 'div'
-    public readonly class = 'w-100 mkdocs-ts-page'
+    public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page'
     public readonly children: ChildrenLike
 
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void
@@ -56,13 +56,13 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
 /**
  * The page footer.
  */
-export class PageFooterView implements VirtualDOM<'div'> {
+export class FooterView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'w-100 mkdocs-ts-footer d-flex align-items-center'
+    public readonly class = 'w-100 mkdocs-FooterView d-flex align-items-center'
     public readonly children: ChildrenLike
 
     public readonly style = {
-        padding: '0.9rem',
+        padding: '0.9em',
         backgroundColor: 'black',
         color: 'white',
     }

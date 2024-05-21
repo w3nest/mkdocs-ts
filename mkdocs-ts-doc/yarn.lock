@@ -1451,16 +1451,18 @@
     jest-junit "^16.0.0"
     ts-jest "^29.1.2"
 
-"@youwol/mkdocs-ts@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.3.3.tgz#de03ae2166cedc98745bcaf1d1031279b7544296"
-  integrity sha512-X1GfeUaiCbVjOARyLaaJgJZ2FhcSbuW6O84qduHhBcvqENwcpu9Ht/Ut3KJcZbrVelj5jqQCyiLO/mNmzV2r/w==
+"@youwol/mkdocs-ts@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.4.1.tgz#a26295ee7075fef38bced320704bf40c1a33992d"
+  integrity sha512-0XWHpPAd4h8Wj5q55raBRCJQyGp5NGfPvGvNbuPDsO+bh1DlCYPeXDDGg3HtzTBbkam3y+Z0X0RkutITeJSEMg==
   dependencies:
     "@youwol/http-primitives" "^0.2.3"
     "@youwol/os-top-banner" "^0.2.0"
     "@youwol/rx-tree-views" "^0.3.3"
     "@youwol/rx-vdom" "^1.0.1"
     "@youwol/webpm-client" "^3.0.0"
+    codemirror "^5.52.0"
+    esprima "^4.0.1"
     highlight.js "11.2.0"
     marked "^4.2.3"
     rxjs "^7.5.6"
@@ -2087,6 +2089,11 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==
+
+codemirror@^5.52.0:
+  version "5.65.16"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.16.tgz#efc0661be6bf4988a6a1c2fe6893294638cdb334"
+  integrity sha512-br21LjYmSlVL0vFCPWPfhzUCT34FM/pAdK7rRIZwa0rrtrIdotvP4Oh4GUHsu2E3IrQMCfRkL/fN3ytMNxVQvg==
 
 collect-v8-coverage@^1.0.0:
   version "1.0.2"
@@ -4637,6 +4644,11 @@ marked@^4.2.3, marked@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
   integrity sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==
+
+mathjax@^3.1.4:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/mathjax/-/mathjax-3.2.2.tgz#c754d7b46a679d7f3fa03543d6b8bf124ddf9f6b"
+  integrity sha512-Bt+SSVU8eBG27zChVewOicYs7Xsdt40qm4+UpHyX7k0/O9NliPc+x77k1/FEsPsjKPZGJvtRZM1vO+geW0OhGw==
 
 media-typer@0.3.0:
   version "0.3.0"

@@ -15,7 +15,7 @@ class CodeHeaderView implements VirtualDOM<'div'> {
     public readonly class =
         'mkapi-code mkapi-semantic-color d-flex align-items-center border rounded p-1 w-100'
     public readonly style = {
-        fontSize: '0.8rem',
+        fontSize: '0.8em',
     }
     public readonly children: ChildrenLike
     public readonly expanded$: BehaviorSubject<boolean>
@@ -80,7 +80,7 @@ export class CodeView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'fv-border-primary rounded'
     public readonly style = {
-        fontSize: '0.9rem',
+        fontSize: '0.9em',
     }
     public readonly children: ChildrenLike
     public readonly expanded$ = new BehaviorSubject(false)
@@ -116,7 +116,7 @@ export class CodeView implements VirtualDOM<'div'> {
                         tag: 'div',
                         class: 'ml-1 mr-1 mt-1 code-api-snippet ',
                         style: {
-                            fontSize: '0.8rem',
+                            fontSize: '0.8em',
                         },
                         children: [
                             parseMd({

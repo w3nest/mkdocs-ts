@@ -1,0 +1,661 @@
+.mkdocs-bg-1 {
+    background-color: rgb(213, 213, 213);
+}
+
+.mkdocs-text-4 {
+    color: rgb(213, 213, 213);
+}
+
+.mkdocs-bg-2 {
+    background-color: rgb(170, 170, 170);
+}
+
+.mkdocs-text-3 {
+    color: rgb(170, 170, 170);
+}
+
+.mkdocs-bg-3 {
+    background-color: rgb(128, 128, 128);
+}
+
+.mkdocs-text-2 {
+    color: rgb(128, 128, 128);
+}
+
+.mkdocs-bg-4 {
+    background-color: rgb(85, 85, 85);
+}
+
+.mkdocs-text-1 {
+    color: rgb(85, 85, 85);
+}
+
+.mkdocs-bg-5 {
+    background-color: rgb(43, 43, 43);
+}
+
+.mkdocs-text-0 {
+    color: rgb(43, 43, 43);
+}
+
+.mkdocs-disabled {
+    opacity: 0.5;
+}
+
+.mkdocs-darker {
+    filter: brightness(0.9) !important;
+}
+
+.mkdocs-hover-darker:hover {
+    filter: brightness(0.9) !important;
+}
+
+.mkdocs-x-darker {
+    filter: brightness(0.8) !important;
+}
+
+.mkdocs-hover-x-darker:hover {
+    filter: brightness(0.8) !important;
+}
+
+.mkdocs-xx-darker {
+    filter: brightness(0.7) !important;
+}
+
+.mkdocs-hover-xx-darker:hover {
+    filter: brightness(0.7) !important;
+}
+
+.mkdocs-lighter {
+    filter: brightness(1.1) !important;
+}
+
+.mkdocs-hover-lighter:hover {
+    filter: brightness(1.1) !important;
+}
+
+.mkdocs-x-lighter {
+    filter: brightness(1.2) !important;
+}
+
+.mkdocs-hover-x-lighter:hover {
+    filter: brightness(1.2) !important;
+}
+
+.mkdocs-xx-lighter {
+    filter: brightness(1.3) !important;
+}
+
+.mkdocs-hover-xx-lighter:hover {
+    filter: brightness(1.3) !important;
+}
+
+.mkdocs-card-danger {
+    color: #f84d3d !important;
+    background-color: #f84d3d1a !important;
+}
+
+.mkdocs-bg-danger {
+    background-color: #f84d3d1a !important;
+}
+
+.mkdocs-text-danger {
+    color: #f84d3d !important;
+}
+
+.mkdocs-border-danger {
+    border: solid 1px #f84d3d !important;
+}
+
+.mkdocs-border-left-danger {
+    border-left: solid 1px #f84d3d !important;
+}
+
+.mkdocs-border-right-danger {
+    border-right: solid 1px #f84d3d !important;
+}
+
+.mkdocs-border-top-danger {
+    border-top: solid 1px #f84d3d !important;
+}
+
+.mkdocs-border-bottom-danger {
+    border-bottom: solid 1px #f84d3d !important;
+}
+
+.mkdocs-hover-bg-danger:hover {
+    background-color: #f84d3d !important;
+}
+
+.mkdocs-hover-bg-warning:hover {
+    background-color: #ffa657 !important;
+}
+
+.mkdocs-hover-bg-success:hover {
+    background-color: #5cad0f !important;
+}
+
+.mkdocs-hover-bg-info:hover {
+    background-color: #9b9b9b !important;
+}
+
+.mkdocs-hover-bg-focus:hover {
+    background-color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-text-danger:hover {
+    color: #f84d3d !important;
+}
+
+.mkdocs-hover-text-warning:hover {
+    color: #ffa657 !important;
+}
+
+.mkdocs-hover-text-success:hover {
+    color: #5cad0f !important;
+}
+
+.mkdocs-hover-text-info:hover {
+    color: #9b9b9b !important;
+}
+
+.mkdocs-hover-text-focus:hover {
+    color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-border-danger:hover {
+    border: solid 1px #f84d3d;
+}
+
+.mkdocs-hover-border-warning:hover {
+    border: solid 1px #ffa657;
+}
+
+.mkdocs-hover-border-success:hover {
+    border: solid 1px #5cad0f;
+}
+
+.mkdocs-hover-border-info:hover {
+    border: solid 1px #9b9b9b;
+}
+
+.mkdocs-hover-border-focus:hover {
+    border: solid 1px #1a7bf6;
+}
+
+.mkdocs-card-warning {
+    color: #ffa657 !important;
+    background-color: #ffa6571a !important;
+}
+
+.mkdocs-bg-warning {
+    background-color: #ffa6571a !important;
+}
+
+.mkdocs-text-warning {
+    color: #ffa657 !important;
+}
+
+.mkdocs-border-warning {
+    border: solid 1px #ffa657 !important;
+}
+
+.mkdocs-border-left-warning {
+    border-left: solid 1px #ffa657 !important;
+}
+
+.mkdocs-border-right-warning {
+    border-right: solid 1px #ffa657 !important;
+}
+
+.mkdocs-border-top-warning {
+    border-top: solid 1px #ffa657 !important;
+}
+
+.mkdocs-border-bottom-warning {
+    border-bottom: solid 1px #ffa657 !important;
+}
+
+.mkdocs-hover-bg-danger:hover {
+    background-color: #f84d3d !important;
+}
+
+.mkdocs-hover-bg-warning:hover {
+    background-color: #ffa657 !important;
+}
+
+.mkdocs-hover-bg-success:hover {
+    background-color: #5cad0f !important;
+}
+
+.mkdocs-hover-bg-info:hover {
+    background-color: #9b9b9b !important;
+}
+
+.mkdocs-hover-bg-focus:hover {
+    background-color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-text-danger:hover {
+    color: #f84d3d !important;
+}
+
+.mkdocs-hover-text-warning:hover {
+    color: #ffa657 !important;
+}
+
+.mkdocs-hover-text-success:hover {
+    color: #5cad0f !important;
+}
+
+.mkdocs-hover-text-info:hover {
+    color: #9b9b9b !important;
+}
+
+.mkdocs-hover-text-focus:hover {
+    color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-border-danger:hover {
+    border: solid 1px #f84d3d;
+}
+
+.mkdocs-hover-border-warning:hover {
+    border: solid 1px #ffa657;
+}
+
+.mkdocs-hover-border-success:hover {
+    border: solid 1px #5cad0f;
+}
+
+.mkdocs-hover-border-info:hover {
+    border: solid 1px #9b9b9b;
+}
+
+.mkdocs-hover-border-focus:hover {
+    border: solid 1px #1a7bf6;
+}
+
+.mkdocs-card-success {
+    color: #5cad0f !important;
+    background-color: #5cad0f1a !important;
+}
+
+.mkdocs-bg-success {
+    background-color: #5cad0f1a !important;
+}
+
+.mkdocs-text-success {
+    color: #5cad0f !important;
+}
+
+.mkdocs-border-success {
+    border: solid 1px #5cad0f !important;
+}
+
+.mkdocs-border-left-success {
+    border-left: solid 1px #5cad0f !important;
+}
+
+.mkdocs-border-right-success {
+    border-right: solid 1px #5cad0f !important;
+}
+
+.mkdocs-border-top-success {
+    border-top: solid 1px #5cad0f !important;
+}
+
+.mkdocs-border-bottom-success {
+    border-bottom: solid 1px #5cad0f !important;
+}
+
+.mkdocs-hover-bg-danger:hover {
+    background-color: #f84d3d !important;
+}
+
+.mkdocs-hover-bg-warning:hover {
+    background-color: #ffa657 !important;
+}
+
+.mkdocs-hover-bg-success:hover {
+    background-color: #5cad0f !important;
+}
+
+.mkdocs-hover-bg-info:hover {
+    background-color: #9b9b9b !important;
+}
+
+.mkdocs-hover-bg-focus:hover {
+    background-color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-text-danger:hover {
+    color: #f84d3d !important;
+}
+
+.mkdocs-hover-text-warning:hover {
+    color: #ffa657 !important;
+}
+
+.mkdocs-hover-text-success:hover {
+    color: #5cad0f !important;
+}
+
+.mkdocs-hover-text-info:hover {
+    color: #9b9b9b !important;
+}
+
+.mkdocs-hover-text-focus:hover {
+    color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-border-danger:hover {
+    border: solid 1px #f84d3d;
+}
+
+.mkdocs-hover-border-warning:hover {
+    border: solid 1px #ffa657;
+}
+
+.mkdocs-hover-border-success:hover {
+    border: solid 1px #5cad0f;
+}
+
+.mkdocs-hover-border-info:hover {
+    border: solid 1px #9b9b9b;
+}
+
+.mkdocs-hover-border-focus:hover {
+    border: solid 1px #1a7bf6;
+}
+
+.mkdocs-card-info {
+    color: #9b9b9b !important;
+    background-color: #9b9b9b1a !important;
+}
+
+.mkdocs-bg-info {
+    background-color: #9b9b9b1a !important;
+}
+
+.mkdocs-text-info {
+    color: #9b9b9b !important;
+}
+
+.mkdocs-border-info {
+    border: solid 1px #9b9b9b !important;
+}
+
+.mkdocs-border-left-info {
+    border-left: solid 1px #9b9b9b !important;
+}
+
+.mkdocs-border-right-info {
+    border-right: solid 1px #9b9b9b !important;
+}
+
+.mkdocs-border-top-info {
+    border-top: solid 1px #9b9b9b !important;
+}
+
+.mkdocs-border-bottom-info {
+    border-bottom: solid 1px #9b9b9b !important;
+}
+
+.mkdocs-hover-bg-danger:hover {
+    background-color: #f84d3d !important;
+}
+
+.mkdocs-hover-bg-warning:hover {
+    background-color: #ffa657 !important;
+}
+
+.mkdocs-hover-bg-success:hover {
+    background-color: #5cad0f !important;
+}
+
+.mkdocs-hover-bg-info:hover {
+    background-color: #9b9b9b !important;
+}
+
+.mkdocs-hover-bg-focus:hover {
+    background-color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-text-danger:hover {
+    color: #f84d3d !important;
+}
+
+.mkdocs-hover-text-warning:hover {
+    color: #ffa657 !important;
+}
+
+.mkdocs-hover-text-success:hover {
+    color: #5cad0f !important;
+}
+
+.mkdocs-hover-text-info:hover {
+    color: #9b9b9b !important;
+}
+
+.mkdocs-hover-text-focus:hover {
+    color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-border-danger:hover {
+    border: solid 1px #f84d3d;
+}
+
+.mkdocs-hover-border-warning:hover {
+    border: solid 1px #ffa657;
+}
+
+.mkdocs-hover-border-success:hover {
+    border: solid 1px #5cad0f;
+}
+
+.mkdocs-hover-border-info:hover {
+    border: solid 1px #9b9b9b;
+}
+
+.mkdocs-hover-border-focus:hover {
+    border: solid 1px #1a7bf6;
+}
+
+.mkdocs-card-focus {
+    color: #1a7bf6 !important;
+    background-color: #1a7bf61a !important;
+}
+
+.mkdocs-bg-focus {
+    background-color: #1a7bf61a !important;
+}
+
+.mkdocs-text-focus {
+    color: #1a7bf6 !important;
+}
+
+.mkdocs-border-focus {
+    border: solid 1px #1a7bf6 !important;
+}
+
+.mkdocs-border-left-focus {
+    border-left: solid 1px #1a7bf6 !important;
+}
+
+.mkdocs-border-right-focus {
+    border-right: solid 1px #1a7bf6 !important;
+}
+
+.mkdocs-border-top-focus {
+    border-top: solid 1px #1a7bf6 !important;
+}
+
+.mkdocs-border-bottom-focus {
+    border-bottom: solid 1px #1a7bf6 !important;
+}
+
+.mkdocs-hover-bg-danger:hover {
+    background-color: #f84d3d !important;
+}
+
+.mkdocs-hover-bg-warning:hover {
+    background-color: #ffa657 !important;
+}
+
+.mkdocs-hover-bg-success:hover {
+    background-color: #5cad0f !important;
+}
+
+.mkdocs-hover-bg-info:hover {
+    background-color: #9b9b9b !important;
+}
+
+.mkdocs-hover-bg-focus:hover {
+    background-color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-text-danger:hover {
+    color: #f84d3d !important;
+}
+
+.mkdocs-hover-text-warning:hover {
+    color: #ffa657 !important;
+}
+
+.mkdocs-hover-text-success:hover {
+    color: #5cad0f !important;
+}
+
+.mkdocs-hover-text-info:hover {
+    color: #9b9b9b !important;
+}
+
+.mkdocs-hover-text-focus:hover {
+    color: #1a7bf6 !important;
+}
+
+.mkdocs-hover-border-danger:hover {
+    border: solid 1px #f84d3d;
+}
+
+.mkdocs-hover-border-warning:hover {
+    border: solid 1px #ffa657;
+}
+
+.mkdocs-hover-border-success:hover {
+    border: solid 1px #5cad0f;
+}
+
+.mkdocs-hover-border-info:hover {
+    border: solid 1px #9b9b9b;
+}
+
+.mkdocs-hover-border-focus:hover {
+    border: solid 1px #1a7bf6;
+}
+
+.mkdocs-pointer {
+    cursor: pointer;
+}
+
+.CodeMirror {
+    height: auto !important;
+}
+
+.mkdocs-DefaultLayoutView,
+.mkdocs-DefaultLayoutView-s,
+.mkdocs-DefaultLayoutView-xs,
+.mkdocs-DefaultLayoutView-xxs {
+    font-family: serif;
+}
+
+.mkdocs-DefaultLayoutView {
+    font-size: 16px;
+}
+
+.mkdocs-DefaultLayoutView-s,
+.mkdocs-DefaultLayoutView-xs,
+.mkdocs-DefaultLayoutView-xxs {
+    font-size: 15px;
+}
+
+.mkdocs-NavigationView {
+    font-size: 1em;
+    line-height: 1.7em;
+}
+
+.mkdocs-WrapperSideNav {
+    width: 20em;
+    line-height: 1.5em;
+    font-size: 0.9em;
+    position: sticky;
+    top: 0px;
+}
+
+.mkdocs-WrapperSideNav li {
+    list-style-type: none;
+}
+
+.mkdocs-NavigationView .fv-tree-arianeLine {
+    display: none;
+}
+
+.mkdocs-NavigationView .fv-tree-expand {
+    display: none !important;
+}
+
+.mkdocs-TopBannerView {
+    max-height: 50px;
+}
+
+.mkdocs-PageView {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.mkdocs-ts-expand-nav-node {
+    transition: transform 0.5s ease 0s;
+}
+
+.mkdocs-ts-bg-highlight {
+    background-color: rgba(234, 181, 25, 0.1019607843);
+}
+
+.mkdocs-PageView h1,
+.mkdocs-PageView h2,
+.mkdocs-PageView h3,
+.mkdocs-PageView h4,
+.mkdocs-PageView h5,
+.mkdocs-PageView h6 {
+    font-weight: bolder;
+    line-height: 1.5;
+    color: inherit;
+    text-transform: none;
+}
+
+.mkdocs-PageView h1 {
+    font-size: 1.6em;
+}
+
+.mkdocs-PageView h2 {
+    font-size: 1.2em;
+}
+
+.mkdocs-PageView h3 {
+    font-size: 1.15em;
+}
+
+.mkdocs-PageView h4 {
+    font-size: 1.1em;
+}
+
+.mkdocs-PageView h5 {
+    font-size: 1.05em;
+}
+
+.mkdocs-PageView h6 {
+    font-size: 1em;
+}
+
+/*# sourceMappingURL=mkdocs-light.css.map */

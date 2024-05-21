@@ -1,0 +1,14 @@
+.mknb-CellView .CodeMirror {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.mknb-NotebookPage p {
+    text-align: justify;
+}
+.mknb-CellTagsView {
+    font-size: small;
+}
+/*In the Notebook text widget we don't want the p padding*/
+.mknb-Text p {
+    margin: 0px;
+}

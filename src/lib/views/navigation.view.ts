@@ -12,12 +12,8 @@ import {
 import { Router } from '../router'
 import { NavNodeBase } from '../navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs'
-import {
-    DefaultLayoutView,
-    DisplayMode,
-    TocWrapperView,
-} from './default-layout.view'
+import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs'
+import { DisplayMode, TocWrapperView } from './default-layout.view'
 
 export class HandlerView implements VirtualDOM<'div'> {
     public readonly node: NavNodeBase
@@ -25,11 +21,11 @@ export class HandlerView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly class =
-        'd-flex flex-column justify-content-center rounded-circle mkdocs-ts-expand-nav-node  fv-hover-bg-background-alt fv-hover-text-focus fv-hover-xx-lighter'
+        'mkdocs-HandlerView d-flex flex-column justify-content-center rounded-circle mkdocs-ts-expand-nav-node  fv-hover-bg-background-alt fv-hover-text-focus fv-hover-xx-lighter'
     public readonly style = {
-        width: '1.1rem',
-        height: '1.1rem',
-        fontSize: '0.8rem',
+        width: '1.1em',
+        height: '1.1em',
+        fontSize: '0.8em',
     }
 
     public readonly onclick: (ev: MouseEvent) => void
@@ -78,7 +74,7 @@ export class HandlerView implements VirtualDOM<'div'> {
 
 export class NavigationHeader implements VirtualDOM<'a'> {
     static DefaultWrapperClass: string =
-        'w-100 d-flex align-items-center fv-pointer pr-2'
+        'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pr-2'
     public readonly tag = 'a'
     public readonly href: string
     public readonly class: AttributeLike<string>
@@ -146,11 +142,9 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'h-100 w-100 overflow-auto'
+    public readonly class = 'mkdocs-NavigationView h-100 w-100 overflow-auto'
     public readonly children: ChildrenLike
-    public readonly style = {
-        fontSize: '0.9rem',
-    }
+
     constructor(params: { router: Router }) {
         Object.assign(this, params)
 
@@ -188,11 +182,16 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly children: ChildrenLike
+    public readonly class = 'mkdocs-ModalNavigationView'
     /**
      * Wether the modal is expanded or not.
      */
     public readonly expanded$ = new BehaviorSubject(false)
-    constructor(params: { router: Router }) {
+    public readonly displayModeToc$: Observable<DisplayMode>
+    constructor(params: {
+        router: Router
+        displayModeToc$: Observable<DisplayMode>
+    }) {
         Object.assign(this, params)
 
         this.children = [
@@ -203,6 +202,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
                         ? new ExpandedNavigationView({
                               router: this.router,
                               collapse: () => this.expanded$.next(false),
+                              displayModeToc$: this.displayModeToc$,
                           })
                         : {
                               tag: 'div',
@@ -223,37 +223,36 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = ''
+    public readonly class = 'mkdocs-ExpandedNavigationView h-100 w-100 border'
     public readonly children: ChildrenLike
     public readonly style = {
         top: '0px',
         left: '0px',
         position: 'absolute' as const,
-        height: '100vh',
-        width: '100vw',
         backgroundColor: 'rgba(0,0,0,0)',
-        zIndex: 1,
+        zIndex: 10,
         transition: 'background-color 0.2s ease 0s',
     }
+    public readonly displayModeToc$: Observable<DisplayMode>
     public readonly onclick: (elem: MouseEvent) => void
     public readonly connectedCallback = (elem: HTMLElement) => {
         setTimeout(() => (elem.style.backgroundColor = 'rgba(0,0,0,0.4)'), 0)
     }
-    constructor(params: { router: Router; collapse: () => void }) {
+    constructor(params: {
+        router: Router
+        collapse: () => void
+        displayModeToc$: Observable<DisplayMode>
+    }) {
         Object.assign(this, params)
         this.children = [
             {
                 tag: 'div',
                 class: 'h-100 overflow-auto ',
                 style: {
-                    position: 'relative',
                     width: ExpandedNavigationView.menuWidth,
                     marginLeft: `-${ExpandedNavigationView.menuWidth}`,
                     backgroundColor: 'white',
                     transition: 'margin 0.2s ease 0s',
-                },
-                onclick: (ev) => {
-                    ev.stopPropagation()
                 },
                 connectedCallback: (elem) =>
                     setTimeout(() => (elem.style.marginLeft = '0px'), 0),
@@ -265,6 +264,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                             new ModalNavParentView({
                                 router: this.router,
                                 node,
+                                displayModeToc$: this.displayModeToc$,
                             }),
                             new ModalNavChildrenView({
                                 router: this.router,
@@ -275,12 +275,14 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                 },
             },
         ]
-        this.onclick = (elem) => {
-            const htmlElement = elem.target as HTMLElement
-            htmlElement.children[0]['style'].marginLeft =
-                `-${ExpandedNavigationView.menuWidth}`
-            htmlElement.style.backgroundColor = 'rgba(0,0,0,0)'
-            setTimeout(() => params.collapse(), 200)
+        this.onclick = (ev) => {
+            if (ev.target['vDom'] === this) {
+                const htmlElement = ev.target as HTMLElement
+                htmlElement.children[0]['style'].marginLeft =
+                    `-${ExpandedNavigationView.menuWidth}`
+                htmlElement.style.backgroundColor = 'rgba(0,0,0,0)'
+                setTimeout(() => params.collapse(), 200)
+            }
         }
     }
 }
@@ -292,13 +294,20 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly node: NavNodeBase
     public readonly tag = 'div'
-    public readonly class = 'w-100 py-3 border px-2 bg-light text-dark'
+    public readonly class =
+        'mkdocs-ModalNavParentView w-100 py-3 border px-2 bg-light text-dark'
     public readonly style = {
         position: 'sticky' as const,
         top: '0px',
     }
     public readonly children: ChildrenLike
-    constructor(params: { router: Router; node: NavNodeBase }) {
+    public readonly displayModeToc$: Observable<DisplayMode>
+
+    constructor(params: {
+        router: Router
+        node: NavNodeBase
+        displayModeToc$: Observable<DisplayMode>
+    }) {
         Object.assign(this, params)
 
         this.children = [
@@ -314,9 +323,7 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
             },
             new NavigationHeader(params),
             {
-                source$: DefaultLayoutView.displayModeToc.pipe(
-                    distinctUntilChanged(),
-                ),
+                source$: this.displayModeToc$.pipe(distinctUntilChanged()),
                 vdomMap: (mode: DisplayMode) => {
                     return mode !== 'Minimized'
                         ? { tag: 'div' }
@@ -334,6 +341,7 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly node: NavNodeBase
     public readonly tag = 'div'
+    public readonly class = 'mkdocs-ModalNavChildrenView'
     public readonly children: ChildrenLike
     constructor(params: { router: Router; node: NavNodeBase }) {
         Object.assign(this, params)
@@ -343,7 +351,12 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
 
         const source$ = this.router.explorerState.getChildren$(node)
         // Following call trigger children resolution if needed
-        this.router.explorerState.getChildren(node)
+        try {
+            this.router.explorerState.getChildren(node)
+        } catch (e) {
+            this.children = []
+            return
+        }
 
         this.children = {
             policy: 'replace',
@@ -379,6 +392,7 @@ export class ModalTocView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     public readonly router: Router
+    public readonly class = 'mkdocs-ModalTocView'
     public readonly expanded$ = new BehaviorSubject(false)
     constructor(params: { router: Router }) {
         Object.assign(this, params)
@@ -412,7 +426,6 @@ export class ModalTocView implements VirtualDOM<'div'> {
                 tag: 'div',
                 style: {
                     maxHeight: '25vh',
-                    height: '10000px',
                 },
                 class: {
                     source$: this.expanded$,
