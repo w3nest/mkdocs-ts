@@ -1,44 +1,24 @@
 
 const runTimeDependencies = {
     "externals": {
-        "@youwol/rx-vdom": "^1.0.1",
-        "@youwol/webpm-client": "^3.0.0",
-        "rxjs": "^7.5.6",
-        "marked": "^4.2.3",
-        "highlight.js": "11.2.0",
+        "@youwol/http-primitives": "^0.2.3",
         "@youwol/os-top-banner": "^0.2.0",
         "@youwol/rx-tree-views": "^0.3.3",
-        "@youwol/http-primitives": "^0.2.3",
+        "@youwol/rx-vdom": "^1.0.1",
+        "@youwol/webpm-client": "^3.0.0",
+        "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
-        "codemirror": "^5.52.0"
+        "highlight.js": "11.2.0",
+        "marked": "^4.2.3",
+        "rxjs": "^7.5.6"
     },
     "includedInBundle": {}
 }
 const externals = {
-    "@youwol/rx-vdom": {
-        "commonjs": "@youwol/rx-vdom",
-        "commonjs2": "@youwol/rx-vdom",
-        "root": "@youwol/rx-vdom_APIv1"
-    },
-    "@youwol/webpm-client": {
-        "commonjs": "@youwol/webpm-client",
-        "commonjs2": "@youwol/webpm-client",
-        "root": "@youwol/webpm-client_APIv3"
-    },
-    "rxjs": {
-        "commonjs": "rxjs",
-        "commonjs2": "rxjs",
-        "root": "rxjs_APIv7"
-    },
-    "marked": {
-        "commonjs": "marked",
-        "commonjs2": "marked",
-        "root": "marked_APIv4"
-    },
-    "highlight.js": {
-        "commonjs": "highlight.js",
-        "commonjs2": "highlight.js",
-        "root": "hljs_APIv11"
+    "@youwol/http-primitives": {
+        "commonjs": "@youwol/http-primitives",
+        "commonjs2": "@youwol/http-primitives",
+        "root": "@youwol/http-primitives_APIv02"
     },
     "@youwol/os-top-banner": {
         "commonjs": "@youwol/os-top-banner",
@@ -50,28 +30,40 @@ const externals = {
         "commonjs2": "@youwol/rx-tree-views",
         "root": "@youwol/rx-tree-views_APIv03"
     },
-    "@youwol/http-primitives": {
-        "commonjs": "@youwol/http-primitives",
-        "commonjs2": "@youwol/http-primitives",
-        "root": "@youwol/http-primitives_APIv02"
+    "@youwol/rx-vdom": {
+        "commonjs": "@youwol/rx-vdom",
+        "commonjs2": "@youwol/rx-vdom",
+        "root": "@youwol/rx-vdom_APIv1"
     },
-    "esprima": {
-        "commonjs": "esprima",
-        "commonjs2": "esprima",
-        "root": "esprima_APIv4"
+    "@youwol/webpm-client": {
+        "commonjs": "@youwol/webpm-client",
+        "commonjs2": "@youwol/webpm-client",
+        "root": "@youwol/webpm-client_APIv3"
     },
     "codemirror": {
         "commonjs": "codemirror",
         "commonjs2": "codemirror",
         "root": "CodeMirror_APIv5"
     },
-    "rxjs/operators": {
-        "commonjs": "rxjs/operators",
-        "commonjs2": "rxjs/operators",
-        "root": [
-            "rxjs_APIv7",
-            "operators"
-        ]
+    "esprima": {
+        "commonjs": "esprima",
+        "commonjs2": "esprima",
+        "root": "esprima_APIv4"
+    },
+    "highlight.js": {
+        "commonjs": "highlight.js",
+        "commonjs2": "highlight.js",
+        "root": "hljs_APIv11"
+    },
+    "marked": {
+        "commonjs": "marked",
+        "commonjs2": "marked",
+        "root": "marked_APIv4"
+    },
+    "rxjs": {
+        "commonjs": "rxjs",
+        "commonjs2": "rxjs",
+        "root": "rxjs_APIv7"
     },
     "rxjs/fetch": {
         "commonjs": "rxjs/fetch",
@@ -80,28 +72,20 @@ const externals = {
             "rxjs_APIv7",
             "fetch"
         ]
+    },
+    "rxjs/operators": {
+        "commonjs": "rxjs/operators",
+        "commonjs2": "rxjs/operators",
+        "root": [
+            "rxjs_APIv7",
+            "operators"
+        ]
     }
 }
 const exportedSymbols = {
-    "@youwol/rx-vdom": {
-        "apiKey": "1",
-        "exportedSymbol": "@youwol/rx-vdom"
-    },
-    "@youwol/webpm-client": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/webpm-client"
-    },
-    "rxjs": {
-        "apiKey": "7",
-        "exportedSymbol": "rxjs"
-    },
-    "marked": {
-        "apiKey": "4",
-        "exportedSymbol": "marked"
-    },
-    "highlight.js": {
-        "apiKey": "11",
-        "exportedSymbol": "hljs"
+    "@youwol/http-primitives": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/http-primitives"
     },
     "@youwol/os-top-banner": {
         "apiKey": "02",
@@ -111,17 +95,33 @@ const exportedSymbols = {
         "apiKey": "03",
         "exportedSymbol": "@youwol/rx-tree-views"
     },
-    "@youwol/http-primitives": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/http-primitives"
+    "@youwol/rx-vdom": {
+        "apiKey": "1",
+        "exportedSymbol": "@youwol/rx-vdom"
+    },
+    "@youwol/webpm-client": {
+        "apiKey": "3",
+        "exportedSymbol": "@youwol/webpm-client"
+    },
+    "codemirror": {
+        "apiKey": "5",
+        "exportedSymbol": "CodeMirror"
     },
     "esprima": {
         "apiKey": "4",
         "exportedSymbol": "esprima"
     },
-    "codemirror": {
-        "apiKey": "5",
-        "exportedSymbol": "CodeMirror"
+    "highlight.js": {
+        "apiKey": "11",
+        "exportedSymbol": "hljs"
+    },
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
+    },
+    "rxjs": {
+        "apiKey": "7",
+        "exportedSymbol": "rxjs"
     }
 }
 
@@ -169,13 +169,13 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.3.5-wip',
+    version:'0.4.0',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
     sourceGithub:'https://github.com/youwol/mkdocs-ts',
     userGuide:'https://l.youwol.com/doc/@youwol/mkdocs-ts',
-    apiVersion:'03',
+    apiVersion:'04',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -200,7 +200,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts_APIv03`]
+            return window[`@youwol/mkdocs-ts_APIv04`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -215,7 +215,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.3.5-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `@youwol/mkdocs-ts#0.4.0~dist/@youwol/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -226,7 +226,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts/${entry.name}_APIv03`]
+            return window[`@youwol/mkdocs-ts/${entry.name}_APIv04`]
         })
     },
     getCdnDependencies(name?: string){

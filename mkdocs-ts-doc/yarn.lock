@@ -1451,16 +1451,18 @@
     jest-junit "^16.0.0"
     ts-jest "^29.1.2"
 
-"@youwol/mkdocs-ts@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.3.3.tgz#de03ae2166cedc98745bcaf1d1031279b7544296"
-  integrity sha512-X1GfeUaiCbVjOARyLaaJgJZ2FhcSbuW6O84qduHhBcvqENwcpu9Ht/Ut3KJcZbrVelj5jqQCyiLO/mNmzV2r/w==
+"@youwol/mkdocs-ts@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.4.0.tgz#b5e863ac1d2edd75fa7d8badb1a6a2390c1a13a3"
+  integrity sha512-G8Urc5dFF8UG6GWv45mbgPwT7LLdKtr5OJ+wdsgLypul+RotWn2+zch8USilFk+lVu96ImCdhjAwPJqiHXQUZw==
   dependencies:
     "@youwol/http-primitives" "^0.2.3"
     "@youwol/os-top-banner" "^0.2.0"
     "@youwol/rx-tree-views" "^0.3.3"
     "@youwol/rx-vdom" "^1.0.1"
     "@youwol/webpm-client" "^3.0.0"
+    codemirror "^5.52.0"
+    esprima "^4.0.1"
     highlight.js "11.2.0"
     marked "^4.2.3"
     rxjs "^7.5.6"
@@ -2087,6 +2089,11 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==
+
+codemirror@^5.52.0:
+  version "5.65.16"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.16.tgz#efc0661be6bf4988a6a1c2fe6893294638cdb334"
+  integrity sha512-br21LjYmSlVL0vFCPWPfhzUCT34FM/pAdK7rRIZwa0rrtrIdotvP4Oh4GUHsu2E3IrQMCfRkL/fN3ytMNxVQvg==
 
 collect-v8-coverage@^1.0.0:
   version "1.0.2"

@@ -1,3 +1,5 @@
+import { setup } from '../auto-generated'
+
 export const example1 = `
 <!DOCTYPE html>
 <html lang="en">
@@ -8,14 +10,14 @@ export const example1 = `
     <script type="module">
         const { MkDocs, RxDom } = await webpm.install({
             modules:[ 
-                '@youwol/mkdocs-ts#0.3.5-wip as MkDocs',
+                '@youwol/mkdocs-ts#${setup.version} as MkDocs',
                 '@youwol/rx-vdom as RxDom'
             ],
             css: [
                 'bootstrap#4.4.1~bootstrap.min.css',
                 'fontawesome#5.12.1~css/all.min.css',
                 '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
-                '@youwol/mkdocs-ts#0.3.5-wip~assets/mkdocs-light.css'
+                '@youwol/mkdocs-ts#${setup.version}~assets/mkdocs-light.css'
                 ],
             displayLoadingScreen: true
         })
