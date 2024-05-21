@@ -31,8 +31,8 @@ const { MkDocs } = await webpm.install({
         'bootstrap#4.4.1~bootstrap.min.css',
         'fontawesome#5.12.1~css/all.min.css',
         '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
-        '@youwol/mkdocs-ts#0.3.5-wip~assets/mkdocs-light.css',
-        '@youwol/mkdocs-ts#0.3.5-wip~assets/notebook.css',
+        '@youwol/mkdocs-ts#{{mkdocs-version}}~assets/mkdocs-light.css',
+        '@youwol/mkdocs-ts#{{mkdocs-version}}~assets/notebook.css',
     ]
 })
 const src =  `

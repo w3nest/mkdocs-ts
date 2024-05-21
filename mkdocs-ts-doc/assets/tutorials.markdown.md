@@ -212,7 +212,7 @@ To use the custom view within Markdown, declare the DOM element with the expecte
 
 <js-cell>
 const { MkDocs } = await webpm.install({
-    modules:['@youwol/mkdocs-ts#0.3.5-wip as MkDocs']
+    modules:['@youwol/mkdocs-ts#{{mkdocs-version}} as MkDocs']
 })
 let src = `
 # Custom view 
