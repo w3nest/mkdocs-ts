@@ -111,7 +111,11 @@ const displayApp = (navigation, display) => {
         tag: 'div',
         class:'border p-1',
         style:{height:'100%'},
-        children:[app]
+        children:[app],
+        onclick: () => {
+            // Related to the 'View customization' example
+            document.querySelectorAll('.ctx-menu').forEach((c) => c.remove())
+        }
     })
 }
 </js-cell>

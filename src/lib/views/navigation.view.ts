@@ -254,9 +254,6 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                     backgroundColor: 'white',
                     transition: 'margin 0.2s ease 0s',
                 },
-                onclick: (ev) => {
-                    ev.stopPropagation()
-                },
                 connectedCallback: (elem) =>
                     setTimeout(() => (elem.style.marginLeft = '0px'), 0),
                 children: {
@@ -278,12 +275,14 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                 },
             },
         ]
-        this.onclick = (elem) => {
-            const htmlElement = elem.target as HTMLElement
-            htmlElement.children[0]['style'].marginLeft =
-                `-${ExpandedNavigationView.menuWidth}`
-            htmlElement.style.backgroundColor = 'rgba(0,0,0,0)'
-            setTimeout(() => params.collapse(), 200)
+        this.onclick = (ev) => {
+            if (ev.target['vDom'] === this) {
+                const htmlElement = ev.target as HTMLElement
+                htmlElement.children[0]['style'].marginLeft =
+                    `-${ExpandedNavigationView.menuWidth}`
+                htmlElement.style.backgroundColor = 'rgba(0,0,0,0)'
+                setTimeout(() => params.collapse(), 200)
+            }
         }
     }
 }
