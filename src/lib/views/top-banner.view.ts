@@ -3,6 +3,7 @@ import { distinctUntilChanged, Subject } from 'rxjs'
 import { DisplayMode } from './default-layout.view'
 import { ModalNavigationView } from './navigation.view'
 import { Router } from '../router'
+import { AnyVirtualDOM } from '@youwol/rx-vdom'
 
 /**
  * Simple top banner definition, including:
@@ -21,11 +22,41 @@ export class TopBannerView extends TopBannerBase {
         displayModeToc$,
         router,
     }: {
-        name: string
+        name: string | AnyVirtualDOM
         displayModeNav$: Subject<DisplayMode>
         displayModeToc$: Subject<DisplayMode>
         router: Router
     }) {
+        const title: AnyVirtualDOM =
+            typeof name === 'string'
+                ? {
+                      tag: 'div',
+                      class: 'd-flex align-items-center',
+                      style: {
+                          width: '12.1em',
+                          padding: '1.2em 0 1.2em 0',
+                      },
+                      children: [
+                          {
+                              tag: 'a',
+                              class: 'fas fa-book-reader',
+                          },
+                          {
+                              tag: 'div',
+                              class: 'mx-3',
+                          },
+                          {
+                              tag: 'div',
+                              innerText: name,
+                              style: {
+                                  fontWeight: 700,
+                                  fontSize: '1.2em',
+                              },
+                          },
+                      ],
+                  }
+                : name
+
         super({
             innerView: {
                 tag: 'div',
@@ -52,32 +83,7 @@ export class TopBannerView extends TopBannerBase {
                                 tag: 'div',
                                 class: 'mx-3',
                             },
-                            {
-                                tag: 'div',
-                                class: 'd-flex align-items-center',
-                                style: {
-                                    width: '12.1em',
-                                    padding: '1.2em 0 1.2em 0',
-                                },
-                                children: [
-                                    {
-                                        tag: 'a',
-                                        class: 'fas fa-book-reader',
-                                    },
-                                    {
-                                        tag: 'div',
-                                        class: 'mx-3',
-                                    },
-                                    {
-                                        tag: 'div',
-                                        innerText: name,
-                                        style: {
-                                            fontWeight: 700,
-                                            fontSize: '1.2em',
-                                        },
-                                    },
-                                ],
-                            },
+                            title,
                             {
                                 tag: 'div',
                                 style: {

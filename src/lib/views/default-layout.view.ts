@@ -48,7 +48,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     /**
      *
      * @param router The router
-     * @param name The name of the application
+     * @param name The name of the application or a VirtualDOM to display instead as title.
      * @param topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
      */
     constructor({
@@ -57,7 +57,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         topBanner,
     }: {
         router: Router
-        name: string
+        name: string | AnyVirtualDOM
         topBanner?: ({ displayMode$ }) => AnyVirtualDOM
     }) {
         const wrapperSideNav = (side: 'left' | 'right') => ({
