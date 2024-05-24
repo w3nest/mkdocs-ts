@@ -600,6 +600,12 @@ export function parseCallable({
     projectGlobals?: ProjectGlobals
     parentElement?: TypedocNode
 }): Callable {
+    if (
+        typedocNode['inheritedFrom'] &&
+        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]
+    ) {
+        return undefined
+    }
     const typedocFct = typedocNode.signatures[0]
     const name = typedocFct.name
     const documentation = parseDocumentationElements({
@@ -782,7 +788,8 @@ export function parseType({
                     parentPath: path,
                     parentElement: typedocNode,
                 }),
-            ),
+            )
+            .filter((attr) => attr),
         callables: methods
             .map((meth) => meth as unknown as TypedocNode & SignaturesTrait)
             .filter((meth) => meth.signatures[0].comment)
@@ -794,7 +801,8 @@ export function parseType({
                     semantic: semantics[meth.kind],
                     parentElement: typedocNode,
                 }),
-            ),
+            )
+            .filter((meth) => meth),
         code: parseCode({
             typedocNode: typedocNode,
             projectGlobals,
@@ -823,6 +831,12 @@ export function parseAttribute({
     parentPath: string
     parentElement?: TypedocNode
 }): Attribute {
+    if (
+        typedocNode['inheritedFrom'] &&
+        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]
+    ) {
+        return undefined
+    }
     const name = typedocNode.name
     if (typedocNode['inheritedFrom']) {
         typedocNode = projectGlobals.typedocIdMap[
