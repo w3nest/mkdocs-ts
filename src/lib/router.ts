@@ -17,6 +17,7 @@ import {
     createImplicitChildren$,
     CatchAllKey,
     LazyNavResolver,
+    sanitizeNavPath,
 } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
 
@@ -201,6 +202,7 @@ export class Router {
      * @param path The path to navigate to.
      */
     navigateTo({ path }: { path: string }) {
+        path = `/${sanitizeNavPath(path)}`
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
 
@@ -301,7 +303,7 @@ export class Router {
             this.navUpdates[resolverPath] ||
             this.navigation[resolverPath][CatchAllKey]
         const oldNode = this.explorerState.getNode(path)
-        const relative = path.split(resolverPath)[1].replace(/^\/+/, '')
+        const relative = sanitizeNavPath(path.split(resolverPath)[1])
         const children = createImplicitChildren$({
             resolver: resolver,
             hrefBase: resolverPath,
@@ -374,7 +376,7 @@ export class Router {
         // node.tree: Navigation | LazyNavResolver
         if (typeof node.tree === 'function') {
             // case: LazyNavResolver, remove starting '/'
-            const relative = path.split(node.path)[1].replace(/^\/+/, '')
+            const relative = sanitizeNavPath(path.split(node.path)[1])
             const nav = node.tree({ path: relative, router: this })
             return nav instanceof Observable
                 ? nav
