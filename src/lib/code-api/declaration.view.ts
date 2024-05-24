@@ -18,6 +18,8 @@ export class DeclarationView implements VirtualDOM<'div'> {
                 return acc.replace(p, ` <a href='${v}'>${k}</a> `)
             },
             code['declaration']
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
                 .replace(/\r?\n/g, ' \n')
                 .replace(separators, (match) => ` ${match} `) // Replace [, ], <, >, , with spaces around them
                 .replace(/ {2}/g, ' ') // Replace multiple spaces with single space
