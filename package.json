@@ -84,10 +84,7 @@
             "marked": "^4.2.3",
             "highlight.js": "11.2.0",
             "@youwol/os-top-banner": "^0.2.0",
-            "@youwol/rx-tree-views": "^0.3.3",
-            "@youwol/http-primitives": "^0.2.3",
-            "esprima": "^4.0.1",
-            "codemirror": "^5.52.0"
+            "@youwol/rx-tree-views": "^0.3.3"
         },
         "aliases": []
     }

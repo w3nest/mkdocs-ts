@@ -134,10 +134,7 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "marked",
         "highlight.js",
         "@youwol/os-top-banner",
-        "@youwol/rx-tree-views",
-        "@youwol/http-primitives",
-        "esprima",
-        "codemirror"
+        "@youwol/rx-tree-views"
     ]
 }
 
