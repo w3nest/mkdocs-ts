@@ -53,7 +53,7 @@ export class ModuleView implements VirtualDOM<'div'> {
         this.children = [
             new HeaderView({
                 tag: 'h1',
-                withClass: 'doc-module-name',
+                withClass: `doc-module-name doc-${this.module.semantic.role}-name fs-1`,
                 doc: this.module,
             }),
             {

@@ -9,19 +9,23 @@ export class DeclarationView implements VirtualDOM<'div'> {
     }
     public readonly class = 'mkapi-declaration mkapi-semantic-color p-2 rounded'
     constructor({ code, parent }: { code: Code; parent: Entity }) {
-        const separators = /[[\],<>,():;]/g
+        const separators = /[[\],<>@.():;]/g
         this.class += ` mkapi-role-${parent.semantic.role}`
 
         let declaration = Object.entries(code.references || {}).reduce(
             (acc, [k, v]) => {
                 const p = new RegExp(` ${k} `, 'g')
-                return acc.replace(p, ` <a href='${v}'>${k}</a> `)
+                return acc.replace(
+                    p,
+                    ` <a target='_blank' href='${v}'>${k}</a> `,
+                )
             },
             code['declaration']
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/\r?\n/g, ' \n')
-                .replace(separators, (match) => ` ${match} `) // Replace [, ], <, >, , with spaces around them
+                .replace(separators, (match) => `${match} `) // Replace [, ], <, >, , with spaces around them
+                .replace(separators, (match) => ` ${match}`) // Replace [, ], <, >, , with spaces around them
                 .replace(/ {2}/g, ' ') // Replace multiple spaces with single space
                 .trim() + ' ', // Trim the string and add a trailing space
         )

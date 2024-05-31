@@ -64,6 +64,10 @@ const noSemantic: Semantic = {
     relations: {},
 }
 const semantics = {
+    [TYPEDOC_KINDS.MODULE]: {
+        ...noSemantic,
+        role: 'module',
+    },
     [TYPEDOC_KINDS.CLASS]: {
         ...noSemantic,
         role: 'class',
@@ -247,7 +251,7 @@ export function generateNavigationPathsInModule(
  * @param _args.typedocNode Typedoc's module node.
  * @param _args.modulePath The module path.
  * @param _args.tsInputs The (global) typescript inputs.
- * @param _args.basePath The base path of the API node in the navigation (*e.g.* `/api`).
+ * @param _args.baseNav The base path of the API node in the navigation (*e.g.* `/api`).
  */
 export function parseModule({
     typedocNode,
@@ -393,7 +397,7 @@ export function parseModule({
         children: subModules.map((child) =>
             parseChildModule({ typedocNode: child, parentPath: path }),
         ),
-        semantic: noSemantic,
+        semantic: semantics[TYPEDOC_KINDS.MODULE],
     }
 }
 
@@ -621,9 +625,7 @@ export function parseCallable({
         typedocFct.type,
         projectGlobals,
     )
-    if (name == 'getScore') {
-        console.log('getScore')
-    }
+
     const functionDoc = getSummaryDoc(documentation)
     const parametersDoc = parseArgumentsDoc({
         fromElement: typedocFct,
