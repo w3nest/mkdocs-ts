@@ -436,7 +436,7 @@
     ],
     "children": [],
     "semantic": {
-        "role": "",
+        "role": "module",
         "labels": [],
         "attributes": {},
         "relations": {}
