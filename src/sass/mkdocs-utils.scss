@@ -19,7 +19,7 @@
 }
 
 // Generate 5 colors between color1 and color2
-@for $i from 1 through 5 {
+@for $i from 0 through 6 {
     .mkdocs-bg-#{$i} {
         background-color: interpolate(
             $color-bg,
@@ -32,6 +32,20 @@
             $color-bg,
             $color-text,
             calc($i / 6)
+        ); // Divide by 6 to get 5 colors
+    }
+    .mkdocs-hover-bg-#{$i}:hover {
+        background-color: interpolate(
+                        $color-bg,
+                        $color-text,
+                        calc($i / 6)
+        ); // Divide by 6 to get 5 colors
+    }
+    .mkdocs-hover-text-#{5-$i}:hover {
+        color: interpolate(
+                        $color-bg,
+                        $color-text,
+                        calc($i / 6)
         ); // Divide by 6 to get 5 colors
     }
 }

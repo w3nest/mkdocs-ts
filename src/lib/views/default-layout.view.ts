@@ -70,6 +70,8 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 position: 'sticky' as const,
                 top: '0px',
                 width: '16em',
+                overflowY: 'auto' as const,
+                overflowX: 'hidden' as const,
             },
         })
         this.connectedCallback = (e: HTMLElement) => {

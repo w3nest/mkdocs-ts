@@ -126,7 +126,7 @@ export class TOCView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'ul',
-                class: 'p-0 h-100 scrollbar-on-hover ',
+                class: 'p-0 h-100 scrollbar-on-hover',
                 connectedCallback: (elem: RxHTMLElement<'ul'>) => {
                     const headings = [...elem.querySelectorAll('li')]
                     elem.ownSubscriptions(
