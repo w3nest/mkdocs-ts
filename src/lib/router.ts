@@ -402,7 +402,7 @@ export class Router {
             return childNode || getLastResolved(ids.slice(0, -1))
         }
         const node = getLastResolved(ids)
-        if (node.id == ids.slice(-1)[0]) {
+        if (node.id === ids.slice(-1)[0] || node.children === undefined) {
             this.explorerState.selectNodeAndExpand(node)
             return
         }
@@ -413,7 +413,7 @@ export class Router {
             return
         }
         const expandRec = (ids: string[], node: NavNodeBase) => {
-            if (ids.length == 0) {
+            if (ids.length == 0 || node.children === undefined) {
                 return this.explorerState.selectNodeAndExpand(node)
             }
             const maybeChildResolved = this.explorerState.getNode(ids[0])
