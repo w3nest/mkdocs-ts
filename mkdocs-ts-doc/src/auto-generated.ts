@@ -1,7 +1,7 @@
 
 const runTimeDependencies = {
     "externals": {
-        "@youwol/mkdocs-ts": "^0.4.1",
+        "@youwol/mkdocs-ts": "^0.5.0",
         "@youwol/rx-vdom": "^1.0.1",
         "@youwol/webpm-client": "^3.0.0",
         "mathjax": "^3.1.4",
@@ -10,7 +10,7 @@ const runTimeDependencies = {
     "includedInBundle": {}
 }
 const externals = {
-    "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv04']",
+    "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv05']",
     "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
     "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
     "mathjax": "window['Mathjax_APIv3']",
@@ -18,7 +18,7 @@ const externals = {
 }
 const exportedSymbols = {
     "@youwol/mkdocs-ts": {
-        "apiKey": "04",
+        "apiKey": "05",
         "exportedSymbol": "@youwol/mkdocs-ts"
     },
     "@youwol/rx-vdom": {
@@ -59,13 +59,13 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts-doc',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHMtZG9j',
-    version:'0.4.2-wip',
+    version:'0.5.0-wip',
     shortDescription:"Documentation app for project @youwol/mkdocs-ts.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts-doc&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts-doc',
     sourceGithub:'https://github.com/youwol/mkdocs-ts-doc',
     userGuide:'https://l.youwol.com/doc/@youwol/mkdocs-ts-doc',
-    apiVersion:'04',
+    apiVersion:'05',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -90,7 +90,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts-doc_APIv04`]
+            return window[`@youwol/mkdocs-ts-doc_APIv05`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -105,7 +105,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts-doc#0.4.2-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
+            `@youwol/mkdocs-ts-doc#0.5.0-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -116,7 +116,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts-doc/${entry.name}_APIv04`]
+            return window[`@youwol/mkdocs-ts-doc/${entry.name}_APIv05`]
         })
     },
     getCdnDependencies(name?: string){

@@ -4,6 +4,7 @@ import {
     Views,
     installCodeApiModule,
     installNotebookModule,
+    Navigation,
 } from '@youwol/mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
@@ -52,9 +53,15 @@ await Promise.all([
     ),
 ])
 
-export const navigation = {
-    name: project.name,
+export const navigation: Navigation = {
+    name: 'Home',
     tableOfContent,
+    decoration: {
+        icon: {
+            tag: 'i',
+            class: 'fas fa-home mr-1',
+        },
+    },
     html: fromMd('index.md'),
     '/how-to': {
         name: 'How to',

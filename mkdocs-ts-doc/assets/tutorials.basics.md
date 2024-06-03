@@ -99,13 +99,14 @@ unless encoded.
 <note level='hint' label='Code factorization'>
 To slightly simplify up-coming cells, the next function is defined to display an application:
 <js-cell>
-const displayApp = (navigation, display) => {
+const displayApp = (navigation, display, topBanner) => {
     const app = new MkDocs.Views.DefaultLayoutView({
         router: new MkDocs.Router({
             navigation,
             mockBrowserLocation
         }),
         name: 'Example',
+        topBanner
     })
     display({
         tag: 'div',
@@ -119,6 +120,40 @@ const displayApp = (navigation, display) => {
     })
 }
 </js-cell>
+</note>
+
+## Top Banner
+
+It is possible to customize the top-banner view by providing the `topBanner` parameters to the
+[DefaultLayoutView](@nav/api/MainModule/Views.DefaultLayoutView) constructor.
+The library exposes a polished [TopBannerClassicView](@nav/api/MainModule/Views.TopBannerClassicView) class that manages
+logo, badges and navigation shortcuts:
+
+
+<js-cell cell-id="example-top-banner">
+const { TopBannerClassicView } = MkDocs.Views
+const topBanner = (params) => new TopBannerClassicView(Object.assign(params,{
+    logo: {
+        tag: 'i',
+        class: 'fas fa-book'
+    },
+    badge: new MkDocs.Views.SourcesLink({
+        href: 'https://github.com/youwol/mkdocs-ts/',
+        name: '@youwol/mkdocs-ts',
+        version: '{{mkdocs-version}}',
+    }),
+}))
+
+displayApp(navigation, display, topBanner)
+
+</js-cell>
+<cell-output cell-id="example-top-banner" full-screen="true" style="height:500px;">
+</cell-output>
+
+
+<note level='info'>
+The top banner needs sufficient space to render fully. Try expanding the output above. It should display the
+various elements if your screen size permits.
 </note>
 
 ## Main HTML Content

@@ -21,7 +21,7 @@ pkg_json_mkdocs = parse_json(folder_path / '..' / pkg_json_name)
 externals_deps = {
     "rxjs": "^7.5.6",
     "@youwol/rx-vdom": "^1.0.1",
-    "@youwol/mkdocs-ts": "^0.4.1",
+    "@youwol/mkdocs-ts": f"^{pkg_json_mkdocs['version'].replace('-wip', '')}",
     "@youwol/webpm-client": "^3.0.0",
     "mathjax": "^3.1.4"
 }

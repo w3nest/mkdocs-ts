@@ -51,8 +51,8 @@
                         "filePath": "src/lib/views/default-layout.view.ts",
                         "declaration": "public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')",
                         "implementation": "",
-                        "startLine": 37,
-                        "endLine": 38,
+                        "startLine": 82,
+                        "endLine": 83,
                         "references": {
                             "displayModeNav$": "@nav/api/MainModule/Views.DefaultLayoutView.displayModeNav$",
                             "DisplayMode": "@nav/api/MainModule/Views.DisplayMode"
@@ -86,8 +86,8 @@
                         "filePath": "src/lib/views/default-layout.view.ts",
                         "declaration": "public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')",
                         "implementation": "",
-                        "startLine": 41,
-                        "endLine": 42,
+                        "startLine": 86,
+                        "endLine": 87,
                         "references": {
                             "displayModeToc$": "@nav/api/MainModule/Views.DefaultLayoutView.displayModeToc$",
                             "DisplayMode": "@nav/api/MainModule/Views.DisplayMode"
@@ -95,20 +95,71 @@
                     }
                 }
             ],
-            "callables": [],
+            "callables": [
+                {
+                    "name": "new DefaultLayoutView",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initializes a new instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **layoutOptions**: Display options regarding sizing of the main elements in the page.\n*  **name**: The name of the application or a VirtualDOM to display instead as title.\nIf the parameter  `topBanner`  is provided, this name is forwarded as  `title`  parameter.\n*  **router**: The router.\n*  **topBanner**: Optional custom top-banner view to use, default to  [TopBannerView](@nav/api/MainModule/Views.TopBannerView) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DefaultLayoutView.new DefaultLayoutView",
+                    "code": {
+                        "filePath": "src/lib/views/default-layout.view.ts",
+                        "declaration": "constructor({\n        router,\n        name,\n        topBanner,\n        layoutOptions,\n    }: {\n        router: Router\n        name: string | AnyVirtualDOM\n        topBanner?: ({\n            title,\n            router,\n            displayModeNav$,\n            displayModeToc$,\n            layoutOptions,\n        }: {\n            title: string | AnyVirtualDOM\n            router: Router\n            displayModeNav$: Subject<DisplayMode>\n            displayModeToc$: Subject<DisplayMode>\n            layoutOptions: LayoutOptions\n        }) => AnyVirtualDOM\n        layoutOptions?: Partial<LayoutOptions>\n    })",
+                        "implementation": "constructor({\n        router,\n        name,\n        topBanner,\n        layoutOptions,\n    }: {\n        router: Router\n        name: string | AnyVirtualDOM\n        topBanner?: ({\n            title,\n            router,\n            displayModeNav$,\n            displayModeToc$,\n            layoutOptions,\n        }: {\n            title: string | AnyVirtualDOM\n            router: Router\n            displayModeNav$: Subject<DisplayMode>\n            displayModeToc$: Subject<DisplayMode>\n            layoutOptions: LayoutOptions\n        }) => AnyVirtualDOM\n        layoutOptions?: Partial<LayoutOptions>\n    }) {\n        this.layoutOptions = Object.assign(\n            this.layoutOptions,\n            layoutOptions || {},\n        )\n        const wrapperSideNav = (side: 'left' | 'right') => ({\n            tag: 'div' as const,\n            class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',\n            style: {\n                maxHeight: '85vh',\n                position: 'sticky' as const,\n                top: '0px',\n                width:\n                    side === 'left'\n                        ? this.layoutOptions.navWidth\n                        : this.layoutOptions.tocWidth,\n                overflowY: 'auto' as const,\n                overflowX: 'hidden' as const,\n            },\n        })\n        this.connectedCallback = (e: HTMLElement) => {\n            const resizeObserver = new ResizeObserver((entries) => {\n                const width = entries[0].contentRect.width\n                e.classList.remove(\n                    'mkdocs-DefaultLayoutView',\n                    'mkdocs-DefaultLayoutView-s',\n                    'mkdocs-DefaultLayoutView-xs',\n                    'mkdocs-DefaultLayoutView-xxs',\n                )\n\n                if (width < 1300) {\n                    e.classList.add('mkdocs-DefaultLayoutView-s')\n                }\n\n                if (width < 1000) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xxs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Minimized')\n                    return\n                }\n                if (width < 1300) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Full')\n                    return\n                }\n                e.classList.add('mkdocs-DefaultLayoutView')\n                this.displayModeNav$.next('Full')\n                this.displayModeToc$.next('Full')\n            })\n            resizeObserver.observe(e)\n        }\n        const topBannerView = topBanner\n            ? topBanner({\n                  title: name,\n                  router,\n                  displayModeNav$: this.displayModeNav$,\n                  displayModeToc$: this.displayModeToc$,\n                  layoutOptions: this.layoutOptions,\n              })\n            : new TopBannerView({\n                  name,\n                  displayModeNav$: this.displayModeNav$,\n                  displayModeToc$: this.displayModeToc$,\n                  router,\n              })\n        this.children = [\n            topBannerView,\n            {\n                tag: 'div',\n                class: 'flex-grow-1 w-100 overflow-auto pt-2',\n                style: {\n                    minHeight: '0px',\n                },\n                connectedCallback: (e) => {\n                    router.scrollableElement = e\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex justify-content-center pt-5 w-100',\n                        children: [\n                            {\n                                source$: this.displayModeNav$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('left'),\n                                              children: [\n                                                  new NavigationView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: this.layoutOptions.pageWidth,\n                                    maxWidth: this.layoutOptions.pageMaxWidth,\n                                    height: 'fit-content',\n                                    minHeight: '100%',\n                                },\n                                children: [\n                                    {\n                                        tag: 'div',\n                                        class: `w-100`,\n                                        style: {\n                                            paddingLeft:\n                                                this.layoutOptions.pageXPadding,\n                                            paddingRight:\n                                                this.layoutOptions.pageXPadding,\n                                        },\n                                        children: [\n                                            new PageView({ router: router }),\n                                        ],\n                                    },\n                                ],\n                            },\n                            {\n                                source$: this.displayModeToc$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('right'),\n                                              children: [\n                                                  new TocWrapperView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                        ],\n                    },\n                    {\n                        tag: 'footer',\n                        style: {\n                            position: 'sticky' as const,\n                            top: '100%',\n                        },\n                        children: [new FooterView()],\n                    },\n                ],\n            },\n        ]\n    }",
+                        "startLine": 103,
+                        "endLine": 279,
+                        "references": {
+                            "new DefaultLayoutView": "@nav/api/MainModule/Views.DefaultLayoutView.constructor",
+                            "LayoutOptions": "@nav/api/MainModule/Views.LayoutOptions",
+                            "Router": "@nav/api/MainModule.Router",
+                            "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
+                            "DefaultLayoutView": "@nav/api/MainModule/Views.DefaultLayoutView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
             "code": {
                 "filePath": "src/lib/views/default-layout.view.ts",
                 "declaration": "export class DefaultLayoutView implements VirtualDOM<'div'>",
-                "implementation": "export class DefaultLayoutView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: AnyVirtualDOM[]\n    public readonly class =\n        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto'\n\n    /**\n     * The display mode regarding the navigation panel.\n     */\n    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')\n    /**\n     * The display mode regarding the table of content.\n     */\n    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')\n\n    public readonly connectedCallback: (e: HTMLElement) => undefined\n\n    public readonly style = {\n        position: 'relative' as const,\n    }\n    /**\n     *\n     * @param router The router\n     * @param name The name of the application or a VirtualDOM to display instead as title.\n     * @param topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.\n     */\n    constructor({\n        router,\n        name,\n        topBanner,\n    }: {\n        router: Router\n        name: string | AnyVirtualDOM\n        topBanner?: ({ displayMode$ }) => AnyVirtualDOM\n    }) {\n        const wrapperSideNav = (side: 'left' | 'right') => ({\n            tag: 'div' as const,\n            class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',\n            style: {\n                marginRight: side == 'left' ? '3em' : '0em',\n                marginLeft: side == 'right' ? '3em' : '0em',\n                maxHeight: '80vh',\n                position: 'sticky' as const,\n                top: '0px',\n                width: '16em',\n                overflowY: 'auto' as const,\n                overflowX: 'hidden' as const,\n            },\n        })\n        this.connectedCallback = (e: HTMLElement) => {\n            const resizeObserver = new ResizeObserver((entries) => {\n                const width = entries[0].contentRect.width\n                e.classList.remove(\n                    'mkdocs-DefaultLayoutView',\n                    'mkdocs-DefaultLayoutView-s',\n                    'mkdocs-DefaultLayoutView-xs',\n                    'mkdocs-DefaultLayoutView-xxs',\n                )\n\n                if (width < 1300) {\n                    e.classList.add('mkdocs-DefaultLayoutView-s')\n                }\n\n                if (width < 850) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xxs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Minimized')\n                    return\n                }\n                if (width < 1100) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Full')\n                    return\n                }\n                e.classList.add('mkdocs-DefaultLayoutView')\n                this.displayModeNav$.next('Full')\n                this.displayModeToc$.next('Full')\n            })\n            resizeObserver.observe(e)\n        }\n        this.children = [\n            topBanner\n                ? topBanner({ displayMode$: this.displayModeNav$ })\n                : new TopBannerView({\n                      name,\n                      displayModeNav$: this.displayModeNav$,\n                      displayModeToc$: this.displayModeToc$,\n                      router,\n                  }),\n            {\n                tag: 'div',\n                class: 'flex-grow-1 w-100 overflow-auto',\n                style: {\n                    minHeight: '0px',\n                },\n                connectedCallback: (e) => {\n                    router.scrollableElement = e\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex justify-content-center pt-5 w-100',\n                        children: [\n                            {\n                                source$: this.displayModeNav$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('left'),\n                                              children: [\n                                                  new NavigationView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: '75%',\n                                    maxWidth: '40em',\n                                    height: 'fit-content',\n                                    minHeight: '100%',\n                                },\n                                children: [new PageView({ router: router })],\n                            },\n                            {\n                                source$: this.displayModeToc$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('right'),\n                                              children: [\n                                                  new TocWrapperView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                        ],\n                    },\n                    {\n                        tag: 'footer',\n                        style: {\n                            position: 'sticky' as const,\n                            top: '100%',\n                        },\n                        children: [new FooterView()],\n                    },\n                ],\n            },\n        ]\n    }\n}",
-                "startLine": 28,
-                "endLine": 191,
+                "implementation": "export class DefaultLayoutView implements VirtualDOM<'div'> {\n    public readonly layoutOptions: LayoutOptions = defaultLayoutOptions()\n\n    public readonly tag = 'div'\n    public readonly children: AnyVirtualDOM[]\n    public readonly class =\n        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto'\n\n    /**\n     * The display mode regarding the navigation panel.\n     */\n    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')\n    /**\n     * The display mode regarding the table of content.\n     */\n    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')\n\n    public readonly connectedCallback: (e: HTMLElement) => undefined\n\n    public readonly style = {\n        position: 'relative' as const,\n    }\n    /**\n     * Initializes a new instance.\n     *\n     * @param _p\n     * @param _p.router The router.\n     * @param _p.name The name of the application or a VirtualDOM to display instead as title.\n     * If the parameter `topBanner` is provided, this name is forwarded as `title` parameter.\n     * @param _p.topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.\n     * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.\n     */\n    constructor({\n        router,\n        name,\n        topBanner,\n        layoutOptions,\n    }: {\n        router: Router\n        name: string | AnyVirtualDOM\n        topBanner?: ({\n            title,\n            router,\n            displayModeNav$,\n            displayModeToc$,\n            layoutOptions,\n        }: {\n            title: string | AnyVirtualDOM\n            router: Router\n            displayModeNav$: Subject<DisplayMode>\n            displayModeToc$: Subject<DisplayMode>\n            layoutOptions: LayoutOptions\n        }) => AnyVirtualDOM\n        layoutOptions?: Partial<LayoutOptions>\n    }) {\n        this.layoutOptions = Object.assign(\n            this.layoutOptions,\n            layoutOptions || {},\n        )\n        const wrapperSideNav = (side: 'left' | 'right') => ({\n            tag: 'div' as const,\n            class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',\n            style: {\n                maxHeight: '85vh',\n                position: 'sticky' as const,\n                top: '0px',\n                width:\n                    side === 'left'\n                        ? this.layoutOptions.navWidth\n                        : this.layoutOptions.tocWidth,\n                overflowY: 'auto' as const,\n                overflowX: 'hidden' as const,\n            },\n        })\n        this.connectedCallback = (e: HTMLElement) => {\n            const resizeObserver = new ResizeObserver((entries) => {\n                const width = entries[0].contentRect.width\n                e.classList.remove(\n                    'mkdocs-DefaultLayoutView',\n                    'mkdocs-DefaultLayoutView-s',\n                    'mkdocs-DefaultLayoutView-xs',\n                    'mkdocs-DefaultLayoutView-xxs',\n                )\n\n                if (width < 1300) {\n                    e.classList.add('mkdocs-DefaultLayoutView-s')\n                }\n\n                if (width < 1000) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xxs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Minimized')\n                    return\n                }\n                if (width < 1300) {\n                    e.classList.add('mkdocs-DefaultLayoutView-xs')\n                    this.displayModeNav$.next('Minimized')\n                    this.displayModeToc$.next('Full')\n                    return\n                }\n                e.classList.add('mkdocs-DefaultLayoutView')\n                this.displayModeNav$.next('Full')\n                this.displayModeToc$.next('Full')\n            })\n            resizeObserver.observe(e)\n        }\n        const topBannerView = topBanner\n            ? topBanner({\n                  title: name,\n                  router,\n                  displayModeNav$: this.displayModeNav$,\n                  displayModeToc$: this.displayModeToc$,\n                  layoutOptions: this.layoutOptions,\n              })\n            : new TopBannerView({\n                  name,\n                  displayModeNav$: this.displayModeNav$,\n                  displayModeToc$: this.displayModeToc$,\n                  router,\n              })\n        this.children = [\n            topBannerView,\n            {\n                tag: 'div',\n                class: 'flex-grow-1 w-100 overflow-auto pt-2',\n                style: {\n                    minHeight: '0px',\n                },\n                connectedCallback: (e) => {\n                    router.scrollableElement = e\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'd-flex justify-content-center pt-5 w-100',\n                        children: [\n                            {\n                                source$: this.displayModeNav$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('left'),\n                                              children: [\n                                                  new NavigationView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                            {\n                                tag: 'div',\n                                style: {\n                                    width: this.layoutOptions.pageWidth,\n                                    maxWidth: this.layoutOptions.pageMaxWidth,\n                                    height: 'fit-content',\n                                    minHeight: '100%',\n                                },\n                                children: [\n                                    {\n                                        tag: 'div',\n                                        class: `w-100`,\n                                        style: {\n                                            paddingLeft:\n                                                this.layoutOptions.pageXPadding,\n                                            paddingRight:\n                                                this.layoutOptions.pageXPadding,\n                                        },\n                                        children: [\n                                            new PageView({ router: router }),\n                                        ],\n                                    },\n                                ],\n                            },\n                            {\n                                source$: this.displayModeToc$.pipe(\n                                    distinctUntilChanged(),\n                                ),\n                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {\n                                    return mode === 'Minimized'\n                                        ? { tag: 'div' }\n                                        : {\n                                              ...wrapperSideNav('right'),\n                                              children: [\n                                                  new TocWrapperView({\n                                                      router,\n                                                  }),\n                                              ],\n                                          }\n                                },\n                            },\n                        ],\n                    },\n                    {\n                        tag: 'footer',\n                        style: {\n                            position: 'sticky' as const,\n                            top: '100%',\n                        },\n                        children: [new FooterView()],\n                    },\n                ],\n            },\n        ]\n    }\n}",
+                "startLine": 71,
+                "endLine": 280,
                 "references": {
                     "DefaultLayoutView": "@nav/api/MainModule/Views.DefaultLayoutView",
+                    "LayoutOptions": "@nav/api/MainModule/Views.LayoutOptions",
                     "Router": "@nav/api/MainModule.Router",
+                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
                     "VirtualDOM.children": "-1",
                     "VirtualDOM.class": "-1",
                     "VirtualDOM.connectedCallback": "-1",
-                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
                     "VirtualDOM.style": "-1",
                     "VirtualDOM.tag": "-1"
                 }
@@ -486,6 +537,94 @@
             }
         },
         {
+            "name": "SourcesLink",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A badge to encapsulate a link on an online repository of source code.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SourcesLink",
+            "attributes": [],
+            "callables": [
+                {
+                    "name": "new SourcesLink",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initializes a new instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **href**: URL to the repo.\n*  **name**: Displayed name.\n*  **version**: Displayed version.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SourcesLink.new SourcesLink",
+                    "code": {
+                        "filePath": "src/lib/views/top-banner-classic.view.ts",
+                        "declaration": "constructor({\n        href,\n        name,\n        version,\n    }: {\n        href: string\n        name: string\n        version: string\n    })",
+                        "implementation": "constructor({\n        href,\n        name,\n        version,\n    }: {\n        href: string\n        name: string\n        version: string\n    }) {\n        this.href = href\n        this.children = [\n            {\n                tag: 'div',\n                class: 'my-auto',\n                style: {\n                    fontSize: 'larger',\n                },\n                children: [\n                    {\n                        tag: 'i',\n                        class: 'fas fa-code-branch',\n                    },\n                ],\n            },\n            {\n                tag: 'i',\n                class: 'mx-1',\n            },\n            {\n                tag: 'div',\n                class: 'd-flex flex-column',\n                style: {\n                    fontSize: 'smaller',\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: name,\n                    },\n                    {\n                        tag: 'div',\n                        class: 'd-flex align-items-center',\n                        style: {\n                            fontSize: 'x-small',\n                        },\n                        children: [\n                            {\n                                tag: 'i',\n                                class: 'fas fa-tag',\n                            },\n                            {\n                                tag: 'i',\n                                class: 'mx-1',\n                            },\n                            {\n                                tag: 'div',\n                                innerText: version,\n                            },\n                        ],\n                    },\n                ],\n            },\n        ]\n    }",
+                        "startLine": 271,
+                        "endLine": 335,
+                        "references": {
+                            "new SourcesLink": "@nav/api/MainModule/Views.SourcesLink.constructor",
+                            "SourcesLink": "@nav/api/MainModule/Views.SourcesLink"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/views/top-banner-classic.view.ts",
+                "declaration": "export class SourcesLink implements VirtualDOM<'a'>",
+                "implementation": "export class SourcesLink implements VirtualDOM<'a'> {\n    public readonly tag = 'a'\n    public readonly href: string\n    public readonly target = '_blank'\n    public readonly class =\n        'd-flex align-items-center mkdocs-text-4 mkdocs-hover-text-5 fv-pointer'\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param _p\n     * @param _p.href URL to the repo.\n     * @param _p.name Displayed name.\n     * @param _p.version Displayed version.\n     */\n    constructor({\n        href,\n        name,\n        version,\n    }: {\n        href: string\n        name: string\n        version: string\n    }) {\n        this.href = href\n        this.children = [\n            {\n                tag: 'div',\n                class: 'my-auto',\n                style: {\n                    fontSize: 'larger',\n                },\n                children: [\n                    {\n                        tag: 'i',\n                        class: 'fas fa-code-branch',\n                    },\n                ],\n            },\n            {\n                tag: 'i',\n                class: 'mx-1',\n            },\n            {\n                tag: 'div',\n                class: 'd-flex flex-column',\n                style: {\n                    fontSize: 'smaller',\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: name,\n                    },\n                    {\n                        tag: 'div',\n                        class: 'd-flex align-items-center',\n                        style: {\n                            fontSize: 'x-small',\n                        },\n                        children: [\n                            {\n                                tag: 'i',\n                                class: 'fas fa-tag',\n                            },\n                            {\n                                tag: 'i',\n                                class: 'mx-1',\n                            },\n                            {\n                                tag: 'div',\n                                innerText: version,\n                            },\n                        ],\n                    },\n                ],\n            },\n        ]\n    }\n}",
+                "startLine": 255,
+                "endLine": 336,
+                "references": {
+                    "SourcesLink": "@nav/api/MainModule/Views.SourcesLink",
+                    "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
+                    "VirtualDOM.href": "-1",
+                    "VirtualDOM.tag": "-1",
+                    "VirtualDOM.target": "-1"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "TOCView",
             "documentation": {
                 "sections": [
@@ -518,6 +657,94 @@
                     "VirtualDOM.connectedCallback": "-1",
                     "VirtualDOM.disconnectedCallback": "-1",
                     "VirtualDOM.style": "-1",
+                    "VirtualDOM.tag": "-1"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "TopBannerClassicView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "This tob banner includes a logo, a badge (displayed above the TOC view), and navigation short-cuts.\n\nIt is usually used as  `topBanner`  parameters of  [DefaultLayoutView](@nav/api/MainModule/Views.DefaultLayoutView) 's constructor.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "TopBannerClassicView",
+            "attributes": [],
+            "callables": [
+                {
+                    "name": "new TopBannerClassicView",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initializes a new instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **params**: Most of them are forwarded from  [DefaultLayoutView](@nav/api/MainModule/Views.DefaultLayoutView) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TopBannerClassicView.new TopBannerClassicView",
+                    "code": {
+                        "filePath": "src/lib/views/top-banner-classic.view.ts",
+                        "declaration": "constructor(params: TopBannerClassicParams)",
+                        "implementation": "constructor(params: TopBannerClassicParams) {\n        this.children = [\n            new MainColumn(params),\n            {\n                source$: params.displayModeToc$,\n                vdomMap: (mode: Views.DisplayMode) =>\n                    mode === 'Full' ? new RightColumn(params) : { tag: 'div' },\n            },\n        ]\n    }",
+                        "startLine": 62,
+                        "endLine": 72,
+                        "references": {
+                            "new TopBannerClassicView": "@nav/api/MainModule/Views.TopBannerClassicView.constructor",
+                            "TopBannerClassicParams": "@nav/api/MainModule/Views.TopBannerClassicParams",
+                            "TopBannerClassicView": "@nav/api/MainModule/Views.TopBannerClassicView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/views/top-banner-classic.view.ts",
+                "declaration": "export class TopBannerClassicView implements VirtualDOM<'div'>",
+                "implementation": "export class TopBannerClassicView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class =\n        'w-100 mkdocs-bg-5 mkdocs-text-5 py-2 d-flex justify-content-center'\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param params Most of them are forwarded from {@link DefaultLayoutView}.\n     */\n    constructor(params: TopBannerClassicParams) {\n        this.children = [\n            new MainColumn(params),\n            {\n                source$: params.displayModeToc$,\n                vdomMap: (mode: Views.DisplayMode) =>\n                    mode === 'Full' ? new RightColumn(params) : { tag: 'div' },\n            },\n        ]\n    }\n}",
+                "startLine": 51,
+                "endLine": 73,
+                "references": {
+                    "TopBannerClassicView": "@nav/api/MainModule/Views.TopBannerClassicView",
+                    "TopBannerClassicParams": "@nav/api/MainModule/Views.TopBannerClassicParams",
+                    "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
                     "VirtualDOM.tag": "-1"
                 }
             },
@@ -573,9 +800,119 @@
                 "attributes": {},
                 "relations": {}
             }
+        },
+        {
+            "name": "LayoutOptions",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Hints regarding sizing of the main elements on the page.\n\nThe 'page' element refers to the text-content area.\n\nSee  [defaultLayoutOptions](@nav/api/MainModule/Views.defaultLayoutOptions) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "LayoutOptions",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/views/default-layout.view.ts",
+                "declaration": "export type LayoutOptions = {\n    /**\n     * Navigation panel's width.\n     */\n    navWidth: string\n    /**\n     * Page's width.\n     */\n    pageWidth: string\n    /**\n     * Page's maximum width.\n     */\n    pageMaxWidth: string\n    /**\n     * Horizontal padding of the main page.\n     */\n    pageXPadding: string\n    /**\n     * TOC panel's width.\n     */\n    tocWidth: string\n}",
+                "implementation": "",
+                "startLine": 26,
+                "endLine": 27,
+                "references": {
+                    "LayoutOptions": "@nav/api/MainModule/Views.LayoutOptions"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "TopBannerClassicParams",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Parameters for  [TopBannerClassicView](@nav/api/MainModule/Views.TopBannerClassicView) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "TopBannerClassicParams",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/views/top-banner-classic.view.ts",
+                "declaration": "export type TopBannerClassicParams = {\n    /**\n     * Router, forwared when used within {@link DefaultLayoutView}.\n     */\n    router: Router\n    /**\n     * Emit the current display mode regarding navigation, forwared when used within {@link DefaultLayoutView}.\n     */\n    displayModeNav$: Subject<Views.DisplayMode>\n    /**\n     * Emit the current display mode regarding TOC, forwared when used within {@link DefaultLayoutView}.\n     */\n    displayModeToc$: Subject<Views.DisplayMode>\n    /**\n     * Layout sizing options, forwarded when used within {@link DefaultLayoutView}.\n     */\n    layoutOptions: Views.LayoutOptions\n    /**\n     * The title, forwarded when used within {@link DefaultLayoutView}.\n     */\n    title: AnyVirtualDOM | string\n    /**\n     * The logo.\n     */\n    logo: AnyVirtualDOM\n    /**\n     * The badge.\n     */\n    badge: AnyVirtualDOM\n}",
+                "implementation": "",
+                "startLine": 15,
+                "endLine": 16,
+                "references": {
+                    "TopBannerClassicParams": "@nav/api/MainModule/Views.TopBannerClassicParams",
+                    "Views.DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
+                    "Views.LayoutOptions": "@nav/api/MainModule/Views.LayoutOptions",
+                    "Router": "@nav/api/MainModule.Router"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
         }
     ],
-    "callables": [],
+    "callables": [
+        {
+            "name": "defaultLayoutOptions",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Default layout options.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "defaultLayoutOptions",
+            "code": {
+                "filePath": "src/lib/views/default-layout.view.ts",
+                "declaration": "defaultLayoutOptions = () => {\n    return {\n        navWidth: '250px',\n        pageWidth: '95%',\n        pageMaxWidth: '47em',\n        tocWidth: '250px',\n        pageXPadding: '3em',\n    }\n}",
+                "implementation": "",
+                "startLine": 52,
+                "endLine": 53,
+                "references": {
+                    "defaultLayoutOptions": "@nav/api/MainModule/Views.defaultLayoutOptions"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
     "files": [
         {
             "name": "default-layout.view.ts",
@@ -616,6 +953,24 @@
         {
             "name": "page.view.ts",
             "path": "src/lib/views/page.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "top-banner-classic.view.ts",
+            "path": "src/lib/views/top-banner-classic.view.ts",
             "documentation": {
                 "sections": [
                     {
