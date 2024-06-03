@@ -94,6 +94,11 @@ export class Router {
         new ReplaySubject<NavigationCommon>(1)
 
     /**
+     * Observable that emit the current navigation path.
+     */
+    public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)
+
+    /**
      * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)
      */
     public readonly explorerState: ImmutableTree.State<NavNodeBase>
@@ -238,6 +243,7 @@ export class Router {
         this.mockBrowserLocation
             ? this.mockBrowserLocation.history.push({ url, data: { path } })
             : history.pushState({ path }, undefined, url)
+        this.currentPath$.next(path)
     }
 
     /**
