@@ -126,3 +126,21 @@ $filters: (
 .mkdocs-pointer {
     cursor: pointer;
 }
+
+.mkdocs-WrapperSideNav {
+    scrollbar-gutter: stable;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    margin: 0 .2rem;
+    overflow-y: auto;
+    scrollbar-color: interpolate(
+                    $color-bg,
+                    $color-text,
+                    calc(0.3)
+    ) $color-bg;
+    scrollbar-width: thin;
+}
+
+.mkdocs-PageView {
+    text-align: justify;
+}

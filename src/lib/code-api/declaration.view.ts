@@ -4,9 +4,9 @@ import { Code, Entity } from './models'
 export class DeclarationView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly style = {
-        fontWeight: 'bolder' as const,
-    }
+    // public readonly style = {
+    //     fontWeight: 'bolder' as const,
+    // }
     public readonly class = 'mkapi-declaration mkapi-semantic-color p-2 rounded'
     constructor({ code, parent }: { code: Code; parent: Entity }) {
         const separators = /[[\],<>@.():;]/g

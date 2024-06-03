@@ -631,6 +631,20 @@
     cursor: pointer;
 }
 
+.mkdocs-WrapperSideNav {
+    scrollbar-gutter: stable;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    margin: 0 0.2rem;
+    overflow-y: auto;
+    scrollbar-color: rgb(179, 179, 179) white;
+    scrollbar-width: thin;
+}
+
+.mkdocs-PageView {
+    text-align: justify;
+}
+
 .CodeMirror {
     height: auto !important;
 }
