@@ -7,6 +7,7 @@ import { BehaviorSubject, filter, Observable, ReplaySubject } from 'rxjs'
 import { parseMd, MdParsingOptions } from '../markdown'
 import { JsCellAttributes } from './js-cell-view'
 import { executeJsStatement } from './js-execution'
+import { DisplayFactory } from './display-utils'
 
 /**
  * All attributes available for a Markdown cell are the common ones for now.
@@ -19,6 +20,7 @@ export class InlinedCode implements VirtualDOM<'div'> {
         display: 'inline-block' as const,
     }
     public readonly src: string
+    public readonly displayFactory: DisplayFactory
     public readonly scope: Scope
     public readonly children: ChildrenLike
     public readonly invalidated$: Observable<unknown>
@@ -26,6 +28,7 @@ export class InlinedCode implements VirtualDOM<'div'> {
     constructor(params: {
         src: string
         scope: Scope
+        displayFactory: DisplayFactory
         invalidated$: Observable<unknown>
     }) {
         Object.assign(this, params)
@@ -35,6 +38,7 @@ export class InlinedCode implements VirtualDOM<'div'> {
             src: this.src,
             scope: this.scope,
             output$,
+            displayFactory: this.displayFactory,
             invalidated$: this.invalidated$,
         })
         this.children = [
@@ -115,6 +119,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
         owningState,
         cellId,
         src,
+        displayFactory,
         output$,
     }: ExecArgs): Promise<Scope> {
         const state = new State({
@@ -134,6 +139,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                     return new InlinedCode({
                         src: elem.textContent,
                         scope,
+                        displayFactory,
                         invalidated$: this.invalidated$,
                     })
                 },

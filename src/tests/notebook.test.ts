@@ -47,6 +47,7 @@ const { MkDocs } = await webpm.install({
 
 test('execute', async () => {
     let scope = { const: {}, let: {}, python: {} }
+    const displayFactory = []
     const invalidated$ = new Subject()
     scope = await executeJs({
         src: `
@@ -55,6 +56,7 @@ let y = 3
 `,
         scope,
         output$: undefined,
+        displayFactory,
         load: undefined,
         invalidated$,
     })
@@ -70,6 +72,7 @@ const foo = { z: x + y}
 `,
         scope,
         output$: undefined,
+        displayFactory,
         load: undefined,
         invalidated$,
     })
@@ -84,6 +87,7 @@ const bar = { a: x + foo.z + y }
 `,
         scope,
         output$: undefined,
+        displayFactory,
         load: undefined,
         invalidated$,
     })

@@ -22,6 +22,7 @@ import {
 import { Router } from '../router'
 import { fromFetch } from 'rxjs/fetch'
 import { parseMd } from '../markdown'
+import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 
 export type CellStatus =
     | 'unready'
@@ -84,6 +85,12 @@ export type ExecArgs = {
      * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.
      */
     output$: Subject<Output>
+
+    /**
+     * The factory used to pick up the right mapping between variable and view when `display` is called.
+     */
+    displayFactory: DisplayFactory
+
     /**
      * Owning state of the cell.
      */
@@ -122,6 +129,11 @@ export class State {
     public readonly scopes$: {
         [k: string]: BehaviorSubject<Scope | undefined>
     } = {}
+
+    /**
+     * The factory used to pick up the right mapping between variable and view when `display` is called.
+     */
+    public readonly displayFactory: DisplayFactory = defaultDisplayFactory()
 
     /**
      * Observable that emits the ID of invalidated cells.
@@ -186,9 +198,14 @@ export class State {
     constructor(params: {
         initialScope?: Partial<Scope>
         router: Router
+        displayFactory?: DisplayFactory
         parent?: { state: State; cellId: string }
     }) {
-        Object.assign(this, params)
+        Object.assign(this, { router: params.router, parent: params.parent })
+        this.displayFactory = [
+            ...this.displayFactory,
+            ...(params.displayFactory || []),
+        ]
         this.initialScope = {
             let: params.initialScope?.let || {},
             const: {
@@ -296,6 +313,7 @@ export class State {
             src: this.src$[id].value,
             scope: scope$.getValue(),
             output$,
+            displayFactory: this.displayFactory,
             load: this.loadModule(id),
             cellId: id,
             owningState: this,

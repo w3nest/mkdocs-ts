@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs'
-import { display } from './display-utils'
+import { display, DisplayFactory } from './display-utils'
 import { Scope } from './state'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import { extractKeys } from './js-execution'
@@ -46,6 +46,7 @@ if 'mknb_cell' in sys.modules:
  * @param _args.src The source to execute.
  * @param _args.scope The entering scope.
  * @param _args.output$ Subject in which output views are sent (when using `display` function).
+ * @param _args.displayFactory Factory to display HTML elements when `display` is called.
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
  * @returns Promise over the scope at exit
  */
@@ -53,18 +54,20 @@ export async function executePy({
     src,
     scope,
     output$,
+    displayFactory,
     invalidated$,
 }: {
     src: string
     scope: Scope
     output$: Subject<AnyVirtualDOM>
+    displayFactory: DisplayFactory
     invalidated$: Observable<unknown>
 }) {
     const pyodide = scope.const.pyodide
     registerMknbModule(pyodide)
 
     const displayInOutput = (...element: HTMLElement[]) =>
-        display(output$, ...element)
+        display(output$, displayFactory, ...element)
     registerMknbCellModule(pyodide, displayInOutput, scope)
 
     const pyHeader = [...Object.keys(scope.let), ...Object.keys(scope.const)]

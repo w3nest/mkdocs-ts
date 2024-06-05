@@ -20,3 +20,8 @@ export * from './md-cell-view'
 export * from './py-cell-view'
 export * from './js-execution'
 export * as Views from './views'
+export {
+    DisplayFactory,
+    DisplayComponent,
+    defaultDisplayFactory,
+} from './display-utils'
