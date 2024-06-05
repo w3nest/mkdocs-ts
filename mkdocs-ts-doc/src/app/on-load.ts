@@ -17,7 +17,7 @@ document.getElementById('content').appendChild(
                     ...params,
                     logo: {
                         tag: 'img',
-                        src: '../assets/logo.svg',
+                        src: '../assets/logo-raw.svg',
                         style: {
                             height: '30px',
                         },
