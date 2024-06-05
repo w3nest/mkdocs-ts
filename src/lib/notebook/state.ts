@@ -237,12 +237,14 @@ export class State {
     }
 
     registerDeportedOutputsView({
+        defaultContent,
         cellId,
         classList,
         style,
         inlined,
         fullScreen,
     }: {
+        defaultContent: string
         cellId: string
         classList: string
         style: CSSAttribute
@@ -254,6 +256,7 @@ export class State {
             this.executing$[cellId] = new BehaviorSubject(false)
         }
         const view = new DeportedOutputsView({
+            defaultContent,
             output$: this.outputs$[cellId],
             style,
             classList,

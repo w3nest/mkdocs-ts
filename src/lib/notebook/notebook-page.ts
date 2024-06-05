@@ -83,6 +83,7 @@ export const notebookViews = ({
             const classList = elem.getAttribute('class') || ''
             const inlined = elem.getAttribute('inlined') || false
             return state.registerDeportedOutputsView({
+                defaultContent: elem.textContent,
                 cellId,
                 style,
                 classList,
