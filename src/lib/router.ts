@@ -17,6 +17,7 @@ import {
     createImplicitChildren$,
     CatchAllKey,
     LazyNavResolver,
+    sanitizeNavPath,
 } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
 
@@ -91,6 +92,11 @@ export class Router {
      */
     public readonly currentNode$: Subject<NavigationCommon> =
         new ReplaySubject<NavigationCommon>(1)
+
+    /**
+     * Observable that emit the current navigation path.
+     */
+    public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)
 
     /**
      * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)
@@ -201,6 +207,7 @@ export class Router {
      * @param path The path to navigate to.
      */
     navigateTo({ path }: { path: string }) {
+        path = `/${sanitizeNavPath(path)}`
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
 
@@ -236,6 +243,7 @@ export class Router {
         this.mockBrowserLocation
             ? this.mockBrowserLocation.history.push({ url, data: { path } })
             : history.pushState({ path }, undefined, url)
+        this.currentPath$.next(path)
     }
 
     /**
@@ -301,7 +309,7 @@ export class Router {
             this.navUpdates[resolverPath] ||
             this.navigation[resolverPath][CatchAllKey]
         const oldNode = this.explorerState.getNode(path)
-        const relative = path.split(resolverPath)[1].replace(/^\/+/, '')
+        const relative = sanitizeNavPath(path.split(resolverPath)[1])
         const children = createImplicitChildren$({
             resolver: resolver,
             hrefBase: resolverPath,
@@ -374,7 +382,7 @@ export class Router {
         // node.tree: Navigation | LazyNavResolver
         if (typeof node.tree === 'function') {
             // case: LazyNavResolver, remove starting '/'
-            const relative = path.split(node.path)[1].replace(/^\/+/, '')
+            const relative = sanitizeNavPath(path.split(node.path)[1])
             const nav = node.tree({ path: relative, router: this })
             return nav instanceof Observable
                 ? nav
@@ -400,7 +408,7 @@ export class Router {
             return childNode || getLastResolved(ids.slice(0, -1))
         }
         const node = getLastResolved(ids)
-        if (node.id == ids.slice(-1)[0]) {
+        if (node.id === ids.slice(-1)[0] || node.children === undefined) {
             this.explorerState.selectNodeAndExpand(node)
             return
         }
@@ -411,7 +419,7 @@ export class Router {
             return
         }
         const expandRec = (ids: string[], node: NavNodeBase) => {
-            if (ids.length == 0) {
+            if (ids.length == 0 || node.children === undefined) {
                 return this.explorerState.selectNodeAndExpand(node)
             }
             const maybeChildResolved = this.explorerState.getNode(ids[0])

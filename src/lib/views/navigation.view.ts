@@ -142,7 +142,7 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-NavigationView h-100 w-100 overflow-auto'
+    public readonly class = 'mkdocs-NavigationView h-100 w-100'
     public readonly children: ChildrenLike
 
     constructor(params: { router: Router }) {
@@ -426,6 +426,8 @@ export class ModalTocView implements VirtualDOM<'div'> {
                 tag: 'div',
                 style: {
                     maxHeight: '25vh',
+                    overflowY: 'auto' as const,
+                    overflowX: 'hidden' as const,
                 },
                 class: {
                     source$: this.expanded$,

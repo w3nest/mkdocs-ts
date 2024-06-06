@@ -64,6 +64,10 @@ const noSemantic: Semantic = {
     relations: {},
 }
 const semantics = {
+    [TYPEDOC_KINDS.MODULE]: {
+        ...noSemantic,
+        role: 'module',
+    },
     [TYPEDOC_KINDS.CLASS]: {
         ...noSemantic,
         role: 'class',
@@ -247,7 +251,7 @@ export function generateNavigationPathsInModule(
  * @param _args.typedocNode Typedoc's module node.
  * @param _args.modulePath The module path.
  * @param _args.tsInputs The (global) typescript inputs.
- * @param _args.basePath The base path of the API node in the navigation (*e.g.* `/api`).
+ * @param _args.baseNav The base path of the API node in the navigation (*e.g.* `/api`).
  */
 export function parseModule({
     typedocNode,
@@ -393,7 +397,7 @@ export function parseModule({
         children: subModules.map((child) =>
             parseChildModule({ typedocNode: child, parentPath: path }),
         ),
-        semantic: noSemantic,
+        semantic: semantics[TYPEDOC_KINDS.MODULE],
     }
 }
 
@@ -600,6 +604,12 @@ export function parseCallable({
     projectGlobals?: ProjectGlobals
     parentElement?: TypedocNode
 }): Callable {
+    if (
+        typedocNode['inheritedFrom'] &&
+        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]
+    ) {
+        return undefined
+    }
     const typedocFct = typedocNode.signatures[0]
     const name = typedocFct.name
     const documentation = parseDocumentationElements({
@@ -615,9 +625,7 @@ export function parseCallable({
         typedocFct.type,
         projectGlobals,
     )
-    if (name == 'getScore') {
-        console.log('getScore')
-    }
+
     const functionDoc = getSummaryDoc(documentation)
     const parametersDoc = parseArgumentsDoc({
         fromElement: typedocFct,
@@ -782,7 +790,8 @@ export function parseType({
                     parentPath: path,
                     parentElement: typedocNode,
                 }),
-            ),
+            )
+            .filter((attr) => attr),
         callables: methods
             .map((meth) => meth as unknown as TypedocNode & SignaturesTrait)
             .filter((meth) => meth.signatures[0].comment)
@@ -794,7 +803,8 @@ export function parseType({
                     semantic: semantics[meth.kind],
                     parentElement: typedocNode,
                 }),
-            ),
+            )
+            .filter((meth) => meth),
         code: parseCode({
             typedocNode: typedocNode,
             projectGlobals,
@@ -823,6 +833,12 @@ export function parseAttribute({
     parentPath: string
     parentElement?: TypedocNode
 }): Attribute {
+    if (
+        typedocNode['inheritedFrom'] &&
+        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]
+    ) {
+        return undefined
+    }
     const name = typedocNode.name
     if (typedocNode['inheritedFrom']) {
         typedocNode = projectGlobals.typedocIdMap[

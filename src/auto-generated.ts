@@ -134,10 +134,7 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "marked",
         "highlight.js",
         "@youwol/os-top-banner",
-        "@youwol/rx-tree-views",
-        "@youwol/http-primitives",
-        "esprima",
-        "codemirror"
+        "@youwol/rx-tree-views"
     ]
 }
 
@@ -169,13 +166,13 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.4.2-wip',
+    version:'0.5.1-wip',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
     sourceGithub:'https://github.com/youwol/mkdocs-ts',
     userGuide:'https://l.youwol.com/doc/@youwol/mkdocs-ts',
-    apiVersion:'04',
+    apiVersion:'05',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -200,7 +197,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts_APIv04`]
+            return window[`@youwol/mkdocs-ts_APIv05`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -215,7 +212,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.4.2-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `@youwol/mkdocs-ts#0.5.1-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -226,7 +223,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts/${entry.name}_APIv04`]
+            return window[`@youwol/mkdocs-ts/${entry.name}_APIv05`]
         })
     },
     getCdnDependencies(name?: string){

@@ -1,0 +1,753 @@
+{
+    "py_griffe": {
+        "name": "py_griffe",
+        "documentation": {
+            "sections": [
+                {
+                    "content": "The python backend module to produce API files from python modules.",
+                    "contentType": "Markdown",
+                    "semantic": {
+                        "role": "text",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "title": null
+                }
+            ]
+        },
+        "semantic": {
+            "role": "",
+            "labels": [],
+            "attributes": {},
+            "relations": {}
+        },
+        "path": "py_griffe",
+        "children": [],
+        "callables": [
+            {
+                "name": "format_module_doc",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "Transforms module documentation as provided by griffe to the mkdocs-ts models.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        },
+                        {
+                            "content": "The parsed documentation.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "returns",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": "Returns"
+                        },
+                        {
+                            "content": "\n*  **ast**: Griffe's module documentation.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "arguments",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": "Arguments"
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "def format_module_doc(ast: GrModule, path: str) -> Module:",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 451,
+                    "endLine": 480,
+                    "references": {
+                        "Module": "models.Module"
+                    },
+                    "implementation": "def format_module_doc(ast: GrModule, path: str) -> Module:\n    \"\"\"\n    Transforms module documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n\n    Return:\n        The parsed documentation.\n    \"\"\"\n    elements = extract_module(ast=ast)\n    children_modules = [format_child_module_doc(m) for m in elements.modules]\n    classes = [format_class_doc(c) for c in elements.classes if c.has_docstring]\n    functions = [format_function_doc(f, semantic=FUNCTION_GLOBAL_SEMANTIC) for f in elements.functions\n                 if f.has_docstring]\n    attributes = [format_attribute_doc(a, semantic=GLOBAL_SEMANTIC) for a in elements.attributes]\n    files = [format_file_doc(f) for f in elements.files]\n    sections = get_docstring_sections(ast)\n\n    return Module(\n        name=ast.name,\n        documentation=format_detailed_docstring(sections=sections, parent=ast),\n        semantic=NO_SEMANTIC,\n        path=path,\n        children=children_modules,\n        attributes=sorted(attributes, key=lambda m: m.name),\n        types=classes,\n        callables=functions,\n        files=files\n    )"
+                },
+                "semantic": {
+                    "role": "function",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.format_module_doc"
+            }
+        ],
+        "types": [],
+        "attributes": [
+            {
+                "name": "ATTR_SEMANTIC",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "Semantic for classe's attributes.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "ATTR_SEMANTIC = Semantic(role=\"attribute\", labels=[], attributes={}, relations={})",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 328,
+                    "endLine": 328,
+                    "references": {
+                        "Semantic": "models.Semantic"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.ATTR_SEMANTIC"
+            },
+            {
+                "name": "CLASS_SEMANTIC",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "Semantic for classe's attributes.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "CLASS_SEMANTIC = Semantic(role=\"class\", labels=[], attributes={}, relations={})",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 323,
+                    "endLine": 323,
+                    "references": {
+                        "Semantic": "models.Semantic"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.CLASS_SEMANTIC"
+            },
+            {
+                "name": "CrossLink",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "CrossLink = Literal[\"mod\", \"class\", \"attr\", \"meth\", \"func\", \"glob\"]",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 354,
+                    "endLine": 354,
+                    "references": {
+                        "Literal": "typing.Literal"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.CrossLink"
+            },
+            {
+                "name": "FUNCTION_GLOBAL_SEMANTIC",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "Semantic for globals functions.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "FUNCTION_GLOBAL_SEMANTIC = Semantic(role=\"function\", labels=[], attributes={}, relations={})",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 318,
+                    "endLine": 318,
+                    "references": {
+                        "Semantic": "models.Semantic"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.FUNCTION_GLOBAL_SEMANTIC"
+            },
+            {
+                "name": "GLOBAL_SEMANTIC",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "Semantic for global variables.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "GLOBAL_SEMANTIC = Semantic(role=\"global\", labels=[], attributes={}, relations={})",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 313,
+                    "endLine": 313,
+                    "references": {
+                        "Semantic": "models.Semantic"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.GLOBAL_SEMANTIC"
+            },
+            {
+                "name": "INIT_FILENAME",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "The '__init__.py' filename to recognize module.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "INIT_FILENAME = \"__init__.py\"",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 54,
+                    "endLine": 54,
+                    "references": {},
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.INIT_FILENAME"
+            },
+            {
+                "name": "METHOD_SEMANTIC",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "Semantic for classe's method.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "METHOD_SEMANTIC = Semantic(role=\"method\", labels=[], attributes={}, relations={})",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 333,
+                    "endLine": 333,
+                    "references": {
+                        "Semantic": "models.Semantic"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.METHOD_SEMANTIC"
+            },
+            {
+                "name": "MODULE",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "MODULE = 'youwol'",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 59,
+                    "endLine": 59,
+                    "references": {},
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.MODULE"
+            },
+            {
+                "name": "NAME",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "NAME = 'py_griffe'",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 819,
+                    "endLine": 819,
+                    "references": {},
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.NAME"
+            },
+            {
+                "name": "NO_SEMANTIC",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "No semantic.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "NO_SEMANTIC = Semantic(role=\"\", labels=[], attributes={}, relations={})",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 308,
+                    "endLine": 308,
+                    "references": {
+                        "Semantic": "models.Semantic"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.NO_SEMANTIC"
+            },
+            {
+                "name": "cross_ref_pattern",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "cross_ref_pattern = re.compile(\n    r\"\\[(.*?)]\\(@yw-nav-(mod|class|attr|meth|glob|func):(.*?)\\)\"\n)",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 350,
+                    "endLine": 352,
+                    "references": {
+                        "re": "re",
+                        "compile": "re.compile"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.cross_ref_pattern"
+            },
+            {
+                "name": "current_file",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "current_file = Path(__file__).resolve()",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 17,
+                    "endLine": 17,
+                    "references": {
+                        "__file__": "__file__",
+                        "Path": "pathlib.Path",
+                        "resolve": "resolve"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.current_file"
+            },
+            {
+                "name": "current_file_path",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "current_file_path = Path(os.path.abspath(__file__))",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 821,
+                    "endLine": 821,
+                    "references": {
+                        "__file__": "__file__",
+                        "os": "os",
+                        "abspath": "os.path.abspath",
+                        "path": "os.path",
+                        "Path": "pathlib.Path"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.current_file_path"
+            },
+            {
+                "name": "current_module",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "current_module = importlib.util.module_from_spec(spec)",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 831,
+                    "endLine": 831,
+                    "references": {
+                        "spec": "py_griffe.spec",
+                        "importlib": "importlib",
+                        "module_from_spec": "importlib.util.module_from_spec",
+                        "util": "importlib.util"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.current_module"
+            },
+            {
+                "name": "docs",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "docs = {}",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 804,
+                    "endLine": 804,
+                    "references": {},
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.docs"
+            },
+            {
+                "name": "global_doc",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 838,
+                    "endLine": 838,
+                    "references": {
+                        "griffe": "griffe",
+                        "Module": "griffe.Module",
+                        "NAME": "py_griffe.NAME",
+                        "load": "griffe.load",
+                        "cast": "typing.cast"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.global_doc"
+            },
+            {
+                "name": "parent_dir",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "parent_dir = current_file.parent",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 18,
+                    "endLine": 18,
+                    "references": {
+                        "current_file": "py_griffe.current_file",
+                        "parent": "py_griffe.current_file.parent"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.parent_dir"
+            },
+            {
+                "name": "spec",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                },
+                "code": {
+                    "declaration": "spec = importlib.util.spec_from_file_location(NAME, current_file_path.parent / '__init__.py')",
+                    "filePath": "/home/greinisch/Projects/youwol-open-source/npm/@youwol/mkdocs-ts/src/backends/py_griffe/py_griffe.py",
+                    "startLine": 829,
+                    "endLine": 829,
+                    "references": {
+                        "NAME": "py_griffe.NAME",
+                        "current_file_path": "py_griffe.current_file_path",
+                        "parent": "py_griffe.current_file_path.parent",
+                        "importlib": "importlib",
+                        "spec_from_file_location": "importlib.util.spec_from_file_location",
+                        "util": "importlib.util"
+                    },
+                    "implementation": null
+                },
+                "semantic": {
+                    "role": "global",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                },
+                "path": "py_griffe.spec"
+            }
+        ],
+        "files": [
+            {
+                "name": "py_griffe",
+                "path": "py_griffe",
+                "documentation": {
+                    "sections": [
+                        {
+                            "content": "The python backend module to produce API files from python modules.",
+                            "contentType": "Markdown",
+                            "semantic": {
+                                "role": "text",
+                                "labels": [],
+                                "attributes": {},
+                                "relations": {}
+                            },
+                            "title": null
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -6,6 +6,7 @@ import { Scope, State } from './state'
 import { JsCellView } from './js-cell-view'
 import { MdCellView } from './md-cell-view'
 import { PyCellView } from './py-cell-view'
+import { DisplayFactory } from './display-utils'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -83,6 +84,7 @@ export const notebookViews = ({
             const classList = elem.getAttribute('class') || ''
             const inlined = elem.getAttribute('inlined') || false
             return state.registerDeportedOutputsView({
+                defaultContent: elem.textContent,
                 cellId,
                 style,
                 classList,
@@ -151,10 +153,6 @@ export class NotebookPage implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike = []
 
     /**
-     * Initial scope provided to the first executing cell.
-     */
-    public readonly initialScope: Partial<Scope>
-    /**
      * State manager.
      */
     public readonly state: State
@@ -170,6 +168,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
      * the `url` attribute.
      * @param params.router Application's router.
      * @param params.initialScope Initial scope provided to the first executing cell.
+     * @param params.displayFactory Additional custom {@link DisplayFactory} invoked when `display` is used.
      * @param params.options Global options for the page, in particular defined the default attribute for the various
      * cells.
      */
@@ -178,6 +177,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
         src?: string
         router: Router
         initialScope?: Partial<Scope>
+        displayFactory?: DisplayFactory
         options?: NotebookOptions
     }) {
         Object.assign(this, params)
@@ -189,7 +189,8 @@ export class NotebookPage implements VirtualDOM<'div'> {
         }
         this.state = new State({
             router: this.router,
-            initialScope: this.initialScope,
+            displayFactory: params.displayFactory,
+            initialScope: params.initialScope,
         })
 
         const source$ =

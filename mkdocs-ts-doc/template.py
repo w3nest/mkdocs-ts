@@ -5,17 +5,23 @@ from pathlib import Path
 from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
     RunTimeDeps, DevServer, Bundles, MainModule
 from youwol.pipelines.pipeline_typescript_weback_npm.regular import generate_template
-from youwol.utils import parse_json
+from youwol.utils import parse_json, write_json
+from typing import cast
+
+import griffe
+
+from mkdocs_py_griffe import generate_api, Configuration, std_links
+
 
 folder_path = Path(__file__).parent
-
-pkg_json = parse_json(folder_path / 'package.json')
-pkg_json_mkdocs = parse_json(folder_path / '..' / 'package.json')
+pkg_json_name = 'package.json'
+pkg_json = parse_json(folder_path / pkg_json_name)
+pkg_json_mkdocs = parse_json(folder_path / '..' / pkg_json_name)
 
 externals_deps = {
     "rxjs": "^7.5.6",
     "@youwol/rx-vdom": "^1.0.1",
-    "@youwol/mkdocs-ts": "^0.4.1",
+    "@youwol/mkdocs-ts": f"^{pkg_json_mkdocs['version'].replace('-wip', '')}",
     "@youwol/webpm-client": "^3.0.0",
     "mathjax": "^3.1.4"
 }
@@ -53,22 +59,58 @@ shutil.copyfile(
     src=folder_path / '.template' / 'src' / 'auto-generated.ts',
     dst=folder_path / 'src' / 'auto-generated.ts'
 )
-for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENSE', 'package.json',
+for file in ['README.md', '.gitignore', '.npmignore', '.prettierignore', 'LICENSE', pkg_json_name,
              'tsconfig.json', 'webpack.config.ts']:
     shutil.copyfile(
         src=folder_path / '.template' / file,
         dst=folder_path / file
     )
 
-# Generate API files
-
+# Generate TS API files
+print("Generate TS API files")
 shell_command = (
-    "cd ./node_modules/@youwol/mkdocs-ts/ && "
+    "cd .. && "
     "node ./bin/index.js "
-    "--project ../../../.. "
+    "--project ./ "
     "--nav /api "
-    "--out ../../../assets/api"
+    "--out mkdocs-ts-doc/assets/api"
 )
-
 # Execute the shell command
 subprocess.run(shell_command, shell=True)
+
+# Patch 'Backends.json' to include python API of 'mkdocs_py_griffe'
+
+print("Patch 'Backends.json' to include python API of 'mkdocs_py_griffe'")
+
+path_backends = Path(__file__).parent / 'assets' / 'api' / 'mkdocs-ts' / 'Backends.json'
+backends = parse_json(path_backends)
+backends['children'].append(
+    {
+        "name": "mkdocs_py_griffe",
+        "path": "mkdocs-ts/Backends.mkdocs_py_griffe.json",
+        "isLeaf": True
+    }
+)
+write_json(backends, path_backends)
+
+# Generate Python API files
+print("Generate Python API files")
+
+NAME = "mkdocs_py_griffe"
+GRIFFE_URL = "https://mkdocstrings.github.io/griffe/reference/griffe"
+DST = path_backends.parent / "Backends"
+
+config = Configuration(
+    base_nav=f"/api/Backends/{NAME}",
+    external_links={
+        **std_links(),
+        **{
+            f"griffe.dataclasses.{name}": f"{GRIFFE_URL}/#griffe.{name}"
+            for name in ["Module", "Class", "Function", "Attribute"]
+        },
+    },
+    out=DST
+)
+
+global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
+generate_api(global_doc, config)

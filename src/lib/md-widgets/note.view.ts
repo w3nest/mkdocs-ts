@@ -14,7 +14,8 @@ export type NoteLevel = 'info' | 'warning' | 'hint'
  */
 export class NoteView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class: string = 'mkdocs-NoteView p-2 px-4 border-left'
+    public readonly class: string =
+        'mkdocs-NoteView p-2 px-4 border-left text-justify'
     public readonly children: ChildrenLike
 
     public readonly level: NoteLevel

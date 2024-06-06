@@ -103,7 +103,7 @@
                     "code": {
                         "filePath": "src/lib/code-api/module.view.ts",
                         "declaration": "constructor(params: {\n        module: Module\n        router: Router\n        project: Project\n        configuration: Configuration\n    })",
-                        "implementation": "constructor(params: {\n        module: Module\n        router: Router\n        project: Project\n        configuration: Configuration\n    }) {\n        Object.assign(this, params)\n        this.class += ` mkapi-role-${this.module.semantic.role}`\n        const getFile = (entity: Entity) => {\n            return entity.code.filePath\n        }\n        const files = [\n            ...new Set(\n                [\n                    ...this.module.attributes,\n                    ...this.module.callables,\n                    ...this.module.types,\n                ].map(getFile),\n            ),\n        ].sort((a: string, b: string) => a.localeCompare(b))\n\n        this.children = [\n            new HeaderView({\n                tag: 'h1',\n                withClass: 'doc-module-name',\n                doc: this.module,\n            }),\n            {\n                tag: 'div',\n                children: [\n                    new DocumentationView({\n                        documentation: this.module.documentation,\n                        router: this.router,\n                        configuration: this.configuration,\n                    }),\n                ],\n            },\n            { tag: 'div', class: 'my-3' },\n            separatorView,\n            ...[...files].map((file): AnyVirtualDOM => {\n                const attributes = this.module.attributes.filter(\n                    (a) => getFile(a) === file,\n                )\n                const types = this.module.types.filter(\n                    (a) => getFile(a) === file,\n                )\n                const callables = this.module.callables.filter(\n                    (a) => getFile(a) === file,\n                )\n                const fileDoc = this.module.files.find((f) => {\n                    return f.path === file\n                })\n                return {\n                    tag: 'div' as const,\n                    children: [\n                        { tag: 'div', class: 'my-5' },\n                        new HeaderView({\n                            tag: 'h2',\n                            withClass: 'doc-file-name fas fa-file',\n                            doc: {\n                                name: file.split('/').slice(-1)[0],\n                                semantic: undefined,\n                                path: file.split('/').slice(-1)[0],\n                            },\n                        }),\n                        new DocumentationView({\n                            documentation: fileDoc.documentation,\n                            router: this.router,\n                            configuration: this.configuration,\n                        }),\n                        {\n                            tag: 'div',\n                            children: attributes\n                                .map((attribute) => [\n                                    new AttributeView({\n                                        fromModule: this.module,\n                                        attribute,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: callables\n                                .map((callable) => [\n                                    new CallableView({\n                                        callable,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: types\n                                .map((type) => [\n                                    new TypeView({\n                                        fromModule: this.module,\n                                        type,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                    ],\n                }\n            }),\n        ]\n    }",
+                        "implementation": "constructor(params: {\n        module: Module\n        router: Router\n        project: Project\n        configuration: Configuration\n    }) {\n        Object.assign(this, params)\n        this.class += ` mkapi-role-${this.module.semantic.role}`\n        const getFile = (entity: Entity) => {\n            return entity.code.filePath\n        }\n        const files = [\n            ...new Set(\n                [\n                    ...this.module.attributes,\n                    ...this.module.callables,\n                    ...this.module.types,\n                ].map(getFile),\n            ),\n        ].sort((a: string, b: string) => a.localeCompare(b))\n\n        this.children = [\n            new HeaderView({\n                tag: 'h1',\n                withClass: `doc-module-name doc-${this.module.semantic.role}-name fs-1`,\n                doc: this.module,\n            }),\n            {\n                tag: 'div',\n                children: [\n                    new DocumentationView({\n                        documentation: this.module.documentation,\n                        router: this.router,\n                        configuration: this.configuration,\n                    }),\n                ],\n            },\n            { tag: 'div', class: 'my-3' },\n            separatorView,\n            ...[...files].map((file): AnyVirtualDOM => {\n                const attributes = this.module.attributes.filter(\n                    (a) => getFile(a) === file,\n                )\n                const types = this.module.types.filter(\n                    (a) => getFile(a) === file,\n                )\n                const callables = this.module.callables.filter(\n                    (a) => getFile(a) === file,\n                )\n                const fileDoc = this.module.files.find((f) => {\n                    return f.path === file\n                })\n                return {\n                    tag: 'div' as const,\n                    children: [\n                        { tag: 'div', class: 'my-5' },\n                        new HeaderView({\n                            tag: 'h2',\n                            withClass: 'doc-file-name fas fa-file',\n                            doc: {\n                                name: file.split('/').slice(-1)[0],\n                                semantic: undefined,\n                                path: file.split('/').slice(-1)[0],\n                            },\n                        }),\n                        new DocumentationView({\n                            documentation: fileDoc.documentation,\n                            router: this.router,\n                            configuration: this.configuration,\n                        }),\n                        {\n                            tag: 'div',\n                            children: attributes\n                                .map((attribute) => [\n                                    new AttributeView({\n                                        fromModule: this.module,\n                                        attribute,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: callables\n                                .map((callable) => [\n                                    new CallableView({\n                                        callable,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: types\n                                .map((type) => [\n                                    new TypeView({\n                                        fromModule: this.module,\n                                        type,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                    ],\n                }\n            }),\n        ]\n    }",
                         "startLine": 32,
                         "endLine": 151,
                         "references": {
@@ -126,7 +126,7 @@
             "code": {
                 "filePath": "src/lib/code-api/module.view.ts",
                 "declaration": "export class ModuleView implements VirtualDOM<'div'>",
-                "implementation": "export class ModuleView implements VirtualDOM<'div'> {\n    public readonly module: Module\n    public readonly router: Router\n    public readonly configuration: Configuration\n    public readonly project: Project\n    public readonly tag = 'div'\n    public readonly class = 'mkapi-module'\n    public readonly children: ChildrenLike\n\n    /**\n     * Create the VirtualDOM.\n     *\n     * @param params Arguments\n     * @param params.module Model of the module.\n     * @param params.router Router of the application.\n     * @param params.configuration Rendering configuration..\n     */\n    constructor(params: {\n        module: Module\n        router: Router\n        project: Project\n        configuration: Configuration\n    }) {\n        Object.assign(this, params)\n        this.class += ` mkapi-role-${this.module.semantic.role}`\n        const getFile = (entity: Entity) => {\n            return entity.code.filePath\n        }\n        const files = [\n            ...new Set(\n                [\n                    ...this.module.attributes,\n                    ...this.module.callables,\n                    ...this.module.types,\n                ].map(getFile),\n            ),\n        ].sort((a: string, b: string) => a.localeCompare(b))\n\n        this.children = [\n            new HeaderView({\n                tag: 'h1',\n                withClass: 'doc-module-name',\n                doc: this.module,\n            }),\n            {\n                tag: 'div',\n                children: [\n                    new DocumentationView({\n                        documentation: this.module.documentation,\n                        router: this.router,\n                        configuration: this.configuration,\n                    }),\n                ],\n            },\n            { tag: 'div', class: 'my-3' },\n            separatorView,\n            ...[...files].map((file): AnyVirtualDOM => {\n                const attributes = this.module.attributes.filter(\n                    (a) => getFile(a) === file,\n                )\n                const types = this.module.types.filter(\n                    (a) => getFile(a) === file,\n                )\n                const callables = this.module.callables.filter(\n                    (a) => getFile(a) === file,\n                )\n                const fileDoc = this.module.files.find((f) => {\n                    return f.path === file\n                })\n                return {\n                    tag: 'div' as const,\n                    children: [\n                        { tag: 'div', class: 'my-5' },\n                        new HeaderView({\n                            tag: 'h2',\n                            withClass: 'doc-file-name fas fa-file',\n                            doc: {\n                                name: file.split('/').slice(-1)[0],\n                                semantic: undefined,\n                                path: file.split('/').slice(-1)[0],\n                            },\n                        }),\n                        new DocumentationView({\n                            documentation: fileDoc.documentation,\n                            router: this.router,\n                            configuration: this.configuration,\n                        }),\n                        {\n                            tag: 'div',\n                            children: attributes\n                                .map((attribute) => [\n                                    new AttributeView({\n                                        fromModule: this.module,\n                                        attribute,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: callables\n                                .map((callable) => [\n                                    new CallableView({\n                                        callable,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: types\n                                .map((type) => [\n                                    new TypeView({\n                                        fromModule: this.module,\n                                        type,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                    ],\n                }\n            }),\n        ]\n    }\n}",
+                "implementation": "export class ModuleView implements VirtualDOM<'div'> {\n    public readonly module: Module\n    public readonly router: Router\n    public readonly configuration: Configuration\n    public readonly project: Project\n    public readonly tag = 'div'\n    public readonly class = 'mkapi-module'\n    public readonly children: ChildrenLike\n\n    /**\n     * Create the VirtualDOM.\n     *\n     * @param params Arguments\n     * @param params.module Model of the module.\n     * @param params.router Router of the application.\n     * @param params.configuration Rendering configuration..\n     */\n    constructor(params: {\n        module: Module\n        router: Router\n        project: Project\n        configuration: Configuration\n    }) {\n        Object.assign(this, params)\n        this.class += ` mkapi-role-${this.module.semantic.role}`\n        const getFile = (entity: Entity) => {\n            return entity.code.filePath\n        }\n        const files = [\n            ...new Set(\n                [\n                    ...this.module.attributes,\n                    ...this.module.callables,\n                    ...this.module.types,\n                ].map(getFile),\n            ),\n        ].sort((a: string, b: string) => a.localeCompare(b))\n\n        this.children = [\n            new HeaderView({\n                tag: 'h1',\n                withClass: `doc-module-name doc-${this.module.semantic.role}-name fs-1`,\n                doc: this.module,\n            }),\n            {\n                tag: 'div',\n                children: [\n                    new DocumentationView({\n                        documentation: this.module.documentation,\n                        router: this.router,\n                        configuration: this.configuration,\n                    }),\n                ],\n            },\n            { tag: 'div', class: 'my-3' },\n            separatorView,\n            ...[...files].map((file): AnyVirtualDOM => {\n                const attributes = this.module.attributes.filter(\n                    (a) => getFile(a) === file,\n                )\n                const types = this.module.types.filter(\n                    (a) => getFile(a) === file,\n                )\n                const callables = this.module.callables.filter(\n                    (a) => getFile(a) === file,\n                )\n                const fileDoc = this.module.files.find((f) => {\n                    return f.path === file\n                })\n                return {\n                    tag: 'div' as const,\n                    children: [\n                        { tag: 'div', class: 'my-5' },\n                        new HeaderView({\n                            tag: 'h2',\n                            withClass: 'doc-file-name fas fa-file',\n                            doc: {\n                                name: file.split('/').slice(-1)[0],\n                                semantic: undefined,\n                                path: file.split('/').slice(-1)[0],\n                            },\n                        }),\n                        new DocumentationView({\n                            documentation: fileDoc.documentation,\n                            router: this.router,\n                            configuration: this.configuration,\n                        }),\n                        {\n                            tag: 'div',\n                            children: attributes\n                                .map((attribute) => [\n                                    new AttributeView({\n                                        fromModule: this.module,\n                                        attribute,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: callables\n                                .map((callable) => [\n                                    new CallableView({\n                                        callable,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                        {\n                            tag: 'div',\n                            children: types\n                                .map((type) => [\n                                    new TypeView({\n                                        fromModule: this.module,\n                                        type,\n                                        router: this.router,\n                                        configuration: this.configuration,\n                                        project: this.project,\n                                    }),\n                                    ySeparatorView5,\n                                ])\n                                .flat(),\n                        },\n                    ],\n                }\n            }),\n        ]\n    }\n}",
                 "startLine": 15,
                 "endLine": 152,
                 "references": {
@@ -192,8 +192,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "isLeaf: boolean",
                         "implementation": "",
-                        "startLine": 183,
-                        "endLine": 184,
+                        "startLine": 185,
+                        "endLine": 186,
                         "references": {
                             "isLeaf": "@nav/api/CodeApi.ChildModule.isLeaf"
                         }
@@ -226,8 +226,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "name: string",
                         "implementation": "",
-                        "startLine": 175,
-                        "endLine": 176,
+                        "startLine": 177,
+                        "endLine": 178,
                         "references": {
                             "name": "@nav/api/CodeApi.ChildModule.name"
                         }
@@ -260,8 +260,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "path: EntityPath",
                         "implementation": "",
-                        "startLine": 179,
-                        "endLine": 180,
+                        "startLine": 181,
+                        "endLine": 182,
                         "references": {
                             "path": "@nav/api/CodeApi.ChildModule.path"
                         }
@@ -273,8 +273,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface ChildModule",
                 "implementation": "export interface ChildModule {\n    /**\n     * Name.\n     */\n    name: string\n    /**\n     * Path (*e.g.* `ModuleFoo.ModuleBar`).\n     */\n    path: EntityPath\n    /**\n     * Whether it includes children modules.\n     */\n    isLeaf: boolean\n}",
-                "startLine": 171,
-                "endLine": 185,
+                "startLine": 173,
+                "endLine": 187,
                 "references": {
                     "ChildModule": "@nav/api/CodeApi.ChildModule"
                 }
@@ -331,8 +331,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "declaration: string",
                         "implementation": "",
-                        "startLine": 53,
-                        "endLine": 54,
+                        "startLine": 55,
+                        "endLine": 56,
                         "references": {
                             "declaration": "@nav/api/CodeApi.Code.declaration"
                         }
@@ -365,8 +365,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "endLine: number",
                         "implementation": "",
-                        "startLine": 69,
-                        "endLine": 70,
+                        "startLine": 71,
+                        "endLine": 72,
                         "references": {
                             "endLine": "@nav/api/CodeApi.Code.endLine"
                         }
@@ -399,8 +399,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "filePath: string",
                         "implementation": "",
-                        "startLine": 61,
-                        "endLine": 62,
+                        "startLine": 63,
+                        "endLine": 64,
                         "references": {
                             "filePath": "@nav/api/CodeApi.Code.filePath"
                         }
@@ -433,8 +433,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "implementation?: string",
                         "implementation": "",
-                        "startLine": 57,
-                        "endLine": 58,
+                        "startLine": 59,
+                        "endLine": 60,
                         "references": {
                             "implementation": "@nav/api/CodeApi.Code.implementation"
                         }
@@ -467,8 +467,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "references: { [name: string]: EntityPath }",
                         "implementation": "",
-                        "startLine": 74,
-                        "endLine": 75,
+                        "startLine": 76,
+                        "endLine": 77,
                         "references": {
                             "references": "@nav/api/CodeApi.Code.references",
                             "EntityPath": "@nav/api/CodeApi.EntityPath"
@@ -502,8 +502,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "startLine: number",
                         "implementation": "",
-                        "startLine": 65,
-                        "endLine": 66,
+                        "startLine": 67,
+                        "endLine": 68,
                         "references": {
                             "startLine": "@nav/api/CodeApi.Code.startLine"
                         }
@@ -515,8 +515,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface Code",
                 "implementation": "export interface Code {\n    /**\n     * Entity's declaration.\n     */\n    declaration: string\n    /**\n     * Optional associated implementation.\n     */\n    implementation?: string\n    /**\n     * File path in which the declaration is included.\n     */\n    filePath: string\n    /**\n     * Starting line of the declaration.\n     */\n    startLine: number\n    /**\n     * Ending line of the declaration.\n     */\n    endLine: number\n\n    /**\n     * References to other entities in the declaration.\n     */\n    references: { [name: string]: EntityPath }\n}",
-                "startLine": 49,
-                "endLine": 76,
+                "startLine": 51,
+                "endLine": 78,
                 "references": {
                     "Code": "@nav/api/CodeApi.Code",
                     "EntityPath": "@nav/api/CodeApi.EntityPath"
@@ -750,8 +750,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "sections: DocumentationSection[]",
                         "implementation": "",
-                        "startLine": 43,
-                        "endLine": 44,
+                        "startLine": 45,
+                        "endLine": 46,
                         "references": {
                             "sections": "@nav/api/CodeApi.Documentation.sections",
                             "DocumentationSection": "@nav/api/CodeApi.DocumentationSection"
@@ -764,8 +764,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface Documentation",
                 "implementation": "export interface Documentation {\n    /**\n     * List of the sections.\n     */\n    sections: DocumentationSection[]\n}",
-                "startLine": 39,
-                "endLine": 45,
+                "startLine": 41,
+                "endLine": 47,
                 "references": {
                     "Documentation": "@nav/api/CodeApi.Documentation",
                     "DocumentationSection": "@nav/api/CodeApi.DocumentationSection"
@@ -823,8 +823,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "content: string",
                         "implementation": "",
-                        "startLine": 29,
-                        "endLine": 30,
+                        "startLine": 31,
+                        "endLine": 32,
                         "references": {
                             "content": "@nav/api/CodeApi.DocumentationSection.content"
                         }
@@ -857,8 +857,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "contentType: string",
                         "implementation": "",
-                        "startLine": 33,
-                        "endLine": 34,
+                        "startLine": 35,
+                        "endLine": 36,
                         "references": {
                             "contentType": "@nav/api/CodeApi.DocumentationSection.contentType"
                         }
@@ -891,8 +891,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "semantic: Semantic",
                         "implementation": "",
-                        "startLine": 25,
-                        "endLine": 26,
+                        "startLine": 27,
+                        "endLine": 28,
                         "references": {
                             "semantic": "@nav/api/CodeApi.DocumentationSection.semantic",
                             "Semantic": "@nav/api/CodeApi.Semantic"
@@ -926,8 +926,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "title?: string",
                         "implementation": "",
-                        "startLine": 21,
-                        "endLine": 22,
+                        "startLine": 23,
+                        "endLine": 24,
                         "references": {
                             "title": "@nav/api/CodeApi.DocumentationSection.title"
                         }
@@ -939,8 +939,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface DocumentationSection",
                 "implementation": "export interface DocumentationSection {\n    /**\n     * Section's title.\n     */\n    title?: string\n    /**\n     * Associated semantic.\n     */\n    semantic: Semantic\n    /**\n     * Section's content.\n     */\n    content: string\n    /**\n     * Content's type.\n     */\n    contentType: string\n}",
-                "startLine": 17,
-                "endLine": 35,
+                "startLine": 19,
+                "endLine": 37,
                 "references": {
                     "DocumentationSection": "@nav/api/CodeApi.DocumentationSection",
                     "Semantic": "@nav/api/CodeApi.Semantic"
@@ -998,8 +998,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "code: Code",
                         "implementation": "",
-                        "startLine": 116,
-                        "endLine": 117,
+                        "startLine": 118,
+                        "endLine": 119,
                         "references": {
                             "code": "@nav/api/CodeApi.Entity.code",
                             "Code": "@nav/api/CodeApi.Code"
@@ -1033,8 +1033,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "documentation: Documentation",
                         "implementation": "",
-                        "startLine": 112,
-                        "endLine": 113,
+                        "startLine": 114,
+                        "endLine": 115,
                         "references": {
                             "documentation": "@nav/api/CodeApi.Entity.documentation",
                             "Documentation": "@nav/api/CodeApi.Documentation"
@@ -1068,8 +1068,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "name: string",
                         "implementation": "",
-                        "startLine": 108,
-                        "endLine": 109,
+                        "startLine": 110,
+                        "endLine": 111,
                         "references": {
                             "name": "@nav/api/CodeApi.Entity.name"
                         }
@@ -1102,8 +1102,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "path: EntityPath",
                         "implementation": "",
-                        "startLine": 124,
-                        "endLine": 125,
+                        "startLine": 126,
+                        "endLine": 127,
                         "references": {
                             "path": "@nav/api/CodeApi.Entity.path"
                         }
@@ -1136,8 +1136,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "semantic: Semantic",
                         "implementation": "",
-                        "startLine": 120,
-                        "endLine": 121,
+                        "startLine": 122,
+                        "endLine": 123,
                         "references": {
                             "semantic": "@nav/api/CodeApi.Entity.semantic",
                             "Semantic": "@nav/api/CodeApi.Semantic"
@@ -1150,8 +1150,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface Entity",
                 "implementation": "export interface Entity {\n    /**\n     * Name.\n     */\n    name: string\n    /**\n     * Documentation.\n     */\n    documentation: Documentation\n    /**\n     * Code information.\n     */\n    code: Code\n    /**\n     * Semantic associated.\n     */\n    semantic: Semantic\n    /**\n     * The path (e.g. `ModuleFoo.TypeBar.attrBaz`)\n     */\n    path: EntityPath\n}",
-                "startLine": 104,
-                "endLine": 126,
+                "startLine": 106,
+                "endLine": 128,
                 "references": {
                     "Entity": "@nav/api/CodeApi.Entity",
                     "Code": "@nav/api/CodeApi.Code",
@@ -1212,8 +1212,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "documentation: Documentation",
                         "implementation": "",
-                        "startLine": 165,
-                        "endLine": 166,
+                        "startLine": 167,
+                        "endLine": 168,
                         "references": {
                             "documentation": "@nav/api/CodeApi.File.documentation",
                             "Documentation": "@nav/api/CodeApi.Documentation"
@@ -1247,8 +1247,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "name: string",
                         "implementation": "",
-                        "startLine": 157,
-                        "endLine": 158,
+                        "startLine": 159,
+                        "endLine": 160,
                         "references": {
                             "name": "@nav/api/CodeApi.File.name"
                         }
@@ -1281,8 +1281,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "path: string",
                         "implementation": "",
-                        "startLine": 161,
-                        "endLine": 162,
+                        "startLine": 163,
+                        "endLine": 164,
                         "references": {
                             "path": "@nav/api/CodeApi.File.path"
                         }
@@ -1294,8 +1294,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface File",
                 "implementation": "export interface File {\n    /**\n     * Name.\n     */\n    name: string\n    /**\n     * Path.\n     */\n    path: string\n    /**\n     * Documentation.\n     */\n    documentation: Documentation\n}",
-                "startLine": 153,
-                "endLine": 167,
+                "startLine": 155,
+                "endLine": 169,
                 "references": {
                     "File": "@nav/api/CodeApi.File",
                     "Documentation": "@nav/api/CodeApi.Documentation"
@@ -1353,8 +1353,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "attributes: { [k: string]: string }",
                         "implementation": "",
-                        "startLine": 94,
-                        "endLine": 95,
+                        "startLine": 96,
+                        "endLine": 97,
                         "references": {
                             "attributes": "@nav/api/CodeApi.Semantic.attributes"
                         }
@@ -1387,8 +1387,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "labels: string[]",
                         "implementation": "",
-                        "startLine": 90,
-                        "endLine": 91,
+                        "startLine": 92,
+                        "endLine": 93,
                         "references": {
                             "labels": "@nav/api/CodeApi.Semantic.labels"
                         }
@@ -1421,8 +1421,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "relations: { [category: string]: EntityPath[] }",
                         "implementation": "",
-                        "startLine": 98,
-                        "endLine": 99,
+                        "startLine": 100,
+                        "endLine": 101,
                         "references": {
                             "relations": "@nav/api/CodeApi.Semantic.relations",
                             "EntityPath": "@nav/api/CodeApi.EntityPath"
@@ -1456,8 +1456,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "role: string",
                         "implementation": "",
-                        "startLine": 86,
-                        "endLine": 87,
+                        "startLine": 88,
+                        "endLine": 89,
                         "references": {
                             "role": "@nav/api/CodeApi.Semantic.role"
                         }
@@ -1469,8 +1469,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface Semantic",
                 "implementation": "export interface Semantic {\n    /**\n     * Role, a unique meaning (*e.g.* `Class`, `Interface`, `TypeAlias`, *etc.*).\n     */\n    role: string\n    /**\n     * Some labels.\n     */\n    labels: string[]\n    /**\n     * Some attributes.\n     */\n    attributes: { [k: string]: string }\n    /**\n     * Some relation with other entities (grouped by a category keyword, *e.g.* `InheritedBy`).\n     */\n    relations: { [category: string]: EntityPath[] }\n}",
-                "startLine": 82,
-                "endLine": 100,
+                "startLine": 84,
+                "endLine": 102,
                 "references": {
                     "Semantic": "@nav/api/CodeApi.Semantic",
                     "EntityPath": "@nav/api/CodeApi.EntityPath"
@@ -1528,8 +1528,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "attributes: Attribute[]",
                         "implementation": "",
-                        "startLine": 147,
-                        "endLine": 148,
+                        "startLine": 149,
+                        "endLine": 150,
                         "references": {
                             "attributes": "@nav/api/CodeApi.Type.attributes",
                             "Entity": "@nav/api/CodeApi.Entity"
@@ -1563,8 +1563,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "callables: Callable[]",
                         "implementation": "",
-                        "startLine": 143,
-                        "endLine": 144,
+                        "startLine": 145,
+                        "endLine": 146,
                         "references": {
                             "callables": "@nav/api/CodeApi.Type.callables",
                             "Entity": "@nav/api/CodeApi.Entity"
@@ -1598,8 +1598,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "code: Code",
                         "implementation": "",
-                        "startLine": 116,
-                        "endLine": 117,
+                        "startLine": 118,
+                        "endLine": 119,
                         "references": {
                             "code": "@nav/api/CodeApi.Entity.code",
                             "Code": "@nav/api/CodeApi.Code"
@@ -1633,8 +1633,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "documentation: Documentation",
                         "implementation": "",
-                        "startLine": 112,
-                        "endLine": 113,
+                        "startLine": 114,
+                        "endLine": 115,
                         "references": {
                             "documentation": "@nav/api/CodeApi.Entity.documentation",
                             "Documentation": "@nav/api/CodeApi.Documentation"
@@ -1668,8 +1668,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "name: string",
                         "implementation": "",
-                        "startLine": 108,
-                        "endLine": 109,
+                        "startLine": 110,
+                        "endLine": 111,
                         "references": {
                             "name": "@nav/api/CodeApi.Entity.name"
                         }
@@ -1702,8 +1702,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "path: EntityPath",
                         "implementation": "",
-                        "startLine": 124,
-                        "endLine": 125,
+                        "startLine": 126,
+                        "endLine": 127,
                         "references": {
                             "path": "@nav/api/CodeApi.Entity.path"
                         }
@@ -1736,8 +1736,8 @@
                         "filePath": "src/lib/code-api/models.ts",
                         "declaration": "semantic: Semantic",
                         "implementation": "",
-                        "startLine": 120,
-                        "endLine": 121,
+                        "startLine": 122,
+                        "endLine": 123,
                         "references": {
                             "semantic": "@nav/api/CodeApi.Entity.semantic",
                             "Semantic": "@nav/api/CodeApi.Semantic"
@@ -1750,8 +1750,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export interface Type extends Entity",
                 "implementation": "export interface Type extends Entity {\n    /**\n     * List of owned callable.\n     */\n    callables: Callable[]\n    /**\n     * List of owned attributes.\n     */\n    attributes: Attribute[]\n}",
-                "startLine": 139,
-                "endLine": 149,
+                "startLine": 141,
+                "endLine": 151,
                 "references": {
                     "Type": "@nav/api/CodeApi.Type",
                     "Entity": "@nav/api/CodeApi.Entity",
@@ -1795,8 +1795,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export type Attribute = Entity",
                 "implementation": "",
-                "startLine": 134,
-                "endLine": 135,
+                "startLine": 136,
+                "endLine": 137,
                 "references": {
                     "Attribute": "@nav/api/CodeApi.Attribute",
                     "Entity": "@nav/api/CodeApi.Entity"
@@ -1832,8 +1832,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export type Callable = Entity",
                 "implementation": "",
-                "startLine": 129,
-                "endLine": 130,
+                "startLine": 131,
+                "endLine": 132,
                 "references": {
                     "Callable": "@nav/api/CodeApi.Callable",
                     "Entity": "@nav/api/CodeApi.Entity"
@@ -1851,7 +1851,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "EntityPath defines ownership between symbols (separated by a dot) and referenced from the actual owning module.\n\n*E.g*, for a particular module the attribute ̀foo ` of class ` Bar ` is ` Foo.bar`.",
+                        "content": "EntityPath defines ownership between symbols (separated by a dot) and referenced from the actual owning module.\n\n*E.g*, for a particular module the attribute  `foo`  of class  `Bar`  is  `Foo.bar` .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1869,8 +1869,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export type EntityPath = string",
                 "implementation": "",
-                "startLine": 12,
-                "endLine": 13,
+                "startLine": 14,
+                "endLine": 15,
                 "references": {
                     "EntityPath": "@nav/api/CodeApi.EntityPath"
                 }
@@ -1905,8 +1905,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export type Module = Omit<Entity, 'code'> & {\n    /**\n     * Children modules.\n     */\n    children: ChildModule[]\n    /**\n     * Callable components.\n     */\n    callables: Callable[]\n    /**\n     * Types components.\n     */\n    types: Type[]\n    /**\n     * Attributes components.\n     */\n    attributes: Attribute[]\n    /**\n     * Files components.\n     */\n    files: File[]\n}",
                 "implementation": "",
-                "startLine": 189,
-                "endLine": 190,
+                "startLine": 191,
+                "endLine": 192,
                 "references": {
                     "Module": "@nav/api/CodeApi.Module",
                     "Entity": "@nav/api/CodeApi.Entity",
@@ -1947,8 +1947,8 @@
                 "filePath": "src/lib/code-api/models.ts",
                 "declaration": "export type Project = {\n    /**\n     * Its name.\n     */\n    name: string\n    /**\n     * The base path of the corresponding node in the documentation.\n     */\n    docBasePath: string\n}",
                 "implementation": "",
-                "startLine": 215,
-                "endLine": 216,
+                "startLine": 217,
+                "endLine": 218,
                 "references": {
                     "Project": "@nav/api/CodeApi.Project"
                 }
@@ -2065,7 +2065,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "This file gathers the models definition describing an API.\n\nThis is the role of backend API generators to construct them and store them appropriately.EntityPath defines ownership between symbols (separated by a dot) and referenced from the actual owning module.\n\n*E.g*, for a particular module the attribute ̀foo` of class `Bar` is `Foo.bar`.",
+                        "content": "This file gathers the models definition describing an API.\n\nThis is the role of backend API generators to construct them and store them appropriately.",
                         "contentType": "markdown"
                     }
                 ]
@@ -2128,7 +2128,7 @@
     ],
     "children": [],
     "semantic": {
-        "role": "",
+        "role": "module",
         "labels": [],
         "attributes": {},
         "relations": {}

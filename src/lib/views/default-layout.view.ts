@@ -10,11 +10,54 @@ import {
     from,
     mergeMap,
     of,
+    Subject,
 } from 'rxjs'
 import { TopBannerView } from './top-banner.view'
 
 export type DisplayMode = 'Full' | 'Minimized'
 
+/**
+ * Hints regarding sizing of the main elements on the page.
+ *
+ * The 'page' element refers to the text-content area.
+ *
+ * See {@link defaultLayoutOptions}.
+ */
+export type LayoutOptions = {
+    /**
+     * Navigation panel's width.
+     */
+    navWidth: string
+    /**
+     * Page's width.
+     */
+    pageWidth: string
+    /**
+     * Page's maximum width.
+     */
+    pageMaxWidth: string
+    /**
+     * Horizontal padding of the main page.
+     */
+    pageXPadding: string
+    /**
+     * TOC panel's width.
+     */
+    tocWidth: string
+}
+
+/**
+ * Default layout options.
+ */
+export const defaultLayoutOptions = () => {
+    return {
+        navWidth: '250px',
+        pageWidth: '95%',
+        pageMaxWidth: '47em',
+        tocWidth: '250px',
+        pageXPadding: '3em',
+    }
+}
 /**
  * Defines the default layout:
  * *  A top banner at the top.
@@ -26,6 +69,8 @@ export type DisplayMode = 'Full' | 'Minimized'
  *
  */
 export class DefaultLayoutView implements VirtualDOM<'div'> {
+    public readonly layoutOptions: LayoutOptions = defaultLayoutOptions()
+
     public readonly tag = 'div'
     public readonly children: AnyVirtualDOM[]
     public readonly class =
@@ -46,30 +91,55 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         position: 'relative' as const,
     }
     /**
+     * Initializes a new instance.
      *
-     * @param router The router
-     * @param name The name of the application
-     * @param topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
+     * @param _p
+     * @param _p.router The router.
+     * @param _p.name The name of the application or a VirtualDOM to display instead as title.
+     * If the parameter `topBanner` is provided, this name is forwarded as `title` parameter.
+     * @param _p.topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
+     * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
      */
     constructor({
         router,
         name,
         topBanner,
+        layoutOptions,
     }: {
         router: Router
-        name: string
-        topBanner?: ({ displayMode$ }) => AnyVirtualDOM
+        name: string | AnyVirtualDOM
+        topBanner?: ({
+            title,
+            router,
+            displayModeNav$,
+            displayModeToc$,
+            layoutOptions,
+        }: {
+            title: string | AnyVirtualDOM
+            router: Router
+            displayModeNav$: Subject<DisplayMode>
+            displayModeToc$: Subject<DisplayMode>
+            layoutOptions: LayoutOptions
+        }) => AnyVirtualDOM
+        layoutOptions?: Partial<LayoutOptions>
     }) {
+        this.layoutOptions = Object.assign(
+            this.layoutOptions,
+            layoutOptions || {},
+        )
         const wrapperSideNav = (side: 'left' | 'right') => ({
             tag: 'div' as const,
             class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',
             style: {
-                marginRight: side == 'left' ? '3em' : '0em',
-                marginLeft: side == 'right' ? '3em' : '0em',
-                maxHeight: '80vh',
+                maxHeight: '85vh',
                 position: 'sticky' as const,
                 top: '0px',
-                width: '16em',
+                width:
+                    side === 'left'
+                        ? this.layoutOptions.navWidth
+                        : this.layoutOptions.tocWidth,
+                overflowY: 'auto' as const,
+                overflowX: 'hidden' as const,
             },
         })
         this.connectedCallback = (e: HTMLElement) => {
@@ -86,13 +156,13 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                     e.classList.add('mkdocs-DefaultLayoutView-s')
                 }
 
-                if (width < 850) {
+                if (width < 1000) {
                     e.classList.add('mkdocs-DefaultLayoutView-xxs')
                     this.displayModeNav$.next('Minimized')
                     this.displayModeToc$.next('Minimized')
                     return
                 }
-                if (width < 1100) {
+                if (width < 1300) {
                     e.classList.add('mkdocs-DefaultLayoutView-xs')
                     this.displayModeNav$.next('Minimized')
                     this.displayModeToc$.next('Full')
@@ -104,18 +174,25 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             })
             resizeObserver.observe(e)
         }
+        const topBannerView = topBanner
+            ? topBanner({
+                  title: name,
+                  router,
+                  displayModeNav$: this.displayModeNav$,
+                  displayModeToc$: this.displayModeToc$,
+                  layoutOptions: this.layoutOptions,
+              })
+            : new TopBannerView({
+                  name,
+                  displayModeNav$: this.displayModeNav$,
+                  displayModeToc$: this.displayModeToc$,
+                  router,
+              })
         this.children = [
-            topBanner
-                ? topBanner({ displayMode$: this.displayModeNav$ })
-                : new TopBannerView({
-                      name,
-                      displayModeNav$: this.displayModeNav$,
-                      displayModeToc$: this.displayModeToc$,
-                      router,
-                  }),
+            topBannerView,
             {
                 tag: 'div',
-                class: 'flex-grow-1 w-100 overflow-auto',
+                class: 'flex-grow-1 w-100 overflow-auto pt-2',
                 style: {
                     minHeight: '0px',
                 },
@@ -147,12 +224,26 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                             {
                                 tag: 'div',
                                 style: {
-                                    width: '75%',
-                                    maxWidth: '40em',
+                                    width: this.layoutOptions.pageWidth,
+                                    maxWidth: this.layoutOptions.pageMaxWidth,
                                     height: 'fit-content',
                                     minHeight: '100%',
                                 },
-                                children: [new PageView({ router: router })],
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        class: `w-100`,
+                                        style: {
+                                            paddingLeft:
+                                                this.layoutOptions.pageXPadding,
+                                            paddingRight:
+                                                this.layoutOptions.pageXPadding,
+                                        },
+                                        children: [
+                                            new PageView({ router: router }),
+                                        ],
+                                    },
+                                ],
                             },
                             {
                                 source$: this.displayModeToc$.pipe(

@@ -43,10 +43,15 @@
             "name": "TsTypedoc",
             "path": "mkdocs-ts/Backends.TsTypedoc",
             "isLeaf": true
+        },
+        {
+            "name": "mkdocs_py_griffe",
+            "path": "mkdocs-ts/Backends.mkdocs_py_griffe.json",
+            "isLeaf": true
         }
     ],
     "semantic": {
-        "role": "",
+        "role": "module",
         "labels": [],
         "attributes": {},
         "relations": {}

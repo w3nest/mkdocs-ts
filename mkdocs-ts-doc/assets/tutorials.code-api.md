@@ -31,13 +31,13 @@ export const navigation = {
         html: fromMd('api.md'),
         tableOfContent,
         '...': ({ path, router }: { path: string; router: Router }) =>
-        CodeApiModule.docNavigation({
-            modulePath: path,
-            router,
-            project,
-            // For instance for ts-typedoc project
-            configuration: CodeApiModule.configurationTsTypedoc,
-        }),
+            CodeApiModule.docNavigation({
+                modulePath: path,
+                router,
+                project,
+                // For instance for ts-typedoc project
+                configuration: CodeApiModule.configurationTsTypedoc,
+            }),
     },
 }
 

@@ -45,7 +45,8 @@ template = Template(
     bundles=Bundles(
         mainModule=MainModule(
             entryFile='./index.ts',
-            loadDependencies=list(externals_deps.keys()),
+            loadDependencies=["@youwol/rx-vdom", "@youwol/webpm-client", "rxjs", "marked", "highlight.js",
+                              "@youwol/os-top-banner","@youwol/rx-tree-views"],
             aliases=[]
         ),
         auxiliaryModules=[

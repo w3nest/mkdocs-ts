@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs'
-import { display } from './display-utils'
+import { display, DisplayFactory } from './display-utils'
 import { parseScript } from 'esprima'
 import { Output, Scope } from './state'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
@@ -17,6 +17,7 @@ export function extractKeys(obj: { [k: string]: unknown } | string[]) {
  * @param _args.src The source to execute
  * @param _args.scope The entering scope.
  * @param _args.output$ Subject in which output views are sent (when using `display` function).
+ * @param _args.displayFactory Factory to display HTML elements when `display` is called.
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
  * @returns Promise over the scope at exit
  */
@@ -24,15 +25,17 @@ export async function executeJsStatement({
     src,
     scope,
     output$,
+    displayFactory,
     invalidated$,
 }: {
     src: string
     scope: Scope
     output$: Subject<Output>
+    displayFactory: DisplayFactory
     invalidated$: Observable<unknown>
 }) {
     const displayInOutput = (...element: HTMLElement[]) =>
-        display(output$, ...element)
+        display(output$, displayFactory, ...element)
     const ast = parseProgram(src)
     const declarations = extractGlobalDeclarations(ast)
     const patchedReactive = patchReactiveCell({
@@ -70,6 +73,7 @@ ${patchedReactive.wrapped}
  * @param _args.src The source to execute
  * @param _args.scope The entering scope.
  * @param _args.output$ Subject in which output views are sent (when using `display` function).
+ * @param _args.displayFactory Factory to display HTML elements when `display` is called.
  * @param _args.load The function used to load a submodule from another notebook page.
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
  * @param _args.reactive If true, observables & promises are resolved before cell execution using a `combineLatest`
@@ -80,6 +84,7 @@ export async function executeJs({
     src,
     scope,
     output$,
+    displayFactory,
     load,
     reactive,
     invalidated$,
@@ -87,6 +92,7 @@ export async function executeJs({
     src: string
     scope: Scope
     output$: Subject<AnyVirtualDOM>
+    displayFactory: DisplayFactory
     load: (path: string) => Promise<{ [k: string]: unknown }>
     reactive?: boolean
     invalidated$: Observable<unknown>
@@ -94,7 +100,7 @@ export async function executeJs({
     const ast = parseProgram(src)
     const declarations = extractGlobalDeclarations(ast)
     const displayInOutput = (...element: HTMLElement[]) =>
-        display(output$, ...element)
+        display(output$, displayFactory, ...element)
 
     let footer = `
 return { 

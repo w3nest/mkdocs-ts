@@ -1,7 +1,7 @@
 {
     "name": "@youwol/mkdocs-ts",
     "description": "Typescript based mkdocs like solution",
-    "version": "0.4.2-wip",
+    "version": "0.5.1-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/mkdocs-ts#README.md",
     "main": "dist/@youwol/mkdocs-ts.js",
@@ -84,10 +84,7 @@
             "marked": "^4.2.3",
             "highlight.js": "11.2.0",
             "@youwol/os-top-banner": "^0.2.0",
-            "@youwol/rx-tree-views": "^0.3.3",
-            "@youwol/http-primitives": "^0.2.3",
-            "esprima": "^4.0.1",
-            "codemirror": "^5.52.0"
+            "@youwol/rx-tree-views": "^0.3.3"
         },
         "aliases": []
     }

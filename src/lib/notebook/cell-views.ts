@@ -8,13 +8,15 @@ import {
     ChildrenLike,
     CSSAttribute,
     VirtualDOM,
+    RxChildren,
 } from '@youwol/rx-vdom'
-import { BehaviorSubject, filter, Observable, take } from 'rxjs'
+import { BehaviorSubject, combineLatest, filter, Observable, take } from 'rxjs'
 import { CellStatus, Output, State } from './state'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
+import { parseMd } from '../markdown'
 
 /**
  * Represents the view of a cell that will render once the associated cell is registered in the {@link State}.
@@ -382,12 +384,15 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
     /**
      *
      * @param params
+     * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from
+     * `output$`.
      * @param params.output$ Observable over the outputs to display.
      * @param params.fullScreen Whether to add a menu to allow expanding the output.
-     * @param params.style Style to apply to this element.
-     * @param params.classList Classes added to this element.
+     * @param params.style Style to apply to this element. It does not apply to the  ̀defaultContent` view.
+     * @param params.classList Classes added to this element. It does not apply to the  ̀defaultContent` view.
      */
     constructor(params: {
+        defaultContent: string
         output$: Observable<Output>
         fullScreen?: boolean
         style?: CSSAttribute
@@ -407,7 +412,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             }
             outputs$.next([...outputs$.value, out])
         })
-        const content: ChildrenLike = {
+        const content: RxChildren<'sync', AnyVirtualDOM> = {
             source$: outputs$,
             policy: 'sync',
             vdomMap: (output: AnyVirtualDOM) => output,
@@ -459,17 +464,34 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                 },
                 children: [
                     {
+                        source$: outputs$,
+                        vdomMap: (outputs: Array<unknown>) =>
+                            outputs.length === 0
+                                ? parseMd({ src: params.defaultContent })
+                                : { tag: 'div' },
+                    },
+                    {
                         tag: 'div' as const,
                         style: {
-                            backgroundColor: 'rgb(255,255,255)',
-                            ...params.style,
+                            source$: outputs$,
+                            vdomMap: (outputs: unknown[]) => ({
+                                backgroundColor: 'rgb(255,255,255)',
+                                ...(outputs.length === 0 ? {} : params.style),
+                            }),
                         },
                         class: {
-                            source$: this.mode$,
-                            vdomMap: (mode: OutputMode) =>
-                                mode === 'normal'
+                            source$: combineLatest([this.mode$, outputs$]),
+                            vdomMap: ([mode, outputs]: [
+                                OutputMode,
+                                unknown[],
+                            ]) => {
+                                if (outputs.length === 0) {
+                                    return ''
+                                }
+                                return mode === 'normal'
                                     ? params.classList
-                                    : `p-2 border rounded h-75 w-75 mx-auto ${params.classList}`,
+                                    : `p-2 border rounded h-75 w-75 mx-auto ${params.classList}`
+                            },
                         },
                         children: content,
                         onclick: (ev) => ev.stopPropagation(),

@@ -137,8 +137,7 @@ export function createImplicitChildren$({
     withExplicit: NavNode[]
     router: Router
 }) {
-    // remove starting '/' (multiple too)
-    path = path.replace(/^\/+/, '')
+    path = sanitizeNavPath(path)
     const resolved = resolver({ path: path, router })
 
     const toChildren = (from: NavNodeInput[]) => [
@@ -336,4 +335,16 @@ export type Navigation = NavigationCommon & {
      * Static sub-navigation resolver.
      */
     [key: `/${string}`]: Navigation
+}
+
+/**
+ * Sanitize an input navigation path:
+ * *  Remove starting '/' (multiple too)
+ * *  Correct for empty path sequence, *e.g.* `foo//bar/.baz` -> `foo/bar.baz`
+ *
+ * @param path The input path.
+ * @returns The sanitized path.
+ */
+export function sanitizeNavPath(path: string) {
+    return path.replace(/^\/+/, '').replace(/\/+/g, '/').replace('/.', '.')
 }

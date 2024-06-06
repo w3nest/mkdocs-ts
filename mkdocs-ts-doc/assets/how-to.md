@@ -1,3 +1,3 @@
 # How to
 
-This part present youwol using a problem-oriented approach.
+This part present **mkdocs-ts** using a problem-oriented approach.
