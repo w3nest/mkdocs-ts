@@ -51,11 +51,11 @@ You can use the following node script to generate API data:
 
 ### Requirements
 
-Install the python module `mkdocs-ts-doc` in your environment.
-For now, the module is not yet available on PyPi and you need to install it from source:
-*  Download or clone the <a href="https://github.com/youwol/mkdocs-ts/tree/main" target="_blank"> mkdocs-ts repo</a>
-*  Navigate to the folder `/src/backends/mkdocs_py_griffe`
-*  Run `pip install .`
+- **In the documentation project** (the project that defines the documentation application):
+    -  `mkdocs-ts` must be available in the `node_modules` of the project.
+    -  Navigate to `node_modules/@youwol/mkdocs/src/backends/mkdocs_py_griffe`
+    -  Run `pip install .`
+
 
 ### Usage
 
