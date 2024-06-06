@@ -587,8 +587,8 @@
                         "filePath": "src/lib/views/top-banner-classic.view.ts",
                         "declaration": "constructor({\n        href,\n        name,\n        version,\n    }: {\n        href: string\n        name: string\n        version: string\n    })",
                         "implementation": "constructor({\n        href,\n        name,\n        version,\n    }: {\n        href: string\n        name: string\n        version: string\n    }) {\n        this.href = href\n        this.children = [\n            {\n                tag: 'div',\n                class: 'my-auto',\n                style: {\n                    fontSize: 'larger',\n                },\n                children: [\n                    {\n                        tag: 'i',\n                        class: 'fas fa-code-branch',\n                    },\n                ],\n            },\n            {\n                tag: 'i',\n                class: 'mx-1',\n            },\n            {\n                tag: 'div',\n                class: 'd-flex flex-column',\n                style: {\n                    fontSize: 'smaller',\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: name,\n                    },\n                    {\n                        tag: 'div',\n                        class: 'd-flex align-items-center',\n                        style: {\n                            fontSize: 'x-small',\n                        },\n                        children: [\n                            {\n                                tag: 'i',\n                                class: 'fas fa-tag',\n                            },\n                            {\n                                tag: 'i',\n                                class: 'mx-1',\n                            },\n                            {\n                                tag: 'div',\n                                innerText: version,\n                            },\n                        ],\n                    },\n                ],\n            },\n        ]\n    }",
-                        "startLine": 271,
-                        "endLine": 335,
+                        "startLine": 274,
+                        "endLine": 338,
                         "references": {
                             "new SourcesLink": "@nav/api/MainModule/Views.SourcesLink.constructor",
                             "SourcesLink": "@nav/api/MainModule/Views.SourcesLink"
@@ -606,8 +606,8 @@
                 "filePath": "src/lib/views/top-banner-classic.view.ts",
                 "declaration": "export class SourcesLink implements VirtualDOM<'a'>",
                 "implementation": "export class SourcesLink implements VirtualDOM<'a'> {\n    public readonly tag = 'a'\n    public readonly href: string\n    public readonly target = '_blank'\n    public readonly class =\n        'd-flex align-items-center mkdocs-text-4 mkdocs-hover-text-5 fv-pointer'\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param _p\n     * @param _p.href URL to the repo.\n     * @param _p.name Displayed name.\n     * @param _p.version Displayed version.\n     */\n    constructor({\n        href,\n        name,\n        version,\n    }: {\n        href: string\n        name: string\n        version: string\n    }) {\n        this.href = href\n        this.children = [\n            {\n                tag: 'div',\n                class: 'my-auto',\n                style: {\n                    fontSize: 'larger',\n                },\n                children: [\n                    {\n                        tag: 'i',\n                        class: 'fas fa-code-branch',\n                    },\n                ],\n            },\n            {\n                tag: 'i',\n                class: 'mx-1',\n            },\n            {\n                tag: 'div',\n                class: 'd-flex flex-column',\n                style: {\n                    fontSize: 'smaller',\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: name,\n                    },\n                    {\n                        tag: 'div',\n                        class: 'd-flex align-items-center',\n                        style: {\n                            fontSize: 'x-small',\n                        },\n                        children: [\n                            {\n                                tag: 'i',\n                                class: 'fas fa-tag',\n                            },\n                            {\n                                tag: 'i',\n                                class: 'mx-1',\n                            },\n                            {\n                                tag: 'div',\n                                innerText: version,\n                            },\n                        ],\n                    },\n                ],\n            },\n        ]\n    }\n}",
-                "startLine": 255,
-                "endLine": 336,
+                "startLine": 258,
+                "endLine": 339,
                 "references": {
                     "SourcesLink": "@nav/api/MainModule/Views.SourcesLink",
                     "VirtualDOM.children": "-1",
@@ -717,9 +717,9 @@
                     "code": {
                         "filePath": "src/lib/views/top-banner-classic.view.ts",
                         "declaration": "constructor(params: TopBannerClassicParams)",
-                        "implementation": "constructor(params: TopBannerClassicParams) {\n        this.children = [\n            new MainColumn(params),\n            {\n                source$: params.displayModeToc$,\n                vdomMap: (mode: Views.DisplayMode) =>\n                    mode === 'Full' ? new RightColumn(params) : { tag: 'div' },\n            },\n        ]\n    }",
-                        "startLine": 62,
-                        "endLine": 72,
+                        "implementation": "constructor(params: TopBannerClassicParams) {\n        this.children = [\n            new MainColumn(params),\n            {\n                source$: params.displayModeToc$,\n                vdomMap: (mode: DisplayMode) =>\n                    mode === 'Full' ? new RightColumn(params) : { tag: 'div' },\n            },\n        ]\n    }",
+                        "startLine": 64,
+                        "endLine": 74,
                         "references": {
                             "new TopBannerClassicView": "@nav/api/MainModule/Views.TopBannerClassicView.constructor",
                             "TopBannerClassicParams": "@nav/api/MainModule/Views.TopBannerClassicParams",
@@ -737,9 +737,9 @@
             "code": {
                 "filePath": "src/lib/views/top-banner-classic.view.ts",
                 "declaration": "export class TopBannerClassicView implements VirtualDOM<'div'>",
-                "implementation": "export class TopBannerClassicView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class =\n        'w-100 mkdocs-bg-5 mkdocs-text-5 py-2 d-flex justify-content-center'\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param params Most of them are forwarded from {@link DefaultLayoutView}.\n     */\n    constructor(params: TopBannerClassicParams) {\n        this.children = [\n            new MainColumn(params),\n            {\n                source$: params.displayModeToc$,\n                vdomMap: (mode: Views.DisplayMode) =>\n                    mode === 'Full' ? new RightColumn(params) : { tag: 'div' },\n            },\n        ]\n    }\n}",
-                "startLine": 51,
-                "endLine": 73,
+                "implementation": "export class TopBannerClassicView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class =\n        'w-100 mkdocs-bg-5 mkdocs-text-5 py-2 d-flex justify-content-center'\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param params Most of them are forwarded from {@link DefaultLayoutView}.\n     */\n    constructor(params: TopBannerClassicParams) {\n        this.children = [\n            new MainColumn(params),\n            {\n                source$: params.displayModeToc$,\n                vdomMap: (mode: DisplayMode) =>\n                    mode === 'Full' ? new RightColumn(params) : { tag: 'div' },\n            },\n        ]\n    }\n}",
+                "startLine": 53,
+                "endLine": 75,
                 "references": {
                     "TopBannerClassicView": "@nav/api/MainModule/Views.TopBannerClassicView",
                     "TopBannerClassicParams": "@nav/api/MainModule/Views.TopBannerClassicParams",
@@ -858,14 +858,14 @@
             "callables": [],
             "code": {
                 "filePath": "src/lib/views/top-banner-classic.view.ts",
-                "declaration": "export type TopBannerClassicParams = {\n    /**\n     * Router, forwared when used within {@link DefaultLayoutView}.\n     */\n    router: Router\n    /**\n     * Emit the current display mode regarding navigation, forwared when used within {@link DefaultLayoutView}.\n     */\n    displayModeNav$: Subject<Views.DisplayMode>\n    /**\n     * Emit the current display mode regarding TOC, forwared when used within {@link DefaultLayoutView}.\n     */\n    displayModeToc$: Subject<Views.DisplayMode>\n    /**\n     * Layout sizing options, forwarded when used within {@link DefaultLayoutView}.\n     */\n    layoutOptions: Views.LayoutOptions\n    /**\n     * The title, forwarded when used within {@link DefaultLayoutView}.\n     */\n    title: AnyVirtualDOM | string\n    /**\n     * The logo.\n     */\n    logo: AnyVirtualDOM\n    /**\n     * The badge.\n     */\n    badge: AnyVirtualDOM\n}",
+                "declaration": "export type TopBannerClassicParams = {\n    /**\n     * Router, forwared when used within {@link DefaultLayoutView}.\n     */\n    router: Router\n    /**\n     * Emit the current display mode regarding navigation, forwared when used within {@link DefaultLayoutView}.\n     */\n    displayModeNav$: Subject<DisplayMode>\n    /**\n     * Emit the current display mode regarding TOC, forwared when used within {@link DefaultLayoutView}.\n     */\n    displayModeToc$: Subject<DisplayMode>\n    /**\n     * Layout sizing options, forwarded when used within {@link DefaultLayoutView}.\n     */\n    layoutOptions: LayoutOptions\n    /**\n     * The title, forwarded when used within {@link DefaultLayoutView}.\n     */\n    title: AnyVirtualDOM | string\n    /**\n     * The logo.\n     */\n    logo: AnyVirtualDOM\n    /**\n     * The badge.\n     */\n    badge: AnyVirtualDOM\n}",
                 "implementation": "",
-                "startLine": 15,
-                "endLine": 16,
+                "startLine": 17,
+                "endLine": 18,
                 "references": {
                     "TopBannerClassicParams": "@nav/api/MainModule/Views.TopBannerClassicParams",
-                    "Views.DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
-                    "Views.LayoutOptions": "@nav/api/MainModule/Views.LayoutOptions",
+                    "DisplayMode": "@nav/api/MainModule/Views.DisplayMode",
+                    "LayoutOptions": "@nav/api/MainModule/Views.LayoutOptions",
                     "Router": "@nav/api/MainModule.Router"
                 }
             },
@@ -903,6 +903,40 @@
                 "endLine": 53,
                 "references": {
                     "defaultLayoutOptions": "@nav/api/MainModule/Views.defaultLayoutOptions"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "popupModal",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Popup a modal on screen with a blury background.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "popupModal",
+            "code": {
+                "filePath": "src/lib/views/modal.view.ts",
+                "declaration": "export function popupModal({\n    content,\n    maxWidth,\n    maxHeight,\n}: {\n    content: AnyVirtualDOM\n    maxWidth?: string\n    maxHeight?: string\n})",
+                "implementation": "export function popupModal({\n    content,\n    maxWidth,\n    maxHeight,\n}: {\n    content: AnyVirtualDOM\n    maxWidth?: string\n    maxHeight?: string\n}) {\n    let element: HTMLElement\n    maxWidth = maxWidth || '75%'\n    maxHeight = maxHeight || '75%'\n    const vdom: AnyVirtualDOM = {\n        tag: 'div',\n        style: {\n            position: 'absolute',\n            top: '0vh',\n            left: '0vw',\n            width: '100vw',\n            height: '100vh',\n            zIndex: 10,\n            backdropFilter: 'blur(2px)',\n        },\n        class: 'd-flex flex-column justify-content-center',\n        children: [\n            {\n                tag: 'div',\n                class: `p-2 border rounded mx-auto d-flex flex-column justify-content-center mkdocs-bg-0 overflow-auto`,\n                children: [content],\n                style: {\n                    maxHeight: maxHeight,\n                    maxWidth: maxWidth,\n                },\n                connectedCallback: (elem: HTMLElement) => {\n                    const firstChild = elem.firstChild\n                    if (isSizeRelativeToParent(firstChild, 'width')) {\n                        elem.style.width = maxWidth\n                    }\n                    if (isSizeRelativeToParent(firstChild, 'height')) {\n                        elem.style.height = maxHeight\n                    }\n                },\n                onclick: (ev) => {\n                    ev.stopPropagation()\n                },\n            },\n        ],\n        connectedCallback: (elem: HTMLElement) => {\n            element = elem\n        },\n        onclick: () => {\n            element && element.remove()\n        },\n    }\n    document.body.appendChild(render(vdom))\n}",
+                "startLine": 46,
+                "endLine": 102,
+                "references": {
+                    "popupModal": "@nav/api/MainModule/Views.popupModal"
                 }
             },
             "semantic": {
@@ -1007,6 +1041,24 @@
         {
             "name": "top-banner.view.ts",
             "path": "src/lib/views/top-banner.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "modal.view.ts",
+            "path": "src/lib/views/modal.view.ts",
             "documentation": {
                 "sections": [
                     {
