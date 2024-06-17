@@ -8,8 +8,13 @@ import { AnyVirtualDOM, render, VirtualDOM } from '@youwol/rx-vdom'
 import * as webpm from '@youwol/webpm-client'
 import { from } from 'rxjs'
 import { Router } from './router'
-import { CodeLanguage, CodeSnippetView } from './md-widgets/code-snippet.view'
-import { NoteLevel, NoteView } from './md-widgets'
+import {
+    CodeLanguage,
+    CodeSnippetView,
+    NoteLevel,
+    NoteView,
+    ExpandableGroupView,
+} from './md-widgets'
 
 /**
  * Type definition for custom view generators.
@@ -101,6 +106,14 @@ export class GlobalMarkdownViews {
                 label: elem.getAttribute('label'),
                 content: elem.textContent,
                 parsingArgs,
+            })
+        },
+        expandable: (elem: HTMLElement, parsingArgs) => {
+            return new ExpandableGroupView({
+                title: elem.getAttribute('title'),
+                icon: elem.getAttribute('icon'),
+                content: () =>
+                    parseMd({ src: elem.textContent, ...parsingArgs }),
             })
         },
     }
