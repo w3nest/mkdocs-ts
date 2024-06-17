@@ -6,6 +6,7 @@
 
 import { Project } from './models'
 import { setup } from '../../auto-generated'
+import { DisplayFactory, NotebookOptions, Scope } from '../notebook'
 
 /**
  * Specification of the configuration interface.
@@ -36,9 +37,16 @@ export interface Configuration {
     }) => string
 
     /**
-     * If `true`, use the {@link Notebook} module to parse the code documentation included in the API files.
+     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API
+     * files, eventually forwarding the parameters provided to the {@link Notebook.NotebookPage} constructor.
      */
-    notebook?: boolean
+    notebook?:
+        | boolean
+        | {
+              initialScope?: Partial<Scope>
+              displayFactory?: DisplayFactory
+              options?: NotebookOptions
+          }
 }
 
 /**
@@ -58,5 +66,5 @@ export const configurationTsTypedoc: Configuration = {
     },
     externalTypes: {},
     css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,
-    notebook: false,
+    notebook: undefined,
 }

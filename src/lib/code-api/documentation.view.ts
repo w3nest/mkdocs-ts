@@ -78,6 +78,10 @@ export class SectionView implements VirtualDOM<'div'> {
             'yw-nav-meth': (link: HTMLAnchorElement) =>
                 redirect(link, '@yw-nav-meth:', 3),
         }
+        const nbConfig: object =
+            typeof configuration === 'boolean'
+                ? {}
+                : (configuration.notebook as object)
 
         this.children = [
             section.title && new SectionHeader(section),
@@ -89,6 +93,7 @@ export class SectionView implements VirtualDOM<'div'> {
                               src: section.content,
                               router,
                               options: { runAtStart: true },
+                              ...nbConfig,
                           })
                       },
                   }
