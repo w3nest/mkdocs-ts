@@ -317,6 +317,92 @@
             }
         },
         {
+            "name": "ExpandableGroupView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents an expandable widget, featuring:\n* An horizontal customizable header\n* The content when expanded\n\nThis view is registered in  [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews) : it can be instantiated from Markdown using the tag\n `expandable` . See constructor's documentation for details regarding its parameters.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ExpandableGroupView",
+            "attributes": [],
+            "callables": [
+                {
+                    "name": "new ExpandableGroupView",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initializes a new instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **content**: Content displayed when the widget is expanded.\nProvided as the HTMLElement's  `textContent`  when instantiated from MarkDown.\n*  **expanded**: Initial state. Provided as attribute  `expanded`  when instantiated from MarkDown.\n*  **icon**: Icon displayed in the header. An instance of  `string`  is used as class of a  `div`  element.\nProvided as attribute  `icon`  when instantiated from MarkDown (only string supported).\n*  **title**: Title displayed in the header.\nProvided as attribute  `title`  when instantiated from MarkDown.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ExpandableGroupView.new ExpandableGroupView",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/expandable-group.view.ts",
+                        "declaration": "constructor({\n        title,\n        icon,\n        content,\n        expanded,\n    }: {\n        title: string | ChildLike\n        icon: string | AnyVirtualDOM\n        content: () => AnyVirtualDOM\n        expanded?: boolean\n    })",
+                        "implementation": "constructor({\n        title,\n        icon,\n        content,\n        expanded,\n    }: {\n        title: string | ChildLike\n        icon: string | AnyVirtualDOM\n        content: () => AnyVirtualDOM\n        expanded?: boolean\n    }) {\n        const expanded$ = new BehaviorSubject(expanded || false)\n        this.children = [\n            {\n                tag: 'div',\n                class: {\n                    source$: expanded$,\n                    vdomMap: (expanded) => (expanded ? 'border-bottom' : ''),\n                    wrapper: (d) => `${d} d-flex align-items-center`,\n                },\n                children: [\n                    typeof icon === 'string'\n                        ? {\n                              tag: 'i',\n                              class: icon,\n                          }\n                        : icon,\n                    {\n                        tag: 'div',\n                        class: 'mx-2',\n                    },\n                    typeof title === 'string'\n                        ? {\n                              tag: 'div',\n                              innerText: title,\n                          }\n                        : title,\n                    {\n                        tag: 'div',\n                        class: 'flex-grow-1',\n                    },\n                    {\n                        tag: 'i',\n                        class: {\n                            source$: expanded$,\n                            vdomMap: (expanded) =>\n                                expanded\n                                    ? 'fa-chevron-down'\n                                    : 'fa-chevron-right',\n                            wrapper: (d) =>\n                                `${d} fas fv-pointer fv-hover-text-focus`,\n                        },\n                        onclick: () => expanded$.next(!expanded$.value),\n                    },\n                ],\n            },\n            {\n                source$: expanded$,\n                vdomMap: (expanded) => {\n                    return expanded ? content() : { tag: 'div' }\n                },\n            },\n        ]\n    }",
+                        "startLine": 36,
+                        "endLine": 100,
+                        "references": {
+                            "new ExpandableGroupView": "@nav/api/MainModule/MdWidgets.ExpandableGroupView.constructor",
+                            "ExpandableGroupView": "@nav/api/MainModule/MdWidgets.ExpandableGroupView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/expandable-group.view.ts",
+                "declaration": "export class ExpandableGroupView implements VirtualDOM<'div'>",
+                "implementation": "export class ExpandableGroupView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n\n    public readonly class = 'w-100 rounded border py-1 px-2 my-1'\n\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param _args The arguments.\n     * @param _args.title Title displayed in the header.\n     * Provided as attribute `title` when instantiated from MarkDown.\n     * @param _args.icon Icon displayed in the header. An instance of `string` is used as class of a `div` element.\n     * Provided as attribute `icon` when instantiated from MarkDown (only string supported).\n     * @param _args.content Content displayed when the widget is expanded.\n     * Provided as the HTMLElement's `textContent` when instantiated from MarkDown.\n     * @param _args.expanded Initial state. Provided as attribute `expanded` when instantiated from MarkDown.\n     */\n    constructor({\n        title,\n        icon,\n        content,\n        expanded,\n    }: {\n        title: string | ChildLike\n        icon: string | AnyVirtualDOM\n        content: () => AnyVirtualDOM\n        expanded?: boolean\n    }) {\n        const expanded$ = new BehaviorSubject(expanded || false)\n        this.children = [\n            {\n                tag: 'div',\n                class: {\n                    source$: expanded$,\n                    vdomMap: (expanded) => (expanded ? 'border-bottom' : ''),\n                    wrapper: (d) => `${d} d-flex align-items-center`,\n                },\n                children: [\n                    typeof icon === 'string'\n                        ? {\n                              tag: 'i',\n                              class: icon,\n                          }\n                        : icon,\n                    {\n                        tag: 'div',\n                        class: 'mx-2',\n                    },\n                    typeof title === 'string'\n                        ? {\n                              tag: 'div',\n                              innerText: title,\n                          }\n                        : title,\n                    {\n                        tag: 'div',\n                        class: 'flex-grow-1',\n                    },\n                    {\n                        tag: 'i',\n                        class: {\n                            source$: expanded$,\n                            vdomMap: (expanded) =>\n                                expanded\n                                    ? 'fa-chevron-down'\n                                    : 'fa-chevron-right',\n                            wrapper: (d) =>\n                                `${d} fas fv-pointer fv-hover-text-focus`,\n                        },\n                        onclick: () => expanded$.next(!expanded$.value),\n                    },\n                ],\n            },\n            {\n                source$: expanded$,\n                vdomMap: (expanded) => {\n                    return expanded ? content() : { tag: 'div' }\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 17,
+                "endLine": 101,
+                "references": {
+                    "ExpandableGroupView": "@nav/api/MainModule/MdWidgets.ExpandableGroupView",
+                    "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
+                    "VirtualDOM.tag": "-1"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "NoteView",
             "documentation": {
                 "sections": [
@@ -400,6 +486,24 @@
         {
             "name": "code-snippet.view.ts",
             "path": "src/lib/md-widgets/code-snippet.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "expandable-group.view.ts",
+            "path": "src/lib/md-widgets/expandable-group.view.ts",
             "documentation": {
                 "sections": [
                     {
