@@ -41,10 +41,10 @@
             "path": "configurationTsTypedoc",
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
-                "declaration": "configurationTsTypedoc: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${startLine}`\n    },\n    externalTypes: {},\n    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,\n    notebook: false,\n}",
+                "declaration": "configurationTsTypedoc: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${startLine}`\n    },\n    externalTypes: {},\n    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,\n    notebook: undefined,\n}",
                 "implementation": "",
-                "startLine": 47,
-                "endLine": 48,
+                "startLine": 55,
+                "endLine": 56,
                 "references": {
                     "configurationTsTypedoc": "@nav/api/CodeApi.configurationTsTypedoc",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -574,8 +574,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string",
                         "implementation": "",
-                        "startLine": 28,
-                        "endLine": 29,
+                        "startLine": 29,
+                        "endLine": 30,
                         "references": {
                             "codeUrl": "@nav/api/CodeApi.Configuration.codeUrl",
                             "Project": "@nav/api/CodeApi.Project"
@@ -609,8 +609,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "css: (project: Project) => string",
                         "implementation": "",
-                        "startLine": 20,
-                        "endLine": 21,
+                        "startLine": 21,
+                        "endLine": 22,
                         "references": {
                             "css": "@nav/api/CodeApi.Configuration.css",
                             "Project": "@nav/api/CodeApi.Project"
@@ -644,8 +644,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "externalTypes: { [k: string]: string }",
                         "implementation": "",
-                        "startLine": 24,
-                        "endLine": 25,
+                        "startLine": 25,
+                        "endLine": 26,
                         "references": {
                             "externalTypes": "@nav/api/CodeApi.Configuration.externalTypes"
                         }
@@ -662,7 +662,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "If  `true` , use the  [Notebook](@nav/api/Notebook)  module to parse the code documentation included in the API files.",
+                                "content": "If  `true`  or an object, use the  [Notebook](@nav/api/Notebook)  module to parse the code documentation included in the API\nfiles, eventually forwarding the parameters provided to the  [Notebook.NotebookPage](@nav/api/Notebook.NotebookPage)  constructor.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -676,12 +676,15 @@
                     "path": "Configuration.notebook",
                     "code": {
                         "filePath": "src/lib/code-api/configurations.ts",
-                        "declaration": "notebook?: boolean",
+                        "declaration": "notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }",
                         "implementation": "",
-                        "startLine": 41,
-                        "endLine": 42,
+                        "startLine": 43,
+                        "endLine": 44,
                         "references": {
-                            "notebook": "@nav/api/CodeApi.Configuration.notebook"
+                            "notebook": "@nav/api/CodeApi.Configuration.notebook",
+                            "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
+                            "Scope": "@nav/api/Notebook.Scope",
+                            "NotebookOptions": "@nav/api/Notebook.NotebookOptions"
                         }
                     }
                 }
@@ -690,12 +693,15 @@
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "export interface Configuration",
-                "implementation": "export interface Configuration {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: { [k: string]: string }\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true`, use the {@link Notebook} module to parse the code documentation included in the API files.\n     */\n    notebook?: boolean\n}",
-                "startLine": 13,
-                "endLine": 43,
+                "implementation": "export interface Configuration {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: { [k: string]: string }\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API\n     * files, eventually forwarding the parameters provided to the {@link Notebook.NotebookPage} constructor.\n     */\n    notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }\n}",
+                "startLine": 14,
+                "endLine": 51,
                 "references": {
                     "Configuration": "@nav/api/CodeApi.Configuration",
-                    "Project": "@nav/api/CodeApi.Project"
+                    "Project": "@nav/api/CodeApi.Project",
+                    "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
+                    "Scope": "@nav/api/Notebook.Scope",
+                    "NotebookOptions": "@nav/api/Notebook.NotebookOptions"
                 }
             },
             "semantic": {
