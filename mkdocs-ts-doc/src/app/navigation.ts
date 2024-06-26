@@ -136,6 +136,16 @@ export const navigation: Navigation = {
                         }),
                 },
             },
+            '/scope': {
+                name: 'Scope & Mutations',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.scope.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+            },
             '/python': {
                 name: 'Python',
                 tableOfContent,

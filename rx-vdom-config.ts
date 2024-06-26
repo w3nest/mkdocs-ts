@@ -20,3 +20,4 @@ type DevTags =
     | 'pre'
     | 'footer'
     | 'input'
+    | 'button'
