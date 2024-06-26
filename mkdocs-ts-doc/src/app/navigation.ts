@@ -136,6 +136,16 @@ export const navigation: Navigation = {
                         }),
                 },
             },
+            '/scope': {
+                name: 'Scope & Mutations',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.scope.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+            },
             '/python': {
                 name: 'Python',
                 tableOfContent,
@@ -155,6 +165,16 @@ export const navigation: Navigation = {
                             options: { ...notebookOptions, runAtStart: false },
                         }),
                 },
+            },
+            '/interpreter': {
+                name: 'Interpreter',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.interpreter.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
             },
         },
     },

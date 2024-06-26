@@ -1,3 +1,23 @@
+@function interpolate($color1, $color2, $weight) {
+    // Extract RGB values for color1
+    $red1: red($color1);
+    $green1: green($color1);
+    $blue1: blue($color1);
+
+    // Extract RGB values for color2
+    $red2: red($color2);
+    $green2: green($color2);
+    $blue2: blue($color2);
+
+    // Interpolate RGB values
+    $red: $red1 + ($red2 - $red1) * $weight;
+    $green: $green1 + ($green2 - $green1) * $weight;
+    $blue: $blue1 + ($blue2 - $blue1) * $weight;
+
+    // Return the interpolated color
+    @return rgb($red, $green, $blue);
+}
+
 .CodeMirror {
     height: auto !important;
 }
@@ -21,9 +41,40 @@
 
 .mkdocs-NavigationView {
     font-size: 1em;
-    line-height: 1.7em;
+    line-height: 1.5rem;
+    border-radius: 5px;
+}
+.mkdocs-NavigationView .fv-tree-header:hover {
+    background-color: rgba(
+        red($color-focus),
+        green($color-focus),
+        blue($color-focus),
+        0.05
+    );
+}
+.mkdocs-NavigationView .fv-tree-selected {
+    background-color: rgba(
+        red($color-focus),
+        green($color-focus),
+        blue($color-focus),
+        0.15
+    );
+}
+.mkdocs-NavigationView .fv-tree-selected:hover {
+    background-color: rgba(
+        red($color-focus),
+        green($color-focus),
+        blue($color-focus),
+        0.25
+    );
 }
 
+.mkdocs-NavigationView .fv-text-focus {
+    color: inherit !important;
+}
+.mkdocs-NavigationView .fv-hover-text-focus:hover {
+    color: inherit !important;
+}
 .mkdocs-WrapperSideNav {
     width: 20em;
     line-height: 1.5em;

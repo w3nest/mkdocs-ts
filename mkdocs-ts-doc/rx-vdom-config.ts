@@ -21,3 +21,4 @@ type DevTags =
     | 'footer'
     | 'input'
     | 'img'
+    | 'button'

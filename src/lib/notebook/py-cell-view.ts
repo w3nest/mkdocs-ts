@@ -1,6 +1,6 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
-import { BehaviorSubject, filter, Observable } from 'rxjs'
+import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
@@ -114,6 +114,7 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
                 state: this.state,
                 editorView: this.editorView,
                 cellAttributes: this.cellAttributes,
+                reactive$: of(false),
             }),
         ]
     }
