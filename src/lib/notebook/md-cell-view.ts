@@ -3,7 +3,7 @@ import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes, notebookViews } from './notebook-page'
 import { CellTrait, ExecArgs, Output, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { BehaviorSubject, filter, Observable, ReplaySubject } from 'rxjs'
+import { BehaviorSubject, filter, Observable, of, ReplaySubject } from 'rxjs'
 import { parseMd, MdParsingOptions } from '../markdown'
 import { JsCellAttributes } from './js-cell-view'
 import { executeJsStatement } from './js-execution'
@@ -105,6 +105,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                 state: this.state,
                 editorView: this.editorView,
                 cellAttributes: this.cellAttributes,
+                reactive$: of(this.cellAttributes.reactive),
             }),
         ]
     }

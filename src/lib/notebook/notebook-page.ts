@@ -7,6 +7,7 @@ import { JsCellView } from './js-cell-view'
 import { MdCellView } from './md-cell-view'
 import { PyCellView } from './py-cell-view'
 import { DisplayFactory } from './display-utils'
+import { InterpreterCellView } from './interpreter-cell-view'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -126,6 +127,31 @@ export const notebookViews = ({
                 content: elem.textContent,
                 state: state,
                 cellAttributes: getCellOptions(elem, cellOptions),
+            })
+            state.appendCell(cell)
+            return cell
+        },
+        'interpreter-cell': (elem: HTMLElement) => {
+            const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
+            const capturedIn = (elem.getAttribute('captured-in') || '').split(
+                ' ',
+            )
+            const capturedOut = (elem.getAttribute('captured-out') || '').split(
+                ' ',
+            )
+            const cell = new InterpreterCellView({
+                cellId: id,
+                content: elem.textContent,
+                state: state,
+                cellAttributes: {
+                    ...getCellOptions(elem, cellOptions),
+                    interpreter: elem.getAttribute('interpreter'),
+                    language: elem.getAttribute('language') as unknown as
+                        | 'javascript'
+                        | 'python',
+                    capturedIn,
+                    capturedOut,
+                },
             })
             state.appendCell(cell)
             return cell

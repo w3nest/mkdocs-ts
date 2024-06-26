@@ -40,13 +40,16 @@ export class FutureCellView implements VirtualDOM<'div'> {
      * @param params.language The language of the cell.
      * @param params.state The state managing the cell.
      * @param params.attributes The cell's attributes.
+     * @param params.reactive$ Whether the cell is reactive (in some circumstances it is only known when running
+     * the cell).
      */
     constructor(params: {
-        editorView: SnippetEditorView
+        editorView: AnyVirtualDOM
         cellId: string
         language: string
         state: State
         cellAttributes: MdCellAttributes | JsCellAttributes
+        reactive$: Observable<boolean>
     }) {
         this.children = [
             {
@@ -92,8 +95,9 @@ export class CellView implements VirtualDOM<'div'> {
     constructor(params: {
         cellId: string
         language: string
-        editorView: SnippetEditorView
+        editorView: AnyVirtualDOM
         cellAttributes: MdCellAttributes | JsCellAttributes
+        reactive$: Observable<boolean>
         state: State
     }) {
         Object.assign(this, params)
@@ -131,6 +135,7 @@ export class CellView implements VirtualDOM<'div'> {
                 params.editorView,
                 new CellTagsView({
                     cellStatus$: this.state.cellsStatus$[this.cellId],
+                    reactive$: params.reactive$,
                     language: params.language,
                     cellAttributes: params.cellAttributes,
                 }),
@@ -269,11 +274,14 @@ export class CellTagsView implements VirtualDOM<'div'> {
     /**
      *
      * @param params
+     * @param params.cellStatus$ Current cell status.
+     * @param params.reactive$ Whether the cell is reactive.
      * @param params.language Cell's owning state.
      * @param params.attributes Cell attributes.
      */
     constructor(params: {
         cellStatus$: Observable<CellStatus>
+        reactive$: Observable<boolean>
         language: string
         cellAttributes: CellCommonAttributes
     }) {
@@ -307,9 +315,11 @@ export class CellTagsView implements VirtualDOM<'div'> {
             },
             {
                 tag: 'div',
-                class: params.cellAttributes['reactive']
-                    ? 'fas fa-bolt mr-1'
-                    : '',
+                class: {
+                    source$: params.reactive$,
+                    vdomMap: (reactive: boolean) =>
+                        reactive ? 'fas fa-bolt mr-1' : '',
+                },
             },
             {
                 tag: 'div',
