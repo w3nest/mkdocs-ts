@@ -156,6 +156,16 @@ export const navigation: Navigation = {
                         }),
                 },
             },
+            '/interpreter': {
+                name: 'Interpreter',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.interpreter.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+            },
         },
     },
     '/api': {
