@@ -56,6 +56,13 @@ export class Range implements VirtualDOM<'div'> {
      * If `true`, data are emitted in `value$` while dragging the slider.
      */
     public readonly emitDrag: boolean = true
+
+    /**
+     * Style attributes.
+     */
+    public readonly style = {
+        fontSize: 'small',
+    }
     constructor(
         params: {
             min?: number

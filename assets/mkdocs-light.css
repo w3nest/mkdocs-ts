@@ -668,7 +668,28 @@
 
 .mkdocs-NavigationView {
     font-size: 1em;
-    line-height: 1.7em;
+    line-height: 1.5rem;
+    border-radius: 5px;
+}
+
+.mkdocs-NavigationView .fv-tree-header:hover {
+    background-color: rgba(26, 123, 246, 0.05);
+}
+
+.mkdocs-NavigationView .fv-tree-selected {
+    background-color: rgba(26, 123, 246, 0.15);
+}
+
+.mkdocs-NavigationView .fv-tree-selected:hover {
+    background-color: rgba(26, 123, 246, 0.25);
+}
+
+.mkdocs-NavigationView .fv-text-focus {
+    color: inherit !important;
+}
+
+.mkdocs-NavigationView .fv-hover-text-focus:hover {
+    color: inherit !important;
 }
 
 .mkdocs-WrapperSideNav {

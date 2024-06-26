@@ -21,11 +21,11 @@ export class HandlerView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-HandlerView d-flex flex-column justify-content-center rounded-circle mkdocs-ts-expand-nav-node  fv-hover-bg-background-alt fv-hover-text-focus fv-hover-xx-lighter'
+        'mkdocs-HandlerView d-flex flex-column justify-content-center text-center rounded-circle mkdocs-ts-expand-nav-node  mkdocs-hover-bg-1'
     public readonly style = {
-        width: '1.1em',
-        height: '1.1em',
-        fontSize: '0.8em',
+        width: '20px',
+        height: '20px',
+        fontSize: '0.7rem',
     }
 
     public readonly onclick: (ev: MouseEvent) => void
