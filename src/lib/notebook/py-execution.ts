@@ -48,6 +48,7 @@ if 'mknb_cell' in sys.modules:
  * @param _args.output$ Subject in which output views are sent (when using `display` function).
  * @param _args.displayFactory Factory to display HTML elements when `display` is called.
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
+ * @param _args.pyNamespace Namespace holding pyodide globals.
  * @returns Promise over the scope at exit
  */
 export async function executePy({
@@ -56,12 +57,14 @@ export async function executePy({
     output$,
     displayFactory,
     invalidated$,
+    pyNamespace,
 }: {
     src: string
     scope: Scope
     output$: Subject<AnyVirtualDOM>
     displayFactory: DisplayFactory
     invalidated$: Observable<unknown>
+    pyNamespace: unknown
 }) {
     const pyodide = scope.const.pyodide
     registerMknbModule(pyodide)
@@ -90,10 +93,10 @@ new_globals = [k for k in final_globals if k not in initial_globals]
 
 python_scope = { k: pyFctWrapperJs(globals()[k]) for k in new_globals if callable(globals()[k])}
 python_scope
-\`)`
+\`, { globals: pyNamespace} )`
 
     const srcPatched = `
-return async (scope, {display, output$, invalidated$}) => {
+return async (scope, {display, output$, invalidated$, pyNamespace}) => {
 
     // header
 const {${extractKeys(scope.const)}} = scope.const
@@ -108,6 +111,7 @@ ${footer}
         display: displayInOutput,
         invalidated$,
         output$,
+        pyNamespace,
     })
     const scopeOut = {
         let: scope.let,

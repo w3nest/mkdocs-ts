@@ -66,6 +66,7 @@ export class PyCellExecutor implements CellTrait {
         return await executePy({
             ...args,
             invalidated$: this.invalidated$,
+            pyNamespace: this.state.getPyNamespace(window['pyodide']),
         })
     }
 }
