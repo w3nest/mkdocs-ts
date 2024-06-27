@@ -37,11 +37,15 @@ const { pyodide } = await webpm.install({
         display(ev.text)
     },
 })
+</js-cell>
+
+Let's also import a small utility function (implementation [here](@nav/tutorials/notebook/python/utils)) to facilitate displaying Matplotlib plots within 
+the notebook:
+
+<js-cell>
 const {plt_to_svg} = await load("/tutorials/notebook/python/utils")
 </js-cell>
 
-In the above cell, a small utility function (plt_to_svg) is also imported to facilitate displaying Matplotlib plots 
-within the notebook. Its implementation can be found [here](@nav/tutorials/notebook/python/utils).
 
 
 Let's start by defining some parameters (the number of points to be drawn) using a JavaScript variable:

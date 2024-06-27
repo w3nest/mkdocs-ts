@@ -3,7 +3,15 @@
 This pages includes python utilities.
 
 <js-cell>
-const pyodide = window['pyodide']
+const { pyodide } = await webpm.install({
+    pyodide:{
+        version:'0.25.0',
+        modules:["matplotlib"]
+    },
+    onEvent: (ev) => {
+        display(ev.text)
+    },
+})
 </js-cell>
 
 

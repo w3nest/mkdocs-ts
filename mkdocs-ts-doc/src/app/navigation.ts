@@ -162,7 +162,7 @@ export const navigation: Navigation = {
                         new NotebookModule.NotebookPage({
                             url: url('tutorials.notebook.python.utils.md'),
                             router,
-                            options: { ...notebookOptions, runAtStart: false },
+                            options: notebookOptions,
                         }),
                 },
             },
