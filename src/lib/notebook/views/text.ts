@@ -1,10 +1,15 @@
-import { ChildrenLike, VirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
-import { parseMd } from '../../markdown'
+import {
+    ChildrenLike,
+    VirtualDOM,
+    CSSAttribute,
+    AnyVirtualDOM,
+} from '@youwol/rx-vdom'
 
+import { parse } from 'marked'
 /**
  * Represents a text view.
  *
- * The text provided is interpreted as markdown, and can include latex equations.
+ * The text provided is interpreted as MarkDown and can include latex equations.
  *
  * <js-cell>
  * display(new Views.Text('**a simple example**'))
@@ -52,5 +57,21 @@ export class Text implements VirtualDOM<'div'> {
             latex: true,
         })
         this.children = [div]
+    }
+}
+
+function parseMd({
+    src,
+    latex,
+}: {
+    src: string
+    latex: boolean
+}): AnyVirtualDOM {
+    return {
+        tag: 'div',
+        innerHTML: parse(src),
+        connectedCallback: (div: HTMLDivElement) => {
+            latex && window['MathJax'] && window['MathJax'].typeset([div])
+        },
     }
 }
