@@ -15,6 +15,7 @@ import {
     CellCommonAttributes,
     defaultCellAttributes,
     JsCellExecutor,
+    JsCellView,
     NotebookPage,
     PyCellExecutor,
     Views,
@@ -265,6 +266,12 @@ export class State {
         cell.content$.subscribe((src) => {
             this.updateSrc({ cellId: cell.cellId, src })
         })
+    }
+
+    createJsCell(elem: HTMLElement): JsCellView {
+        const cell = JsCellView.FromDom({ elem, state: this })
+        this.appendCell(cell)
+        return cell
     }
 
     createDeportedOutputsView(elem: HTMLElement): OutputsView {

@@ -3,7 +3,6 @@ import { parseMd, MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
 import { Scope, State } from './state'
-import { JsCellView } from './js-cell-view'
 import { MdCellView } from './md-cell-view'
 import { PyCellView } from './py-cell-view'
 import { DisplayFactory } from './display-utils'
@@ -83,19 +82,7 @@ export const notebookViews = ({
             return state.createDeportedOutputsView(elem)
         },
         'js-cell': (elem: HTMLElement) => {
-            const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
-            const reactive = elem.getAttribute('reactive') === 'true'
-            const cell = new JsCellView({
-                cellId: id,
-                content: elem.textContent,
-                state: state,
-                cellAttributes: {
-                    ...getCellOptions(elem, cellOptions),
-                    reactive,
-                },
-            })
-            state.appendCell(cell)
-            return cell
+            return state.createJsCell(elem)
         },
         'md-cell': (elem: HTMLElement, parserOptions) => {
             const id = elem.getAttribute('cell-id') || elem.getAttribute('id')

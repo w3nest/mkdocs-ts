@@ -79,19 +79,75 @@ export class JsCellExecutor implements CellTrait {
  *
  * Represents a Javascript cell within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `js-cell`, in this case
- * associated attributes are provided as DOM attributes; see {@link JsCellAttributes}.
+ * They are typically included from a DOM definition with tag name `js-cell` in MarkDown content,
+ * see {@link JsCellView.FromDom}.
  */
 export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     /**
-     * Classes associated to the view.
+     * Classes associated with the view.
      */
     public readonly class = 'mknb-JsCellView'
     public readonly children: ChildrenLike
 
+    /**
+     * The encapsulated code editor view.
+     */
     public readonly editorView: CodeSnippetView
 
+    /**
+     * Defines the methods to retrieve constructor's arguments from the DOM element `js-cell` within
+     * MarkDown content.
+     *
+     * <note level='warning'>
+     * Be mindful of the conversion from `camelCase` to `kebab-case`.
+     * </note>
+     */
+    static readonly FromDomAttributes = {
+        cellId: (e: HTMLElement) =>
+            e.getAttribute('cell-id') || e.getAttribute('id'),
+        content: (e: HTMLElement) => e.textContent,
+        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
+        lineNumber: (e: HTMLElement) =>
+            e.getAttribute('line-number') === 'true',
+        reactive: (e: HTMLElement) => e.getAttribute('reactive') === 'true',
+    }
+
+    /**
+     * Initialize an instance of {@link JsCellView} from a DOM element `js-cell` in MarkDown content
+     *  (the parameter `state` is automatically provided).
+     *
+     * <note level="hint" label="Constructor's attributes mapping">
+     *  The static property {@link JsCellView.FromDomAttributes | FromDomAttributes}
+     *  defines the mapping between the DOM element and the constructor's attributes.
+     * </note>
+     *
+     * @param _p
+     * @param _p.elem The DOM element.
+     * @param _p.state The page state.
+     */
+    static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
+        const params = {
+            cellId: JsCellView.FromDomAttributes.cellId(elem),
+            content: JsCellView.FromDomAttributes.content(elem),
+            cellAttributes: {
+                readOnly: JsCellView.FromDomAttributes.readOnly(elem),
+                lineNumber: JsCellView.FromDomAttributes.lineNumber(elem),
+                reactive: JsCellView.FromDomAttributes.reactive(elem),
+            },
+        }
+        return new JsCellView({ ...params, state })
+    }
+
+    /**
+     * Initialize a new instance.
+     *
+     * @param params
+     * @param params.cellId The cell's ID.
+     * @param params.content The cell's content.
+     * @param params.state The page's state.
+     * @param params.cellAttributes Cell's attributes.
+     */
     constructor(params: {
         cellId: string
         content: string
