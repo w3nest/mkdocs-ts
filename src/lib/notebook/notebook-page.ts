@@ -3,7 +3,6 @@ import { parseMd, MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
 import { Scope, State } from './state'
-import { MdCellView } from './md-cell-view'
 import { DisplayFactory } from './display-utils'
 import { InterpreterCellView } from './interpreter-cell-view'
 
@@ -83,17 +82,8 @@ export const notebookViews = ({
         'js-cell': (elem: HTMLElement) => {
             return state.createJsCell(elem)
         },
-        'md-cell': (elem: HTMLElement, parserOptions) => {
-            const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
-            const cell = new MdCellView({
-                cellId: id,
-                content: elem.textContent,
-                state: state,
-                parserOptions,
-                cellAttributes: getCellOptions(elem, cellOptions),
-            })
-            state.appendCell(cell)
-            return cell
+        'md-cell': (elem: HTMLElement, parserOptions: MdParsingOptions) => {
+            return state.createMdCell(elem, parserOptions)
         },
         'py-cell': (elem: HTMLElement) => {
             return state.createPyCell(elem)

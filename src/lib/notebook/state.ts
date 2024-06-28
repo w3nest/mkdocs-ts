@@ -16,6 +16,7 @@ import {
     defaultCellAttributes,
     JsCellExecutor,
     JsCellView,
+    MdCellView,
     NotebookPage,
     PyCellExecutor,
     PyCellView,
@@ -23,7 +24,7 @@ import {
 } from '.'
 import { Router } from '../router'
 import { fromFetch } from 'rxjs/fetch'
-import { parseMd } from '../markdown'
+import { MdParsingOptions, parseMd } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 
 export type CellStatus =
@@ -277,6 +278,15 @@ export class State {
 
     createPyCell(elem: HTMLElement): PyCellView {
         const cell = PyCellView.FromDom({ elem, state: this })
+        this.appendCell(cell)
+        return cell
+    }
+
+    createMdCell(
+        elem: HTMLElement,
+        parserOptions: MdParsingOptions,
+    ): MdCellView {
+        const cell = MdCellView.FromDom({ elem, state: this, parserOptions })
         this.appendCell(cell)
         return cell
     }
