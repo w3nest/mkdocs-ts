@@ -1,4 +1,4 @@
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
 import { ObjectJs } from '@youwol/rx-tree-views'
 import { Observable, Subject } from 'rxjs'
 
@@ -128,4 +128,27 @@ export function defaultDisplayFactory(): DisplayFactory {
             view: htmlView,
         },
     ]
+}
+
+/**
+ * Convert an inlined style defined in a DOM element, to a CSS dictionary `styleAttribute -> value`.
+ *
+ * @param styleString The string (e.g. `"width:100%; height:100%"`).
+ * @returns The CSS dictionary.
+ */
+export function parseStyle(styleString: string): CSSAttribute {
+    if (!styleString) {
+        return {}
+    }
+    const stylePairs = styleString.split(';')
+    const styleObject = {}
+
+    stylePairs.forEach((pair) => {
+        const [property, value] = pair.split(':').map((s) => s.trim())
+        if (property && value) {
+            styleObject[property] = value
+        }
+    })
+
+    return styleObject
 }

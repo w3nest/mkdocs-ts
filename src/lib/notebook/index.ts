@@ -26,4 +26,5 @@ export {
     DisplayFactory,
     DisplayComponent,
     defaultDisplayFactory,
+    parseStyle,
 } from './display-utils'

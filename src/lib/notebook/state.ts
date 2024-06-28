@@ -10,7 +10,7 @@ import {
 } from 'rxjs'
 import { OutputsView, DeportedOutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
-import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import {
     CellCommonAttributes,
     defaultCellAttributes,
@@ -267,35 +267,17 @@ export class State {
         })
     }
 
-    registerDeportedOutputsView({
-        defaultContent,
-        cellId,
-        classList,
-        style,
-        inlined,
-        fullScreen,
-    }: {
-        defaultContent: string
-        cellId: string
-        classList: string
-        style: CSSAttribute
-        inlined: boolean
-        fullScreen: boolean
-    }): OutputsView {
+    createDeportedOutputsView(elem: HTMLElement): OutputsView {
+        const cellId = DeportedOutputsView.FromDomAttributes.cellId(elem)
         if (!this.outputs$[cellId]) {
             this.outputs$[cellId] = new ReplaySubject()
             this.executing$[cellId] = new BehaviorSubject(false)
         }
-        const view = new DeportedOutputsView({
-            defaultContent,
-            output$: this.outputs$[cellId],
-            style,
-            classList,
-            fullScreen,
-            inlined,
-        })
         this.deportedOutputsViews.push(cellId)
-        return view
+        return DeportedOutputsView.FromDom({
+            elem,
+            output$: this.outputs$[cellId],
+        })
     }
 
     updateSrc({ cellId, src }: { cellId: string; src: string }) {

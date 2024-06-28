@@ -79,19 +79,8 @@ export const notebookViews = ({
     cellOptions: CellCommonAttributes
 }) => {
     return {
-        'cell-output': (elem) => {
-            const cellId = elem.getAttribute('cell-id')
-            const style = parseStyle(elem.getAttribute('style'))
-            const classList = elem.getAttribute('class') || ''
-            const inlined = elem.getAttribute('inlined') || false
-            return state.registerDeportedOutputsView({
-                defaultContent: elem.textContent,
-                cellId,
-                style,
-                classList,
-                fullScreen: elem.getAttribute('full-screen') === 'true',
-                inlined,
-            })
+        'cell-output': (elem: HTMLElement) => {
+            return state.createDeportedOutputsView(elem)
         },
         'js-cell': (elem) => {
             const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
@@ -253,20 +242,4 @@ export class NotebookPage implements VirtualDOM<'div'> {
             },
         ]
     }
-}
-function parseStyle(styleString: string): { [k: string]: string } {
-    if (!styleString) {
-        return {}
-    }
-    const stylePairs = styleString.split(';')
-    const styleObject = {}
-
-    stylePairs.forEach((pair) => {
-        const [property, value] = pair.split(':').map((s) => s.trim())
-        if (property && value) {
-            styleObject[property] = value
-        }
-    })
-
-    return styleObject
 }
