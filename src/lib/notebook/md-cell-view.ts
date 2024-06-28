@@ -5,7 +5,6 @@ import { CellTrait, ExecArgs, Output, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, Observable, of, ReplaySubject } from 'rxjs'
 import { parseMd, MdParsingOptions } from '../markdown'
-import { JsCellAttributes } from './js-cell-view'
 import { executeJsStatement } from './js-execution'
 import { DisplayFactory } from './display-utils'
 
@@ -51,34 +50,107 @@ export class InlinedCode implements VirtualDOM<'div'> {
 }
 /**
  *
- * Represents a Markdown cell within a {@link NotebookPage}.
+ * Represents a MarkDown cell within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `md-cell`, in this case
- * associated attributes are provided as DOM attributes; see {@link CellCommonAttributes}.
+ * They are typically included from a DOM definition with tag name `md-cell` in MarkDown content,
+ * see {@link MdCellView.FromDom}.
  */
 export class MdCellView implements VirtualDOM<'div'>, CellTrait {
     public readonly tag = 'div'
     /**
-     * Classes associated to the view.
+     * Classes associated with the view.
      */
     public readonly class = 'mknb-MdCellView'
     public readonly children: ChildrenLike
+    /**
+     * Cell's ID.
+     */
     public readonly cellId: string
-    public readonly cellAttributes: JsCellAttributes
+    /**
+     * Cell's Attributes.
+     */
+    public readonly cellAttributes: MdCellAttributes
     /**
      * State manager, owned by the parent {@link NotebookPage}.
      */
     public readonly state: State
-
+    /**
+     * Encapsulated editor view.
+     */
     public readonly editorView: CodeSnippetView
     /**
      * Observable over the source content of the cell.
      */
     public readonly content$: BehaviorSubject<string>
 
+    /**
+     * Options for parsing MarkDown code.
+     */
     public readonly parserOptions: MdParsingOptions
+    /**
+     * Emit when the cell is invalidated.
+     */
     public readonly invalidated$: Observable<unknown>
 
+    /**
+     * Defines the methods to retrieve constructor's arguments from the DOM element `md-cell` within
+     * MarkDown content.
+     *
+     * <note level='warning'>
+     * Be mindful of the conversion from `camelCase` to `kebab-case`.
+     * </note>
+     */
+    static readonly FromDomAttributes = {
+        cellId: (e: HTMLElement) =>
+            e.getAttribute('cell-id') || e.getAttribute('id'),
+        content: (e: HTMLElement) => e.textContent,
+        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
+        lineNumber: (e: HTMLElement) =>
+            e.getAttribute('line-number') === 'true',
+    }
+    /**
+     * Initialize an instance of {@link MdCellView} from a DOM element `md-cell` in MarkDown content
+     *  (the parameter `state` & `parserOptions` are automatically provided).
+     *
+     * <note level="hint" label="Constructor's attributes mapping">
+     *  The static property {@link MdCellView.FromDomAttributes | FromDomAttributes}
+     *  defines the mapping between the DOM element and the constructor's attributes.
+     * </note>
+     *
+     * @param _p
+     * @param _p.elem The DOM element.
+     * @param _p.parserOptions MarkDown parsing options.
+     * @param _p.state The page state.
+     */
+    static FromDom({
+        elem,
+        parserOptions,
+        state,
+    }: {
+        elem: HTMLElement
+        parserOptions: MdParsingOptions
+        state: State
+    }) {
+        const params = {
+            cellId: MdCellView.FromDomAttributes.cellId(elem),
+            content: MdCellView.FromDomAttributes.content(elem),
+            cellAttributes: {
+                readOnly: MdCellView.FromDomAttributes.readOnly(elem),
+                lineNumber: MdCellView.FromDomAttributes.lineNumber(elem),
+            },
+        }
+        return new MdCellView({ ...params, parserOptions, state })
+    }
+    /**
+     * Initialize a new instance.
+     *
+     * @param params
+     * @param params.cellId The cell's ID.
+     * @param params.content The cell's content.
+     * @param params.state The page's state.
+     * @param params.parserOptions MarkDown parsing options.
+     * @param params.cellAttributes Cell's attributes.
+     */
     constructor(params: {
         cellId: string
         content: string
@@ -105,7 +177,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                 state: this.state,
                 editorView: this.editorView,
                 cellAttributes: this.cellAttributes,
-                reactive$: of(this.cellAttributes.reactive),
+                reactive$: of(false),
             }),
         ]
     }
@@ -146,10 +218,6 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                 },
                 ...notebookViews({
                     state: state,
-                    cellOptions: {
-                        readOnly: true,
-                        lineNumbers: false,
-                    },
                 }),
             },
         })

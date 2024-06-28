@@ -38,19 +38,25 @@ export type InterpreterCellAttributes = CellCommonAttributes & {
 
 /**
  *
- * Represents a cell that runs using a dedicated backend interpreter.
+ * Represents a cell that runs using a dedicated backend interpreter within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `interpreter-cell`, in this case
- * associated attributes are provided as DOM attributes; see {@link InterpreterCellAttributes}.
+ * They are typically included from a DOM definition with tag name `interpreter-cell` in MarkDown content,
+ * see {@link InterpreterCellView.FromDom}.
  */
 export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
     public readonly tag = 'div'
     /**
-     * Classes associated to the view.
+     * Classes associated with the view.
      */
     public readonly class = 'mknb-InterpreterCellView'
     public readonly children: ChildrenLike
+    /**
+     * Cell's ID.
+     */
     public readonly cellId: string
+    /**
+     * Cell's attributes.
+     */
     public readonly cellAttributes: InterpreterCellAttributes
     /**
      * State manager, owned by the parent {@link NotebookPage}.
@@ -63,10 +69,81 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
      */
     public readonly content$: BehaviorSubject<string>
 
+    /**
+     * Emit when the cell is invalidated.
+     */
     public readonly invalidated$: Observable<unknown>
 
+    /**
+     * Current state regarding whether the cell is reactive.
+     */
     public readonly reactive$ = new BehaviorSubject(false)
 
+    /**
+     * Defines the methods to retrieve constructor's arguments from the DOM element `interpreter-cell` within
+     * MarkDown content.
+     *
+     * <note level='warning'>
+     * Be mindful of the conversion from `camelCase` to `kebab-case`.
+     * </note>
+     */
+    static readonly FromDomAttributes = {
+        cellId: (e: HTMLElement) =>
+            e.getAttribute('cell-id') || e.getAttribute('id'),
+        content: (e: HTMLElement) => e.textContent,
+        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
+        lineNumber: (e: HTMLElement) =>
+            e.getAttribute('line-number') === 'true',
+        interpreter: (e: HTMLElement) => e.getAttribute('interpreter'),
+        language: (e: HTMLElement) =>
+            e.getAttribute('language') as unknown as 'javascript' | 'python',
+        capturedIn: (e: HTMLElement) =>
+            (e.getAttribute('captured-in') || '').split(' '),
+        capturedOut: (e: HTMLElement) =>
+            (e.getAttribute('captured-out') || '').split(' '),
+    }
+    /**
+     * Initialize an instance of {@link InterpreterCellView} from a DOM element `interpreter-cell` in MarkDown content
+     *  (the parameter `state` is automatically provided).
+     *
+     * <note level="hint" label="Constructor's attributes mapping">
+     *  The static property {@link InterpreterCellView.FromDomAttributes | FromDomAttributes}
+     *  defines the mapping between the DOM element and the constructor's attributes.
+     * </note>
+     *
+     * @param _p
+     * @param _p.elem The DOM element.
+     * @param _p.state The page state.
+     */
+    static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
+        const params = {
+            cellId: InterpreterCellView.FromDomAttributes.cellId(elem),
+            content: InterpreterCellView.FromDomAttributes.content(elem),
+            cellAttributes: {
+                readOnly: InterpreterCellView.FromDomAttributes.readOnly(elem),
+                lineNumber:
+                    InterpreterCellView.FromDomAttributes.lineNumber(elem),
+                interpreter:
+                    InterpreterCellView.FromDomAttributes.interpreter(elem),
+                language: InterpreterCellView.FromDomAttributes.language(elem),
+                capturedIn:
+                    InterpreterCellView.FromDomAttributes.capturedIn(elem),
+                capturedOut:
+                    InterpreterCellView.FromDomAttributes.capturedOut(elem),
+            },
+        }
+        return new InterpreterCellView({ ...params, state })
+    }
+
+    /**
+     * Initialize a new instance.
+     *
+     * @param params
+     * @param params.cellId The cell's ID.
+     * @param params.content The cell's content.
+     * @param params.state The page's state.
+     * @param params.cellAttributes Cell's attributes.
+     */
     constructor(params: {
         cellId: string
         content: string

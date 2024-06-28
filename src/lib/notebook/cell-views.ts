@@ -8,15 +8,13 @@ import {
     ChildrenLike,
     CSSAttribute,
     VirtualDOM,
-    RxChildren,
 } from '@youwol/rx-vdom'
-import { BehaviorSubject, combineLatest, filter, Observable, take } from 'rxjs'
+import { BehaviorSubject, filter, Observable, take } from 'rxjs'
 import { CellStatus, Output, State } from './state'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
-import { parseMd } from '../markdown'
 
 /**
  * Represents the view of a cell that will render once the associated cell is registered in the {@link State}.
@@ -330,7 +328,10 @@ export class CellTagsView implements VirtualDOM<'div'> {
     }
 }
 
-type OutputMode = 'normal' | 'fullscreen'
+/**
+ * Display mode for {@link DeportedOutputsView | deported outputs}.
+ */
+export type OutputMode = 'normal' | 'fullscreen'
 /**
  * Represents the output view of a cell (when using *e.g.* the `display` function).
  */
@@ -371,144 +372,5 @@ export class OutputsView implements VirtualDOM<'div'> {
             policy: 'sync',
             vdomMap: (output: AnyVirtualDOM) => output,
         }
-    }
-}
-
-/**
- * Represents a deported output view (instantiated from `cell-output` element).
- */
-export class DeportedOutputsView implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-
-    /**
-     * Classes associated to the view.
-     */
-    public readonly class: string = 'mknb-DeportedOutputsView'
-    public readonly children: ChildrenLike
-    public readonly output$: Observable<Output>
-
-    public readonly style: CSSAttribute
-    public readonly fullScreen: boolean
-    public readonly mode$ = new BehaviorSubject<OutputMode>('normal')
-
-    /**
-     *
-     * @param params
-     * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from
-     * `output$`.
-     * @param params.output$ Observable over the outputs to display.
-     * @param params.fullScreen Whether to add a menu to allow expanding the output.
-     * @param params.style Style to apply to this element. It does not apply to the  ̀defaultContent` view.
-     * @param params.classList Classes added to this element. It does not apply to the  ̀defaultContent` view.
-     */
-    constructor(params: {
-        defaultContent: string
-        output$: Observable<Output>
-        fullScreen?: boolean
-        style?: CSSAttribute
-        classList?: string
-        inlined?: boolean
-    }) {
-        this.output$ = params.output$
-        this.fullScreen = params.fullScreen
-        if (params.inlined) {
-            this.style = { display: 'inline-block' }
-        }
-        const outputs$ = new BehaviorSubject([])
-        this.output$.subscribe((out: Output) => {
-            if (out === undefined) {
-                outputs$.next([])
-                return
-            }
-            outputs$.next([...outputs$.value, out])
-        })
-        const content: RxChildren<'sync', AnyVirtualDOM> = {
-            source$: outputs$,
-            policy: 'sync',
-            vdomMap: (output: AnyVirtualDOM) => output,
-        }
-        this.children = [
-            {
-                source$: outputs$,
-                vdomMap: (outputs: AnyVirtualDOM[]) => {
-                    if (!this.fullScreen || outputs.length === 0) {
-                        return { tag: 'div' }
-                    }
-                    return {
-                        tag: 'div',
-                        class: 'w-100 d-flex pb-1',
-                        children: [
-                            { tag: 'div', class: 'flex-grow-1' },
-                            {
-                                tag: 'div',
-                                class: 'fas fa-expand fv-pointer',
-                                onclick: () => this.mode$.next('fullscreen'),
-                            },
-                        ],
-                    }
-                },
-            },
-            {
-                tag: 'div',
-                class: 'd-flex flex-column justify-content-center mkdocs-bg-info',
-                style: {
-                    source$: this.mode$,
-                    vdomMap: (mode: OutputMode) => {
-                        return mode === 'normal'
-                            ? {
-                                  position: 'initial',
-                                  width: '100%',
-                                  height: 'auto',
-                                  backdropFilter: 'none',
-                              }
-                            : {
-                                  position: 'absolute',
-                                  top: '0vh',
-                                  left: '0vw',
-                                  width: '100vw',
-                                  height: '100vh',
-                                  zIndex: 10,
-                                  backdropFilter: 'blur(2px)',
-                              }
-                    },
-                },
-                children: [
-                    {
-                        source$: outputs$,
-                        vdomMap: (outputs: Array<unknown>) =>
-                            outputs.length === 0
-                                ? parseMd({ src: params.defaultContent })
-                                : { tag: 'div' },
-                    },
-                    {
-                        tag: 'div' as const,
-                        style: {
-                            source$: outputs$,
-                            vdomMap: (outputs: unknown[]) => ({
-                                backgroundColor: 'rgb(255,255,255)',
-                                ...(outputs.length === 0 ? {} : params.style),
-                            }),
-                        },
-                        class: {
-                            source$: combineLatest([this.mode$, outputs$]),
-                            vdomMap: ([mode, outputs]: [
-                                OutputMode,
-                                unknown[],
-                            ]) => {
-                                if (outputs.length === 0) {
-                                    return ''
-                                }
-                                return mode === 'normal'
-                                    ? params.classList
-                                    : `p-2 border rounded h-75 w-75 mx-auto ${params.classList}`
-                            },
-                        },
-                        children: content,
-                        onclick: (ev) => ev.stopPropagation(),
-                    },
-                ],
-                onclick: () => this.mode$.next('normal'),
-            },
-        ]
     }
 }
