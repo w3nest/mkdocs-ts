@@ -195,6 +195,15 @@ export class State {
         [k: string]: { state: State; exports: Scope }
     } = {}
 
+    /**
+     * Pyodide execution should be namespaced by notebook page,
+     * this variable holds the symbols.
+     *
+     * This is a python dictionary initialized with `pyodide.globals.get("dict")()`
+     * when the notebook page is loaded and reused across python cells.
+     */
+    private pyNamespace: { get: (key: string) => unknown }
+
     constructor(params: {
         initialScope?: Partial<Scope>
         router: Router
@@ -229,6 +238,11 @@ export class State {
                     )
                 })
         }
+    }
+
+    getPyNamespace(pyodide) {
+        this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()
+        return this.pyNamespace
     }
 
     appendCell(cell: CellTrait) {
