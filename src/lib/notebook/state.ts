@@ -18,6 +18,7 @@ import {
     JsCellView,
     NotebookPage,
     PyCellExecutor,
+    PyCellView,
     Views,
 } from '.'
 import { Router } from '../router'
@@ -270,6 +271,12 @@ export class State {
 
     createJsCell(elem: HTMLElement): JsCellView {
         const cell = JsCellView.FromDom({ elem, state: this })
+        this.appendCell(cell)
+        return cell
+    }
+
+    createPyCell(elem: HTMLElement): PyCellView {
+        const cell = PyCellView.FromDom({ elem, state: this })
         this.appendCell(cell)
         return cell
     }

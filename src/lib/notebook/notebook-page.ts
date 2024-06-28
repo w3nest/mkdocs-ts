@@ -4,7 +4,6 @@ import { Router } from '../router'
 import { from, of, take } from 'rxjs'
 import { Scope, State } from './state'
 import { MdCellView } from './md-cell-view'
-import { PyCellView } from './py-cell-view'
 import { DisplayFactory } from './display-utils'
 import { InterpreterCellView } from './interpreter-cell-view'
 
@@ -97,15 +96,7 @@ export const notebookViews = ({
             return cell
         },
         'py-cell': (elem: HTMLElement) => {
-            const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
-            const cell = new PyCellView({
-                cellId: id,
-                content: elem.textContent,
-                state: state,
-                cellAttributes: getCellOptions(elem, cellOptions),
-            })
-            state.appendCell(cell)
-            return cell
+            return state.createPyCell(elem)
         },
         'interpreter-cell': (elem: HTMLElement) => {
             const id = elem.getAttribute('cell-id') || elem.getAttribute('id')

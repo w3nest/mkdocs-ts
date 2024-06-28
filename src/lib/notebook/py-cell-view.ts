@@ -73,17 +73,17 @@ export class PyCellExecutor implements CellTrait {
 
 /**
  *
- * Represents a Python cell within a {@link NotebookPage}.
+ * Represents a Python cell (running in browser) within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `py-cell`, in this case
- * associated attributes are provided as DOM attributes; see {@link PyCellAttributes}.
+ * They are typically included from a DOM definition with tag name `py-cell` in MarkDown content,
+ * see {@link PyCellView.FromDom}.
  */
 export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     /**
-     * Classes associated to the view.
+     * Classes associated with the view.
      */
-    public readonly class = 'mknb-JsCellView'
+    public readonly class = 'mknb-PyCellView'
     public readonly children: ChildrenLike
 
     /**
@@ -91,6 +91,57 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
      */
     public readonly editorView: CodeSnippetView
 
+    /**
+     * Defines the methods to retrieve constructor's arguments from the DOM element `py-cell` within
+     * MarkDown content.
+     *
+     * <note level='warning'>
+     * Be mindful of the conversion from `camelCase` to `kebab-case`.
+     * </note>
+     */
+    static readonly FromDomAttributes = {
+        cellId: (e: HTMLElement) =>
+            e.getAttribute('cell-id') || e.getAttribute('id'),
+        content: (e: HTMLElement) => e.textContent,
+        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
+        lineNumber: (e: HTMLElement) =>
+            e.getAttribute('line-number') === 'true',
+    }
+
+    /**
+     * Initialize an instance of {@link PyCellView} from a DOM element `py-cell` in MarkDown content
+     *  (the parameter `state` is automatically provided).
+     *
+     * <note level="hint" label="Constructor's attributes mapping">
+     *  The static property {@link PyCellView.FromDomAttributes | FromDomAttributes}
+     *  defines the mapping between the DOM element and the constructor's attributes.
+     * </note>
+     *
+     * @param _p
+     * @param _p.elem The DOM element.
+     * @param _p.state The page state.
+     */
+    static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
+        const params = {
+            cellId: PyCellView.FromDomAttributes.cellId(elem),
+            content: PyCellView.FromDomAttributes.content(elem),
+            cellAttributes: {
+                readOnly: PyCellView.FromDomAttributes.readOnly(elem),
+                lineNumber: PyCellView.FromDomAttributes.lineNumber(elem),
+            },
+        }
+        return new PyCellView({ ...params, state })
+    }
+
+    /**
+     * Initialize a new instance.
+     *
+     * @param params
+     * @param params.cellId The cell's ID.
+     * @param params.content The cell's content.
+     * @param params.state The page's state.
+     * @param params.cellAttributes Cell's attributes.
+     */
     constructor(params: {
         cellId: string
         content: string
