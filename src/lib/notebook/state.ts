@@ -8,12 +8,13 @@ import {
     map,
     firstValueFrom,
 } from 'rxjs'
-import { OutputsView, DeportedOutputsView } from './cell-views'
+import { OutputsView } from './cell-views'
 import * as webpm from '@youwol/webpm-client'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import {
     CellCommonAttributes,
     defaultCellAttributes,
+    DeportedOutputsView,
     InterpreterCellView,
     JsCellExecutor,
     JsCellView,

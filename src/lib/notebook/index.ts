@@ -15,6 +15,7 @@
 export * from './notebook-page'
 export * from './state'
 export * from './cell-views'
+export * from './deported-outputs-view'
 export * from './js-cell-view'
 export * from './md-cell-view'
 export * from './py-cell-view'
