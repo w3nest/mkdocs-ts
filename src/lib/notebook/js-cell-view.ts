@@ -14,7 +14,7 @@ export type JsCellAttributes = CellCommonAttributes & {
      * If the cell is reactive, Observables & Promises referenced are automatically resolved.
      * It uses a 'combineLatest' policy.
      */
-    reactive: true
+    reactive: boolean
 }
 
 /**
