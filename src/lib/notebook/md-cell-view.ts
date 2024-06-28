@@ -218,10 +218,6 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                 },
                 ...notebookViews({
                     state: state,
-                    cellOptions: {
-                        readOnly: true,
-                        lineNumbers: false,
-                    },
                 }),
             },
         })

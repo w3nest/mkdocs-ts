@@ -14,6 +14,7 @@ import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import {
     CellCommonAttributes,
     defaultCellAttributes,
+    InterpreterCellView,
     JsCellExecutor,
     JsCellView,
     MdCellView,
@@ -287,6 +288,12 @@ export class State {
         parserOptions: MdParsingOptions,
     ): MdCellView {
         const cell = MdCellView.FromDom({ elem, state: this, parserOptions })
+        this.appendCell(cell)
+        return cell
+    }
+
+    createInterpreterCell(elem: HTMLElement): InterpreterCellView {
+        const cell = InterpreterCellView.FromDom({ elem, state: this })
         this.appendCell(cell)
         return cell
     }

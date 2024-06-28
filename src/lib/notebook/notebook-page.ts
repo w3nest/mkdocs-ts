@@ -4,7 +4,6 @@ import { Router } from '../router'
 import { from, of, take } from 'rxjs'
 import { Scope, State } from './state'
 import { DisplayFactory } from './display-utils'
-import { InterpreterCellView } from './interpreter-cell-view'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -52,29 +51,7 @@ export type NotebookOptions = {
     markdown?: MdParsingOptions
 }
 
-function getCellOptions(
-    elem: HTMLElement,
-    overrides: CellCommonAttributes,
-): CellCommonAttributes {
-    const lineNumbers = elem.getAttribute('line-numbers')
-    const readOnly = elem.getAttribute('read-only')
-
-    return {
-        ...defaultCellAttributes,
-        ...(lineNumbers !== undefined
-            ? { lineNumbers: lineNumbers === 'true' }
-            : {}),
-        ...(readOnly !== undefined ? { readOnly: readOnly === 'true' } : {}),
-        ...overrides,
-    }
-}
-export const notebookViews = ({
-    state,
-    cellOptions,
-}: {
-    state: State
-    cellOptions: CellCommonAttributes
-}) => {
+export const notebookViews = ({ state }: { state: State }) => {
     return {
         'cell-output': (elem: HTMLElement) => {
             return state.createDeportedOutputsView(elem)
@@ -89,29 +66,7 @@ export const notebookViews = ({
             return state.createPyCell(elem)
         },
         'interpreter-cell': (elem: HTMLElement) => {
-            const id = elem.getAttribute('cell-id') || elem.getAttribute('id')
-            const capturedIn = (elem.getAttribute('captured-in') || '').split(
-                ' ',
-            )
-            const capturedOut = (elem.getAttribute('captured-out') || '').split(
-                ' ',
-            )
-            const cell = new InterpreterCellView({
-                cellId: id,
-                content: elem.textContent,
-                state: state,
-                cellAttributes: {
-                    ...getCellOptions(elem, cellOptions),
-                    interpreter: elem.getAttribute('interpreter'),
-                    language: elem.getAttribute('language') as unknown as
-                        | 'javascript'
-                        | 'python',
-                    capturedIn,
-                    capturedOut,
-                },
-            })
-            state.appendCell(cell)
-            return cell
+            return state.createInterpreterCell(elem)
         },
     }
 }
@@ -182,10 +137,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
                 : from(fetch(this.url).then((resp) => resp.text())).pipe(
                       take(1),
                   )
-        const cellOptions = {
-            ...defaultCellAttributes,
-            ...(params.options?.defaultCellAttributes || {}),
-        }
+
         this.children = [
             {
                 source$,
@@ -198,7 +150,6 @@ export class NotebookPage implements VirtualDOM<'div'> {
                             ...(this.options?.markdown?.views || {}),
                             ...notebookViews({
                                 state: this.state,
-                                cellOptions,
                             }),
                         },
                     })
