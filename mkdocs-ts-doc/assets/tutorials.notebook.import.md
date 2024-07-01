@@ -133,11 +133,10 @@ project = await project.with({
     toolboxes:["@youwol/vsf-three", '@youwol/vsf-pmp', '@youwol/vsf-rxjs'],
     workflow: {
         branches:[
-            "(of#of)>>(torusKnot#geom)>>(fromThree#three->pmp)>>(uniformRemeshing#remesh)>>(toThree#pmp->three)>>0(combineLatest#combine)>>(mesh#threeMesh)>>(viewer#viewer)",
-            "(#of)>>(standardMaterial#material)>>1(#combine)"
+            "(of#of)>>(torusKnot#geom)>>(fromThree#convIn)" + 
+            ">>(uniformRemeshing#remesh)>>(toThree#convOut)>>(viewer#viewer)"
         ],
         configurations:{
-            material: { wireframe: true },
             remesh: { edgeFactor: 0.7 }
         }
     }
@@ -248,20 +247,20 @@ target="_blank">install guide</a> for more information in case of troubles.
 When designing your notebook projects, you may want to factorize code or hide implementation details in separate
 notebook pages. The `load` function is available within JavaScript cells to do so.
 
-The next cell illustrates this feature by importing the `timer1s` variable from this
-[page](@nav/tutorials/notebook/import/from-page): 
+The next cell illustrates this feature by importing the `ChartView` function from this
+[page](@nav/tutorials/notebook/import-utils): 
 
 <js-cell>
-const {timer1s} = await load("/tutorials/notebook/import/from-page")
+const { ChartView } = await load("/tutorials/notebook/import-utils")
 
-</js-cell>
+const data = rxjs.timer(0,1000).pipe(
+    rxjs.map(() => ({
+        x: Array.from({length: 100}, () => Math.random()),
+        y: Array.from({length: 100}, () => Math.random())
+    }))
+)
 
-You can then reference the variables imported, eventually reactive ones (the next cell is reactive):
-
-<js-cell reactive='true'>
-const div = document.createElement('div')
-div.innerText = `Tick : ${timer1s}`
-display(div)
+display( await ChartView({data}) )
 </js-cell>
 
 <note level='warning'>

@@ -125,16 +125,6 @@ export const navigation: Navigation = {
                         router,
                         options: notebookOptions,
                     }),
-                '/from-page': {
-                    name: 'From a page',
-                    tableOfContent,
-                    html: ({ router }) =>
-                        new NotebookModule.NotebookPage({
-                            url: url('tutorials.notebook.import.from-page.md'),
-                            router,
-                            options: notebookOptions,
-                        }),
-                },
             },
             '/scope': {
                 name: 'Scope & Mutations',
@@ -155,12 +145,12 @@ export const navigation: Navigation = {
                         router,
                         options: notebookOptions,
                     }),
-                '/utils': {
-                    name: 'Utils',
+                '/matplotlib': {
+                    name: 'Matplotlib',
                     tableOfContent,
                     html: ({ router }) =>
                         new NotebookModule.NotebookPage({
-                            url: url('tutorials.notebook.python.utils.md'),
+                            url: url('tutorials.notebook.python.matplotlib.md'),
                             router,
                             options: notebookOptions,
                         }),
@@ -172,6 +162,16 @@ export const navigation: Navigation = {
                 html: ({ router }) =>
                     new NotebookModule.NotebookPage({
                         url: url('tutorials.notebook.interpreter.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+            },
+            '/import-utils': {
+                name: 'Import Utilities',
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.import-utils.md'),
                         router,
                         options: notebookOptions,
                     }),

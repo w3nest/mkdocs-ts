@@ -193,12 +193,10 @@ The following example fetches the root markdown source of this application:
 
 <js-cell cell-id="example2">
 
-const docBasePath = '{{assetsBasePath}}'
-
 navigation = {
     name: 'Root Node',
     tableOfContent,
-    html: MkDocs.fetchMd({ url: `${docBasePath}/index.md` }),
+    html: MkDocs.fetchMd({ url: '../assets/index.md' }),
 }
 displayApp(navigation, display)
 
