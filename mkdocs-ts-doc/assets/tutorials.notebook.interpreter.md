@@ -59,7 +59,7 @@ Key attributes include:
 *  **interpreter**: A string pointing to the JavaScript client of the interpreter, such as `pyrun` here.
 *  **language**: Specifies the language for syntax highlighting in the editor view.
 
-Cells bounded to an interpreter features the icon <i class="fas fa-network-wired"></i> at the top left of their
+Cells bounded to an interpreter feature the icon <i class="fas fa-network-wired"></i> at the top left of their
 editor view.
 
 Let’s begin by implementing a function `compute` that calculates the projectile’s trajectory based on the initial 
@@ -81,26 +81,16 @@ class Result:
 def compute(v0: float, angle0: float):
 
     gravity = 9.81  # acceleration due to gravity in m/s^2
-    # Convert launch angle to radians
     angle0_rad = np.radians(angle0)
-    # Calculate the time of flight, range, and maximum height
     time_of_flight = 2 * v0 * np.sin(angle0_rad) / gravity
-    max_height = (v0**2) * (np.sin(angle0_rad)**2) / (2 * gravity)
-    range_projectile = (v0**2) * np.sin(2 * angle0_rad) / gravity
-
-    # Time intervals for trajectory calculation
     t = np.linspace(0, time_of_flight, num=100)
-    
-    # Calculate x and y coordinates
-    x = v0 * t * np.cos(angle0_rad)
-    y = v0 * t * np.sin(angle0_rad) - 0.5 * gravity * t**2
-    
+
     return Result(
         time_of_flight=time_of_flight, 
-        max_height=max_height, 
-        range_projectile=range_projectile,
-        x=x, 
-        y=y,
+        max_height=(v0**2) * (np.sin(angle0_rad)**2) / (2 * gravity), 
+        range_projectile=(v0**2) * np.sin(2 * angle0_rad) / gravity,
+        x=v0 * t * np.cos(angle0_rad), 
+        y=v0 * t * np.sin(angle0_rad) - 0.5 * gravity * t**2,
         t=t
     )
 </interpreter-cell>
@@ -146,82 +136,22 @@ For instance, the following cell captures the `result` variable:
 <interpreter-cell interpreter="pyrun" language="python" captured-out="result">
 raw = compute(initial_velocity, launch_angle_deg)
 result = {
-    # The `tolist()` convert the numpy array to a serializable entity ove HTTP.
+    # The `tolist()` convert the numpy array to a serializable entity over HTTP.
     "x": raw.x.tolist(),
     "y": raw.y.tolist()
 }
 </interpreter-cell>
 
 Now, the `result` variable can be used in other types of cells. 
-The next JavaScript cells demonstrate how to plot the projectile’s trajectory using `chart.js`.
-
-First, install and initialize the `chart.js` plotting library:
+To display the current result, the `ChartView` function is loaded and executed:
 
 <js-cell>
-const { chartJs } = await webpm.install({
-    modules:['chart.js#^3.9.1 as chartJs'],
-})
-chartJs.registerables.forEach((plot)=>chartJs.Chart.register(plot))
-</js-cell>
+const { ChartView } = await load("/tutorials/notebook/import-utils")
 
-In the next cell, a function `chartView` is defined.
-This function returns a VirtualDOM component from the 
-<a target="_blank" href="https://l.youwol.com/doc/@youwol/rx-vdom"> Rx-vDOM library</a>.
-It accepts a reactive variable expected to emit objects with `x` and `y` attributes, updating the chart with each 
-emission:
+const xScale = { title:{ display: true, text: 'Distance (m)'}, min:0, max:300}
+const yScale = { title:{ display: true, text: 'Height (m)'}, min:0, max:150}
 
-<js-cell>
-const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: { 
-        x: { title:{ display: true, text: 'Distance (m)'}, min:0, max:300},
-        y: { title:{ display: true, text: 'Height (m)'}, min:0, max:150},
-    }
-}
-const chartView = (r) => {
-    let plot
-    return {
-        tag: 'div',
-        class:`border text-center rounded p-2 flex-grow-1 w-100`,
-        children: [
-            {
-                tag:'canvas',
-                class:'mx-auto w-75 h-100',
-                connectedCallback: (htmlElement) => {
-                    plot = new chartJs.Chart(
-                        htmlElement, 
-                        { 
-                            type: 'scatter',
-                            data: { datasets: [{label:'Trajectory'}] },
-                            options: chartOptions
-                        }
-                    )
-                    htmlElement.ownSubscriptions(
-                        r.subscribe( ({x,y}) => {
-                            data = Array.from({length: x.length}, (_,i) => ({x: x[i], y: y[i]}))
-                            plot.data.datasets[0].data = data
-                            plot.update()
-                        })
-                    )
-                },
-                disconnectedCallback: (htmlElement) =>  plot.clear()
-            }
-        ]
-    }
-}
-</js-cell>
-
-<note level='hint'>
-At this stage, it would have been possible to simplify a little the above implementation to account for plain value
-rather than reactive variable. It has been provided as such to allow code factorization regarding future usage.
-</note>
-
-To display the current result, the `chartView` function is called (`rxjs.of` transforms the plain value `result` into
-a reactive variable emitting this single object):
-
-<js-cell>
-display(chartView(rxjs.of(result)))
+display( await ChartView({data:result, xScale, yScale}) )
 </js-cell>
 
 
@@ -252,10 +182,10 @@ result = {
 }
 </interpreter-cell>
 
-Finally, the plot of the trajectory for the new input conditions:
+Finally, to plot the trajectory for the new input conditions:
 
 <js-cell>
-display(chartView(rxjs.of(result)))
+display( await ChartView({data:result, xScale, yScale}) )
 </js-cell>
 
 ## Reactivity
@@ -312,12 +242,12 @@ result = {
     "timeOfFlight": raw.time_of_flight,
     "rangeProjectile": raw.range_projectile
 }
-print("maxHeight", raw.max_height)
-print("timeOfFlight", raw.time_of_flight)
-print("rangeProjectile", raw.range_projectile)
+print(f"maxHeight (m): {raw.max_height:.4g}")
+print(f"timeOfFlight (s): {raw.time_of_flight:.4g}")
+print(f"rangeProjectile (m): {raw.range_projectile:.4g}")
 </interpreter-cell>
 
-You can play with the above sliders to see the value displayed updated accordingly.
+You can play with the sliders above to see the value displayed updated accordingly.
 
 <note level="hint">
 When multiple reactive variables are included in the `captured-in` attribute, the default strategy is to combine
@@ -336,7 +266,7 @@ display("Time of flight (s):",Views.mx1,  result.timeOfFlight.toFixed(2))
 display("Range (m):", Views.mx1, result.rangeProjectile.toFixed(2))
 </js-cell>
 
-Finally, let's wrap the view elements in a convenient layout:
+Finally, let's wrap the view elements in a layout:
 
 <js-cell cell-id="final">
 display({
@@ -345,13 +275,13 @@ display({
     children:[
         {
         	tag: 'div',
-            class: 'p-2 my-2',
             children: [
                 angleView,
                 velocityView,
             ]
         },
-        chartView(result)
+        Views.my2,
+        await ChartView({data:result, xScale, yScale})
     ]
 })
 </js-cell>
