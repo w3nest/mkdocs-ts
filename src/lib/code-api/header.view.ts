@@ -1,5 +1,6 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Semantic } from './models'
+import { headingPrefixId } from '../router'
 
 type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4'
 type Doc = { semantic?: Semantic; path: string; name: string }
@@ -27,7 +28,7 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
         this.class += ` mkapi-role-${semantic}`
         this.text = this.text || this.doc.name
         this.withChildren = this.withChildren || []
-        this.id = this.doc.path
+        this.id = `${headingPrefixId}${this.doc.path}`
         this.children = [
             {
                 tag: 'span',

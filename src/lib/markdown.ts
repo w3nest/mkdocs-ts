@@ -7,7 +7,7 @@ import highlight from 'highlight.js'
 import { AnyVirtualDOM, render, VirtualDOM } from '@youwol/rx-vdom'
 import * as webpm from '@youwol/webpm-client'
 import { from } from 'rxjs'
-import { Router } from './router'
+import { headingPrefixId, type Router } from './router'
 import {
     CodeLanguage,
     CodeSnippetView,
@@ -130,13 +130,6 @@ export function fetchMd(
         url: string
     } & MdParsingOptions,
 ): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
-    setOptions({
-        langPrefix: 'hljs language-',
-        highlight: function (code, lang) {
-            return highlight.highlightAuto(code, [lang]).value
-        },
-    })
-
     return ({ router }: { router: Router }) => {
         return fetch(params.url)
             .then((resp) => resp.text())
@@ -440,6 +433,17 @@ function fixedMarkedParseCustomViews({
     const { patchedInput, contents } = patchSrc({ src: input, views })
 
     const divResult = document.createElement('div')
+
+    setOptions({
+        langPrefix: 'hljs language-',
+        highlight: function (code, lang) {
+            return highlight.highlightAuto(code, [lang]).value
+        },
+        // deprecated since v0.3.0, removed in v8.0.0,
+        // see https://marked.js.org/using_advanced
+        headerPrefix: headingPrefixId,
+    })
+
     divResult.innerHTML = parse(patchedInput)
     Object.entries(contents).forEach(([id, content]) => {
         const elem = divResult.querySelector(`#${id}`)
