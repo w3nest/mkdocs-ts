@@ -43,7 +43,7 @@ const externals = {
     "codemirror": {
         "commonjs": "codemirror",
         "commonjs2": "codemirror",
-        "root": "CodeMirror_APIv5"
+        "root": "codemirror_APIv5"
     },
     "esprima": {
         "commonjs": "esprima",
@@ -53,7 +53,7 @@ const externals = {
     "highlight.js": {
         "commonjs": "highlight.js",
         "commonjs2": "highlight.js",
-        "root": "hljs_APIv11"
+        "root": "highlight.js_APIv11"
     },
     "marked": {
         "commonjs": "marked",
@@ -105,7 +105,7 @@ const exportedSymbols = {
     },
     "codemirror": {
         "apiKey": "5",
-        "exportedSymbol": "CodeMirror"
+        "exportedSymbol": "codemirror"
     },
     "esprima": {
         "apiKey": "4",
@@ -113,7 +113,7 @@ const exportedSymbols = {
     },
     "highlight.js": {
         "apiKey": "11",
-        "exportedSymbol": "hljs"
+        "exportedSymbol": "highlight.js"
     },
     "marked": {
         "apiKey": "4",
