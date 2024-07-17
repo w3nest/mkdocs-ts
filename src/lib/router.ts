@@ -54,6 +54,8 @@ export interface MockBrowserLocation {
     history?: { url: string; data: unknown }[]
 }
 
+export const headingPrefixId = 'mk-head-'
+
 /**
  * Represents the router of the application.
  */
@@ -290,7 +292,7 @@ export class Router {
         }, 0)
 
         const currentPath = this.getCurrentPath().split('.')[0]
-        const path = `${currentPath}.${div.id}`
+        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
@@ -454,9 +456,11 @@ export class Router {
 }
 
 function findElementById(parent: HTMLElement, targetId: string): HTMLElement {
-    const divByCssQuery = parent.querySelector(
-        `#${targetId.replace('.', '\\.')}`,
-    )
+    const shortSelector = `#${targetId.replace('.', '\\.')}̀`
+    const prefixedSelector = `#${headingPrefixId}${targetId.replace('.', '\\.')}̀`
+    const divByCssQuery =
+        parent.querySelector(shortSelector) ||
+        parent.querySelector(prefixedSelector)
     if (divByCssQuery) {
         return divByCssQuery as HTMLElement
     }
@@ -464,5 +468,11 @@ function findElementById(parent: HTMLElement, targetId: string): HTMLElement {
     const divByScan = headings.find((e) => e.id === targetId) as HTMLElement
     if (divByScan) {
         return divByScan
+    }
+    const divByScanPrefixed = headings.find(
+        (e) => e.id === `${headingPrefixId}${targetId}`,
+    ) as HTMLElement
+    if (divByScanPrefixed) {
+        return divByScanPrefixed
     }
 }
