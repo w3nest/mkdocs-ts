@@ -4,10 +4,8 @@ import {
     VirtualDOM,
     ChildLike,
     RxChild,
-    RxHTMLElement,
-    SupportedHTMLTags,
 } from '@youwol/rx-vdom'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 
 /**
  * Represents an expandable widget, featuring:
