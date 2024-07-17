@@ -17,7 +17,7 @@ export type CodeLanguage =
  * The widget for code snippet.
  */
 export class CodeSnippetView implements VirtualDOM<'div'> {
-    static cmDependencies$: Record<
+    static readonly cmDependencies$: Record<
         CodeLanguage,
         Observable<WindowOrWorkerGlobalScope> | undefined
     > = {
@@ -64,7 +64,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     /**
      * Class appended to the line DOM for highlighted lines.
      */
-    static hlLineClass = 'mkdocs-ts-bg-highlight'
+    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'
 
     /**
      * The tag of the associated HTML element.
@@ -97,6 +97,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
 
     public readonly content$: BehaviorSubject<string>
 
+    public readonly editor$ = new BehaviorSubject<Editor | undefined>(undefined)
     /**
      * Initialize the widget.
      *
@@ -163,6 +164,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                             })
 
                             editor.refresh()
+                            this.editor$.next(editor)
                         },
                     }
                 },
