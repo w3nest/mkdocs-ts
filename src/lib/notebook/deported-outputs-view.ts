@@ -136,7 +136,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                 }
                 return mode === 'normal'
                     ? params.class
-                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class}`
+                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`
             },
         }
         const contentView: VirtualDOM<'div'> = {

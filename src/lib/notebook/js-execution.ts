@@ -196,12 +196,13 @@ return {
     const wrapped = `
 const scope$ = rxjs.combineLatest([${keys}]).pipe( 
     rxjs.takeUntil(invalidated$),
-    rxjs.map(([${keys}]) => {
+    rxjs.map( async ([${keys}]) => {
         output$.next(undefined)
         ${src}
         // Footer
         ${footerInner}
     }), 
+    rxjs.switchMap((d) => rxjs.from(d)),
     rxjs.shareReplay({bufferSize:1, refCount: true}))
 scope$.subscribe()
             `

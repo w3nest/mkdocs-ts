@@ -7,3 +7,4 @@
 export * from './constants'
 export * from './range'
 export * from './text'
+export { CodeSnippetView as CodeSnippet } from '../../md-widgets/code-snippet.view'

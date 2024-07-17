@@ -3,6 +3,7 @@ import {
     ChildrenLike,
     VirtualDOM,
     ChildLike,
+    RxChild,
 } from '@youwol/rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 
@@ -32,69 +33,81 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
      * @param _args.content Content displayed when the widget is expanded.
      * Provided as the HTMLElement's `textContent` when instantiated from MarkDown.
      * @param _args.expanded Initial state. Provided as attribute `expanded` when instantiated from MarkDown.
+     * @param _args.mode Whether to preserve the state of the content when expanding/hidding.
      */
     constructor({
         title,
         icon,
         content,
         expanded,
+        mode,
     }: {
         title: string | ChildLike
         icon: string | AnyVirtualDOM
         content: () => AnyVirtualDOM
+        mode?: 'stateful' | 'stateless'
         expanded?: boolean
     }) {
         const expanded$ = new BehaviorSubject(expanded || false)
-        this.children = [
-            {
-                tag: 'div',
-                class: {
-                    source$: expanded$,
-                    vdomMap: (expanded) => (expanded ? 'border-bottom' : ''),
-                    wrapper: (d) => `${d} d-flex align-items-center`,
-                },
-                children: [
-                    typeof icon === 'string'
-                        ? {
-                              tag: 'i',
-                              class: icon,
-                          }
-                        : icon,
-                    {
-                        tag: 'div',
-                        class: 'mx-2',
-                    },
-                    typeof title === 'string'
-                        ? {
-                              tag: 'div',
-                              innerText: title,
-                          }
-                        : title,
-                    {
-                        tag: 'div',
-                        class: 'flex-grow-1',
-                    },
-                    {
-                        tag: 'i',
-                        class: {
-                            source$: expanded$,
-                            vdomMap: (expanded) =>
-                                expanded
-                                    ? 'fa-chevron-down'
-                                    : 'fa-chevron-right',
-                            wrapper: (d) =>
-                                `${d} fas fv-pointer fv-hover-text-focus`,
-                        },
-                        onclick: () => expanded$.next(!expanded$.value),
-                    },
-                ],
-            },
-            {
+        mode = mode || 'stateless'
+        const header: AnyVirtualDOM = {
+            tag: 'div',
+            class: {
                 source$: expanded$,
-                vdomMap: (expanded) => {
-                    return expanded ? content() : { tag: 'div' }
-                },
+                vdomMap: (expanded) => (expanded ? 'border-bottom' : ''),
+                wrapper: (d) => `${d} d-flex align-items-center`,
             },
-        ]
+            children: [
+                typeof icon === 'string'
+                    ? {
+                          tag: 'i',
+                          class: icon,
+                      }
+                    : icon,
+                {
+                    tag: 'div',
+                    class: 'mx-2',
+                },
+                typeof title === 'string'
+                    ? {
+                          tag: 'div',
+                          innerText: title,
+                      }
+                    : title,
+                {
+                    tag: 'div',
+                    class: 'flex-grow-1',
+                },
+                {
+                    tag: 'i',
+                    class: {
+                        source$: expanded$,
+                        vdomMap: (expanded) =>
+                            expanded ? 'fa-chevron-down' : 'fa-chevron-right',
+                        wrapper: (d) =>
+                            `${d} fas fv-pointer fv-hover-text-focus`,
+                    },
+                    onclick: () => expanded$.next(!expanded$.value),
+                },
+            ],
+        }
+        const innerContent: AnyVirtualDOM | RxChild =
+            mode === 'stateless'
+                ? {
+                      source$: expanded$,
+                      vdomMap: (expanded: boolean) => {
+                          return expanded ? content() : { tag: 'div' }
+                      },
+                  }
+                : {
+                      tag: 'div' as const,
+                      class: {
+                          source$: expanded$,
+                          vdomMap: (expanded: boolean) =>
+                              expanded ? '' : 'd-none',
+                      },
+                      children: [content()],
+                  }
+        this.children = [header, innerContent]
     }
 }

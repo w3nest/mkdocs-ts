@@ -1,7 +1,7 @@
 
 const runTimeDependencies = {
     "externals": {
-        "@youwol/mkdocs-ts": "^0.5.3",
+        "@youwol/mkdocs-ts": "^0.5.4",
         "@youwol/rx-vdom": "^1.0.1",
         "@youwol/webpm-client": "^3.0.0",
         "mathjax": "^3.1.4",
@@ -13,7 +13,7 @@ const externals = {
     "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv05']",
     "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
     "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
-    "mathjax": "window['Mathjax_APIv3']",
+    "mathjax": "window['mathjax_APIv3']",
     "rxjs": "window['rxjs_APIv7']"
 }
 const exportedSymbols = {
@@ -31,7 +31,7 @@ const exportedSymbols = {
     },
     "mathjax": {
         "apiKey": "3",
-        "exportedSymbol": "Mathjax"
+        "exportedSymbol": "mathjax"
     },
     "rxjs": {
         "apiKey": "7",
@@ -59,7 +59,7 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts-doc',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHMtZG9j',
-    version:'0.5.3-wip',
+    version:'0.5.4-wip',
     shortDescription:"Documentation app for project @youwol/mkdocs-ts.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts-doc&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts-doc',
@@ -105,7 +105,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts-doc#0.5.3-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
+            `@youwol/mkdocs-ts-doc#0.5.4-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

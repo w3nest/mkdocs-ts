@@ -112,6 +112,7 @@ export class GlobalMarkdownViews {
             return new ExpandableGroupView({
                 title: elem.getAttribute('title'),
                 icon: elem.getAttribute('icon'),
+                mode: elem.getAttribute('mode') as 'stateful' | 'stateless',
                 content: () =>
                     parseMd({ src: elem.textContent, ...parsingArgs }),
             })
