@@ -4879,7 +4879,7 @@
                 "endLine": 52,
                 "references": {
                     "DisplayComponent": "@nav/api/Notebook.DisplayComponent",
-                    "T": "1234"
+                    "T": "2115"
                 }
             },
             "semantic": {
@@ -5495,7 +5495,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "This module gathers the definition of simple views to use within a notebook page.",
+                        "content": "This module gathers the definition of simple views to use within a notebook page,\nit also re-exports the .\n\nSome layout elements are included in the  submodule.",
                         "contentType": "markdown"
                     }
                 ]
@@ -5704,7 +5704,7 @@
         {
             "name": "Views",
             "path": "mkdocs-ts/Notebook.Views",
-            "isLeaf": true
+            "isLeaf": false
         }
     ],
     "semantic": {
