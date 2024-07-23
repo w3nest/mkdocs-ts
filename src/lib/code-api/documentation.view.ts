@@ -47,37 +47,6 @@ export class SectionView implements VirtualDOM<'div'> {
         if (!section) {
             return
         }
-        const redirect = (
-            link: HTMLAnchorElement,
-            target: string,
-            i: number,
-        ) => {
-            const href = link.href.split(target)[1]
-            let path =
-                i == 0
-                    ? `/references/${href.split('.').join('/')}`
-                    : `/references/${href.split('.').slice(0, -i).join('/')}.${
-                          href.split('.').slice(-i)[0]
-                      }.${href.split('.').slice(-i)[1]}`
-            if (i > 2) {
-                path += `.${href.split('.').slice(-2)[1]}`
-            }
-            router.navigateTo({ path })
-        }
-        const navigations = {
-            'yw-nav-mod': (link: HTMLAnchorElement) =>
-                redirect(link, '@yw-nav-mod:', 0),
-            'yw-nav-class': (link: HTMLAnchorElement) =>
-                redirect(link, '@yw-nav-class:', 2),
-            'yw-nav-func': (link: HTMLAnchorElement) =>
-                redirect(link, '@yw-nav-func:', 2),
-            'yw-nav-attr': (link: HTMLAnchorElement) =>
-                redirect(link, '@yw-nav-attr:', 3),
-            'yw-nav-glob': (link: HTMLAnchorElement) =>
-                redirect(link, '@yw-nav-glob:', 2),
-            'yw-nav-meth': (link: HTMLAnchorElement) =>
-                redirect(link, '@yw-nav-meth:', 3),
-        }
         const nbConfig: object =
             typeof configuration === 'boolean'
                 ? {}
@@ -100,7 +69,6 @@ export class SectionView implements VirtualDOM<'div'> {
                 : parseMd({
                       src: section.content,
                       router: router,
-                      navigations,
                   }),
         ]
     }
