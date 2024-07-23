@@ -269,7 +269,7 @@ export class Router {
         const br = this.scrollableElement.getBoundingClientRect()
         if (!target) {
             this.scrollableElement.scrollTo({
-                top: br.top,
+                top: 0,
                 left: 0,
             })
             return
