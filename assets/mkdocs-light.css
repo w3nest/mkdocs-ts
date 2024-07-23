@@ -631,12 +631,13 @@
     cursor: pointer;
 }
 
-.mkdocs-WrapperSideNav {
+.mkdocs-thin-v-scroller {
     scrollbar-gutter: stable;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     margin: 0 0.2rem;
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-color: rgb(179, 179, 179) white;
     scrollbar-width: thin;
 }
@@ -698,6 +699,7 @@
     font-size: 0.9em;
     position: sticky;
     top: 0px;
+    max-height: 85vh;
 }
 
 .mkdocs-WrapperSideNav li {

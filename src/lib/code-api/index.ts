@@ -25,7 +25,7 @@ export * from './utils'
 
 import { combineLatest, map, Observable } from 'rxjs'
 import { ModuleView } from './module.view'
-import { Navigation, Router, Views } from '../index'
+import { Decoration, Navigation, Router, Views } from '../index'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@youwol/http-primitives'
@@ -138,6 +138,12 @@ export const docNavigation = ({
                               name: m.name,
                               leaf: m.isLeaf,
                               id: m.name,
+                              decoration: {
+                                  icon: {
+                                      tag: 'i' as const,
+                                      class: 'mkapi-semantic-flag mkapi-role-module',
+                                  },
+                              },
                           }))
                         : [],
                 html: () =>
@@ -147,4 +153,47 @@ export const docNavigation = ({
             }
         }),
     )
+}
+
+export function codeApiEntryNode(params: {
+    name: string
+    decoration: Decoration
+    docBasePath: string
+    entryModule: string
+    configuration: Configuration
+}) {
+    const project = {
+        name: params.entryModule,
+        docBasePath: params.docBasePath,
+    }
+    const configuration = params.configuration
+    return {
+        name: params.name,
+        decoration: params.decoration,
+        html: ({ router }) => {
+            return fetchModuleDoc({
+                modulePath: project.name,
+                basePath: project.docBasePath,
+                configuration,
+                project,
+            }).pipe(
+                map((module) => {
+                    return new ModuleView({
+                        module,
+                        router,
+                        configuration,
+                        project,
+                    })
+                }),
+            )
+        },
+        tableOfContent: Views.tocView,
+        '...': ({ router, path }) =>
+            docNavigation({
+                modulePath: path,
+                router,
+                project,
+                configuration,
+            }),
+    }
 }

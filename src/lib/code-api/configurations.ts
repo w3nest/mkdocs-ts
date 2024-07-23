@@ -48,11 +48,7 @@ export interface Configuration {
               options?: NotebookOptions
           }
 }
-
-/**
- * Configuration for the `TsTypedoc` backend.
- */
-export const configurationTsTypedoc: Configuration = {
+export const configurationDefault: Configuration = {
     codeUrl: ({
         project,
         path,
@@ -68,3 +64,13 @@ export const configurationTsTypedoc: Configuration = {
     css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,
     notebook: undefined,
 }
+
+/**
+ * Configuration for the `TsTypedoc` backend.
+ */
+export const configurationTsTypedoc: Configuration = configurationDefault
+
+/**
+ * Configuration for the `Python` backend.
+ */
+export const configurationPython: Configuration = configurationDefault

@@ -29,7 +29,7 @@ export class NoteView implements VirtualDOM<'div'> {
      * retrieved from the attribute 'level'.
      * @param params.label Label to display. When instantiated from Markdown, this parameter is
      * retrieved from the attribute 'label'. If none is provided, it is by default `Note`, `Warning` & `Hint` for
-     * levels 'info', 'warning', 'success' respectively.
+     * levels 'info', 'warning', 'success' respectively. If an empty string is provided, no label will appear.
      * @param params.content Text content. When instantiated from Markdown, this parameter is
      * retrieved from the text content of the DOM element.
      */
@@ -55,10 +55,11 @@ export class NoteView implements VirtualDOM<'div'> {
             warning: 'Warning',
             hint: 'Hint',
         }
+        const includeLabel = this.label !== ''
         this.label = this.label || defaultLabels[this.level]
         this.class = `${this.class} ${fact[this.level]}`
         this.children = [
-            {
+            includeLabel && {
                 tag: 'div',
                 innerText: this.label,
                 class: factLabel[this.level],

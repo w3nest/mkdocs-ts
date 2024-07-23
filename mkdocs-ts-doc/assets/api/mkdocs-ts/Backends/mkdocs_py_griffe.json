@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "Backend for generating API data for python projects using the Python module\n<a href=\"https://mkdocstrings.github.io/griffe/\" target=\"_blank\">griffe</a> as the primary AST generator.\n\nThe entry point is the function [generate_api](@nav/api/Backends/mkdocs_py_griffe.py_griffe.generate_api), providing appropriate [Configuration](@nav/api/Backends/mkdocs_py_griffe.py_griffe.Configuration).\n\n## Supported style\n\nWe encourage to use Google-style synthax for docstrings, as documented\n<a href=\"https://mkdocstrings.github.io/griffe/docstrings/#google-style\" target=\"_blank\">here</a>.\n\nRegarding symbols cross-linking, the sphinx syntax is supported, see [SUPPORTED_CROSS_LINK_TAGS](@nav/api/Backends/mkdocs_py_griffe.py_griffe.SUPPORTED_CROSS_LINK_TAGS).",
+                "content": "The backend for generating API data for python projects using the Python module\n<a href=\"https://mkdocstrings.github.io/griffe/\" target=\"_blank\">griffe</a> as the primary AST generator.\n\nThe entry point is the function [generate_api](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.generate_api),\nproviding appropriate [Configuration](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Configuration).\n\n**Supported style**\n\nWe encourage to use Google-style synthax for docstrings, as documented\n<a href=\"https://mkdocstrings.github.io/griffe/docstrings/#google-style\" target=\"_blank\">here</a>.\n\nRegarding symbols cross-linking, the sphinx syntax is supported,\nsee [SUPPORTED_CROSS_LINK_TAGS](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SUPPORTED_CROSS_LINK_TAGS).",
                 "contentType": "Markdown",
                 "semantic": {
                     "role": "text",
@@ -51,7 +51,7 @@
                         "title": "Returns"
                     },
                     {
-                        "content": "\n*  **ast**: Griffe's module documentation.\n*  **path**: The path of the module relative to the root (e.g. `Foo.Bar.Baz`).\n*  **project**: Project description.",
+                        "content": "\n*  **ast**: Griffe's module documentation.\n*  **project**: Project description.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "arguments",
@@ -64,18 +64,17 @@
                 ]
             },
             "code": {
-                "declaration": "def parse_module(ast: AstModule, path: str, project: Project) -> Module",
+                "declaration": "def parse_module(ast: AstModule, project: Project) -> Module",
                 "filePath": "py_griffe.py",
-                "startLine": 228,
-                "endLine": 271,
+                "startLine": 316,
+                "endLine": 358,
                 "references": {
-                    "Module": "@nav/api/Backends/mkdocs_py_griffe.models.Module",
+                    "Module": "@nav/api/Backends/mkdocs_py_griffe/.models.Module",
                     "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
-                    "str": "https://docs.python.org/fr/3/library/string.html",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_module": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_module"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_module": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_module"
                 },
-                "implementation": "def parse_module(ast: AstModule, path: str, project: Project) -> Module:\n    \"\"\"\n    Transforms module documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        path: The path of the module relative to the root (e.g. `Foo.Bar.Baz`).\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    elements = extract_module(ast=ast)\n    children_modules = [\n        parse_child_module(ast=m, project=project) for m in elements.modules\n    ]\n    classes = [\n        parse_class(ast=c, project=project) for c in elements.classes if c.has_docstring\n    ]\n    functions = [\n        parse_function(ast=f, semantic=FUNCTION_GLOBAL_SEMANTIC, project=project)\n        for f in elements.functions\n        if f.has_docstring\n    ]\n    attributes = [\n        parse_attribute(ast=a, semantic=GLOBAL_SEMANTIC, project=project)\n        for a in elements.attributes\n    ]\n    files = [format_file_doc(ast=f, project=project) for f in elements.files]\n    sections = get_docstring_sections(ast)\n\n    return Module(\n        name=ast.name,\n        documentation=format_detailed_docstring(\n            sections=sections, parent=ast, project=project\n        ),\n        semantic=MODULE_SEMANTIC,\n        path=path,\n        children=children_modules,\n        attributes=sorted(attributes, key=lambda m: m.name),\n        types=classes,\n        callables=functions,\n        files=files,\n    )"
+                "implementation": "def parse_module(ast: AstModule, project: Project) -> Module:\n    \"\"\"\n    Transforms module documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    elements = extract_module(ast=ast)\n    children_modules = [\n        parse_child_module(ast=m, project=project) for m in elements.modules\n    ]\n    classes = [\n        parse_class(ast=c, project=project) for c in elements.classes if c.has_docstring\n    ]\n    functions = [\n        parse_function(ast=f, semantic=FUNCTION_GLOBAL_SEMANTIC, project=project)\n        for f in elements.functions\n        if f.has_docstring\n    ]\n    attributes = [\n        parse_attribute(ast=a, semantic=GLOBAL_SEMANTIC, project=project)\n        for a in elements.attributes\n    ]\n    files = [format_file_doc(ast=f, project=project) for f in elements.files]\n    sections = get_docstring_sections(ast)\n\n    return Module(\n        name=ast.name,\n        documentation=format_detailed_docstring(\n            sections=sections, parent=ast, project=project\n        ),\n        semantic=MODULE_SEMANTIC,\n        path=canonical_path(ast=ast, project=project),\n        children=children_modules,\n        attributes=sorted(attributes, key=lambda m: m.name),\n        types=classes,\n        callables=functions,\n        files=files,\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -90,7 +89,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Transforms sub-module documentation as provided by griffe to the mkdocs-ts models.",
+                        "content": "Transforms submodule documentation as provided by griffe to the mkdocs-ts models.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -127,15 +126,15 @@
             "code": {
                 "declaration": "def parse_child_module(ast: AstModule, project: Project) -> ChildModule",
                 "filePath": "py_griffe.py",
-                "startLine": 284,
-                "endLine": 299,
+                "startLine": 371,
+                "endLine": 386,
                 "references": {
-                    "ChildModule": "@nav/api/Backends/mkdocs_py_griffe.models.ChildModule",
+                    "ChildModule": "@nav/api/Backends/mkdocs_py_griffe/.models.ChildModule",
                     "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_child_module": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_child_module"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_child_module": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_child_module"
                 },
-                "implementation": "def parse_child_module(ast: AstModule, project: Project) -> ChildModule:\n    \"\"\"\n    Transforms sub-module documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    return ChildModule(\n        name=ast.name,\n        path=ast.canonical_path,\n        isLeaf=is_leaf_module(path=ast.canonical_path, project=project),\n    )"
+                "implementation": "def parse_child_module(ast: AstModule, project: Project) -> ChildModule:\n    \"\"\"\n    Transforms submodule documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    return ChildModule(\n        name=ast.name,\n        path=ast.canonical_path,\n        isLeaf=is_leaf_module(path=ast.canonical_path, project=project),\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -187,13 +186,13 @@
             "code": {
                 "declaration": "def format_file_doc(ast: AstModule, project: Project) -> File",
                 "filePath": "py_griffe.py",
-                "startLine": 302,
-                "endLine": 319,
+                "startLine": 389,
+                "endLine": 406,
                 "references": {
-                    "File": "@nav/api/Backends/mkdocs_py_griffe.models.File",
+                    "File": "@nav/api/Backends/mkdocs_py_griffe/.models.File",
                     "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "format_file_doc": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.format_file_doc"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "format_file_doc": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.format_file_doc"
                 },
                 "implementation": "def format_file_doc(ast: AstModule, project: Project) -> File:\n    \"\"\"\n    Transforms a file documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    return File(\n        name=ast.name,\n        path=str(ast.filepath.relative_to(project.root_ast.filepath.parent)),\n        documentation=format_detailed_docstring(\n            get_docstring_sections(ast), parent=ast, project=project\n        ),\n    )"
             },
@@ -210,7 +209,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Transforms a function documentation as provided by griffe to the mkdocs-ts models.",
+                        "content": "Transforms a function's documentation as provided by griffe to the mkdocs-ts models.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -247,16 +246,16 @@
             "code": {
                 "declaration": "def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Callable",
                 "filePath": "py_griffe.py",
-                "startLine": 322,
-                "endLine": 353,
+                "startLine": 409,
+                "endLine": 440,
                 "references": {
-                    "Callable": "@nav/api/Backends/mkdocs_py_griffe.models.Callable",
+                    "Callable": "@nav/api/Backends/mkdocs_py_griffe/.models.Callable",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_function": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_function"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic",
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_function": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_function"
                 },
-                "implementation": "def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Callable:\n    \"\"\"\n    Transforms a function documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's function documentation.\n        semantic: Target semantic\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    parsed = get_docstring_sections(ast)\n    sections = [\n        p\n        for p in parsed\n        if isinstance(p, DocstringSectionText)\n        or (isinstance(p, DocstringSectionAdmonition) and p.title != \"Return\")\n    ]\n    formatted = format_detailed_docstring(sections, parent=ast, project=project)\n    params_doc = parse_parameters(ast, project=project)\n    returns_doc = parse_returns(ast, project=project)\n\n    return Callable(\n        name=ast.name,\n        documentation=Documentation(\n            sections=[s for s in [*formatted.sections, returns_doc, params_doc] if s]\n        ),\n        path=canonical_path(ast=ast, project=project),\n        code=parse_code(ast=ast, project=project),\n        semantic=semantic,\n    )"
+                "implementation": "def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Callable:\n    \"\"\"\n    Transforms a function's documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's function documentation.\n        semantic: Target semantic\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    parsed = get_docstring_sections(ast)\n    sections = [\n        p\n        for p in parsed\n        if isinstance(p, DocstringSectionText)\n        or (isinstance(p, DocstringSectionAdmonition) and p.title != \"Return\")\n    ]\n    formatted = format_detailed_docstring(sections, parent=ast, project=project)\n    params_doc = parse_parameters(ast, project=project)\n    returns_doc = parse_returns(ast, project=project)\n\n    return Callable(\n        name=ast.name,\n        documentation=Documentation(\n            sections=[s for s in [*formatted.sections, returns_doc, params_doc] if s]\n        ),\n        path=canonical_path(ast=ast, project=project),\n        code=parse_code(ast=ast, project=project),\n        semantic=semantic,\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -271,7 +270,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Transforms a class documentation as provided by griffe to the mkdocs-ts models.",
+                        "content": "Transforms a class's documentation as provided by griffe to the mkdocs-ts models.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -308,15 +307,15 @@
             "code": {
                 "declaration": "def parse_class(ast: AstClass, project: Project) -> Type",
                 "filePath": "py_griffe.py",
-                "startLine": 356,
-                "endLine": 394,
+                "startLine": 443,
+                "endLine": 481,
                 "references": {
-                    "Type": "@nav/api/Backends/mkdocs_py_griffe.models.Type",
+                    "Type": "@nav/api/Backends/mkdocs_py_griffe/.models.Type",
                     "AstClass": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Class",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_class": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_class"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_class": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_class"
                 },
-                "implementation": "def parse_class(ast: AstClass, project: Project) -> Type:\n    \"\"\"\n    Transforms a class documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's class documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    bases = find_attributes_of_type(ast.bases, ExprName)\n    semantic = Semantic(\n        role=\"class\",\n        labels=[],\n        attributes={},\n        relations={\"inherits\": [b.canonical_path for b in bases]},\n    )\n    return Type(\n        name=ast.name,\n        documentation=format_detailed_docstring(\n            sections=get_docstring_sections(ast),\n            parent=ast,\n            project=project,\n        ),\n        path=canonical_path(ast=ast, project=project),\n        semantic=semantic,\n        attributes=[\n            parse_attribute(ast=attr, semantic=ATTR_SEMANTIC, project=project)\n            for attr in ast.attributes.values()\n            if attr.docstring and not attr.inherited\n        ],\n        callables=[\n            parse_function(ast=f, semantic=METHOD_SEMANTIC, project=project)\n            for f in ast.functions.values()\n            if f and f.docstring\n        ],\n        code=parse_code(ast, project=project),\n    )"
+                "implementation": "def parse_class(ast: AstClass, project: Project) -> Type:\n    \"\"\"\n    Transforms a class's documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's class documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    bases = find_attributes_of_type(ast.bases, ExprName)\n    semantic = Semantic(\n        role=\"class\",\n        labels=[],\n        attributes={},\n        relations={\"inherits\": [b.canonical_path for b in bases]},\n    )\n    return Type(\n        name=ast.name,\n        documentation=format_detailed_docstring(\n            sections=get_docstring_sections(ast),\n            parent=ast,\n            project=project,\n        ),\n        path=canonical_path(ast=ast, project=project),\n        semantic=semantic,\n        attributes=[\n            parse_attribute(ast=attr, semantic=ATTR_SEMANTIC, project=project)\n            for attr in ast.attributes.values()\n            if attr.docstring and not attr.inherited\n        ],\n        callables=[\n            parse_function(ast=f, semantic=METHOD_SEMANTIC, project=project)\n            for f in ast.functions.values()\n            if f and f.docstring\n        ],\n        code=parse_code(ast, project=project),\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -331,7 +330,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Transforms a function's parameters documentation as provided by griffe to the mkdocs-ts models.",
+                        "content": "Transforms a function's parameter documentation as provided by griffe to the mkdocs-ts models.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -368,15 +367,15 @@
             "code": {
                 "declaration": "def parse_parameters(ast: AstFunction, project: Project) -> DocumentationSection | None",
                 "filePath": "py_griffe.py",
-                "startLine": 397,
-                "endLine": 431,
+                "startLine": 484,
+                "endLine": 518,
                 "references": {
-                    "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe.models.DocumentationSection",
+                    "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_parameters": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_parameters"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_parameters": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_parameters"
                 },
-                "implementation": "def parse_parameters(ast: AstFunction, project: Project) -> DocumentationSection | None:\n    \"\"\"\n    Transforms a function's parameters documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's function documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    parsed = get_docstring_sections(ast)\n\n    params = next(\n        (p for p in parsed if isinstance(p, DocstringSectionParameters)), None\n    )\n\n    def format_param(e):\n        with_links = replace_links(\n            e.description, parent=ast.canonical_path, project=project\n        )\n        return f\"*  **{e.name}**: {with_links}\"\n\n    if not params:\n        return None\n\n    content = functools.reduce(\n        lambda acc, e: f\"{acc}\\n{format_param(e)}\", params.value, \"\"\n    )\n    return DocumentationSection(\n        title=\"Arguments\",\n        content=content,\n        contentType=\"Markdown\",\n        semantic=Semantic(role=\"arguments\", labels=[], attributes={}, relations={}),\n    )"
+                "implementation": "def parse_parameters(ast: AstFunction, project: Project) -> DocumentationSection | None:\n    \"\"\"\n    Transforms a function's parameter documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's function documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    parsed = get_docstring_sections(ast)\n\n    params = next(\n        (p for p in parsed if isinstance(p, DocstringSectionParameters)), None\n    )\n\n    def format_param(e):\n        with_links = replace_links(\n            e.description, parent=ast.canonical_path, project=project\n        )\n        return f\"*  **{e.name}**: {with_links}\"\n\n    if not params:\n        return None\n\n    content = functools.reduce(\n        lambda acc, e: f\"{acc}\\n{format_param(e)}\", params.value, \"\"\n    )\n    return DocumentationSection(\n        title=\"Arguments\",\n        content=content,\n        contentType=\"Markdown\",\n        semantic=Semantic(role=\"arguments\", labels=[], attributes={}, relations={}),\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -428,13 +427,13 @@
             "code": {
                 "declaration": "def parse_returns(ast: AstFunction, project: Project) -> DocumentationSection | None",
                 "filePath": "py_griffe.py",
-                "startLine": 434,
-                "endLine": 473,
+                "startLine": 521,
+                "endLine": 560,
                 "references": {
-                    "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe.models.DocumentationSection",
+                    "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_returns": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_returns"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_returns": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_returns"
                 },
                 "implementation": "def parse_returns(ast: AstFunction, project: Project) -> DocumentationSection | None:\n    \"\"\"\n    Transforms a function's returns documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's function documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n\n    parsed = get_docstring_sections(ast)\n\n    returns = next(\n        (p for p in parsed if isinstance(p, DocstringSectionReturns)),\n        None,\n    )\n    if returns:\n        try:\n            returns_doc = replace_links(\n                returns.value[0].description,\n                parent=ast.canonical_path,\n                project=project,\n            )\n            return DocumentationSection(\n                title=\"Returns\",\n                content=returns_doc,\n                contentType=\"Markdown\",\n                semantic=Semantic(\n                    role=\"returns\", labels=[], attributes={}, relations={}\n                ),\n            )\n        except Exception as e:\n            DocReporter.add_error(\n                ast.canonical_path,\n                f\"Failed to parse return of function {ast.name}: {e}\",\n            )\n\n    return None"
             },
@@ -451,7 +450,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Transforms an attribute documentation as provided by griffe to the mkdocs-ts models.",
+                        "content": "Transforms an attribute's documentation as provided by griffe to the mkdocs-ts models.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -488,16 +487,16 @@
             "code": {
                 "declaration": "def parse_attribute(\n    ast: AstAttribute, semantic: Semantic, project: Project\n) -> Attribute",
                 "filePath": "py_griffe.py",
-                "startLine": 606,
-                "endLine": 630,
+                "startLine": 699,
+                "endLine": 723,
                 "references": {
-                    "Attribute": "@nav/api/Backends/mkdocs_py_griffe.models.Attribute",
+                    "Attribute": "@nav/api/Backends/mkdocs_py_griffe/.models.Attribute",
                     "AstAttribute": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Attribute",
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_attribute": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_attribute"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic",
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_attribute": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_attribute"
                 },
-                "implementation": "def parse_attribute(\n    ast: AstAttribute, semantic: Semantic, project: Project\n) -> Attribute:\n    \"\"\"\n    Transforms an attribute documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        semantic: Target semantic.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    sections = get_docstring_sections(ast)\n    documentation = format_detailed_docstring(\n        sections=sections, parent=ast, project=project\n    )\n    return Attribute(\n        name=ast.name,\n        semantic=semantic,\n        documentation=documentation,\n        path=canonical_path(ast=ast, project=project),\n        code=parse_code(ast=ast, project=project),\n    )"
+                "implementation": "def parse_attribute(\n    ast: AstAttribute, semantic: Semantic, project: Project\n) -> Attribute:\n    \"\"\"\n    Transforms an attribute's documentation as provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        semantic: Target semantic.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n    sections = get_docstring_sections(ast)\n    documentation = format_detailed_docstring(\n        sections=sections, parent=ast, project=project\n    )\n    return Attribute(\n        name=ast.name,\n        semantic=semantic,\n        documentation=documentation,\n        path=canonical_path(ast=ast, project=project),\n        code=parse_code(ast=ast, project=project),\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -512,7 +511,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Transforms a code documentation from class, function or attribute provided by griffe to the mkdocs-ts models.",
+                        "content": "Transforms a code's documentation from class, function or attribute provided by griffe to the mkdocs-ts models.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -549,17 +548,17 @@
             "code": {
                 "declaration": "def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> Code",
                 "filePath": "py_griffe.py",
-                "startLine": 649,
-                "endLine": 722,
+                "startLine": 742,
+                "endLine": 807,
                 "references": {
-                    "Code": "@nav/api/Backends/mkdocs_py_griffe.models.Code",
+                    "Code": "@nav/api/Backends/mkdocs_py_griffe/.models.Code",
                     "AstClass": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Class",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
                     "AstAttribute": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Attribute",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project",
-                    "parse_code": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.parse_code"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
+                    "parse_code": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_code"
                 },
-                "implementation": "def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> Code:\n    \"\"\"\n    Transforms a code documentation from class, function or attribute provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n\n    def get_nav_path(e: ExprName | AstClass | AstFunction):\n        py_path = e.canonical_path\n        if py_path.startswith(project.root_ast.name):\n            return f\"@nav{project.config.base_nav}.{canonical_path(ast=e, project=project)}\"\n        if py_path in project.config.external_links:\n            return project.config.external_links[py_path]\n        print(\"Link unknown\", e.canonical_path)\n        return e.canonical_path\n\n    file_path = str(ast.filepath.relative_to(project.root_ast.filepath.parent))\n    start_line = ast.lineno\n    end_line = ast.endlineno\n    references = {}\n    implementation = \"\"\n    declaration = \"\"\n    if isinstance(ast, AstAttribute):\n        types_annotation = find_attributes_of_type(ast.annotation, ExprName)\n        types_value = find_attributes_of_type(ast.value, ExprName)\n        declaration = functools.reduce(lambda acc, e: f\"{acc}\\n{e}\", ast.lines)\n        implementation = None\n        references = {\n            e.name: get_nav_path(e=e) for e in [*types_annotation, *types_value]\n        }\n\n    if isinstance(ast, AstFunction):\n        types_annotation = find_attributes_of_type(ast.annotation, ExprName)\n        returns_annotation = find_attributes_of_type(ast.returns, ExprName)\n        parameters_annotation = find_attributes_of_type(ast.parameters, ExprName)\n        all_annotations = [\n            *types_annotation,\n            *returns_annotation,\n            *parameters_annotation,\n        ]\n        implementation = functools.reduce(lambda acc, e: f\"{acc}\\n{e}\", ast.lines)\n        declaration = extract_function_declaration(implementation)\n        references = {\n            **{e.name: get_nav_path(e=e) for e in all_annotations},\n            ast.name: get_nav_path(e=ast),\n        }\n\n    if isinstance(ast, AstClass):\n        decorators_annotation = find_attributes_of_type(ast.decorators, ExprName)\n        bases_annotation = find_attributes_of_type(ast.bases, ExprName)\n        all_annotations = [\n            *decorators_annotation,\n            *bases_annotation,\n        ]\n        implementation = functools.reduce(lambda acc, e: f\"{acc}\\n{e}\", ast.lines)\n        declaration = extract_class_declaration(implementation)\n        references = {\n            **{e.name: get_nav_path(e=e) for e in all_annotations},\n            ast.name: get_nav_path(e=ast),\n        }\n\n    return Code(\n        filePath=file_path,\n        startLine=start_line,\n        endLine=end_line,\n        declaration=declaration,\n        implementation=implementation,\n        references=references,\n    )"
+                "implementation": "def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> Code:\n    \"\"\"\n    Transforms a code's documentation from class, function or attribute provided by griffe to the mkdocs-ts models.\n\n    Parameters:\n        ast: Griffe's module documentation.\n        project: Project description.\n\n    Returns:\n        The parsed model.\n    \"\"\"\n\n    def nav_path(e: ExprName | AstClass | AstFunction):\n        return navigation_path(ast=e, project=project)\n\n    file_path = str(ast.filepath.relative_to(project.root_ast.filepath.parent))\n    start_line = ast.lineno\n    end_line = ast.endlineno\n    references = {}\n    implementation = \"\"\n    declaration = \"\"\n    if isinstance(ast, AstAttribute):\n        types_annotation = find_attributes_of_type(ast.annotation, ExprName)\n        types_value = find_attributes_of_type(ast.value, ExprName)\n        declaration = functools.reduce(lambda acc, e: f\"{acc}\\n{e}\", ast.lines)\n        implementation = None\n        references = {e.name: nav_path(e=e) for e in [*types_annotation, *types_value]}\n\n    if isinstance(ast, AstFunction):\n        types_annotation = find_attributes_of_type(ast.annotation, ExprName)\n        returns_annotation = find_attributes_of_type(ast.returns, ExprName)\n        parameters_annotation = find_attributes_of_type(ast.parameters, ExprName)\n        all_annotations = [\n            *types_annotation,\n            *returns_annotation,\n            *parameters_annotation,\n        ]\n        implementation = functools.reduce(lambda acc, e: f\"{acc}\\n{e}\", ast.lines)\n        declaration = extract_function_declaration(implementation)\n        references = {\n            **{e.name: nav_path(e=e) for e in all_annotations},\n            ast.name: nav_path(e=ast),\n        }\n\n    if isinstance(ast, AstClass):\n        decorators_annotation = find_attributes_of_type(ast.decorators, ExprName)\n        bases_annotation = find_attributes_of_type(ast.bases, ExprName)\n        all_annotations = [\n            *decorators_annotation,\n            *bases_annotation,\n        ]\n        implementation = functools.reduce(lambda acc, e: f\"{acc}\\n{e}\", ast.lines)\n        declaration = extract_class_declaration(implementation)\n        references = {\n            **{e.name: nav_path(e=e) for e in all_annotations},\n            ast.name: nav_path(e=ast),\n        }\n\n    return Code(\n        filePath=file_path,\n        startLine=start_line,\n        endLine=end_line,\n        declaration=declaration,\n        implementation=implementation,\n        references=references,\n    )"
             },
             "semantic": {
                 "role": "function",
@@ -570,11 +569,168 @@
             "path": "py_griffe.parse_code"
         },
         {
+            "name": "init_symbols",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Recursive look up for all the symbols within the provided AST.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "text",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": null
+                    },
+                    {
+                        "content": "A dictionary `canonical path` => [SymbolRef](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SymbolRef).",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": "Returns"
+                    },
+                    {
+                        "content": "\n*  **root_ast**: Root module's AST.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": "Arguments"
+                    }
+                ]
+            },
+            "code": {
+                "declaration": "def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]",
+                "filePath": "py_griffe.py",
+                "startLine": 866,
+                "endLine": 949,
+                "references": {
+                    "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
+                    "str": "https://docs.python.org/fr/3/library/string.html",
+                    "SymbolRef": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SymbolRef",
+                    "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
+                    "init_symbols": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.init_symbols"
+                },
+                "implementation": "def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]:\n    \"\"\"\n    Recursive look up for all the symbols within the provided AST.\n\n    Parameters:\n        root_ast: Root module's AST.\n\n    Returns:\n        A dictionary `canonical path` => :class:`mkdocs_py_griffe.py_griffe.SymbolRef`.\n    \"\"\"\n\n    def get_canonical_path(p: str):\n        return p.replace(f\"{root_ast.name}.\", \"\")\n\n    def get_symbol(\n        ast: AstClass | AstFunction | AstAttribute | AstModule, from_class: bool\n    ):\n        base = get_canonical_path(ast.canonical_path)\n        indexes = {\n            Kind.MODULE: 1,\n            Kind.ATTRIBUTE: 3 if from_class else 2,\n            Kind.FUNCTION: 3 if from_class else 2,\n            Kind.CLASS: 2,\n        }\n        kinds = {\n            Kind.MODULE: \"module\",\n            Kind.ATTRIBUTE: \"property\" if from_class else \"attribute\",\n            Kind.FUNCTION: \"method\" if from_class else \"function\",\n            Kind.CLASS: \"class\",\n        }\n        index = indexes[ast.kind]\n        module_path = \"/\".join(base.split(\".\")[0:-index])\n        remaining = \".\".join(base.split(\".\")[-index:])\n        return SymbolRef(\n            navigation_path=f\"{module_path}.{remaining}\",\n            kind=cast(SymbolKind, kinds[ast.kind]),\n        )\n\n    def init_symbols_rec(ast: AstModule, depth=0, max_depth=10) -> dict[str, SymbolRef]:\n        if depth > max_depth:\n            raise RecursionError(\"Maximum recursion depth reached\")\n\n        elements = extract_module(ast=ast)\n        functions = {\n            get_canonical_path(f.canonical_path): get_symbol(f, from_class=False)\n            for f in elements.functions\n        }\n        attributes = {\n            get_canonical_path(a.canonical_path): get_symbol(a, from_class=False)\n            for a in elements.attributes\n        }\n        classes = {\n            get_canonical_path(c.canonical_path): get_symbol(c, from_class=False)\n            for c in elements.classes\n        }\n        methods = {\n            get_canonical_path(m.canonical_path): get_symbol(m, from_class=True)\n            for c in elements.classes\n            for m in c.functions.values()\n        }\n        properties = {\n            get_canonical_path(p.canonical_path): get_symbol(p, from_class=True)\n            for c in elements.classes\n            for p in c.attributes.values()\n        }\n        sub_modules = {\n            k: v\n            for module in elements.modules\n            for k, v in init_symbols_rec(\n                ast=module, depth=depth + 1, max_depth=max_depth\n            ).items()\n        }\n        return {\n            get_canonical_path(ast.canonical_path): get_symbol(ast, from_class=False),\n            **functions,\n            **attributes,\n            **classes,\n            **methods,\n            **properties,\n            **attributes,\n            **sub_modules,\n        }\n\n    return init_symbols_rec(ast=root_ast)"
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "py_griffe.init_symbols"
+        },
+        {
+            "name": "get_module_aliases",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Retrieves the list of aliases defined within a module.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "text",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": null
+                    },
+                    {
+                        "content": "\n*  **root_ast**: Root module's AST.\n*  **ast**: Module AST to generate the aliases for.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": "Arguments"
+                    }
+                ]
+            },
+            "code": {
+                "declaration": "def get_module_aliases(root_ast: AstModule, ast: AstModule)",
+                "filePath": "py_griffe.py",
+                "startLine": 952,
+                "endLine": 998,
+                "references": {
+                    "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
+                    "get_module_aliases": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.get_module_aliases"
+                },
+                "implementation": "def get_module_aliases(root_ast: AstModule, ast: AstModule):\n    \"\"\"\n    Retrieves the list of aliases defined within a module.\n\n    Parameters:\n        root_ast: Root module's AST.\n        ast: Module AST to generate the aliases for.\n    \"\"\"\n\n    def is_lib_alias(m):\n        try:\n            return isinstance(m, AstAlias) and m.canonical_path.startswith(root_ast.name)\n        except AliasResolutionError:\n            return False\n        except AttributeError:\n            return False\n\n    imports: list[AstAlias] = [m for m in ast.all_members.values() if is_lib_alias(m)]\n\n    wild_char_imports = [m for m in imports if m.name.endswith(\"/*\")]\n\n    def is_target_alias(m):\n        try:\n            return isinstance(m, AstAlias) and m.target.canonical_path.startswith(\n                root_ast.name\n            )\n        except AliasResolutionError:\n            return False\n        except AttributeError:\n            return False\n\n    wild_char_aliases = [\n        alias\n        for short_access in wild_char_imports\n        for alias in short_access.all_members.values()\n        if is_target_alias(alias)\n    ]\n    explicit_imports = [m for m in imports if not m.name.endswith(\"/*\")]\n    explicit_aliases = {\n        f\"{ast.canonical_path}.{m.name}\": m.canonical_path for m in explicit_imports\n    }\n\n    implicit_aliases = {\n        f\"{ast.canonical_path}.{alias.name}\": alias.target.canonical_path\n        for alias in wild_char_aliases\n    }\n    return {**explicit_aliases, **implicit_aliases}"
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "py_griffe.get_module_aliases"
+        },
+        {
+            "name": "init_aliases",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Retrieves the list of all aliases defined within the provided root AST.\n\nRecursively call [get_module_aliases](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.get_module_aliases) for each module found in the provided AST.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "text",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": null
+                    },
+                    {
+                        "content": "\n*  **root_ast**: Root module's AST.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": "Arguments"
+                    }
+                ]
+            },
+            "code": {
+                "declaration": "def init_aliases(root_ast: AstModule) -> dict[str, str]",
+                "filePath": "py_griffe.py",
+                "startLine": 1001,
+                "endLine": 1033,
+                "references": {
+                    "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
+                    "str": "https://docs.python.org/fr/3/library/string.html",
+                    "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
+                    "init_aliases": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.init_aliases"
+                },
+                "implementation": "def init_aliases(root_ast: AstModule) -> dict[str, str]:\n    \"\"\"\n    Retrieves the list of all aliases defined within the provided root AST.\n\n    Recursively call :func:`mkdocs_py_griffe.py_griffe.get_module_aliases` for each module found in the provided AST.\n\n    Parameters:\n        root_ast: Root module's AST.\n    \"\"\"\n\n    def init_aliases_rec(ast: AstModule, depth=0, max_depth=10) -> dict[str, str]:\n        if depth > max_depth:\n            raise RecursionError(\"Maximum recursion depth reached\")\n\n        submodules = [\n            v\n            for _, v in ast.modules.items()\n            if not isinstance(v, griffe.dataclasses.Alias)\n        ]\n        aliases = get_module_aliases(root_ast=root_ast, ast=ast)\n        aliases_submodules = {\n            k: v\n            for module in submodules\n            for k, v in init_aliases_rec(\n                ast=module, depth=depth + 1, max_depth=max_depth\n            ).items()\n        }\n        return {\n            **aliases,\n            **aliases_submodules,\n        }\n\n    return init_aliases_rec(ast=root_ast)"
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "py_griffe.init_aliases"
+        },
+        {
             "name": "generate_api",
             "documentation": {
                 "sections": [
                     {
-                        "content": "Create documentation API files from an AST parsed by griffe library.",
+                        "content": "Create documentation API files from an AST parsed by the griffe library:\n* It generates the list of exported symbols (those documented).\n  See [init_symbols](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.init_symbols).\n* It generates the list of all aliases from the `__init__.py` files, and from the `import` statements in the files.\n  See [init_aliases](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.init_aliases).\n* It generates the documentation recursively for all exported modules (those documented).",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -600,14 +756,14 @@
             "code": {
                 "declaration": "def generate_api(root_ast: AstModule, config: Configuration)",
                 "filePath": "py_griffe.py",
-                "startLine": 810,
-                "endLine": 837,
+                "startLine": 1036,
+                "endLine": 1088,
                 "references": {
                     "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
-                    "Configuration": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Configuration",
-                    "generate_api": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.generate_api"
+                    "Configuration": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Configuration",
+                    "generate_api": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.generate_api"
                 },
-                "implementation": "def generate_api(root_ast: AstModule, config: Configuration):\n    \"\"\"\n    Create documentation API files from an AST parsed by griffe library.\n\n    Parameters:\n        root_ast: Root module's AST.\n        config: Configuration.\n    \"\"\"\n\n    project = Project(\n        config=config,\n        root_ast=root_ast,\n        all_symbols=init_symbols(root_ast=root_ast),\n    )\n\n    def get_doc_rec(module: AstModule, path: str):\n\n        doc = parse_module(module, path, project=project)\n        target_path = config.out / f\"{path}.json\"\n        target_path.exists() and target_path.unlink()\n\n        with open(target_path, \"w\") as json_file:\n            json.dump(doc, json_file, cls=DataclassJSONEncoder, indent=4)\n        for child in doc.children:\n            gr_child = module[child.name]\n            get_doc_rec(module=gr_child, path=f\"{path}.{child.name}\")\n\n    get_doc_rec(module=root_ast, path=root_ast.name)"
+                "implementation": "def generate_api(root_ast: AstModule, config: Configuration):\n    \"\"\"\n    Create documentation API files from an AST parsed by the griffe library:\n    * It generates the list of exported symbols (those documented).\n      See :func:`mkdocs_py_griffe.py_griffe.init_symbols`.\n    * It generates the list of all aliases from the `__init__.py` files, and from the `import` statements in the files.\n      See :func:`mkdocs_py_griffe.py_griffe.init_aliases`.\n    * It generates the documentation recursively for all exported modules (those documented).\n\n    Parameters:\n        root_ast: Root module's AST.\n        config: Configuration.\n    \"\"\"\n    all_symbols = init_symbols(root_ast=root_ast)\n    all_aliases = init_aliases(root_ast=root_ast)\n    project = Project(\n        config=config,\n        root_ast=root_ast,\n        all_symbols=all_symbols,\n        all_aliases=all_aliases,\n    )\n\n    def get_doc_rec(module: AstModule, path: str):\n\n        doc = parse_module(module, project=project)\n        target_path = Path(config.out, *path.split(\".\")).with_suffix(\".json\")\n        if target_path.exists():\n            target_path.unlink()\n        target_path.parent.mkdir(parents=True, exist_ok=True)\n        with open(target_path, \"w\", encoding='UTF8') as json_file:\n            json.dump(doc, json_file, cls=DataclassJSONEncoder, indent=4)\n        for child in doc.children:\n            gr_child = module[child.name]\n            get_doc_rec(module=gr_child, path=f\"{path}.{child.name}\")\n\n    get_doc_rec(module=root_ast, path=root_ast.name)\n\n    print(\n        f\"Internal cross links errors ({len(DocReporter.internal_cross_ref_errors)}):\"\n    )\n    pprint.pprint(DocReporter.internal_cross_ref_errors)\n    print(\n        f\"External cross links errors  ({len(DocReporter.external_cross_ref_errors)}):\"\n    )\n    pprint.pprint(DocReporter.external_cross_ref_errors)\n    print(f\"No docstring errors ({len(DocReporter.no_docstrings_errors)}):\")\n    pprint.pprint(DocReporter.no_docstrings_errors)\n    print(f\"Sphinx cross-link tag unknown ({len(DocReporter.sphinx_tag_unknown)}):\")\n    pprint.pprint(DocReporter.sphinx_tag_unknown)\n    print(\n        f\"Sphinx cross-link unresolved ({len(DocReporter.sphinx_links_unresolved.keys())}):\"\n    )\n    pprint.pprint(DocReporter.sphinx_links_unresolved)"
             },
             "semantic": {
                 "role": "function",
@@ -649,13 +805,13 @@
                 "declaration": "def std_links() -> dict[str, str]",
                 "filePath": "std_links.py",
                 "startLine": 1,
-                "endLine": 44,
+                "endLine": 64,
                 "references": {
                     "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                     "str": "https://docs.python.org/fr/3/library/string.html",
-                    "std_links": "@nav/api/Backends/mkdocs_py_griffe.std_links.std_links"
+                    "std_links": "@nav/api/Backends/mkdocs_py_griffe/.std_links.std_links"
                 },
-                "implementation": "def std_links() -> dict[str, str]:\n    \"\"\"\n    Returns typical links for standard python symbols from `https://docs.python.org`.\n\n    Returns:\n        Dictionary `symbol-path` -> `URL`\n    \"\"\"\n\n    typing_url = \"https://docs.python.org/3/library/typing.html\"\n    return {\n        \"Exception\": \"https://docs.python.org/3/tutorial/errors.html\",\n        \"bytes\": \"https://docs.python.org/3/library/stdtypes.html#bytes-and-bytearray-operations\",\n        \"str\": \"https://docs.python.org/fr/3/library/string.html\",\n        \"bool\": \"https://docs.python.org/fr/3/library/stdtypes.html#boolean-type-bool\",\n        \"int\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n        \"float\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n        \"list\": \"https://docs.python.org/3/library/stdtypes.html#lists\",\n        \"dict\": \"https://docs.python.org/3/library/stdtypes.html#mapping-types-dict\",\n        \"set\": \"https://docs.python.org/3/library/stdtypes.html#set\",\n        \"tuple\": \"https://docs.python.org/3/library/stdtypes.html#tuple\",\n        \"asyncio.subprocess.Process\": \"https://docs.python.org/3/library/asyncio-subprocess.html\",\n        \"collections.abc.Mapping\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping\",\n        \"io.BytesIO\": \"https://docs.python.org/3/library/io.html#io.BytesIO\",\n        \"enum.Enum\": \"https://docs.python.org/3/library/enum.html\",\n        \"abc.ABC\": \"https://docs.python.org/3/library/abc.html\",\n        \"collections.abc.Awaitable\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Awaitable\",\n        \"pathlib.Path\": \"https://docs.python.org/fr/3/library/pathlib.html#pathlib.Path\",\n        \"typing.List\": f\"{typing_url}#typing.List\",\n        \"typing.Dict\": f\"{typing_url}#typing.Dict\",\n        \"typing.Tuple\": f\"{typing_url}#typing.Tuple\",\n        \"typing.Optional\": f\"{typing_url}#typing.Optional\",\n        \"typing.Union\": f\"{typing_url}#typing.Union\",\n        \"typing.Any\": f\"{typing_url}#typing.Any\",\n        \"typing.Mapping\": f\"{typing_url}#typing.Mapping\",\n        \"typing.Awaitable\": f\"{typing_url}#typing.Awaitable\",\n        \"typing.Callable\": f\"{typing_url}#typing.Callable\",\n        \"typing.Set\": f\"{typing_url}#typing.Set\",\n        \"typing.NamedTuple\": f\"{typing_url}#typing.NamedTuple\",\n        \"typing.Literal\": f\"{typing_url}#typing.Literal\",\n        \"typing.Generic\": \"https://mypy.readthedocs.io/en/stable/generics.html\",\n        \"asyncio.Future\": \"https://docs.python.org/3/library/asyncio-future.html\",\n        \"dataclasses\": \"https://docs.python.org/3/library/dataclasses.html#\",\n        \"dataclasses.dataclass\": \"https://docs.python.org/3/library/dataclasses.html#\",\n    }"
+                "implementation": "def std_links() -> dict[str, str]:\n    \"\"\"\n    Returns typical links for standard python symbols from `https://docs.python.org`.\n\n    Returns:\n        Dictionary `symbol-path` -> `URL`\n    \"\"\"\n\n    typing_url = \"https://docs.python.org/3/library/typing.html\"\n    return {\n        \"builtins\": \"https://docs.python.org/3/library/functions.html\",\n        \"builtins.dict\": \"https://docs.python.org/3/library/functions.html#func-dict\",\n        \"Exception\": \"https://docs.python.org/3/tutorial/errors.html\",\n        \"RuntimeError\": \"https://docs.python.org/3/library/exceptions.html#RuntimeError\",\n        \"bytes\": \"https://docs.python.org/3/library/stdtypes.html#bytes-and-bytearray-operations\",\n        \"str\": \"https://docs.python.org/fr/3/library/string.html\",\n        \"bool\": \"https://docs.python.org/fr/3/library/stdtypes.html#boolean-type-bool\",\n        \"int\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n        \"float\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n        \"list\": \"https://docs.python.org/3/library/stdtypes.html#lists\",\n        \"dict\": \"https://docs.python.org/3/library/stdtypes.html#mapping-types-dict\",\n        \"set\": \"https://docs.python.org/3/library/stdtypes.html#set\",\n        \"tuple\": \"https://docs.python.org/3/library/stdtypes.html#tuple\",\n        \"asyncio\": \"https://docs.python.org/3/library/asyncio.html\",\n        \"asyncio.subprocess.Process\": \"https://docs.python.org/3/library/asyncio-subprocess.html\",\n        \"collections.abc.Callable\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable\",\n        \"collections.abc.Coroutine\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Coroutine\",\n        \"collections.abc.Iterable\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable\",\n        \"collections.abc.Mapping\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping\",\n        \"io.BytesIO\": \"https://docs.python.org/3/library/io.html#io.BytesIO\",\n        \"enum.Enum\": \"https://docs.python.org/3/library/enum.html\",\n        \"abc.ABC\": \"https://docs.python.org/3/library/abc.html\",\n        \"collections.abc.Awaitable\": \"https://docs.python.org/3/library/collections.abc.html#collections.abc.Awaitable\",\n        \"pathlib.Path\": \"https://docs.python.org/fr/3/library/pathlib.html#pathlib.Path\",\n        \"typing.List\": f\"{typing_url}#typing.List\",\n        \"typing.Dict\": f\"{typing_url}#typing.Dict\",\n        \"typing.Tuple\": f\"{typing_url}#typing.Tuple\",\n        \"typing.Optional\": f\"{typing_url}#typing.Optional\",\n        \"typing.Union\": f\"{typing_url}#typing.Union\",\n        \"typing.Any\": f\"{typing_url}#typing.Any\",\n        \"typing.Mapping\": f\"{typing_url}#typing.Mapping\",\n        \"typing.Awaitable\": f\"{typing_url}#typing.Awaitable\",\n        \"typing.Callable\": f\"{typing_url}#typing.Callable\",\n        \"typing.Set\": f\"{typing_url}#typing.Set\",\n        \"typing.NamedTuple\": f\"{typing_url}#typing.NamedTuple\",\n        \"typing.Literal\": f\"{typing_url}#typing.Literal\",\n        \"typing.TypeVar\": f\"{typing_url}#typing.TypeVar\",\n        \"typing.TypedDict\": f\"{typing_url}#typing.TypedDict\",\n        \"typing.Generic\": \"https://mypy.readthedocs.io/en/stable/generics.html\",\n        \"asyncio.Future\": \"https://docs.python.org/3/library/asyncio-future.html\",\n        \"dataclasses\": \"https://docs.python.org/3/library/dataclasses.html#\",\n        \"dataclasses.field\": \"https://docs.python.org/3/library/dataclasses.html#\",\n        \"dataclasses.dataclass\": \"https://docs.python.org/3/library/dataclasses.html#\",\n        \"pathlib.Path.home\": \"https://docs.python.org/3/library/pathlib.html#pathlib.Path.home\",\n        \"tempfile\": \"https://docs.python.org/3/library/tempfile.html\",\n        \"tempfile.gettempdir\": \"https://docs.python.org/3/library/tempfile.html#tempfile.gettempdir\",\n        \"threading.Lock\": \"https://docs.python.org/3/library/threading.html#threading.Lock\",\n        \"threading.Thread\": \"https://docs.python.org/3/library/threading.html#threading.Thread\",\n        \"time\": \"https://docs.python.org/3/library/time.html\",\n        \"time.time\": \"https://docs.python.org/3/library/time.html#time.time\",\n        \"watchdog.events.FileSystemEvent\": \"https://pythonhosted.org/watchdog/api.html#watchdog.events.FileSystemEvent\",\n        \"watchdog.events.PatternMatchingEventHandler\":\n            \"https://pythonhosted.org/watchdog/api.html#watchdog.events.PatternMatchingEventHandler\",\n    }"
             },
             "semantic": {
                 "role": "function",
@@ -692,7 +848,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass Semantic:\n    \"\"\"\n    Semantic representation.\n\n    They represent metadata transmitted to the frontend renderer to display appropriately the elements.\n    \"\"\"\n\n    role: str\n    \"\"\"\n    Role, a unique meaning (*e.g.* `Class`, `Interface`, `TypeAlias`, *etc.*).\n    \"\"\"\n    labels: list[str]\n    \"\"\"\n    Some labels.\n    \"\"\"\n    attributes: dict[str, str]\n    \"\"\"\n    Some attributes.\n    \"\"\"\n    relations: dict[str, list[str]]\n    \"\"\"\n    Some relation with other entities (grouped by a category keyword, *e.g.* `InheritedBy`).\n    \"\"\""
             },
@@ -878,7 +1034,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe.models.DocumentationSection"
+                    "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass DocumentationSection:\n    \"\"\"\n    Documentation section.\n    \"\"\"\n\n    content: str\n    \"\"\"\n    Section's content.\n    \"\"\"\n    contentType: str\n    \"\"\"\n    Content's type.\n    \"\"\"\n    semantic: Semantic\n    \"\"\"\n    Associated semantic.\n    \"\"\"\n    title: Optional[str] = None\n    \"\"\"\n    Section's title.\n    \"\"\""
             },
@@ -986,7 +1142,7 @@
                         "startLine": 54,
                         "endLine": 54,
                         "references": {
-                            "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                            "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                         },
                         "implementation": null
                     },
@@ -1061,7 +1217,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Documentation": "@nav/api/Backends/mkdocs_py_griffe.models.Documentation"
+                    "Documentation": "@nav/api/Backends/mkdocs_py_griffe/.models.Documentation"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass Documentation:\n    \"\"\"\n    An entity documentation.\n    \"\"\"\n\n    sections: list[DocumentationSection]\n    \"\"\"\n    List of the sections.\n    \"\"\""
             },
@@ -1100,7 +1256,7 @@
                         "endLine": 70,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe.models.DocumentationSection"
+                            "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection"
                         },
                         "implementation": null
                     },
@@ -1139,7 +1295,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Code": "@nav/api/Backends/mkdocs_py_griffe.models.Code"
+                    "Code": "@nav/api/Backends/mkdocs_py_griffe/.models.Code"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass Code:\n    \"\"\"\n    Entity code's description.\n    \"\"\"\n\n    declaration: str\n    \"\"\"\n    Entity's declaration.\n    \"\"\"\n    filePath: str\n    \"\"\"\n    File path in which the declaration is included.\n    \"\"\"\n    startLine: int\n    \"\"\"\n    Starting line of the declaration.\n    \"\"\"\n    endLine: int\n    \"\"\"\n    Ending line of the declaration.\n    \"\"\"\n    references: dict[str, EntityPath]\n    \"\"\"\n    References to other entities in the declaration.\n    \"\"\"\n    implementation: Optional[str] = None\n    \"\"\"\n    Optional associated implementation.\n    \"\"\""
             },
@@ -1319,7 +1475,7 @@
                         "references": {
                             "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                             "str": "https://docs.python.org/fr/3/library/string.html",
-                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe.models.EntityPath"
+                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe/.models.EntityPath"
                         },
                         "implementation": null
                     },
@@ -1394,7 +1550,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Entity": "@nav/api/Backends/mkdocs_py_griffe.models.Entity"
+                    "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass Entity:\n    \"\"\"\n    Base structure to represent an entity within the code, e.g. class, structure, function, variable, *etc.*.\n    \"\"\"\n\n    name: str\n    \"\"\"\n    Name.\n    \"\"\"\n    documentation: Documentation\n    \"\"\"\n    Documentation\n    \"\"\"\n    code: Code\n    \"\"\"\n    Code information.\n    \"\"\"\n    semantic: Semantic\n    \"\"\"\n    Associated semantic.\n    \"\"\"\n    path: EntityPath\n    \"\"\"\n    The path (e.g. `ModuleFoo.TypeBar.attrBaz`).\n    \"\"\""
             },
@@ -1467,7 +1623,7 @@
                         "startLine": 118,
                         "endLine": 118,
                         "references": {
-                            "Documentation": "@nav/api/Backends/mkdocs_py_griffe.models.Documentation"
+                            "Documentation": "@nav/api/Backends/mkdocs_py_griffe/.models.Documentation"
                         },
                         "implementation": null
                     },
@@ -1502,7 +1658,7 @@
                         "startLine": 122,
                         "endLine": 122,
                         "references": {
-                            "Code": "@nav/api/Backends/mkdocs_py_griffe.models.Code"
+                            "Code": "@nav/api/Backends/mkdocs_py_griffe/.models.Code"
                         },
                         "implementation": null
                     },
@@ -1537,7 +1693,7 @@
                         "startLine": 126,
                         "endLine": 126,
                         "references": {
-                            "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                            "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                         },
                         "implementation": null
                     },
@@ -1572,7 +1728,7 @@
                         "startLine": 130,
                         "endLine": 130,
                         "references": {
-                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe.models.EntityPath"
+                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe/.models.EntityPath"
                         },
                         "implementation": null
                     },
@@ -1611,8 +1767,8 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Entity": "@nav/api/Backends/mkdocs_py_griffe.models.Entity",
-                    "Type": "@nav/api/Backends/mkdocs_py_griffe.models.Type"
+                    "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity",
+                    "Type": "@nav/api/Backends/mkdocs_py_griffe/.models.Type"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass Type(Entity):\n    \"\"\"\n    Type representation.\n    \"\"\"\n\n    callables: list[Callable]\n    \"\"\"\n    List of owned callable.\n    \"\"\"\n    attributes: list[Attribute]\n    \"\"\"\n    List of owned attributes.\n    \"\"\""
             },
@@ -1653,7 +1809,7 @@
                         "endLine": 153,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "Callable": "@nav/api/Backends/mkdocs_py_griffe.models.Callable"
+                            "Callable": "@nav/api/Backends/mkdocs_py_griffe/.models.Callable"
                         },
                         "implementation": null
                     },
@@ -1689,7 +1845,7 @@
                         "endLine": 157,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "Attribute": "@nav/api/Backends/mkdocs_py_griffe.models.Attribute"
+                            "Attribute": "@nav/api/Backends/mkdocs_py_griffe/.models.Attribute"
                         },
                         "implementation": null
                     },
@@ -1728,7 +1884,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "File": "@nav/api/Backends/mkdocs_py_griffe.models.File"
+                    "File": "@nav/api/Backends/mkdocs_py_griffe/.models.File"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass File:\n    \"\"\"\n    File representation.\n    \"\"\"\n\n    name: str\n    \"\"\"\n    Name.\n    \"\"\"\n    path: str\n    \"\"\"\n    Path.\n    \"\"\"\n    documentation: Documentation\n    \"\"\"\n    Documentation.\n    \"\"\""
             },
@@ -1836,7 +1992,7 @@
                         "startLine": 177,
                         "endLine": 177,
                         "references": {
-                            "Documentation": "@nav/api/Backends/mkdocs_py_griffe.models.Documentation"
+                            "Documentation": "@nav/api/Backends/mkdocs_py_griffe/.models.Documentation"
                         },
                         "implementation": null
                     },
@@ -1875,7 +2031,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "ChildModule": "@nav/api/Backends/mkdocs_py_griffe.models.ChildModule"
+                    "ChildModule": "@nav/api/Backends/mkdocs_py_griffe/.models.ChildModule"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass ChildModule:\n    \"\"\"\n    Child module representation.\n    \"\"\"\n\n    name: str\n    \"\"\"\n    Name.\n    \"\"\"\n    path: EntityPath\n    \"\"\"\n    Path (*e.g.* `ModuleFoo.ModuleBar`).\n    \"\"\"\n    isLeaf: bool\n    \"\"\"\n    Whether it includes children modules.\n    \"\"\""
             },
@@ -1948,7 +2104,7 @@
                         "startLine": 193,
                         "endLine": 193,
                         "references": {
-                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe.models.EntityPath"
+                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe/.models.EntityPath"
                         },
                         "implementation": null
                     },
@@ -2022,7 +2178,7 @@
                 "references": {
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Module": "@nav/api/Backends/mkdocs_py_griffe.models.Module"
+                    "Module": "@nav/api/Backends/mkdocs_py_griffe/.models.Module"
                 },
                 "implementation": "@dataclasses.dataclass(frozen=True)\nclass Module:\n    \"\"\"\n    Module representation.\n    \"\"\"\n\n    name: str\n    \"\"\"\n    Name.\n    \"\"\"\n    documentation: Documentation\n    \"\"\"\n    Documentation\n    \"\"\"\n\n    semantic: Semantic\n    \"\"\"\n    Associated semantic.\n    \"\"\"\n    path: EntityPath\n    \"\"\"\n    The path (e.g. `ModuleFoo.TypeBar.attrBaz`).\n    \"\"\"\n\n    children: list[ChildModule]\n    \"\"\"\n    Children modules.\n    \"\"\"\n    callables: list[Callable]\n    \"\"\"\n    Callable components.\n    \"\"\"\n    types: list[Type]\n    \"\"\"\n    Types components.\n    \"\"\"\n    attributes: list[Attribute]\n    \"\"\"\n    Attributes components.\n    \"\"\"\n    files: list[File]\n    \"\"\"\n    Files components.\n    \"\"\""
             },
@@ -2095,7 +2251,7 @@
                         "startLine": 213,
                         "endLine": 213,
                         "references": {
-                            "Documentation": "@nav/api/Backends/mkdocs_py_griffe.models.Documentation"
+                            "Documentation": "@nav/api/Backends/mkdocs_py_griffe/.models.Documentation"
                         },
                         "implementation": null
                     },
@@ -2130,7 +2286,7 @@
                         "startLine": 218,
                         "endLine": 218,
                         "references": {
-                            "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                            "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                         },
                         "implementation": null
                     },
@@ -2165,7 +2321,7 @@
                         "startLine": 222,
                         "endLine": 222,
                         "references": {
-                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe.models.EntityPath"
+                            "EntityPath": "@nav/api/Backends/mkdocs_py_griffe/.models.EntityPath"
                         },
                         "implementation": null
                     },
@@ -2201,7 +2357,7 @@
                         "endLine": 227,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "ChildModule": "@nav/api/Backends/mkdocs_py_griffe.models.ChildModule"
+                            "ChildModule": "@nav/api/Backends/mkdocs_py_griffe/.models.ChildModule"
                         },
                         "implementation": null
                     },
@@ -2237,7 +2393,7 @@
                         "endLine": 231,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "Callable": "@nav/api/Backends/mkdocs_py_griffe.models.Callable"
+                            "Callable": "@nav/api/Backends/mkdocs_py_griffe/.models.Callable"
                         },
                         "implementation": null
                     },
@@ -2273,7 +2429,7 @@
                         "endLine": 235,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "Type": "@nav/api/Backends/mkdocs_py_griffe.models.Type"
+                            "Type": "@nav/api/Backends/mkdocs_py_griffe/.models.Type"
                         },
                         "implementation": null
                     },
@@ -2309,7 +2465,7 @@
                         "endLine": 239,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "Attribute": "@nav/api/Backends/mkdocs_py_griffe.models.Attribute"
+                            "Attribute": "@nav/api/Backends/mkdocs_py_griffe/.models.Attribute"
                         },
                         "implementation": null
                     },
@@ -2345,7 +2501,7 @@
                         "endLine": 243,
                         "references": {
                             "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "File": "@nav/api/Backends/mkdocs_py_griffe.models.File"
+                            "File": "@nav/api/Backends/mkdocs_py_griffe/.models.File"
                         },
                         "implementation": null
                     },
@@ -2364,7 +2520,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the configuration to generate API files using [generate_api](@nav/api/Backends/mkdocs_py_griffe.py_griffe.generate_api).",
+                        "content": "Represents the configuration to generate API files using\n[generate_api](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.generate_api).",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -2379,13 +2535,13 @@
             "code": {
                 "declaration": "class Configuration(NamedTuple)",
                 "filePath": "py_griffe.py",
-                "startLine": 39,
-                "endLine": 63,
+                "startLine": 41,
+                "endLine": 66,
                 "references": {
                     "NamedTuple": "https://docs.python.org/3/library/typing.html#typing.NamedTuple",
-                    "Configuration": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Configuration"
+                    "Configuration": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Configuration"
                 },
-                "implementation": "class Configuration(NamedTuple):\n    \"\"\"\n    Represents the configuration to generate API files using :func:`generate_api`.\n    \"\"\"\n\n    base_nav: str\n    \"\"\"\n    The base URL for the navigation.\n    \"\"\"\n    out: Path\n    \"\"\"\n    Path of the output folder in which API files are generated.\n    \"\"\"\n    external_links: dict[str, str] = {}\n    \"\"\"\n    External links to cross-reference, e.g.:\n    ```\n    {   \n        \"float\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n        \"list\": \"https://docs.python.org/3/library/stdtypes.html#lists\",\n        \"dict\": \"https://docs.python.org/3/library/stdtypes.html#mapping-types-dict\",\n    }\n    ```\n    The function :func:`std_links` is available is includes common standard Python links.\n    \"\"\""
+                "implementation": "class Configuration(NamedTuple):\n    \"\"\"\n    Represents the configuration to generate API files using\n    :func:`mkdocs_py_griffe.py_griffe.generate_api`.\n    \"\"\"\n\n    base_nav: str\n    \"\"\"\n    The base URL for the navigation.\n    \"\"\"\n    out: Path\n    \"\"\"\n    Path of the output folder in which API files are generated.\n    \"\"\"\n    external_links: dict[str, str] = {}\n    \"\"\"\n    External links to cross-reference, e.g.:\n    ```\n    {   \n        \"float\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n        \"list\": \"https://docs.python.org/3/library/stdtypes.html#lists\",\n        \"dict\": \"https://docs.python.org/3/library/stdtypes.html#mapping-types-dict\",\n    }\n    ```\n    The function :func:`mkdocs_py_griffe.std_links.std_links` is available, it includes common standard Python links.\n    \"\"\""
             },
             "semantic": {
                 "role": "class",
@@ -2420,8 +2576,8 @@
                     "code": {
                         "declaration": "    base_nav: str",
                         "filePath": "py_griffe.py",
-                        "startLine": 44,
-                        "endLine": 44,
+                        "startLine": 47,
+                        "endLine": 47,
                         "references": {
                             "str": "https://docs.python.org/fr/3/library/string.html"
                         },
@@ -2455,8 +2611,8 @@
                     "code": {
                         "declaration": "    out: Path",
                         "filePath": "py_griffe.py",
-                        "startLine": 48,
-                        "endLine": 48,
+                        "startLine": 51,
+                        "endLine": 51,
                         "references": {
                             "Path": "https://docs.python.org/fr/3/library/pathlib.html#pathlib.Path"
                         },
@@ -2475,7 +2631,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "External links to cross-reference, e.g.:\n```\n{   \n    \"float\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n    \"list\": \"https://docs.python.org/3/library/stdtypes.html#lists\",\n    \"dict\": \"https://docs.python.org/3/library/stdtypes.html#mapping-types-dict\",\n}\n```\nThe function [std_links](@nav/api/Backends/mkdocs_py_griffe.std_links.std_links) is available is includes common standard Python links.",
+                                "content": "External links to cross-reference, e.g.:\n```\n{   \n    \"float\": \"https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex\",\n    \"list\": \"https://docs.python.org/3/library/stdtypes.html#lists\",\n    \"dict\": \"https://docs.python.org/3/library/stdtypes.html#mapping-types-dict\",\n}\n```\nThe function [std_links](@nav/api/Backends/mkdocs_py_griffe/.std_links.std_links) is available, it includes common standard Python links.",
                                 "contentType": "Markdown",
                                 "semantic": {
                                     "role": "text",
@@ -2490,8 +2646,8 @@
                     "code": {
                         "declaration": "    external_links: dict[str, str] = {}",
                         "filePath": "py_griffe.py",
-                        "startLine": 52,
-                        "endLine": 52,
+                        "startLine": 55,
+                        "endLine": 55,
                         "references": {
                             "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                             "str": "https://docs.python.org/fr/3/library/string.html"
@@ -2505,6 +2661,119 @@
                         "relations": {}
                     },
                     "path": "py_griffe.Configuration.external_links"
+                }
+            ]
+        },
+        {
+            "name": "SymbolRef",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a reference of a symbol in the library.\nInitialized from the function [init_symbols](@nav/api/Backends/mkdocs_py_griffe/.py_griffe.init_symbols).",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "text",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": null
+                    }
+                ]
+            },
+            "code": {
+                "declaration": "class SymbolRef(NamedTuple)",
+                "filePath": "py_griffe.py",
+                "startLine": 74,
+                "endLine": 87,
+                "references": {
+                    "NamedTuple": "https://docs.python.org/3/library/typing.html#typing.NamedTuple",
+                    "SymbolRef": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SymbolRef"
+                },
+                "implementation": "class SymbolRef(NamedTuple):\n    \"\"\"\n    Represents a reference of a symbol in the library.\n    Initialized from the function :func:`mkdocs_py_griffe.py_griffe.init_symbols`.\n    \"\"\"\n\n    kind: SymbolKind\n    \"\"\"\n    Kind of the symbol.\n    \"\"\"\n    navigation_path: str\n    \"\"\"\n    Navigation path.\n    \"\"\""
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {
+                    "inherits": [
+                        "typing.NamedTuple"
+                    ]
+                }
+            },
+            "path": "py_griffe.SymbolRef",
+            "callables": [],
+            "attributes": [
+                {
+                    "name": "kind",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Kind of the symbol.",
+                                "contentType": "Markdown",
+                                "semantic": {
+                                    "role": "text",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                },
+                                "title": null
+                            }
+                        ]
+                    },
+                    "code": {
+                        "declaration": "    kind: SymbolKind",
+                        "filePath": "py_griffe.py",
+                        "startLine": 80,
+                        "endLine": 80,
+                        "references": {
+                            "SymbolKind": null
+                        },
+                        "implementation": null
+                    },
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "path": "py_griffe.SymbolRef.kind"
+                },
+                {
+                    "name": "navigation_path",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Navigation path.",
+                                "contentType": "Markdown",
+                                "semantic": {
+                                    "role": "text",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                },
+                                "title": null
+                            }
+                        ]
+                    },
+                    "code": {
+                        "declaration": "    navigation_path: str",
+                        "filePath": "py_griffe.py",
+                        "startLine": 84,
+                        "endLine": 84,
+                        "references": {
+                            "str": "https://docs.python.org/fr/3/library/string.html"
+                        },
+                        "implementation": null
+                    },
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "path": "py_griffe.SymbolRef.navigation_path"
                 }
             ]
         },
@@ -2528,13 +2797,13 @@
             "code": {
                 "declaration": "class Project(NamedTuple)",
                 "filePath": "py_griffe.py",
-                "startLine": 66,
-                "endLine": 82,
+                "startLine": 90,
+                "endLine": 110,
                 "references": {
                     "NamedTuple": "https://docs.python.org/3/library/typing.html#typing.NamedTuple",
-                    "Project": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Project"
+                    "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project"
                 },
-                "implementation": "class Project(NamedTuple):\n    \"\"\"\n    Represents the project, holding global symbols.\n    \"\"\"\n\n    config: Configuration\n    \"\"\"\n    The configuration.\n    \"\"\"\n    root_ast: AstModule\n    \"\"\"\n    The root AST from griffe of the documented module.\n    \"\"\"\n    all_symbols: list[str]\n    \"\"\"\n    The list of all symbols defined in the documented module.\n    \"\"\""
+                "implementation": "class Project(NamedTuple):\n    \"\"\"\n    Represents the project, holding global symbols.\n    \"\"\"\n\n    config: Configuration\n    \"\"\"\n    The configuration.\n    \"\"\"\n    root_ast: AstModule\n    \"\"\"\n    The root AST from griffe of the documented module.\n    \"\"\"\n    all_symbols: dict[str, SymbolRef]\n    \"\"\"\n    The list of all symbols defined in the documented module.\n    \"\"\"\n    all_aliases: dict[str, str]\n    \"\"\"\n    The list of aliases defined in the documented module (from the library).\n    \"\"\""
             },
             "semantic": {
                 "role": "class",
@@ -2569,10 +2838,10 @@
                     "code": {
                         "declaration": "    config: Configuration",
                         "filePath": "py_griffe.py",
-                        "startLine": 71,
-                        "endLine": 71,
+                        "startLine": 95,
+                        "endLine": 95,
                         "references": {
-                            "Configuration": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.Configuration"
+                            "Configuration": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Configuration"
                         },
                         "implementation": null
                     },
@@ -2604,8 +2873,8 @@
                     "code": {
                         "declaration": "    root_ast: AstModule",
                         "filePath": "py_griffe.py",
-                        "startLine": 75,
-                        "endLine": 75,
+                        "startLine": 99,
+                        "endLine": 99,
                         "references": {
                             "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module"
                         },
@@ -2637,13 +2906,14 @@
                         ]
                     },
                     "code": {
-                        "declaration": "    all_symbols: list[str]",
+                        "declaration": "    all_symbols: dict[str, SymbolRef]",
                         "filePath": "py_griffe.py",
-                        "startLine": 79,
-                        "endLine": 79,
+                        "startLine": 103,
+                        "endLine": 103,
                         "references": {
-                            "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                            "str": "https://docs.python.org/fr/3/library/string.html"
+                            "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
+                            "str": "https://docs.python.org/fr/3/library/string.html",
+                            "SymbolRef": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SymbolRef"
                         },
                         "implementation": null
                     },
@@ -2654,6 +2924,42 @@
                         "relations": {}
                     },
                     "path": "py_griffe.Project.all_symbols"
+                },
+                {
+                    "name": "all_aliases",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The list of aliases defined in the documented module (from the library).",
+                                "contentType": "Markdown",
+                                "semantic": {
+                                    "role": "text",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                },
+                                "title": null
+                            }
+                        ]
+                    },
+                    "code": {
+                        "declaration": "    all_aliases: dict[str, str]",
+                        "filePath": "py_griffe.py",
+                        "startLine": 107,
+                        "endLine": 107,
+                        "references": {
+                            "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
+                            "str": "https://docs.python.org/fr/3/library/string.html"
+                        },
+                        "implementation": null
+                    },
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "path": "py_griffe.Project.all_aliases"
                 }
             ]
         }
@@ -2679,10 +2985,10 @@
             "code": {
                 "declaration": "ATTR_SEMANTIC = Semantic(role=\"attribute\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 112,
-                "endLine": 112,
+                "startLine": 140,
+                "endLine": 140,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -2717,7 +3023,7 @@
                 "startLine": 141,
                 "endLine": 141,
                 "references": {
-                    "Entity": "@nav/api/Backends/mkdocs_py_griffe.models.Entity"
+                    "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity"
                 },
                 "implementation": null
             },
@@ -2749,10 +3055,10 @@
             "code": {
                 "declaration": "CLASS_SEMANTIC = Semantic(role=\"class\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 107,
-                "endLine": 107,
+                "startLine": 135,
+                "endLine": 135,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -2787,7 +3093,7 @@
                 "startLine": 136,
                 "endLine": 136,
                 "references": {
-                    "Entity": "@nav/api/Backends/mkdocs_py_griffe.models.Entity"
+                    "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity"
                 },
                 "implementation": null
             },
@@ -2854,10 +3160,10 @@
             "code": {
                 "declaration": "FUNCTION_GLOBAL_SEMANTIC = Semantic(\n    role=\"function\", labels=[], attributes={}, relations={}\n)",
                 "filePath": "py_griffe.py",
-                "startLine": 100,
-                "endLine": 102,
+                "startLine": 128,
+                "endLine": 130,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -2889,10 +3195,10 @@
             "code": {
                 "declaration": "GLOBAL_SEMANTIC = Semantic(role=\"global\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 95,
-                "endLine": 95,
+                "startLine": 123,
+                "endLine": 123,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -2924,8 +3230,8 @@
             "code": {
                 "declaration": "INIT_FILENAME = \"__init__.py\"",
                 "filePath": "py_griffe.py",
-                "startLine": 33,
-                "endLine": 33,
+                "startLine": 35,
+                "endLine": 35,
                 "references": {},
                 "implementation": null
             },
@@ -2957,10 +3263,10 @@
             "code": {
                 "declaration": "METHOD_SEMANTIC = Semantic(role=\"method\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 117,
-                "endLine": 117,
+                "startLine": 145,
+                "endLine": 145,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -2992,10 +3298,10 @@
             "code": {
                 "declaration": "MODULE_SEMANTIC = Semantic(role=\"module\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 90,
-                "endLine": 90,
+                "startLine": 118,
+                "endLine": 118,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -3027,10 +3333,10 @@
             "code": {
                 "declaration": "NO_SEMANTIC = Semantic(role=\"\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 85,
-                "endLine": 85,
+                "startLine": 113,
+                "endLine": 113,
                 "references": {
-                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe.models.Semantic"
+                    "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
                 "implementation": null
             },
@@ -3047,7 +3353,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "The supported tags for sphinx like cross links.\n\n*E.g.*:\n```\n*  :tag:`symbol`\n*  :tag:`a custom text <symbol>`\n*  :tag:`a custom text <foo.bar.symbol>`\n```",
+                        "content": "The supported tags for sphinx like cross links.\n\n*E.g.*:\n```\n*  symbol\n*  a custom text <symbol>\n*  symbol>\n```",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -3060,13 +3366,13 @@
                 ]
             },
             "code": {
-                "declaration": "SUPPORTED_CROSS_LINK_TAGS : set[SphinxCrossLinkTag] = {'mod', 'class', 'func', 'attr', 'meth', 'glob'}",
+                "declaration": "SUPPORTED_CROSS_LINK_TAGS: set[SphinxCrossLinkTag] = {\n    \"mod\",\n    \"class\",\n    \"func\",\n    \"attr\",\n    \"meth\",\n    \"glob\",\n}",
                 "filePath": "py_griffe.py",
-                "startLine": 127,
-                "endLine": 127,
+                "startLine": 155,
+                "endLine": 162,
                 "references": {
                     "set": "https://docs.python.org/3/library/stdtypes.html#set",
-                    "SphinxCrossLinkTag": "@nav/api/Backends/mkdocs_py_griffe.py_griffe.SphinxCrossLinkTag"
+                    "SphinxCrossLinkTag": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SphinxCrossLinkTag"
                 },
                 "implementation": null
             },
@@ -3096,10 +3402,10 @@
                 ]
             },
             "code": {
-                "declaration": "SphinxCrossLinkTag = Literal['mod', 'class', 'func', 'attr', 'meth', 'glob']",
+                "declaration": "SphinxCrossLinkTag = Literal[\"mod\", \"class\", \"func\", \"attr\", \"meth\", \"glob\"]",
                 "filePath": "py_griffe.py",
-                "startLine": 122,
-                "endLine": 122,
+                "startLine": 150,
+                "endLine": 150,
                 "references": {
                     "Literal": "https://docs.python.org/3/library/typing.html#typing.Literal"
                 },
@@ -3122,25 +3428,6 @@
                 "sections": [
                     {
                         "content": "Python version of the target TypeScript [models](@nav/api/CodeApi.models.ts).",
-                        "contentType": "Markdown",
-                        "semantic": {
-                            "role": "text",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "title": null
-                    }
-                ]
-            }
-        },
-        {
-            "name": "main",
-            "path": "main.py",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",

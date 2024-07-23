@@ -33,6 +33,7 @@ export class TypeView implements VirtualDOM<'div'> {
                 tag: 'h3',
                 withClass: `doc-${this.type.semantic.role}-name fs-1`,
                 doc: this.type,
+                relativeToPath: this.fromModule.path,
             }),
             separatorView,
             new CodeView({
@@ -75,6 +76,7 @@ export class TypeView implements VirtualDOM<'div'> {
                             configuration: this.configuration,
                             parent: this.type,
                             project: this.project,
+                            fromModule: this.fromModule,
                         }),
                     ],
                 }

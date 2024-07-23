@@ -55,6 +55,7 @@ export class ModuleView implements VirtualDOM<'div'> {
                 tag: 'h1',
                 withClass: `doc-module-name doc-${this.module.semantic.role}-name fs-1`,
                 doc: this.module,
+                relativeToPath: '',
             }),
             {
                 tag: 'div',
@@ -93,6 +94,7 @@ export class ModuleView implements VirtualDOM<'div'> {
                                 semantic: undefined,
                                 path: file.split('/').slice(-1)[0],
                             },
+                            relativeToPath: module.path,
                         }),
                         new DocumentationView({
                             documentation: fileDoc.documentation,
@@ -123,6 +125,7 @@ export class ModuleView implements VirtualDOM<'div'> {
                                         router: this.router,
                                         configuration: this.configuration,
                                         project: this.project,
+                                        fromModule: this.module,
                                     }),
                                     ySeparatorView5,
                                 ])

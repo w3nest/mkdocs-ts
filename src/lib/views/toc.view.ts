@@ -126,19 +126,23 @@ export class TOCView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'ul',
-                class: 'p-0 h-100 scrollbar-on-hover',
+                class: 'p-0 h-100 mkdocs-thin-v-scroller',
                 connectedCallback: (elem: RxHTMLElement<'ul'>) => {
-                    const headings = [...elem.querySelectorAll('li')]
                     elem.ownSubscriptions(
-                        this.indexFirstVisibleHeading$.subscribe((index) => {
-                            const br = elem.getBoundingClientRect()
-                            const offset = headings[index]?.['offsetTop'] || 0
-                            elem.scrollTo({
-                                top: offset + br.top - br.height / 4,
-                                left: 0,
-                                behavior: 'smooth',
-                            })
-                        }),
+                        this.indexFirstVisibleHeading$
+                            .pipe(debounceTime(200))
+                            .subscribe((index) => {
+                                const headings = [
+                                    ...elem.querySelectorAll('li'),
+                                ]
+                                const br = elem.getBoundingClientRect()
+                                const offset = headings[index]?.offsetTop || 0
+                                elem.scrollTo({
+                                    top: offset - br.top,
+                                    left: 0,
+                                    behavior: 'smooth',
+                                })
+                            }),
                     )
                 },
                 children: {
