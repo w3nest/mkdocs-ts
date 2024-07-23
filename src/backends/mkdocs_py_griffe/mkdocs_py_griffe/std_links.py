@@ -24,8 +24,8 @@ def std_links() -> dict[str, str]:
         "asyncio": "https://docs.python.org/3/library/asyncio.html",
         "asyncio.subprocess.Process": "https://docs.python.org/3/library/asyncio-subprocess.html",
         "collections.abc.Callable": "https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable",
-        "collections.abc.Coroutine":"https://docs.python.org/3/library/collections.abc.html#collections.abc.Coroutine",
-        "collections.abc.Iterable":"https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable",
+        "collections.abc.Coroutine": "https://docs.python.org/3/library/collections.abc.html#collections.abc.Coroutine",
+        "collections.abc.Iterable": "https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable",
         "collections.abc.Mapping": "https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping",
         "io.BytesIO": "https://docs.python.org/3/library/io.html#io.BytesIO",
         "enum.Enum": "https://docs.python.org/3/library/enum.html",
@@ -54,12 +54,11 @@ def std_links() -> dict[str, str]:
         "pathlib.Path.home": "https://docs.python.org/3/library/pathlib.html#pathlib.Path.home",
         "tempfile": "https://docs.python.org/3/library/tempfile.html",
         "tempfile.gettempdir": "https://docs.python.org/3/library/tempfile.html#tempfile.gettempdir",
-        "threading.Lock":"https://docs.python.org/3/library/threading.html#threading.Lock",
-        "threading.Thread":"https://docs.python.org/3/library/threading.html#threading.Thread",
-        "time":"https://docs.python.org/3/library/time.html",
+        "threading.Lock": "https://docs.python.org/3/library/threading.html#threading.Lock",
+        "threading.Thread": "https://docs.python.org/3/library/threading.html#threading.Thread",
+        "time": "https://docs.python.org/3/library/time.html",
         "time.time": "https://docs.python.org/3/library/time.html#time.time",
-        "watchdog.events.FileSystemEvent":"https://pythonhosted.org/watchdog/api.html#watchdog.events.FileSystemEvent",
+        "watchdog.events.FileSystemEvent": "https://pythonhosted.org/watchdog/api.html#watchdog.events.FileSystemEvent",
         "watchdog.events.PatternMatchingEventHandler":
-            "https://pythonhosted.org/watchdog/api.html#watchdog.events.PatternMatchingEventHandler"
-
+            "https://pythonhosted.org/watchdog/api.html#watchdog.events.PatternMatchingEventHandler",
     }
