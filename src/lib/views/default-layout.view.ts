@@ -129,17 +129,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         )
         const wrapperSideNav = (side: 'left' | 'right') => ({
             tag: 'div' as const,
-            class: 'mkdocs-WrapperSideNav mkdocs-ts-side-nav',
+            class: 'mkdocs-WrapperSideNav',
             style: {
-                maxHeight: '85vh',
-                position: 'sticky' as const,
-                top: '0px',
                 width:
                     side === 'left'
                         ? this.layoutOptions.navWidth
                         : this.layoutOptions.tocWidth,
-                overflowY: 'auto' as const,
-                overflowX: 'hidden' as const,
             },
         })
         this.connectedCallback = (e: HTMLElement) => {

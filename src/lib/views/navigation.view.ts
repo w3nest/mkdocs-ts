@@ -142,7 +142,8 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-NavigationView h-100 w-100'
+    public readonly class =
+        'mkdocs-NavigationView h-100 w-100 mkdocs-thin-v-scroller'
     public readonly children: ChildrenLike
 
     constructor(params: { router: Router }) {
