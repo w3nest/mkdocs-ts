@@ -7,6 +7,7 @@ type Doc = { semantic?: Semantic; path: string; name: string }
 
 export class HeaderView implements VirtualDOM<HeadingLevel> {
     public readonly doc: Doc
+    public readonly relativeToPath: string
     public readonly withChildren: AnyVirtualDOM[]
     public readonly withClass: string
     public readonly text: string
@@ -22,13 +23,18 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
         withClass: string
         doc: Doc
         withChildren?: AnyVirtualDOM[]
+        relativeToPath: string
     }) {
         Object.assign(this, params)
         const semantic = this.doc.semantic ? this.doc.semantic.role : ''
         this.class += ` mkapi-role-${semantic}`
         this.text = this.text || this.doc.name
         this.withChildren = this.withChildren || []
-        this.id = `${headingPrefixId}${this.doc.path}`
+        const relativePath = this.doc.path.replace(
+            this.relativeToPath + '.',
+            '',
+        )
+        this.id = `${headingPrefixId}${relativePath}`
         this.children = [
             {
                 tag: 'span',

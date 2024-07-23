@@ -37,6 +37,7 @@ export class AttributeView implements VirtualDOM<'div'> {
                         tag: params.parent ? 'h4' : 'h3',
                         withClass: `doc-${this.attribute.semantic.role}-name`,
                         doc: this.attribute,
+                        relativeToPath: this.fromModule.path,
                     }),
                 ],
             },

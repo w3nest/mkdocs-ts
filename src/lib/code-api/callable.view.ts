@@ -5,10 +5,12 @@ import { DocumentationView } from './documentation.view'
 import { CodeView } from './code.view'
 import { HeaderView } from './header.view'
 import { separatorView } from './utils'
-import { Callable, Project, Type } from './models'
+import { Callable, Module, Project, Type } from './models'
 
 export class CallableView implements VirtualDOM<'div'> {
     public readonly callable: Callable
+    public readonly fromModule: Module
+
     public readonly router: Router
     public readonly configuration: Configuration
     public readonly project: Project
@@ -22,6 +24,7 @@ export class CallableView implements VirtualDOM<'div'> {
         configuration: Configuration
         project: Project
         parent?: Type
+        fromModule: Module
     }) {
         Object.assign(this, params)
         this.class += ` mkapi-role-${this.callable.semantic.role}`
@@ -30,6 +33,7 @@ export class CallableView implements VirtualDOM<'div'> {
                 tag: params.parent ? 'h4' : 'h3',
                 withClass: `doc-${this.callable.semantic.role}-name`,
                 doc: this.callable,
+                relativeToPath: this.fromModule.path,
             }),
             separatorView,
             new CodeView({
