@@ -202,11 +202,6 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             },
             {},
         )
-        const fromCellId =
-            currentIndex === 0
-                ? undefined
-                : compatibleCells[currentIndex - 1].cellId
-
         const isReactive =
             Object.values(capturedIn).find(
                 (v) => v instanceof Observable || v instanceof Promise,
@@ -214,14 +209,16 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
 
         const body = {
             cellId: this.cellId,
-            fromCellId,
+            previousCellIds: compatibleCells
+                .slice(0, currentIndex)
+                .map((cell) => cell.cellId),
             code: src,
             capturedIn,
             capturedOut: this.cellAttributes.capturedOut,
         }
+        this.reactive$.next(isReactive)
         const interpreter = window[this.cellAttributes.interpreter]
         if (isReactive) {
-            this.reactive$.next(true)
             return executeInterpreter$({
                 body,
                 interpreter,
@@ -230,8 +227,12 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
                 invalidated$: this.invalidated$,
             })
         }
-        this.reactive$.next(false)
-        return executeInterpreter({ body, interpreter, scope, output$ })
+        return executeInterpreter({
+            body,
+            interpreter,
+            scope,
+            output$,
+        })
     }
 
     private headerView(): AnyVirtualDOM {
