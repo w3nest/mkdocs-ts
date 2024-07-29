@@ -98,9 +98,13 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
         language: (e: HTMLElement) =>
             e.getAttribute('language') as unknown as 'javascript' | 'python',
         capturedIn: (e: HTMLElement) =>
-            (e.getAttribute('captured-in') || '').split(' '),
+            (e.getAttribute('captured-in') || '')
+                .split(' ')
+                .filter((c) => c !== ''),
         capturedOut: (e: HTMLElement) =>
-            (e.getAttribute('captured-out') || '').split(' '),
+            (e.getAttribute('captured-out') || '')
+                .split(' ')
+                .filter((c) => c !== ''),
     }
     /**
      * Initialize an instance of {@link InterpreterCellView} from a DOM element `interpreter-cell` in MarkDown content
