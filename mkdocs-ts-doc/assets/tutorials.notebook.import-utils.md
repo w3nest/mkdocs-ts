@@ -58,7 +58,7 @@ const ChartView = async ({data, xScale, yScale}) => {
     }
     return {
         tag: 'div',
-        class:`border text-center rounded p-2 flex-grow-1 w-100`,
+        class:`border text-center rounded p-2 flex-grow-1 w-100 h-100`,
         children: [
             {
                 tag:'canvas',

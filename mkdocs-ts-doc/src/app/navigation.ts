@@ -156,6 +156,16 @@ export const navigation: Navigation = {
                         }),
                 },
             },
+            '/workers': {
+                name: "Workers' Pool",
+                tableOfContent,
+                html: ({ router }) =>
+                    new NotebookModule.NotebookPage({
+                        url: url('tutorials.notebook.workers.md'),
+                        router,
+                        options: notebookOptions,
+                    }),
+            },
             '/interpreter': {
                 name: 'Interpreter',
                 tableOfContent,

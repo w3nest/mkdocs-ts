@@ -28,6 +28,7 @@ import { Router } from '../router'
 import { fromFetch } from 'rxjs/fetch'
 import { MdParsingOptions, parseMd } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
+import { WorkerCellView } from './worker-cell-view'
 
 export type CellStatus =
     | 'unready'
@@ -295,6 +296,12 @@ export class State {
 
     createInterpreterCell(elem: HTMLElement): InterpreterCellView {
         const cell = InterpreterCellView.FromDom({ elem, state: this })
+        this.appendCell(cell)
+        return cell
+    }
+
+    createWorkerCell(elem: HTMLElement): WorkerCellView {
+        const cell = WorkerCellView.FromDom({ elem, state: this })
         this.appendCell(cell)
         return cell
     }

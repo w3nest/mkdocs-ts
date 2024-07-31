@@ -68,6 +68,9 @@ export const notebookViews = ({ state }: { state: State }) => {
         'interpreter-cell': (elem: HTMLElement) => {
             return state.createInterpreterCell(elem)
         },
+        'worker-cell': (elem: HTMLElement) => {
+            return state.createWorkerCell(elem)
+        },
     }
 }
 
