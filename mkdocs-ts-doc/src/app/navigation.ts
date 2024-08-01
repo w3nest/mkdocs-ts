@@ -65,6 +65,12 @@ export const navigation: Navigation = {
     html: fromMd('index.md'),
     '/how-to': {
         name: 'How to',
+        decoration: {
+            icon: {
+                tag: 'i',
+                class: 'fas fa-question-circle mr-1',
+            },
+        },
         tableOfContent,
         html: fromMd('how-to.md'),
         '/install': {
@@ -80,6 +86,12 @@ export const navigation: Navigation = {
     },
     '/tutorials': {
         name: 'Tutorials',
+        decoration: {
+            icon: {
+                tag: 'i',
+                class: 'fas fa-graduation-cap mr-1',
+            },
+        },
         tableOfContent,
         html: fromMd('tutorials.md'),
         '/basics': {
@@ -190,6 +202,12 @@ export const navigation: Navigation = {
     },
     '/api': {
         name: 'API',
+        decoration: {
+            icon: {
+                tag: 'i',
+                class: 'fas fa-code mr-1',
+            },
+        },
         html: fromMd('api.md'),
         tableOfContent,
         '...': ({ path, router }: { path: string; router: Router }) =>
