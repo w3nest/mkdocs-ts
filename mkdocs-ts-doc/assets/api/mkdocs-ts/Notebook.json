@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is  [NotebookPage](@nav/api/Notebook.NotebookPage) , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including  [JsCellView](@nav/api/Notebook.JsCellView)  and  [MdCellView](@nav/api/Notebook.MdCellView) .\nThese cells are identified within the markdown source using specific DOM elements ( `js-cell` ,  `md-cell` ),\nand their attributes are passed to the corresponding constructors (refer to  [JsCellAttributes](@nav/api/Notebook.JsCellAttributes)  and\n [MdCellAttributes](@nav/api/Notebook.MdCellAttributes)  for details).\n\nMost of the implementation logic regarding synchronization are included in the  [State](@nav/api/Notebook.State)  class.",
+                "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is  [NotebookPage](@nav/api/Notebook.NotebookPage) , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including  [JsCellView](@nav/api/Notebook.JsCellView) ,  [MdCellView](@nav/api/Notebook.MdCellView) ,\n [PyCellView](@nav/api/Notebook.PyCellView) ,  [InterpreterCellView](@nav/api/Notebook.InterpreterCellView)  and  [WorkerCellView](@nav/api/Notebook.WorkerCellView) .\nThese cells are identified within the Markdown source using specific DOM elements ( `js-cell` ,  `md-cell` ,  `py-cell` ,\n `interpreter-cell`  and  `worker-cell` ). Cells feature attributes provided with the DOM element,\nrefer to the associated  [JsCellAttributes](@nav/api/Notebook.JsCellAttributes) ,  [MdCellAttributes](@nav/api/Notebook.MdCellAttributes) ,  [PyCellAttributes](@nav/api/Notebook.PyCellAttributes) ,\n [InterpreterCellAttributes](@nav/api/Notebook.InterpreterCellAttributes)  and  [WorkerCellAttributes](@nav/api/Notebook.WorkerCellAttributes) .\n\nMost of the implementation logic regarding synchronization are included in the  [State](@nav/api/Notebook.State)  class.",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -961,7 +961,7 @@
                     "path": "InterpreterCellView.FromDomAttributes",
                     "code": {
                         "filePath": "src/lib/notebook/interpreter-cell-view.ts",
-                        "declaration": "static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n        interpreter: (e: HTMLElement) => e.getAttribute('interpreter'),\n        language: (e: HTMLElement) =>\n            e.getAttribute('language') as unknown as 'javascript' | 'python',\n        capturedIn: (e: HTMLElement) =>\n            (e.getAttribute('captured-in') || '').split(' '),\n        capturedOut: (e: HTMLElement) =>\n            (e.getAttribute('captured-out') || '').split(' '),\n    }",
+                        "declaration": "static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n        interpreter: (e: HTMLElement) => e.getAttribute('interpreter'),\n        language: (e: HTMLElement) =>\n            e.getAttribute('language') as unknown as 'javascript' | 'python',\n        capturedIn: (e: HTMLElement) =>\n            (e.getAttribute('captured-in') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n        capturedOut: (e: HTMLElement) =>\n            (e.getAttribute('captured-out') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n    }",
                         "implementation": "",
                         "startLine": 90,
                         "endLine": 91,
@@ -1004,8 +1004,8 @@
                         "filePath": "src/lib/notebook/interpreter-cell-view.ts",
                         "declaration": "constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: InterpreterCellAttributes\n    })",
                         "implementation": "constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: InterpreterCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: this.cellAttributes.language,\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: this.cellAttributes.language,\n                cellId: this.cellId,\n                state: this.state,\n                editorView: {\n                    tag: 'div',\n                    children: [this.headerView(), this.editorView],\n                },\n                cellAttributes: this.cellAttributes,\n                reactive$: this.reactive$,\n            }),\n        ]\n    }",
-                        "startLine": 147,
-                        "endLine": 179,
+                        "startLine": 151,
+                        "endLine": 183,
                         "references": {
                             "new InterpreterCellView": "@nav/api/Notebook.InterpreterCellView.constructor",
                             "InterpreterCellAttributes": "@nav/api/Notebook.InterpreterCellAttributes",
@@ -1051,9 +1051,9 @@
                     "code": {
                         "filePath": "src/lib/notebook/interpreter-cell-view.ts",
                         "declaration": "async execute({ scope, src, output$ }: ExecArgs): Promise<Scope>",
-                        "implementation": "async execute({ scope, src, output$ }: ExecArgs): Promise<Scope> {\n        const compatibleCells = this.state.cells\n            .filter((cell) => cell instanceof InterpreterCellView)\n            .filter(\n                (cell: InterpreterCellView) =>\n                    cell.cellAttributes.interpreter ===\n                    this.cellAttributes.interpreter,\n            )\n        const currentIndex = compatibleCells.indexOf(this)\n\n        const capturedIn = this.cellAttributes.capturedIn.reduce(\n            (acc, name) => {\n                return { ...acc, [name]: scope.const[name] || scope.let[name] }\n            },\n            {},\n        )\n        const fromCellId =\n            currentIndex === 0\n                ? undefined\n                : compatibleCells[currentIndex - 1].cellId\n\n        const isReactive =\n            Object.values(capturedIn).find(\n                (v) => v instanceof Observable || v instanceof Promise,\n            ) !== undefined\n\n        const body = {\n            cellId: this.cellId,\n            fromCellId,\n            code: src,\n            capturedIn,\n            capturedOut: this.cellAttributes.capturedOut,\n        }\n        const interpreter = window[this.cellAttributes.interpreter]\n        if (isReactive) {\n            this.reactive$.next(true)\n            return executeInterpreter$({\n                body,\n                interpreter,\n                scope,\n                output$,\n                invalidated$: this.invalidated$,\n            })\n        }\n        this.reactive$.next(false)\n        return executeInterpreter({ body, interpreter, scope, output$ })\n    }",
-                        "startLine": 185,
-                        "endLine": 232,
+                        "implementation": "async execute({ scope, src, output$ }: ExecArgs): Promise<Scope> {\n        const compatibleCells = this.state.cells\n            .filter((cell) => cell instanceof InterpreterCellView)\n            .filter(\n                (cell: InterpreterCellView) =>\n                    cell.cellAttributes.interpreter ===\n                    this.cellAttributes.interpreter,\n            )\n        const currentIndex = compatibleCells.indexOf(this)\n\n        const capturedIn = this.cellAttributes.capturedIn.reduce(\n            (acc, name) => {\n                return { ...acc, [name]: scope.const[name] || scope.let[name] }\n            },\n            {},\n        )\n        const isReactive =\n            Object.values(capturedIn).find(\n                (v) => v instanceof Observable || v instanceof Promise,\n            ) !== undefined\n\n        const body = {\n            cellId: this.cellId,\n            previousCellIds: compatibleCells\n                .slice(0, currentIndex)\n                .map((cell) => cell.cellId),\n            code: src,\n            capturedIn,\n            capturedOut: this.cellAttributes.capturedOut,\n        }\n        this.reactive$.next(isReactive)\n        const interpreter = window[this.cellAttributes.interpreter]\n        if (isReactive) {\n            return executeInterpreter$({\n                body,\n                interpreter,\n                scope,\n                output$,\n                invalidated$: this.invalidated$,\n            })\n        }\n        return executeInterpreter({\n            body,\n            interpreter,\n            scope,\n            output$,\n        })\n    }",
+                        "startLine": 189,
+                        "endLine": 237,
                         "references": {
                             "execute": "@nav/api/Notebook.InterpreterCellView.execute",
                             "ExecArgs": "@nav/api/Notebook.ExecArgs",
@@ -1099,8 +1099,8 @@
                         "filePath": "src/lib/notebook/interpreter-cell-view.ts",
                         "declaration": "static FromDom({ elem, state }: { elem: HTMLElement; state: State })",
                         "implementation": "static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {\n        const params = {\n            cellId: InterpreterCellView.FromDomAttributes.cellId(elem),\n            content: InterpreterCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: InterpreterCellView.FromDomAttributes.readOnly(elem),\n                lineNumber:\n                    InterpreterCellView.FromDomAttributes.lineNumber(elem),\n                interpreter:\n                    InterpreterCellView.FromDomAttributes.interpreter(elem),\n                language: InterpreterCellView.FromDomAttributes.language(elem),\n                capturedIn:\n                    InterpreterCellView.FromDomAttributes.capturedIn(elem),\n                capturedOut:\n                    InterpreterCellView.FromDomAttributes.capturedOut(elem),\n            },\n        }\n        return new InterpreterCellView({ ...params, state })\n    }",
-                        "startLine": 118,
-                        "endLine": 137,
+                        "startLine": 122,
+                        "endLine": 141,
                         "references": {
                             "FromDom": "@nav/api/Notebook.InterpreterCellView.FromDom",
                             "State": "@nav/api/Notebook.State",
@@ -1118,9 +1118,9 @@
             "code": {
                 "filePath": "src/lib/notebook/interpreter-cell-view.ts",
                 "declaration": "export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait",
-                "implementation": "export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {\n    public readonly tag = 'div'\n    /**\n     * Classes associated with the view.\n     */\n    public readonly class = 'mknb-InterpreterCellView'\n    public readonly children: ChildrenLike\n    /**\n     * Cell's ID.\n     */\n    public readonly cellId: string\n    /**\n     * Cell's attributes.\n     */\n    public readonly cellAttributes: InterpreterCellAttributes\n    /**\n     * State manager, owned by the parent {@link NotebookPage}.\n     */\n    public readonly state: State\n\n    public readonly editorView: CodeSnippetView\n    /**\n     * Observable over the source content of the cell.\n     */\n    public readonly content$: BehaviorSubject<string>\n\n    /**\n     * Emit when the cell is invalidated.\n     */\n    public readonly invalidated$: Observable<unknown>\n\n    /**\n     * Current state regarding whether the cell is reactive.\n     */\n    public readonly reactive$ = new BehaviorSubject(false)\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `interpreter-cell` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n        interpreter: (e: HTMLElement) => e.getAttribute('interpreter'),\n        language: (e: HTMLElement) =>\n            e.getAttribute('language') as unknown as 'javascript' | 'python',\n        capturedIn: (e: HTMLElement) =>\n            (e.getAttribute('captured-in') || '').split(' '),\n        capturedOut: (e: HTMLElement) =>\n            (e.getAttribute('captured-out') || '').split(' '),\n    }\n    /**\n     * Initialize an instance of {@link InterpreterCellView} from a DOM element `interpreter-cell` in MarkDown content\n     *  (the parameter `state` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link InterpreterCellView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.state The page state.\n     */\n    static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {\n        const params = {\n            cellId: InterpreterCellView.FromDomAttributes.cellId(elem),\n            content: InterpreterCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: InterpreterCellView.FromDomAttributes.readOnly(elem),\n                lineNumber:\n                    InterpreterCellView.FromDomAttributes.lineNumber(elem),\n                interpreter:\n                    InterpreterCellView.FromDomAttributes.interpreter(elem),\n                language: InterpreterCellView.FromDomAttributes.language(elem),\n                capturedIn:\n                    InterpreterCellView.FromDomAttributes.capturedIn(elem),\n                capturedOut:\n                    InterpreterCellView.FromDomAttributes.capturedOut(elem),\n            },\n        }\n        return new InterpreterCellView({ ...params, state })\n    }\n\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.cellId The cell's ID.\n     * @param params.content The cell's content.\n     * @param params.state The page's state.\n     * @param params.cellAttributes Cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: InterpreterCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: this.cellAttributes.language,\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: this.cellAttributes.language,\n                cellId: this.cellId,\n                state: this.state,\n                editorView: {\n                    tag: 'div',\n                    children: [this.headerView(), this.editorView],\n                },\n                cellAttributes: this.cellAttributes,\n                reactive$: this.reactive$,\n            }),\n        ]\n    }\n\n    /**\n     * Execute the cell.\n     *\n     * @param args See {@link ExecArgs}.\n     */\n    async execute({ scope, src, output$ }: ExecArgs): Promise<Scope> {\n        const compatibleCells = this.state.cells\n            .filter((cell) => cell instanceof InterpreterCellView)\n            .filter(\n                (cell: InterpreterCellView) =>\n                    cell.cellAttributes.interpreter ===\n                    this.cellAttributes.interpreter,\n            )\n        const currentIndex = compatibleCells.indexOf(this)\n\n        const capturedIn = this.cellAttributes.capturedIn.reduce(\n            (acc, name) => {\n                return { ...acc, [name]: scope.const[name] || scope.let[name] }\n            },\n            {},\n        )\n        const fromCellId =\n            currentIndex === 0\n                ? undefined\n                : compatibleCells[currentIndex - 1].cellId\n\n        const isReactive =\n            Object.values(capturedIn).find(\n                (v) => v instanceof Observable || v instanceof Promise,\n            ) !== undefined\n\n        const body = {\n            cellId: this.cellId,\n            fromCellId,\n            code: src,\n            capturedIn,\n            capturedOut: this.cellAttributes.capturedOut,\n        }\n        const interpreter = window[this.cellAttributes.interpreter]\n        if (isReactive) {\n            this.reactive$.next(true)\n            return executeInterpreter$({\n                body,\n                interpreter,\n                scope,\n                output$,\n                invalidated$: this.invalidated$,\n            })\n        }\n        this.reactive$.next(false)\n        return executeInterpreter({ body, interpreter, scope, output$ })\n    }\n\n    private headerView(): AnyVirtualDOM {\n        const title: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center px-2',\n            children: [\n                {\n                    tag: 'i',\n                    class: 'fas fa-network-wired',\n                },\n                {\n                    tag: 'i',\n                    class: 'px-2',\n                },\n                {\n                    tag: 'div',\n                    style: { fontWeight: 'bolder' },\n                    innerText: this.cellAttributes.interpreter,\n                },\n            ],\n        }\n        const separator: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'mx-2',\n        }\n        return {\n            tag: 'div',\n            class: 'd-flex align-items-center mkdocs-bg-info',\n            children: [\n                title,\n                separator,\n                new DropDownCaptureView({\n                    mode: 'in',\n                    variables: this.cellAttributes.capturedIn,\n                }),\n                separator,\n                new DropDownCaptureView({\n                    mode: 'out',\n                    variables: this.cellAttributes.capturedOut,\n                }),\n            ],\n        }\n    }\n}",
+                "implementation": "export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {\n    public readonly tag = 'div'\n    /**\n     * Classes associated with the view.\n     */\n    public readonly class = 'mknb-InterpreterCellView'\n    public readonly children: ChildrenLike\n    /**\n     * Cell's ID.\n     */\n    public readonly cellId: string\n    /**\n     * Cell's attributes.\n     */\n    public readonly cellAttributes: InterpreterCellAttributes\n    /**\n     * State manager, owned by the parent {@link NotebookPage}.\n     */\n    public readonly state: State\n\n    public readonly editorView: CodeSnippetView\n    /**\n     * Observable over the source content of the cell.\n     */\n    public readonly content$: BehaviorSubject<string>\n\n    /**\n     * Emit when the cell is invalidated.\n     */\n    public readonly invalidated$: Observable<unknown>\n\n    /**\n     * Current state regarding whether the cell is reactive.\n     */\n    public readonly reactive$ = new BehaviorSubject(false)\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `interpreter-cell` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n        interpreter: (e: HTMLElement) => e.getAttribute('interpreter'),\n        language: (e: HTMLElement) =>\n            e.getAttribute('language') as unknown as 'javascript' | 'python',\n        capturedIn: (e: HTMLElement) =>\n            (e.getAttribute('captured-in') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n        capturedOut: (e: HTMLElement) =>\n            (e.getAttribute('captured-out') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n    }\n    /**\n     * Initialize an instance of {@link InterpreterCellView} from a DOM element `interpreter-cell` in MarkDown content\n     *  (the parameter `state` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link InterpreterCellView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.state The page state.\n     */\n    static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {\n        const params = {\n            cellId: InterpreterCellView.FromDomAttributes.cellId(elem),\n            content: InterpreterCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: InterpreterCellView.FromDomAttributes.readOnly(elem),\n                lineNumber:\n                    InterpreterCellView.FromDomAttributes.lineNumber(elem),\n                interpreter:\n                    InterpreterCellView.FromDomAttributes.interpreter(elem),\n                language: InterpreterCellView.FromDomAttributes.language(elem),\n                capturedIn:\n                    InterpreterCellView.FromDomAttributes.capturedIn(elem),\n                capturedOut:\n                    InterpreterCellView.FromDomAttributes.capturedOut(elem),\n            },\n        }\n        return new InterpreterCellView({ ...params, state })\n    }\n\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.cellId The cell's ID.\n     * @param params.content The cell's content.\n     * @param params.state The page's state.\n     * @param params.cellAttributes Cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: InterpreterCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: this.cellAttributes.language,\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: this.cellAttributes.language,\n                cellId: this.cellId,\n                state: this.state,\n                editorView: {\n                    tag: 'div',\n                    children: [this.headerView(), this.editorView],\n                },\n                cellAttributes: this.cellAttributes,\n                reactive$: this.reactive$,\n            }),\n        ]\n    }\n\n    /**\n     * Execute the cell.\n     *\n     * @param args See {@link ExecArgs}.\n     */\n    async execute({ scope, src, output$ }: ExecArgs): Promise<Scope> {\n        const compatibleCells = this.state.cells\n            .filter((cell) => cell instanceof InterpreterCellView)\n            .filter(\n                (cell: InterpreterCellView) =>\n                    cell.cellAttributes.interpreter ===\n                    this.cellAttributes.interpreter,\n            )\n        const currentIndex = compatibleCells.indexOf(this)\n\n        const capturedIn = this.cellAttributes.capturedIn.reduce(\n            (acc, name) => {\n                return { ...acc, [name]: scope.const[name] || scope.let[name] }\n            },\n            {},\n        )\n        const isReactive =\n            Object.values(capturedIn).find(\n                (v) => v instanceof Observable || v instanceof Promise,\n            ) !== undefined\n\n        const body = {\n            cellId: this.cellId,\n            previousCellIds: compatibleCells\n                .slice(0, currentIndex)\n                .map((cell) => cell.cellId),\n            code: src,\n            capturedIn,\n            capturedOut: this.cellAttributes.capturedOut,\n        }\n        this.reactive$.next(isReactive)\n        const interpreter = window[this.cellAttributes.interpreter]\n        if (isReactive) {\n            return executeInterpreter$({\n                body,\n                interpreter,\n                scope,\n                output$,\n                invalidated$: this.invalidated$,\n            })\n        }\n        return executeInterpreter({\n            body,\n            interpreter,\n            scope,\n            output$,\n        })\n    }\n\n    private headerView(): AnyVirtualDOM {\n        const title: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center px-2',\n            children: [\n                {\n                    tag: 'i',\n                    class: 'fas fa-network-wired',\n                },\n                {\n                    tag: 'i',\n                    class: 'px-2',\n                },\n                {\n                    tag: 'div',\n                    style: { fontWeight: 'bolder' },\n                    innerText: this.cellAttributes.interpreter,\n                },\n            ],\n        }\n        const separator: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'mx-2',\n        }\n        return {\n            tag: 'div',\n            class: 'd-flex align-items-center mkdocs-bg-info',\n            children: [\n                title,\n                separator,\n                new DropDownCaptureView({\n                    mode: 'in',\n                    variables: this.cellAttributes.capturedIn,\n                }),\n                separator,\n                new DropDownCaptureView({\n                    mode: 'out',\n                    variables: this.cellAttributes.capturedOut,\n                }),\n            ],\n        }\n    }\n}",
                 "startLine": 46,
-                "endLine": 276,
+                "endLine": 281,
                 "references": {
                     "InterpreterCellView": "@nav/api/Notebook.InterpreterCellView",
                     "InterpreterCellAttributes": "@nav/api/Notebook.InterpreterCellAttributes",
@@ -2434,8 +2434,8 @@
                         "filePath": "src/lib/notebook/notebook-page.ts",
                         "declaration": "public readonly class = 'mknb-NotebookPage'",
                         "implementation": "",
-                        "startLine": 87,
-                        "endLine": 88,
+                        "startLine": 90,
+                        "endLine": 91,
                         "references": {
                             "class": "@nav/api/Notebook.NotebookPage.class",
                             "VirtualDOM.class": "-1"
@@ -2469,8 +2469,8 @@
                         "filePath": "src/lib/notebook/notebook-page.ts",
                         "declaration": "public readonly state: State",
                         "implementation": "",
-                        "startLine": 96,
-                        "endLine": 97,
+                        "startLine": 99,
+                        "endLine": 100,
                         "references": {
                             "state": "@nav/api/Notebook.NotebookPage.state",
                             "State": "@nav/api/Notebook.State"
@@ -2511,8 +2511,8 @@
                         "filePath": "src/lib/notebook/notebook-page.ts",
                         "declaration": "constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    })",
                         "implementation": "constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    }) {\n        Object.assign(this, params)\n        if (params.src === undefined && params.url === undefined) {\n            console.error(\n                'Neither url or src parameter provided to the notebook page.',\n            )\n            return\n        }\n        this.state = new State({\n            router: this.router,\n            displayFactory: params.displayFactory,\n            initialScope: params.initialScope,\n        })\n\n        const source$ =\n            params.src !== undefined\n                ? of(params.src)\n                : from(fetch(this.url).then((resp) => resp.text())).pipe(\n                      take(1),\n                  )\n\n        this.children = [\n            {\n                source$,\n                vdomMap: (src: string) => {\n                    const vdom = parseMd({\n                        src,\n                        router: this.router,\n                        ...(this.options?.markdown || {}),\n                        views: {\n                            ...(this.options?.markdown?.views || {}),\n                            ...notebookViews({\n                                state: this.state,\n                            }),\n                        },\n                    })\n                    if (params?.options?.runAtStart) {\n                        this.state.execute(this.state.ids.slice(-1)[0]).then()\n                    }\n                    return vdom\n                },\n            },\n        ]\n    }",
-                        "startLine": 113,
-                        "endLine": 164,
+                        "startLine": 116,
+                        "endLine": 167,
                         "references": {
                             "new NotebookPage": "@nav/api/Notebook.NotebookPage.constructor",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -2534,8 +2534,8 @@
                 "filePath": "src/lib/notebook/notebook-page.ts",
                 "declaration": "export class NotebookPage implements VirtualDOM<'div'>",
                 "implementation": "export class NotebookPage implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = 'mknb-NotebookPage'\n    public readonly url: string\n    public readonly views: { [k: string]: ViewGenerator }\n    public readonly router: Router\n    public readonly children: ChildrenLike = []\n\n    /**\n     * State manager.\n     */\n    public readonly state: State\n\n    public readonly options: NotebookOptions\n\n    /**\n     * Constructs the page.\n     *\n     * @param params The parameters\n     * @param params.url Url pointing to the markdown content, only used if the `src` attribute is not provided.\n     * @param params.src Markdown source content. To fetch from a URL leave it empty & provide instead\n     * the `url` attribute.\n     * @param params.router Application's router.\n     * @param params.initialScope Initial scope provided to the first executing cell.\n     * @param params.displayFactory Additional custom {@link DisplayFactory} invoked when `display` is used.\n     * @param params.options Global options for the page, in particular defined the default attribute for the various\n     * cells.\n     */\n    constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    }) {\n        Object.assign(this, params)\n        if (params.src === undefined && params.url === undefined) {\n            console.error(\n                'Neither url or src parameter provided to the notebook page.',\n            )\n            return\n        }\n        this.state = new State({\n            router: this.router,\n            displayFactory: params.displayFactory,\n            initialScope: params.initialScope,\n        })\n\n        const source$ =\n            params.src !== undefined\n                ? of(params.src)\n                : from(fetch(this.url).then((resp) => resp.text())).pipe(\n                      take(1),\n                  )\n\n        this.children = [\n            {\n                source$,\n                vdomMap: (src: string) => {\n                    const vdom = parseMd({\n                        src,\n                        router: this.router,\n                        ...(this.options?.markdown || {}),\n                        views: {\n                            ...(this.options?.markdown?.views || {}),\n                            ...notebookViews({\n                                state: this.state,\n                            }),\n                        },\n                    })\n                    if (params?.options?.runAtStart) {\n                        this.state.execute(this.state.ids.slice(-1)[0]).then()\n                    }\n                    return vdom\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 82,
-                "endLine": 165,
+                "startLine": 85,
+                "endLine": 168,
                 "references": {
                     "NotebookPage": "@nav/api/Notebook.NotebookPage",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -3674,8 +3674,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly cellIds$ = new BehaviorSubject<string[]>([])",
                         "implementation": "",
-                        "startLine": 164,
-                        "endLine": 165,
+                        "startLine": 165,
+                        "endLine": 166,
                         "references": {
                             "cellIds$": "@nav/api/Notebook.State.cellIds$"
                         }
@@ -3708,8 +3708,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly cells: CellTrait[] = []",
                         "implementation": "",
-                        "startLine": 183,
-                        "endLine": 184,
+                        "startLine": 184,
+                        "endLine": 185,
                         "references": {
                             "cells": "@nav/api/Notebook.State.cells",
                             "CellTrait": "@nav/api/Notebook.CellTrait"
@@ -3743,8 +3743,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =\n        {}",
                         "implementation": "",
-                        "startLine": 158,
-                        "endLine": 159,
+                        "startLine": 159,
+                        "endLine": 160,
                         "references": {
                             "cellsStatus$": "@nav/api/Notebook.State.cellsStatus$",
                             "CellStatus": "@nav/api/Notebook.CellStatus"
@@ -3778,8 +3778,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly deportedOutputsViews: string[] = []",
                         "implementation": "",
-                        "startLine": 174,
-                        "endLine": 175,
+                        "startLine": 175,
+                        "endLine": 176,
                         "references": {
                             "deportedOutputsViews": "@nav/api/Notebook.State.deportedOutputsViews"
                         }
@@ -3812,8 +3812,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly displayFactory: DisplayFactory = defaultDisplayFactory()",
                         "implementation": "",
-                        "startLine": 141,
-                        "endLine": 142,
+                        "startLine": 142,
+                        "endLine": 143,
                         "references": {
                             "displayFactory": "@nav/api/Notebook.State.displayFactory",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory"
@@ -3847,8 +3847,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}",
                         "implementation": "",
-                        "startLine": 169,
-                        "endLine": 170,
+                        "startLine": 170,
+                        "endLine": 171,
                         "references": {
                             "executing$": "@nav/api/Notebook.State.executing$"
                         }
@@ -3881,8 +3881,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly ids: string[] = []",
                         "implementation": "",
-                        "startLine": 179,
-                        "endLine": 180,
+                        "startLine": 180,
+                        "endLine": 181,
                         "references": {
                             "ids": "@nav/api/Notebook.State.ids"
                         }
@@ -3915,8 +3915,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly initialScope: Scope",
                         "implementation": "",
-                        "startLine": 188,
-                        "endLine": 189,
+                        "startLine": 189,
+                        "endLine": 190,
                         "references": {
                             "initialScope": "@nav/api/Notebook.State.initialScope",
                             "Scope": "@nav/api/Notebook.Scope"
@@ -3950,8 +3950,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly invalidated$ = new Subject<string>()",
                         "implementation": "",
-                        "startLine": 146,
-                        "endLine": 147,
+                        "startLine": 147,
+                        "endLine": 148,
                         "references": {
                             "invalidated$": "@nav/api/Notebook.State.invalidated$"
                         }
@@ -3984,8 +3984,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}",
                         "implementation": "",
-                        "startLine": 150,
-                        "endLine": 151,
+                        "startLine": 151,
+                        "endLine": 152,
                         "references": {
                             "outputs$": "@nav/api/Notebook.State.outputs$",
                             "Output": "@nav/api/Notebook.Output"
@@ -4019,8 +4019,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly parent?: { state: State; cellId: string }",
                         "implementation": "",
-                        "startLine": 192,
-                        "endLine": 193,
+                        "startLine": 193,
+                        "endLine": 194,
                         "references": {
                             "parent": "@nav/api/Notebook.State.parent",
                             "State": "@nav/api/Notebook.State"
@@ -4054,8 +4054,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "private pyNamespace: { get: (key: string) => unknown }",
                         "implementation": "",
-                        "startLine": 210,
-                        "endLine": 211,
+                        "startLine": 211,
+                        "endLine": 212,
                         "references": {
                             "pyNamespace": "@nav/api/Notebook.State.pyNamespace"
                         }
@@ -4088,8 +4088,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly router: Router",
                         "implementation": "",
-                        "startLine": 197,
-                        "endLine": 198,
+                        "startLine": 198,
+                        "endLine": 199,
                         "references": {
                             "router": "@nav/api/Notebook.State.router",
                             "Router": "@nav/api/MainModule.Router"
@@ -4123,8 +4123,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly scopes$: {\n        [k: string]: BehaviorSubject<Scope | undefined>\n    } = {}",
                         "implementation": "",
-                        "startLine": 134,
-                        "endLine": 135,
+                        "startLine": 135,
+                        "endLine": 136,
                         "references": {
                             "scopes$": "@nav/api/Notebook.State.scopes$",
                             "Scope": "@nav/api/Notebook.Scope"
@@ -4158,8 +4158,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly src$: { [k: string]: BehaviorSubject<string> } = {}",
                         "implementation": "",
-                        "startLine": 154,
-                        "endLine": 155,
+                        "startLine": 155,
+                        "endLine": 156,
                         "references": {
                             "src$": "@nav/api/Notebook.State.src$"
                         }
@@ -4170,9 +4170,9 @@
             "code": {
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export class State",
-                "implementation": "export class State {\n    /**\n     * Observables over the cell's entering scopes keyed by the cell's ID.\n     */\n    public readonly scopes$: {\n        [k: string]: BehaviorSubject<Scope | undefined>\n    } = {}\n\n    /**\n     * The factory used to pick up the right mapping between variable and view when `display` is called.\n     */\n    public readonly displayFactory: DisplayFactory = defaultDisplayFactory()\n\n    /**\n     * Observable that emits the ID of invalidated cells.\n     */\n    public readonly invalidated$ = new Subject<string>()\n    /**\n     * Observables over the cell's output keyed by the cell's ID.\n     */\n    public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}\n    /**\n     * Observables over the cell's source keyed by the cell's ID.\n     */\n    public readonly src$: { [k: string]: BehaviorSubject<string> } = {}\n    /**\n     * Observables over the cell's status keyed by the cell's ID.\n     */\n    public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =\n        {}\n\n    /**\n     * Observables over the cell IDs included in the associated {@link NotebookPage}.\n     */\n    public readonly cellIds$ = new BehaviorSubject<string[]>([])\n\n    /**\n     * Observables over whether the cell is currently executing keyed by the cell's ID.\n     */\n    public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}\n\n    /**\n     * The deported output views as a list of their associated cell ID.\n     */\n    public readonly deportedOutputsViews: string[] = []\n\n    /**\n     * List of the cell IDs in the page.\n     */\n    public readonly ids: string[] = []\n    /**\n     * List of the cells in the page.\n     */\n    public readonly cells: CellTrait[] = []\n\n    /**\n     * The initial scope (provided to the first cell when executed).\n     */\n    public readonly initialScope: Scope\n    /**\n     * Optional related parent state (*e.g.* {@link MdCellView} own their own executing state created upon execution).\n     */\n    public readonly parent?: { state: State; cellId: string }\n\n    /**\n     * The application router, used to import modules from other notebook pages.\n     */\n    public readonly router: Router\n\n    public readonly modules: {\n        [k: string]: { state: State; exports: Scope }\n    } = {}\n\n    /**\n     * Pyodide execution should be namespaced by notebook page,\n     * this variable holds the symbols.\n     *\n     * This is a python dictionary initialized with `pyodide.globals.get(\"dict\")()`\n     * when the notebook page is loaded and reused across python cells.\n     */\n    private pyNamespace: { get: (key: string) => unknown }\n\n    constructor(params: {\n        initialScope?: Partial<Scope>\n        router: Router\n        displayFactory?: DisplayFactory\n        parent?: { state: State; cellId: string }\n    }) {\n        Object.assign(this, { router: params.router, parent: params.parent })\n        this.displayFactory = [\n            ...this.displayFactory,\n            ...(params.displayFactory || []),\n        ]\n        this.initialScope = {\n            let: params.initialScope?.let || {},\n            const: {\n                webpm,\n                Views,\n                ...(params.initialScope?.const || {}),\n            },\n            python: params.initialScope?.python || {},\n        }\n\n        if (params.parent) {\n            params.parent.state.invalidated$\n                .pipe(filter((cellId) => cellId === params.parent.cellId))\n                .subscribe(() => {\n                    if (this.ids.length === 0) {\n                        return\n                    }\n                    this.unreadyCells({ afterCellId: this.ids[0] })\n                    Object.values(this.outputs$).forEach((output$) =>\n                        output$.next(undefined),\n                    )\n                })\n        }\n    }\n\n    getPyNamespace(pyodide) {\n        this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()\n        return this.pyNamespace\n    }\n\n    appendCell(cell: CellTrait) {\n        this.ids.push(cell.cellId)\n        this.cellIds$.next(this.ids)\n        this.cells.push(cell)\n        if (!this.outputs$[cell.cellId]) {\n            this.outputs$[cell.cellId] = new ReplaySubject()\n            this.executing$[cell.cellId] = new BehaviorSubject(false)\n            this.src$[cell.cellId] = cell.content$\n        }\n\n        this.cellsStatus$[cell.cellId] = new BehaviorSubject<CellStatus>(\n            this.ids.length === 1 ? 'ready' : 'unready',\n        )\n        this.scopes$[cell.cellId] =\n            Object.keys(this.scopes$).length == 0\n                ? new BehaviorSubject(this.initialScope)\n                : new BehaviorSubject(undefined)\n        cell.content$.subscribe((src) => {\n            this.updateSrc({ cellId: cell.cellId, src })\n        })\n    }\n\n    createJsCell(elem: HTMLElement): JsCellView {\n        const cell = JsCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createPyCell(elem: HTMLElement): PyCellView {\n        const cell = PyCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createMdCell(\n        elem: HTMLElement,\n        parserOptions: MdParsingOptions,\n    ): MdCellView {\n        const cell = MdCellView.FromDom({ elem, state: this, parserOptions })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createInterpreterCell(elem: HTMLElement): InterpreterCellView {\n        const cell = InterpreterCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createDeportedOutputsView(elem: HTMLElement): OutputsView {\n        const cellId = DeportedOutputsView.FromDomAttributes.cellId(elem)\n        if (!this.outputs$[cellId]) {\n            this.outputs$[cellId] = new ReplaySubject()\n            this.executing$[cellId] = new BehaviorSubject(false)\n        }\n        this.deportedOutputsViews.push(cellId)\n        return DeportedOutputsView.FromDom({\n            elem,\n            output$: this.outputs$[cellId],\n        })\n    }\n\n    updateSrc({ cellId, src }: { cellId: string; src: string }) {\n        if (!this.src$[cellId]) {\n            this.src$[cellId] = new BehaviorSubject(src)\n        }\n        this.cellsStatus$[cellId].next('ready')\n        this.unreadyCells({ afterCellId: cellId })\n        if (this.parent) {\n            this.parent.state.unreadyCells({ afterCellId: this.parent.cellId })\n        }\n    }\n    async execute(id: string, rootExecution: boolean = true) {\n        if (this.ids.length === 0) {\n            return this.initialScope\n        }\n        const index = this.ids.indexOf(id)\n        this.cellsStatus$[id].next('pending')\n        if (!this.scopes$[id].value) {\n            await this.execute(this.ids[index - 1], false)\n        }\n        const scope$ = this.scopes$[id]\n        const output$ = this.outputs$[id]\n\n        output$.next(undefined)\n        this.cellsStatus$[id].next('executing')\n        this.executing$[id].next(true)\n        const scope = await this.cells[index].execute({\n            src: this.src$[id].value,\n            scope: scope$.getValue(),\n            output$,\n            displayFactory: this.displayFactory,\n            load: this.loadModule(id),\n            cellId: id,\n            owningState: this,\n        })\n        this.cellsStatus$[id].next('success')\n        const nextId = this.ids[index + 1]\n        const remainingIds = this.ids.slice(index + 2)\n        if (nextId) {\n            this.scopes$[nextId].next(scope)\n            this.cellsStatus$[nextId].next('ready')\n        }\n        nextId && this.scopes$[nextId].next(scope)\n        remainingIds.forEach((id) => {\n            rootExecution && this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n        })\n        return scope\n    }\n    private invalidateCells(cellId: string) {\n        this.invalidated$.next(cellId)\n    }\n\n    private dispose() {\n        this.cells.forEach((cell) => {\n            this.invalidateCells(cell.cellId)\n        })\n        Object.values(this.modules).forEach(({ state }) => {\n            state.dispose()\n        })\n    }\n\n    unreadyCells({ afterCellId }: { afterCellId: string }) {\n        const index = this.ids.indexOf(afterCellId)\n        this.invalidateCells(afterCellId)\n        const remainingIds = this.ids.slice(index + 1)\n        remainingIds.forEach((id) => {\n            this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n            this.invalidateCells(id)\n        })\n    }\n\n    private loadModule(cellId: string) {\n        const components = ({\n            state,\n        }: {\n            state: State\n            cellOptions: CellCommonAttributes\n        }) => {\n            return {\n                'js-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const reactive = elem.getAttribute('reactive')\n                    const cell = new JsCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {\n                            reactive,\n                        },\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n                'py-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const cell = new PyCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {},\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n            }\n        }\n\n        return (path: string) => {\n            const router = this.router\n            if (this.modules[path]) {\n                this.modules[path].state.dispose()\n            }\n            const module$ = router.getNav({ path }).pipe(\n                switchMap((nav) => {\n                    const nbPage = nav.html({\n                        router,\n                    }) as unknown as NotebookPage\n                    return fromFetch(nbPage.url)\n                }),\n                switchMap((resp) => resp.text()),\n                switchMap((src) => {\n                    const state = new State({\n                        router,\n                        parent: { state: this, cellId },\n                    })\n                    parseMd({\n                        src: extractExportedCode(src),\n                        router,\n                        views: {\n                            ...components({\n                                state,\n                                cellOptions: defaultCellAttributes,\n                            }),\n                        },\n                    })\n                    return from(state.execute(state.ids.slice(-1)[0])).pipe(\n                        map((scope) => {\n                            this.modules[path] = { exports: scope, state }\n                            return this.modules[path]\n                        }),\n                    )\n                }),\n            )\n\n            return firstValueFrom(module$).then(({ exports }) => ({\n                ...exports.const,\n                ...exports.let,\n                ...exports.python,\n            }))\n        }\n    }\n}",
-                "startLine": 130,
-                "endLine": 472,
+                "implementation": "export class State {\n    /**\n     * Observables over the cell's entering scopes keyed by the cell's ID.\n     */\n    public readonly scopes$: {\n        [k: string]: BehaviorSubject<Scope | undefined>\n    } = {}\n\n    /**\n     * The factory used to pick up the right mapping between variable and view when `display` is called.\n     */\n    public readonly displayFactory: DisplayFactory = defaultDisplayFactory()\n\n    /**\n     * Observable that emits the ID of invalidated cells.\n     */\n    public readonly invalidated$ = new Subject<string>()\n    /**\n     * Observables over the cell's output keyed by the cell's ID.\n     */\n    public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}\n    /**\n     * Observables over the cell's source keyed by the cell's ID.\n     */\n    public readonly src$: { [k: string]: BehaviorSubject<string> } = {}\n    /**\n     * Observables over the cell's status keyed by the cell's ID.\n     */\n    public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =\n        {}\n\n    /**\n     * Observables over the cell IDs included in the associated {@link NotebookPage}.\n     */\n    public readonly cellIds$ = new BehaviorSubject<string[]>([])\n\n    /**\n     * Observables over whether the cell is currently executing keyed by the cell's ID.\n     */\n    public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}\n\n    /**\n     * The deported output views as a list of their associated cell ID.\n     */\n    public readonly deportedOutputsViews: string[] = []\n\n    /**\n     * List of the cell IDs in the page.\n     */\n    public readonly ids: string[] = []\n    /**\n     * List of the cells in the page.\n     */\n    public readonly cells: CellTrait[] = []\n\n    /**\n     * The initial scope (provided to the first cell when executed).\n     */\n    public readonly initialScope: Scope\n    /**\n     * Optional related parent state (*e.g.* {@link MdCellView} own their own executing state created upon execution).\n     */\n    public readonly parent?: { state: State; cellId: string }\n\n    /**\n     * The application router, used to import modules from other notebook pages.\n     */\n    public readonly router: Router\n\n    public readonly modules: {\n        [k: string]: { state: State; exports: Scope }\n    } = {}\n\n    /**\n     * Pyodide execution should be namespaced by notebook page,\n     * this variable holds the symbols.\n     *\n     * This is a python dictionary initialized with `pyodide.globals.get(\"dict\")()`\n     * when the notebook page is loaded and reused across python cells.\n     */\n    private pyNamespace: { get: (key: string) => unknown }\n\n    constructor(params: {\n        initialScope?: Partial<Scope>\n        router: Router\n        displayFactory?: DisplayFactory\n        parent?: { state: State; cellId: string }\n    }) {\n        Object.assign(this, { router: params.router, parent: params.parent })\n        this.displayFactory = [\n            ...this.displayFactory,\n            ...(params.displayFactory || []),\n        ]\n        this.initialScope = {\n            let: params.initialScope?.let || {},\n            const: {\n                webpm,\n                Views,\n                ...(params.initialScope?.const || {}),\n            },\n            python: params.initialScope?.python || {},\n        }\n\n        if (params.parent) {\n            params.parent.state.invalidated$\n                .pipe(filter((cellId) => cellId === params.parent.cellId))\n                .subscribe(() => {\n                    if (this.ids.length === 0) {\n                        return\n                    }\n                    this.unreadyCells({ afterCellId: this.ids[0] })\n                    Object.values(this.outputs$).forEach((output$) =>\n                        output$.next(undefined),\n                    )\n                })\n        }\n    }\n\n    getPyNamespace(pyodide) {\n        this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()\n        return this.pyNamespace\n    }\n\n    appendCell(cell: CellTrait) {\n        this.ids.push(cell.cellId)\n        this.cellIds$.next(this.ids)\n        this.cells.push(cell)\n        if (!this.outputs$[cell.cellId]) {\n            this.outputs$[cell.cellId] = new ReplaySubject()\n            this.executing$[cell.cellId] = new BehaviorSubject(false)\n            this.src$[cell.cellId] = cell.content$\n        }\n\n        this.cellsStatus$[cell.cellId] = new BehaviorSubject<CellStatus>(\n            this.ids.length === 1 ? 'ready' : 'unready',\n        )\n        this.scopes$[cell.cellId] =\n            Object.keys(this.scopes$).length == 0\n                ? new BehaviorSubject(this.initialScope)\n                : new BehaviorSubject(undefined)\n        cell.content$.subscribe((src) => {\n            this.updateSrc({ cellId: cell.cellId, src })\n        })\n    }\n\n    createJsCell(elem: HTMLElement): JsCellView {\n        const cell = JsCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createPyCell(elem: HTMLElement): PyCellView {\n        const cell = PyCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createMdCell(\n        elem: HTMLElement,\n        parserOptions: MdParsingOptions,\n    ): MdCellView {\n        const cell = MdCellView.FromDom({ elem, state: this, parserOptions })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createInterpreterCell(elem: HTMLElement): InterpreterCellView {\n        const cell = InterpreterCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createWorkerCell(elem: HTMLElement): WorkerCellView {\n        const cell = WorkerCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createDeportedOutputsView(elem: HTMLElement): OutputsView {\n        const cellId = DeportedOutputsView.FromDomAttributes.cellId(elem)\n        if (!this.outputs$[cellId]) {\n            this.outputs$[cellId] = new ReplaySubject()\n            this.executing$[cellId] = new BehaviorSubject(false)\n        }\n        this.deportedOutputsViews.push(cellId)\n        return DeportedOutputsView.FromDom({\n            elem,\n            output$: this.outputs$[cellId],\n        })\n    }\n\n    updateSrc({ cellId, src }: { cellId: string; src: string }) {\n        if (!this.src$[cellId]) {\n            this.src$[cellId] = new BehaviorSubject(src)\n        }\n        this.cellsStatus$[cellId].next('ready')\n        this.unreadyCells({ afterCellId: cellId })\n        if (this.parent) {\n            this.parent.state.unreadyCells({ afterCellId: this.parent.cellId })\n        }\n    }\n    async execute(id: string, rootExecution: boolean = true) {\n        if (this.ids.length === 0) {\n            return this.initialScope\n        }\n        const index = this.ids.indexOf(id)\n        this.cellsStatus$[id].next('pending')\n        if (!this.scopes$[id].value) {\n            await this.execute(this.ids[index - 1], false)\n        }\n        const scope$ = this.scopes$[id]\n        const output$ = this.outputs$[id]\n\n        output$.next(undefined)\n        this.cellsStatus$[id].next('executing')\n        this.executing$[id].next(true)\n        const scope = await this.cells[index].execute({\n            src: this.src$[id].value,\n            scope: scope$.getValue(),\n            output$,\n            displayFactory: this.displayFactory,\n            load: this.loadModule(id),\n            cellId: id,\n            owningState: this,\n        })\n        this.cellsStatus$[id].next('success')\n        const nextId = this.ids[index + 1]\n        const remainingIds = this.ids.slice(index + 2)\n        if (nextId) {\n            this.scopes$[nextId].next(scope)\n            this.cellsStatus$[nextId].next('ready')\n        }\n        nextId && this.scopes$[nextId].next(scope)\n        remainingIds.forEach((id) => {\n            rootExecution && this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n        })\n        return scope\n    }\n    private invalidateCells(cellId: string) {\n        this.invalidated$.next(cellId)\n    }\n\n    private dispose() {\n        this.cells.forEach((cell) => {\n            this.invalidateCells(cell.cellId)\n        })\n        Object.values(this.modules).forEach(({ state }) => {\n            state.dispose()\n        })\n    }\n\n    unreadyCells({ afterCellId }: { afterCellId: string }) {\n        const index = this.ids.indexOf(afterCellId)\n        this.invalidateCells(afterCellId)\n        const remainingIds = this.ids.slice(index + 1)\n        remainingIds.forEach((id) => {\n            this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n            this.invalidateCells(id)\n        })\n    }\n\n    private loadModule(cellId: string) {\n        const components = ({\n            state,\n        }: {\n            state: State\n            cellOptions: CellCommonAttributes\n        }) => {\n            return {\n                'js-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const reactive = elem.getAttribute('reactive')\n                    const cell = new JsCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {\n                            reactive,\n                        },\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n                'py-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const cell = new PyCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {},\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n            }\n        }\n\n        return (path: string) => {\n            const router = this.router\n            if (this.modules[path]) {\n                this.modules[path].state.dispose()\n            }\n            const module$ = router.getNav({ path }).pipe(\n                switchMap((nav) => {\n                    const nbPage = nav.html({\n                        router,\n                    }) as unknown as NotebookPage\n                    return fromFetch(nbPage.url)\n                }),\n                switchMap((resp) => resp.text()),\n                switchMap((src) => {\n                    const state = new State({\n                        router,\n                        parent: { state: this, cellId },\n                    })\n                    parseMd({\n                        src: extractExportedCode(src),\n                        router,\n                        views: {\n                            ...components({\n                                state,\n                                cellOptions: defaultCellAttributes,\n                            }),\n                        },\n                    })\n                    return from(state.execute(state.ids.slice(-1)[0])).pipe(\n                        map((scope) => {\n                            this.modules[path] = { exports: scope, state }\n                            return this.modules[path]\n                        }),\n                    )\n                }),\n            )\n\n            return firstValueFrom(module$).then(({ exports }) => ({\n                ...exports.const,\n                ...exports.let,\n                ...exports.python,\n            }))\n        }\n    }\n}",
+                "startLine": 131,
+                "endLine": 479,
                 "references": {
                     "State": "@nav/api/Notebook.State",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -4186,7 +4186,512 @@
                     "JsCellView": "@nav/api/Notebook.JsCellView",
                     "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
                     "MdCellView": "@nav/api/Notebook.MdCellView",
-                    "PyCellView": "@nav/api/Notebook.PyCellView"
+                    "PyCellView": "@nav/api/Notebook.PyCellView",
+                    "WorkerCellView": "@nav/api/Notebook.WorkerCellView"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "WorkerCellView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a worker cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThey are typically included from a DOM definition with tag name  `worker-cell`  in Markdown content,\nsee  [WorkerCellView.FromDom](@nav/api/Notebook.WorkerCellView.FromDom) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "WorkerCellView",
+            "attributes": [
+                {
+                    "name": "cellAttributes",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Cell's attributes.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.cellAttributes",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly cellAttributes: WorkerCellAttributes",
+                        "implementation": "",
+                        "startLine": 54,
+                        "endLine": 55,
+                        "references": {
+                            "cellAttributes": "@nav/api/Notebook.WorkerCellView.cellAttributes",
+                            "WorkerCellAttributes": "@nav/api/Notebook.WorkerCellAttributes"
+                        }
+                    }
+                },
+                {
+                    "name": "cellId",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Cell's ID.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.cellId",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly cellId: string",
+                        "implementation": "",
+                        "startLine": 50,
+                        "endLine": 51,
+                        "references": {
+                            "cellId": "@nav/api/Notebook.WorkerCellView.cellId",
+                            "CellTrait.cellId": "@nav/api/Notebook.CellTrait.cellId"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Classes associated with the view.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.class",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly class = 'mknb-JsCellView'",
+                        "implementation": "",
+                        "startLine": 45,
+                        "endLine": 46,
+                        "references": {
+                            "class": "@nav/api/Notebook.WorkerCellView.class",
+                            "VirtualDOM.class": "-1"
+                        }
+                    }
+                },
+                {
+                    "name": "content$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable over the source content of the cell.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.content$",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly content$: BehaviorSubject<string>",
+                        "implementation": "",
+                        "startLine": 67,
+                        "endLine": 68,
+                        "references": {
+                            "content$": "@nav/api/Notebook.WorkerCellView.content$",
+                            "CellTrait.content$": "@nav/api/Notebook.CellTrait.content$"
+                        }
+                    }
+                },
+                {
+                    "name": "editorView",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The encapsulated code editor view.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.editorView",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly editorView: CodeSnippetView",
+                        "implementation": "",
+                        "startLine": 63,
+                        "endLine": 64,
+                        "references": {
+                            "editorView": "@nav/api/Notebook.WorkerCellView.editorView",
+                            "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView"
+                        }
+                    }
+                },
+                {
+                    "name": "invalidated$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Emit when the cell is invalidated.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.invalidated$",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly invalidated$: Observable<unknown>",
+                        "implementation": "",
+                        "startLine": 72,
+                        "endLine": 73,
+                        "references": {
+                            "invalidated$": "@nav/api/Notebook.WorkerCellView.invalidated$"
+                        }
+                    }
+                },
+                {
+                    "name": "reactive$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Current state regarding whether the cell is reactive.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.reactive$",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly reactive$ = new BehaviorSubject(false)",
+                        "implementation": "",
+                        "startLine": 77,
+                        "endLine": 78,
+                        "references": {
+                            "reactive$": "@nav/api/Notebook.WorkerCellView.reactive$"
+                        }
+                    }
+                },
+                {
+                    "name": "state",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.state",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "public readonly state: State",
+                        "implementation": "",
+                        "startLine": 58,
+                        "endLine": 59,
+                        "references": {
+                            "state": "@nav/api/Notebook.WorkerCellView.state",
+                            "State": "@nav/api/Notebook.State"
+                        }
+                    }
+                },
+                {
+                    "name": "FromDomAttributes",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Defines the methods to retrieve constructor's arguments from the DOM element  `worker-cell`  within\nMarkDown content.\n\n<note level='warning'>\nBe mindful of the conversion from  `camelCase`  to  `kebab-case` .\n</note>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.FromDomAttributes",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n        workersPool: (e: HTMLElement) => e.getAttribute('workers-pool'),\n        mode: (e: HTMLElement) =>\n            e.getAttribute('mode') as unknown as 'javascript' | 'python',\n        capturedIn: (e: HTMLElement) =>\n            (e.getAttribute('captured-in') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n        capturedOut: (e: HTMLElement) =>\n            (e.getAttribute('captured-out') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n    }",
+                        "implementation": "",
+                        "startLine": 87,
+                        "endLine": 88,
+                        "references": {
+                            "FromDomAttributes": "@nav/api/Notebook.WorkerCellView.FromDomAttributes"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "new WorkerCellView",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initialize a new instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **cellAttributes**: Cell's attributes.\n*  **cellId**: The cell's ID.\n*  **content**: The cell's content.\n*  **state**: The page's state.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.new WorkerCellView",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: WorkerCellAttributes\n    })",
+                        "implementation": "constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: WorkerCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: this.cellAttributes.mode,\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: this.cellAttributes.mode,\n                cellId: this.cellId,\n                state: this.state,\n                editorView: {\n                    tag: 'div',\n                    children: [this.headerView(), this.editorView],\n                },\n                cellAttributes: this.cellAttributes,\n                reactive$: this.reactive$,\n            }),\n        ]\n    }",
+                        "startLine": 145,
+                        "endLine": 177,
+                        "references": {
+                            "new WorkerCellView": "@nav/api/Notebook.WorkerCellView.constructor",
+                            "WorkerCellAttributes": "@nav/api/Notebook.WorkerCellAttributes",
+                            "State": "@nav/api/Notebook.State",
+                            "WorkerCellView": "@nav/api/Notebook.WorkerCellView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "execute",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Execute the cell.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.execute",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "async execute({ scope, src }: ExecArgs): Promise<Scope>",
+                        "implementation": "async execute({ scope, src }: ExecArgs): Promise<Scope> {\n        const capturedIn = this.cellAttributes.capturedIn.reduce(\n            (acc, name) => {\n                return { ...acc, [name]: scope.const[name] || scope.let[name] }\n            },\n            {},\n        )\n        const isReactive =\n            Object.values(capturedIn).find(\n                (v) => v instanceof Observable || v instanceof Promise,\n            ) !== undefined\n        this.reactive$.next(isReactive)\n        const workersPool = { ...scope.let, ...scope.const }[\n            this.cellAttributes.workersPool\n        ] as WorkersPoolTypes.WorkersPool\n        if (isReactive) {\n            return executeWorkersPool$({\n                src,\n                mode: this.cellAttributes.mode,\n                workersPool,\n                scope,\n                invalidated$: this.invalidated$,\n                capturedIn,\n                capturedOut: this.cellAttributes.capturedOut,\n            })\n        }\n\n        return executeWorkersPool({\n            src,\n            mode: this.cellAttributes.mode,\n            workersPool,\n            scope,\n            capturedIn,\n            capturedOut: this.cellAttributes.capturedOut,\n        })\n    }",
+                        "startLine": 183,
+                        "endLine": 219,
+                        "references": {
+                            "execute": "@nav/api/Notebook.WorkerCellView.execute",
+                            "ExecArgs": "@nav/api/Notebook.ExecArgs",
+                            "Scope": "@nav/api/Notebook.Scope"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "FromDom",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initialize an instance of  [WorkerCellView](@nav/api/Notebook.WorkerCellView)  from a DOM element  `worker-cell`  in Markdown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.WorkerCellView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The DOM element.\n*  **state**: The page state.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "WorkerCellView.FromDom",
+                    "code": {
+                        "filePath": "src/lib/notebook/worker-cell-view.ts",
+                        "declaration": "static FromDom({ elem, state }: { elem: HTMLElement; state: State })",
+                        "implementation": "static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {\n        const params = {\n            cellId: WorkerCellView.FromDomAttributes.cellId(elem),\n            content: WorkerCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: WorkerCellView.FromDomAttributes.readOnly(elem),\n                lineNumber: WorkerCellView.FromDomAttributes.lineNumber(elem),\n                workersPool: WorkerCellView.FromDomAttributes.workersPool(elem),\n                mode: WorkerCellView.FromDomAttributes.mode(elem),\n                capturedIn: WorkerCellView.FromDomAttributes.capturedIn(elem),\n                capturedOut: WorkerCellView.FromDomAttributes.capturedOut(elem),\n            },\n        }\n        return new WorkerCellView({ ...params, state })\n    }",
+                        "startLine": 120,
+                        "endLine": 135,
+                        "references": {
+                            "FromDom": "@nav/api/Notebook.WorkerCellView.FromDom",
+                            "State": "@nav/api/Notebook.State",
+                            "WorkerCellView": "@nav/api/Notebook.WorkerCellView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/notebook/worker-cell-view.ts",
+                "declaration": "export class WorkerCellView implements VirtualDOM<'div'>, CellTrait",
+                "implementation": "export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {\n    public readonly tag = 'div'\n    /**\n     * Classes associated with the view.\n     */\n    public readonly class = 'mknb-JsCellView'\n    public readonly children: ChildrenLike\n    /**\n     * Cell's ID.\n     */\n    public readonly cellId: string\n    /**\n     * Cell's attributes.\n     */\n    public readonly cellAttributes: WorkerCellAttributes\n    /**\n     * State manager, owned by the parent {@link NotebookPage}.\n     */\n    public readonly state: State\n\n    /**\n     * The encapsulated code editor view.\n     */\n    public readonly editorView: CodeSnippetView\n    /**\n     * Observable over the source content of the cell.\n     */\n    public readonly content$: BehaviorSubject<string>\n\n    /**\n     * Emit when the cell is invalidated.\n     */\n    public readonly invalidated$: Observable<unknown>\n\n    /**\n     * Current state regarding whether the cell is reactive.\n     */\n    public readonly reactive$ = new BehaviorSubject(false)\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `worker-cell` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n        workersPool: (e: HTMLElement) => e.getAttribute('workers-pool'),\n        mode: (e: HTMLElement) =>\n            e.getAttribute('mode') as unknown as 'javascript' | 'python',\n        capturedIn: (e: HTMLElement) =>\n            (e.getAttribute('captured-in') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n        capturedOut: (e: HTMLElement) =>\n            (e.getAttribute('captured-out') || '')\n                .split(' ')\n                .filter((c) => c !== ''),\n    }\n\n    /**\n     * Initialize an instance of {@link WorkerCellView} from a DOM element `worker-cell` in Markdown content\n     *  (the parameter `state` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link WorkerCellView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.state The page state.\n     */\n    static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {\n        const params = {\n            cellId: WorkerCellView.FromDomAttributes.cellId(elem),\n            content: WorkerCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: WorkerCellView.FromDomAttributes.readOnly(elem),\n                lineNumber: WorkerCellView.FromDomAttributes.lineNumber(elem),\n                workersPool: WorkerCellView.FromDomAttributes.workersPool(elem),\n                mode: WorkerCellView.FromDomAttributes.mode(elem),\n                capturedIn: WorkerCellView.FromDomAttributes.capturedIn(elem),\n                capturedOut: WorkerCellView.FromDomAttributes.capturedOut(elem),\n            },\n        }\n        return new WorkerCellView({ ...params, state })\n    }\n\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.cellId The cell's ID.\n     * @param params.content The cell's content.\n     * @param params.state The page's state.\n     * @param params.cellAttributes Cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        cellAttributes: WorkerCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: this.cellAttributes.mode,\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: this.cellAttributes.mode,\n                cellId: this.cellId,\n                state: this.state,\n                editorView: {\n                    tag: 'div',\n                    children: [this.headerView(), this.editorView],\n                },\n                cellAttributes: this.cellAttributes,\n                reactive$: this.reactive$,\n            }),\n        ]\n    }\n\n    /**\n     * Execute the cell.\n     *\n     * @param args See {@link ExecArgs}.\n     */\n    async execute({ scope, src }: ExecArgs): Promise<Scope> {\n        const capturedIn = this.cellAttributes.capturedIn.reduce(\n            (acc, name) => {\n                return { ...acc, [name]: scope.const[name] || scope.let[name] }\n            },\n            {},\n        )\n        const isReactive =\n            Object.values(capturedIn).find(\n                (v) => v instanceof Observable || v instanceof Promise,\n            ) !== undefined\n        this.reactive$.next(isReactive)\n        const workersPool = { ...scope.let, ...scope.const }[\n            this.cellAttributes.workersPool\n        ] as WorkersPoolTypes.WorkersPool\n        if (isReactive) {\n            return executeWorkersPool$({\n                src,\n                mode: this.cellAttributes.mode,\n                workersPool,\n                scope,\n                invalidated$: this.invalidated$,\n                capturedIn,\n                capturedOut: this.cellAttributes.capturedOut,\n            })\n        }\n\n        return executeWorkersPool({\n            src,\n            mode: this.cellAttributes.mode,\n            workersPool,\n            scope,\n            capturedIn,\n            capturedOut: this.cellAttributes.capturedOut,\n        })\n    }\n\n    private headerView(): AnyVirtualDOM {\n        const title: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center px-2',\n            children: [\n                {\n                    tag: 'i',\n                    class: 'fas fa-cog',\n                },\n                {\n                    tag: 'i',\n                    class: 'px-2',\n                },\n                {\n                    tag: 'div',\n                    style: { fontWeight: 'bolder' },\n                    innerText: this.cellAttributes.workersPool,\n                },\n            ],\n        }\n        const separator: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'mx-2',\n        }\n        return {\n            tag: 'div',\n            class: 'd-flex align-items-center mkdocs-bg-info',\n            children: [\n                title,\n                separator,\n                new DropDownCaptureView({\n                    mode: 'in',\n                    variables: this.cellAttributes.capturedIn,\n                }),\n                separator,\n                new DropDownCaptureView({\n                    mode: 'out',\n                    variables: this.cellAttributes.capturedOut,\n                }),\n            ],\n        }\n    }\n}",
+                "startLine": 40,
+                "endLine": 263,
+                "references": {
+                    "WorkerCellView": "@nav/api/Notebook.WorkerCellView",
+                    "WorkerCellAttributes": "@nav/api/Notebook.WorkerCellAttributes",
+                    "State": "@nav/api/Notebook.State",
+                    "CellTrait.cellId": "@nav/api/Notebook.CellTrait.cellId",
+                    "VirtualDOM.children": "-1",
+                    "VirtualDOM.class": "-1",
+                    "CellTrait.content$": "@nav/api/Notebook.CellTrait.content$",
+                    "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
+                    "VirtualDOM.tag": "-1",
+                    "ExecArgs": "@nav/api/Notebook.ExecArgs",
+                    "Scope": "@nav/api/Notebook.Scope",
+                    "CellTrait.execute": "@nav/api/Notebook.CellTrait.execute",
+                    "CellTrait": "@nav/api/Notebook.CellTrait"
                 }
             },
             "semantic": {
@@ -4368,8 +4873,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "cellId: string",
                         "implementation": "",
-                        "startLine": 116,
-                        "endLine": 117,
+                        "startLine": 117,
+                        "endLine": 118,
                         "references": {
                             "cellId": "@nav/api/Notebook.CellTrait.cellId"
                         }
@@ -4402,8 +4907,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "content$: BehaviorSubject<string>",
                         "implementation": "",
-                        "startLine": 120,
-                        "endLine": 121,
+                        "startLine": 121,
+                        "endLine": 122,
                         "references": {
                             "content$": "@nav/api/Notebook.CellTrait.content$"
                         }
@@ -4436,8 +4941,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "execute: (args: ExecArgs) => Promise<Scope>",
                         "implementation": "",
-                        "startLine": 124,
-                        "endLine": 125,
+                        "startLine": 125,
+                        "endLine": 126,
                         "references": {
                             "execute": "@nav/api/Notebook.CellTrait.execute",
                             "ExecArgs": "@nav/api/Notebook.ExecArgs",
@@ -4451,8 +4956,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export interface CellTrait",
                 "implementation": "export interface CellTrait {\n    /**\n     * Cell unique ID.\n     */\n    cellId: string\n    /**\n     * Observable over the source content of the cell.\n     */\n    content$: BehaviorSubject<string>\n    /**\n     * Define the implementation of cell execution.\n     */\n    execute: (args: ExecArgs) => Promise<Scope>\n}",
-                "startLine": 112,
-                "endLine": 126,
+                "startLine": 113,
+                "endLine": 127,
                 "references": {
                     "CellTrait": "@nav/api/Notebook.CellTrait",
                     "ExecArgs": "@nav/api/Notebook.ExecArgs",
@@ -4460,7 +4965,8 @@
                     "InterpreterCellView": "@nav/api/Notebook.InterpreterCellView",
                     "JsCellExecutor": "@nav/api/Notebook.JsCellExecutor",
                     "MdCellView": "@nav/api/Notebook.MdCellView",
-                    "PyCellExecutor": "@nav/api/Notebook.PyCellExecutor"
+                    "PyCellExecutor": "@nav/api/Notebook.PyCellExecutor",
+                    "WorkerCellView": "@nav/api/Notebook.WorkerCellView"
                 }
             },
             "semantic": {
@@ -4515,8 +5021,8 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "capturedIn: { [k: string]: unknown }",
                         "implementation": "",
-                        "startLine": 58,
-                        "endLine": 59,
+                        "startLine": 57,
+                        "endLine": 58,
                         "references": {
                             "capturedIn": "@nav/api/Notebook.RunBody.capturedIn"
                         }
@@ -4549,8 +5055,8 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "capturedOut: string[]",
                         "implementation": "",
-                        "startLine": 62,
-                        "endLine": 63,
+                        "startLine": 61,
+                        "endLine": 62,
                         "references": {
                             "capturedOut": "@nav/api/Notebook.RunBody.capturedOut"
                         }
@@ -4583,8 +5089,8 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "cellId: string",
                         "implementation": "",
-                        "startLine": 44,
-                        "endLine": 45,
+                        "startLine": 43,
+                        "endLine": 44,
                         "references": {
                             "cellId": "@nav/api/Notebook.RunBody.cellId"
                         }
@@ -4617,15 +5123,15 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "code: string",
                         "implementation": "",
-                        "startLine": 52,
-                        "endLine": 53,
+                        "startLine": 51,
+                        "endLine": 52,
                         "references": {
                             "code": "@nav/api/Notebook.RunBody.code"
                         }
                     }
                 },
                 {
-                    "name": "fromCellId",
+                    "name": "previousCellIds",
                     "semantic": {
                         "role": "attribute",
                         "labels": [],
@@ -4635,7 +5141,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "ID of the previous cell, it allows recovering the proper scope.",
+                                "content": "IDs of the previous cell running in the same interpreter, it allows recovering the proper scope.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -4646,15 +5152,15 @@
                             }
                         ]
                     },
-                    "path": "RunBody.fromCellId",
+                    "path": "RunBody.previousCellIds",
                     "code": {
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
-                        "declaration": "fromCellId: string",
+                        "declaration": "previousCellIds: string[]",
                         "implementation": "",
-                        "startLine": 48,
-                        "endLine": 49,
+                        "startLine": 47,
+                        "endLine": 48,
                         "references": {
-                            "fromCellId": "@nav/api/Notebook.RunBody.fromCellId"
+                            "previousCellIds": "@nav/api/Notebook.RunBody.previousCellIds"
                         }
                     }
                 }
@@ -4663,9 +5169,9 @@
             "code": {
                 "filePath": "src/lib/notebook/interpreter-execution.ts",
                 "declaration": "export interface RunBody",
-                "implementation": "export interface RunBody {\n    /**\n     * ID of the cell run.\n     */\n    cellId: string\n    /**\n     * ID of the previous cell, it allows recovering the proper scope.\n     */\n    fromCellId: string\n    /**\n     * The code to run.\n     */\n    code: string\n    /**\n     * Input variables to capture:\n     * *  keys are variable's name\n     * *  values are their associated value, they must be serializable as JSON object.\n     */\n    capturedIn: { [k: string]: unknown }\n    /**\n     * Output variables to capture.\n     */\n    capturedOut: string[]\n}",
-                "startLine": 40,
-                "endLine": 64,
+                "implementation": "export interface RunBody {\n    /**\n     * ID of the cell run.\n     */\n    cellId: string\n    /**\n     * IDs of the previous cell running in the same interpreter, it allows recovering the proper scope.\n     */\n    previousCellIds: string[]\n    /**\n     * The code to run.\n     */\n    code: string\n    /**\n     * Input variables to capture:\n     * *  keys are variable's name\n     * *  values are their associated value, they must be serializable as JSON object.\n     */\n    capturedIn: { [k: string]: unknown }\n    /**\n     * Output variables to capture.\n     */\n    capturedOut: string[]\n}",
+                "startLine": 39,
+                "endLine": 63,
                 "references": {
                     "RunBody": "@nav/api/Notebook.RunBody"
                 }
@@ -4722,8 +5228,8 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "capturedOut: { [k: string]: unknown }",
                         "implementation": "",
-                        "startLine": 75,
-                        "endLine": 76,
+                        "startLine": 73,
+                        "endLine": 74,
                         "references": {
                             "capturedOut": "@nav/api/Notebook.RunResponse.capturedOut"
                         }
@@ -4756,8 +5262,8 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "error: string",
                         "implementation": "",
-                        "startLine": 79,
-                        "endLine": 80,
+                        "startLine": 77,
+                        "endLine": 78,
                         "references": {
                             "error": "@nav/api/Notebook.RunResponse.error"
                         }
@@ -4790,8 +5296,8 @@
                         "filePath": "src/lib/notebook/interpreter-execution.ts",
                         "declaration": "output: string",
                         "implementation": "",
-                        "startLine": 83,
-                        "endLine": 84,
+                        "startLine": 81,
+                        "endLine": 82,
                         "references": {
                             "output": "@nav/api/Notebook.RunResponse.output"
                         }
@@ -4803,8 +5309,8 @@
                 "filePath": "src/lib/notebook/interpreter-execution.ts",
                 "declaration": "export interface RunResponse",
                 "implementation": "export interface RunResponse {\n    /**\n     * Output variables captured:\n     * *  keys are variable's name\n     * *  values are their associated value, they must be serializable as JSON object.\n     */\n    capturedOut: { [k: string]: unknown }\n    /**\n     * Error if any.\n     */\n    error: string\n    /**\n     * Standard output generated during the run.\n     */\n    output: string\n}",
-                "startLine": 69,
-                "endLine": 85,
+                "startLine": 67,
+                "endLine": 83,
                 "references": {
                     "RunResponse": "@nav/api/Notebook.RunResponse"
                 }
@@ -4949,8 +5455,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export type ExecArgs = {\n    /**\n     * Cell ID.\n     */\n    cellId: string\n    /**\n     * Source to execute.\n     */\n    src: string\n\n    /**\n     * The function used to load a submodule from a notebook page.\n     *\n     * @param path Navigation path of the submodule.\n     * @returns The exported symbols.\n     */\n    load: (path: string) => Promise<{ [k: string]: unknown }>\n\n    /**\n     * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.\n     */\n    output$: Subject<Output>\n\n    /**\n     * The factory used to pick up the right mapping between variable and view when `display` is called.\n     */\n    displayFactory: DisplayFactory\n\n    /**\n     * Owning state of the cell.\n     */\n    owningState: State\n    /**\n     * Entering scope of the cell.\n     */\n    scope: Scope\n}",
                 "implementation": "",
-                "startLine": 71,
-                "endLine": 72,
+                "startLine": 72,
+                "endLine": 73,
                 "references": {
                     "ExecArgs": "@nav/api/Notebook.ExecArgs",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -5138,8 +5644,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export type Output = AnyVirtualDOM | undefined",
                 "implementation": "",
-                "startLine": 66,
-                "endLine": 67,
+                "startLine": 67,
+                "endLine": 68,
                 "references": {
                     "Output": "@nav/api/Notebook.Output"
                 }
@@ -5247,10 +5753,47 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export type Scope = {\n    /**\n     * The `let` variables: keyed by their name and mapped to their values.\n     */\n    let: { [k: string]: unknown }\n    /**\n     * The `const` variables: keyed by their name and mapped to their values.\n     */\n    const: { [k: string]: unknown }\n\n    /**\n     * The exported globals of python runtime.\n     */\n    python: { [k: string]: unknown }\n}",
                 "implementation": "",
-                "startLine": 45,
-                "endLine": 46,
+                "startLine": 46,
+                "endLine": 47,
                 "references": {
                     "Scope": "@nav/api/Notebook.Scope"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "WorkerCellAttributes",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "All attributes available for a 'worker' cell.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "WorkerCellAttributes",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/worker-cell-view.ts",
+                "declaration": "export type WorkerCellAttributes = CellCommonAttributes & {\n    /**\n     * Name (exported symbol) of the worker's pool used to execute the code.\n     */\n    workersPool: string\n    /**\n     * Whether to interpret code as JavaScript or Python (pyodide) snippet.\n     */\n    mode: 'javascript' | 'python'\n    /**\n     * The names of the captured variables forwarded to the worker along with the processing task.\n     */\n    capturedIn?: string[]\n    /**\n     * The names of the captured variable name forwarded to the main-thread from the worker.\n     */\n    capturedOut?: string[]\n}",
+                "implementation": "",
+                "startLine": 14,
+                "endLine": 15,
+                "references": {
+                    "WorkerCellAttributes": "@nav/api/Notebook.WorkerCellAttributes",
+                    "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes"
                 }
             },
             "semantic": {
@@ -5415,6 +5958,120 @@
                     "executeJsStatement": "@nav/api/Notebook.executeJsStatement",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
                     "Output": "@nav/api/Notebook.Output",
+                    "Scope": "@nav/api/Notebook.Scope"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "executeWorkersPool",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Execute a given JavaScript or Python statement within a workers' pool.\nThis is only for non-reactive cells.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **capturedIn**: Variable's names captured from the main thread and forwarded to the worker.\n*  **capturedOut**: Variable's names captured from the worker and forwarded to the main thread.\n*  **mode**: The script's language.\n*  **scope**: The entering scope.\n*  **src**: The source to execute.\n*  **workersPool**: The workers' pool.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "Promise over the scope at exit.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "executeWorkersPool",
+            "code": {
+                "filePath": "src/lib/notebook/worker-execution.ts",
+                "declaration": "export async function executeWorkersPool({\n    src,\n    mode,\n    workersPool,\n    scope,\n    capturedIn,\n    capturedOut,\n}: {\n    src: string\n    mode: 'javascript' | 'python'\n    workersPool: WorkersPoolTypes.WorkersPool\n    scope: Scope\n    capturedIn: { [_k: string]: unknown }\n    capturedOut: string[]\n}): Promise<Scope>",
+                "implementation": "export async function executeWorkersPool({\n    src,\n    mode,\n    workersPool,\n    scope,\n    capturedIn,\n    capturedOut,\n}: {\n    src: string\n    mode: 'javascript' | 'python'\n    workersPool: WorkersPoolTypes.WorkersPool\n    scope: Scope\n    capturedIn: { [_k: string]: unknown }\n    capturedOut: string[]\n}): Promise<Scope> {\n    const srcPatched =\n        mode === 'javascript'\n            ? patchSrc({\n                  src,\n                  capturedOut,\n                  capturedIn: Object.keys(capturedIn),\n              })\n            : patchPySrc({ src, capturedOut })\n\n    const task = new Function(srcPatched)()\n\n    const r$ = workersPool.schedule({\n        title: 'Test',\n        entryPoint: task,\n        args: capturedIn,\n    })\n\n    const lastMessage = await lastValueFrom(r$)\n    return {\n        let: scope.let,\n        const: { ...scope.const, ...lastMessage.data['result'] },\n        python: scope.python,\n    }\n}",
+                "startLine": 29,
+                "endLine": 68,
+                "references": {
+                    "executeWorkersPool": "@nav/api/Notebook.executeWorkersPool",
+                    "Scope": "@nav/api/Notebook.Scope"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "executeWorkersPool$",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Execute a given JavaScript or Python statement within a workers' pool.\nThis is only for reactive cells.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **capturedIn**: Variable's names captured from the main thread and forwarded to the worker.\n*  **capturedOut**: Variable's names captured from the worker and forwarded to the main thread.\n*  **invalidated$**: Observable that emits when the associated cell is invalidated.\n*  **mode**: The script's language.\n*  **scope**: The entering scope.\n*  **src**: The source to execute.\n*  **workersPool**: The workers' pool.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "Promise over the scope at exit.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "executeWorkersPool$",
+            "code": {
+                "filePath": "src/lib/notebook/worker-execution.ts",
+                "declaration": "export async function executeWorkersPool$({\n    src,\n    mode,\n    workersPool,\n    scope,\n    capturedIn,\n    capturedOut,\n    invalidated$,\n}: {\n    src: string\n    mode: 'javascript' | 'python'\n    workersPool: WorkersPoolTypes.WorkersPool\n    scope: Scope\n    capturedIn: { [_k: string]: unknown }\n    capturedOut: string[]\n    invalidated$: Observable<unknown>\n}): Promise<Scope>",
+                "implementation": "export async function executeWorkersPool$({\n    src,\n    mode,\n    workersPool,\n    scope,\n    capturedIn,\n    capturedOut,\n    invalidated$,\n}: {\n    src: string\n    mode: 'javascript' | 'python'\n    workersPool: WorkersPoolTypes.WorkersPool\n    scope: Scope\n    capturedIn: { [_k: string]: unknown }\n    capturedOut: string[]\n    invalidated$: Observable<unknown>\n}): Promise<Scope> {\n    const reactives: [string, Observable<unknown>][] = Object.entries(\n        capturedIn,\n    )\n        .filter(([_, v]) => v instanceof Observable || v instanceof Promise)\n        .map(([k, v]: [string, Promise<unknown> | Observable<unknown>]) => [\n            k,\n            v instanceof Promise ? from(v) : v,\n        ])\n\n    const capturedOut$ = capturedOut\n        .map((k) => {\n            return [k, new ReplaySubject()]\n        })\n        .reduce(\n            (acc, [k, v]: [string, ReplaySubject<unknown>]) => ({\n                ...acc,\n                [k]: v,\n            }),\n            {},\n        )\n    const inputs: Observable<unknown>[] = reactives.map(\n        ([_, v]) => v,\n    ) as unknown as Observable<unknown>[]\n\n    combineLatest(inputs)\n        .pipe(\n            takeUntil(invalidated$),\n            map((vs: unknown[]) => {\n                return vs.reduce(\n                    (acc: object, e, currentIndex) => ({\n                        ...acc,\n                        [reactives[currentIndex][0]]: e,\n                    }),\n                    capturedIn,\n                )\n            }),\n            switchMap((capturedIn) => {\n                const srcPatched =\n                    mode === 'javascript'\n                        ? patchSrc({\n                              src,\n                              capturedOut,\n                              capturedIn: Object.keys(capturedIn),\n                          })\n                        : patchPySrc({ src, capturedOut })\n                const task = new Function(srcPatched)()\n                return workersPool\n                    .schedule({\n                        title: 'Test',\n                        entryPoint: task,\n                        args: capturedIn,\n                    })\n                    .pipe(last())\n            }),\n            shareReplay({ bufferSize: 1, refCount: true }),\n        )\n        .subscribe((resp) => {\n            Object.entries(resp.data['result']).forEach(([k, v]) => {\n                capturedOut$[k].next(v)\n            })\n        })\n    return {\n        ...scope,\n        const: {\n            ...scope.const,\n            ...capturedOut$,\n        },\n    }\n}",
+                "startLine": 83,
+                "endLine": 169,
+                "references": {
+                    "executeWorkersPool$": "@nav/api/Notebook.executeWorkersPool$",
                     "Scope": "@nav/api/Notebook.Scope"
                 }
             },
@@ -5646,6 +6303,24 @@
             }
         },
         {
+            "name": "worker-cell-view.ts",
+            "path": "src/lib/notebook/worker-cell-view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
             "name": "interpreter-execution.ts",
             "path": "src/lib/notebook/interpreter-execution.ts",
             "documentation": {
@@ -5684,6 +6359,24 @@
         {
             "name": "js-execution.ts",
             "path": "src/lib/notebook/js-execution.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "worker-execution.ts",
+            "path": "src/lib/notebook/worker-execution.ts",
             "documentation": {
                 "sections": [
                     {

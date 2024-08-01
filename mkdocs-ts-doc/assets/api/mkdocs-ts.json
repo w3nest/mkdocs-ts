@@ -74,7 +74,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including  and .\nThese cells are identified within the markdown source using specific DOM elements (`js-cell`, `md-cell`),\nand their attributes are passed to the corresponding constructors (refer to  and\n for details).\n\nMost of the implementation logic regarding synchronization are included in the  class.",
+                        "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including , ,\n,  and .\nThese cells are identified within the Markdown source using specific DOM elements (`js-cell`, `md-cell`, `py-cell`,\n`interpreter-cell` and `worker-cell`). Cells feature attributes provided with the DOM element,\nrefer to the associated , , ,\n and .\n\nMost of the implementation logic regarding synchronization are included in the  class.",
                         "contentType": "markdown"
                     }
                 ]
