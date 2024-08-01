@@ -30,10 +30,11 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
         this.class += ` mkapi-role-${semantic}`
         this.text = this.text || this.doc.name
         this.withChildren = this.withChildren || []
-        const relativePath = this.doc.path.replace(
-            this.relativeToPath + '.',
-            '',
-        )
+        const relativePath =
+            this.relativeToPath !== '' &&
+            this.doc.path.startsWith(this.relativeToPath + '.')
+                ? this.doc.path.replace(this.relativeToPath + '.', '')
+                : this.doc.path
         this.id = `${headingPrefixId}${relativePath}`
         this.children = [
             {
