@@ -25,7 +25,7 @@ document.getElementById('content').appendChild(
                     badge: new Views.SourcesLink({
                         href: 'https://github.com/youwol/mkdocs-ts/',
                         version: setup.version,
-                        name: setup.name,
+                        name: '@youwol/mkdocs-ts',
                     }),
                 }),
         }),

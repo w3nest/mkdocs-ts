@@ -98,9 +98,13 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
         language: (e: HTMLElement) =>
             e.getAttribute('language') as unknown as 'javascript' | 'python',
         capturedIn: (e: HTMLElement) =>
-            (e.getAttribute('captured-in') || '').split(' '),
+            (e.getAttribute('captured-in') || '')
+                .split(' ')
+                .filter((c) => c !== ''),
         capturedOut: (e: HTMLElement) =>
-            (e.getAttribute('captured-out') || '').split(' '),
+            (e.getAttribute('captured-out') || '')
+                .split(' ')
+                .filter((c) => c !== ''),
     }
     /**
      * Initialize an instance of {@link InterpreterCellView} from a DOM element `interpreter-cell` in MarkDown content
@@ -198,11 +202,6 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             },
             {},
         )
-        const fromCellId =
-            currentIndex === 0
-                ? undefined
-                : compatibleCells[currentIndex - 1].cellId
-
         const isReactive =
             Object.values(capturedIn).find(
                 (v) => v instanceof Observable || v instanceof Promise,
@@ -210,14 +209,16 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
 
         const body = {
             cellId: this.cellId,
-            fromCellId,
+            previousCellIds: compatibleCells
+                .slice(0, currentIndex)
+                .map((cell) => cell.cellId),
             code: src,
             capturedIn,
             capturedOut: this.cellAttributes.capturedOut,
         }
+        this.reactive$.next(isReactive)
         const interpreter = window[this.cellAttributes.interpreter]
         if (isReactive) {
-            this.reactive$.next(true)
             return executeInterpreter$({
                 body,
                 interpreter,
@@ -226,8 +227,12 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
                 invalidated$: this.invalidated$,
             })
         }
-        this.reactive$.next(false)
-        return executeInterpreter({ body, interpreter, scope, output$ })
+        return executeInterpreter({
+            body,
+            interpreter,
+            scope,
+            output$,
+        })
     }
 
     private headerView(): AnyVirtualDOM {

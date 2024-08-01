@@ -36,16 +36,15 @@ export interface BackendClient {
 /**
  * Represents the body of the `/run` endpoint.
  */
-
 export interface RunBody {
     /**
      * ID of the cell run.
      */
     cellId: string
     /**
-     * ID of the previous cell, it allows recovering the proper scope.
+     * IDs of the previous cell running in the same interpreter, it allows recovering the proper scope.
      */
-    fromCellId: string
+    previousCellIds: string[]
     /**
      * The code to run.
      */
@@ -65,7 +64,6 @@ export interface RunBody {
 /**
  * Represents the response of the `/run` endpoint.
  */
-
 export interface RunResponse {
     /**
      * Output variables captured:

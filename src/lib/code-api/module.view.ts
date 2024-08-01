@@ -85,10 +85,10 @@ export class ModuleView implements VirtualDOM<'div'> {
                 return {
                     tag: 'div' as const,
                     children: [
-                        { tag: 'div', class: 'my-5' },
+                        { tag: 'div', class: 'my-2' },
                         new HeaderView({
                             tag: 'h2',
-                            withClass: 'doc-file-name fas fa-file',
+                            withClass: 'doc-file-name fas fa-file mt-3 mb-2',
                             doc: {
                                 name: file.split('/').slice(-1)[0],
                                 semantic: undefined,
