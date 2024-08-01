@@ -1,7 +1,7 @@
 {
     "name": "@youwol/mkdocs-ts-doc",
     "description": "Documentation app for project @youwol/mkdocs-ts.",
-    "version": "0.5.6",
+    "version": "0.5.7-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/mkdocs-ts-doc#README.md",
     "main": "dist/index.html",
@@ -31,7 +31,7 @@
     "dependencies": {
         "rxjs": "^7.5.6",
         "@youwol/rx-vdom": "^1.0.1",
-        "@youwol/mkdocs-ts": "^0.5.6",
+        "@youwol/mkdocs-ts": "^0.5.7",
         "@youwol/webpm-client": "^3.0.0",
         "mathjax": "^3.1.4"
     },
@@ -64,7 +64,7 @@
         "dependencies": {
             "rxjs": "^7.5.6",
             "@youwol/rx-vdom": "^1.0.1",
-            "@youwol/mkdocs-ts": "^0.5.6",
+            "@youwol/mkdocs-ts": "^0.5.7",
             "@youwol/webpm-client": "^3.0.0",
             "mathjax": "^3.1.4"
         },
