@@ -1430,9 +1430,10 @@
     jest-junit "^16.0.0"
     ts-jest "^29.1.2"
 
-"@youwol/mkdocs-ts@file:.local-dependencies/youwol-mkdocs-ts-0.6.0-wip-1725432149.tgz":
-  version "0.6.0-wip"
-  resolved "file:.local-dependencies/youwol-mkdocs-ts-0.6.0-wip-1725432149.tgz#246bc9acd22e541c15fccb9ca1f68061bb68c496"
+"@youwol/mkdocs-ts@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.6.0.tgz#bc1a54b01328c3cec5f5a8c673e8f894796e3122"
+  integrity sha512-LDROLf0CY98CHzFBzOTi8gZckEdTAbUKUjn0IXNv44t5by2EJCWQjfF7ieYvgYgfE5VhEKWzUab/gRCMUp7J5A==
   dependencies:
     "@youwol/http-primitives" "^0.2.3"
     "@youwol/os-top-banner" "^0.2.0"
