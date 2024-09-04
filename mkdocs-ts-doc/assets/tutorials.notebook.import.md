@@ -119,14 +119,10 @@ linked at runtime.
 
 <js-cell cell-id="vs-flow-0">
 const {VSF, Canvas, rxDom, rxjs} = await webpm.install({
-    modules:[
-        '@youwol/vsf-core#^0.2.4 as VSF', 
-        '@youwol/rx-vdom as rxDom', 
-        '@youwol/vsf-canvas#^0.2.2 as Canvas'],
-    css: [
-        'bootstrap#^4.4.0~bootstrap.min.css', 
-        'fontawesome#5.12.1~css/all.min.css', 
-        '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css']
+    esm:[
+        '@youwol/vsf-core#^0.3.3 as VSF', 
+        '@youwol/rx-vdom#1.0.3 as rxDom', 
+        '@youwol/vsf-canvas#^0.3.1 as Canvas']
 })
 let project = new VSF.Projects.ProjectState()
 project = await project.with({
