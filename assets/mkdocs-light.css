@@ -199,60 +199,12 @@
     background-color: #f84d3d !important;
 }
 
-.mkdocs-hover-bg-warning:hover {
-    background-color: #ffa657 !important;
-}
-
-.mkdocs-hover-bg-success:hover {
-    background-color: #5cad0f !important;
-}
-
-.mkdocs-hover-bg-info:hover {
-    background-color: #9b9b9b !important;
-}
-
-.mkdocs-hover-bg-focus:hover {
-    background-color: #1a7bf6 !important;
-}
-
 .mkdocs-hover-text-danger:hover {
     color: #f84d3d !important;
 }
 
-.mkdocs-hover-text-warning:hover {
-    color: #ffa657 !important;
-}
-
-.mkdocs-hover-text-success:hover {
-    color: #5cad0f !important;
-}
-
-.mkdocs-hover-text-info:hover {
-    color: #9b9b9b !important;
-}
-
-.mkdocs-hover-text-focus:hover {
-    color: #1a7bf6 !important;
-}
-
 .mkdocs-hover-border-danger:hover {
     border: solid 1px #f84d3d;
-}
-
-.mkdocs-hover-border-warning:hover {
-    border: solid 1px #ffa657;
-}
-
-.mkdocs-hover-border-success:hover {
-    border: solid 1px #5cad0f;
-}
-
-.mkdocs-hover-border-info:hover {
-    border: solid 1px #9b9b9b;
-}
-
-.mkdocs-hover-border-focus:hover {
-    border: solid 1px #1a7bf6;
 }
 
 .mkdocs-card-warning {
@@ -288,64 +240,16 @@
     border-bottom: solid 1px #ffa657 !important;
 }
 
-.mkdocs-hover-bg-danger:hover {
-    background-color: #f84d3d !important;
-}
-
 .mkdocs-hover-bg-warning:hover {
     background-color: #ffa657 !important;
-}
-
-.mkdocs-hover-bg-success:hover {
-    background-color: #5cad0f !important;
-}
-
-.mkdocs-hover-bg-info:hover {
-    background-color: #9b9b9b !important;
-}
-
-.mkdocs-hover-bg-focus:hover {
-    background-color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-text-danger:hover {
-    color: #f84d3d !important;
 }
 
 .mkdocs-hover-text-warning:hover {
     color: #ffa657 !important;
 }
 
-.mkdocs-hover-text-success:hover {
-    color: #5cad0f !important;
-}
-
-.mkdocs-hover-text-info:hover {
-    color: #9b9b9b !important;
-}
-
-.mkdocs-hover-text-focus:hover {
-    color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-border-danger:hover {
-    border: solid 1px #f84d3d;
-}
-
 .mkdocs-hover-border-warning:hover {
     border: solid 1px #ffa657;
-}
-
-.mkdocs-hover-border-success:hover {
-    border: solid 1px #5cad0f;
-}
-
-.mkdocs-hover-border-info:hover {
-    border: solid 1px #9b9b9b;
-}
-
-.mkdocs-hover-border-focus:hover {
-    border: solid 1px #1a7bf6;
 }
 
 .mkdocs-card-success {
@@ -381,64 +285,16 @@
     border-bottom: solid 1px #5cad0f !important;
 }
 
-.mkdocs-hover-bg-danger:hover {
-    background-color: #f84d3d !important;
-}
-
-.mkdocs-hover-bg-warning:hover {
-    background-color: #ffa657 !important;
-}
-
 .mkdocs-hover-bg-success:hover {
     background-color: #5cad0f !important;
-}
-
-.mkdocs-hover-bg-info:hover {
-    background-color: #9b9b9b !important;
-}
-
-.mkdocs-hover-bg-focus:hover {
-    background-color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-text-danger:hover {
-    color: #f84d3d !important;
-}
-
-.mkdocs-hover-text-warning:hover {
-    color: #ffa657 !important;
 }
 
 .mkdocs-hover-text-success:hover {
     color: #5cad0f !important;
 }
 
-.mkdocs-hover-text-info:hover {
-    color: #9b9b9b !important;
-}
-
-.mkdocs-hover-text-focus:hover {
-    color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-border-danger:hover {
-    border: solid 1px #f84d3d;
-}
-
-.mkdocs-hover-border-warning:hover {
-    border: solid 1px #ffa657;
-}
-
 .mkdocs-hover-border-success:hover {
     border: solid 1px #5cad0f;
-}
-
-.mkdocs-hover-border-info:hover {
-    border: solid 1px #9b9b9b;
-}
-
-.mkdocs-hover-border-focus:hover {
-    border: solid 1px #1a7bf6;
 }
 
 .mkdocs-card-info {
@@ -474,64 +330,16 @@
     border-bottom: solid 1px #9b9b9b !important;
 }
 
-.mkdocs-hover-bg-danger:hover {
-    background-color: #f84d3d !important;
-}
-
-.mkdocs-hover-bg-warning:hover {
-    background-color: #ffa657 !important;
-}
-
-.mkdocs-hover-bg-success:hover {
-    background-color: #5cad0f !important;
-}
-
 .mkdocs-hover-bg-info:hover {
     background-color: #9b9b9b !important;
-}
-
-.mkdocs-hover-bg-focus:hover {
-    background-color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-text-danger:hover {
-    color: #f84d3d !important;
-}
-
-.mkdocs-hover-text-warning:hover {
-    color: #ffa657 !important;
-}
-
-.mkdocs-hover-text-success:hover {
-    color: #5cad0f !important;
 }
 
 .mkdocs-hover-text-info:hover {
     color: #9b9b9b !important;
 }
 
-.mkdocs-hover-text-focus:hover {
-    color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-border-danger:hover {
-    border: solid 1px #f84d3d;
-}
-
-.mkdocs-hover-border-warning:hover {
-    border: solid 1px #ffa657;
-}
-
-.mkdocs-hover-border-success:hover {
-    border: solid 1px #5cad0f;
-}
-
 .mkdocs-hover-border-info:hover {
     border: solid 1px #9b9b9b;
-}
-
-.mkdocs-hover-border-focus:hover {
-    border: solid 1px #1a7bf6;
 }
 
 .mkdocs-card-focus {
@@ -567,60 +375,12 @@
     border-bottom: solid 1px #1a7bf6 !important;
 }
 
-.mkdocs-hover-bg-danger:hover {
-    background-color: #f84d3d !important;
-}
-
-.mkdocs-hover-bg-warning:hover {
-    background-color: #ffa657 !important;
-}
-
-.mkdocs-hover-bg-success:hover {
-    background-color: #5cad0f !important;
-}
-
-.mkdocs-hover-bg-info:hover {
-    background-color: #9b9b9b !important;
-}
-
 .mkdocs-hover-bg-focus:hover {
     background-color: #1a7bf6 !important;
 }
 
-.mkdocs-hover-text-danger:hover {
-    color: #f84d3d !important;
-}
-
-.mkdocs-hover-text-warning:hover {
-    color: #ffa657 !important;
-}
-
-.mkdocs-hover-text-success:hover {
-    color: #5cad0f !important;
-}
-
-.mkdocs-hover-text-info:hover {
-    color: #9b9b9b !important;
-}
-
 .mkdocs-hover-text-focus:hover {
     color: #1a7bf6 !important;
-}
-
-.mkdocs-hover-border-danger:hover {
-    border: solid 1px #f84d3d;
-}
-
-.mkdocs-hover-border-warning:hover {
-    border: solid 1px #ffa657;
-}
-
-.mkdocs-hover-border-success:hover {
-    border: solid 1px #5cad0f;
-}
-
-.mkdocs-hover-border-info:hover {
-    border: solid 1px #9b9b9b;
 }
 
 .mkdocs-hover-border-focus:hover {
@@ -640,10 +400,6 @@
     overflow-x: hidden;
     scrollbar-color: rgb(179, 179, 179) white;
     scrollbar-width: thin;
-}
-
-.mkdocs-PageView {
-    text-align: justify;
 }
 
 .CodeMirror {
@@ -671,6 +427,14 @@
     font-size: 1em;
     line-height: 1.5rem;
     border-radius: 5px;
+}
+
+.mkdocs-TopBannerClassicView a {
+    text-decoration: none;
+}
+
+.mkdocs-TOCView a {
+    text-decoration: none;
 }
 
 .mkdocs-NavigationView .fv-tree-header:hover {
@@ -719,6 +483,7 @@
 }
 
 .mkdocs-PageView {
+    text-align: justify;
     font-size: 1em;
     line-height: 1.6;
 }

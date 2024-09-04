@@ -53,7 +53,7 @@ export type TopBannerClassicParams = {
 export class TopBannerClassicView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
-        'w-100 mkdocs-bg-5 mkdocs-text-5 py-2 d-flex justify-content-center'
+        'mkdocs-TopBannerClassicView w-100 mkdocs-bg-5 mkdocs-text-5 py-2 d-flex justify-content-center'
     public readonly children: ChildrenLike
 
     /**
@@ -98,7 +98,7 @@ export class NavItemsView implements VirtualDOM<'div'> {
 
 export class NavItem implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'mr-5'
+    public readonly class = 'me-5'
     public readonly children: ChildrenLike
     constructor({
         node,

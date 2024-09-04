@@ -76,7 +76,7 @@ export class CellView implements VirtualDOM<'div'> {
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-CellView border-left pl-1'
+    public readonly class = 'mknb-CellView border-left ps-1'
 
     public readonly cellId: string
     public readonly state: State
@@ -111,7 +111,7 @@ export class CellView implements VirtualDOM<'div'> {
         const class$ = {
             source$: this.state.cellsStatus$[this.cellId],
             vdomMap: (status: CellStatus) => backgrounds[status],
-            wrapper: (d) => `pl-1 ${d}`,
+            wrapper: (d) => `ps-1 ${d}`,
         }
         const style$ = {
             source$: this.state.cellsStatus$[this.cellId],
@@ -296,9 +296,9 @@ export class CellTagsView implements VirtualDOM<'div'> {
                     vdomMap: (status: CellStatus) => {
                         switch (status) {
                             case 'pending':
-                                return 'fas fa-clock mr-1'
+                                return 'fas fa-clock me-1'
                             case 'executing':
-                                return 'fas fa-cog fa-spin mr-1'
+                                return 'fas fa-cog fa-spin me-1'
                             default:
                                 return ''
                         }
@@ -308,15 +308,15 @@ export class CellTagsView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: params.cellAttributes.readOnly
-                    ? 'fas fa-lock mr-1'
-                    : 'fas fa-pen mr-1',
+                    ? 'fas fa-lock me-1'
+                    : 'fas fa-pen me-1',
             },
             {
                 tag: 'div',
                 class: {
                     source$: params.reactive$,
                     vdomMap: (reactive: boolean) =>
-                        reactive ? 'fas fa-bolt mr-1' : '',
+                        reactive ? 'fas fa-bolt me-1' : '',
                 },
             },
             {

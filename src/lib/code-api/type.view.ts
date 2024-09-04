@@ -17,7 +17,7 @@ export class TypeView implements VirtualDOM<'div'> {
     public readonly project: Project
     public readonly tag = 'div'
     public readonly class =
-        'mkapi-type border-left border-bottom pl-2 mkapi-semantic-border-color'
+        'mkapi-type border-left border-bottom ps-2 mkapi-semantic-border-color'
     public readonly children: ChildrenLike
     constructor(params: {
         fromModule: Module
@@ -31,7 +31,7 @@ export class TypeView implements VirtualDOM<'div'> {
         this.children = [
             new HeaderView({
                 tag: 'h3',
-                withClass: `doc-${this.type.semantic.role}-name fs-1`,
+                withClass: `doc-${this.type.semantic.role}-name`,
                 doc: this.type,
                 relativeToPath: this.fromModule.path,
             }),

@@ -114,7 +114,7 @@ export class CodeView implements VirtualDOM<'div'> {
                     }
                     return {
                         tag: 'div',
-                        class: 'ml-1 mr-1 mt-1 code-api-snippet ',
+                        class: 'ms-1 me-1 mt-1 code-api-snippet ',
                         style: {
                             fontSize: '0.8em',
                         },

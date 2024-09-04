@@ -8,7 +8,7 @@ await setup.installMainModule({
     cdnClient: webpmClient,
     installParameters: {
         css: [
-            'bootstrap#4.4.1~bootstrap.min.css',
+            'bootstrap#5.3.3~bootstrap.min.css',
             'fontawesome#5.12.1~css/all.min.css',
             '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
             `@youwol/mkdocs-ts#${setup.runTimeDependencies.externals['@youwol/mkdocs-ts']}~assets/mkdocs-light.css`,

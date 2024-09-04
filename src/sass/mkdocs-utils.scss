@@ -106,20 +106,14 @@ $filters: (
     .mkdocs-border-bottom-#{$nickName} {
         border-bottom: solid 1px $color !important;
     }
-    @each $nickName, $color in $colorsMap {
-        .mkdocs-hover-bg-#{$nickName}:hover {
-            background-color: $color !important;
-        }
+    .mkdocs-hover-bg-#{$nickName}:hover {
+        background-color: $color !important;
     }
-    @each $nickName, $color in $colorsMap {
-        .mkdocs-hover-text-#{$nickName}:hover {
-            color: $color !important;
-        }
+    .mkdocs-hover-text-#{$nickName}:hover {
+        color: $color !important;
     }
-    @each $nickName, $color in $colorsMap {
-        .mkdocs-hover-border-#{$nickName}:hover {
-            border: solid 1px $color;
-        }
+    .mkdocs-hover-border-#{$nickName}:hover {
+        border: solid 1px $color;
     }
 }
 
@@ -136,7 +130,4 @@ $filters: (
     overflow-x: hidden;
     scrollbar-color: interpolate($color-bg, $color-text, calc(0.3)) $color-bg;
     scrollbar-width: thin;
-}
-.mkdocs-PageView {
-    text-align: justify;
 }

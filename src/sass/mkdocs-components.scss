@@ -44,6 +44,15 @@
     line-height: 1.5rem;
     border-radius: 5px;
 }
+
+.mkdocs-TopBannerClassicView a {
+    text-decoration: none;
+}
+
+.mkdocs-TOCView a {
+    text-decoration: none;
+}
+
 .mkdocs-NavigationView .fv-tree-header:hover {
     background-color: rgba(
         red($color-focus),
@@ -99,6 +108,7 @@
 }
 
 .mkdocs-PageView {
+    text-align: justify;
     font-size: 1em;
     line-height: 1.6;
 }

@@ -74,7 +74,7 @@ export class HandlerView implements VirtualDOM<'div'> {
 
 export class NavigationHeader implements VirtualDOM<'a'> {
     static DefaultWrapperClass: string =
-        'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pr-2'
+        'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pe-2'
     public readonly tag = 'a'
     public readonly href: string
     public readonly class: AttributeLike<string>
