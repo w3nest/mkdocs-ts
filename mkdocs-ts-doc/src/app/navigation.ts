@@ -59,7 +59,7 @@ export const navigation: Navigation = {
     decoration: {
         icon: {
             tag: 'i',
-            class: 'fas fa-home mr-1',
+            class: 'fas fa-home me-1',
         },
     },
     html: fromMd('index.md'),
@@ -68,7 +68,7 @@ export const navigation: Navigation = {
         decoration: {
             icon: {
                 tag: 'i',
-                class: 'fas fa-question-circle mr-1',
+                class: 'fas fa-question-circle me-1',
             },
         },
         tableOfContent,
@@ -89,7 +89,7 @@ export const navigation: Navigation = {
         decoration: {
             icon: {
                 tag: 'i',
-                class: 'fas fa-graduation-cap mr-1',
+                class: 'fas fa-graduation-cap me-1',
             },
         },
         tableOfContent,
@@ -205,7 +205,7 @@ export const navigation: Navigation = {
         decoration: {
             icon: {
                 tag: 'i',
-                class: 'fas fa-code mr-1',
+                class: 'fas fa-code me-1',
             },
         },
         html: fromMd('api.md'),

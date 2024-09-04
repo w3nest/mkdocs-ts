@@ -673,6 +673,14 @@
     border-radius: 5px;
 }
 
+.mkdocs-TopBannerClassicView a {
+    text-decoration: none;
+}
+
+.mkdocs-TOCView a {
+    text-decoration: none;
+}
+
 .mkdocs-NavigationView .fv-tree-header:hover {
     background-color: rgba(26, 123, 246, 0.05);
 }
