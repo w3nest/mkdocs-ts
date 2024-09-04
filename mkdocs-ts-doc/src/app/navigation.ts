@@ -14,11 +14,11 @@ const tableOfContent = Views.tocView
 
 const project = {
     name: 'mkdocs-ts',
-    docBasePath: `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/api`,
+    docBasePath: `/api/assets-gateway/cdn-backend/resources/${setup.assetId}/${setup.version}/assets/api`,
 }
 
 const url = (restOfPath: string) =>
-    `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/${restOfPath}`
+    `/api/assets-gateway/cdn-backend/resources/${setup.assetId}/${setup.version}/assets/${restOfPath}`
 
 const placeholders = {
     '{{project}}': project.name,
