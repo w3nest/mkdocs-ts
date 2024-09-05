@@ -3,7 +3,7 @@ const runTimeDependencies = {
     "externals": {
         "@youwol/http-primitives": "^0.2.3",
         "@youwol/os-top-banner": "^0.2.0",
-        "@youwol/rx-tree-views": "^0.3.3",
+        "@youwol/rx-tree-views": "^0.3.4",
         "@youwol/rx-vdom": "^1.0.1",
         "@youwol/webpm-client": "^3.0.0",
         "codemirror": "^5.52.0",

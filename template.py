@@ -17,7 +17,7 @@ externals_deps = {
     "marked": "^4.2.3",
     "highlight.js": "11.2.0",
     "@youwol/os-top-banner": "^0.2.0",
-    "@youwol/rx-tree-views": "^0.3.3",
+    "@youwol/rx-tree-views": "^0.3.4",
     "@youwol/http-primitives": "^0.2.3",
     "esprima": "^4.0.1",
     # It is only used for typing, not included in dev. dependencies to install it from consuming library.
