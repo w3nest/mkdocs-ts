@@ -1430,14 +1430,14 @@
     jest-junit "^16.0.0"
     ts-jest "^29.1.2"
 
-"@youwol/mkdocs-ts@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.6.0.tgz#bc1a54b01328c3cec5f5a8c673e8f894796e3122"
-  integrity sha512-LDROLf0CY98CHzFBzOTi8gZckEdTAbUKUjn0IXNv44t5by2EJCWQjfF7ieYvgYgfE5VhEKWzUab/gRCMUp7J5A==
+"@youwol/mkdocs-ts@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.6.1.tgz#4f389dddbedc52040bca302442a4513feafbf566"
+  integrity sha512-yra8DhuDk3Wn9mQ57Y3KVGet/H5PAj27XUAvneAXAmF7YXDr8F9ak8iF4VroqoP4AZOmAnxPhnqlGLdDjQpzpQ==
   dependencies:
     "@youwol/http-primitives" "^0.2.3"
     "@youwol/os-top-banner" "^0.2.0"
-    "@youwol/rx-tree-views" "^0.3.3"
+    "@youwol/rx-tree-views" "^0.3.4"
     "@youwol/rx-vdom" "^1.0.1"
     "@youwol/webpm-client" "^3.0.0"
     codemirror "^5.52.0"
@@ -1474,10 +1474,10 @@
     prettier "^3.2.5"
     prettier-plugin-properties "^0.3.0"
 
-"@youwol/rx-tree-views@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@youwol/rx-tree-views/-/rx-tree-views-0.3.3.tgz#aedb384dd2f1aee5fe3c9d266beff90f1b86662c"
-  integrity sha512-bFNqrtRbnGpzQhhMuLceWgUt45pBnsMQaYIn5r/+Zw2n4UP73wei5WE47Aq68mCNk+9oyUezt9uT9C2fxImRMg==
+"@youwol/rx-tree-views@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@youwol/rx-tree-views/-/rx-tree-views-0.3.4.tgz#df586aa381d1ad2a748a7334211f20fc1866e18f"
+  integrity sha512-LYF6cx/JLugmLm+HWXcqdoOTcE++SrHv5Dp+Mk7wnYmyu4ykbqp7eWKjCTnnoEFE/37szHAQVF0j1dcyuWhkdw==
   dependencies:
     "@youwol/rx-vdom" "^1.0.1"
     rxjs "^7.5.6"
