@@ -167,6 +167,12 @@ export class NavigationView implements VirtualDOM<'div'> {
                             ],
                     })
                 },
+                options: {
+                    autoScroll: {
+                        trigger: 'not-visible',
+                        top: 50,
+                    },
+                },
             }),
         ]
     }
