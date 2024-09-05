@@ -3,7 +3,7 @@ const runTimeDependencies = {
     "externals": {
         "@youwol/http-primitives": "^0.2.3",
         "@youwol/os-top-banner": "^0.2.0",
-        "@youwol/rx-tree-views": "^0.3.3",
+        "@youwol/rx-tree-views": "^0.3.4",
         "@youwol/rx-vdom": "^1.0.1",
         "@youwol/webpm-client": "^3.0.0",
         "codemirror": "^5.52.0",
@@ -166,7 +166,7 @@ const entries = {
 export const setup = {
     name:'@youwol/mkdocs-ts',
         assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.6.1-wip',
+    version:'0.6.2-wip',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
@@ -212,7 +212,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.6.1-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `@youwol/mkdocs-ts#0.6.2-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

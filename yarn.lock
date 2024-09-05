@@ -1321,10 +1321,10 @@
     prettier "^3.2.5"
     prettier-plugin-properties "^0.3.0"
 
-"@youwol/rx-tree-views@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@youwol/rx-tree-views/-/rx-tree-views-0.3.3.tgz#aedb384dd2f1aee5fe3c9d266beff90f1b86662c"
-  integrity sha512-bFNqrtRbnGpzQhhMuLceWgUt45pBnsMQaYIn5r/+Zw2n4UP73wei5WE47Aq68mCNk+9oyUezt9uT9C2fxImRMg==
+"@youwol/rx-tree-views@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@youwol/rx-tree-views/-/rx-tree-views-0.3.4.tgz#df586aa381d1ad2a748a7334211f20fc1866e18f"
+  integrity sha512-LYF6cx/JLugmLm+HWXcqdoOTcE++SrHv5Dp+Mk7wnYmyu4ykbqp7eWKjCTnnoEFE/37szHAQVF0j1dcyuWhkdw==
   dependencies:
     "@youwol/rx-vdom" "^1.0.1"
     rxjs "^7.5.6"

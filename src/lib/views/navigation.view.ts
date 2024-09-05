@@ -167,6 +167,12 @@ export class NavigationView implements VirtualDOM<'div'> {
                             ],
                     })
                 },
+                options: {
+                    autoScroll: {
+                        trigger: 'not-visible',
+                        top: 50,
+                    },
+                },
             }),
         ]
     }
@@ -192,6 +198,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
     constructor(params: {
         router: Router
         displayModeToc$: Observable<DisplayMode>
+        footer?: AnyVirtualDOM
     }) {
         Object.assign(this, params)
 
@@ -204,6 +211,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
                               router: this.router,
                               collapse: () => this.expanded$.next(false),
                               displayModeToc$: this.displayModeToc$,
+                              footer: params.footer,
                           })
                         : {
                               tag: 'div',
@@ -243,12 +251,13 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
         router: Router
         collapse: () => void
         displayModeToc$: Observable<DisplayMode>
+        footer?: AnyVirtualDOM
     }) {
         Object.assign(this, params)
         this.children = [
             {
                 tag: 'div',
-                class: 'h-100 overflow-auto ',
+                class: 'h-100 d-flex flex-column',
                 style: {
                     width: ExpandedNavigationView.menuWidth,
                     marginLeft: `-${ExpandedNavigationView.menuWidth}`,
@@ -267,10 +276,21 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                                 node,
                                 displayModeToc$: this.displayModeToc$,
                             }),
-                            new ModalNavChildrenView({
-                                router: this.router,
-                                node,
-                            }),
+                            {
+                                tag: 'div',
+                                class: 'flex-grow-1 overflow-auto',
+                                children: [
+                                    new ModalNavChildrenView({
+                                        router: this.router,
+                                        node,
+                                    }),
+                                ],
+                            },
+                            params.footer && {
+                                tag: 'div',
+                                class: 'w-100 py-3 border px-2 bg-light text-dark',
+                                children: [params.footer],
+                            },
                         ]
                     },
                 },

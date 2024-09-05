@@ -169,6 +169,7 @@ export class MainColumn implements VirtualDOM<'div'> {
         router,
         logo,
         title,
+        badge,
     }: TopBannerClassicParams) {
         this.style = {
             source$: displayModeNav$,
@@ -217,6 +218,7 @@ export class MainColumn implements VirtualDOM<'div'> {
                                           new ModalNavigationView({
                                               router,
                                               displayModeToc$: displayModeToc$,
+                                              footer: badge,
                                           }),
                                       ],
                                   }
