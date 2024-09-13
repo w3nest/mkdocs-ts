@@ -85,7 +85,21 @@ class Configuration(NamedTuple):
     }
     ```
     """
-
+    extra_modules: dict[str, list[ChildModule]] = {}
+    """
+    Other API module documentation node that should be added as a child of a given module.
+    
+    This is a dictionary where the keys are the parent's module names, and the values are a list of child modules' 
+    specification.
+    
+    Example:
+    ```
+    {
+        "foo": [ChildModule(name="Foo", path="foo/extra-foo", isLeaf=False)],
+        "foo.bar": [ChildModule(name="Bar", path="foo/bar/extra-bar", isLeaf=True)],
+    }
+    ```
+    """
 
 type SymbolKind = Literal[
     "function", "attribute", "class", "property", "method", "module"
@@ -355,7 +369,8 @@ def parse_module(ast: AstModule, project: Project) -> Module:
     """
     elements = extract_module(ast=ast)
     children_modules = [
-        parse_child_module(ast=m, project=project) for m in elements.modules
+        *[parse_child_module(ast=m, project=project) for m in elements.modules],
+        *project.config.extra_modules.get(ast.canonical_path,[])
     ]
     classes = [
         parse_class(ast=c, project=project) for c in elements.classes if c.has_docstring
@@ -1105,6 +1120,8 @@ def generate_api(root_ast: AstModule, config: Configuration):
         with open(target_path, "w", encoding='UTF8') as json_file:
             json.dump(doc, json_file, cls=DataclassJSONEncoder, indent=4)
         for child in doc.children:
+            if child in config.extra_modules.get(path, []):
+                continue
             gr_child = module[child.name]
             get_doc_rec(module=gr_child, path=f"{path}.{child.name}")
 
