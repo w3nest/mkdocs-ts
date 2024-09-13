@@ -204,6 +204,14 @@ class DocReporter:
     def add_sphinx_link_unresolved(parent: str, link: str, candidates: list[str]):
         DocReporter.sphinx_links_unresolved[f"{parent}=>{link}"] = candidates
 
+    @staticmethod
+    def clear():
+        DocReporter.errors = {}
+        DocReporter.external_cross_ref_errors = set()
+        DocReporter.internal_cross_ref_errors = set()
+        DocReporter.no_docstrings_errors = set()
+        DocReporter.sphinx_tag_unknown = set()
+        DocReporter.sphinx_links_unresolved = {}
 
 def canonical_path(
     ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName,
@@ -1048,6 +1056,7 @@ def generate_api(root_ast: AstModule, config: Configuration):
         root_ast: Root module's AST.
         config: Configuration.
     """
+    DocReporter.clear()
     all_symbols = init_symbols(root_ast=root_ast)
     all_aliases = init_aliases(root_ast=root_ast)
     project = Project(
