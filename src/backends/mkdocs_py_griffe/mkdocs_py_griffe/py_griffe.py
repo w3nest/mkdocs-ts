@@ -810,7 +810,7 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
 def find_attributes_of_type(ast: Any, target_type):
     results = []
     primitive_types = (int, float, str, bool, bytes, complex)
-
+    visited = list()
     def get_attr_val(obj, attr_name) -> Any | None:
         attr_value = getattr(obj, attr_name, None)
         invalid = any(
@@ -825,10 +825,13 @@ def find_attributes_of_type(ast: Any, target_type):
         return not invalid and attr_value
 
     def parse_obj(obj):
+        if obj in visited:
+            return
+        visited.append(obj)
         attributes = [
             get_attr_val(obj, attr_name)
             for attr_name in dir(obj)
-            if get_attr_val(obj, attr_name)
+            if get_attr_val(obj, attr_name) and attr_name != 'parent'
         ]
         for attr_value in attributes:
             if isinstance(attr_value, target_type):
@@ -842,8 +845,7 @@ def find_attributes_of_type(ast: Any, target_type):
             results.append(current)
 
         if isinstance(current, list):
-            for item in current:
-                recursive_search(item)
+            [recursive_search(item) for item in current]
         elif hasattr(current, "__dict__"):
             parse_obj(current)
 
