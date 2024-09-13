@@ -80,6 +80,20 @@ export class Router {
     public readonly navigation: Navigation
 
     /**
+     * Handles navigation redirections.
+     *
+     * This function is invoked whenever a specific path is requested for navigation.
+     * It allows modifying the target path before the navigation occurs.
+     *
+     * @param target - The requested path that the user intends to navigate to.
+     * @returns The modified path to navigate to, or the original path if no changes are needed.
+     *          If `undefined` is returned, the navigation will be canceled.
+     */
+    public readonly redirects: (target: string) => string | undefined = (
+        target,
+    ) => target
+
+    /**
      * Observable that emit the current main HTML page.
      */
     public readonly currentHtml$: Subject<HTMLElement> =
@@ -130,12 +144,14 @@ export class Router {
      * @param params.navigation See {@link Router.navigation}.
      * @param params.basePath Deprecated should not be used.
      * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.
+     * @param params.redirects See {@link Router.redirects}.
      * @param params.mockBrowserLocation See {@link Router.mockBrowserLocation}.
      */
     constructor(params: {
         navigation: Navigation
         basePath?: string
         retryNavPeriod?: number
+        redirects?: (target: string) => string | undefined
         mockBrowserLocation?: { initialPath: string }
     }) {
         Object.assign(this, params)
@@ -210,6 +226,11 @@ export class Router {
      */
     navigateTo({ path }: { path: string }) {
         path = `/${sanitizeNavPath(path)}`
+        path = this.redirects(path)
+        if (!path) {
+            return
+        }
+
         const pagePath = path.split('.')[0]
         const sectionId = path.split('.').slice(1).join('.')
 
