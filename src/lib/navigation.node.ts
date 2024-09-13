@@ -229,6 +229,7 @@ export function createRootNode({
     const rootNode = new NavNode({
         id: '/',
         name: navigation.name,
+        decoration: navigation.decoration,
         children: createChildren({
             navigation,
             hRefBase: href,
