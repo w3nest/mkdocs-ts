@@ -111,46 +111,55 @@ export class NavItem implements VirtualDOM<'div'> {
     }) {
         this.children = [
             {
-                tag: 'a',
-                class: {
-                    source$: router.currentPath$,
-                    vdomMap: (path: string) => {
-                        if (href === '/') {
-                            return path === '/'
-                                ? 'mkdocs-text-5'
-                                : 'mkdocs-text-4'
-                        }
-                        return path.startsWith(href)
-                            ? 'mkdocs-text-5'
-                            : 'mkdocs-text-4'
-                    },
-                    wrapper: (d) =>
-                        `${d} mkdocs-hover-text-5 d-flex align-items-center`,
-                    untilFirst: 'mkdocs-text-4',
-                },
-                href: href,
+                tag: 'div',
+                class: node.decoration?.wrapperClass || '',
                 children: [
-                    node.decoration?.icon,
                     {
-                        tag: 'div',
-                        innerText: node.name,
+                        tag: 'a',
+                        class: {
+                            source$: router.currentPath$,
+                            vdomMap: (path: string) => {
+                                if (href === '/') {
+                                    return path === '/'
+                                        ? 'mkdocs-text-5'
+                                        : 'mkdocs-text-4'
+                                }
+                                return path.startsWith(href)
+                                    ? 'mkdocs-text-5'
+                                    : 'mkdocs-text-4'
+                            },
+                            wrapper: (d) =>
+                                `${d} mkdocs-hover-text-5 d-flex align-items-center`,
+                            untilFirst: 'mkdocs-text-4',
+                        },
+                        href: href,
+                        children: [
+                            node.decoration?.icon,
+                            {
+                                tag: 'div',
+                                innerText: node.name,
+                            },
+                        ],
+                        onclick: (ev) => {
+                            ev.preventDefault()
+                            router.navigateTo({ path: href })
+                            if (href === '/') {
+                                router.explorerState.expandedNodes$.next(['/'])
+                                return
+                            }
+                            const expanded =
+                                router.explorerState.expandedNodes$.value.filter(
+                                    (n) => {
+                                        return n.startsWith(href)
+                                    },
+                                )
+                            router.explorerState.expandedNodes$.next([
+                                '/',
+                                ...expanded,
+                            ])
+                        },
                     },
                 ],
-                onclick: (ev) => {
-                    ev.preventDefault()
-                    router.navigateTo({ path: href })
-                    if (href === '/') {
-                        router.explorerState.expandedNodes$.next(['/'])
-                        return
-                    }
-                    const expanded =
-                        router.explorerState.expandedNodes$.value.filter(
-                            (n) => {
-                                return n.startsWith(href)
-                            },
-                        )
-                    router.explorerState.expandedNodes$.next(['/', ...expanded])
-                },
             },
         ]
     }
