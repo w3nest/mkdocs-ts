@@ -54,7 +54,7 @@ class Configuration(NamedTuple):
     """
     external_links: dict[str, str] = {}
     """
-    External links to cross-reference, e.g.:
+    External links definition, e.g.:
     ```
     {   
         "float": "https://docs.python.org/fr/3/library/stdtypes.html#numeric-types-int-float-complex",
