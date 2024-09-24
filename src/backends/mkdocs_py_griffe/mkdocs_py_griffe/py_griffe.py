@@ -25,7 +25,6 @@ from griffe.docstrings.dataclasses import (DocstringSection,
                                            DocstringSectionReturns,
                                            DocstringSectionText)
 from griffe.enumerations import Kind
-from griffe.exceptions import AliasResolutionError
 from griffe.expressions import ExprName
 
 from mkdocs_py_griffe.models import (Attribute, Callable, ChildModule, Code,
@@ -259,24 +258,31 @@ def navigation_path(
     ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName, project: Project
 ) -> str | None:
 
-    def lib_nav_path(path: str):
+    def get_symbol(path: str):
         base = path.replace(f"{project.root_ast.name}.", "")
         symbol = project.all_symbols.get(base, None)
         if symbol:
-            return symbol.navigation_path
+            return symbol
         alias = project.all_aliases.get(path, None)
         if alias:
-            return lib_nav_path(alias)
+            base = alias.replace(f"{project.root_ast.name}.", "")
+            symbol = project.all_symbols.get(base, None)
+            return symbol
         return None
 
     py_path = ast.canonical_path
 
     if py_path.startswith(project.root_ast.name):
-        nav_path = lib_nav_path(path=ast.canonical_path)
-        if not nav_path:
+        symbol = get_symbol(path=ast.canonical_path)
+        if not symbol:
+            parent_symbol = get_symbol(path=ast.canonical_path.replace(f".{ast.name}",""))
+            if parent_symbol and parent_symbol.kind == "attribute":
+                # This is when linking an instance's attribute (from implementation in declaration).
+                # We link to the parent global attribute if it exists.
+                return f"@nav{project.config.base_nav}/{parent_symbol.navigation_path}"
             DocReporter.add_internal_cross_ref_error(ast.canonical_path)
             return None
-        return f"@nav{project.config.base_nav}/{nav_path}"
+        return f"@nav{project.config.base_nav}/{symbol.navigation_path}"
     if py_path in project.config.external_links:
         return project.config.external_links[py_path]
 
@@ -1003,88 +1009,53 @@ def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]:
     return init_symbols_rec(ast=root_ast)
 
 
-def get_module_aliases(root_ast: AstModule, ast: AstModule):
-    """
-    Retrieves the list of aliases defined within a module.
-
-    Parameters:
-        root_ast: Root module's AST.
-        ast: Module AST to generate the aliases for.
-    """
-
-    def is_lib_alias(m):
-        try:
-            return isinstance(m, AstAlias) and m.canonical_path.startswith(root_ast.name)
-        except AliasResolutionError:
-            return False
-        except AttributeError:
-            return False
-
-    imports: list[AstAlias] = [m for m in ast.all_members.values() if is_lib_alias(m)]
-
-    wild_char_imports = [m for m in imports if m.name.endswith("/*")]
-
-    def is_target_alias(m):
-        try:
-            return isinstance(m, AstAlias) and m.target.canonical_path.startswith(
-                root_ast.name
-            )
-        except AliasResolutionError:
-            return False
-        except AttributeError:
-            return False
-
-    wild_char_aliases = [
-        alias
-        for short_access in wild_char_imports
-        for alias in short_access.all_members.values()
-        if is_target_alias(alias)
-    ]
-    explicit_imports = [m for m in imports if not m.name.endswith("/*")]
-    explicit_aliases = {
-        f"{ast.canonical_path}.{m.name}": m.canonical_path for m in explicit_imports
-    }
-
-    implicit_aliases = {
-        f"{ast.canonical_path}.{alias.name}": alias.target.canonical_path
-        for alias in wild_char_aliases
-    }
-    return {**explicit_aliases, **implicit_aliases}
-
-
 def init_aliases(root_ast: AstModule) -> dict[str, str]:
-    """
-    Retrieves the list of all aliases defined within the provided root AST.
+    aliases = {}
+    modules_seen = []
 
-    Recursively call :func:`mkdocs_py_griffe.py_griffe.get_module_aliases` for each module found in the provided AST.
+    def is_leaf(ast):
+        return any(isinstance(ast, C ) for C in [AstAttribute, AstClass, AstFunction])
 
-    Parameters:
-        root_ast: Root module's AST.
-    """
+    def process_entity(ast: AstModule | AstAlias | AstAttribute | AstClass | AstFunction,
+                       parent_module:str,
+                       parents_wild_card: list[str]):
 
-    def init_aliases_rec(ast: AstModule, depth=0, max_depth=10) -> dict[str, str]:
-        if depth > max_depth:
-            raise RecursionError("Maximum recursion depth reached")
+        def add_import(entity: AstModule | AstAlias | AstAttribute | AstClass | AstFunction):
+            aliases[f"{parent_module}.{entity.name}"] = entity.canonical_path
+            for parent_wild_card in parents_wild_card:
+                aliases[f"{parent_wild_card}.{entity.name}"] = entity.canonical_path
 
-        submodules = [
-            v
-            for _, v in ast.modules.items()
-            if not isinstance(v, griffe.dataclasses.Alias)
-        ]
-        aliases = get_module_aliases(root_ast=root_ast, ast=ast)
-        aliases_submodules = {
-            k: v
-            for module in submodules
-            for k, v in init_aliases_rec(
-                ast=module, depth=depth + 1, max_depth=max_depth
-            ).items()
-        }
-        return {
-            **aliases,
-            **aliases_submodules,
-        }
+        if is_leaf(ast):
+            add_import(ast)
+            return
 
-    return init_aliases_rec(ast=root_ast)
+        def is_in_lib(m):
+            try:
+                m.canonical_path.startswith(root_ast.name)
+                return True
+            except:
+                return False
+        lib_members = [m for m in ast.all_members.values() if is_in_lib(m)]
+
+        modules = [m for m in lib_members if isinstance(m, AstModule) and not m.canonical_path in modules_seen]
+        for m in modules:
+            modules_seen.append(m.canonical_path)
+            add_import(m)
+            process_entity(m, m.canonical_path, parents_wild_card)
+
+        direct_imports = [m for m in lib_members if not isinstance(m, AstAlias) and not isinstance(m, AstModule)]
+        for direct_import in direct_imports:
+            process_entity(direct_import, ast.canonical_path, parents_wild_card)
+
+        direct_aliases : list[AstAlias] = [m for m in lib_members if isinstance(m, AstAlias) and not m.name.endswith('/*')]
+        for direct_alias in direct_aliases:
+            add_import(direct_alias)
+
+        wild_cards_aliases : list[AstAlias] = [m for m in lib_members if isinstance(m, AstAlias) and m.name.endswith('/*')]
+        for wild_card_alias in wild_cards_aliases:
+            process_entity(wild_card_alias, wild_card_alias.canonical_path, [*parents_wild_card, ast.canonical_path] )
+    process_entity(root_ast, root_ast.name, list())
+    return aliases
 
 
 def generate_api(root_ast: AstModule, config: Configuration):
