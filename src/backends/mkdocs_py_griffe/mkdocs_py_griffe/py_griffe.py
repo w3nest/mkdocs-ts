@@ -100,7 +100,7 @@ class Configuration(NamedTuple):
     ```
     """
 
-type SymbolKind = Literal[
+SymbolKind = Literal[
     "function", "attribute", "class", "property", "method", "module"
 ]
 
@@ -816,7 +816,7 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
     start_line = ast.lineno
     end_line = ast.endlineno
     references = {}
-    implementation = ""
+    implementation = None
     declaration = ""
     if isinstance(ast, AstAttribute):
         types_annotation = find_attributes_of_type(ast.annotation, ExprName)
@@ -909,9 +909,6 @@ def find_attributes_of_type(ast: Any, target_type):
 
     recursive_search(ast)
     return results
-
-
-docs = {}
 
 
 class DataclassJSONEncoder(json.JSONEncoder):
@@ -1033,11 +1030,11 @@ def init_aliases(root_ast: AstModule) -> dict[str, str]:
             try:
                 m.canonical_path.startswith(root_ast.name)
                 return True
-            except:
+            except AliasResolutionError:
                 return False
         lib_members = [m for m in ast.all_members.values() if is_in_lib(m)]
 
-        modules = [m for m in lib_members if isinstance(m, AstModule) and not m.canonical_path in modules_seen]
+        modules = [m for m in lib_members if isinstance(m, AstModule) and m.canonical_path not in modules_seen]
         for m in modules:
             modules_seen.append(m.canonical_path)
             add_import(m)
