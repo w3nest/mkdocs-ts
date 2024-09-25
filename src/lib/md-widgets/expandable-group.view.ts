@@ -91,12 +91,19 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                 },
             ],
         }
+        const wrapperClass = 'pt-2'
         const innerContent: AnyVirtualDOM | RxChild =
             mode === 'stateless'
                 ? {
                       source$: expanded$,
                       vdomMap: (expanded: boolean) => {
-                          return expanded ? content() : { tag: 'div' }
+                          return expanded
+                              ? {
+                                    tag: 'div',
+                                    class: wrapperClass,
+                                    children: [content()],
+                                }
+                              : { tag: 'div' }
                       },
                   }
                 : {
@@ -104,7 +111,7 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                       class: {
                           source$: expanded$,
                           vdomMap: (expanded: boolean) =>
-                              expanded ? '' : 'd-none',
+                              expanded ? wrapperClass : 'd-none',
                       },
                       children: [content()],
                   }
