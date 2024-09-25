@@ -89,9 +89,8 @@ export class Router {
      * @returns The modified path to navigate to, or the original path if no changes are needed.
      *          If `undefined` is returned, the navigation will be canceled.
      */
-    public readonly redirects: (target: string) => string | undefined = (
-        target,
-    ) => target
+    public readonly redirects: (target: string) => Promise<string | undefined> =
+        async (target) => target
 
     /**
      * Observable that emit the current main HTML page.
@@ -151,7 +150,7 @@ export class Router {
         navigation: Navigation
         basePath?: string
         retryNavPeriod?: number
-        redirects?: (target: string) => string | undefined
+        redirects?: (target: string) => Promise<string | undefined>
         mockBrowserLocation?: { initialPath: string }
     }) {
         Object.assign(this, params)
@@ -219,14 +218,18 @@ export class Router {
         return currentPath.split('/').slice(0, -1).join('/')
     }
 
+    navigateTo({ path }: { path: string }) {
+        this.awaitNavigateTo({ path }).then()
+    }
+
     /**
      * Navigate to a specific path.
      *
      * @param path The path to navigate to.
      */
-    navigateTo({ path }: { path: string }) {
+    private async awaitNavigateTo({ path }: { path: string }) {
         path = `/${sanitizeNavPath(path)}`
-        path = this.redirects(path)
+        path = await this.redirects(path)
         if (!path) {
             return
         }
