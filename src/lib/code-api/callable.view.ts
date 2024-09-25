@@ -1,4 +1,4 @@
-import { Router } from '../index'
+import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { VirtualDOM, ChildrenLike } from '@youwol/rx-vdom'
 import { DocumentationView } from './documentation.view'

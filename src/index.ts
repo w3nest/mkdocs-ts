@@ -3,6 +3,8 @@
  *
  * @module MainModule
  */
+import { headingPrefixId, parseMd, Views } from './lib'
+
 export * from './lib'
 export { setup } from './auto-generated'
 
@@ -21,6 +23,10 @@ export async function installCodeApiModule() {
         name: 'CodeApi',
         cdnClient: webpmClient,
     })
+    module.Dependencies.parseMd = parseMd
+    module.Dependencies.Views = Views
+    module.Dependencies.installNotebookModule = installNotebookModule
+    module.Dependencies.headingPrefixId = headingPrefixId
     return module
 }
 

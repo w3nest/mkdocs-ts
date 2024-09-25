@@ -1,17 +1,17 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd } from '../index'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
-import { NotebookTypes, installNotebookModule } from '../../index'
+import type { NotebookTypes } from '../../index'
 import { from } from 'rxjs'
+import { Dependencies } from './index'
 
 export class DocumentationView implements VirtualDOM<'div'> {
     public readonly documentation?: Documentation
     public readonly router: Router
     public readonly configuration: Configuration
     public readonly tag = 'div'
-    public readonly clas = 'mkapi-doc'
+    public readonly class = 'mkapi-doc'
     public readonly children: ChildrenLike
     constructor(params: {
         documentation: Documentation
@@ -56,7 +56,7 @@ export class SectionView implements VirtualDOM<'div'> {
             section.title && new SectionHeader(section),
             configuration.notebook
                 ? {
-                      source$: from(installNotebookModule()),
+                      source$: from(Dependencies.installNotebookModule()),
                       vdomMap: (mdle: typeof NotebookTypes) => {
                           return new mdle.NotebookPage({
                               src: section.content,
@@ -66,7 +66,7 @@ export class SectionView implements VirtualDOM<'div'> {
                           })
                       },
                   }
-                : parseMd({
+                : Dependencies.parseMd({
                       src: section.content,
                       router: router,
                   }),

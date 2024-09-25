@@ -25,12 +25,22 @@ export * from './utils'
 
 import { combineLatest, map, Observable } from 'rxjs'
 import { ModuleView } from './module.view'
-import { Decoration, Navigation, Router, Views } from '../index'
 import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@youwol/http-primitives'
 import { Module, Project } from './models'
 import { install } from '@youwol/webpm-client'
+import type { Decoration, Navigation, Router, Views } from '../index'
+import type { installNotebookModule } from '../../index'
+import type { parseMd } from '../markdown'
+
+export class Dependencies {
+    public static parseMd: typeof parseMd = undefined
+    public static Views: typeof Views = undefined
+    public static installNotebookModule: typeof installNotebookModule =
+        undefined
+    public static headingPrefixId: string
+}
 
 export const tocConvertor = (heading: HTMLHeadingElement): AnyVirtualDOM => {
     const classes = heading.firstChild
@@ -39,7 +49,7 @@ export const tocConvertor = (heading: HTMLHeadingElement): AnyVirtualDOM => {
 
     return {
         tag: 'div' as const,
-        innerText: heading.firstChild['innerText'],
+        innerText: heading.firstChild['innerText'] || heading.innerText,
         class: `${classes} fv-hover-text-focus`,
     }
 }
@@ -73,7 +83,7 @@ export const docNode: ({
 }) => Navigation = ({ project, configuration }) => ({
     name: 'API',
     tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-        Views.tocView({ ...d, domConvertor: tocConvertor }),
+        Dependencies.Views.tocView({ ...d, domConvertor: tocConvertor }),
     html: () => ({
         tag: 'div',
         innerText: 'The modules of the project',
@@ -81,7 +91,7 @@ export const docNode: ({
     '/api': {
         name: project.name,
         tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-            Views.tocView({ ...d, domConvertor: tocConvertor }),
+            Dependencies.Views.tocView({ ...d, domConvertor: tocConvertor }),
         html: ({ router }) =>
             fetchModuleDoc({
                 modulePath: project.name,
@@ -149,7 +159,10 @@ export const docNavigation = ({
                 html: () =>
                     new ModuleView({ module, router, configuration, project }),
                 tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-                    Views.tocView({ ...d, domConvertor: tocConvertor }),
+                    Dependencies.Views.tocView({
+                        ...d,
+                        domConvertor: tocConvertor,
+                    }),
             }
         }),
     )
@@ -187,7 +200,7 @@ export function codeApiEntryNode(params: {
                 }),
             )
         },
-        tableOfContent: Views.tocView,
+        tableOfContent: Dependencies.Views.tocView,
         '...': ({ router, path }) =>
             docNavigation({
                 modulePath: path,

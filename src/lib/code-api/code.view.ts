@@ -1,10 +1,10 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { BehaviorSubject } from 'rxjs'
-import { parseMd } from '../index'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { Code, Entity, Project } from './models'
 import { DeclarationView } from './declaration.view'
+import { Dependencies } from './index'
 
 class CodeHeaderView implements VirtualDOM<'div'> {
     public readonly code: Code
@@ -119,7 +119,7 @@ export class CodeView implements VirtualDOM<'div'> {
                             fontSize: '0.8em',
                         },
                         children: [
-                            parseMd({
+                            Dependencies.parseMd({
                                 src: `
 <code-snippet language="javascript">
 ${this.code.implementation}
