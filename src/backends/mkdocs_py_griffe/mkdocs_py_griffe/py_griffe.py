@@ -28,9 +28,8 @@ from griffe.enumerations import Kind
 from griffe.exceptions import AliasResolutionError
 from griffe.expressions import ExprName
 
-from mkdocs_py_griffe.models import (Attribute, Callable, ChildModule, Code,
-                                     Documentation, DocumentationSection, File,
-                                     Module, Semantic, Type)
+from .models import (Attribute, Callable, ChildModule, Code, Documentation,
+                     DocumentationSection, File, Module, Semantic, Type)
 
 INIT_FILENAME = "__init__.py"
 """
@@ -604,7 +603,7 @@ def parse_returns(ast: AstFunction, project: Project) -> DocumentationSection | 
                     role="returns", labels=[], attributes={}, relations={}
                 ),
             )
-        except Exception as e:
+        except RuntimeError as e:
             DocReporter.add_error(
                 ast.canonical_path,
                 f"Failed to parse return of function {ast.name}: {e}",
@@ -816,8 +815,6 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
         return navigation_path(ast=e, project=project)
 
     file_path = str(ast.filepath.relative_to(project.root_ast.filepath.parent))
-    start_line = ast.lineno
-    end_line = ast.endlineno
     references = {}
     implementation = None
     declaration = ""
@@ -860,8 +857,8 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
 
     return Code(
         filePath=file_path,
-        startLine=start_line,
-        endLine=end_line,
+        startLine=ast.lineno,
+        endLine=ast.endlineno,
         declaration=declaration,
         implementation=implementation,
         references=references,
@@ -871,7 +868,7 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
 def find_attributes_of_type(ast: Any, target_type):
     results = []
     primitive_types = (int, float, str, bool, bytes, complex)
-    visited = list()
+    visited = []
 
     def get_attr_val(obj, attr_name) -> Any | None:
         attr_value = getattr(obj, attr_name, None)
@@ -907,7 +904,7 @@ def find_attributes_of_type(ast: Any, target_type):
             results.append(current)
 
         if isinstance(current, list):
-            [recursive_search(item) for item in current]
+            _ = [recursive_search(item) for item in current]
         elif hasattr(current, "__dict__"):
             parse_obj(current)
 
@@ -1011,6 +1008,16 @@ def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]:
 
 
 def init_aliases(root_ast: AstModule) -> dict[str, str]:
+    """
+    Recursive look up for all the aliases within the provided AST.
+
+    Parameters:
+        root_ast: Root module's AST.
+
+    Returns:
+        A dictionary `alias canonical path` => `resolved canonical path`.
+    """
+
     aliases = {}
     modules_seen = []
 
@@ -1079,7 +1086,7 @@ def init_aliases(root_ast: AstModule) -> dict[str, str]:
                 [*parents_wild_card, ast.canonical_path],
             )
 
-    process_entity(root_ast, root_ast.name, list())
+    process_entity(root_ast, root_ast.name, [])
     return aliases
 
 
