@@ -25,6 +25,7 @@ from griffe.docstrings.dataclasses import (DocstringSection,
                                            DocstringSectionReturns,
                                            DocstringSectionText)
 from griffe.enumerations import Kind
+from griffe.exceptions import AliasResolutionError
 from griffe.expressions import ExprName
 
 from mkdocs_py_griffe.models import (Attribute, Callable, ChildModule, Code,
@@ -100,9 +101,8 @@ class Configuration(NamedTuple):
     ```
     """
 
-SymbolKind = Literal[
-    "function", "attribute", "class", "property", "method", "module"
-]
+
+SymbolKind = Literal["function", "attribute", "class", "property", "method", "module"]
 
 
 class SymbolRef(NamedTuple):
@@ -247,6 +247,7 @@ class DocReporter:
         DocReporter.sphinx_tag_unknown = set()
         DocReporter.sphinx_links_unresolved = {}
 
+
 def canonical_path(
     ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName,
     project: Project,
@@ -260,14 +261,14 @@ def navigation_path(
 
     def get_symbol(path: str):
         base = path.replace(f"{project.root_ast.name}.", "")
-        symbol = project.all_symbols.get(base, None)
-        if symbol:
-            return symbol
+        symbol_direct = project.all_symbols.get(base, None)
+        if symbol_direct:
+            return symbol_direct
         alias = project.all_aliases.get(path, None)
         if alias:
             base = alias.replace(f"{project.root_ast.name}.", "")
-            symbol = project.all_symbols.get(base, None)
-            return symbol
+            symbol_alias = project.all_symbols.get(base, None)
+            return symbol_alias
         return None
 
     py_path = ast.canonical_path
@@ -275,7 +276,9 @@ def navigation_path(
     if py_path.startswith(project.root_ast.name):
         symbol = get_symbol(path=ast.canonical_path)
         if not symbol:
-            parent_symbol = get_symbol(path=ast.canonical_path.replace(f".{ast.name}",""))
+            parent_symbol = get_symbol(
+                path=ast.canonical_path.replace(f".{ast.name}", "")
+            )
             if parent_symbol and parent_symbol.kind == "attribute":
                 # This is when linking an instance's attribute (from implementation in declaration).
                 # We link to the parent global attribute if it exists.
@@ -376,7 +379,7 @@ def parse_module(ast: AstModule, project: Project) -> Module:
     elements = extract_module(ast=ast)
     children_modules = [
         *[parse_child_module(ast=m, project=project) for m in elements.modules],
-        *project.config.extra_modules.get(ast.canonical_path,[])
+        *project.config.extra_modules.get(ast.canonical_path, []),
     ]
     classes = [
         parse_class(ast=c, project=project) for c in elements.classes if c.has_docstring
@@ -687,10 +690,10 @@ def replace_links(text: str, parent: str, project: Project) -> str:
             nav_path = get_nav_path(tag=tag, py_path=py_path)
             return f"[{label}](@nav{project.config.base_nav}/{nav_path})"
 
-        package_name = py_path.split('.')[0]
+        package_name = py_path.split(".")[0]
         if project.config.cross_linked_packages.get(package_name, None):
             # Remove the package name from the path (e.g. 'youwol.foo.bar' => 'foo.bar')
-            relative_path = '.'.join(py_path.split('.')[1:])
+            relative_path = ".".join(py_path.split(".")[1:])
             nav_path = get_nav_path(tag=tag, py_path=relative_path)
             base_path = project.config.cross_linked_packages[package_name]
             return f"[{label}](@nav{base_path}/{nav_path})"
@@ -869,6 +872,7 @@ def find_attributes_of_type(ast: Any, target_type):
     results = []
     primitive_types = (int, float, str, bool, bytes, complex)
     visited = list()
+
     def get_attr_val(obj, attr_name) -> Any | None:
         attr_value = getattr(obj, attr_name, None)
         invalid = any(
@@ -889,7 +893,7 @@ def find_attributes_of_type(ast: Any, target_type):
         attributes = [
             get_attr_val(obj, attr_name)
             for attr_name in dir(obj)
-            if get_attr_val(obj, attr_name) and attr_name != 'parent'
+            if get_attr_val(obj, attr_name) and attr_name != "parent"
         ]
         for attr_value in attributes:
             if isinstance(attr_value, target_type):
@@ -1011,13 +1015,17 @@ def init_aliases(root_ast: AstModule) -> dict[str, str]:
     modules_seen = []
 
     def is_leaf(ast):
-        return any(isinstance(ast, C ) for C in [AstAttribute, AstClass, AstFunction])
+        return any(isinstance(ast, C) for C in [AstAttribute, AstClass, AstFunction])
 
-    def process_entity(ast: AstModule | AstAlias | AstAttribute | AstClass | AstFunction,
-                       parent_module:str,
-                       parents_wild_card: list[str]):
+    def process_entity(
+        ast: AstModule | AstAlias | AstAttribute | AstClass | AstFunction,
+        parent_module: str,
+        parents_wild_card: list[str],
+    ):
 
-        def add_import(entity: AstModule | AstAlias | AstAttribute | AstClass | AstFunction):
+        def add_import(
+            entity: AstModule | AstAlias | AstAttribute | AstClass | AstFunction,
+        ):
             aliases[f"{parent_module}.{entity.name}"] = entity.canonical_path
             for parent_wild_card in parents_wild_card:
                 aliases[f"{parent_wild_card}.{entity.name}"] = entity.canonical_path
@@ -1032,25 +1040,45 @@ def init_aliases(root_ast: AstModule) -> dict[str, str]:
                 return True
             except AliasResolutionError:
                 return False
+
         lib_members = [m for m in ast.all_members.values() if is_in_lib(m)]
 
-        modules = [m for m in lib_members if isinstance(m, AstModule) and m.canonical_path not in modules_seen]
+        modules = [
+            m
+            for m in lib_members
+            if isinstance(m, AstModule) and m.canonical_path not in modules_seen
+        ]
         for m in modules:
             modules_seen.append(m.canonical_path)
             add_import(m)
             process_entity(m, m.canonical_path, parents_wild_card)
 
-        direct_imports = [m for m in lib_members if not isinstance(m, AstAlias) and not isinstance(m, AstModule)]
+        direct_imports = [
+            m
+            for m in lib_members
+            if not isinstance(m, AstAlias) and not isinstance(m, AstModule)
+        ]
         for direct_import in direct_imports:
             process_entity(direct_import, ast.canonical_path, parents_wild_card)
 
-        direct_aliases : list[AstAlias] = [m for m in lib_members if isinstance(m, AstAlias) and not m.name.endswith('/*')]
+        direct_aliases: list[AstAlias] = [
+            m
+            for m in lib_members
+            if isinstance(m, AstAlias) and not m.name.endswith("/*")
+        ]
         for direct_alias in direct_aliases:
             add_import(direct_alias)
 
-        wild_cards_aliases : list[AstAlias] = [m for m in lib_members if isinstance(m, AstAlias) and m.name.endswith('/*')]
+        wild_cards_aliases: list[AstAlias] = [
+            m for m in lib_members if isinstance(m, AstAlias) and m.name.endswith("/*")
+        ]
         for wild_card_alias in wild_cards_aliases:
-            process_entity(wild_card_alias, wild_card_alias.canonical_path, [*parents_wild_card, ast.canonical_path] )
+            process_entity(
+                wild_card_alias,
+                wild_card_alias.canonical_path,
+                [*parents_wild_card, ast.canonical_path],
+            )
+
     process_entity(root_ast, root_ast.name, list())
     return aliases
 
@@ -1085,7 +1113,7 @@ def generate_api(root_ast: AstModule, config: Configuration):
         if target_path.exists():
             target_path.unlink()
         target_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(target_path, "w", encoding='UTF8') as json_file:
+        with open(target_path, "w", encoding="UTF8") as json_file:
             json.dump(doc, json_file, cls=DataclassJSONEncoder, indent=4)
         for child in doc.children:
             if child in config.extra_modules.get(path, []):
