@@ -2041,6 +2041,24 @@
             }
         },
         {
+            "name": "index.ts",
+            "path": "src/lib/code-api/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Auxiliary module to provide code api documentation.\n\n\nOnce 'backend' data has been generated, customization of the output is using a layer running in the\nbrowser. For now, the customization is essentially defined using css through the  attribute.\nIts purpose is to link  attribute to display options.\n\nFor instance,\n<a target='_blank'\nhref=\"/api/assets-gateway/cdn-backend/resources/QHlvdXdvbC9ta2RvY3MtdHM=/latest/assets/ts-typedoc.css\">this</a>\n is the default css file of the .",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
             "name": "documentation.view.ts",
             "path": "src/lib/code-api/documentation.view.ts",
             "documentation": {
@@ -2143,24 +2161,6 @@
                             "relations": {}
                         },
                         "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
-            }
-        },
-        {
-            "name": "index.ts",
-            "path": "src/lib/code-api/index.ts",
-            "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "Auxiliary module to provide code api documentation.\n\n\nOnce 'backend' data has been generated, customization of the output is using a layer running in the\nbrowser. For now, the customization is essentially defined using css through the  attribute.\nIts purpose is to link  attribute to display options.\n\nFor instance,\n<a target='_blank'\nhref=\"/api/assets-gateway/cdn-backend/resources/QHlvdXdvbC9ta2RvY3MtdHM=/latest/assets/ts-typedoc.css\">this</a>\n is the default css file of the .",
                         "contentType": "markdown"
                     }
                 ]
