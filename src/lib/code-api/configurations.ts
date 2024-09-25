@@ -6,7 +6,7 @@
 
 import { Project } from './models'
 import { setup } from '../../auto-generated'
-import { DisplayFactory, NotebookOptions, Scope } from '../notebook'
+import type { DisplayFactory, NotebookOptions, Scope } from '../notebook'
 
 /**
  * Specification of the configuration interface.

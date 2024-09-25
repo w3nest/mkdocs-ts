@@ -15,19 +15,19 @@
 }
 
 .mkdocs-bg-1 {
-    background-color: rgb(213, 213, 213);
+    background-color: rgb(212.5, 212.5, 212.5);
 }
 
 .mkdocs-text-4 {
-    color: rgb(213, 213, 213);
+    color: rgb(212.5, 212.5, 212.5);
 }
 
 .mkdocs-hover-bg-1:hover {
-    background-color: rgb(213, 213, 213);
+    background-color: rgb(212.5, 212.5, 212.5);
 }
 
 .mkdocs-hover-text-4:hover {
-    color: rgb(213, 213, 213);
+    color: rgb(212.5, 212.5, 212.5);
 }
 
 .mkdocs-bg-2 {
@@ -47,19 +47,19 @@
 }
 
 .mkdocs-bg-3 {
-    background-color: rgb(128, 128, 128);
+    background-color: rgb(127.5, 127.5, 127.5);
 }
 
 .mkdocs-text-2 {
-    color: rgb(128, 128, 128);
+    color: rgb(127.5, 127.5, 127.5);
 }
 
 .mkdocs-hover-bg-3:hover {
-    background-color: rgb(128, 128, 128);
+    background-color: rgb(127.5, 127.5, 127.5);
 }
 
 .mkdocs-hover-text-2:hover {
-    color: rgb(128, 128, 128);
+    color: rgb(127.5, 127.5, 127.5);
 }
 
 .mkdocs-bg-4 {
@@ -79,19 +79,19 @@
 }
 
 .mkdocs-bg-5 {
-    background-color: rgb(43, 43, 43);
+    background-color: rgb(42.5, 42.5, 42.5);
 }
 
 .mkdocs-text-0 {
-    color: rgb(43, 43, 43);
+    color: rgb(42.5, 42.5, 42.5);
 }
 
 .mkdocs-hover-bg-5:hover {
-    background-color: rgb(43, 43, 43);
+    background-color: rgb(42.5, 42.5, 42.5);
 }
 
 .mkdocs-hover-text-0:hover {
-    color: rgb(43, 43, 43);
+    color: rgb(42.5, 42.5, 42.5);
 }
 
 .mkdocs-bg-6 {
@@ -398,7 +398,7 @@
     margin: 0 0.2rem;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-color: rgb(179, 179, 179) white;
+    scrollbar-color: rgb(178.5, 178.5, 178.5) white;
     scrollbar-width: thin;
 }
 

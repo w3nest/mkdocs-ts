@@ -2,6 +2,8 @@
 Python version of the target TypeScript [models](@nav/api/CodeApi.models.ts).
 """
 
+# pylint: disable=invalid-name
+
 import dataclasses
 from typing import Optional
 
@@ -201,6 +203,7 @@ class ChildModule:
 
 
 @dataclasses.dataclass(frozen=True)
+# pylint: disable=too-many-instance-attributes
 class Module:
     """
     Module representation.

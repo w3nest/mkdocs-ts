@@ -8,6 +8,13 @@ def std_links() -> dict[str, str]:
 
     typing_url = "https://docs.python.org/3/library/typing.html"
     return {
+        "hashlib": "https://docs.python.org/3/library/hashlib.html",
+        "hashlib.sha1": "https://docs.python.org/3/library/hashlib.html#hashlib.sha1",
+        "io": "https://docs.python.org/3/library/io.html",
+        "os": "https://docs.python.org/3/library/os.html",
+        "os.getenv": "https://docs.python.org/3/library/os.html#os.getenv",
+        "typing.Protocol": "https://docs.python.org/3/library/typing.html#typing.Protocol",
+        "typing.TextIO": "https://docs.python.org/3/library/typing.html#typing.TextIO",
         "builtins": "https://docs.python.org/3/library/functions.html",
         "builtins.dict": "https://docs.python.org/3/library/functions.html#func-dict",
         "Exception": "https://docs.python.org/3/tutorial/errors.html",
@@ -46,6 +53,7 @@ def std_links() -> dict[str, str]:
         "typing.Literal": f"{typing_url}#typing.Literal",
         "typing.TypeVar": f"{typing_url}#typing.TypeVar",
         "typing.TypedDict": f"{typing_url}#typing.TypedDict",
+        "typing.Type": f"{typing_url}#typing.Type",
         "typing.Generic": "https://mypy.readthedocs.io/en/stable/generics.html",
         "asyncio.Future": "https://docs.python.org/3/library/asyncio-future.html",
         "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
@@ -59,6 +67,5 @@ def std_links() -> dict[str, str]:
         "time": "https://docs.python.org/3/library/time.html",
         "time.time": "https://docs.python.org/3/library/time.html#time.time",
         "watchdog.events.FileSystemEvent": "https://pythonhosted.org/watchdog/api.html#watchdog.events.FileSystemEvent",
-        "watchdog.events.PatternMatchingEventHandler":
-            "https://pythonhosted.org/watchdog/api.html#watchdog.events.PatternMatchingEventHandler",
+        "watchdog.events.PatternMatchingEventHandler": "https://pythonhosted.org/watchdog/api.html#watchdog.events.PatternMatchingEventHandler",
     }

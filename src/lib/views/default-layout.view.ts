@@ -58,6 +58,20 @@ export const defaultLayoutOptions = () => {
         pageXPadding: '3em',
     }
 }
+
+export type LayoutElementView = ({
+    title,
+    router,
+    displayModeNav$,
+    displayModeToc$,
+    layoutOptions,
+}: {
+    title: string | AnyVirtualDOM
+    router: Router
+    displayModeNav$: Subject<DisplayMode>
+    displayModeToc$: Subject<DisplayMode>
+    layoutOptions: LayoutOptions
+}) => AnyVirtualDOM
 /**
  * Defines the default layout:
  * *  A top banner at the top.
@@ -98,29 +112,20 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      * @param _p.name The name of the application or a VirtualDOM to display instead as title.
      * If the parameter `topBanner` is provided, this name is forwarded as `title` parameter.
      * @param _p.topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
+     * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
      */
     constructor({
         router,
         name,
         topBanner,
+        footer,
         layoutOptions,
     }: {
         router: Router
         name: string | AnyVirtualDOM
-        topBanner?: ({
-            title,
-            router,
-            displayModeNav$,
-            displayModeToc$,
-            layoutOptions,
-        }: {
-            title: string | AnyVirtualDOM
-            router: Router
-            displayModeNav$: Subject<DisplayMode>
-            displayModeToc$: Subject<DisplayMode>
-            layoutOptions: LayoutOptions
-        }) => AnyVirtualDOM
+        topBanner?: LayoutElementView
+        footer?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
     }) {
         this.layoutOptions = Object.assign(
@@ -169,20 +174,22 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             })
             resizeObserver.observe(e)
         }
+        const viewInputs = {
+            title: name,
+            router,
+            displayModeNav$: this.displayModeNav$,
+            displayModeToc$: this.displayModeToc$,
+            layoutOptions: this.layoutOptions,
+        }
         const topBannerView = topBanner
-            ? topBanner({
-                  title: name,
-                  router,
-                  displayModeNav$: this.displayModeNav$,
-                  displayModeToc$: this.displayModeToc$,
-                  layoutOptions: this.layoutOptions,
-              })
+            ? topBanner(viewInputs)
             : new TopBannerView({
                   name,
                   displayModeNav$: this.displayModeNav$,
                   displayModeToc$: this.displayModeToc$,
                   router,
               })
+        const footerView = footer ? footer(viewInputs) : new FooterView()
         this.children = [
             topBannerView,
             {
@@ -265,7 +272,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                             position: 'sticky' as const,
                             top: '100%',
                         },
-                        children: [new FooterView()],
+                        children: [footerView],
                     },
                 ],
             },

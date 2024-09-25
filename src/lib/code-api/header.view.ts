@@ -1,6 +1,6 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Semantic } from './models'
-import { headingPrefixId } from '../router'
+import { Dependencies } from './index'
 
 type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4'
 type Doc = { semantic?: Semantic; path: string; name: string }
@@ -35,7 +35,7 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
             this.doc.path.startsWith(this.relativeToPath + '.')
                 ? this.doc.path.replace(this.relativeToPath + '.', '')
                 : this.doc.path
-        this.id = `${headingPrefixId}${relativePath}`
+        this.id = `${Dependencies.headingPrefixId}${relativePath}`
         this.children = [
             {
                 tag: 'span',
