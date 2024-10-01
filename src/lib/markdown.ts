@@ -230,28 +230,6 @@ export function parseMd({
         custom.parentNode.parentNode.replaceChild(view, custom.parentNode)
     })
 
-    // Navigation links
-    const links = div.querySelectorAll('a')
-    links.forEach((link) => {
-        if (link.href.includes('@nav') && router) {
-            const path = link.href.split('@nav')[1]
-            link.href = `${router.basePath}?nav=${path}`
-            link.onclick = (e: MouseEvent) => {
-                e.preventDefault()
-                router.navigateTo({ path })
-            }
-        }
-        if (navigations) {
-            Object.entries(navigations).forEach(([k, v]) => {
-                if (link.href.includes(`@${k}`)) {
-                    link.onclick = (e: MouseEvent) => {
-                        e.preventDefault()
-                        v(link)
-                    }
-                }
-            })
-        }
-    })
     const options = {
         router,
         preprocessing,
@@ -278,7 +256,31 @@ export function parseMd({
     return {
         tag: 'div',
         children: [div],
-        connectedCallback: () => emitHtmlUpdated && router.emitHtmlUpdated(),
+        connectedCallback: (elem) => {
+            // Navigation links
+            const links = elem.querySelectorAll('a')
+            links.forEach((link) => {
+                if (link.href.includes('@nav') && router) {
+                    const path = link.href.split('@nav')[1]
+                    link.href = `${router.basePath}?nav=${path}`
+                    link.onclick = (e: MouseEvent) => {
+                        e.preventDefault()
+                        router.navigateTo({ path })
+                    }
+                }
+                if (navigations) {
+                    Object.entries(navigations).forEach(([k, v]) => {
+                        if (link.href.includes(`@${k}`)) {
+                            link.onclick = (e: MouseEvent) => {
+                                e.preventDefault()
+                                v(link)
+                            }
+                        }
+                    })
+                }
+            })
+            emitHtmlUpdated && router.emitHtmlUpdated()
+        },
     }
 }
 
