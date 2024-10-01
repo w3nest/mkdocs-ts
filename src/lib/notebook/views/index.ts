@@ -9,5 +9,6 @@
 export * from './constants'
 export * from './range'
 export * from './text'
+export * from './dropdown'
 export { CodeSnippetView as CodeSnippet } from '../../md-widgets/code-snippet.view'
 export * as Layouts from './layouts'
