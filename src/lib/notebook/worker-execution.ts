@@ -198,7 +198,7 @@ function patchPySrc({
     const footer = capturedOut.reduce((acc, e) => `${acc} "${e}": ${e},`, '')
 
     return `return async ({args, workerScope}) => {
-        const pyNamespace = pyodide.globals.get('dict')()
+        const pyNamespace = workerScope.pyNamespace || pyodide.globals.get('dict')()
         // args is the input captured variables
         Object.entries(args).forEach(([k, v]) => {
             pyNamespace.set(k, v)
@@ -211,7 +211,7 @@ ${src}
 {${footer}}
 
 \`, { globals: pyNamespace} )
-
+        workerScope.pyNamespace = pyNamespace
         return outScope.toJs({dict_converter:  Object.fromEntries})
 }`
 }

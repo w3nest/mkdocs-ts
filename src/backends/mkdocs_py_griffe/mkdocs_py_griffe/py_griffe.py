@@ -22,6 +22,7 @@ from griffe.dataclasses import Module as AstModule
 from griffe.docstrings.dataclasses import (DocstringSection,
                                            DocstringSectionAdmonition,
                                            DocstringSectionParameters,
+                                           DocstringSectionRaises,
                                            DocstringSectionReturns,
                                            DocstringSectionText)
 from griffe.enumerations import Kind
@@ -254,9 +255,7 @@ def canonical_path(
     return ast.canonical_path.replace(f"{project.root_ast.name}.", "")
 
 
-def navigation_path(
-    ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName, project: Project
-) -> str | None:
+def navigation_path(py_path: str, name: str, project: Project) -> str | None:
 
     def get_symbol(path: str):
         base = path.replace(f"{project.root_ast.name}.", "")
@@ -270,19 +269,15 @@ def navigation_path(
             return symbol_alias
         return None
 
-    py_path = ast.canonical_path
-
     if py_path.startswith(project.root_ast.name):
-        symbol = get_symbol(path=ast.canonical_path)
+        symbol = get_symbol(path=py_path)
         if not symbol:
-            parent_symbol = get_symbol(
-                path=ast.canonical_path.replace(f".{ast.name}", "")
-            )
+            parent_symbol = get_symbol(path=py_path.replace(f".{name}", ""))
             if parent_symbol and parent_symbol.kind == "attribute":
                 # This is when linking an instance's attribute (from implementation in declaration).
                 # We link to the parent global attribute if it exists.
                 return f"@nav{project.config.base_nav}/{parent_symbol.navigation_path}"
-            DocReporter.add_internal_cross_ref_error(ast.canonical_path)
+            DocReporter.add_internal_cross_ref_error(py_path)
             return None
         return f"@nav{project.config.base_nav}/{symbol.navigation_path}"
     if py_path in project.config.external_links:
@@ -290,6 +285,12 @@ def navigation_path(
 
     DocReporter.add_external_cross_ref_error(py_path)
     return None
+
+
+def navigation_path_ast(
+    ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName, project: Project
+) -> str | None:
+    return navigation_path(py_path=ast.canonical_path, name=ast.name, project=project)
 
 
 class ModuleElements(NamedTuple):
@@ -478,13 +479,18 @@ def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Ca
         or (isinstance(p, DocstringSectionAdmonition) and p.title != "Return")
     ]
     formatted = format_detailed_docstring(sections, parent=ast, project=project)
-    params_doc = parse_parameters(ast, project=project)
-    returns_doc = parse_returns(ast, project=project)
+    params_doc = parse_parameters(ast=ast, parsed=parsed, project=project)
+    returns_doc = parse_returns(ast=ast, parsed=parsed, project=project)
+    raises_doc = parse_raises(ast=ast, parsed=parsed, project=project)
 
     return Callable(
         name=ast.name,
         documentation=Documentation(
-            sections=[s for s in [*formatted.sections, returns_doc, params_doc] if s]
+            sections=[
+                s
+                for s in [*formatted.sections, returns_doc, params_doc, raises_doc]
+                if s
+            ]
         ),
         path=canonical_path(ast=ast, project=project),
         code=parse_code(ast=ast, project=project),
@@ -533,18 +539,20 @@ def parse_class(ast: AstClass, project: Project) -> Type:
     )
 
 
-def parse_parameters(ast: AstFunction, project: Project) -> DocumentationSection | None:
+def parse_parameters(
+    ast: AstFunction, parsed: list[DocstringSection], project: Project
+) -> DocumentationSection | None:
     """
     Transforms a function's parameter documentation as provided by griffe to the mkdocs-ts models.
 
     Parameters:
         ast: Griffe's function documentation.
+        parsed: parsed documentation using google style.
         project: Project description.
 
     Returns:
         The parsed model.
     """
-    parsed = get_docstring_sections(ast)
 
     params = next(
         (p for p in parsed if isinstance(p, DocstringSectionParameters)), None
@@ -570,19 +578,20 @@ def parse_parameters(ast: AstFunction, project: Project) -> DocumentationSection
     )
 
 
-def parse_returns(ast: AstFunction, project: Project) -> DocumentationSection | None:
+def parse_returns(
+    ast: AstFunction, parsed: list[DocstringSection], project: Project
+) -> DocumentationSection | None:
     """
     Transforms a function's returns documentation as provided by griffe to the mkdocs-ts models.
 
     Parameters:
         ast: Griffe's function documentation.
+        parsed: parsed documentation using google style.
         project: Project description.
 
     Returns:
         The parsed model.
     """
-
-    parsed = get_docstring_sections(ast)
 
     returns = next(
         (p for p in parsed if isinstance(p, DocstringSectionReturns)),
@@ -612,9 +621,64 @@ def parse_returns(ast: AstFunction, project: Project) -> DocumentationSection | 
     return None
 
 
+def parse_raises(
+    ast: AstFunction, parsed: list[DocstringSection], project: Project
+) -> DocumentationSection | None:
+    """
+    Transforms a function's raises documentation as provided by griffe to the mkdocs-ts models.
+
+    Parameters:
+        ast: Griffe's function documentation.
+        parsed: parsed documentation using google style.
+        project: Project description.
+
+    Returns:
+        The parsed model.
+    """
+
+    raises = next(
+        (p for p in parsed if isinstance(p, DocstringSectionRaises)),
+        None,
+    )
+    if raises:
+        try:
+
+            def format_raise(e):
+                with_links = replace_links(
+                    e.description, parent=ast.canonical_path, project=project
+                )
+                annotation = e.annotation
+                exception_nav = navigation_path(
+                    py_path=annotation.canonical_path,
+                    name=annotation.name,
+                    project=project,
+                )
+                return f"*  **<a target='_blank' href='{exception_nav}'>{annotation.name}</a>**: {with_links}"
+
+            content = functools.reduce(
+                lambda acc, e: f"{acc}\n{format_raise(e)}", raises.value, ""
+            )
+
+            return DocumentationSection(
+                title="Raises",
+                content=content,
+                contentType="Markdown",
+                semantic=Semantic(
+                    role="raises", labels=[], attributes={}, relations={}
+                ),
+            )
+        except RuntimeError as e:
+            DocReporter.add_error(
+                ast.canonical_path,
+                f"Failed to parse 'raises' of function {ast.name}: {e}",
+            )
+
+    return None
+
+
 def get_docstring_sections(
     ast: AstClass | AstFunction | AstAttribute | AstModule,
-):
+) -> list[DocstringSection]:
     if not ast.docstring and not (
         isinstance(ast, AstModule) and ast.filepath.parts[-1] != "__init__.py"
     ):
@@ -812,7 +876,7 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
     """
 
     def nav_path(e: ExprName | AstClass | AstFunction):
-        return navigation_path(ast=e, project=project)
+        return navigation_path_ast(ast=e, project=project)
 
     file_path = str(ast.filepath.relative_to(project.root_ast.filepath.parent))
     references = {}
