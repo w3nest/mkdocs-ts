@@ -20,7 +20,7 @@ The python interpreter `pyrun_backend` is used in this page:
 <js-cell>
 const {pyrun} = await webpm.install({
     backends: { 
-        modules:['pyrun_backend#^0.1.0 as pyrun'],
+        modules:['pyrun_backend#^0.2.1 as pyrun'],
         configurations: {
             pyrun_backend: {
                 build: { modules:'numpy'}
