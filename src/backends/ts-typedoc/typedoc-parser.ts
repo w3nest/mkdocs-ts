@@ -764,11 +764,16 @@ export function parseType({
             (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,
         ) || []
     const methods =
-        typedocNode.children?.filter((child) =>
-            [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(
-                child.kind,
-            ),
-        ) || []
+        typedocNode.children
+            ?.filter((child) =>
+                [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(
+                    child.kind,
+                ),
+            )
+            // For now inherited methods are only documented in the class they belong.
+            .filter(
+                (child: TypedocNode & MethodTrait) => !child.inheritedFrom,
+            ) || []
 
     const references = gather_symbol_references(typedocNode, projectGlobals)
     const doc = getSummaryDoc(documentation)

@@ -145,7 +145,16 @@ export type TypedocNode = {
     comment: Comment
     children: TypedocNode[]
 }
-
+/**
+ * Trait specific of a method.
+ */
+export type MethodTrait = SignaturesTrait & {
+    inheritedFrom?: {
+        type: string
+        target: number
+        name: string
+    }
+}
 export type SymbolId = {
     sourceFileName: string | null
     qualifiedName: string
