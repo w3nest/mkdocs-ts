@@ -9,8 +9,8 @@ import {
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { Output } from './state'
 import { parseStyle } from './display-utils'
-import { parseMd } from '../markdown'
 import { OutputMode } from './cell-views'
+import { Dependencies } from '.'
 
 /**
  * Represents deported outputs view.
@@ -179,7 +179,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             source$: outputs$,
             vdomMap: (outputs: Array<unknown>) =>
                 outputs.length === 0
-                    ? parseMd({ src: params.defaultContent })
+                    ? Dependencies.parseMd({ src: params.defaultContent })
                     : { tag: 'div' },
         }
 

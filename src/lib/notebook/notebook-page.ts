@@ -1,9 +1,10 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { parseMd, MdParsingOptions, ViewGenerator } from '../markdown'
+import type { MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
 import { Scope, State } from './state'
 import { DisplayFactory } from './display-utils'
+import { Dependencies } from './index'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -145,7 +146,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
             {
                 source$,
                 vdomMap: (src: string) => {
-                    const vdom = parseMd({
+                    const vdom = Dependencies.parseMd({
                         src,
                         router: this.router,
                         ...(this.options?.markdown || {}),

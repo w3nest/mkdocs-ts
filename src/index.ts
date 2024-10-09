@@ -38,5 +38,6 @@ export async function installNotebookModule() {
         name: 'Notebook',
         cdnClient: webpmClient,
     })
+    module.Dependencies.parseMd = parseMd
     return module
 }

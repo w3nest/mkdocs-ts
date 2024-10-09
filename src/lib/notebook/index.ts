@@ -33,3 +33,9 @@ export {
     defaultDisplayFactory,
     parseStyle,
 } from './display-utils'
+
+import type { parseMd } from '../markdown'
+
+export class Dependencies {
+    public static parseMd: typeof parseMd = undefined
+}

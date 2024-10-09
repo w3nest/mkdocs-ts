@@ -4,9 +4,10 @@ import { CellCommonAttributes, notebookViews } from './notebook-page'
 import { CellTrait, ExecArgs, Output, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, Observable, of, ReplaySubject } from 'rxjs'
-import { parseMd, MdParsingOptions } from '../markdown'
+import type { MdParsingOptions } from '../markdown'
 import { executeJsStatement } from './js-execution'
 import { DisplayFactory } from './display-utils'
+import { Dependencies } from '.'
 
 /**
  * All attributes available for a Markdown cell are the common ones for now.
@@ -204,7 +205,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
             .replace(/\${/g, '<js-inlined>')
             .replace(/}\$/g, '</js-inlined>')
 
-        const vdom = parseMd({
+        const vdom = Dependencies.parseMd({
             src: patchSrc,
             ...this.parserOptions,
             views: {
