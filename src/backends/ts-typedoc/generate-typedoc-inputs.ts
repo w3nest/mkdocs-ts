@@ -23,7 +23,11 @@ export function generateTypedocInputs(
         'bin',
         'typedoc',
     )
-    const result = spawnSync(typedoc, ['--json', output], { cwd: folder })
+    const result = spawnSync(
+        typedoc,
+        ['--json', output, '--basePath', projectFolder],
+        { cwd: folder },
+    )
 
     if (result.stdout) {
         console.log(`stdout: ${result.stdout}`)
