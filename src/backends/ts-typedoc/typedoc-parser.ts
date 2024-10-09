@@ -15,6 +15,7 @@ import {
     ProjectTrait,
     SignaturesTrait,
     SymbolTrait,
+    MethodTrait,
 } from './typedoc-models'
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -33,7 +34,7 @@ import {
     ChildModule,
 } from '../../lib/code-api'
 import fs from 'fs'
-import path from 'node:path'
+import * as pathLib from 'node:path'
 
 /**
  * Global project information.
@@ -150,7 +151,7 @@ export function generateApiFiles({
     baseNav: string
 }) {
     const projectPackageJson = fs.readFileSync(
-        path.resolve(projectFolder, 'package.json'),
+        pathLib.resolve(projectFolder, 'package.json'),
         'utf8',
     )
     // module name should not include '/', before finding a better solution
@@ -301,14 +302,16 @@ export function parseModule({
         ) {
             return fromElem
         }
-        const child = fromElem.children.find(
-            (c) =>
-                [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(
-                    c.kind,
-                ) && c.name === parts[0],
+        const modules = fromElem.children.filter((c) =>
+            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         )
-        if (child) {
-            return getModuleRec(child, parts.slice(1))
+        const targetPath = pathLib.join(...parts)
+        const children = modules.map((c) =>
+            targetPath.startsWith(c.name) ? [1 + c.name.search(/\//), c] : 0,
+        )
+        children.sort((a, b) => b[0] - a[0])
+        if (children.length > 0) {
+            return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))
         }
         throw new Error(`Module not found: ${parts.join('.')}`)
     }
