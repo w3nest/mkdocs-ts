@@ -1,3 +1,6 @@
+import base64
+from pathlib import Path
+
 from youwol.app.environment import YouwolEnvironment
 from youwol.app.routers.projects import IPipelineFactory, BrowserApp, Execution, Link, BrowserAppGraphics
 from youwol.pipelines.pipeline_typescript_weback_npm import pipeline, PipelineConfig, PublishConfig
@@ -10,13 +13,21 @@ class PipelineFactory(IPipelineFactory):
         super().__init__(**kwargs)
 
     async def get(self, _env: YouwolEnvironment, context: Context):
+
+        img_path = Path(__file__).parent.parent / 'assets' / 'logo-raw.svg'
+        svg_content = img_path.read_bytes()
+        img_base64 = base64.b64encode(svg_content).decode('utf-8')
+
         config = PipelineConfig(target=BrowserApp(
-            displayName="@youwol/rx-vdom-doc",
+            displayName="MkDocs-TS",
             execution=Execution(
                 standalone=True
             ),
             graphics=BrowserAppGraphics(
-                appIcon={'class': 'far fa-laugh-beam fa-2x'},
+                appIcon={
+                    "tag":'img',
+                    "src": f"data:image/svg+xml;base64,{img_base64}"
+                },
                 fileIcon={}
             ),
             links=[
