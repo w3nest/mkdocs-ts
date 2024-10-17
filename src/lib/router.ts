@@ -21,6 +21,7 @@ import {
     ReactiveLazyNavResolver,
 } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
+import { FuturePageView, UnresolvedPageView } from './views'
 
 /**
  * Gathers the resolved elements when navigating to a specific path.
@@ -225,7 +226,14 @@ export class Router {
         const nav = this.getNav({ path: pagePath })
         if (!nav) {
             console.log('Try to wait...')
-            setTimeout(() => this.navigateTo({ path }), this.retryNavPeriod)
+            this.currentPage$.next({
+                html: new FuturePageView(),
+            })
+            const timeoutId = setTimeout(
+                () => this.navigateTo({ path }),
+                this.retryNavPeriod,
+            )
+            this.currentPath$.subscribe(() => clearTimeout(timeoutId))
             return
         }
         // This part is to resolve the html content of the selected page.
@@ -381,6 +389,9 @@ export class Router {
                 }
 
                 if (!treePart && !tree[CatchAllKey]) {
+                    this.currentPage$.next({
+                        html: new UnresolvedPageView({ path }),
+                    })
                     throw Error(
                         `Can not find target navigation ${resolvedPath}`,
                     )
