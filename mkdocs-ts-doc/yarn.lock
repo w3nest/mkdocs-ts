@@ -1403,15 +1403,7 @@
     eslint-plugin-tsdoc "^0.2.17"
     eslint-plugin-unused-imports "^3.1.0"
 
-"@youwol/http-clients@^3.0.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@youwol/http-clients/-/http-clients-3.0.1.tgz#b1ea113d7ce0c1addd9795b61c8c4b2c3ea81cb0"
-  integrity sha512-HyBhKE9lMDb5VweF9+jzA9F3Bnd+nNq9a970yJPwWAW28oM4Csebv0vlPhPIj4IgwXKzP5AZh4lTccAICIoDsQ==
-  dependencies:
-    "@youwol/http-primitives" "^0.2.0"
-    rxjs "^7.5.6"
-
-"@youwol/http-primitives@^0.2.0", "@youwol/http-primitives@^0.2.3", "@youwol/http-primitives@^0.2.4":
+"@youwol/http-primitives@^0.2.3", "@youwol/http-primitives@^0.2.4":
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@youwol/http-primitives/-/http-primitives-0.2.5.tgz#49e54108eba3e48c3779a4ff8ef7c5422d042fe2"
   integrity sha512-uaeXOjKnlY6xDaD6TZwuGllzYpDZMIs68g37DNPTQ1O1iaPYFjjhV41g/EtQbDT6BJclYlv4jg4xqZE5h4oLqQ==
@@ -1430,13 +1422,12 @@
     jest-junit "^16.0.0"
     ts-jest "^29.1.2"
 
-"@youwol/mkdocs-ts@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.6.3.tgz#7f450ac4f3f72e44003216d7c4e3deae8d99bcc5"
-  integrity sha512-JV+QpcJ1u1Rs+op8rBJ1QmUTwBM6sf/GLvp8HbgIjqETh+bS44THeZ2nLrlJdb0SFFqFhgG/yEOpyLjxwR6w0g==
+"@youwol/mkdocs-ts@^0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@youwol/mkdocs-ts/-/mkdocs-ts-0.6.4.tgz#efee7b7aa59c28bbc07897e49ab00680174e908a"
+  integrity sha512-d7ciaTvZ5qYUDlxItLoYzvSp0ja5mWV7QmFb47OYvnFDyVnL9DlCTG2WLLBhsCr7AH9WjAE68qmUWFOSfNfljA==
   dependencies:
     "@youwol/http-primitives" "^0.2.3"
-    "@youwol/os-top-banner" "^0.2.0"
     "@youwol/rx-tree-views" "^0.3.4"
     "@youwol/rx-vdom" "^1.0.1"
     "@youwol/webpm-client" "^3.0.0"
@@ -1445,26 +1436,6 @@
     highlight.js "11.2.0"
     marked "^4.2.3"
     rxjs "^7.5.6"
-
-"@youwol/os-core@^0.2.0":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@youwol/os-core/-/os-core-0.2.1.tgz#dc54e0c8cf10df98c91178cdc0a86e6bc998a553"
-  integrity sha512-h7itWv/83XiZCfqB4Kz02SAbbHDe10ZpZADYEwXe7OEzfu/ALf9TcYdgcDClX1727/+CvyVZ9OjoZddpbph8pw==
-  dependencies:
-    "@youwol/http-clients" "^3.0.0"
-    "@youwol/http-primitives" "^0.2.0"
-    "@youwol/rx-vdom" "^1.0.1"
-    "@youwol/webpm-client" "^3.0.0"
-    rxjs "^7.5.6"
-    uuid "^8.3.2"
-
-"@youwol/os-top-banner@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@youwol/os-top-banner/-/os-top-banner-0.2.0.tgz#2423572cc271af3513655a368d02f2088afde175"
-  integrity sha512-avzrYY4pVEdPoBjpqbSc2imwDf5TOPltl1cbRObJTl6oBKfNFQGebNLHjrzBOvI1+K73UUtLcK3a/kemrebiQQ==
-  dependencies:
-    "@youwol/os-core" "^0.2.0"
-    "@youwol/rx-vdom" "^1.0.1"
 
 "@youwol/prettier-config@^1.2.1":
   version "1.2.1"

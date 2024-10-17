@@ -43,8 +43,8 @@
                 "filePath": "src/lib/notebook/notebook-page.ts",
                 "declaration": "defaultCellAttributes: CellCommonAttributes = {\n    lineNumbers: false,\n    readOnly: false,\n}",
                 "implementation": "",
-                "startLine": 30,
-                "endLine": 31,
+                "startLine": 31,
+                "endLine": 32,
                 "references": {
                     "defaultCellAttributes": "@nav/api/Notebook.defaultCellAttributes",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes"
@@ -510,7 +510,7 @@
                     "code": {
                         "filePath": "src/lib/notebook/deported-outputs-view.ts",
                         "declaration": "constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    })",
-                        "implementation": "constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    }) {\n        this.output$ = params.output$\n        if (params.inlined) {\n            this.style = { display: 'inline-block' }\n        }\n        const outputs$ = new BehaviorSubject<Output[]>([])\n        this.output$.subscribe((out: Output) => {\n            if (out === undefined) {\n                outputs$.next([])\n                return\n            }\n            outputs$.next([...outputs$.value, out])\n        })\n        const style$: AttributeLike<CSSAttribute> = {\n            source$: outputs$,\n            vdomMap: (outputs: Output[]): CSSAttribute => ({\n                backgroundColor: 'rgb(255,255,255)',\n                ...(outputs.length === 0 ? {} : params.style),\n            }),\n        }\n        const class$: AttributeLike<string> = {\n            source$: combineLatest([this.mode$, outputs$]),\n            vdomMap: ([mode, outputs]: [OutputMode, Output[]]) => {\n                if (outputs.length === 0) {\n                    return ''\n                }\n                return mode === 'normal'\n                    ? params.class\n                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`\n            },\n        }\n        const contentView: VirtualDOM<'div'> = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: {\n                source$: outputs$,\n                policy: 'sync',\n                vdomMap: (output: AnyVirtualDOM) => output,\n            },\n            onclick: (ev) => ev.stopPropagation(),\n        }\n        if (params.inlined) {\n            this.children = [contentView]\n            return\n        }\n\n        const headerView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: AnyVirtualDOM[]) => {\n                if (!params.fullScreen || outputs.length === 0) {\n                    return { tag: 'div' }\n                }\n                return {\n                    tag: 'div',\n                    class: 'w-100 d-flex pb-1',\n                    children: [\n                        { tag: 'div', class: 'flex-grow-1' },\n                        {\n                            tag: 'div',\n                            class: 'fas fa-expand fv-pointer',\n                            onclick: () => this.mode$.next('fullscreen'),\n                        },\n                    ],\n                }\n            },\n        }\n        const defaultView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: Array<unknown>) =>\n                outputs.length === 0\n                    ? parseMd({ src: params.defaultContent })\n                    : { tag: 'div' },\n        }\n\n        const displayModeStyle$: AttributeLike<CSSAttribute> = {\n            source$: this.mode$,\n            vdomMap: (mode: OutputMode) => {\n                return mode === 'normal'\n                    ? {\n                          position: 'initial',\n                          width: '100%',\n                          height: 'auto',\n                          backdropFilter: 'none',\n                      }\n                    : {\n                          position: 'absolute',\n                          top: '0vh',\n                          left: '0vw',\n                          width: '100vw',\n                          height: '100vh',\n                          zIndex: 10,\n                          backdropFilter: 'blur(2px)',\n                      }\n            },\n        }\n        this.children = [\n            headerView,\n            {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center mkdocs-bg-info',\n                style: displayModeStyle$,\n                children: [defaultView, contentView],\n                onclick: () => this.mode$.next('normal'),\n            },\n        ]\n    }",
+                        "implementation": "constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    }) {\n        this.output$ = params.output$\n        if (params.inlined) {\n            this.style = { display: 'inline-block' }\n        }\n        const outputs$ = new BehaviorSubject<Output[]>([])\n        this.output$.subscribe((out: Output) => {\n            if (out === undefined) {\n                outputs$.next([])\n                return\n            }\n            outputs$.next([...outputs$.value, out])\n        })\n        const style$: AttributeLike<CSSAttribute> = {\n            source$: outputs$,\n            vdomMap: (outputs: Output[]): CSSAttribute => ({\n                backgroundColor: 'rgb(255,255,255)',\n                ...(outputs.length === 0 ? {} : params.style),\n            }),\n        }\n        const class$: AttributeLike<string> = {\n            source$: combineLatest([this.mode$, outputs$]),\n            vdomMap: ([mode, outputs]: [OutputMode, Output[]]) => {\n                if (outputs.length === 0) {\n                    return ''\n                }\n                return mode === 'normal'\n                    ? params.class\n                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`\n            },\n        }\n        const contentView: VirtualDOM<'div'> = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: {\n                source$: outputs$,\n                policy: 'sync',\n                vdomMap: (output: AnyVirtualDOM) => output,\n            },\n            onclick: (ev) => ev.stopPropagation(),\n        }\n        if (params.inlined) {\n            this.children = [contentView]\n            return\n        }\n\n        const headerView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: AnyVirtualDOM[]) => {\n                if (!params.fullScreen || outputs.length === 0) {\n                    return { tag: 'div' }\n                }\n                return {\n                    tag: 'div',\n                    class: 'w-100 d-flex pb-1',\n                    children: [\n                        { tag: 'div', class: 'flex-grow-1' },\n                        {\n                            tag: 'div',\n                            class: 'fas fa-expand fv-pointer',\n                            onclick: () => this.mode$.next('fullscreen'),\n                        },\n                    ],\n                }\n            },\n        }\n        const defaultView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: Array<unknown>) =>\n                outputs.length === 0\n                    ? Dependencies.parseMd({ src: params.defaultContent })\n                    : { tag: 'div' },\n        }\n\n        const displayModeStyle$: AttributeLike<CSSAttribute> = {\n            source$: this.mode$,\n            vdomMap: (mode: OutputMode) => {\n                return mode === 'normal'\n                    ? {\n                          position: 'initial',\n                          width: '100%',\n                          height: 'auto',\n                          backdropFilter: 'none',\n                      }\n                    : {\n                          position: 'absolute',\n                          top: '0vh',\n                          left: '0vw',\n                          width: '100vw',\n                          height: '100vh',\n                          zIndex: 10,\n                          backdropFilter: 'blur(2px)',\n                      }\n            },\n        }\n        this.children = [\n            headerView,\n            {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center mkdocs-bg-info',\n                style: displayModeStyle$,\n                children: [defaultView, contentView],\n                onclick: () => this.mode$.next('normal'),\n            },\n        ]\n    }",
                         "startLine": 104,
                         "endLine": 218,
                         "references": {
@@ -577,7 +577,7 @@
             "code": {
                 "filePath": "src/lib/notebook/deported-outputs-view.ts",
                 "declaration": "export class DeportedOutputsView implements VirtualDOM<'div'>",
-                "implementation": "export class DeportedOutputsView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class: string = 'mknb-DeportedOutputsView'\n    public readonly children: ChildrenLike\n\n    /**\n     * The channel in which views are emitted when running the associated cell.\n     */\n    public readonly output$: Observable<Output>\n\n    public readonly style: CSSAttribute\n\n    /**\n     * The current display mode.\n     */\n    public readonly mode$ = new BehaviorSubject<OutputMode>('normal')\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `cell-output` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) => e.getAttribute('cell-id'),\n        defaultContent: (e: HTMLElement) => e.textContent,\n        fullScreen: (e: HTMLElement) =>\n            e.getAttribute('full-screen') === 'true',\n        style: (e: HTMLElement) => parseStyle(e.getAttribute('style')),\n        class: (e: HTMLElement) => e.getAttribute('class') || '',\n        inlined: (e: HTMLElement) => e.getAttribute('inlined') === 'true',\n    }\n\n    /**\n     * Initialize an instance of {@link DeportedOutputsView} from a DOM element `cell-output` in MarkDown content\n     * (the parameter `output$` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link DeportedOutputsView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.output$ The output views channel, automatically provided.\n     */\n    static FromDom({\n        elem,\n        output$,\n    }: {\n        elem: HTMLElement\n        output$: Observable<Output>\n    }) {\n        const params = {\n            cellId: DeportedOutputsView.FromDomAttributes.cellId(elem),\n            defaultContent:\n                DeportedOutputsView.FromDomAttributes.defaultContent(elem),\n            style: DeportedOutputsView.FromDomAttributes.style(elem),\n            class: DeportedOutputsView.FromDomAttributes.class(elem),\n            inlined: DeportedOutputsView.FromDomAttributes.inlined(elem),\n            fullScreen: DeportedOutputsView.FromDomAttributes.fullScreen(elem),\n        }\n        return new DeportedOutputsView({ ...params, output$ })\n    }\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from\n     * `output$`.\n     * @param params.output$ Observable over the outputs to display.\n     * @param params.fullScreen Whether to add a menu to allow expanding the output.\n     * @param params.style Style to apply to this element. It does not apply to the `defaultContent` view.\n     * @param params.classList Classes added to this element. It does not apply to the `defaultContent` view.\n     * @param params.inlined If `true`, adjust the display mode to fit as an inlined element within a text.\n     * When inlined, the option `fullScreen` is not enabled.\n     */\n    constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    }) {\n        this.output$ = params.output$\n        if (params.inlined) {\n            this.style = { display: 'inline-block' }\n        }\n        const outputs$ = new BehaviorSubject<Output[]>([])\n        this.output$.subscribe((out: Output) => {\n            if (out === undefined) {\n                outputs$.next([])\n                return\n            }\n            outputs$.next([...outputs$.value, out])\n        })\n        const style$: AttributeLike<CSSAttribute> = {\n            source$: outputs$,\n            vdomMap: (outputs: Output[]): CSSAttribute => ({\n                backgroundColor: 'rgb(255,255,255)',\n                ...(outputs.length === 0 ? {} : params.style),\n            }),\n        }\n        const class$: AttributeLike<string> = {\n            source$: combineLatest([this.mode$, outputs$]),\n            vdomMap: ([mode, outputs]: [OutputMode, Output[]]) => {\n                if (outputs.length === 0) {\n                    return ''\n                }\n                return mode === 'normal'\n                    ? params.class\n                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`\n            },\n        }\n        const contentView: VirtualDOM<'div'> = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: {\n                source$: outputs$,\n                policy: 'sync',\n                vdomMap: (output: AnyVirtualDOM) => output,\n            },\n            onclick: (ev) => ev.stopPropagation(),\n        }\n        if (params.inlined) {\n            this.children = [contentView]\n            return\n        }\n\n        const headerView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: AnyVirtualDOM[]) => {\n                if (!params.fullScreen || outputs.length === 0) {\n                    return { tag: 'div' }\n                }\n                return {\n                    tag: 'div',\n                    class: 'w-100 d-flex pb-1',\n                    children: [\n                        { tag: 'div', class: 'flex-grow-1' },\n                        {\n                            tag: 'div',\n                            class: 'fas fa-expand fv-pointer',\n                            onclick: () => this.mode$.next('fullscreen'),\n                        },\n                    ],\n                }\n            },\n        }\n        const defaultView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: Array<unknown>) =>\n                outputs.length === 0\n                    ? parseMd({ src: params.defaultContent })\n                    : { tag: 'div' },\n        }\n\n        const displayModeStyle$: AttributeLike<CSSAttribute> = {\n            source$: this.mode$,\n            vdomMap: (mode: OutputMode) => {\n                return mode === 'normal'\n                    ? {\n                          position: 'initial',\n                          width: '100%',\n                          height: 'auto',\n                          backdropFilter: 'none',\n                      }\n                    : {\n                          position: 'absolute',\n                          top: '0vh',\n                          left: '0vw',\n                          width: '100vw',\n                          height: '100vh',\n                          zIndex: 10,\n                          backdropFilter: 'blur(2px)',\n                      }\n            },\n        }\n        this.children = [\n            headerView,\n            {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center mkdocs-bg-info',\n                style: displayModeStyle$,\n                children: [defaultView, contentView],\n                onclick: () => this.mode$.next('normal'),\n            },\n        ]\n    }\n}",
+                "implementation": "export class DeportedOutputsView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class: string = 'mknb-DeportedOutputsView'\n    public readonly children: ChildrenLike\n\n    /**\n     * The channel in which views are emitted when running the associated cell.\n     */\n    public readonly output$: Observable<Output>\n\n    public readonly style: CSSAttribute\n\n    /**\n     * The current display mode.\n     */\n    public readonly mode$ = new BehaviorSubject<OutputMode>('normal')\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `cell-output` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) => e.getAttribute('cell-id'),\n        defaultContent: (e: HTMLElement) => e.textContent,\n        fullScreen: (e: HTMLElement) =>\n            e.getAttribute('full-screen') === 'true',\n        style: (e: HTMLElement) => parseStyle(e.getAttribute('style')),\n        class: (e: HTMLElement) => e.getAttribute('class') || '',\n        inlined: (e: HTMLElement) => e.getAttribute('inlined') === 'true',\n    }\n\n    /**\n     * Initialize an instance of {@link DeportedOutputsView} from a DOM element `cell-output` in MarkDown content\n     * (the parameter `output$` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link DeportedOutputsView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.output$ The output views channel, automatically provided.\n     */\n    static FromDom({\n        elem,\n        output$,\n    }: {\n        elem: HTMLElement\n        output$: Observable<Output>\n    }) {\n        const params = {\n            cellId: DeportedOutputsView.FromDomAttributes.cellId(elem),\n            defaultContent:\n                DeportedOutputsView.FromDomAttributes.defaultContent(elem),\n            style: DeportedOutputsView.FromDomAttributes.style(elem),\n            class: DeportedOutputsView.FromDomAttributes.class(elem),\n            inlined: DeportedOutputsView.FromDomAttributes.inlined(elem),\n            fullScreen: DeportedOutputsView.FromDomAttributes.fullScreen(elem),\n        }\n        return new DeportedOutputsView({ ...params, output$ })\n    }\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from\n     * `output$`.\n     * @param params.output$ Observable over the outputs to display.\n     * @param params.fullScreen Whether to add a menu to allow expanding the output.\n     * @param params.style Style to apply to this element. It does not apply to the `defaultContent` view.\n     * @param params.classList Classes added to this element. It does not apply to the `defaultContent` view.\n     * @param params.inlined If `true`, adjust the display mode to fit as an inlined element within a text.\n     * When inlined, the option `fullScreen` is not enabled.\n     */\n    constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    }) {\n        this.output$ = params.output$\n        if (params.inlined) {\n            this.style = { display: 'inline-block' }\n        }\n        const outputs$ = new BehaviorSubject<Output[]>([])\n        this.output$.subscribe((out: Output) => {\n            if (out === undefined) {\n                outputs$.next([])\n                return\n            }\n            outputs$.next([...outputs$.value, out])\n        })\n        const style$: AttributeLike<CSSAttribute> = {\n            source$: outputs$,\n            vdomMap: (outputs: Output[]): CSSAttribute => ({\n                backgroundColor: 'rgb(255,255,255)',\n                ...(outputs.length === 0 ? {} : params.style),\n            }),\n        }\n        const class$: AttributeLike<string> = {\n            source$: combineLatest([this.mode$, outputs$]),\n            vdomMap: ([mode, outputs]: [OutputMode, Output[]]) => {\n                if (outputs.length === 0) {\n                    return ''\n                }\n                return mode === 'normal'\n                    ? params.class\n                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`\n            },\n        }\n        const contentView: VirtualDOM<'div'> = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: {\n                source$: outputs$,\n                policy: 'sync',\n                vdomMap: (output: AnyVirtualDOM) => output,\n            },\n            onclick: (ev) => ev.stopPropagation(),\n        }\n        if (params.inlined) {\n            this.children = [contentView]\n            return\n        }\n\n        const headerView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: AnyVirtualDOM[]) => {\n                if (!params.fullScreen || outputs.length === 0) {\n                    return { tag: 'div' }\n                }\n                return {\n                    tag: 'div',\n                    class: 'w-100 d-flex pb-1',\n                    children: [\n                        { tag: 'div', class: 'flex-grow-1' },\n                        {\n                            tag: 'div',\n                            class: 'fas fa-expand fv-pointer',\n                            onclick: () => this.mode$.next('fullscreen'),\n                        },\n                    ],\n                }\n            },\n        }\n        const defaultView: ChildLike = {\n            source$: outputs$,\n            vdomMap: (outputs: Array<unknown>) =>\n                outputs.length === 0\n                    ? Dependencies.parseMd({ src: params.defaultContent })\n                    : { tag: 'div' },\n        }\n\n        const displayModeStyle$: AttributeLike<CSSAttribute> = {\n            source$: this.mode$,\n            vdomMap: (mode: OutputMode) => {\n                return mode === 'normal'\n                    ? {\n                          position: 'initial',\n                          width: '100%',\n                          height: 'auto',\n                          backdropFilter: 'none',\n                      }\n                    : {\n                          position: 'absolute',\n                          top: '0vh',\n                          left: '0vw',\n                          width: '100vw',\n                          height: '100vh',\n                          zIndex: 10,\n                          backdropFilter: 'blur(2px)',\n                      }\n            },\n        }\n        this.children = [\n            headerView,\n            {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center mkdocs-bg-info',\n                style: displayModeStyle$,\n                children: [defaultView, contentView],\n                onclick: () => this.mode$.next('normal'),\n            },\n        ]\n    }\n}",
                 "startLine": 21,
                 "endLine": 219,
                 "references": {
@@ -1757,49 +1757,6 @@
                     }
                 },
                 {
-                    "name": "execute",
-                    "documentation": {
-                        "sections": [
-                            {
-                                "content": "Execute the cell. See  [execute](@nav/api/Notebook.JsCellExecutor.execute) .",
-                                "contentType": "markdown",
-                                "semantic": {
-                                    "role": "",
-                                    "labels": [],
-                                    "attributes": {},
-                                    "relations": {}
-                                }
-                            },
-                            {
-                                "title": "Arguments",
-                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .",
-                                "contentType": "markdown",
-                                "semantic": {
-                                    "role": "arguments",
-                                    "labels": [],
-                                    "attributes": {},
-                                    "relations": {}
-                                }
-                            }
-                        ]
-                    },
-                    "path": "JsCellView.execute",
-                    "code": {
-                        "filePath": "",
-                        "declaration": "",
-                        "implementation": "",
-                        "startLine": 1,
-                        "endLine": 2,
-                        "references": {}
-                    },
-                    "semantic": {
-                        "role": "method",
-                        "labels": [],
-                        "attributes": {},
-                        "relations": {}
-                    }
-                },
-                {
                     "name": "FromDom",
                     "documentation": {
                         "sections": [
@@ -1926,8 +1883,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly cellAttributes: MdCellAttributes",
                         "implementation": "",
-                        "startLine": 72,
-                        "endLine": 73,
+                        "startLine": 73,
+                        "endLine": 74,
                         "references": {
                             "cellAttributes": "@nav/api/Notebook.MdCellView.cellAttributes",
                             "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes"
@@ -1961,8 +1918,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly cellId: string",
                         "implementation": "",
-                        "startLine": 68,
-                        "endLine": 69,
+                        "startLine": 69,
+                        "endLine": 70,
                         "references": {
                             "cellId": "@nav/api/Notebook.MdCellView.cellId",
                             "CellTrait.cellId": "@nav/api/Notebook.CellTrait.cellId"
@@ -1996,8 +1953,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly class = 'mknb-MdCellView'",
                         "implementation": "",
-                        "startLine": 63,
-                        "endLine": 64,
+                        "startLine": 64,
+                        "endLine": 65,
                         "references": {
                             "class": "@nav/api/Notebook.MdCellView.class",
                             "VirtualDOM.class": "-1"
@@ -2031,8 +1988,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly content$: BehaviorSubject<string>",
                         "implementation": "",
-                        "startLine": 84,
-                        "endLine": 85,
+                        "startLine": 85,
+                        "endLine": 86,
                         "references": {
                             "content$": "@nav/api/Notebook.MdCellView.content$",
                             "CellTrait.content$": "@nav/api/Notebook.CellTrait.content$"
@@ -2066,8 +2023,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly editorView: CodeSnippetView",
                         "implementation": "",
-                        "startLine": 80,
-                        "endLine": 81,
+                        "startLine": 81,
+                        "endLine": 82,
                         "references": {
                             "editorView": "@nav/api/Notebook.MdCellView.editorView",
                             "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView"
@@ -2101,8 +2058,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly invalidated$: Observable<unknown>",
                         "implementation": "",
-                        "startLine": 93,
-                        "endLine": 94,
+                        "startLine": 94,
+                        "endLine": 95,
                         "references": {
                             "invalidated$": "@nav/api/Notebook.MdCellView.invalidated$"
                         }
@@ -2135,8 +2092,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly parserOptions: MdParsingOptions",
                         "implementation": "",
-                        "startLine": 89,
-                        "endLine": 90,
+                        "startLine": 90,
+                        "endLine": 91,
                         "references": {
                             "parserOptions": "@nav/api/Notebook.MdCellView.parserOptions",
                             "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions"
@@ -2170,8 +2127,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "public readonly state: State",
                         "implementation": "",
-                        "startLine": 76,
-                        "endLine": 77,
+                        "startLine": 77,
+                        "endLine": 78,
                         "references": {
                             "state": "@nav/api/Notebook.MdCellView.state",
                             "State": "@nav/api/Notebook.State"
@@ -2205,8 +2162,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n    }",
                         "implementation": "",
-                        "startLine": 103,
-                        "endLine": 104,
+                        "startLine": 104,
+                        "endLine": 105,
                         "references": {
                             "FromDomAttributes": "@nav/api/Notebook.MdCellView.FromDomAttributes"
                         }
@@ -2246,8 +2203,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        parserOptions: MdParsingOptions\n        cellAttributes: MdCellAttributes\n    })",
                         "implementation": "constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        parserOptions: MdParsingOptions\n        cellAttributes: MdCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: 'markdown',\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: 'markdown',\n                cellId: this.cellId,\n                state: this.state,\n                editorView: this.editorView,\n                cellAttributes: this.cellAttributes,\n                reactive$: of(false),\n            }),\n        ]\n    }",
-                        "startLine": 154,
-                        "endLine": 184,
+                        "startLine": 155,
+                        "endLine": 185,
                         "references": {
                             "new MdCellView": "@nav/api/Notebook.MdCellView.constructor",
                             "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes",
@@ -2294,9 +2251,9 @@
                     "code": {
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "async execute({\n        scope,\n        owningState,\n        cellId,\n        src,\n        displayFactory,\n        output$,\n    }: ExecArgs): Promise<Scope>",
-                        "implementation": "async execute({\n        scope,\n        owningState,\n        cellId,\n        src,\n        displayFactory,\n        output$,\n    }: ExecArgs): Promise<Scope> {\n        const state = new State({\n            initialScope: scope,\n            parent: { state: owningState, cellId },\n            router: this.state.router,\n        })\n        const patchSrc = src\n            .replace(/\\${/g, '<js-inlined>')\n            .replace(/}\\$/g, '</js-inlined>')\n\n        const vdom = parseMd({\n            src: patchSrc,\n            ...this.parserOptions,\n            views: {\n                'js-inlined': (elem) => {\n                    return new InlinedCode({\n                        src: elem.textContent,\n                        scope,\n                        displayFactory,\n                        invalidated$: this.invalidated$,\n                    })\n                },\n                ...notebookViews({\n                    state: state,\n                }),\n            },\n        })\n        output$.next(vdom)\n        return await state.execute(state.ids.slice(-1)[0])\n    }",
-                        "startLine": 190,
-                        "endLine": 227,
+                        "implementation": "async execute({\n        scope,\n        owningState,\n        cellId,\n        src,\n        displayFactory,\n        output$,\n    }: ExecArgs): Promise<Scope> {\n        const state = new State({\n            initialScope: scope,\n            parent: { state: owningState, cellId },\n            router: this.state.router,\n        })\n        const patchSrc = src\n            .replace(/\\${/g, '<js-inlined>')\n            .replace(/}\\$/g, '</js-inlined>')\n\n        const vdom = Dependencies.parseMd({\n            src: patchSrc,\n            ...this.parserOptions,\n            views: {\n                'js-inlined': (elem) => {\n                    return new InlinedCode({\n                        src: elem.textContent,\n                        scope,\n                        displayFactory,\n                        invalidated$: this.invalidated$,\n                    })\n                },\n                ...notebookViews({\n                    state: state,\n                }),\n            },\n        })\n        output$.next(vdom)\n        return await state.execute(state.ids.slice(-1)[0])\n    }",
+                        "startLine": 191,
+                        "endLine": 228,
                         "references": {
                             "execute": "@nav/api/Notebook.MdCellView.execute",
                             "ExecArgs": "@nav/api/Notebook.ExecArgs",
@@ -2342,8 +2299,8 @@
                         "filePath": "src/lib/notebook/md-cell-view.ts",
                         "declaration": "static FromDom({\n        elem,\n        parserOptions,\n        state,\n    }: {\n        elem: HTMLElement\n        parserOptions: MdParsingOptions\n        state: State\n    })",
                         "implementation": "static FromDom({\n        elem,\n        parserOptions,\n        state,\n    }: {\n        elem: HTMLElement\n        parserOptions: MdParsingOptions\n        state: State\n    }) {\n        const params = {\n            cellId: MdCellView.FromDomAttributes.cellId(elem),\n            content: MdCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: MdCellView.FromDomAttributes.readOnly(elem),\n                lineNumber: MdCellView.FromDomAttributes.lineNumber(elem),\n            },\n        }\n        return new MdCellView({ ...params, parserOptions, state })\n    }",
-                        "startLine": 125,
-                        "endLine": 144,
+                        "startLine": 126,
+                        "endLine": 145,
                         "references": {
                             "FromDom": "@nav/api/Notebook.MdCellView.FromDom",
                             "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
@@ -2362,9 +2319,9 @@
             "code": {
                 "filePath": "src/lib/notebook/md-cell-view.ts",
                 "declaration": "export class MdCellView implements VirtualDOM<'div'>, CellTrait",
-                "implementation": "export class MdCellView implements VirtualDOM<'div'>, CellTrait {\n    public readonly tag = 'div'\n    /**\n     * Classes associated with the view.\n     */\n    public readonly class = 'mknb-MdCellView'\n    public readonly children: ChildrenLike\n    /**\n     * Cell's ID.\n     */\n    public readonly cellId: string\n    /**\n     * Cell's Attributes.\n     */\n    public readonly cellAttributes: MdCellAttributes\n    /**\n     * State manager, owned by the parent {@link NotebookPage}.\n     */\n    public readonly state: State\n    /**\n     * Encapsulated editor view.\n     */\n    public readonly editorView: CodeSnippetView\n    /**\n     * Observable over the source content of the cell.\n     */\n    public readonly content$: BehaviorSubject<string>\n\n    /**\n     * Options for parsing MarkDown code.\n     */\n    public readonly parserOptions: MdParsingOptions\n    /**\n     * Emit when the cell is invalidated.\n     */\n    public readonly invalidated$: Observable<unknown>\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `md-cell` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n    }\n    /**\n     * Initialize an instance of {@link MdCellView} from a DOM element `md-cell` in MarkDown content\n     *  (the parameter `state` & `parserOptions` are automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link MdCellView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.parserOptions MarkDown parsing options.\n     * @param _p.state The page state.\n     */\n    static FromDom({\n        elem,\n        parserOptions,\n        state,\n    }: {\n        elem: HTMLElement\n        parserOptions: MdParsingOptions\n        state: State\n    }) {\n        const params = {\n            cellId: MdCellView.FromDomAttributes.cellId(elem),\n            content: MdCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: MdCellView.FromDomAttributes.readOnly(elem),\n                lineNumber: MdCellView.FromDomAttributes.lineNumber(elem),\n            },\n        }\n        return new MdCellView({ ...params, parserOptions, state })\n    }\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.cellId The cell's ID.\n     * @param params.content The cell's content.\n     * @param params.state The page's state.\n     * @param params.parserOptions MarkDown parsing options.\n     * @param params.cellAttributes Cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        parserOptions: MdParsingOptions\n        cellAttributes: MdCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: 'markdown',\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: 'markdown',\n                cellId: this.cellId,\n                state: this.state,\n                editorView: this.editorView,\n                cellAttributes: this.cellAttributes,\n                reactive$: of(false),\n            }),\n        ]\n    }\n\n    /**\n     * Execute the cell. Because markdown cell can include other cells, this function own a dedicated {@link State}).\n     *\n     * @param args See {@link ExecArgs}.\n     */\n    async execute({\n        scope,\n        owningState,\n        cellId,\n        src,\n        displayFactory,\n        output$,\n    }: ExecArgs): Promise<Scope> {\n        const state = new State({\n            initialScope: scope,\n            parent: { state: owningState, cellId },\n            router: this.state.router,\n        })\n        const patchSrc = src\n            .replace(/\\${/g, '<js-inlined>')\n            .replace(/}\\$/g, '</js-inlined>')\n\n        const vdom = parseMd({\n            src: patchSrc,\n            ...this.parserOptions,\n            views: {\n                'js-inlined': (elem) => {\n                    return new InlinedCode({\n                        src: elem.textContent,\n                        scope,\n                        displayFactory,\n                        invalidated$: this.invalidated$,\n                    })\n                },\n                ...notebookViews({\n                    state: state,\n                }),\n            },\n        })\n        output$.next(vdom)\n        return await state.execute(state.ids.slice(-1)[0])\n    }\n}",
-                "startLine": 58,
-                "endLine": 228,
+                "implementation": "export class MdCellView implements VirtualDOM<'div'>, CellTrait {\n    public readonly tag = 'div'\n    /**\n     * Classes associated with the view.\n     */\n    public readonly class = 'mknb-MdCellView'\n    public readonly children: ChildrenLike\n    /**\n     * Cell's ID.\n     */\n    public readonly cellId: string\n    /**\n     * Cell's Attributes.\n     */\n    public readonly cellAttributes: MdCellAttributes\n    /**\n     * State manager, owned by the parent {@link NotebookPage}.\n     */\n    public readonly state: State\n    /**\n     * Encapsulated editor view.\n     */\n    public readonly editorView: CodeSnippetView\n    /**\n     * Observable over the source content of the cell.\n     */\n    public readonly content$: BehaviorSubject<string>\n\n    /**\n     * Options for parsing MarkDown code.\n     */\n    public readonly parserOptions: MdParsingOptions\n    /**\n     * Emit when the cell is invalidated.\n     */\n    public readonly invalidated$: Observable<unknown>\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `md-cell` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) =>\n            e.getAttribute('cell-id') || e.getAttribute('id'),\n        content: (e: HTMLElement) => e.textContent,\n        readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',\n        lineNumber: (e: HTMLElement) =>\n            e.getAttribute('line-number') === 'true',\n    }\n    /**\n     * Initialize an instance of {@link MdCellView} from a DOM element `md-cell` in MarkDown content\n     *  (the parameter `state` & `parserOptions` are automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link MdCellView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.parserOptions MarkDown parsing options.\n     * @param _p.state The page state.\n     */\n    static FromDom({\n        elem,\n        parserOptions,\n        state,\n    }: {\n        elem: HTMLElement\n        parserOptions: MdParsingOptions\n        state: State\n    }) {\n        const params = {\n            cellId: MdCellView.FromDomAttributes.cellId(elem),\n            content: MdCellView.FromDomAttributes.content(elem),\n            cellAttributes: {\n                readOnly: MdCellView.FromDomAttributes.readOnly(elem),\n                lineNumber: MdCellView.FromDomAttributes.lineNumber(elem),\n            },\n        }\n        return new MdCellView({ ...params, parserOptions, state })\n    }\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.cellId The cell's ID.\n     * @param params.content The cell's content.\n     * @param params.state The page's state.\n     * @param params.parserOptions MarkDown parsing options.\n     * @param params.cellAttributes Cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        content: string\n        state: State\n        parserOptions: MdParsingOptions\n        cellAttributes: MdCellAttributes\n    }) {\n        Object.assign(this, params)\n        this.invalidated$ = this.state.invalidated$.pipe(\n            filter((cellId) => cellId === this.cellId),\n        )\n        this.editorView = new SnippetEditorView({\n            language: 'markdown',\n            readOnly: false,\n            content: params.content,\n            lineNumbers: this.cellAttributes.lineNumbers,\n            onExecute: () => this.state.execute(this.cellId).then(() => {}),\n        })\n        this.content$ = this.editorView.content$\n        this.children = [\n            new FutureCellView({\n                language: 'markdown',\n                cellId: this.cellId,\n                state: this.state,\n                editorView: this.editorView,\n                cellAttributes: this.cellAttributes,\n                reactive$: of(false),\n            }),\n        ]\n    }\n\n    /**\n     * Execute the cell. Because markdown cell can include other cells, this function own a dedicated {@link State}).\n     *\n     * @param args See {@link ExecArgs}.\n     */\n    async execute({\n        scope,\n        owningState,\n        cellId,\n        src,\n        displayFactory,\n        output$,\n    }: ExecArgs): Promise<Scope> {\n        const state = new State({\n            initialScope: scope,\n            parent: { state: owningState, cellId },\n            router: this.state.router,\n        })\n        const patchSrc = src\n            .replace(/\\${/g, '<js-inlined>')\n            .replace(/}\\$/g, '</js-inlined>')\n\n        const vdom = Dependencies.parseMd({\n            src: patchSrc,\n            ...this.parserOptions,\n            views: {\n                'js-inlined': (elem) => {\n                    return new InlinedCode({\n                        src: elem.textContent,\n                        scope,\n                        displayFactory,\n                        invalidated$: this.invalidated$,\n                    })\n                },\n                ...notebookViews({\n                    state: state,\n                }),\n            },\n        })\n        output$.next(vdom)\n        return await state.execute(state.ids.slice(-1)[0])\n    }\n}",
+                "startLine": 59,
+                "endLine": 229,
                 "references": {
                     "MdCellView": "@nav/api/Notebook.MdCellView",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes",
@@ -2434,8 +2391,8 @@
                         "filePath": "src/lib/notebook/notebook-page.ts",
                         "declaration": "public readonly class = 'mknb-NotebookPage'",
                         "implementation": "",
-                        "startLine": 90,
-                        "endLine": 91,
+                        "startLine": 91,
+                        "endLine": 92,
                         "references": {
                             "class": "@nav/api/Notebook.NotebookPage.class",
                             "VirtualDOM.class": "-1"
@@ -2469,8 +2426,8 @@
                         "filePath": "src/lib/notebook/notebook-page.ts",
                         "declaration": "public readonly state: State",
                         "implementation": "",
-                        "startLine": 99,
-                        "endLine": 100,
+                        "startLine": 100,
+                        "endLine": 101,
                         "references": {
                             "state": "@nav/api/Notebook.NotebookPage.state",
                             "State": "@nav/api/Notebook.State"
@@ -2510,9 +2467,9 @@
                     "code": {
                         "filePath": "src/lib/notebook/notebook-page.ts",
                         "declaration": "constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    })",
-                        "implementation": "constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    }) {\n        Object.assign(this, params)\n        if (params.src === undefined && params.url === undefined) {\n            console.error(\n                'Neither url or src parameter provided to the notebook page.',\n            )\n            return\n        }\n        this.state = new State({\n            router: this.router,\n            displayFactory: params.displayFactory,\n            initialScope: params.initialScope,\n        })\n\n        const source$ =\n            params.src !== undefined\n                ? of(params.src)\n                : from(fetch(this.url).then((resp) => resp.text())).pipe(\n                      take(1),\n                  )\n\n        this.children = [\n            {\n                source$,\n                vdomMap: (src: string) => {\n                    const vdom = parseMd({\n                        src,\n                        router: this.router,\n                        ...(this.options?.markdown || {}),\n                        views: {\n                            ...(this.options?.markdown?.views || {}),\n                            ...notebookViews({\n                                state: this.state,\n                            }),\n                        },\n                    })\n                    if (params?.options?.runAtStart) {\n                        this.state.execute(this.state.ids.slice(-1)[0]).then()\n                    }\n                    return vdom\n                },\n            },\n        ]\n    }",
-                        "startLine": 116,
-                        "endLine": 167,
+                        "implementation": "constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    }) {\n        Object.assign(this, params)\n        if (params.src === undefined && params.url === undefined) {\n            console.error(\n                'Neither url or src parameter provided to the notebook page.',\n            )\n            return\n        }\n        this.state = new State({\n            router: this.router,\n            displayFactory: params.displayFactory,\n            initialScope: params.initialScope,\n        })\n\n        const source$ =\n            params.src !== undefined\n                ? of(params.src)\n                : from(fetch(this.url).then((resp) => resp.text())).pipe(\n                      take(1),\n                  )\n\n        this.children = [\n            {\n                source$,\n                vdomMap: (src: string) => {\n                    const vdom = Dependencies.parseMd({\n                        src,\n                        router: this.router,\n                        ...(this.options?.markdown || {}),\n                        views: {\n                            ...(this.options?.markdown?.views || {}),\n                            ...notebookViews({\n                                state: this.state,\n                            }),\n                        },\n                    })\n                    if (params?.options?.runAtStart) {\n                        this.state.execute(this.state.ids.slice(-1)[0]).then()\n                    }\n                    return vdom\n                },\n            },\n        ]\n    }",
+                        "startLine": 117,
+                        "endLine": 168,
                         "references": {
                             "new NotebookPage": "@nav/api/Notebook.NotebookPage.constructor",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -2533,9 +2490,9 @@
             "code": {
                 "filePath": "src/lib/notebook/notebook-page.ts",
                 "declaration": "export class NotebookPage implements VirtualDOM<'div'>",
-                "implementation": "export class NotebookPage implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = 'mknb-NotebookPage'\n    public readonly url: string\n    public readonly views: { [k: string]: ViewGenerator }\n    public readonly router: Router\n    public readonly children: ChildrenLike = []\n\n    /**\n     * State manager.\n     */\n    public readonly state: State\n\n    public readonly options: NotebookOptions\n\n    /**\n     * Constructs the page.\n     *\n     * @param params The parameters\n     * @param params.url Url pointing to the markdown content, only used if the `src` attribute is not provided.\n     * @param params.src Markdown source content. To fetch from a URL leave it empty & provide instead\n     * the `url` attribute.\n     * @param params.router Application's router.\n     * @param params.initialScope Initial scope provided to the first executing cell.\n     * @param params.displayFactory Additional custom {@link DisplayFactory} invoked when `display` is used.\n     * @param params.options Global options for the page, in particular defined the default attribute for the various\n     * cells.\n     */\n    constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    }) {\n        Object.assign(this, params)\n        if (params.src === undefined && params.url === undefined) {\n            console.error(\n                'Neither url or src parameter provided to the notebook page.',\n            )\n            return\n        }\n        this.state = new State({\n            router: this.router,\n            displayFactory: params.displayFactory,\n            initialScope: params.initialScope,\n        })\n\n        const source$ =\n            params.src !== undefined\n                ? of(params.src)\n                : from(fetch(this.url).then((resp) => resp.text())).pipe(\n                      take(1),\n                  )\n\n        this.children = [\n            {\n                source$,\n                vdomMap: (src: string) => {\n                    const vdom = parseMd({\n                        src,\n                        router: this.router,\n                        ...(this.options?.markdown || {}),\n                        views: {\n                            ...(this.options?.markdown?.views || {}),\n                            ...notebookViews({\n                                state: this.state,\n                            }),\n                        },\n                    })\n                    if (params?.options?.runAtStart) {\n                        this.state.execute(this.state.ids.slice(-1)[0]).then()\n                    }\n                    return vdom\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 85,
-                "endLine": 168,
+                "implementation": "export class NotebookPage implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = 'mknb-NotebookPage'\n    public readonly url: string\n    public readonly views: { [k: string]: ViewGenerator }\n    public readonly router: Router\n    public readonly children: ChildrenLike = []\n\n    /**\n     * State manager.\n     */\n    public readonly state: State\n\n    public readonly options: NotebookOptions\n\n    /**\n     * Constructs the page.\n     *\n     * @param params The parameters\n     * @param params.url Url pointing to the markdown content, only used if the `src` attribute is not provided.\n     * @param params.src Markdown source content. To fetch from a URL leave it empty & provide instead\n     * the `url` attribute.\n     * @param params.router Application's router.\n     * @param params.initialScope Initial scope provided to the first executing cell.\n     * @param params.displayFactory Additional custom {@link DisplayFactory} invoked when `display` is used.\n     * @param params.options Global options for the page, in particular defined the default attribute for the various\n     * cells.\n     */\n    constructor(params: {\n        url?: string\n        src?: string\n        router: Router\n        initialScope?: Partial<Scope>\n        displayFactory?: DisplayFactory\n        options?: NotebookOptions\n    }) {\n        Object.assign(this, params)\n        if (params.src === undefined && params.url === undefined) {\n            console.error(\n                'Neither url or src parameter provided to the notebook page.',\n            )\n            return\n        }\n        this.state = new State({\n            router: this.router,\n            displayFactory: params.displayFactory,\n            initialScope: params.initialScope,\n        })\n\n        const source$ =\n            params.src !== undefined\n                ? of(params.src)\n                : from(fetch(this.url).then((resp) => resp.text())).pipe(\n                      take(1),\n                  )\n\n        this.children = [\n            {\n                source$,\n                vdomMap: (src: string) => {\n                    const vdom = Dependencies.parseMd({\n                        src,\n                        router: this.router,\n                        ...(this.options?.markdown || {}),\n                        views: {\n                            ...(this.options?.markdown?.views || {}),\n                            ...notebookViews({\n                                state: this.state,\n                            }),\n                        },\n                    })\n                    if (params?.options?.runAtStart) {\n                        this.state.execute(this.state.ids.slice(-1)[0]).then()\n                    }\n                    return vdom\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 86,
+                "endLine": 169,
                 "references": {
                     "NotebookPage": "@nav/api/Notebook.NotebookPage",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -3248,49 +3205,6 @@
                     }
                 },
                 {
-                    "name": "execute",
-                    "documentation": {
-                        "sections": [
-                            {
-                                "content": "Execute the cell. See  [executePy](undefined) .",
-                                "contentType": "markdown",
-                                "semantic": {
-                                    "role": "",
-                                    "labels": [],
-                                    "attributes": {},
-                                    "relations": {}
-                                }
-                            },
-                            {
-                                "title": "Arguments",
-                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .",
-                                "contentType": "markdown",
-                                "semantic": {
-                                    "role": "arguments",
-                                    "labels": [],
-                                    "attributes": {},
-                                    "relations": {}
-                                }
-                            }
-                        ]
-                    },
-                    "path": "PyCellView.execute",
-                    "code": {
-                        "filePath": "",
-                        "declaration": "",
-                        "implementation": "",
-                        "startLine": 1,
-                        "endLine": 2,
-                        "references": {}
-                    },
-                    "semantic": {
-                        "role": "method",
-                        "labels": [],
-                        "attributes": {},
-                        "relations": {}
-                    }
-                },
-                {
                     "name": "FromDom",
                     "documentation": {
                         "sections": [
@@ -3674,8 +3588,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly cellIds$ = new BehaviorSubject<string[]>([])",
                         "implementation": "",
-                        "startLine": 165,
-                        "endLine": 166,
+                        "startLine": 166,
+                        "endLine": 167,
                         "references": {
                             "cellIds$": "@nav/api/Notebook.State.cellIds$"
                         }
@@ -3708,8 +3622,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly cells: CellTrait[] = []",
                         "implementation": "",
-                        "startLine": 184,
-                        "endLine": 185,
+                        "startLine": 185,
+                        "endLine": 186,
                         "references": {
                             "cells": "@nav/api/Notebook.State.cells",
                             "CellTrait": "@nav/api/Notebook.CellTrait"
@@ -3743,8 +3657,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =\n        {}",
                         "implementation": "",
-                        "startLine": 159,
-                        "endLine": 160,
+                        "startLine": 160,
+                        "endLine": 161,
                         "references": {
                             "cellsStatus$": "@nav/api/Notebook.State.cellsStatus$",
                             "CellStatus": "@nav/api/Notebook.CellStatus"
@@ -3778,8 +3692,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly deportedOutputsViews: string[] = []",
                         "implementation": "",
-                        "startLine": 175,
-                        "endLine": 176,
+                        "startLine": 176,
+                        "endLine": 177,
                         "references": {
                             "deportedOutputsViews": "@nav/api/Notebook.State.deportedOutputsViews"
                         }
@@ -3812,8 +3726,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly displayFactory: DisplayFactory = defaultDisplayFactory()",
                         "implementation": "",
-                        "startLine": 142,
-                        "endLine": 143,
+                        "startLine": 143,
+                        "endLine": 144,
                         "references": {
                             "displayFactory": "@nav/api/Notebook.State.displayFactory",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory"
@@ -3847,8 +3761,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}",
                         "implementation": "",
-                        "startLine": 170,
-                        "endLine": 171,
+                        "startLine": 171,
+                        "endLine": 172,
                         "references": {
                             "executing$": "@nav/api/Notebook.State.executing$"
                         }
@@ -3881,8 +3795,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly ids: string[] = []",
                         "implementation": "",
-                        "startLine": 180,
-                        "endLine": 181,
+                        "startLine": 181,
+                        "endLine": 182,
                         "references": {
                             "ids": "@nav/api/Notebook.State.ids"
                         }
@@ -3915,8 +3829,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly initialScope: Scope",
                         "implementation": "",
-                        "startLine": 189,
-                        "endLine": 190,
+                        "startLine": 190,
+                        "endLine": 191,
                         "references": {
                             "initialScope": "@nav/api/Notebook.State.initialScope",
                             "Scope": "@nav/api/Notebook.Scope"
@@ -3950,8 +3864,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly invalidated$ = new Subject<string>()",
                         "implementation": "",
-                        "startLine": 147,
-                        "endLine": 148,
+                        "startLine": 148,
+                        "endLine": 149,
                         "references": {
                             "invalidated$": "@nav/api/Notebook.State.invalidated$"
                         }
@@ -3984,8 +3898,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}",
                         "implementation": "",
-                        "startLine": 151,
-                        "endLine": 152,
+                        "startLine": 152,
+                        "endLine": 153,
                         "references": {
                             "outputs$": "@nav/api/Notebook.State.outputs$",
                             "Output": "@nav/api/Notebook.Output"
@@ -4019,8 +3933,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly parent?: { state: State; cellId: string }",
                         "implementation": "",
-                        "startLine": 193,
-                        "endLine": 194,
+                        "startLine": 194,
+                        "endLine": 195,
                         "references": {
                             "parent": "@nav/api/Notebook.State.parent",
                             "State": "@nav/api/Notebook.State"
@@ -4054,8 +3968,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "private pyNamespace: { get: (key: string) => unknown }",
                         "implementation": "",
-                        "startLine": 211,
-                        "endLine": 212,
+                        "startLine": 212,
+                        "endLine": 213,
                         "references": {
                             "pyNamespace": "@nav/api/Notebook.State.pyNamespace"
                         }
@@ -4088,8 +4002,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly router: Router",
                         "implementation": "",
-                        "startLine": 198,
-                        "endLine": 199,
+                        "startLine": 199,
+                        "endLine": 200,
                         "references": {
                             "router": "@nav/api/Notebook.State.router",
                             "Router": "@nav/api/MainModule.Router"
@@ -4123,8 +4037,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly scopes$: {\n        [k: string]: BehaviorSubject<Scope | undefined>\n    } = {}",
                         "implementation": "",
-                        "startLine": 135,
-                        "endLine": 136,
+                        "startLine": 136,
+                        "endLine": 137,
                         "references": {
                             "scopes$": "@nav/api/Notebook.State.scopes$",
                             "Scope": "@nav/api/Notebook.Scope"
@@ -4158,8 +4072,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "public readonly src$: { [k: string]: BehaviorSubject<string> } = {}",
                         "implementation": "",
-                        "startLine": 155,
-                        "endLine": 156,
+                        "startLine": 156,
+                        "endLine": 157,
                         "references": {
                             "src$": "@nav/api/Notebook.State.src$"
                         }
@@ -4170,9 +4084,9 @@
             "code": {
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export class State",
-                "implementation": "export class State {\n    /**\n     * Observables over the cell's entering scopes keyed by the cell's ID.\n     */\n    public readonly scopes$: {\n        [k: string]: BehaviorSubject<Scope | undefined>\n    } = {}\n\n    /**\n     * The factory used to pick up the right mapping between variable and view when `display` is called.\n     */\n    public readonly displayFactory: DisplayFactory = defaultDisplayFactory()\n\n    /**\n     * Observable that emits the ID of invalidated cells.\n     */\n    public readonly invalidated$ = new Subject<string>()\n    /**\n     * Observables over the cell's output keyed by the cell's ID.\n     */\n    public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}\n    /**\n     * Observables over the cell's source keyed by the cell's ID.\n     */\n    public readonly src$: { [k: string]: BehaviorSubject<string> } = {}\n    /**\n     * Observables over the cell's status keyed by the cell's ID.\n     */\n    public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =\n        {}\n\n    /**\n     * Observables over the cell IDs included in the associated {@link NotebookPage}.\n     */\n    public readonly cellIds$ = new BehaviorSubject<string[]>([])\n\n    /**\n     * Observables over whether the cell is currently executing keyed by the cell's ID.\n     */\n    public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}\n\n    /**\n     * The deported output views as a list of their associated cell ID.\n     */\n    public readonly deportedOutputsViews: string[] = []\n\n    /**\n     * List of the cell IDs in the page.\n     */\n    public readonly ids: string[] = []\n    /**\n     * List of the cells in the page.\n     */\n    public readonly cells: CellTrait[] = []\n\n    /**\n     * The initial scope (provided to the first cell when executed).\n     */\n    public readonly initialScope: Scope\n    /**\n     * Optional related parent state (*e.g.* {@link MdCellView} own their own executing state created upon execution).\n     */\n    public readonly parent?: { state: State; cellId: string }\n\n    /**\n     * The application router, used to import modules from other notebook pages.\n     */\n    public readonly router: Router\n\n    public readonly modules: {\n        [k: string]: { state: State; exports: Scope }\n    } = {}\n\n    /**\n     * Pyodide execution should be namespaced by notebook page,\n     * this variable holds the symbols.\n     *\n     * This is a python dictionary initialized with `pyodide.globals.get(\"dict\")()`\n     * when the notebook page is loaded and reused across python cells.\n     */\n    private pyNamespace: { get: (key: string) => unknown }\n\n    constructor(params: {\n        initialScope?: Partial<Scope>\n        router: Router\n        displayFactory?: DisplayFactory\n        parent?: { state: State; cellId: string }\n    }) {\n        Object.assign(this, { router: params.router, parent: params.parent })\n        this.displayFactory = [\n            ...this.displayFactory,\n            ...(params.displayFactory || []),\n        ]\n        this.initialScope = {\n            let: params.initialScope?.let || {},\n            const: {\n                webpm,\n                Views,\n                ...(params.initialScope?.const || {}),\n            },\n            python: params.initialScope?.python || {},\n        }\n\n        if (params.parent) {\n            params.parent.state.invalidated$\n                .pipe(filter((cellId) => cellId === params.parent.cellId))\n                .subscribe(() => {\n                    if (this.ids.length === 0) {\n                        return\n                    }\n                    this.unreadyCells({ afterCellId: this.ids[0] })\n                    Object.values(this.outputs$).forEach((output$) =>\n                        output$.next(undefined),\n                    )\n                })\n        }\n    }\n\n    getPyNamespace(pyodide) {\n        this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()\n        return this.pyNamespace\n    }\n\n    appendCell(cell: CellTrait) {\n        this.ids.push(cell.cellId)\n        this.cellIds$.next(this.ids)\n        this.cells.push(cell)\n        if (!this.outputs$[cell.cellId]) {\n            this.outputs$[cell.cellId] = new ReplaySubject()\n            this.executing$[cell.cellId] = new BehaviorSubject(false)\n            this.src$[cell.cellId] = cell.content$\n        }\n\n        this.cellsStatus$[cell.cellId] = new BehaviorSubject<CellStatus>(\n            this.ids.length === 1 ? 'ready' : 'unready',\n        )\n        this.scopes$[cell.cellId] =\n            Object.keys(this.scopes$).length == 0\n                ? new BehaviorSubject(this.initialScope)\n                : new BehaviorSubject(undefined)\n        cell.content$.subscribe((src) => {\n            this.updateSrc({ cellId: cell.cellId, src })\n        })\n    }\n\n    createJsCell(elem: HTMLElement): JsCellView {\n        const cell = JsCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createPyCell(elem: HTMLElement): PyCellView {\n        const cell = PyCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createMdCell(\n        elem: HTMLElement,\n        parserOptions: MdParsingOptions,\n    ): MdCellView {\n        const cell = MdCellView.FromDom({ elem, state: this, parserOptions })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createInterpreterCell(elem: HTMLElement): InterpreterCellView {\n        const cell = InterpreterCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createWorkerCell(elem: HTMLElement): WorkerCellView {\n        const cell = WorkerCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createDeportedOutputsView(elem: HTMLElement): OutputsView {\n        const cellId = DeportedOutputsView.FromDomAttributes.cellId(elem)\n        if (!this.outputs$[cellId]) {\n            this.outputs$[cellId] = new ReplaySubject()\n            this.executing$[cellId] = new BehaviorSubject(false)\n        }\n        this.deportedOutputsViews.push(cellId)\n        return DeportedOutputsView.FromDom({\n            elem,\n            output$: this.outputs$[cellId],\n        })\n    }\n\n    updateSrc({ cellId, src }: { cellId: string; src: string }) {\n        if (!this.src$[cellId]) {\n            this.src$[cellId] = new BehaviorSubject(src)\n        }\n        this.cellsStatus$[cellId].next('ready')\n        this.unreadyCells({ afterCellId: cellId })\n        if (this.parent) {\n            this.parent.state.unreadyCells({ afterCellId: this.parent.cellId })\n        }\n    }\n    async execute(id: string, rootExecution: boolean = true) {\n        if (this.ids.length === 0) {\n            return this.initialScope\n        }\n        const index = this.ids.indexOf(id)\n        this.cellsStatus$[id].next('pending')\n        if (!this.scopes$[id].value) {\n            await this.execute(this.ids[index - 1], false)\n        }\n        const scope$ = this.scopes$[id]\n        const output$ = this.outputs$[id]\n\n        output$.next(undefined)\n        this.cellsStatus$[id].next('executing')\n        this.executing$[id].next(true)\n        const scope = await this.cells[index].execute({\n            src: this.src$[id].value,\n            scope: scope$.getValue(),\n            output$,\n            displayFactory: this.displayFactory,\n            load: this.loadModule(id),\n            cellId: id,\n            owningState: this,\n        })\n        this.cellsStatus$[id].next('success')\n        const nextId = this.ids[index + 1]\n        const remainingIds = this.ids.slice(index + 2)\n        if (nextId) {\n            this.scopes$[nextId].next(scope)\n            this.cellsStatus$[nextId].next('ready')\n        }\n        nextId && this.scopes$[nextId].next(scope)\n        remainingIds.forEach((id) => {\n            rootExecution && this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n        })\n        return scope\n    }\n    private invalidateCells(cellId: string) {\n        this.invalidated$.next(cellId)\n    }\n\n    private dispose() {\n        this.cells.forEach((cell) => {\n            this.invalidateCells(cell.cellId)\n        })\n        Object.values(this.modules).forEach(({ state }) => {\n            state.dispose()\n        })\n    }\n\n    unreadyCells({ afterCellId }: { afterCellId: string }) {\n        const index = this.ids.indexOf(afterCellId)\n        this.invalidateCells(afterCellId)\n        const remainingIds = this.ids.slice(index + 1)\n        remainingIds.forEach((id) => {\n            this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n            this.invalidateCells(id)\n        })\n    }\n\n    private loadModule(cellId: string) {\n        const components = ({\n            state,\n        }: {\n            state: State\n            cellOptions: CellCommonAttributes\n        }) => {\n            return {\n                'js-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const reactive = elem.getAttribute('reactive')\n                    const cell = new JsCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {\n                            reactive,\n                        },\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n                'py-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const cell = new PyCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {},\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n            }\n        }\n\n        return (path: string) => {\n            const router = this.router\n            if (this.modules[path]) {\n                this.modules[path].state.dispose()\n            }\n            const module$ = router.getNav({ path }).pipe(\n                switchMap((nav) => {\n                    const nbPage = nav.html({\n                        router,\n                    }) as unknown as NotebookPage\n                    return fromFetch(nbPage.url)\n                }),\n                switchMap((resp) => resp.text()),\n                switchMap((src) => {\n                    const state = new State({\n                        router,\n                        parent: { state: this, cellId },\n                    })\n                    parseMd({\n                        src: extractExportedCode(src),\n                        router,\n                        views: {\n                            ...components({\n                                state,\n                                cellOptions: defaultCellAttributes,\n                            }),\n                        },\n                    })\n                    return from(state.execute(state.ids.slice(-1)[0])).pipe(\n                        map((scope) => {\n                            this.modules[path] = { exports: scope, state }\n                            return this.modules[path]\n                        }),\n                    )\n                }),\n            )\n\n            return firstValueFrom(module$).then(({ exports }) => ({\n                ...exports.const,\n                ...exports.let,\n                ...exports.python,\n            }))\n        }\n    }\n}",
-                "startLine": 131,
-                "endLine": 479,
+                "implementation": "export class State {\n    /**\n     * Observables over the cell's entering scopes keyed by the cell's ID.\n     */\n    public readonly scopes$: {\n        [k: string]: BehaviorSubject<Scope | undefined>\n    } = {}\n\n    /**\n     * The factory used to pick up the right mapping between variable and view when `display` is called.\n     */\n    public readonly displayFactory: DisplayFactory = defaultDisplayFactory()\n\n    /**\n     * Observable that emits the ID of invalidated cells.\n     */\n    public readonly invalidated$ = new Subject<string>()\n    /**\n     * Observables over the cell's output keyed by the cell's ID.\n     */\n    public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}\n    /**\n     * Observables over the cell's source keyed by the cell's ID.\n     */\n    public readonly src$: { [k: string]: BehaviorSubject<string> } = {}\n    /**\n     * Observables over the cell's status keyed by the cell's ID.\n     */\n    public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =\n        {}\n\n    /**\n     * Observables over the cell IDs included in the associated {@link NotebookPage}.\n     */\n    public readonly cellIds$ = new BehaviorSubject<string[]>([])\n\n    /**\n     * Observables over whether the cell is currently executing keyed by the cell's ID.\n     */\n    public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}\n\n    /**\n     * The deported output views as a list of their associated cell ID.\n     */\n    public readonly deportedOutputsViews: string[] = []\n\n    /**\n     * List of the cell IDs in the page.\n     */\n    public readonly ids: string[] = []\n    /**\n     * List of the cells in the page.\n     */\n    public readonly cells: CellTrait[] = []\n\n    /**\n     * The initial scope (provided to the first cell when executed).\n     */\n    public readonly initialScope: Scope\n    /**\n     * Optional related parent state (*e.g.* {@link MdCellView} own their own executing state created upon execution).\n     */\n    public readonly parent?: { state: State; cellId: string }\n\n    /**\n     * The application router, used to import modules from other notebook pages.\n     */\n    public readonly router: Router\n\n    public readonly modules: {\n        [k: string]: { state: State; exports: Scope }\n    } = {}\n\n    /**\n     * Pyodide execution should be namespaced by notebook page,\n     * this variable holds the symbols.\n     *\n     * This is a python dictionary initialized with `pyodide.globals.get(\"dict\")()`\n     * when the notebook page is loaded and reused across python cells.\n     */\n    private pyNamespace: { get: (key: string) => unknown }\n\n    constructor(params: {\n        initialScope?: Partial<Scope>\n        router: Router\n        displayFactory?: DisplayFactory\n        parent?: { state: State; cellId: string }\n    }) {\n        Object.assign(this, { router: params.router, parent: params.parent })\n        this.displayFactory = [\n            ...this.displayFactory,\n            ...(params.displayFactory || []),\n        ]\n        this.initialScope = {\n            let: params.initialScope?.let || {},\n            const: {\n                webpm,\n                Views,\n                ...(params.initialScope?.const || {}),\n            },\n            python: params.initialScope?.python || {},\n        }\n\n        if (params.parent) {\n            params.parent.state.invalidated$\n                .pipe(filter((cellId) => cellId === params.parent.cellId))\n                .subscribe(() => {\n                    if (this.ids.length === 0) {\n                        return\n                    }\n                    this.unreadyCells({ afterCellId: this.ids[0] })\n                    Object.values(this.outputs$).forEach((output$) =>\n                        output$.next(undefined),\n                    )\n                })\n        }\n    }\n\n    getPyNamespace(pyodide) {\n        this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()\n        return this.pyNamespace\n    }\n\n    appendCell(cell: CellTrait) {\n        this.ids.push(cell.cellId)\n        this.cellIds$.next(this.ids)\n        this.cells.push(cell)\n        if (!this.outputs$[cell.cellId]) {\n            this.outputs$[cell.cellId] = new ReplaySubject()\n            this.executing$[cell.cellId] = new BehaviorSubject(false)\n            this.src$[cell.cellId] = cell.content$\n        }\n\n        this.cellsStatus$[cell.cellId] = new BehaviorSubject<CellStatus>(\n            this.ids.length === 1 ? 'ready' : 'unready',\n        )\n        this.scopes$[cell.cellId] =\n            Object.keys(this.scopes$).length == 0\n                ? new BehaviorSubject(this.initialScope)\n                : new BehaviorSubject(undefined)\n        cell.content$.subscribe((src) => {\n            this.updateSrc({ cellId: cell.cellId, src })\n        })\n    }\n\n    createJsCell(elem: HTMLElement): JsCellView {\n        const cell = JsCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createPyCell(elem: HTMLElement): PyCellView {\n        const cell = PyCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createMdCell(\n        elem: HTMLElement,\n        parserOptions: MdParsingOptions,\n    ): MdCellView {\n        const cell = MdCellView.FromDom({ elem, state: this, parserOptions })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createInterpreterCell(elem: HTMLElement): InterpreterCellView {\n        const cell = InterpreterCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createWorkerCell(elem: HTMLElement): WorkerCellView {\n        const cell = WorkerCellView.FromDom({ elem, state: this })\n        this.appendCell(cell)\n        return cell\n    }\n\n    createDeportedOutputsView(elem: HTMLElement): OutputsView {\n        const cellId = DeportedOutputsView.FromDomAttributes.cellId(elem)\n        if (!this.outputs$[cellId]) {\n            this.outputs$[cellId] = new ReplaySubject()\n            this.executing$[cellId] = new BehaviorSubject(false)\n        }\n        this.deportedOutputsViews.push(cellId)\n        return DeportedOutputsView.FromDom({\n            elem,\n            output$: this.outputs$[cellId],\n        })\n    }\n\n    updateSrc({ cellId, src }: { cellId: string; src: string }) {\n        if (!this.src$[cellId]) {\n            this.src$[cellId] = new BehaviorSubject(src)\n        }\n        this.cellsStatus$[cellId].next('ready')\n        this.unreadyCells({ afterCellId: cellId })\n        if (this.parent) {\n            this.parent.state.unreadyCells({ afterCellId: this.parent.cellId })\n        }\n    }\n    async execute(id: string, rootExecution: boolean = true) {\n        if (this.ids.length === 0) {\n            return this.initialScope\n        }\n        const index = this.ids.indexOf(id)\n        this.cellsStatus$[id].next('pending')\n        if (!this.scopes$[id].value) {\n            await this.execute(this.ids[index - 1], false)\n        }\n        const scope$ = this.scopes$[id]\n        const output$ = this.outputs$[id]\n\n        output$.next(undefined)\n        this.cellsStatus$[id].next('executing')\n        this.executing$[id].next(true)\n        const scope = await this.cells[index].execute({\n            src: this.src$[id].value,\n            scope: scope$.getValue(),\n            output$,\n            displayFactory: this.displayFactory,\n            load: this.loadModule(id),\n            cellId: id,\n            owningState: this,\n        })\n        this.cellsStatus$[id].next('success')\n        const nextId = this.ids[index + 1]\n        const remainingIds = this.ids.slice(index + 2)\n        if (nextId) {\n            this.scopes$[nextId].next(scope)\n            this.cellsStatus$[nextId].next('ready')\n        }\n        nextId && this.scopes$[nextId].next(scope)\n        remainingIds.forEach((id) => {\n            rootExecution && this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n        })\n        return scope\n    }\n    private invalidateCells(cellId: string) {\n        this.invalidated$.next(cellId)\n    }\n\n    private dispose() {\n        this.cells.forEach((cell) => {\n            this.invalidateCells(cell.cellId)\n        })\n        Object.values(this.modules).forEach(({ state }) => {\n            state.dispose()\n        })\n    }\n\n    unreadyCells({ afterCellId }: { afterCellId: string }) {\n        const index = this.ids.indexOf(afterCellId)\n        this.invalidateCells(afterCellId)\n        const remainingIds = this.ids.slice(index + 1)\n        remainingIds.forEach((id) => {\n            this.cellsStatus$[id].next('unready')\n            this.scopes$[id].next(undefined)\n            this.executing$[id].next(false)\n            this.invalidateCells(id)\n        })\n    }\n\n    private loadModule(cellId: string) {\n        const components = ({\n            state,\n        }: {\n            state: State\n            cellOptions: CellCommonAttributes\n        }) => {\n            return {\n                'js-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const reactive = elem.getAttribute('reactive')\n                    const cell = new JsCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {\n                            reactive,\n                        },\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n                'py-cell': (elem) => {\n                    const id =\n                        elem.getAttribute('cell-id') || elem.getAttribute('id')\n                    const cell = new PyCellExecutor({\n                        cellId: id,\n                        content$: new BehaviorSubject(elem.textContent),\n                        state: state,\n                        cellAttributes: {},\n                    })\n                    state.appendCell(cell)\n                    return { tag: 'div' as const }\n                },\n            }\n        }\n\n        return (path: string) => {\n            const router = this.router\n            if (this.modules[path]) {\n                this.modules[path].state.dispose()\n            }\n            const module$ = router.getNav({ path }).pipe(\n                switchMap((nav) => {\n                    const nbPage = nav.html({\n                        router,\n                    }) as unknown as NotebookPage\n                    return fromFetch(nbPage.url)\n                }),\n                switchMap((resp) => resp.text()),\n                switchMap((src) => {\n                    const state = new State({\n                        router,\n                        parent: { state: this, cellId },\n                    })\n                    Dependencies.parseMd({\n                        src: extractExportedCode(src),\n                        router,\n                        views: {\n                            ...components({\n                                state,\n                                cellOptions: defaultCellAttributes,\n                            }),\n                        },\n                    })\n                    return from(state.execute(state.ids.slice(-1)[0])).pipe(\n                        map((scope) => {\n                            this.modules[path] = { exports: scope, state }\n                            return this.modules[path]\n                        }),\n                    )\n                }),\n            )\n\n            return firstValueFrom(module$).then(({ exports }) => ({\n                ...exports.const,\n                ...exports.let,\n                ...exports.python,\n            }))\n        }\n    }\n}",
+                "startLine": 132,
+                "endLine": 480,
                 "references": {
                     "State": "@nav/api/Notebook.State",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -4873,8 +4787,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "cellId: string",
                         "implementation": "",
-                        "startLine": 117,
-                        "endLine": 118,
+                        "startLine": 118,
+                        "endLine": 119,
                         "references": {
                             "cellId": "@nav/api/Notebook.CellTrait.cellId"
                         }
@@ -4907,8 +4821,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "content$: BehaviorSubject<string>",
                         "implementation": "",
-                        "startLine": 121,
-                        "endLine": 122,
+                        "startLine": 122,
+                        "endLine": 123,
                         "references": {
                             "content$": "@nav/api/Notebook.CellTrait.content$"
                         }
@@ -4941,8 +4855,8 @@
                         "filePath": "src/lib/notebook/state.ts",
                         "declaration": "execute: (args: ExecArgs) => Promise<Scope>",
                         "implementation": "",
-                        "startLine": 125,
-                        "endLine": 126,
+                        "startLine": 126,
+                        "endLine": 127,
                         "references": {
                             "execute": "@nav/api/Notebook.CellTrait.execute",
                             "ExecArgs": "@nav/api/Notebook.ExecArgs",
@@ -4956,8 +4870,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export interface CellTrait",
                 "implementation": "export interface CellTrait {\n    /**\n     * Cell unique ID.\n     */\n    cellId: string\n    /**\n     * Observable over the source content of the cell.\n     */\n    content$: BehaviorSubject<string>\n    /**\n     * Define the implementation of cell execution.\n     */\n    execute: (args: ExecArgs) => Promise<Scope>\n}",
-                "startLine": 113,
-                "endLine": 127,
+                "startLine": 114,
+                "endLine": 128,
                 "references": {
                     "CellTrait": "@nav/api/Notebook.CellTrait",
                     "ExecArgs": "@nav/api/Notebook.ExecArgs",
@@ -5345,8 +5259,8 @@
                 "filePath": "src/lib/notebook/notebook-page.ts",
                 "declaration": "export type CellCommonAttributes = {\n    /**\n     * Whether to display line numbers on cell.\n     */\n    lineNumbers?: boolean\n    /**\n     * Whether the cell is readonly.\n     */\n    readOnly?: boolean\n}",
                 "implementation": "",
-                "startLine": 16,
-                "endLine": 17,
+                "startLine": 17,
+                "endLine": 18,
                 "references": {
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes"
                 }
@@ -5385,7 +5299,7 @@
                 "endLine": 52,
                 "references": {
                     "DisplayComponent": "@nav/api/Notebook.DisplayComponent",
-                    "T": "2243"
+                    "T": "2301"
                 }
             },
             "semantic": {
@@ -5455,8 +5369,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export type ExecArgs = {\n    /**\n     * Cell ID.\n     */\n    cellId: string\n    /**\n     * Source to execute.\n     */\n    src: string\n\n    /**\n     * The function used to load a submodule from a notebook page.\n     *\n     * @param path Navigation path of the submodule.\n     * @returns The exported symbols.\n     */\n    load: (path: string) => Promise<{ [k: string]: unknown }>\n\n    /**\n     * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.\n     */\n    output$: Subject<Output>\n\n    /**\n     * The factory used to pick up the right mapping between variable and view when `display` is called.\n     */\n    displayFactory: DisplayFactory\n\n    /**\n     * Owning state of the cell.\n     */\n    owningState: State\n    /**\n     * Entering scope of the cell.\n     */\n    scope: Scope\n}",
                 "implementation": "",
-                "startLine": 72,
-                "endLine": 73,
+                "startLine": 73,
+                "endLine": 74,
                 "references": {
                     "ExecArgs": "@nav/api/Notebook.ExecArgs",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -5569,8 +5483,8 @@
                 "filePath": "src/lib/notebook/md-cell-view.ts",
                 "declaration": "export type MdCellAttributes = CellCommonAttributes",
                 "implementation": "",
-                "startLine": 14,
-                "endLine": 15,
+                "startLine": 15,
+                "endLine": 16,
                 "references": {
                     "MdCellAttributes": "@nav/api/Notebook.MdCellAttributes",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes"
@@ -5606,8 +5520,8 @@
                 "filePath": "src/lib/notebook/notebook-page.ts",
                 "declaration": "export type NotebookOptions = {\n    /**\n     * Whether to run all the cells of a notebook page when loaded.\n     */\n    runAtStart?: boolean\n    /**\n     * The default values for cell's attribute.\n     */\n    defaultCellAttributes?: CellCommonAttributes\n\n    /**\n     * Options for markdown parsing.\n     */\n    markdown?: MdParsingOptions\n}",
                 "implementation": "",
-                "startLine": 38,
-                "endLine": 39,
+                "startLine": 39,
+                "endLine": 40,
                 "references": {
                     "NotebookOptions": "@nav/api/Notebook.NotebookOptions",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes",
@@ -5644,8 +5558,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export type Output = AnyVirtualDOM | undefined",
                 "implementation": "",
-                "startLine": 67,
-                "endLine": 68,
+                "startLine": 68,
+                "endLine": 69,
                 "references": {
                     "Output": "@nav/api/Notebook.Output"
                 }
@@ -5753,8 +5667,8 @@
                 "filePath": "src/lib/notebook/state.ts",
                 "declaration": "export type Scope = {\n    /**\n     * The `let` variables: keyed by their name and mapped to their values.\n     */\n    let: { [k: string]: unknown }\n    /**\n     * The `const` variables: keyed by their name and mapped to their values.\n     */\n    const: { [k: string]: unknown }\n\n    /**\n     * The exported globals of python runtime.\n     */\n    python: { [k: string]: unknown }\n}",
                 "implementation": "",
-                "startLine": 46,
-                "endLine": 47,
+                "startLine": 47,
+                "endLine": 48,
                 "references": {
                     "Scope": "@nav/api/Notebook.Scope"
                 }
@@ -6171,6 +6085,24 @@
                             "relations": {}
                         },
                         "content": "This file gathers various views used when rendering the .",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/lib/notebook/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including , ,\n,  and .\nThese cells are identified within the Markdown source using specific DOM elements (`js-cell`, `md-cell`, `py-cell`,\n`interpreter-cell` and `worker-cell`). Cells feature attributes provided with the DOM element,\nrefer to the associated , , ,\n and .\n\nMost of the implementation logic regarding synchronization are included in the  class.",
                         "contentType": "markdown"
                     }
                 ]
