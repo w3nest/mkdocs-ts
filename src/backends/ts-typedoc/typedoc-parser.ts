@@ -306,9 +306,9 @@ export function parseModule({
             [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         )
         const targetPath = pathLib.join(...parts)
-        const children = modules.map((c) =>
-            targetPath.startsWith(c.name) ? [1 + c.name.search(/\//), c] : 0,
-        )
+        const children: [number, TypedocNode][] = modules
+            .filter((c) => targetPath.startsWith(c.name))
+            .map((c) => [1 + c.name.search(/\//), c])
         children.sort((a, b) => b[0] - a[0])
         if (children.length > 0) {
             return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))
