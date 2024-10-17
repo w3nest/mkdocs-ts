@@ -75,7 +75,8 @@ export class TopBannerClassicView implements VirtualDOM<'div'> {
 
 export class NavItemsView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'mt-2 mb-1 d-flex justify-content-left'
+    public readonly class =
+        'mt-2 mb-1 d-flex align-items-center justify-content-left'
     public readonly children: ChildrenLike
     constructor({ router }: { router: Router }) {
         const firstLayer = Object.entries(router.navigation).filter(([k]) =>
@@ -110,7 +111,7 @@ export class NavItemsView implements VirtualDOM<'div'> {
 
 export class NavItem implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'me-5'
+    public readonly class = 'mkdocs-NavItem me-5'
     public readonly children: ChildrenLike
     constructor({
         node,
@@ -133,11 +134,11 @@ export class NavItem implements VirtualDOM<'div'> {
                             vdomMap: (path: string) => {
                                 if (href === '/') {
                                     return path === '/'
-                                        ? 'mkdocs-text-5'
+                                        ? 'mkdocs-text-5 selected'
                                         : 'mkdocs-text-4'
                                 }
                                 return path.startsWith(href)
-                                    ? 'mkdocs-text-5'
+                                    ? 'mkdocs-text-5 selected'
                                     : 'mkdocs-text-4'
                             },
                             wrapper: (d) =>
@@ -149,6 +150,7 @@ export class NavItem implements VirtualDOM<'div'> {
                             node.decoration?.icon,
                             {
                                 tag: 'div',
+                                class: 'mkdocs-NavItem-title',
                                 innerText: node.name,
                             },
                         ],

@@ -116,13 +116,15 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                         selected.id == node.id
                             ? 'fv-text-focus font-weight-bold'
                             : '',
-                    wrapper: (d) => `${d} flex-grow-1 fv-hover-text-focus`,
+                    wrapper: (d) =>
+                        `${d} flex-grow-1 fv-hover-text-focus mkdocs-NavigationHeader-title`,
                     untilFirst: 'flex-grow-1 fv-hover-text-focus',
                 },
                 innerText: node.name,
             },
             {
                 tag: 'div',
+                class: 'mkdocs-NavigationHeader-actions',
                 children: node.decoration?.actions || [],
             },
             ...(withChildren || []),
