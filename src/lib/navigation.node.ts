@@ -78,6 +78,19 @@ export class NavNode extends NavNodeBase {
     }
 }
 
+export class NavNodePromise extends NavNodeBase {
+    constructor({ href }: { href: string }) {
+        super({
+            id: href,
+            name: '',
+            href,
+            decoration: {
+                icon: { tag: 'i' as const, class: 'fas fa-spinner fa-spin' },
+            },
+        })
+    }
+}
+
 /**
  * Arguments defining the children part of a navigation node when using dynamic {@link CatchAllNav}.
  */
@@ -174,16 +187,22 @@ export function createChildren({
     hRefBase,
     router,
     reactiveNavs,
+    promiseNavs,
 }: {
     navigation: Navigation
     hRefBase: string
     router: Router
     reactiveNavs: { [_href: string]: Observable<LazyNavResolver> }
+    promiseNavs: { [_href: string]: Promise<Navigation> }
 }) {
     const explicitChildren = Object.entries(navigation)
         .filter(([k]) => k.startsWith('/') && k !== CatchAllKey)
-        .map(([k, v]: [string, Navigation]) => {
+        .map(([k, v]: [string, Navigation | Promise<Navigation>]) => {
             const href = hRefBase + k
+            if (v instanceof Promise) {
+                promiseNavs[href] = v
+                return new NavNodePromise({ href })
+            }
             return new NavNode({
                 id: href,
                 name: v['name'],
@@ -192,6 +211,7 @@ export function createChildren({
                     hRefBase: hRefBase + k,
                     router,
                     reactiveNavs,
+                    promiseNavs,
                 }),
                 href,
                 decoration: v['decoration'],
@@ -220,14 +240,17 @@ export function createChildren({
 export function createRootNode({
     navigation,
     router,
+    hrefBase,
 }: {
     navigation: Navigation
     router: Router
+    hrefBase?: string
 }) {
-    const href = ''
+    const href = hrefBase || ''
     const reactiveNavs: { [k: string]: ReactiveLazyNavResolver } = {}
+    const promiseNavs: { [k: string]: Promise<Navigation> } = {}
     const rootNode = new NavNode({
-        id: '/',
+        id: href === '' ? '/' : href,
         name: navigation.name,
         decoration: navigation.decoration,
         children: createChildren({
@@ -235,12 +258,14 @@ export function createRootNode({
             hRefBase: href,
             router,
             reactiveNavs,
+            promiseNavs,
         }),
         href,
     })
     return {
         rootNode,
         reactiveNavs,
+        promiseNavs,
     }
 }
 
@@ -335,7 +360,7 @@ export type Navigation = NavigationCommon & {
     /**
      * Static sub-navigation resolver.
      */
-    [key: `/${string}`]: Navigation
+    [key: `/${string}`]: Navigation | Promise<Navigation>
 }
 
 /**

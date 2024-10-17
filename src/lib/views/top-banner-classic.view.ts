@@ -7,7 +7,7 @@ import {
 } from '@youwol/rx-vdom'
 
 import { Router, Navigation } from '..'
-import { Subject } from 'rxjs'
+import { from, Subject } from 'rxjs'
 import { DisplayMode, LayoutOptions } from './default-layout.view'
 import { ModalNavigationView } from './navigation.view'
 
@@ -85,12 +85,24 @@ export class NavItemsView implements VirtualDOM<'div'> {
         this.children = [
             new NavItem({ node: router.navigation, href: '/', router }),
             ...firstLayer.map(
-                ([k, v]: [k: string, v: Navigation]) =>
-                    new NavItem({
+                ([k, v]: [k: string, v: Navigation | Promise<Navigation>]) => {
+                    if (v instanceof Promise) {
+                        return {
+                            source$: from(v),
+                            vdomMap: (node: Navigation) =>
+                                new NavItem({
+                                    node,
+                                    href: k,
+                                    router,
+                                }),
+                        }
+                    }
+                    return new NavItem({
                         node: v,
                         href: k,
                         router,
-                    }),
+                    })
+                },
             ),
         ]
     }
