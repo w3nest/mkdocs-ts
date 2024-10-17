@@ -2,7 +2,6 @@
 const runTimeDependencies = {
     "externals": {
         "@youwol/http-primitives": "^0.2.3",
-        "@youwol/os-top-banner": "^0.2.0",
         "@youwol/rx-tree-views": "^0.3.4",
         "@youwol/rx-vdom": "^1.0.1",
         "@youwol/webpm-client": "^3.0.0",
@@ -19,11 +18,6 @@ const externals = {
         "commonjs": "@youwol/http-primitives",
         "commonjs2": "@youwol/http-primitives",
         "root": "@youwol/http-primitives_APIv02"
-    },
-    "@youwol/os-top-banner": {
-        "commonjs": "@youwol/os-top-banner",
-        "commonjs2": "@youwol/os-top-banner",
-        "root": "@youwol/os-top-banner_APIv02"
     },
     "@youwol/rx-tree-views": {
         "commonjs": "@youwol/rx-tree-views",
@@ -86,10 +80,6 @@ const exportedSymbols = {
     "@youwol/http-primitives": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/http-primitives"
-    },
-    "@youwol/os-top-banner": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/os-top-banner"
     },
     "@youwol/rx-tree-views": {
         "apiKey": "03",
