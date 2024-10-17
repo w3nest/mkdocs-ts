@@ -103,7 +103,9 @@ class Configuration(NamedTuple):
 
 
 SymbolKind = Literal["function", "attribute", "class", "property", "method", "module"]
-
+"""
+Possible kinds for a symbol.
+"""
 
 class SymbolRef(NamedTuple):
     """
