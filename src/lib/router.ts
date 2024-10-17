@@ -181,9 +181,7 @@ export class Router {
                 }
             }
         }
-        this.currentHtml$.subscribe(() => {
-            console.log('Status', this.status)
-        })
+        this.currentHtml$.subscribe(() => {})
     }
 
     /**
