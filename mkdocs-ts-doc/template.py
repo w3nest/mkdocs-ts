@@ -97,7 +97,7 @@ write_json(backends, path_backends)
 print("Generate Python API files")
 
 NAME = "mkdocs_py_griffe"
-GRIFFE_URL = "https://mkdocstrings.github.io/griffe/reference/griffe"
+GRIFFE_URL = "https://mkdocstrings.github.io/griffe/reference"
 DST = path_backends.parent / "Backends"
 
 config = Configuration(
@@ -105,9 +105,10 @@ config = Configuration(
     external_links={
         **std_links(),
         **{
-            f"griffe.dataclasses.{name}": f"{GRIFFE_URL}/#griffe.{name}"
+            f"griffe.dataclasses.{name}": f"{GRIFFE_URL}/griffe/#griffe.{name}"
             for name in ["Module", "Class", "Function", "Attribute"]
         },
+        "griffe.docstrings.dataclasses.DocstringSection":f"{GRIFFE_URL}/api/docstrings/models/#griffe.DocstringSection"
     },
     out=DST
 )
