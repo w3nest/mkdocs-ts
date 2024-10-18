@@ -16,7 +16,6 @@ externals_deps = {
     "rxjs": "^7.5.6",
     "marked": "^4.2.3",
     "highlight.js": "11.2.0",
-    "@youwol/os-top-banner": "^0.2.0",
     "@youwol/rx-tree-views": "^0.3.4",
     "@youwol/http-primitives": "^0.2.3",
     "esprima": "^4.0.1",

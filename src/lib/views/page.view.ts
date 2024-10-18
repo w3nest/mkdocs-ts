@@ -5,6 +5,7 @@ import {
     RxHTMLElement,
 } from '@youwol/rx-vdom'
 import { Router } from '../router'
+import { parseMd } from '../markdown'
 
 /**
  * The main content of the page.
@@ -98,6 +99,39 @@ export class FooterView implements VirtualDOM<'div'> {
                     flexGrow: 2,
                 },
             },
+        ]
+    }
+}
+
+export class FuturePageView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+    constructor() {
+        this.children = [
+            parseMd({
+                src: `
+<note level="hint">
+<i class="fas fa-spinner fa-spin"></i> The page is currently loading, and the content will update shortly. 
+In the meantime, feel free to explore other sections of the document.
+</note>                
+                `,
+            }),
+        ]
+    }
+}
+
+export class UnresolvedPageView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+    constructor({ path }: { path: string }) {
+        this.children = [
+            parseMd({
+                src: `
+<note level="warning">
+The page at location \`${path}\` does not exist. Please try navigating to other sections of the document.
+</note>                
+                `,
+            }),
         ]
     }
 }

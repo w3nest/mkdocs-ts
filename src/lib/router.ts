@@ -18,8 +18,10 @@ import {
     CatchAllKey,
     LazyNavResolver,
     sanitizeNavPath,
+    ReactiveLazyNavResolver,
 } from './navigation.node'
 import { ImmutableTree } from '@youwol/rx-tree-views'
+import { FuturePageView, UnresolvedPageView } from './views'
 
 /**
  * Gathers the resolved elements when navigating to a specific path.
@@ -128,6 +130,7 @@ export class Router {
     > = { Warning: {}, Error: {} }
 
     private navUpdates: { [href: string]: LazyNavResolver } = {}
+    private navResolved: { [href: string]: Navigation } = {}
 
     /**
      * If this attribute is set, navigation to nodes do not trigger browser re-location.
@@ -156,7 +159,7 @@ export class Router {
         Object.assign(this, params)
         this.basePath = this.basePath || document.location.pathname
         this.mockBrowserLocation && (this.mockBrowserLocation.history = [])
-        const { rootNode, reactiveNavs } = createRootNode({
+        const { rootNode, reactiveNavs, promiseNavs } = createRootNode({
             navigation: this.navigation,
             router: this,
         })
@@ -164,25 +167,8 @@ export class Router {
             rootNode,
             expandedNodes: ['/'],
         })
-        Object.entries(reactiveNavs).forEach(([href, v]) => {
-            v.subscribe((resolver) => {
-                this.navUpdates[href] = resolver
-                const oldNode = this.explorerState.getNode(href)
-                const children = createImplicitChildren$({
-                    resolver: resolver,
-                    hrefBase: href,
-                    path: '',
-                    withExplicit: [],
-                    router: this,
-                })
-                const newNode = new oldNode.factory({
-                    ...oldNode,
-                    children,
-                })
-                this.explorerState.replaceNode(oldNode, newNode)
-            })
-        })
-
+        this.bindReactiveNavs(reactiveNavs)
+        this.bindPromiseNavs(promiseNavs)
         this.navigateTo({ path: this.getCurrentPath() })
 
         if (this.mockBrowserLocation === undefined) {
@@ -195,9 +181,7 @@ export class Router {
                 }
             }
         }
-        this.currentHtml$.subscribe(() => {
-            console.log('Status', this.status)
-        })
+        this.currentHtml$.subscribe(() => {})
     }
 
     /**
@@ -240,7 +224,14 @@ export class Router {
         const nav = this.getNav({ path: pagePath })
         if (!nav) {
             console.log('Try to wait...')
-            setTimeout(() => this.navigateTo({ path }), this.retryNavPeriod)
+            this.currentPage$.next({
+                html: new FuturePageView(),
+            })
+            const timeoutId = setTimeout(
+                () => this.navigateTo({ path }),
+                this.retryNavPeriod,
+            )
+            this.currentPath$.subscribe(() => clearTimeout(timeoutId))
             return
         }
         // This part is to resolve the html content of the selected page.
@@ -376,39 +367,63 @@ export class Router {
         }
 
         const node = parts.reduce(
-            ({ tree, path, keepGoing }, part) => {
+            ({ tree, resolvedPath, keepGoing }, part) => {
                 if (!keepGoing) {
-                    return { tree, path, keepGoing }
+                    return { tree, resolvedPath, keepGoing }
                 }
-                const treePart = tree[`/${part}`]
+                let treePart = tree[`/${part}`]
+
+                if (treePart instanceof Promise) {
+                    const resolved = this.navResolved[`/${part}`]
+                    if (!resolved) {
+                        // a retry in some period of time will be executed
+                        return {
+                            tree: treePart,
+                            resolvedPath,
+                            keepGoing: false,
+                        }
+                    }
+                    treePart = resolved
+                }
+
                 if (!treePart && !tree[CatchAllKey]) {
-                    console.error({ path, tree })
-                    throw Error(`Can not find target navigation ${path}`)
+                    this.currentPage$.next({
+                        html: new UnresolvedPageView({ path }),
+                    })
+                    throw Error(
+                        `Can not find target navigation ${resolvedPath}`,
+                    )
                 }
                 if (!treePart) {
                     return {
-                        tree: this.navUpdates[path] || tree[CatchAllKey],
-                        path: `${path}`,
+                        tree:
+                            this.navUpdates[resolvedPath] || tree[CatchAllKey],
+                        resolvedPath,
                         keepGoing: false,
                     }
                 }
                 return {
                     tree: treePart,
-                    path: `${path}/${part}`,
+                    resolvedPath: `${resolvedPath}/${part}`,
                     keepGoing: true,
                 }
             },
-            { tree: this.navigation, path: ``, keepGoing: true },
+            { tree: this.navigation, resolvedPath: ``, keepGoing: true },
         )
         // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver
         if (node.tree instanceof Observable) {
             // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed
             return undefined
         }
+        if (node.tree instanceof Promise) {
+            // case: Promise not yet resolved -> a retry in some period of time will be executed
+            return undefined
+        }
+
         // node.tree: Navigation | LazyNavResolver
         if (typeof node.tree === 'function') {
             // case: LazyNavResolver, remove starting '/'
-            const relative = sanitizeNavPath(path.split(node.path)[1])
+            const relative = sanitizeNavPath(path.split(node.resolvedPath)[1])
             const nav = node.tree({ path: relative, router: this })
             return nav instanceof Observable
                 ? nav
@@ -476,6 +491,48 @@ export class Router {
      */
     emitHtmlUpdated() {
         this.htmlUpdated$.next(true)
+    }
+
+    private bindReactiveNavs(reactiveNavs: {
+        [href: string]: ReactiveLazyNavResolver
+    }) {
+        Object.entries(reactiveNavs).forEach(([href, v]) => {
+            v.subscribe((resolver) => {
+                this.navUpdates[href] = resolver
+                const oldNode = this.explorerState.getNode(href)
+                const children = createImplicitChildren$({
+                    resolver: resolver,
+                    hrefBase: href,
+                    path: '',
+                    withExplicit: [],
+                    router: this,
+                })
+                const newNode = new oldNode.factory({
+                    ...oldNode,
+                    children,
+                })
+                this.explorerState.replaceNode(oldNode, newNode)
+            })
+        })
+    }
+    private bindPromiseNavs(promiseNavs: {
+        [href: string]: Promise<Navigation>
+    }) {
+        Object.entries(promiseNavs).forEach(([href, v]) => {
+            v.then((nav) => {
+                this.navResolved[href] = nav
+                const oldNode = this.explorerState.getNode(href)
+
+                const { rootNode, reactiveNavs, promiseNavs } = createRootNode({
+                    navigation: nav,
+                    router: this,
+                    hrefBase: href,
+                })
+                this.explorerState.replaceNode(oldNode, rootNode)
+                this.bindReactiveNavs(reactiveNavs)
+                this.bindPromiseNavs(promiseNavs)
+            })
+        })
     }
 }
 

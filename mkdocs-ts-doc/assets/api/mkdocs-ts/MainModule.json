@@ -43,8 +43,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "CatchAllKey = '...'",
                 "implementation": "",
-                "startLine": 311,
-                "endLine": 312,
+                "startLine": 336,
+                "endLine": 337,
                 "references": {
                     "CatchAllKey": "@nav/api/MainModule.CatchAllKey"
                 }
@@ -170,8 +170,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly basePath: string",
                         "implementation": "",
-                        "startLine": 68,
-                        "endLine": 69,
+                        "startLine": 70,
+                        "endLine": 71,
                         "references": {
                             "basePath": "@nav/api/MainModule.Router.basePath"
                         }
@@ -204,8 +204,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly currentHtml$: Subject<HTMLElement> =\n        new ReplaySubject<HTMLElement>(1)",
                         "implementation": "",
-                        "startLine": 98,
-                        "endLine": 99,
+                        "startLine": 100,
+                        "endLine": 101,
                         "references": {
                             "currentHtml$": "@nav/api/MainModule.Router.currentHtml$"
                         }
@@ -238,8 +238,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly currentNode$: Subject<NavigationCommon> =\n        new ReplaySubject<NavigationCommon>(1)",
                         "implementation": "",
-                        "startLine": 108,
-                        "endLine": 109,
+                        "startLine": 110,
+                        "endLine": 111,
                         "references": {
                             "currentNode$": "@nav/api/MainModule.Router.currentNode$",
                             "NavigationCommon": "@nav/api/MainModule.NavigationCommon"
@@ -273,8 +273,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly currentPage$: Subject<Destination> =\n        new ReplaySubject<Destination>(1)",
                         "implementation": "",
-                        "startLine": 103,
-                        "endLine": 104,
+                        "startLine": 105,
+                        "endLine": 106,
                         "references": {
                             "currentPage$": "@nav/api/MainModule.Router.currentPage$",
                             "Destination": "@nav/api/MainModule.Destination"
@@ -308,8 +308,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)",
                         "implementation": "",
-                        "startLine": 114,
-                        "endLine": 115,
+                        "startLine": 116,
+                        "endLine": 117,
                         "references": {
                             "currentPath$": "@nav/api/MainModule.Router.currentPath$"
                         }
@@ -342,8 +342,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly explorerState: ImmutableTree.State<NavNodeBase>",
                         "implementation": "",
-                        "startLine": 119,
-                        "endLine": 120,
+                        "startLine": 121,
+                        "endLine": 122,
                         "references": {
                             "explorerState": "@nav/api/MainModule.Router.explorerState",
                             "NavNodeBase": "@nav/api/MainModule.NavNodeBase"
@@ -377,8 +377,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly mockBrowserLocation?: MockBrowserLocation",
                         "implementation": "",
-                        "startLine": 137,
-                        "endLine": 138,
+                        "startLine": 140,
+                        "endLine": 141,
                         "references": {
                             "mockBrowserLocation": "@nav/api/MainModule.Router.mockBrowserLocation",
                             "MockBrowserLocation": "@nav/api/MainModule.MockBrowserLocation"
@@ -412,8 +412,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly navigation: Navigation",
                         "implementation": "",
-                        "startLine": 80,
-                        "endLine": 81,
+                        "startLine": 82,
+                        "endLine": 83,
                         "references": {
                             "navigation": "@nav/api/MainModule.Router.navigation",
                             "Navigation": "@nav/api/MainModule.Navigation"
@@ -447,8 +447,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly redirects: (target: string) => Promise<string | undefined> =\n        async (target) => target",
                         "implementation": "",
-                        "startLine": 92,
-                        "endLine": 93,
+                        "startLine": 94,
+                        "endLine": 95,
                         "references": {
                             "redirects": "@nav/api/MainModule.Router.redirects"
                         }
@@ -481,8 +481,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public readonly retryNavPeriod: number = 1000",
                         "implementation": "",
-                        "startLine": 75,
-                        "endLine": 76,
+                        "startLine": 77,
+                        "endLine": 78,
                         "references": {
                             "retryNavPeriod": "@nav/api/MainModule.Router.retryNavPeriod"
                         }
@@ -521,9 +521,9 @@
                     "code": {
                         "filePath": "src/lib/router.ts",
                         "declaration": "constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    })",
-                        "implementation": "constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    }) {\n        Object.assign(this, params)\n        this.basePath = this.basePath || document.location.pathname\n        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])\n        const { rootNode, reactiveNavs } = createRootNode({\n            navigation: this.navigation,\n            router: this,\n        })\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNode(href)\n                const children = createImplicitChildren$({\n                    resolver: resolver,\n                    hrefBase: href,\n                    path: '',\n                    withExplicit: [],\n                    router: this,\n                })\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                })\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n\n        this.navigateTo({ path: this.getCurrentPath() })\n\n        if (this.mockBrowserLocation === undefined) {\n            window.onpopstate = (event: PopStateEvent) => {\n                const state = event.state\n                if (state) {\n                    this.navigateTo(state)\n                } else {\n                    this.navigateTo({ path: '/' })\n                }\n            }\n        }\n        this.currentHtml$.subscribe(() => {\n            console.log('Status', this.status)\n        })\n    }",
-                        "startLine": 149,
-                        "endLine": 202,
+                        "implementation": "constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    }) {\n        Object.assign(this, params)\n        this.basePath = this.basePath || document.location.pathname\n        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])\n        const { rootNode, reactiveNavs, promiseNavs } = createRootNode({\n            navigation: this.navigation,\n            router: this,\n        })\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        this.bindReactiveNavs(reactiveNavs)\n        this.bindPromiseNavs(promiseNavs)\n        this.navigateTo({ path: this.getCurrentPath() })\n\n        if (this.mockBrowserLocation === undefined) {\n            window.onpopstate = (event: PopStateEvent) => {\n                const state = event.state\n                if (state) {\n                    this.navigateTo(state)\n                } else {\n                    this.navigateTo({ path: '/' })\n                }\n            }\n        }\n        this.currentHtml$.subscribe(() => {})\n    }",
+                        "startLine": 152,
+                        "endLine": 186,
                         "references": {
                             "new Router": "@nav/api/MainModule.Router.constructor",
                             "Navigation": "@nav/api/MainModule.Navigation",
@@ -568,9 +568,9 @@
                     "code": {
                         "filePath": "src/lib/router.ts",
                         "declaration": "private async awaitNavigateTo({ path }: { path: string })",
-                        "implementation": "private async awaitNavigateTo({ path }: { path: string }) {\n        path = `/${sanitizeNavPath(path)}`\n        path = await this.redirects(path)\n        if (!path) {\n            return\n        }\n\n        const pagePath = path.split('.')[0]\n        const sectionId = path.split('.').slice(1).join('.')\n\n        const nav = this.getNav({ path: pagePath })\n        if (!nav) {\n            console.log('Try to wait...')\n            setTimeout(() => this.navigateTo({ path }), this.retryNavPeriod)\n            return\n        }\n        // This part is to resolve the html content of the selected page.\n        nav.pipe(\n            switchMap((resolved: NavigationCommon) => {\n                this.currentNode$.next(resolved)\n                const html = resolved.html({ router: this })\n                if (html instanceof Promise) {\n                    return from(html)\n                }\n                if (html instanceof Observable) {\n                    return html.pipe(take(1))\n                }\n                return of(html)\n            }),\n            map((html) => ({\n                html,\n                sectionId: sectionId == '' ? undefined : sectionId,\n            })),\n        ).subscribe((d) => {\n            this.currentPage$.next(d)\n        })\n        // This part is to select the appropriate node in the navigation.\n        this.expand(pagePath)\n        const url = `${this.basePath}?nav=${path}`\n        this.mockBrowserLocation\n            ? this.mockBrowserLocation.history.push({ url, data: { path } })\n            : history.pushState({ path }, undefined, url)\n        this.currentPath$.next(path)\n    }",
-                        "startLine": 230,
-                        "endLine": 274,
+                        "implementation": "private async awaitNavigateTo({ path }: { path: string }) {\n        path = `/${sanitizeNavPath(path)}`\n        path = await this.redirects(path)\n        if (!path) {\n            return\n        }\n\n        const pagePath = path.split('.')[0]\n        const sectionId = path.split('.').slice(1).join('.')\n\n        const nav = this.getNav({ path: pagePath })\n        if (!nav) {\n            console.log('Try to wait...')\n            this.currentPage$.next({\n                html: new FuturePageView(),\n            })\n            const timeoutId = setTimeout(\n                () => this.navigateTo({ path }),\n                this.retryNavPeriod,\n            )\n            this.currentPath$.subscribe(() => clearTimeout(timeoutId))\n            return\n        }\n        // This part is to resolve the html content of the selected page.\n        nav.pipe(\n            switchMap((resolved: NavigationCommon) => {\n                this.currentNode$.next(resolved)\n                const html = resolved.html({ router: this })\n                if (html instanceof Promise) {\n                    return from(html)\n                }\n                if (html instanceof Observable) {\n                    return html.pipe(take(1))\n                }\n                return of(html)\n            }),\n            map((html) => ({\n                html,\n                sectionId: sectionId == '' ? undefined : sectionId,\n            })),\n        ).subscribe((d) => {\n            this.currentPage$.next(d)\n        })\n        // This part is to select the appropriate node in the navigation.\n        this.expand(pagePath)\n        const url = `${this.basePath}?nav=${path}`\n        this.mockBrowserLocation\n            ? this.mockBrowserLocation.history.push({ url, data: { path } })\n            : history.pushState({ path }, undefined, url)\n        this.currentPath$.next(path)\n    }",
+                        "startLine": 214,
+                        "endLine": 265,
                         "references": {
                             "awaitNavigateTo": "@nav/api/MainModule.Router.awaitNavigateTo"
                         }
@@ -603,8 +603,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "emitHtmlUpdated()",
                         "implementation": "emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }",
-                        "startLine": 477,
-                        "endLine": 480,
+                        "startLine": 492,
+                        "endLine": 495,
                         "references": {
                             "emitHtmlUpdated": "@nav/api/MainModule.Router.emitHtmlUpdated"
                         }
@@ -637,8 +637,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "getCurrentPath(): string",
                         "implementation": "getCurrentPath(): string {\n        const urlParams = new URLSearchParams(\n            this.mockBrowserLocation?.initialPath || window.location.search,\n        )\n        return urlParams.get('nav') || '/'\n    }",
-                        "startLine": 206,
-                        "endLine": 212,
+                        "startLine": 190,
+                        "endLine": 196,
                         "references": {
                             "getCurrentPath": "@nav/api/MainModule.Router.getCurrentPath"
                         }
@@ -681,9 +681,9 @@
                     "code": {
                         "filePath": "src/lib/router.ts",
                         "declaration": "public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined",
-                        "implementation": "public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined {\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n\n        const node = parts.reduce(\n            ({ tree, path, keepGoing }, part) => {\n                if (!keepGoing) {\n                    return { tree, path, keepGoing }\n                }\n                const treePart = tree[`/${part}`]\n                if (!treePart && !tree[CatchAllKey]) {\n                    console.error({ path, tree })\n                    throw Error(`Can not find target navigation ${path}`)\n                }\n                if (!treePart) {\n                    return {\n                        tree: this.navUpdates[path] || tree[CatchAllKey],\n                        path: `${path}`,\n                        keepGoing: false,\n                    }\n                }\n                return {\n                    tree: treePart,\n                    path: `${path}/${part}`,\n                    keepGoing: true,\n                }\n            },\n            { tree: this.navigation, path: ``, keepGoing: true },\n        )\n        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver\n        if (node.tree instanceof Observable) {\n            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed\n            return undefined\n        }\n        // node.tree: Navigation | LazyNavResolver\n        if (typeof node.tree === 'function') {\n            // case: LazyNavResolver, remove starting '/'\n            const relative = sanitizeNavPath(path.split(node.path)[1])\n            const nav = node.tree({ path: relative, router: this })\n            return nav instanceof Observable\n                ? nav\n                : nav instanceof Promise\n                  ? from(nav)\n                  : of(nav)\n        }\n        // node.tree: Navigation\n        return of(node.tree)\n    }",
-                        "startLine": 364,
-                        "endLine": 422,
+                        "implementation": "public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined {\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                let treePart = tree[`/${part}`]\n\n                if (treePart instanceof Promise) {\n                    const resolved = this.navResolved[`/${part}`]\n                    if (!resolved) {\n                        // a retry in some period of time will be executed\n                        return {\n                            tree: treePart,\n                            resolvedPath,\n                            keepGoing: false,\n                        }\n                    }\n                    treePart = resolved\n                }\n\n                if (!treePart && !tree[CatchAllKey]) {\n                    this.currentPage$.next({\n                        html: new UnresolvedPageView({ path }),\n                    })\n                    throw Error(\n                        `Can not find target navigation ${resolvedPath}`,\n                    )\n                }\n                if (!treePart) {\n                    return {\n                        tree:\n                            this.navUpdates[resolvedPath] || tree[CatchAllKey],\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return {\n                    tree: treePart,\n                    resolvedPath: `${resolvedPath}/${part}`,\n                    keepGoing: true,\n                }\n            },\n            { tree: this.navigation, resolvedPath: ``, keepGoing: true },\n        )\n        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver\n        if (node.tree instanceof Observable) {\n            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed\n            return undefined\n        }\n        if (node.tree instanceof Promise) {\n            // case: Promise not yet resolved -> a retry in some period of time will be executed\n            return undefined\n        }\n\n        // node.tree: Navigation | LazyNavResolver\n        if (typeof node.tree === 'function') {\n            // case: LazyNavResolver, remove starting '/'\n            const relative = sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const nav = node.tree({ path: relative, router: this })\n            return nav instanceof Observable\n                ? nav\n                : nav instanceof Promise\n                  ? from(nav)\n                  : of(nav)\n        }\n        // node.tree: Navigation\n        return of(node.tree)\n    }",
+                        "startLine": 355,
+                        "endLine": 437,
                         "references": {
                             "getNav": "@nav/api/MainModule.Router.getNav",
                             "NavigationCommon": "@nav/api/MainModule.NavigationCommon"
@@ -717,8 +717,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "getParentPath(): string",
                         "implementation": "getParentPath(): string {\n        const currentPath = this.getCurrentPath()\n        return currentPath.split('/').slice(0, -1).join('/')\n    }",
-                        "startLine": 216,
-                        "endLine": 220,
+                        "startLine": 200,
+                        "endLine": 204,
                         "references": {
                             "getParentPath": "@nav/api/MainModule.Router.getParentPath"
                         }
@@ -751,8 +751,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "navigateToParent()",
                         "implementation": "navigateToParent() {\n        const path = this.getCurrentPath()\n        const parentPath = path.split('/').slice(0, -1).join('/')\n        this.navigateTo({ path: parentPath })\n    }",
-                        "startLine": 278,
-                        "endLine": 283,
+                        "startLine": 269,
+                        "endLine": 274,
                         "references": {
                             "navigateToParent": "@nav/api/MainModule.Router.navigateToParent"
                         }
@@ -796,8 +796,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "scrollTo(target: string | HTMLElement)",
                         "implementation": "scrollTo(target: string | HTMLElement) {\n        if (!this.scrollableElement) {\n            return\n        }\n        const br = this.scrollableElement.getBoundingClientRect()\n        if (!target) {\n            this.scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const div: HTMLElement =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(this.scrollableElement, target)\n\n        if (!div) {\n            console.warn(`Can not scroll to element #${target}`)\n            return\n        }\n        setTimeout(() => {\n            this.scrollableElement.scrollTo({\n                top: div.offsetTop - br.top,\n                left: 0,\n                behavior: 'smooth',\n            })\n        }, 0)\n\n        const currentPath = this.getCurrentPath().split('.')[0]\n        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`\n        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)\n    }",
-                        "startLine": 289,
-                        "endLine": 322,
+                        "startLine": 280,
+                        "endLine": 313,
                         "references": {
                             "scrollTo": "@nav/api/MainModule.Router.scrollTo"
                         }
@@ -813,9 +813,9 @@
             "code": {
                 "filePath": "src/lib/router.ts",
                 "declaration": "export class Router",
-                "implementation": "export class Router {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation\n\n    /**\n     * Handles navigation redirections.\n     *\n     * This function is invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * @param target - The requested path that the user intends to navigate to.\n     * @returns The modified path to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: (target: string) => Promise<string | undefined> =\n        async (target) => target\n\n    /**\n     * Observable that emit the current main HTML page.\n     */\n    public readonly currentHtml$: Subject<HTMLElement> =\n        new ReplaySubject<HTMLElement>(1)\n    /**\n     * Observable that emit the current page.\n     */\n    public readonly currentPage$: Subject<Destination> =\n        new ReplaySubject<Destination>(1)\n    /**\n     * Observable that emit the current navigation node.\n     */\n    public readonly currentNode$: Subject<NavigationCommon> =\n        new ReplaySubject<NavigationCommon>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<NavNodeBase>\n\n    public scrollableElement: HTMLElement\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        { [k: string]: unknown[] }\n    > = { Warning: {}, Error: {} }\n\n    private navUpdates: { [href: string]: LazyNavResolver } = {}\n\n    /**\n     * If this attribute is set, navigation to nodes do not trigger browser re-location.\n     *\n     * See {@link MockBrowserLocation}.\n     */\n    public readonly mockBrowserLocation?: MockBrowserLocation\n\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.mockBrowserLocation See {@link Router.mockBrowserLocation}.\n     */\n    constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    }) {\n        Object.assign(this, params)\n        this.basePath = this.basePath || document.location.pathname\n        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])\n        const { rootNode, reactiveNavs } = createRootNode({\n            navigation: this.navigation,\n            router: this,\n        })\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNode(href)\n                const children = createImplicitChildren$({\n                    resolver: resolver,\n                    hrefBase: href,\n                    path: '',\n                    withExplicit: [],\n                    router: this,\n                })\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                })\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n\n        this.navigateTo({ path: this.getCurrentPath() })\n\n        if (this.mockBrowserLocation === undefined) {\n            window.onpopstate = (event: PopStateEvent) => {\n                const state = event.state\n                if (state) {\n                    this.navigateTo(state)\n                } else {\n                    this.navigateTo({ path: '/' })\n                }\n            }\n        }\n        this.currentHtml$.subscribe(() => {\n            console.log('Status', this.status)\n        })\n    }\n\n    /**\n     * Returns the current navigation path.\n     */\n    getCurrentPath(): string {\n        const urlParams = new URLSearchParams(\n            this.mockBrowserLocation?.initialPath || window.location.search,\n        )\n        return urlParams.get('nav') || '/'\n    }\n\n    /**\n     * Returns the parent path of the current navigation path.\n     */\n    getParentPath(): string {\n        const currentPath = this.getCurrentPath()\n        return currentPath.split('/').slice(0, -1).join('/')\n    }\n\n    navigateTo({ path }: { path: string }) {\n        this.awaitNavigateTo({ path }).then()\n    }\n\n    /**\n     * Navigate to a specific path.\n     *\n     * @param path The path to navigate to.\n     */\n    private async awaitNavigateTo({ path }: { path: string }) {\n        path = `/${sanitizeNavPath(path)}`\n        path = await this.redirects(path)\n        if (!path) {\n            return\n        }\n\n        const pagePath = path.split('.')[0]\n        const sectionId = path.split('.').slice(1).join('.')\n\n        const nav = this.getNav({ path: pagePath })\n        if (!nav) {\n            console.log('Try to wait...')\n            setTimeout(() => this.navigateTo({ path }), this.retryNavPeriod)\n            return\n        }\n        // This part is to resolve the html content of the selected page.\n        nav.pipe(\n            switchMap((resolved: NavigationCommon) => {\n                this.currentNode$.next(resolved)\n                const html = resolved.html({ router: this })\n                if (html instanceof Promise) {\n                    return from(html)\n                }\n                if (html instanceof Observable) {\n                    return html.pipe(take(1))\n                }\n                return of(html)\n            }),\n            map((html) => ({\n                html,\n                sectionId: sectionId == '' ? undefined : sectionId,\n            })),\n        ).subscribe((d) => {\n            this.currentPage$.next(d)\n        })\n        // This part is to select the appropriate node in the navigation.\n        this.expand(pagePath)\n        const url = `${this.basePath}?nav=${path}`\n        this.mockBrowserLocation\n            ? this.mockBrowserLocation.history.push({ url, data: { path } })\n            : history.pushState({ path }, undefined, url)\n        this.currentPath$.next(path)\n    }\n\n    /**\n     * Navigate to the parent node.\n     */\n    navigateToParent() {\n        const path = this.getCurrentPath()\n        const parentPath = path.split('/').slice(0, -1).join('/')\n        this.navigateTo({ path: parentPath })\n    }\n\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    scrollTo(target: string | HTMLElement) {\n        if (!this.scrollableElement) {\n            return\n        }\n        const br = this.scrollableElement.getBoundingClientRect()\n        if (!target) {\n            this.scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const div: HTMLElement =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(this.scrollableElement, target)\n\n        if (!div) {\n            console.warn(`Can not scroll to element #${target}`)\n            return\n        }\n        setTimeout(() => {\n            this.scrollableElement.scrollTo({\n                top: div.offsetTop - br.top,\n                left: 0,\n                behavior: 'smooth',\n            })\n        }, 0)\n\n        const currentPath = this.getCurrentPath().split('.')[0]\n        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`\n        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)\n    }\n\n    refresh({\n        resolverPath,\n        path,\n        redirectTo,\n    }: {\n        resolverPath: string\n        path?: string\n        redirectTo?: string\n    }) {\n        const currentPath = this.getCurrentPath()\n        path = path || this.getCurrentPath()\n        const resolver =\n            this.navUpdates[resolverPath] ||\n            this.navigation[resolverPath][CatchAllKey]\n        const oldNode = this.explorerState.getNode(path)\n        const relative = sanitizeNavPath(path.split(resolverPath)[1])\n        const children = createImplicitChildren$({\n            resolver: resolver,\n            hrefBase: resolverPath,\n            path: relative,\n            withExplicit: [],\n            router: this,\n        })\n        const newNode = new oldNode.factory({\n            ...oldNode,\n            children,\n        }) as NavNodeBase\n        this.explorerState.replaceNode(oldNode, newNode)\n        //this.explorerState.selectNodeAndExpand(newNode)\n        if (redirectTo) {\n            this.navigateTo({ path })\n            return\n        }\n        this.navigateTo({ path: currentPath })\n    }\n\n    /**\n     * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.\n     *\n     * @param path The target path.\n     */\n    public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined {\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n\n        const node = parts.reduce(\n            ({ tree, path, keepGoing }, part) => {\n                if (!keepGoing) {\n                    return { tree, path, keepGoing }\n                }\n                const treePart = tree[`/${part}`]\n                if (!treePart && !tree[CatchAllKey]) {\n                    console.error({ path, tree })\n                    throw Error(`Can not find target navigation ${path}`)\n                }\n                if (!treePart) {\n                    return {\n                        tree: this.navUpdates[path] || tree[CatchAllKey],\n                        path: `${path}`,\n                        keepGoing: false,\n                    }\n                }\n                return {\n                    tree: treePart,\n                    path: `${path}/${part}`,\n                    keepGoing: true,\n                }\n            },\n            { tree: this.navigation, path: ``, keepGoing: true },\n        )\n        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver\n        if (node.tree instanceof Observable) {\n            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed\n            return undefined\n        }\n        // node.tree: Navigation | LazyNavResolver\n        if (typeof node.tree === 'function') {\n            // case: LazyNavResolver, remove starting '/'\n            const relative = sanitizeNavPath(path.split(node.path)[1])\n            const nav = node.tree({ path: relative, router: this })\n            return nav instanceof Observable\n                ? nav\n                : nav instanceof Promise\n                  ? from(nav)\n                  : of(nav)\n        }\n        // node.tree: Navigation\n        return of(node.tree)\n    }\n\n    private expand(path: string) {\n        const parts = path.split('/')\n        const ids = parts\n            .map((p, i) => parts.slice(0, i + 1).join('/'))\n            .slice(1)\n        const getLastResolved = (ids: string[]) => {\n            if (ids.length == 0) {\n                return this.explorerState.getNode('/')\n            }\n            const id = ids.slice(-1)[0]\n            const childNode = this.explorerState.getNode(id)\n            return childNode || getLastResolved(ids.slice(0, -1))\n        }\n        const node = getLastResolved(ids)\n        if (node.id === ids.slice(-1)[0] || node.children === undefined) {\n            this.explorerState.selectNodeAndExpand(node)\n            return\n        }\n\n        const idsRemaining = ids.slice(ids.indexOf(node.id) + 1)\n        if (idsRemaining.length == 0) {\n            this.explorerState.selectNodeAndExpand(node)\n            return\n        }\n        const expandRec = (ids: string[], node: NavNodeBase) => {\n            if (ids.length == 0 || node.children === undefined) {\n                return this.explorerState.selectNodeAndExpand(node)\n            }\n            const maybeChildResolved = this.explorerState.getNode(ids[0])\n            return maybeChildResolved\n                ? expandRec(ids.slice(1), maybeChildResolved)\n                : this.explorerState.getChildren(node, (_, children) => {\n                      const nodeNew = children.find(\n                          (child) => child.id === ids[0],\n                      )\n                      if (!nodeNew) {\n                          console.warn(`Can not find node ${ids[0]} (yet?)`)\n                      }\n                      if (nodeNew) {\n                          expandRec(ids.slice(1), nodeNew)\n                      }\n                  })\n        }\n        expandRec(idsRemaining, node)\n    }\n\n    setDisplayedPage({ page }: { page: HTMLElement }) {\n        this.currentHtml$.next(page)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n}",
-                "startLine": 62,
-                "endLine": 481,
+                "implementation": "export class Router {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation\n\n    /**\n     * Handles navigation redirections.\n     *\n     * This function is invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * @param target - The requested path that the user intends to navigate to.\n     * @returns The modified path to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: (target: string) => Promise<string | undefined> =\n        async (target) => target\n\n    /**\n     * Observable that emit the current main HTML page.\n     */\n    public readonly currentHtml$: Subject<HTMLElement> =\n        new ReplaySubject<HTMLElement>(1)\n    /**\n     * Observable that emit the current page.\n     */\n    public readonly currentPage$: Subject<Destination> =\n        new ReplaySubject<Destination>(1)\n    /**\n     * Observable that emit the current navigation node.\n     */\n    public readonly currentNode$: Subject<NavigationCommon> =\n        new ReplaySubject<NavigationCommon>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<NavNodeBase>\n\n    public scrollableElement: HTMLElement\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        { [k: string]: unknown[] }\n    > = { Warning: {}, Error: {} }\n\n    private navUpdates: { [href: string]: LazyNavResolver } = {}\n    private navResolved: { [href: string]: Navigation } = {}\n\n    /**\n     * If this attribute is set, navigation to nodes do not trigger browser re-location.\n     *\n     * See {@link MockBrowserLocation}.\n     */\n    public readonly mockBrowserLocation?: MockBrowserLocation\n\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.mockBrowserLocation See {@link Router.mockBrowserLocation}.\n     */\n    constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    }) {\n        Object.assign(this, params)\n        this.basePath = this.basePath || document.location.pathname\n        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])\n        const { rootNode, reactiveNavs, promiseNavs } = createRootNode({\n            navigation: this.navigation,\n            router: this,\n        })\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        this.bindReactiveNavs(reactiveNavs)\n        this.bindPromiseNavs(promiseNavs)\n        this.navigateTo({ path: this.getCurrentPath() })\n\n        if (this.mockBrowserLocation === undefined) {\n            window.onpopstate = (event: PopStateEvent) => {\n                const state = event.state\n                if (state) {\n                    this.navigateTo(state)\n                } else {\n                    this.navigateTo({ path: '/' })\n                }\n            }\n        }\n        this.currentHtml$.subscribe(() => {})\n    }\n\n    /**\n     * Returns the current navigation path.\n     */\n    getCurrentPath(): string {\n        const urlParams = new URLSearchParams(\n            this.mockBrowserLocation?.initialPath || window.location.search,\n        )\n        return urlParams.get('nav') || '/'\n    }\n\n    /**\n     * Returns the parent path of the current navigation path.\n     */\n    getParentPath(): string {\n        const currentPath = this.getCurrentPath()\n        return currentPath.split('/').slice(0, -1).join('/')\n    }\n\n    navigateTo({ path }: { path: string }) {\n        this.awaitNavigateTo({ path }).then()\n    }\n\n    /**\n     * Navigate to a specific path.\n     *\n     * @param path The path to navigate to.\n     */\n    private async awaitNavigateTo({ path }: { path: string }) {\n        path = `/${sanitizeNavPath(path)}`\n        path = await this.redirects(path)\n        if (!path) {\n            return\n        }\n\n        const pagePath = path.split('.')[0]\n        const sectionId = path.split('.').slice(1).join('.')\n\n        const nav = this.getNav({ path: pagePath })\n        if (!nav) {\n            console.log('Try to wait...')\n            this.currentPage$.next({\n                html: new FuturePageView(),\n            })\n            const timeoutId = setTimeout(\n                () => this.navigateTo({ path }),\n                this.retryNavPeriod,\n            )\n            this.currentPath$.subscribe(() => clearTimeout(timeoutId))\n            return\n        }\n        // This part is to resolve the html content of the selected page.\n        nav.pipe(\n            switchMap((resolved: NavigationCommon) => {\n                this.currentNode$.next(resolved)\n                const html = resolved.html({ router: this })\n                if (html instanceof Promise) {\n                    return from(html)\n                }\n                if (html instanceof Observable) {\n                    return html.pipe(take(1))\n                }\n                return of(html)\n            }),\n            map((html) => ({\n                html,\n                sectionId: sectionId == '' ? undefined : sectionId,\n            })),\n        ).subscribe((d) => {\n            this.currentPage$.next(d)\n        })\n        // This part is to select the appropriate node in the navigation.\n        this.expand(pagePath)\n        const url = `${this.basePath}?nav=${path}`\n        this.mockBrowserLocation\n            ? this.mockBrowserLocation.history.push({ url, data: { path } })\n            : history.pushState({ path }, undefined, url)\n        this.currentPath$.next(path)\n    }\n\n    /**\n     * Navigate to the parent node.\n     */\n    navigateToParent() {\n        const path = this.getCurrentPath()\n        const parentPath = path.split('/').slice(0, -1).join('/')\n        this.navigateTo({ path: parentPath })\n    }\n\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    scrollTo(target: string | HTMLElement) {\n        if (!this.scrollableElement) {\n            return\n        }\n        const br = this.scrollableElement.getBoundingClientRect()\n        if (!target) {\n            this.scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const div: HTMLElement =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(this.scrollableElement, target)\n\n        if (!div) {\n            console.warn(`Can not scroll to element #${target}`)\n            return\n        }\n        setTimeout(() => {\n            this.scrollableElement.scrollTo({\n                top: div.offsetTop - br.top,\n                left: 0,\n                behavior: 'smooth',\n            })\n        }, 0)\n\n        const currentPath = this.getCurrentPath().split('.')[0]\n        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`\n        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)\n    }\n\n    refresh({\n        resolverPath,\n        path,\n        redirectTo,\n    }: {\n        resolverPath: string\n        path?: string\n        redirectTo?: string\n    }) {\n        const currentPath = this.getCurrentPath()\n        path = path || this.getCurrentPath()\n        const resolver =\n            this.navUpdates[resolverPath] ||\n            this.navigation[resolverPath][CatchAllKey]\n        const oldNode = this.explorerState.getNode(path)\n        const relative = sanitizeNavPath(path.split(resolverPath)[1])\n        const children = createImplicitChildren$({\n            resolver: resolver,\n            hrefBase: resolverPath,\n            path: relative,\n            withExplicit: [],\n            router: this,\n        })\n        const newNode = new oldNode.factory({\n            ...oldNode,\n            children,\n        }) as NavNodeBase\n        this.explorerState.replaceNode(oldNode, newNode)\n        //this.explorerState.selectNodeAndExpand(newNode)\n        if (redirectTo) {\n            this.navigateTo({ path })\n            return\n        }\n        this.navigateTo({ path: currentPath })\n    }\n\n    /**\n     * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.\n     *\n     * @param path The target path.\n     */\n    public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined {\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                let treePart = tree[`/${part}`]\n\n                if (treePart instanceof Promise) {\n                    const resolved = this.navResolved[`/${part}`]\n                    if (!resolved) {\n                        // a retry in some period of time will be executed\n                        return {\n                            tree: treePart,\n                            resolvedPath,\n                            keepGoing: false,\n                        }\n                    }\n                    treePart = resolved\n                }\n\n                if (!treePart && !tree[CatchAllKey]) {\n                    this.currentPage$.next({\n                        html: new UnresolvedPageView({ path }),\n                    })\n                    throw Error(\n                        `Can not find target navigation ${resolvedPath}`,\n                    )\n                }\n                if (!treePart) {\n                    return {\n                        tree:\n                            this.navUpdates[resolvedPath] || tree[CatchAllKey],\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return {\n                    tree: treePart,\n                    resolvedPath: `${resolvedPath}/${part}`,\n                    keepGoing: true,\n                }\n            },\n            { tree: this.navigation, resolvedPath: ``, keepGoing: true },\n        )\n        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver\n        if (node.tree instanceof Observable) {\n            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed\n            return undefined\n        }\n        if (node.tree instanceof Promise) {\n            // case: Promise not yet resolved -> a retry in some period of time will be executed\n            return undefined\n        }\n\n        // node.tree: Navigation | LazyNavResolver\n        if (typeof node.tree === 'function') {\n            // case: LazyNavResolver, remove starting '/'\n            const relative = sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const nav = node.tree({ path: relative, router: this })\n            return nav instanceof Observable\n                ? nav\n                : nav instanceof Promise\n                  ? from(nav)\n                  : of(nav)\n        }\n        // node.tree: Navigation\n        return of(node.tree)\n    }\n\n    private expand(path: string) {\n        const parts = path.split('/')\n        const ids = parts\n            .map((p, i) => parts.slice(0, i + 1).join('/'))\n            .slice(1)\n        const getLastResolved = (ids: string[]) => {\n            if (ids.length == 0) {\n                return this.explorerState.getNode('/')\n            }\n            const id = ids.slice(-1)[0]\n            const childNode = this.explorerState.getNode(id)\n            return childNode || getLastResolved(ids.slice(0, -1))\n        }\n        const node = getLastResolved(ids)\n        if (node.id === ids.slice(-1)[0] || node.children === undefined) {\n            this.explorerState.selectNodeAndExpand(node)\n            return\n        }\n\n        const idsRemaining = ids.slice(ids.indexOf(node.id) + 1)\n        if (idsRemaining.length == 0) {\n            this.explorerState.selectNodeAndExpand(node)\n            return\n        }\n        const expandRec = (ids: string[], node: NavNodeBase) => {\n            if (ids.length == 0 || node.children === undefined) {\n                return this.explorerState.selectNodeAndExpand(node)\n            }\n            const maybeChildResolved = this.explorerState.getNode(ids[0])\n            return maybeChildResolved\n                ? expandRec(ids.slice(1), maybeChildResolved)\n                : this.explorerState.getChildren(node, (_, children) => {\n                      const nodeNew = children.find(\n                          (child) => child.id === ids[0],\n                      )\n                      if (!nodeNew) {\n                          console.warn(`Can not find node ${ids[0]} (yet?)`)\n                      }\n                      if (nodeNew) {\n                          expandRec(ids.slice(1), nodeNew)\n                      }\n                  })\n        }\n        expandRec(idsRemaining, node)\n    }\n\n    setDisplayedPage({ page }: { page: HTMLElement }) {\n        this.currentHtml$.next(page)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n\n    private bindReactiveNavs(reactiveNavs: {\n        [href: string]: ReactiveLazyNavResolver\n    }) {\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNode(href)\n                const children = createImplicitChildren$({\n                    resolver: resolver,\n                    hrefBase: href,\n                    path: '',\n                    withExplicit: [],\n                    router: this,\n                })\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                })\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n    }\n    private bindPromiseNavs(promiseNavs: {\n        [href: string]: Promise<Navigation>\n    }) {\n        Object.entries(promiseNavs).forEach(([href, v]) => {\n            v.then((nav) => {\n                this.navResolved[href] = nav\n                const oldNode = this.explorerState.getNode(href)\n\n                const { rootNode, reactiveNavs, promiseNavs } = createRootNode({\n                    navigation: nav,\n                    router: this,\n                    hrefBase: href,\n                })\n                this.explorerState.replaceNode(oldNode, rootNode)\n                this.bindReactiveNavs(reactiveNavs)\n                this.bindPromiseNavs(promiseNavs)\n            })\n        })\n    }\n}",
+                "startLine": 64,
+                "endLine": 538,
                 "references": {
                     "Router": "@nav/api/MainModule.Router",
                     "Navigation": "@nav/api/MainModule.Navigation",
@@ -823,7 +823,8 @@
                     "Destination": "@nav/api/MainModule.Destination",
                     "NavNodeBase": "@nav/api/MainModule.NavNodeBase",
                     "MockBrowserLocation": "@nav/api/MainModule.MockBrowserLocation",
-                    "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver"
+                    "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver",
+                    "ReactiveLazyNavResolver": "@nav/api/MainModule.ReactiveLazyNavResolver"
                 }
             },
             "semantic": {
@@ -878,8 +879,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "history?: { url: string; data: unknown }[]",
                         "implementation": "",
-                        "startLine": 54,
-                        "endLine": 55,
+                        "startLine": 56,
+                        "endLine": 57,
                         "references": {
                             "history": "@nav/api/MainModule.MockBrowserLocation.history"
                         }
@@ -912,8 +913,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "initialPath: string",
                         "implementation": "",
-                        "startLine": 50,
-                        "endLine": 51,
+                        "startLine": 52,
+                        "endLine": 53,
                         "references": {
                             "initialPath": "@nav/api/MainModule.MockBrowserLocation.initialPath"
                         }
@@ -925,8 +926,8 @@
                 "filePath": "src/lib/router.ts",
                 "declaration": "export interface MockBrowserLocation",
                 "implementation": "export interface MockBrowserLocation {\n    /**\n     * Initial path.\n     */\n    initialPath: string\n    /**\n     * History of navigation.\n     */\n    history?: { url: string; data: unknown }[]\n}",
-                "startLine": 46,
-                "endLine": 56,
+                "startLine": 48,
+                "endLine": 58,
                 "references": {
                     "MockBrowserLocation": "@nav/api/MainModule.MockBrowserLocation"
                 }
@@ -961,8 +962,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type CatchAllNav = Resolvable<\n    NavigationCommon & { children: NavNodeInput[] }\n>",
                 "implementation": "",
-                "startLine": 284,
-                "endLine": 285,
+                "startLine": 309,
+                "endLine": 310,
                 "references": {
                     "CatchAllNav": "@nav/api/MainModule.CatchAllNav",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
@@ -1036,8 +1037,8 @@
                 "filePath": "src/lib/router.ts",
                 "declaration": "export type Destination = {\n    /**\n     * The table of content view.\n     */\n    tableOfContent?: HTMLElement | AnyVirtualDOM\n    /**\n     * The main page view.\n     */\n    html: HTMLElement | AnyVirtualDOM\n    /**\n     * The typedocNodes's ID if provided in the URL.\n     */\n    sectionId?: string\n}",
                 "implementation": "",
-                "startLine": 27,
-                "endLine": 28,
+                "startLine": 29,
+                "endLine": 30,
                 "references": {
                     "Destination": "@nav/api/MainModule.Destination"
                 }
@@ -1072,8 +1073,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyNavResolver = (p: {\n    // The targeted path in the navigation\n    path: string\n    // Router instance\n    router: Router\n}) => CatchAllNav",
                 "implementation": "",
-                "startLine": 294,
-                "endLine": 295,
+                "startLine": 319,
+                "endLine": 320,
                 "references": {
                     "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver",
                     "Router": "@nav/api/MainModule.Router",
@@ -1147,8 +1148,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type NavNodeInput = Omit<NavNodeParams, 'href' | 'children'> & {\n    /**\n     * Whether the node is a leaf (no children expected).\n     */\n    leaf?: boolean\n}",
                 "implementation": "",
-                "startLine": 84,
-                "endLine": 85,
+                "startLine": 97,
+                "endLine": 98,
                 "references": {
                     "NavNodeInput": "@nav/api/MainModule.NavNodeInput",
                     "NavNodeParams": "@nav/api/MainModule.NavNodeParams"
@@ -1220,10 +1221,10 @@
             "callables": [],
             "code": {
                 "filePath": "src/lib/navigation.node.ts",
-                "declaration": "export type Navigation = NavigationCommon & {\n    /**\n     * Name of the node.\n     */\n    name: string\n\n    /**\n     * Decoration configuration for the node.\n     */\n    decoration?: Decoration\n\n    /**\n     * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.\n     *\n     * The sub-paths defined in it can also be made reaction (using {@link ReactiveLazyNavResolver})\n     * if changes in organisation over time are expected.\n     */\n    [CatchAllKey]?: LazyNavResolver | ReactiveLazyNavResolver\n\n    /**\n     * Static sub-navigation resolver.\n     */\n    [key: `/${string}`]: Navigation\n}",
+                "declaration": "export type Navigation = NavigationCommon & {\n    /**\n     * Name of the node.\n     */\n    name: string\n\n    /**\n     * Decoration configuration for the node.\n     */\n    decoration?: Decoration\n\n    /**\n     * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.\n     *\n     * The sub-paths defined in it can also be made reaction (using {@link ReactiveLazyNavResolver})\n     * if changes in organisation over time are expected.\n     */\n    [CatchAllKey]?: LazyNavResolver | ReactiveLazyNavResolver\n\n    /**\n     * Static sub-navigation resolver.\n     */\n    [key: `/${string}`]: Navigation | Promise<Navigation>\n}",
                 "implementation": "",
-                "startLine": 316,
-                "endLine": 317,
+                "startLine": 341,
+                "endLine": 342,
                 "references": {
                     "Navigation": "@nav/api/MainModule.Navigation",
                     "NavigationCommon": "@nav/api/MainModule.NavigationCommon",
@@ -1262,8 +1263,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type NavigationCommon = {\n    /**\n     * This function represents the view of the main content.\n     *\n     * @param router Router instance.\n     * @returns A resolvable view\n     */\n    html: ({ router }) => Resolvable<AnyVirtualDOM>\n    /**\n     * This function represents the view of the table of content in the page.\n     *\n     * @param p arguments of the view generator:\n     *   *  html : Content of the HTML page\n     *   *  router : Router instance.\n     * @returns A promise on the view\n     */\n    tableOfContent?: (p: {\n        html: HTMLElement\n        router: Router\n    }) => Promise<AnyVirtualDOM>\n}",
                 "implementation": "",
-                "startLine": 258,
-                "endLine": 259,
+                "startLine": 283,
+                "endLine": 284,
                 "references": {
                     "NavigationCommon": "@nav/api/MainModule.NavigationCommon",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
@@ -1300,8 +1301,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type ReactiveLazyNavResolver = Observable<LazyNavResolver>",
                 "implementation": "",
-                "startLine": 305,
-                "endLine": 306,
+                "startLine": 330,
+                "endLine": 331,
                 "references": {
                     "ReactiveLazyNavResolver": "@nav/api/MainModule.ReactiveLazyNavResolver",
                     "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver"
@@ -1337,11 +1338,11 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type Resolvable<T> = T | Promise<T> | Observable<T>",
                 "implementation": "",
-                "startLine": 253,
-                "endLine": 254,
+                "startLine": 278,
+                "endLine": 279,
                 "references": {
                     "Resolvable": "@nav/api/MainModule.Resolvable",
-                    "T": "923"
+                    "T": "965"
                 }
             },
             "semantic": {
@@ -1493,9 +1494,9 @@
             "code": {
                 "filePath": "src/index.ts",
                 "declaration": "export async function installNotebookModule()",
-                "implementation": "export async function installNotebookModule() {\n    const module: typeof NotebookModule = await setup.installAuxiliaryModule({\n        name: 'Notebook',\n        cdnClient: webpmClient,\n    })\n    return module\n}",
+                "implementation": "export async function installNotebookModule() {\n    const module: typeof NotebookModule = await setup.installAuxiliaryModule({\n        name: 'Notebook',\n        cdnClient: webpmClient,\n    })\n    module.Dependencies.parseMd = parseMd\n    return module\n}",
                 "startLine": 36,
-                "endLine": 43,
+                "endLine": 44,
                 "references": {
                     "installNotebookModule": "@nav/api/MainModule.installNotebookModule",
                     "__module": "@nav/api/Notebook"
@@ -1643,8 +1644,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export function sanitizeNavPath(path: string)",
                 "implementation": "export function sanitizeNavPath(path: string) {\n    return path.replace(/^\\/+/, '').replace(/\\/+/g, '/').replace('/.', '.')\n}",
-                "startLine": 349,
-                "endLine": 352,
+                "startLine": 374,
+                "endLine": 377,
                 "references": {
                     "sanitizeNavPath": "@nav/api/MainModule.sanitizeNavPath"
                 }

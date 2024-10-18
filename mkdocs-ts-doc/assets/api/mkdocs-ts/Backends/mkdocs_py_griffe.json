@@ -66,8 +66,8 @@
             "code": {
                 "declaration": "def parse_module(ast: AstModule, project: Project) -> Module",
                 "filePath": "py_griffe.py",
-                "startLine": 368,
-                "endLine": 411,
+                "startLine": 370,
+                "endLine": 413,
                 "references": {
                     "Module": "@nav/api/Backends/mkdocs_py_griffe/.models.Module",
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
@@ -138,8 +138,8 @@
             "code": {
                 "declaration": "def parse_child_module(ast: AstModule, project: Project) -> ChildModule",
                 "filePath": "py_griffe.py",
-                "startLine": 424,
-                "endLine": 439,
+                "startLine": 426,
+                "endLine": 441,
                 "references": {
                     "ChildModule": "@nav/api/Backends/mkdocs_py_griffe/.models.ChildModule",
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
@@ -203,8 +203,8 @@
             "code": {
                 "declaration": "def format_file_doc(ast: AstModule, project: Project) -> File",
                 "filePath": "py_griffe.py",
-                "startLine": 442,
-                "endLine": 459,
+                "startLine": 444,
+                "endLine": 461,
                 "references": {
                     "File": "@nav/api/Backends/mkdocs_py_griffe/.models.File",
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
@@ -267,8 +267,8 @@
             "code": {
                 "declaration": "def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Callable",
                 "filePath": "py_griffe.py",
-                "startLine": 462,
-                "endLine": 498,
+                "startLine": 464,
+                "endLine": 500,
                 "references": {
                     "Callable": "@nav/api/Backends/mkdocs_py_griffe/.models.Callable",
                     "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity",
@@ -329,8 +329,8 @@
             "code": {
                 "declaration": "def parse_class(ast: AstClass, project: Project) -> Type",
                 "filePath": "py_griffe.py",
-                "startLine": 501,
-                "endLine": 539,
+                "startLine": 503,
+                "endLine": 541,
                 "references": {
                     "Type": "@nav/api/Backends/mkdocs_py_griffe/.models.Type",
                     "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity",
@@ -400,13 +400,13 @@
             "code": {
                 "declaration": "def parse_parameters(\n    ast: AstFunction, parsed: list[DocstringSection], project: Project\n) -> DocumentationSection | None",
                 "filePath": "py_griffe.py",
-                "startLine": 542,
-                "endLine": 578,
+                "startLine": 544,
+                "endLine": 580,
                 "references": {
                     "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
                     "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                    "DocstringSection": null,
+                    "DocstringSection": "https://mkdocstrings.github.io/griffe/reference/api/docstrings/models/#griffe.DocstringSection",
                     "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
                     "parse_parameters": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_parameters"
                 },
@@ -462,13 +462,13 @@
             "code": {
                 "declaration": "def parse_returns(\n    ast: AstFunction, parsed: list[DocstringSection], project: Project\n) -> DocumentationSection | None",
                 "filePath": "py_griffe.py",
-                "startLine": 581,
-                "endLine": 621,
+                "startLine": 583,
+                "endLine": 623,
                 "references": {
                     "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
                     "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                    "DocstringSection": null,
+                    "DocstringSection": "https://mkdocstrings.github.io/griffe/reference/api/docstrings/models/#griffe.DocstringSection",
                     "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
                     "parse_returns": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_returns"
                 },
@@ -524,13 +524,13 @@
             "code": {
                 "declaration": "def parse_raises(\n    ast: AstFunction, parsed: list[DocstringSection], project: Project\n) -> DocumentationSection | None",
                 "filePath": "py_griffe.py",
-                "startLine": 624,
-                "endLine": 676,
+                "startLine": 626,
+                "endLine": 678,
                 "references": {
                     "DocumentationSection": "@nav/api/Backends/mkdocs_py_griffe/.models.DocumentationSection",
                     "AstFunction": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Function",
                     "list": "https://docs.python.org/3/library/stdtypes.html#lists",
-                    "DocstringSection": null,
+                    "DocstringSection": "https://mkdocstrings.github.io/griffe/reference/api/docstrings/models/#griffe.DocstringSection",
                     "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project",
                     "parse_raises": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.parse_raises"
                 },
@@ -586,8 +586,8 @@
             "code": {
                 "declaration": "def parse_attribute(\n    ast: AstAttribute, semantic: Semantic, project: Project\n) -> Attribute",
                 "filePath": "py_griffe.py",
-                "startLine": 823,
-                "endLine": 847,
+                "startLine": 825,
+                "endLine": 849,
                 "references": {
                     "Attribute": "@nav/api/Backends/mkdocs_py_griffe/.models.Attribute",
                     "Entity": "@nav/api/Backends/mkdocs_py_griffe/.models.Entity",
@@ -648,8 +648,8 @@
             "code": {
                 "declaration": "def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> Code",
                 "filePath": "py_griffe.py",
-                "startLine": 866,
-                "endLine": 929,
+                "startLine": 868,
+                "endLine": 931,
                 "references": {
                     "Code": "@nav/api/Backends/mkdocs_py_griffe/.models.Code",
                     "dataclasses": "https://docs.python.org/3/library/dataclasses.html#",
@@ -717,8 +717,8 @@
             "code": {
                 "declaration": "def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]",
                 "filePath": "py_griffe.py",
-                "startLine": 988,
-                "endLine": 1071,
+                "startLine": 990,
+                "endLine": 1073,
                 "references": {
                     "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                     "str": "https://docs.python.org/fr/3/library/string.html",
@@ -779,8 +779,8 @@
             "code": {
                 "declaration": "def init_aliases(root_ast: AstModule) -> dict[str, str]",
                 "filePath": "py_griffe.py",
-                "startLine": 1074,
-                "endLine": 1154,
+                "startLine": 1076,
+                "endLine": 1156,
                 "references": {
                     "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                     "str": "https://docs.python.org/fr/3/library/string.html",
@@ -828,8 +828,8 @@
             "code": {
                 "declaration": "def generate_api(root_ast: AstModule, config: Configuration)",
                 "filePath": "py_griffe.py",
-                "startLine": 1157,
-                "endLine": 1212,
+                "startLine": 1159,
+                "endLine": 1214,
                 "references": {
                     "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module",
                     "Configuration": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Configuration",
@@ -2881,8 +2881,8 @@
             "code": {
                 "declaration": "class SymbolRef(NamedTuple)",
                 "filePath": "py_griffe.py",
-                "startLine": 108,
-                "endLine": 121,
+                "startLine": 110,
+                "endLine": 123,
                 "references": {
                     "NamedTuple": "https://docs.python.org/3/library/typing.html#typing.NamedTuple",
                     "SymbolRef": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SymbolRef"
@@ -2922,10 +2922,10 @@
                     "code": {
                         "declaration": "    kind: SymbolKind",
                         "filePath": "py_griffe.py",
-                        "startLine": 114,
-                        "endLine": 114,
+                        "startLine": 116,
+                        "endLine": 116,
                         "references": {
-                            "SymbolKind": null,
+                            "SymbolKind": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SymbolKind",
                             "Literal": "https://docs.python.org/3/library/typing.html#typing.Literal"
                         },
                         "implementation": null
@@ -2958,8 +2958,8 @@
                     "code": {
                         "declaration": "    navigation_path: str",
                         "filePath": "py_griffe.py",
-                        "startLine": 118,
-                        "endLine": 118,
+                        "startLine": 120,
+                        "endLine": 120,
                         "references": {
                             "str": "https://docs.python.org/fr/3/library/string.html"
                         },
@@ -2995,8 +2995,8 @@
             "code": {
                 "declaration": "class Project(NamedTuple)",
                 "filePath": "py_griffe.py",
-                "startLine": 124,
-                "endLine": 144,
+                "startLine": 126,
+                "endLine": 146,
                 "references": {
                     "NamedTuple": "https://docs.python.org/3/library/typing.html#typing.NamedTuple",
                     "Project": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Project"
@@ -3036,8 +3036,8 @@
                     "code": {
                         "declaration": "    config: Configuration",
                         "filePath": "py_griffe.py",
-                        "startLine": 129,
-                        "endLine": 129,
+                        "startLine": 131,
+                        "endLine": 131,
                         "references": {
                             "Configuration": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.Configuration",
                             "NamedTuple": "https://docs.python.org/3/library/typing.html#typing.NamedTuple"
@@ -3072,8 +3072,8 @@
                     "code": {
                         "declaration": "    root_ast: AstModule",
                         "filePath": "py_griffe.py",
-                        "startLine": 133,
-                        "endLine": 133,
+                        "startLine": 135,
+                        "endLine": 135,
                         "references": {
                             "AstModule": "https://mkdocstrings.github.io/griffe/reference/griffe/#griffe.Module"
                         },
@@ -3107,8 +3107,8 @@
                     "code": {
                         "declaration": "    all_symbols: dict[str, SymbolRef]",
                         "filePath": "py_griffe.py",
-                        "startLine": 137,
-                        "endLine": 137,
+                        "startLine": 139,
+                        "endLine": 139,
                         "references": {
                             "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                             "str": "https://docs.python.org/fr/3/library/string.html",
@@ -3145,8 +3145,8 @@
                     "code": {
                         "declaration": "    all_aliases: dict[str, str]",
                         "filePath": "py_griffe.py",
-                        "startLine": 141,
-                        "endLine": 141,
+                        "startLine": 143,
+                        "endLine": 143,
                         "references": {
                             "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                             "str": "https://docs.python.org/fr/3/library/string.html"
@@ -3185,8 +3185,8 @@
             "code": {
                 "declaration": "ATTR_SEMANTIC = Semantic(role=\"attribute\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 174,
-                "endLine": 174,
+                "startLine": 176,
+                "endLine": 176,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3262,8 +3262,8 @@
             "code": {
                 "declaration": "CLASS_SEMANTIC = Semantic(role=\"class\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 169,
-                "endLine": 169,
+                "startLine": 171,
+                "endLine": 171,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3374,8 +3374,8 @@
             "code": {
                 "declaration": "FUNCTION_GLOBAL_SEMANTIC = Semantic(\n    role=\"function\", labels=[], attributes={}, relations={}\n)",
                 "filePath": "py_griffe.py",
-                "startLine": 162,
-                "endLine": 164,
+                "startLine": 164,
+                "endLine": 166,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3409,8 +3409,8 @@
             "code": {
                 "declaration": "GLOBAL_SEMANTIC = Semantic(role=\"global\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 157,
-                "endLine": 157,
+                "startLine": 159,
+                "endLine": 159,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3477,8 +3477,8 @@
             "code": {
                 "declaration": "METHOD_SEMANTIC = Semantic(role=\"method\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 179,
-                "endLine": 179,
+                "startLine": 181,
+                "endLine": 181,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3512,8 +3512,8 @@
             "code": {
                 "declaration": "MODULE_SEMANTIC = Semantic(role=\"module\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 152,
-                "endLine": 152,
+                "startLine": 154,
+                "endLine": 154,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3547,8 +3547,8 @@
             "code": {
                 "declaration": "NO_SEMANTIC = Semantic(role=\"\", labels=[], attributes={}, relations={})",
                 "filePath": "py_griffe.py",
-                "startLine": 147,
-                "endLine": 147,
+                "startLine": 149,
+                "endLine": 149,
                 "references": {
                     "Semantic": "@nav/api/Backends/mkdocs_py_griffe/.models.Semantic"
                 },
@@ -3582,8 +3582,8 @@
             "code": {
                 "declaration": "SUPPORTED_CROSS_LINK_TAGS: set[SphinxCrossLinkTag] = {\n    \"mod\",\n    \"class\",\n    \"func\",\n    \"attr\",\n    \"meth\",\n    \"glob\",\n}",
                 "filePath": "py_griffe.py",
-                "startLine": 189,
-                "endLine": 196,
+                "startLine": 191,
+                "endLine": 198,
                 "references": {
                     "set": "https://docs.python.org/3/library/stdtypes.html#set",
                     "SphinxCrossLinkTag": "@nav/api/Backends/mkdocs_py_griffe/.py_griffe.SphinxCrossLinkTag"
@@ -3618,8 +3618,8 @@
             "code": {
                 "declaration": "SphinxCrossLinkTag = Literal[\"mod\", \"class\", \"func\", \"attr\", \"meth\", \"glob\"]",
                 "filePath": "py_griffe.py",
-                "startLine": 184,
-                "endLine": 184,
+                "startLine": 186,
+                "endLine": 186,
                 "references": {
                     "Literal": "https://docs.python.org/3/library/typing.html#typing.Literal"
                 },
@@ -3632,6 +3632,41 @@
                 "relations": {}
             },
             "path": "py_griffe.SphinxCrossLinkTag"
+        },
+        {
+            "name": "SymbolKind",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Possible kinds for a symbol.",
+                        "contentType": "Markdown",
+                        "semantic": {
+                            "role": "text",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "title": null
+                    }
+                ]
+            },
+            "code": {
+                "declaration": "SymbolKind = Literal[\"function\", \"attribute\", \"class\", \"property\", \"method\", \"module\"]",
+                "filePath": "py_griffe.py",
+                "startLine": 105,
+                "endLine": 105,
+                "references": {
+                    "Literal": "https://docs.python.org/3/library/typing.html#typing.Literal"
+                },
+                "implementation": null
+            },
+            "semantic": {
+                "role": "global",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "py_griffe.SymbolKind"
         }
     ],
     "files": [

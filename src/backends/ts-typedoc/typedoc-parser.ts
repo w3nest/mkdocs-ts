@@ -15,6 +15,7 @@ import {
     ProjectTrait,
     SignaturesTrait,
     SymbolTrait,
+    MethodTrait,
 } from './typedoc-models'
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -33,7 +34,7 @@ import {
     ChildModule,
 } from '../../lib/code-api'
 import fs from 'fs'
-import path from 'node:path'
+import * as pathLib from 'node:path'
 
 /**
  * Global project information.
@@ -150,7 +151,7 @@ export function generateApiFiles({
     baseNav: string
 }) {
     const projectPackageJson = fs.readFileSync(
-        path.resolve(projectFolder, 'package.json'),
+        pathLib.resolve(projectFolder, 'package.json'),
         'utf8',
     )
     // module name should not include '/', before finding a better solution
@@ -301,14 +302,16 @@ export function parseModule({
         ) {
             return fromElem
         }
-        const child = fromElem.children.find(
-            (c) =>
-                [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(
-                    c.kind,
-                ) && c.name === parts[0],
+        const modules = fromElem.children.filter((c) =>
+            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         )
-        if (child) {
-            return getModuleRec(child, parts.slice(1))
+        const targetPath = pathLib.join(...parts)
+        const children: [number, TypedocNode][] = modules
+            .filter((c) => targetPath.startsWith(c.name))
+            .map((c) => [1 + c.name.search(/\//), c])
+        children.sort((a, b) => b[0] - a[0])
+        if (children.length > 0) {
+            return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))
         }
         throw new Error(`Module not found: ${parts.join('.')}`)
     }
@@ -761,11 +764,16 @@ export function parseType({
             (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,
         ) || []
     const methods =
-        typedocNode.children?.filter((child) =>
-            [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(
-                child.kind,
-            ),
-        ) || []
+        typedocNode.children
+            ?.filter((child) =>
+                [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(
+                    child.kind,
+                ),
+            )
+            // For now inherited methods are only documented in the class they belong.
+            .filter(
+                (child: TypedocNode & MethodTrait) => !child.inheritedFrom,
+            ) || []
 
     const references = gather_symbol_references(typedocNode, projectGlobals)
     const doc = getSummaryDoc(documentation)

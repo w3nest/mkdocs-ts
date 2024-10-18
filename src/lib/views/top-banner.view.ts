@@ -1,9 +1,8 @@
-import { TopBannerView as TopBannerBase } from '@youwol/os-top-banner'
 import { distinctUntilChanged, Subject } from 'rxjs'
 import { DisplayMode } from './default-layout.view'
 import { ModalNavigationView } from './navigation.view'
 import { Router } from '../router'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 
 /**
  * Simple top banner definition, including:
@@ -11,10 +10,11 @@ import { AnyVirtualDOM } from '@youwol/rx-vdom'
  * *  A title
  *
  */
-export class TopBannerView extends TopBannerBase {
+export class TopBannerView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
         'mkdocs-TopBannerView fv-text-primary fv-bg-background'
+    public readonly children: ChildrenLike
 
     constructor({
         name,
@@ -56,9 +56,8 @@ export class TopBannerView extends TopBannerBase {
                       ],
                   }
                 : name
-
-        super({
-            innerView: {
+        this.children = [
+            {
                 tag: 'div',
                 class: 'd-flex flex-column justify-content-center h-100',
                 children: [
@@ -101,6 +100,6 @@ export class TopBannerView extends TopBannerBase {
                     },
                 ],
             },
-        })
+        ]
     }
 }

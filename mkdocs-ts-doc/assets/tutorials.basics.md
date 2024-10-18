@@ -17,7 +17,7 @@ const { MkDocs } = await webpm.install({
 display(MkDocs)
 </js-cell>
 
-Creating an application with @youwol/mkdocs-ts involves defining a  [Navigation](@nav/api/MainModule.Navigation) object. 
+Creating an application with **@youwol/mkdocs-ts** involves defining a  [Navigation](@nav/api/MainModule.Navigation) object. 
 This object represents a tree structure where nodes (called navigation nodes) are associated with:
 *  A target URL
 *  A main content view
@@ -46,14 +46,14 @@ let navigation = {
             innerText: 'First page',
         }),
     },
-    '/node-2': {
+    '/node-2': Promise.resolve({
         name: 'Second child',
         tableOfContent,
         html: () => ({
             tag: 'h1',
-            innerText: 'Second page',
+            innerText: 'Second page (async nav.)',
         }),
-    },
+    }),
 }
 
 // For real scenario the following parameters is not needed.
@@ -84,9 +84,10 @@ display({
 </cell-output>
 
 Key points:
+*  To define a child node, use a property name starting with `/`. This name defines the corresponding part of the URL.
+   A `Promise` can also be used to define them.
 *  The `html` property of a navigation node is provided as VirtualDOM (from the `@youwol/rx-vdom` library). 
    Typically, the `html` definition comes from Markdown source, as explained in the next section.
-*  To define a child node, use a property name starting with `/`. This name defines the corresponding part of the URL.
 *  the `name` property of a navigation node specifies to the displayed name.
 *  the `router` object is the navigation resolver. Its is provided at all places where re-routing can occur.
     See [Router](@nav/api/MainModule.Router) for more information.

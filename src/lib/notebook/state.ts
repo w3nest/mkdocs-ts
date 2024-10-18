@@ -14,6 +14,7 @@ import { AnyVirtualDOM } from '@youwol/rx-vdom'
 import {
     CellCommonAttributes,
     defaultCellAttributes,
+    Dependencies,
     DeportedOutputsView,
     InterpreterCellView,
     JsCellExecutor,
@@ -26,7 +27,7 @@ import {
 } from '.'
 import { Router } from '../router'
 import { fromFetch } from 'rxjs/fetch'
-import { MdParsingOptions, parseMd } from '../markdown'
+import type { MdParsingOptions } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
 
@@ -449,7 +450,7 @@ export class State {
                         router,
                         parent: { state: this, cellId },
                     })
-                    parseMd({
+                    Dependencies.parseMd({
                         src: extractExportedCode(src),
                         router,
                         views: {
