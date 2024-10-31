@@ -200,7 +200,11 @@ export function codeApiEntryNode(params: {
                 }),
             )
         },
-        tableOfContent: Dependencies.Views.tocView,
+        tableOfContent: (d: { html: HTMLElement; router: Router }) =>
+            Dependencies.Views.tocView({
+                ...d,
+                domConvertor: tocConvertor,
+            }),
         '...': ({ router, path }) =>
             docNavigation({
                 modulePath: path,
