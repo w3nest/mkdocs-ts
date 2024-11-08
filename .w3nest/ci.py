@@ -1,7 +1,7 @@
-from youwol.app.environment import YouwolEnvironment
-from youwol.app.routers.projects import IPipelineFactory, JsBundle, Link, Pipeline
-from youwol.pipelines.pipeline_typescript_weback_npm import pipeline, PipelineConfig, PublishConfig
-from youwol.utils.context import Context
+from w3nest.app.environment import Environment
+from w3nest.app.projects import IPipelineFactory, JsBundle, Link, Pipeline
+from w3nest.ci.ts_frontend import pipeline, PipelineConfig, PublishConfig
+from w3nest_client.context import Context
 
 
 class PipelineFactory(IPipelineFactory):
@@ -9,7 +9,7 @@ class PipelineFactory(IPipelineFactory):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    async def get(self, env: YouwolEnvironment, context: Context) -> Pipeline:
+    async def get(self, env: Environment, context: Context) -> Pipeline:
         publish_conf = PublishConfig(
             packagedFolders=["assets"],
             ignore=[

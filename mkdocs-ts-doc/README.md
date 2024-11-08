@@ -68,8 +68,8 @@ the Py-YouWol configuration needs to be updated to include a `WebpackDevServerSw
 `FlowSwitcherMiddleware`. For example:
 
 ```python
-from youwol.app.environment import *
-from youwol.pipelines.pipeline_typescript_weback_npm import WebpackDevServerSwitch
+from w3nest.app.config import *
+from w3nest.pipelines.pipeline_typescript_weback_npm import WebpackDevServerSwitch
 
 Configuration(
     customization = Customization(

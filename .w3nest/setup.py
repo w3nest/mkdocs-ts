@@ -1,14 +1,14 @@
-import shutil
+from shutil import copyfile
 from pathlib import Path
 
-from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
+from w3nest.ci.ts_frontend import ProjectConfig, PackageType, Dependencies, \
     RunTimeDeps, Bundles, MainModule, AuxiliaryModule
-from youwol.pipelines.pipeline_typescript_weback_npm.regular import generate_template
-from youwol.utils import parse_json
+from w3nest.ci.ts_frontend.regular import generate_template
+from w3nest.utils import parse_json
 
-folder_path = Path(__file__).parent
+project_folder = Path(__file__).parent.parent
 
-pkg_json = parse_json(folder_path / 'package.json')
+pkg_json = parse_json(project_folder / 'package.json')
 
 externals_deps = {
     "@youwol/rx-vdom": "^1.0.1",
@@ -27,8 +27,8 @@ dev_deps = {
     "sass": "^1.69.7",
 }
 
-template = Template(
-    path=folder_path,
+config = ProjectConfig(
+    path=project_folder,
     type=PackageType.LIBRARY,
     name=pkg_json['name'],
     version=pkg_json['version'],
@@ -61,7 +61,6 @@ template = Template(
             )
         ]
     ),
-    userGuide=True,
     inPackageJson={
         "scripts" :{
             "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
@@ -82,22 +81,18 @@ template = Template(
         }
     }
 )
+template_folder = project_folder / '.w3nest' / '.template'
+generate_template(config=config, dst_folder=template_folder)
 
-generate_template(template)
-shutil.copyfile(
-    src=folder_path / '.template' / 'src' / 'auto-generated.ts',
-    dst=folder_path / 'src' / 'auto-generated.ts'
-)
-for file in ['README.md',
-             '.gitignore',
-             # '.npmignore', add 'mkdocs-ts-doc'
-             # '.prettierignore', add '**/assets/**/*.md'
-             'LICENSE',
-             'package.json',
-             # 'tsconfig.json', add `"exclude": ["mkdocs-ts-doc"]`
-             # 'jest.config.ts',  add `testPathIgnorePatterns: ['mkdocs-ts-doc']`
-             'webpack.config.ts']:
-    shutil.copyfile(
-        src=folder_path / '.template' / file,
-        dst=folder_path / file
-    )
+files = [
+    Path("src") / "auto-generated.ts",
+    "README.md",
+    "package.json",
+    # '.npmignore', add 'mkdocs-ts-doc'
+    # '.prettierignore', add '**/assets/**/*.md'
+    # "tsconfig.json", add `"exclude": ["mkdocs-ts-doc"]`
+    # 'jest.config.ts',  add `testPathIgnorePatterns: ['mkdocs-ts-doc']`
+    "webpack.config.ts",
+    ]
+for file in files:
+    copyfile(src=template_folder / file, dst=project_folder / file)

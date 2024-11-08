@@ -1,10 +1,10 @@
 import base64
 from pathlib import Path
 
-from youwol.app.environment import YouwolEnvironment
-from youwol.app.routers.projects import IPipelineFactory, BrowserApp, Execution, Link, BrowserAppGraphics
-from youwol.pipelines.pipeline_typescript_weback_npm import pipeline, PipelineConfig, PublishConfig
-from youwol.utils.context import Context
+from w3nest.app.environment import Environment
+from w3nest.app.routers.projects import IPipelineFactory, BrowserApp, Execution, Link, BrowserAppGraphics
+from w3nest.pipelines.pipeline_typescript_weback_npm import pipeline, PipelineConfig, PublishConfig
+from w3nest_client.context import Context
 
 
 class PipelineFactory(IPipelineFactory):
@@ -12,7 +12,7 @@ class PipelineFactory(IPipelineFactory):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    async def get(self, _env: YouwolEnvironment, context: Context):
+    async def get(self, _env: Environment, context: Context):
 
         img_path = Path(__file__).parent.parent / 'assets' / 'logo-raw.svg'
         svg_content = img_path.read_bytes()

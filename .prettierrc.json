@@ -1,0 +1,14 @@
+{
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "trailingComma": "all",
+    "overrides": [
+        {
+            "files": ["*.yaml", "*.yml", "*.md", "*.mkd", "*.mkdn","*.mkdown", "*.markdown"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}

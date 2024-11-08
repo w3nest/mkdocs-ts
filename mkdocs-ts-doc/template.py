@@ -2,10 +2,10 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
+from w3nest.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
     RunTimeDeps, DevServer, Bundles, MainModule
-from youwol.pipelines.pipeline_typescript_weback_npm.regular import generate_template
-from youwol.utils import parse_json, write_json
+from w3nest.pipelines.pipeline_typescript_weback_npm.regular import generate_template
+from w3nest.utils import parse_json, write_json
 from typing import cast
 
 import griffe
