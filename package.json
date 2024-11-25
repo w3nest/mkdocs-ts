@@ -1,7 +1,7 @@
 {
     "name": "mkdocs-ts",
     "description": "Typescript based mkdocs like solution",
-    "version": "0.1.1",
+    "version": "0.1.2-wip",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts#README.md",
     "main": "dist/mkdocs-ts.js",
