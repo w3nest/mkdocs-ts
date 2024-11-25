@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { CellTrait, ExecArgs, Scope, State } from './state'
@@ -322,7 +322,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                     },
                 ],
             },
-            {
+            child$({
                 source$: from(install({ modules: ['bootstrap#^4.4.1'] })),
                 vdomMap: () => ({
                     tag: 'div',
@@ -352,7 +352,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                         ],
                     })),
                 }),
-            },
+            }),
         ]
     }
 }

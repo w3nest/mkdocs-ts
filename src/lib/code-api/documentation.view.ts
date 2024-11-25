@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
@@ -55,7 +55,7 @@ export class SectionView implements VirtualDOM<'div'> {
         this.children = [
             section.title && new SectionHeader(section),
             configuration.notebook
-                ? {
+                ? child$({
                       source$: from(Dependencies.installNotebookModule()),
                       vdomMap: (mdle: typeof NotebookTypes) => {
                           return new mdle.NotebookPage({
@@ -65,7 +65,7 @@ export class SectionView implements VirtualDOM<'div'> {
                               ...nbConfig,
                           })
                       },
-                  }
+                  })
                 : Dependencies.parseMd({
                       src: section.content,
                       router: router,

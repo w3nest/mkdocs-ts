@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { NavigationView } from './navigation.view'
 import { Router } from '../router'
 import { FooterView, PageView } from './page.view'
@@ -206,7 +206,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                         tag: 'div',
                         class: 'd-flex justify-content-center pt-5 w-100',
                         children: [
-                            {
+                            child$({
                                 source$: this.displayModeNav$.pipe(
                                     distinctUntilChanged(),
                                 ),
@@ -222,7 +222,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                               ],
                                           }
                                 },
-                            },
+                            }),
                             {
                                 tag: 'div',
                                 style: {
@@ -247,7 +247,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                     },
                                 ],
                             },
-                            {
+                            child$({
                                 source$: this.displayModeToc$.pipe(
                                     distinctUntilChanged(),
                                 ),
@@ -263,7 +263,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                               ],
                                           }
                                 },
-                            },
+                            }),
                         ],
                     },
                     {
@@ -292,7 +292,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
         Object.assign(this, params)
 
         this.children = [
-            {
+            child$({
                 source$: combineLatest([
                     this.router.currentNode$,
                     this.router.currentHtml$,
@@ -309,10 +309,10 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                             : of(undefined)
                     }),
                 ),
-                vdomMap: (toc?: AnyVirtualDOM): AnyVirtualDOM => {
+                vdomMap: (toc?): AnyVirtualDOM => {
                     return toc || { tag: 'div' }
                 },
-            },
+            }),
         ]
     }
 }

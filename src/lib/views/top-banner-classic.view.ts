@@ -4,6 +4,8 @@ import {
     AttributeLike,
     CSSAttribute,
     AnyVirtualDOM,
+    child$,
+    attr$,
 } from 'rx-vdom'
 
 import { Router, Navigation } from '..'
@@ -64,11 +66,11 @@ export class TopBannerClassicView implements VirtualDOM<'div'> {
     constructor(params: TopBannerClassicParams) {
         this.children = [
             new MainColumn(params),
-            {
+            child$({
                 source$: params.displayModeToc$,
                 vdomMap: (mode: DisplayMode) =>
                     mode === 'Full' ? new RightColumn(params) : { tag: 'div' },
-            },
+            }),
         ]
     }
 }
@@ -88,15 +90,15 @@ export class NavItemsView implements VirtualDOM<'div'> {
             ...firstLayer.map(
                 ([k, v]: [k: string, v: Navigation | Promise<Navigation>]) => {
                     if (v instanceof Promise) {
-                        return {
+                        return child$({
                             source$: from(v),
-                            vdomMap: (node: Navigation) =>
+                            vdomMap: (node) =>
                                 new NavItem({
                                     node,
                                     href: k,
                                     router,
                                 }),
-                        }
+                        })
                     }
                     return new NavItem({
                         node: v,
@@ -129,9 +131,9 @@ export class NavItem implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'a',
-                        class: {
+                        class: attr$({
                             source$: router.currentPath$,
-                            vdomMap: (path: string) => {
+                            vdomMap: (path) => {
                                 if (href === '/') {
                                     return path === '/'
                                         ? 'mkdocs-text-5 selected'
@@ -144,7 +146,7 @@ export class NavItem implements VirtualDOM<'div'> {
                             wrapper: (d) =>
                                 `${d} mkdocs-hover-text-5 d-flex align-items-center`,
                             untilFirst: 'mkdocs-text-4',
-                        },
+                        }),
                         href: href,
                         children: [
                             node.decoration?.icon,
@@ -194,9 +196,9 @@ export class MainColumn implements VirtualDOM<'div'> {
         title,
         badge,
     }: TopBannerClassicParams) {
-        this.style = {
+        this.style = attr$({
             source$: displayModeNav$,
-            vdomMap: (mode: DisplayMode) => {
+            vdomMap: (mode) => {
                 if (mode === 'Full') {
                     return {
                         width: `calc( ${layoutOptions.navWidth} + ${layoutOptions.pageWidth} )`,
@@ -208,7 +210,7 @@ export class MainColumn implements VirtualDOM<'div'> {
                     maxWidth: `calc( ${layoutOptions.pageMaxWidth})`,
                 }
             },
-        }
+        })
         const titleVDom: AnyVirtualDOM =
             typeof title === 'string'
                 ? {
@@ -226,9 +228,9 @@ export class MainColumn implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'd-flex align-items-center',
                 children: [
-                    {
+                    child$({
                         source$: displayModeNav$,
-                        vdomMap: (mode: DisplayMode) => {
+                        vdomMap: (mode) => {
                             return mode === 'Full'
                                 ? logo
                                 : {
@@ -246,7 +248,7 @@ export class MainColumn implements VirtualDOM<'div'> {
                                       ],
                                   }
                         },
-                    },
+                    }),
                     {
                         tag: 'i',
                         class: 'mx-3',
@@ -254,13 +256,13 @@ export class MainColumn implements VirtualDOM<'div'> {
                     titleVDom,
                 ],
             },
-            {
+            child$({
                 source$: displayModeNav$,
-                vdomMap: (mode: DisplayMode) =>
+                vdomMap: (mode) =>
                     mode === 'Full'
                         ? new NavItemsView({ router })
                         : { tag: 'div' },
-            },
+            }),
         ]
     }
 }

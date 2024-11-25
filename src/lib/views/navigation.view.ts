@@ -8,6 +8,9 @@ import {
     CSSAttribute,
     AnyVirtualDOM,
     AttributeLike,
+    attr$,
+    child$,
+    replace$,
 } from 'rx-vdom'
 import { Router } from '../router'
 import { NavNodeBase } from '../navigation.node'
@@ -40,9 +43,9 @@ export class HandlerView implements VirtualDOM<'div'> {
             {
                 tag: 'i',
                 class: 'fas fa-chevron-right text-center',
-                style: {
+                style: attr$({
                     source$: this.expandedNodes$,
-                    vdomMap: (nodes: string[]) => {
+                    vdomMap: (nodes) => {
                         return nodes.includes(this.node.id)
                             ? {
                                   transform: 'rotate(90deg)',
@@ -55,7 +58,7 @@ export class HandlerView implements VirtualDOM<'div'> {
                         ...style,
                         transition: 'transform 0.3s ease 0s',
                     }),
-                },
+                }),
             },
         ]
 
@@ -110,16 +113,16 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             node.decoration?.icon,
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: router.explorerState.selectedNode$,
-                    vdomMap: (selected: NavNodeBase) =>
+                    vdomMap: (selected) =>
                         selected.id == node.id
                             ? 'fv-text-focus font-weight-bold'
                             : '',
                     wrapper: (d) =>
                         `${d} flex-grow-1 fv-hover-text-focus mkdocs-NavigationHeader-title`,
                     untilFirst: 'flex-grow-1 fv-hover-text-focus',
-                },
+                }),
                 innerText: node.name,
             },
             {
@@ -205,7 +208,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
         Object.assign(this, params)
 
         this.children = [
-            {
+            child$({
                 source$: this.expanded$,
                 vdomMap: (expanded) => {
                     return expanded
@@ -221,7 +224,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
                               onclick: () => this.expanded$.next(true),
                           }
                 },
-            },
+            }),
         ]
     }
 }
@@ -268,10 +271,10 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                 },
                 connectedCallback: (elem) =>
                     setTimeout(() => (elem.style.marginLeft = '0px'), 0),
-                children: {
+                children: replace$({
                     policy: 'replace',
                     source$: this.router.explorerState.selectedNode$,
-                    vdomMap: (node: NavNodeBase) => {
+                    vdomMap: (node) => {
                         return [
                             new ModalNavParentView({
                                 router: this.router,
@@ -295,7 +298,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                             },
                         ]
                     },
-                },
+                }),
             },
         ]
         this.onclick = (ev) => {
@@ -345,14 +348,14 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
                 },
             },
             new NavigationHeader(params),
-            {
+            child$({
                 source$: this.displayModeToc$.pipe(distinctUntilChanged()),
                 vdomMap: (mode: DisplayMode) => {
                     return mode !== 'Minimized'
                         ? { tag: 'div' }
                         : new ModalTocView({ router: this.router })
                 },
-            },
+            }),
         ]
     }
 }
@@ -381,10 +384,10 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
             return
         }
 
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: source$,
-            vdomMap: (children: NavNodeBase[]) => {
+            vdomMap: (children) => {
                 return children.map((child) => {
                     return {
                         tag: 'div',
@@ -404,7 +407,7 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
                     }
                 })
             },
-        }
+        })
     }
 }
 
@@ -436,12 +439,12 @@ export class ModalTocView implements VirtualDOM<'div'> {
                     },
                     {
                         tag: 'div',
-                        class: {
+                        class: attr$({
                             source$: this.expanded$,
-                            vdomMap: (expanded) =>
+                            vdomMap: (expanded): string =>
                                 expanded ? 'fa-chevron-up' : 'fa-chevron-down',
                             wrapper: (d) => `fas ${d} flex-grow-1 text-right`,
-                        },
+                        }),
                     },
                 ],
             },
@@ -452,10 +455,10 @@ export class ModalTocView implements VirtualDOM<'div'> {
                     overflowY: 'auto' as const,
                     overflowX: 'hidden' as const,
                 },
-                class: {
+                class: attr$({
                     source$: this.expanded$,
                     vdomMap: (expanded) => (expanded ? 'd-block' : 'd-none'),
-                },
+                }),
                 children: [new TocWrapperView({ router: this.router })],
             },
         ]

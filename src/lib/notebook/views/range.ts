@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject, Subject } from 'rxjs'
 
 /**
@@ -100,10 +100,10 @@ export class Range implements VirtualDOM<'div'> {
                 tag: 'input',
                 type: 'number',
                 ...options,
-                value: {
+                value: attr$({
                     source$: this.value$,
-                    vdomMap: (v: number) => `${v}`,
-                },
+                    vdomMap: (v) => `${v}`,
+                }),
                 onchange: (ev: MouseEvent) => {
                     this.value$.next(getValue(ev.target['value']))
                 },
@@ -113,10 +113,10 @@ export class Range implements VirtualDOM<'div'> {
                 tag: 'input',
                 type: 'range',
                 ...options,
-                value: {
+                value: attr$({
                     source$: this.value$,
-                    vdomMap: (v: number) => `${v}`,
-                },
+                    vdomMap: (v) => `${v}`,
+                }),
                 onchange: (ev: MouseEvent) => {
                     this.value$.next(getValue(ev.target['value']))
                 },

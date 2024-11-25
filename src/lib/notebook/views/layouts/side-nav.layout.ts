@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, attr$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { layoutStyleBase } from './common'
 
@@ -119,13 +119,13 @@ export class SideNavLayout implements VirtualDOM<'div'> {
                             ([k, elem]) => {
                                 return {
                                     tag: 'div',
-                                    class: {
+                                    class: attr$({
                                         source$: this.selected$,
                                         vdomMap: (selected) =>
                                             selected === k
                                                 ? 'd-block h-100 overflow-auto'
                                                 : 'd-none',
-                                    },
+                                    }),
                                     children: [elem.content],
                                 }
                             },
@@ -152,13 +152,13 @@ export class SideNavLayout implements VirtualDOM<'div'> {
                 ([key, elem]) => {
                     return {
                         tag: 'button',
-                        class: {
+                        class: attr$({
                             source$: this.selected$,
-                            vdomMap: (selected: string) =>
+                            vdomMap: (selected) =>
                                 selected === key
                                     ? `btn btn-primary ${elem.icon} p-1 border rounded`
                                     : `btn btn-light ${elem.icon} p-1 border rounded`,
-                        },
+                        }),
                         onclick: () => {
                             this.selected$.value === key
                                 ? this.selected$.next('')

@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes, notebookViews } from './notebook-page'
 import { CellTrait, ExecArgs, Output, Scope, State } from './state'
@@ -42,10 +42,10 @@ export class InlinedCode implements VirtualDOM<'div'> {
             invalidated$: this.invalidated$,
         })
         this.children = [
-            {
+            child$({
                 source$: output$.pipe(filter((d) => d != undefined)),
-                vdomMap: (vDom: AnyVirtualDOM) => vDom,
-            },
+                vdomMap: (vDom) => vDom,
+            }),
         ]
     }
 }

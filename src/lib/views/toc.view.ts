@@ -4,8 +4,10 @@
 
 import {
     AnyVirtualDOM,
+    attr$,
     ChildrenLike,
     CSSAttribute,
+    replace$,
     RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
@@ -145,10 +147,10 @@ export class TOCView implements VirtualDOM<'div'> {
                             }),
                     )
                 },
-                children: {
+                children: replace$({
                     policy: 'replace',
                     source$: headings$,
-                    vdomMap: (headingsArray: HTMLElement[]) => {
+                    vdomMap: (headingsArray) => {
                         return headingsArray.map(
                             (heading: HTMLHeadingElement, index: number) => {
                                 return new TocItemView({
@@ -162,7 +164,7 @@ export class TOCView implements VirtualDOM<'div'> {
                             },
                         )
                     },
-                },
+                }),
             },
         ]
     }
@@ -204,7 +206,7 @@ class TocItemView implements VirtualDOM<'li'> {
                 ? heading.innerText
                 : heading.firstChild['innerText'],
         })
-        const getItemClass = (firstIndex: number) => {
+        const getItemClass = (firstIndex: number): string => {
             if (index == firstIndex) {
                 return 'fv-text-focus font-weight-bold'
             }
@@ -215,11 +217,11 @@ class TocItemView implements VirtualDOM<'li'> {
         this.children = [
             {
                 tag: 'a' as const,
-                class: {
+                class: attr$({
                     source$: indexFirstVisibleHeading$,
                     vdomMap: getItemClass,
                     wrapper: (d) => `fv-hover-text-focus ${d} `,
-                },
+                }),
                 href: `${
                     router.basePath
                 }?nav=${router.getCurrentPath()}.${heading.id}`,

@@ -1,4 +1,4 @@
-import { VirtualDOM, AnyVirtualDOM, RxChildren } from 'rx-vdom'
+import { VirtualDOM, AnyVirtualDOM, RxChildren, replace$, attr$ } from 'rx-vdom'
 import { BehaviorSubject, from } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 
@@ -64,7 +64,7 @@ export class DropDown implements VirtualDOM<'div'> {
                 (acc, e) => ({ ...acc, [e]: e }),
                 {},
             )
-        this.children = {
+        this.children = replace$({
             policy: 'replace',
             source$: from(install({ esm: ['bootstrap#^5.3.0'] })),
             vdomMap: (_): AnyVirtualDOM[] => {
@@ -73,10 +73,10 @@ export class DropDown implements VirtualDOM<'div'> {
                         tag: 'button',
                         type: 'button',
                         class: 'btn btn-sm dropdown-toggle btn-secondary',
-                        innerText: {
+                        innerText: attr$({
                             source$: this.itemId$,
-                            vdomMap: (id: string) => displayedNames[id],
-                        },
+                            vdomMap: (id) => displayedNames[id],
+                        }),
                         customAttributes: {
                             dataBsToggle: 'dropdown',
                             ariaExpanded: 'true',
@@ -106,6 +106,6 @@ export class DropDown implements VirtualDOM<'div'> {
                     },
                 ]
             },
-        }
+        })
     }
 }

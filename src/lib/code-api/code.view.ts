@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
@@ -60,12 +60,12 @@ class CodeHeaderView implements VirtualDOM<'div'> {
             },
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: this.expanded$,
-                    vdomMap: (expanded: boolean) =>
+                    vdomMap: (expanded): string =>
                         expanded ? 'fa-chevron-down' : 'fa-chevron-right',
                     wrapper: (d) => `fas fv-pointer ${d}`,
-                },
+                }),
                 onclick: () => this.expanded$.next(!this.expanded$.value),
             },
         ]
@@ -106,30 +106,31 @@ export class CodeView implements VirtualDOM<'div'> {
                     configuration: this.configuration,
                     project: this.project,
                 }),
-            this.code.implementation && {
-                source$: this.expanded$,
-                vdomMap: (expanded: boolean) => {
-                    if (!expanded) {
-                        return { tag: 'div' }
-                    }
-                    return {
-                        tag: 'div',
-                        class: 'ms-1 me-1 mt-1 code-api-snippet ',
-                        style: {
-                            fontSize: '0.8em',
-                        },
-                        children: [
-                            Dependencies.parseMd({
-                                src: `
+            this.code.implementation &&
+                child$({
+                    source$: this.expanded$,
+                    vdomMap: (expanded) => {
+                        if (!expanded) {
+                            return { tag: 'div' }
+                        }
+                        return {
+                            tag: 'div',
+                            class: 'ms-1 me-1 mt-1 code-api-snippet ',
+                            style: {
+                                fontSize: '0.8em',
+                            },
+                            children: [
+                                Dependencies.parseMd({
+                                    src: `
 <code-snippet language="javascript">
 ${this.code.implementation}
 </code-snippet>`,
-                                router: this.router,
-                            }),
-                        ],
-                    }
-                },
-            },
+                                    router: this.router,
+                                }),
+                            ],
+                        }
+                    },
+                }),
         ]
     }
 }

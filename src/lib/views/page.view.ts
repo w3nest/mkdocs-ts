@@ -1,4 +1,10 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM, RxHTMLElement } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    ChildrenLike,
+    VirtualDOM,
+    RxHTMLElement,
+    child$,
+} from 'rx-vdom'
 import { Router } from '../router'
 import { parseMd } from '../markdown'
 
@@ -16,7 +22,7 @@ export class PageView implements VirtualDOM<'div'> {
     constructor(params: { router: Router }) {
         Object.assign(this, params)
         this.children = [
-            {
+            child$({
                 source$: this.router.currentPage$,
                 vdomMap: ({ html, sectionId }) => {
                     return {
@@ -29,7 +35,7 @@ export class PageView implements VirtualDOM<'div'> {
                         },
                     }
                 },
-            },
+            }),
         ]
     }
 }

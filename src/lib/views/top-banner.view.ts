@@ -2,7 +2,7 @@ import { distinctUntilChanged, Subject } from 'rxjs'
 import { DisplayMode } from './default-layout.view'
 import { ModalNavigationView } from './navigation.view'
 import { Router } from '../router'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 
 /**
  * Simple top banner definition, including:
@@ -65,11 +65,11 @@ export class TopBannerView implements VirtualDOM<'div'> {
                         tag: 'div',
                         class: 'd-flex mx-auto align-items-center justify-content-center px-5',
                         children: [
-                            {
+                            child$({
                                 source$: displayModeNav$.pipe(
                                     distinctUntilChanged(),
                                 ),
-                                vdomMap: (mode: DisplayMode) => {
+                                vdomMap: (mode) => {
                                     return mode === 'Full'
                                         ? { tag: 'div' }
                                         : new ModalNavigationView({
@@ -77,7 +77,7 @@ export class TopBannerView implements VirtualDOM<'div'> {
                                               displayModeToc$: displayModeToc$,
                                           })
                                 },
-                            },
+                            }),
                             {
                                 tag: 'div',
                                 class: 'mx-3',

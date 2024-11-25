@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, CSSAttribute } from 'rx-vdom'
+import { AnyVirtualDOM, child$, CSSAttribute } from 'rx-vdom'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 import { Observable, Subject } from 'rxjs'
 
@@ -25,10 +25,10 @@ export function display(
             return {
                 tag: 'div' as const,
                 children: [
-                    {
+                    child$({
                         source$: element,
                         vdomMap: (value) => pickView(value),
-                    },
+                    }),
                 ],
             }
         }

@@ -1,9 +1,12 @@
 import {
     AnyVirtualDOM,
+    attr$,
     AttributeLike,
+    child$,
     ChildLike,
     ChildrenLike,
     CSSAttribute,
+    sync$,
     VirtualDOM,
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
@@ -121,16 +124,16 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             }
             outputs$.next([...outputs$.value, out])
         })
-        const style$: AttributeLike<CSSAttribute> = {
+        const style$: AttributeLike<CSSAttribute> = attr$({
             source$: outputs$,
-            vdomMap: (outputs: Output[]): CSSAttribute => ({
+            vdomMap: (outputs): CSSAttribute => ({
                 backgroundColor: 'rgb(255,255,255)',
                 ...(outputs.length === 0 ? {} : params.style),
             }),
-        }
-        const class$: AttributeLike<string> = {
+        })
+        const class$: AttributeLike<string> = attr$({
             source$: combineLatest([this.mode$, outputs$]),
-            vdomMap: ([mode, outputs]: [OutputMode, Output[]]) => {
+            vdomMap: ([mode, outputs]) => {
                 if (outputs.length === 0) {
                     return ''
                 }
@@ -138,16 +141,16 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                     ? params.class
                     : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`
             },
-        }
+        })
         const contentView: VirtualDOM<'div'> = {
             tag: 'div' as const,
             style: style$,
             class: class$,
-            children: {
+            children: sync$({
                 source$: outputs$,
                 policy: 'sync',
-                vdomMap: (output: AnyVirtualDOM) => output,
-            },
+                vdomMap: (output) => output,
+            }),
             onclick: (ev) => ev.stopPropagation(),
         }
         if (params.inlined) {
@@ -155,9 +158,9 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             return
         }
 
-        const headerView: ChildLike = {
+        const headerView: ChildLike = child$({
             source$: outputs$,
-            vdomMap: (outputs: AnyVirtualDOM[]) => {
+            vdomMap: (outputs) => {
                 if (!params.fullScreen || outputs.length === 0) {
                     return { tag: 'div' }
                 }
@@ -174,18 +177,18 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                     ],
                 }
             },
-        }
-        const defaultView: ChildLike = {
+        })
+        const defaultView: ChildLike = child$({
             source$: outputs$,
-            vdomMap: (outputs: Array<unknown>) =>
+            vdomMap: (outputs) =>
                 outputs.length === 0
                     ? Dependencies.parseMd({ src: params.defaultContent })
                     : { tag: 'div' },
-        }
+        })
 
-        const displayModeStyle$: AttributeLike<CSSAttribute> = {
+        const displayModeStyle$: AttributeLike<CSSAttribute> = attr$({
             source$: this.mode$,
-            vdomMap: (mode: OutputMode) => {
+            vdomMap: (mode) => {
                 return mode === 'normal'
                     ? {
                           position: 'initial',
@@ -203,7 +206,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                           backdropFilter: 'blur(2px)',
                       }
             },
-        }
+        })
         this.children = [
             headerView,
             {

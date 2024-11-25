@@ -4,6 +4,8 @@ import {
     VirtualDOM,
     ChildLike,
     RxChild,
+    attr$,
+    child$,
 } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 
@@ -52,11 +54,12 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
         mode = mode || 'stateless'
         const header: AnyVirtualDOM = {
             tag: 'div',
-            class: {
+            class: attr$({
                 source$: expanded$,
-                vdomMap: (expanded) => (expanded ? 'border-bottom' : ''),
+                vdomMap: (expanded): string =>
+                    expanded ? 'border-bottom' : '',
                 wrapper: (d) => `${d} d-flex align-items-center`,
-            },
+            }),
             children: [
                 typeof icon === 'string'
                     ? {
@@ -80,13 +83,13 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                 },
                 {
                     tag: 'i',
-                    class: {
+                    class: attr$({
                         source$: expanded$,
-                        vdomMap: (expanded) =>
+                        vdomMap: (expanded): string =>
                             expanded ? 'fa-chevron-down' : 'fa-chevron-right',
                         wrapper: (d) =>
                             `${d} fas fv-pointer fv-hover-text-focus`,
-                    },
+                    }),
                     onclick: () => expanded$.next(!expanded$.value),
                 },
             ],
@@ -94,9 +97,9 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
         const wrapperClass = 'pt-2'
         const innerContent: AnyVirtualDOM | RxChild =
             mode === 'stateless'
-                ? {
+                ? child$({
                       source$: expanded$,
-                      vdomMap: (expanded: boolean) => {
+                      vdomMap: (expanded) => {
                           return expanded
                               ? {
                                     tag: 'div',
@@ -105,14 +108,14 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                                 }
                               : { tag: 'div' }
                       },
-                  }
+                  })
                 : {
                       tag: 'div' as const,
-                      class: {
+                      class: attr$({
                           source$: expanded$,
-                          vdomMap: (expanded: boolean) =>
+                          vdomMap: (expanded) =>
                               expanded ? wrapperClass : 'd-none',
-                      },
+                      }),
                       children: [content()],
                   }
         this.children = [header, innerContent]

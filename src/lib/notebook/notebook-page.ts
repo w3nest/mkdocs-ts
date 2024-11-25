@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import type { MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
 import { from, of, take } from 'rxjs'
@@ -143,9 +143,9 @@ export class NotebookPage implements VirtualDOM<'div'> {
                   )
 
         this.children = [
-            {
+            child$({
                 source$,
-                vdomMap: (src: string) => {
+                vdomMap: (src) => {
                     const vdom = Dependencies.parseMd({
                         src,
                         router: this.router,
@@ -162,7 +162,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
                     }
                     return vdom
                 },
-            },
+            }),
         ]
     }
 }

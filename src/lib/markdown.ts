@@ -4,7 +4,7 @@
  */
 import { parse, setOptions } from 'marked'
 import highlight from 'highlight.js'
-import { AnyVirtualDOM, render, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, child$, render, VirtualDOM } from 'rx-vdom'
 import * as webpm from '@w3nest/webpm-client'
 import { from } from 'rxjs'
 import { headingPrefixId, type Router } from './router'
@@ -221,10 +221,10 @@ export function parseMd({
         const view = render({
             tag: 'div',
             children: [
-                {
+                child$({
                     source$: from(fct),
                     vdomMap: (vDom) => vDom as AnyVirtualDOM,
-                },
+                }),
             ],
         })
         custom.parentNode.parentNode.replaceChild(view, custom.parentNode)

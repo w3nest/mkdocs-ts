@@ -1,7 +1,7 @@
 import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
-import { ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { type Editor } from 'codemirror'
 
 export type CodeLanguage =
@@ -130,12 +130,12 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
         const linesToHighlight = parseLineIndices(highlightedLines)
         this.content$ = new BehaviorSubject<string>(content)
         this.children = [
-            {
+            child$({
                 source$: combineLatest([
                     content$,
                     CodeSnippetView.fetchCmDependencies$(language),
                 ]),
-                vdomMap: ([content, _]: [string, unknown]) => {
+                vdomMap: ([content, _]) => {
                     return {
                         tag: 'div',
                         class: 'h-100 w-100',
@@ -168,7 +168,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                         },
                     }
                 },
-            },
+            }),
         ]
     }
 }

@@ -3,7 +3,15 @@
  *
  *
  */
-import { AnyVirtualDOM, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    attr$,
+    child$,
+    ChildrenLike,
+    CSSAttribute,
+    sync$,
+    VirtualDOM,
+} from 'rx-vdom'
 import { BehaviorSubject, filter, Observable, take } from 'rxjs'
 import { CellStatus, Output, State } from './state'
 import { CodeSnippetView } from '../md-widgets'
@@ -45,7 +53,7 @@ export class FutureCellView implements VirtualDOM<'div'> {
         reactive$: Observable<boolean>
     }) {
         this.children = [
-            {
+            child$({
                 source$: params.state.cellIds$.pipe(
                     filter((cellIds) => cellIds.includes(params.cellId)),
                     take(1),
@@ -53,7 +61,7 @@ export class FutureCellView implements VirtualDOM<'div'> {
                 vdomMap: (): AnyVirtualDOM => {
                     return new CellView(params)
                 },
-            },
+            }),
         ]
     }
 }
@@ -103,14 +111,14 @@ export class CellView implements VirtualDOM<'div'> {
             unready: '',
         }
 
-        const class$ = {
+        const class$ = attr$({
             source$: this.state.cellsStatus$[this.cellId],
-            vdomMap: (status: CellStatus) => backgrounds[status],
+            vdomMap: (status) => backgrounds[status],
             wrapper: (d) => `ps-1 ${d}`,
-        }
-        const style$ = {
+        })
+        const style$ = attr$({
             source$: this.state.cellsStatus$[this.cellId],
-            vdomMap: (status: CellStatus) => {
+            vdomMap: (status) => {
                 return ['unready', 'pending'].includes(status)
                     ? { opacity: 0.4 }
                     : { opacity: 1 }
@@ -119,7 +127,7 @@ export class CellView implements VirtualDOM<'div'> {
                 ...d,
                 position: 'relative',
             }),
-        }
+        })
         const editorView = {
             tag: 'div' as const,
             style: style$,
@@ -134,7 +142,7 @@ export class CellView implements VirtualDOM<'div'> {
                 }),
             ],
         }
-        const outputsView = {
+        const outputsView = child$({
             source$: this.state.executing$[this.cellId].pipe(
                 filter(
                     (executing) =>
@@ -148,7 +156,7 @@ export class CellView implements VirtualDOM<'div'> {
                     output$: this.state.outputs$[this.cellId],
                 })
             },
-        }
+        })
         this.children = [
             new CellHeaderView({
                 state: this.state,
@@ -224,9 +232,9 @@ export class CellHeaderView implements VirtualDOM<'div'> {
     constructor(params: { state: State; cellId: string }) {
         Object.assign(this, params)
         this.children = [
-            {
+            child$({
                 source$: this.state.cellsStatus$[this.cellId],
-                vdomMap: (s: CellStatus) => {
+                vdomMap: (s) => {
                     if (['success', 'pending', 'executing'].includes(s)) {
                         return { tag: 'div' }
                     }
@@ -238,7 +246,7 @@ export class CellHeaderView implements VirtualDOM<'div'> {
                         onclick: () => this.state.execute(this.cellId),
                     }
                 },
-            },
+            }),
         ]
     }
 }
@@ -286,9 +294,9 @@ export class CellTagsView implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'i',
-                class: {
+                class: attr$({
                     source$: params.cellStatus$,
-                    vdomMap: (status: CellStatus) => {
+                    vdomMap: (status) => {
                         switch (status) {
                             case 'pending':
                                 return 'fas fa-clock me-1'
@@ -298,7 +306,7 @@ export class CellTagsView implements VirtualDOM<'div'> {
                                 return ''
                         }
                     },
-                },
+                }),
             },
             {
                 tag: 'div',
@@ -308,11 +316,10 @@ export class CellTagsView implements VirtualDOM<'div'> {
             },
             {
                 tag: 'div',
-                class: {
+                class: attr$({
                     source$: params.reactive$,
-                    vdomMap: (reactive: boolean) =>
-                        reactive ? 'fas fa-bolt me-1' : '',
-                },
+                    vdomMap: (reactive) => (reactive ? 'fas fa-bolt me-1' : ''),
+                }),
             },
             {
                 tag: 'div',
@@ -362,10 +369,10 @@ export class OutputsView implements VirtualDOM<'div'> {
             }
             outputs$.next([...outputs$.value, out])
         })
-        this.children = {
+        this.children = sync$({
             source$: outputs$,
             policy: 'sync',
             vdomMap: (output: AnyVirtualDOM) => output,
-        }
+        })
     }
 }
