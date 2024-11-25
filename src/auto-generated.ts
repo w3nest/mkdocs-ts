@@ -150,19 +150,19 @@ const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDepen
 }
 
 const entries = {
-     '@youwol/mkdocs-ts': './index.ts',
-    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`@youwol/mkdocs-ts/${e.name}`]:e.entryFile}), {})
+     'mkdocs-ts': './index.ts',
+    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`mkdocs-ts/${e.name}`]:e.entryFile}), {})
 }
 export const setup = {
-    name:'@youwol/mkdocs-ts',
-        assetId:'QHlvdXdvbC9ta2RvY3MtdHM=',
-    version:'0.6.5-wip',
+    name:'mkdocs-ts',
+        assetId:'bWtkb2NzLXRz',
+    version:'0.1.0-wip',
     shortDescription:"Typescript based mkdocs like solution",
-    developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts&tab=doc',
-    npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts',
-    sourceGithub:'https://github.com/youwol/mkdocs-ts',
+    developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=mkdocs-ts&tab=doc',
+    npmPackage:'https://www.npmjs.com/package/mkdocs-ts',
+    sourceGithub:'https://github.com/mkdocs-ts',
     userGuide:'',
-    apiVersion:'06',
+    apiVersion:'01',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -187,7 +187,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts_APIv06`]
+            return window[`mkdocs-ts_APIv01`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -202,7 +202,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts#0.6.5-wip~dist/@youwol/mkdocs-ts/${entry.name}.js`
+            `mkdocs-ts#0.1.0-wip~dist/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -213,7 +213,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts/${entry.name}_APIv06`]
+            return window[`mkdocs-ts/${entry.name}_APIv01`]
         })
     },
     getCdnDependencies(name?: string){

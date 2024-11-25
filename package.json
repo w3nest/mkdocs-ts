@@ -1,10 +1,10 @@
 {
-    "name": "@youwol/mkdocs-ts",
+    "name": "mkdocs-ts",
     "description": "Typescript based mkdocs like solution",
-    "version": "0.6.5-wip",
-    "author": "greinisch@youwol.com",
-    "homepage": "https://github.com/youwol/mkdocs-ts#README.md",
-    "main": "dist/@youwol/mkdocs-ts.js",
+    "version": "0.1.0-wip",
+    "author": "reinisch.gui@gmail.com",
+    "homepage": "https://github.com/mkdocs-ts#README.md",
+    "main": "dist/mkdocs-ts.js",
     "types": "src/index.ts",
     "scripts": {
         "clean": "del-cli dist",
