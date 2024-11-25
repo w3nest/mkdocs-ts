@@ -44,20 +44,20 @@ config = ProjectConfig(
     bundles=Bundles(
         mainModule=MainModule(
             entryFile='./index.ts',
-            loadDependencies=["@youwol/rx-vdom", "@youwol/webpm-client", "rxjs", "marked", "highlight.js",
-                              "@youwol/os-top-banner","@youwol/rx-tree-views"],
+            loadDependencies=["rx-vdom", "w3nest/webpm-client", "rxjs", "marked", "highlight.js",
+                              "@w3nest/rx-tree-views"],
             aliases=[]
         ),
         auxiliaryModules=[
             AuxiliaryModule(
                 name='CodeApi',
                 entryFile='./lib/code-api/index.ts',
-                loadDependencies=["@youwol/rx-vdom", "@youwol/http-primitives" ],
+                loadDependencies=["rx-vdom", "@w3nest/http-clients" ],
             ),
             AuxiliaryModule(
                 name='Notebook',
                 entryFile='./lib/notebook/index.ts',
-                loadDependencies=["@youwol/rx-vdom", "rxjs", "@youwol/rx-tree-views", "esprima"],
+                loadDependencies=["rx-vdom", "rxjs", "@w3nest/rx-tree-views", "esprima"],
             )
         ]
     ),

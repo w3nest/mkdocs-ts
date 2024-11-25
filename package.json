@@ -63,8 +63,10 @@
     },
     "webpm": {
         "dependencies": {
+            "@w3nest/rx-tree-views": "^0.1.0",
             "highlight.js": "11.2.0",
             "marked": "^4.2.3",
+            "rx-vdom": "^0.1.0",
             "rxjs": "^7.5.6"
         },
         "aliases": []

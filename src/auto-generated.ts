@@ -118,13 +118,12 @@ const exportedSymbols = {
 const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "entryFile": "./index.ts",
     "loadDependencies": [
-        "@youwol/rx-vdom",
-        "@youwol/webpm-client",
+        "rx-vdom",
+        "w3nest/webpm-client",
         "rxjs",
         "marked",
         "highlight.js",
-        "@youwol/os-top-banner",
-        "@youwol/rx-tree-views"
+        "@w3nest/rx-tree-views"
     ]
 }
 
@@ -132,17 +131,17 @@ const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDepen
     "CodeApi": {
         "entryFile": "./lib/code-api/index.ts",
         "loadDependencies": [
-            "@youwol/rx-vdom",
-            "@youwol/http-primitives"
+            "rx-vdom",
+            "@w3nest/http-clients"
         ],
         "name": "CodeApi"
     },
     "Notebook": {
         "entryFile": "./lib/notebook/index.ts",
         "loadDependencies": [
-            "@youwol/rx-vdom",
+            "rx-vdom",
             "rxjs",
-            "@youwol/rx-tree-views",
+            "@w3nest/rx-tree-views",
             "esprima"
         ],
         "name": "Notebook"
