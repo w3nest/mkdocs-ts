@@ -10,7 +10,7 @@ import {
     takeUntil,
 } from 'rxjs'
 import { Scope } from './state'
-import { type WorkersPoolTypes } from '@youwol/webpm-client'
+import { type WorkersPoolTypes } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
 
 /**

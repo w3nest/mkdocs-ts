@@ -4,7 +4,7 @@ import {
     render,
     VirtualDOM,
     RxHTMLElement,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { BehaviorSubject, Subject } from 'rxjs'
 import { layoutStyleBase } from './common'
 

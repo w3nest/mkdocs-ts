@@ -1,6 +1,6 @@
-import { VirtualDOM, AnyVirtualDOM, RxChildren } from '@youwol/rx-vdom'
+import { VirtualDOM, AnyVirtualDOM, RxChildren } from 'rx-vdom'
 import { BehaviorSubject, from } from 'rxjs'
-import { install } from '@youwol/webpm-client'
+import { install } from '@w3nest/webpm-client'
 
 /**
  * Represents a drop-down view.

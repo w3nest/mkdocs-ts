@@ -4,8 +4,8 @@
  */
 import { parse, setOptions } from 'marked'
 import highlight from 'highlight.js'
-import { AnyVirtualDOM, render, VirtualDOM } from '@youwol/rx-vdom'
-import * as webpm from '@youwol/webpm-client'
+import { AnyVirtualDOM, render, VirtualDOM } from 'rx-vdom'
+import * as webpm from '@w3nest/webpm-client'
 import { from } from 'rxjs'
 import { headingPrefixId, type Router } from './router'
 import {
@@ -59,7 +59,7 @@ export type MdParsingOptions = {
      *
      * Using the webpm client:
      * ````js
-     * import { install } from '@youwol/webpm-client'
+     * import { install } from '@w3nest/webpm-client'
      *
      * await install({
      *     modules: ['mathjax#^3.1.4'],

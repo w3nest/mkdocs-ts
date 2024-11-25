@@ -1,9 +1,4 @@
-import {
-    AnyVirtualDOM,
-    ChildrenLike,
-    VirtualDOM,
-    RxHTMLElement,
-} from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM, RxHTMLElement } from 'rx-vdom'
 import { Router } from '../router'
 import { parseMd } from '../markdown'
 

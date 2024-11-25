@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, MdParsingOptions } from '../markdown'
 import { Router } from '../router'
 /**

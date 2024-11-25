@@ -1,38 +1,33 @@
 /* eslint-disable */
 const runTimeDependencies = {
     "externals": {
-        "@youwol/http-primitives": "^0.2.3",
-        "@youwol/rx-tree-views": "^0.3.4",
-        "@youwol/rx-vdom": "^1.0.1",
-        "@youwol/webpm-client": "^3.0.0",
+        "@w3nest/http-clients": "^0.1.0",
+        "@w3nest/rx-tree-views": "^0.1.0",
+        "@w3nest/webpm-client": "^0.1.0",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
         "highlight.js": "11.2.0",
         "marked": "^4.2.3",
+        "rx-vdom": "^0.1.0",
         "rxjs": "^7.5.6"
     },
     "includedInBundle": {}
 }
 const externals = {
-    "@youwol/http-primitives": {
-        "commonjs": "@youwol/http-primitives",
-        "commonjs2": "@youwol/http-primitives",
-        "root": "@youwol/http-primitives_APIv02"
+    "@w3nest/http-clients": {
+        "commonjs": "@w3nest/http-clients",
+        "commonjs2": "@w3nest/http-clients",
+        "root": "@w3nest/http-clients_APIv01"
     },
-    "@youwol/rx-tree-views": {
-        "commonjs": "@youwol/rx-tree-views",
-        "commonjs2": "@youwol/rx-tree-views",
-        "root": "@youwol/rx-tree-views_APIv03"
+    "@w3nest/rx-tree-views": {
+        "commonjs": "@w3nest/rx-tree-views",
+        "commonjs2": "@w3nest/rx-tree-views",
+        "root": "@w3nest/rx-tree-views_APIv01"
     },
-    "@youwol/rx-vdom": {
-        "commonjs": "@youwol/rx-vdom",
-        "commonjs2": "@youwol/rx-vdom",
-        "root": "@youwol/rx-vdom_APIv1"
-    },
-    "@youwol/webpm-client": {
-        "commonjs": "@youwol/webpm-client",
-        "commonjs2": "@youwol/webpm-client",
-        "root": "@youwol/webpm-client_APIv3"
+    "@w3nest/webpm-client": {
+        "commonjs": "@w3nest/webpm-client",
+        "commonjs2": "@w3nest/webpm-client",
+        "root": "@w3nest/webpm-client_APIv01"
     },
     "codemirror": {
         "commonjs": "codemirror",
@@ -53,6 +48,11 @@ const externals = {
         "commonjs": "marked",
         "commonjs2": "marked",
         "root": "marked_APIv4"
+    },
+    "rx-vdom": {
+        "commonjs": "rx-vdom",
+        "commonjs2": "rx-vdom",
+        "root": "rx-vdom_APIv01"
     },
     "rxjs": {
         "commonjs": "rxjs",
@@ -77,21 +77,17 @@ const externals = {
     }
 }
 const exportedSymbols = {
-    "@youwol/http-primitives": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/http-primitives"
+    "@w3nest/http-clients": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/http-clients"
     },
-    "@youwol/rx-tree-views": {
-        "apiKey": "03",
-        "exportedSymbol": "@youwol/rx-tree-views"
+    "@w3nest/rx-tree-views": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/rx-tree-views"
     },
-    "@youwol/rx-vdom": {
-        "apiKey": "1",
-        "exportedSymbol": "@youwol/rx-vdom"
-    },
-    "@youwol/webpm-client": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/webpm-client"
+    "@w3nest/webpm-client": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/webpm-client"
     },
     "codemirror": {
         "apiKey": "5",
@@ -108,6 +104,10 @@ const exportedSymbols = {
     "marked": {
         "apiKey": "4",
         "exportedSymbol": "marked"
+    },
+    "rx-vdom": {
+        "apiKey": "01",
+        "exportedSymbol": "rx-vdom"
     },
     "rxjs": {
         "apiKey": "7",

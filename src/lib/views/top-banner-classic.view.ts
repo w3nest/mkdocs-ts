@@ -4,7 +4,7 @@ import {
     AttributeLike,
     CSSAttribute,
     AnyVirtualDOM,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 
 import { Router, Navigation } from '..'
 import { from, Subject } from 'rxjs'

@@ -8,7 +8,7 @@ import {
     CSSAttribute,
     RxHTMLElement,
     VirtualDOM,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { Router } from '../router'
 import {
     BehaviorSubject,

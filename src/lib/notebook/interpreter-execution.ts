@@ -10,7 +10,7 @@ import {
     tap,
 } from 'rxjs'
 import { shareReplay } from 'rxjs/operators'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 import { Scope } from './state'
 
 /**

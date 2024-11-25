@@ -4,7 +4,7 @@ import {
     VirtualDOM,
     ChildLike,
     RxChild,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 
 /**

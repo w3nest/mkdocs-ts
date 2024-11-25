@@ -1,9 +1,4 @@
-import {
-    ChildrenLike,
-    VirtualDOM,
-    CSSAttribute,
-    AnyVirtualDOM,
-} from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM, CSSAttribute, AnyVirtualDOM } from 'rx-vdom'
 
 import { parse } from 'marked'
 /**

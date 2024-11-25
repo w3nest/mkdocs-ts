@@ -8,7 +8,7 @@ import {
     switchMap,
     take,
 } from 'rxjs'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 import {
     createRootNode,
     Navigation,
@@ -20,7 +20,7 @@ import {
     sanitizeNavPath,
     ReactiveLazyNavResolver,
 } from './navigation.node'
-import { ImmutableTree } from '@youwol/rx-tree-views'
+import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { FuturePageView, UnresolvedPageView } from './views'
 
 /**
@@ -510,7 +510,7 @@ export class Router {
                 const newNode = new oldNode.factory({
                     ...oldNode,
                     children,
-                })
+                }) as NavNodeBase
                 this.explorerState.replaceNode(oldNode, newNode)
             })
         })

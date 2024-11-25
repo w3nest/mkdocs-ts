@@ -8,10 +8,10 @@ import {
     CSSAttribute,
     AnyVirtualDOM,
     AttributeLike,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { Router } from '../router'
 import { NavNodeBase } from '../navigation.node'
-import { ImmutableTree } from '@youwol/rx-tree-views'
+import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs'
 import { DisplayMode, TocWrapperView } from './default-layout.view'
 

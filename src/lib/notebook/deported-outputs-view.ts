@@ -5,7 +5,7 @@ import {
     ChildrenLike,
     CSSAttribute,
     VirtualDOM,
-} from '@youwol/rx-vdom'
+} from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { Output } from './state'
 import { parseStyle } from './display-utils'

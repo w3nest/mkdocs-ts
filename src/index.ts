@@ -9,7 +9,7 @@ export * from './lib'
 export { setup } from './auto-generated'
 
 import { setup } from './auto-generated'
-import * as webpmClient from '@youwol/webpm-client'
+import * as webpmClient from '@w3nest/webpm-client'
 import type * as CodeApiModule from './lib/code-api'
 import type * as NotebookModule from './lib/notebook'
 

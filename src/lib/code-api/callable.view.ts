@@ -1,6 +1,6 @@
 import type { Router } from '../index'
 import { Configuration } from './configurations'
-import { VirtualDOM, ChildrenLike } from '@youwol/rx-vdom'
+import { VirtualDOM, ChildrenLike } from 'rx-vdom'
 import { DocumentationView } from './documentation.view'
 import { CodeView } from './code.view'
 import { HeaderView } from './header.view'

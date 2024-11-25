@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { NavigationView } from './navigation.view'
 import { Router } from '../router'
 import { FooterView, PageView } from './page.view'

@@ -1,4 +1,4 @@
-import { VirtualDOM } from '@youwol/rx-vdom'
+import { VirtualDOM } from 'rx-vdom'
 
 export const separatorView: VirtualDOM<'div'> = {
     tag: 'div',

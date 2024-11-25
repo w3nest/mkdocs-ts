@@ -3,12 +3,7 @@
  *
  *
  */
-import {
-    AnyVirtualDOM,
-    ChildrenLike,
-    CSSAttribute,
-    VirtualDOM,
-} from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject, filter, Observable, take } from 'rxjs'
 import { CellStatus, Output, State } from './state'
 import { CodeSnippetView } from '../md-widgets'

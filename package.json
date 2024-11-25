@@ -25,14 +25,14 @@
         "build-css": "yarn build-css-default && prettier ./assets -w"
     },
     "dependencies": {
-        "@youwol/http-primitives": "^0.2.3",
-        "@youwol/rx-tree-views": "^0.3.4",
-        "@youwol/rx-vdom": "^1.0.1",
-        "@youwol/webpm-client": "^3.0.0",
+        "@w3nest/http-clients": "^0.1.0",
+        "@w3nest/rx-tree-views": "^0.1.0",
+        "@w3nest/webpm-client": "^0.1.0",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
         "highlight.js": "11.2.0",
         "marked": "^4.2.3",
+        "rx-vdom": "^0.1.0",
         "rxjs": "^7.5.6"
     },
     "devDependencies": {
@@ -63,9 +63,6 @@
     },
     "webpm": {
         "dependencies": {
-            "@youwol/rx-tree-views": "^0.3.4",
-            "@youwol/rx-vdom": "^1.0.1",
-            "@youwol/webpm-client": "^3.0.0",
             "highlight.js": "11.2.0",
             "marked": "^4.2.3",
             "rxjs": "^7.5.6"

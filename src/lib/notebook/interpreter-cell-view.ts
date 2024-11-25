@@ -1,10 +1,10 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { CellTrait, ExecArgs, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, from, Observable } from 'rxjs'
-import { install } from '@youwol/webpm-client'
+import { install } from '@w3nest/webpm-client'
 import {
     executeInterpreter,
     executeInterpreter$,

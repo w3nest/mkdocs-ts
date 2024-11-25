@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, render } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, render } from 'rx-vdom'
 
 function isSizeRelativeToParent(element, dimension: 'width' | 'height') {
     const style = element.style

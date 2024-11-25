@@ -2,7 +2,7 @@ import { Observable, Subject } from 'rxjs'
 import { display, DisplayFactory } from './display-utils'
 import { parseScript } from 'esprima'
 import { Output, Scope } from './state'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 export function extractKeys(obj: { [k: string]: unknown } | string[]) {
     return (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(

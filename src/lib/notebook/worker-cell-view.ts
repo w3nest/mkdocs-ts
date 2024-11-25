@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
@@ -6,7 +6,7 @@ import { CellTrait, ExecArgs, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { DropDownCaptureView } from './interpreter-cell-view'
 import { executeWorkersPool, executeWorkersPool$ } from './worker-execution'
-import type { WorkersPoolTypes } from '@youwol/webpm-client'
+import type { WorkersPoolTypes } from '@w3nest/webpm-client'
 
 /**
  * All attributes available for a 'worker' cell.

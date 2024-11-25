@@ -1,5 +1,5 @@
-import { AnyVirtualDOM, CSSAttribute } from '@youwol/rx-vdom'
-import { ObjectJs } from '@youwol/rx-tree-views'
+import { AnyVirtualDOM, CSSAttribute } from 'rx-vdom'
+import { ObjectJs } from '@w3nest/rx-tree-views'
 import { Observable, Subject } from 'rxjs'
 
 /**

@@ -2,7 +2,7 @@ import { distinctUntilChanged, Subject } from 'rxjs'
 import { DisplayMode } from './default-layout.view'
 import { ModalNavigationView } from './navigation.view'
 import { Router } from '../router'
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 
 /**
  * Simple top banner definition, including:

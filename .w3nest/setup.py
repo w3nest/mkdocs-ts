@@ -11,13 +11,13 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / 'package.json')
 
 externals_deps = {
-    "@youwol/rx-vdom": "^1.0.1",
-    "@youwol/webpm-client": "^3.0.0",
+    "rx-vdom": "^0.1.0",
+    "@w3nest/webpm-client": "^0.1.0",
+    "@w3nest/http-clients": "^0.1.0",
     "rxjs": "^7.5.6",
     "marked": "^4.2.3",
     "highlight.js": "11.2.0",
-    "@youwol/rx-tree-views": "^0.3.4",
-    "@youwol/http-primitives": "^0.2.3",
+    "@w3nest/rx-tree-views": "^0.1.0",
     "esprima": "^4.0.1",
     # It is only used for typing, not included in dev. dependencies to install it from consuming library.
     "codemirror": "^5.52.0",

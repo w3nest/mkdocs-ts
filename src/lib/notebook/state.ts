@@ -9,8 +9,8 @@ import {
     firstValueFrom,
 } from 'rxjs'
 import { OutputsView } from './cell-views'
-import * as webpm from '@youwol/webpm-client'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import * as webpm from '@w3nest/webpm-client'
+import { AnyVirtualDOM } from 'rx-vdom'
 import {
     CellCommonAttributes,
     defaultCellAttributes,

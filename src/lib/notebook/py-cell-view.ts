@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'

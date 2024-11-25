@@ -1,12 +1,7 @@
-import { ImmutableTree } from '@youwol/rx-tree-views'
+import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { Router } from './router'
 import { from, map, Observable } from 'rxjs'
-import {
-    AnyVirtualDOM,
-    AttributeLike,
-    ChildrenLike,
-    ChildLike,
-} from '@youwol/rx-vdom'
+import { AnyVirtualDOM, AttributeLike, ChildrenLike, ChildLike } from 'rx-vdom'
 
 /**
  * Defines attributes regarding the visual rendering of the node if the navigation view.

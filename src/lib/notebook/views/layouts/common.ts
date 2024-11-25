@@ -1,4 +1,4 @@
-import { CSSAttribute } from '@youwol/rx-vdom'
+import { CSSAttribute } from 'rx-vdom'
 
 export const layoutStyleBase: CSSAttribute = {
     height: '100%',

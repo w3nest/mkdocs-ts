@@ -1,7 +1,7 @@
 import { Observable, Subject } from 'rxjs'
 import { display, DisplayFactory } from './display-utils'
 import { Scope } from './state'
-import { AnyVirtualDOM } from '@youwol/rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 import { extractKeys } from './js-execution'
 
 function registerMknbModule(pyodide) {
