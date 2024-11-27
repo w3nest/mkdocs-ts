@@ -14,7 +14,7 @@ import { parseMd } from '../markdown'
 export class PageView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page'
+    public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page text-justify'
     public readonly children: ChildrenLike
 
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void

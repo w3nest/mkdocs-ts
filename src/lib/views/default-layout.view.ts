@@ -44,10 +44,6 @@ export type LayoutOptions = {
      */
     pageMaxWidth: string
     /**
-     * Horizontal padding of the main page.
-     */
-    pageXPadding: string
-    /**
      * TOC panel's width.
      */
     tocWidth: string
@@ -58,11 +54,10 @@ export type LayoutOptions = {
  */
 export const defaultLayoutOptions = () => {
     return {
-        navWidth: '250px',
+        navWidth: '450px',
         pageWidth: '95%',
         pageMaxWidth: '47em',
-        tocWidth: '250px',
-        pageXPadding: '3em',
+        tocWidth: '350px',
     }
 }
 

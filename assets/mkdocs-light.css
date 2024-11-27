@@ -406,68 +406,47 @@
     height: auto !important;
 }
 
-.mkdocs-DefaultLayoutView,
-.mkdocs-DefaultLayoutView-s,
-.mkdocs-DefaultLayoutView-xs,
-.mkdocs-DefaultLayoutView-xxs {
-    font-family: serif;
-}
-
-.mkdocs-DefaultLayoutView {
-    font-size: 16px;
-}
-
-.mkdocs-DefaultLayoutView-s,
-.mkdocs-DefaultLayoutView-xs,
-.mkdocs-DefaultLayoutView-xxs {
-    font-size: 15px;
-}
-
 .mkdocs-NavigationView {
-    font-size: 1em;
-    line-height: 1.5rem;
+    line-height: 1.7rem;
+}
+
+.mkdocs-TOCView {
+    font-size: 0.9rem;
+    line-height: 1.7rem;
     border-radius: 5px;
+    padding-left: 10%;
 }
 
-.mkdocs-TopBannerClassicView a {
-    text-decoration: none;
+.mkdocs-TocItemView:hover {
+    border: solid 1px #1a7bf6;
+    border-radius: 3px 10px;
 }
 
-.mkdocs-TOCView a {
-    text-decoration: none;
+.mkdocs-NavigationView .rxtree-header {
+    border-radius: 3px 10px;
+    font-size: 0.9rem;
 }
 
-.mkdocs-NavigationView .fv-tree-header:hover {
-    background-color: rgba(26, 123, 246, 0.05);
+.mkdocs-NavigationView .rxtree-header.rxtree-depth-0 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
 }
 
-.mkdocs-NavigationView .fv-tree-selected {
-    background-color: rgba(26, 123, 246, 0.15);
+.mkdocs-NavigationView .rxtree-header.rxtree-depth-1 {
+    margin-top: 0.8rem;
+    font-size: 1rem;
 }
 
-.mkdocs-NavigationView .fv-tree-selected:hover {
+.mkdocs-NavigationView .rxtree-header:hover {
+    border: solid 1px #1a7bf6;
+}
+
+.mkdocs-NavigationView .rxtree-selected {
+    background-color: rgba(26, 123, 246, 0.75);
+}
+
+.mkdocs-NavigationView .rxtree-selected:hover {
     background-color: rgba(26, 123, 246, 0.25);
-}
-
-.mkdocs-NavigationView .fv-text-focus {
-    color: inherit !important;
-}
-
-.mkdocs-NavigationView .fv-hover-text-focus:hover {
-    color: inherit !important;
-}
-
-.mkdocs-WrapperSideNav {
-    width: 20em;
-    line-height: 1.5em;
-    font-size: 0.9em;
-    position: sticky;
-    top: 0px;
-    max-height: 85vh;
-}
-
-.mkdocs-WrapperSideNav li {
-    list-style-type: none;
 }
 
 .mkdocs-NavigationView .fv-tree-arianeLine {
@@ -478,18 +457,12 @@
     display: none !important;
 }
 
+.mkdocs-NavigationView .mkdocs-ts-expand-nav-node {
+    transition: transform 0.5s ease 0s;
+}
+
 .mkdocs-TopBannerView {
     max-height: 50px;
-}
-
-.mkdocs-PageView {
-    text-align: justify;
-    font-size: 1em;
-    line-height: 1.6;
-}
-
-.mkdocs-ts-expand-nav-node {
-    transition: transform 0.5s ease 0s;
 }
 
 .mkdocs-ts-bg-highlight {
@@ -503,33 +476,33 @@
 .mkdocs-PageView h5,
 .mkdocs-PageView h6 {
     font-weight: bolder;
-    line-height: 1.5;
+    line-height: 1.5rem;
     color: inherit;
     text-transform: none;
 }
 
 .mkdocs-PageView h1 {
-    font-size: 1.6em;
+    font-size: 1.6rem;
 }
 
 .mkdocs-PageView h2 {
-    font-size: 1.2em;
+    font-size: 1.2rem;
 }
 
 .mkdocs-PageView h3 {
-    font-size: 1.15em;
+    font-size: 1.15rem;
 }
 
 .mkdocs-PageView h4 {
-    font-size: 1.1em;
+    font-size: 1.1rem;
 }
 
 .mkdocs-PageView h5 {
-    font-size: 1.05em;
+    font-size: 1.05rem;
 }
 
 .mkdocs-PageView h6 {
-    font-size: 1em;
+    font-size: 1rem;
 }
 
 /*# sourceMappingURL=mkdocs-light.css.map */

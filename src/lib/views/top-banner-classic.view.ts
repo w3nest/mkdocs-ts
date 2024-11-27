@@ -55,7 +55,7 @@ export type TopBannerClassicParams = {
 export class TopBannerClassicView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-TopBannerClassicView w-100 mkdocs-bg-5 mkdocs-text-5 py-2 d-flex justify-content-center'
+        'mkdocs-TopBannerClassicView border-bottom w-100 mkdocs-bg-6 mkdocs-text-5 py-2 d-flex justify-content-center'
     public readonly children: ChildrenLike
 
     /**
@@ -130,10 +130,6 @@ export class MainColumn implements VirtualDOM<'div'> {
                                 ? logo
                                 : {
                                       tag: 'div',
-                                      style: {
-                                          paddingLeft:
-                                              layoutOptions.pageXPadding,
-                                      },
                                       children: [
                                           new ModalNavigationView({
                                               router,

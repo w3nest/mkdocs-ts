@@ -37,11 +37,11 @@ const supportedHeadingTags: [H1, H2, H3, H4, H5] = [
 ]
 
 const headingsPadding: Record<SupportedHeading, string> = {
-    H1: '0em',
-    H2: '1em',
-    H3: '2em',
-    H4: '3em',
-    H5: '4em',
+    H1: '0.5em',
+    H2: '1.5em',
+    H3: '2.5em',
+    H4: '3.5em',
+    H5: '4.5em',
 }
 
 /**
@@ -51,11 +51,8 @@ export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly html: HTMLElement
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-TOCView h-100'
+    public readonly class = 'mkdocs-TOCView h-100 border-primary border-start'
     public readonly children: ChildrenLike
-    public readonly style = {
-        lineHeight: '1.5em',
-    }
 
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
@@ -126,6 +123,15 @@ export class TOCView implements VirtualDOM<'div'> {
         }
 
         this.children = [
+            {
+                tag: 'div',
+                innerText: 'On this page',
+                class: 'border-bottom mb-2',
+                style: {
+                    fontWeight: 'bolder',
+                    fontSize: 'larger',
+                },
+            },
             {
                 tag: 'ul',
                 class: 'p-0 h-100 mkdocs-thin-v-scroller',
@@ -201,26 +207,29 @@ class TocItemView implements VirtualDOM<'li'> {
     }) {
         const defaultConv = (heading: HTMLElement) => ({
             tag: 'div' as const,
-            class: 'fv-hover-text-focus',
+            class: '',
             innerText: heading.innerText
                 ? heading.innerText
                 : heading.firstChild['innerText'],
         })
         const getItemClass = (firstIndex: number): string => {
             if (index == firstIndex) {
-                return 'fv-text-focus font-weight-bold'
+                return 'fw-bolder'
             }
-            return index < firstIndex ? 'text-dark' : 'fv-text-disabled'
+            return index < firstIndex ? 'text-dark' : 'mkdocs-text-1'
         }
         this.style = { paddingLeft: headingsPadding[heading.tagName] }
-        this.class = heading.classList.value
+        this.class = `mkdocs-TocItemView ${heading.classList.value} `
         this.children = [
             {
                 tag: 'a' as const,
+                style: {
+                    textDecoration: 'none',
+                },
                 class: attr$({
                     source$: indexFirstVisibleHeading$,
                     vdomMap: getItemClass,
-                    wrapper: (d) => `fv-hover-text-focus ${d} `,
+                    wrapper: (d) => `${d} `,
                 }),
                 href: `${
                     router.basePath
