@@ -1,4 +1,10 @@
-import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import {
+    AnyVirtualDOM,
+    child$,
+    ChildrenLike,
+    CSSAttribute,
+    VirtualDOM,
+} from 'rx-vdom'
 import { NavigationView } from './navigation.view'
 import { Router } from '../router'
 import { FooterView, PageView } from './page.view'
@@ -13,6 +19,7 @@ import {
     Subject,
 } from 'rxjs'
 import { TopBannerView } from './top-banner.view'
+import { BookmarksView } from './bookmarks.view'
 
 export type DisplayMode = 'Full' | 'Minimized'
 
@@ -114,6 +121,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      * @param _p.topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
      * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
+     * @param _p.bookmarks$ Subject emitting the `href` of the bookmarked pages.
      */
     constructor({
         router,
@@ -121,27 +129,19 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         topBanner,
         footer,
         layoutOptions,
+        bookmarks$,
     }: {
         router: Router
         name: string | AnyVirtualDOM
         topBanner?: LayoutElementView
         footer?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
+        bookmarks$: BehaviorSubject<string[]>
     }) {
         this.layoutOptions = Object.assign(
             this.layoutOptions,
             layoutOptions || {},
         )
-        const wrapperSideNav = (side: 'left' | 'right') => ({
-            tag: 'div' as const,
-            class: 'mkdocs-WrapperSideNav',
-            style: {
-                width:
-                    side === 'left'
-                        ? this.layoutOptions.navWidth
-                        : this.layoutOptions.tocWidth,
-            },
-        })
         this.connectedCallback = (e: HTMLElement) => {
             const resizeObserver = new ResizeObserver((entries) => {
                 const width = entries[0].contentRect.width
@@ -189,14 +189,55 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                   displayModeToc$: this.displayModeToc$,
                   router,
               })
-        const footerView = footer ? footer(viewInputs) : new FooterView()
+        const favoritesView = new StickyColumnContainer({
+            type: 'favorites',
+            content: new BookmarksView({ router, bookmarks$ }),
+            layoutOptions: this.layoutOptions,
+        })
+        const navView = new StickyColumnContainer({
+            type: 'nav',
+            content: new NavigationView({
+                router,
+                bookmarks$,
+            }),
+            layoutOptions: this.layoutOptions,
+        })
+        const tocView = new StickyColumnContainer({
+            type: 'toc',
+            content: new TocWrapperView({
+                router,
+            }),
+            layoutOptions: this.layoutOptions,
+        })
+        const pageView = {
+            tag: 'div' as const,
+            class: `w-100 ${StickyColumnContainer.topStickyPadding}`,
+            style: {
+                maxWidth: this.layoutOptions.pageMaxWidth,
+                height: 'fit-content',
+                minHeight: '100vh',
+            },
+            children: [new PageView({ router: router })],
+        }
+        const footerView = {
+            tag: 'footer' as const,
+            style: {
+                position: 'sticky' as const,
+                top: '100%',
+            },
+            children: [footer ? footer(viewInputs) : new FooterView()],
+        }
+        const hSep = {
+            tag: 'div' as const,
+            class: 'flex-grow-1',
+        }
         this.children = [
             topBannerView,
             {
                 tag: 'div',
-                class: 'flex-grow-1 w-100 overflow-auto pt-2',
+                class: 'w-100 overflow-auto',
                 style: {
-                    minHeight: '0px',
+                    maxHeight: '95vh',
                 },
                 connectedCallback: (e) => {
                     router.scrollableElement = e
@@ -204,8 +245,9 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 children: [
                     {
                         tag: 'div',
-                        class: 'd-flex justify-content-center pt-5 w-100',
+                        class: 'd-flex w-100',
                         children: [
+                            favoritesView,
                             child$({
                                 source$: this.displayModeNav$.pipe(
                                     distinctUntilChanged(),
@@ -213,40 +255,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                 vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
                                     return mode === 'Minimized'
                                         ? { tag: 'div' }
-                                        : {
-                                              ...wrapperSideNav('left'),
-                                              children: [
-                                                  new NavigationView({
-                                                      router,
-                                                  }),
-                                              ],
-                                          }
+                                        : navView
                                 },
                             }),
-                            {
-                                tag: 'div',
-                                style: {
-                                    width: this.layoutOptions.pageWidth,
-                                    maxWidth: this.layoutOptions.pageMaxWidth,
-                                    height: 'fit-content',
-                                    minHeight: '100%',
-                                },
-                                children: [
-                                    {
-                                        tag: 'div',
-                                        class: `w-100`,
-                                        style: {
-                                            paddingLeft:
-                                                this.layoutOptions.pageXPadding,
-                                            paddingRight:
-                                                this.layoutOptions.pageXPadding,
-                                        },
-                                        children: [
-                                            new PageView({ router: router }),
-                                        ],
-                                    },
-                                ],
-                            },
+                            hSep,
+                            pageView,
+                            hSep,
                             child$({
                                 source$: this.displayModeToc$.pipe(
                                     distinctUntilChanged(),
@@ -254,26 +268,13 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                                 vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
                                     return mode === 'Minimized'
                                         ? { tag: 'div' }
-                                        : {
-                                              ...wrapperSideNav('right'),
-                                              children: [
-                                                  new TocWrapperView({
-                                                      router,
-                                                  }),
-                                              ],
-                                          }
+                                        : tocView
                                 },
                             }),
+                            hSep,
                         ],
                     },
-                    {
-                        tag: 'footer',
-                        style: {
-                            position: 'sticky' as const,
-                            top: '100%',
-                        },
-                        children: [footerView],
-                    },
+                    footerView,
                 ],
             },
         ]
@@ -314,5 +315,48 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                 },
             }),
         ]
+    }
+}
+
+type Container = 'favorites' | 'nav' | 'toc'
+
+class StickyColumnContainer implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class: string
+    public readonly style: CSSAttribute
+    public readonly children: ChildrenLike
+    public readonly layoutOptions: LayoutOptions
+    public readonly content: AnyVirtualDOM
+    public readonly type: Container
+
+    static readonly topStickyPadding = 'pt-5'
+
+    constructor(params: {
+        type: Container
+        content: AnyVirtualDOM
+        layoutOptions: LayoutOptions
+    }) {
+        Object.assign(this, params)
+        const classes: Record<Container, string> = {
+            favorites: 'mkdocs-bg-6 mkdocs-text-6',
+            nav: 'mkdocs-bg-5 mkdocs-text-5',
+            toc: 'mkdocs-bg-0 mkdocs-text-0',
+        }
+        const widths: Record<Container, string> = {
+            favorites: 'fit-content',
+            nav: this.layoutOptions.navWidth,
+            toc: this.layoutOptions.tocWidth,
+        }
+        this.content.style = {
+            ...(this.content.style || {}),
+            position: 'sticky',
+            top: '10px',
+            maxHeight: '85vh',
+        }
+        this.class = `mkdocs-WrapperSideNav ${classes[this.type]} ${StickyColumnContainer.topStickyPadding} d-flex`
+        this.style = {
+            width: widths[this.type],
+        }
+        this.children = [this.content]
     }
 }

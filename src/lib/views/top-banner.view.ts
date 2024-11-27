@@ -75,6 +75,7 @@ export class TopBannerView implements VirtualDOM<'div'> {
                                         : new ModalNavigationView({
                                               router,
                                               displayModeToc$: displayModeToc$,
+                                              bookmarks$: undefined,
                                           })
                                 },
                             }),

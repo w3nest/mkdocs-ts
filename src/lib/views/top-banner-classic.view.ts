@@ -75,111 +75,6 @@ export class TopBannerClassicView implements VirtualDOM<'div'> {
     }
 }
 
-export class NavItemsView implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-    public readonly class =
-        'mt-2 mb-1 d-flex align-items-center justify-content-left'
-    public readonly children: ChildrenLike
-    constructor({ router }: { router: Router }) {
-        const firstLayer = Object.entries(router.navigation).filter(([k]) =>
-            k.startsWith('/'),
-        )
-
-        this.children = [
-            new NavItem({ node: router.navigation, href: '/', router }),
-            ...firstLayer.map(
-                ([k, v]: [k: string, v: Navigation | Promise<Navigation>]) => {
-                    if (v instanceof Promise) {
-                        return child$({
-                            source$: from(v),
-                            vdomMap: (node) =>
-                                new NavItem({
-                                    node,
-                                    href: k,
-                                    router,
-                                }),
-                        })
-                    }
-                    return new NavItem({
-                        node: v,
-                        href: k,
-                        router,
-                    })
-                },
-            ),
-        ]
-    }
-}
-
-export class NavItem implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-    public readonly class = 'mkdocs-NavItem me-5'
-    public readonly children: ChildrenLike
-    constructor({
-        node,
-        href,
-        router,
-    }: {
-        node: Navigation
-        href: string
-        router: Router
-    }) {
-        this.children = [
-            {
-                tag: 'div',
-                class: node.decoration?.wrapperClass || '',
-                children: [
-                    {
-                        tag: 'a',
-                        class: attr$({
-                            source$: router.currentPath$,
-                            vdomMap: (path) => {
-                                if (href === '/') {
-                                    return path === '/'
-                                        ? 'mkdocs-text-5 selected'
-                                        : 'mkdocs-text-4'
-                                }
-                                return path.startsWith(href)
-                                    ? 'mkdocs-text-5 selected'
-                                    : 'mkdocs-text-4'
-                            },
-                            wrapper: (d) =>
-                                `${d} mkdocs-hover-text-5 d-flex align-items-center`,
-                            untilFirst: 'mkdocs-text-4',
-                        }),
-                        href: href,
-                        children: [
-                            node.decoration?.icon,
-                            {
-                                tag: 'div',
-                                class: 'mkdocs-NavItem-title',
-                                innerText: node.name,
-                            },
-                        ],
-                        onclick: (ev) => {
-                            ev.preventDefault()
-                            router.navigateTo({ path: href })
-                            if (href === '/') {
-                                router.explorerState.expandedNodes$.next(['/'])
-                                return
-                            }
-                            const expanded =
-                                router.explorerState.expandedNodes$.value.filter(
-                                    (n) => {
-                                        return n.startsWith(href)
-                                    },
-                                )
-                            router.explorerState.expandedNodes$.next([
-                                '/',
-                                ...expanded,
-                            ])
-                        },
-                    },
-                ],
-            },
-        ]
-    }
-}
 export class MainColumn implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly id = 'LeftColumn'
@@ -244,6 +139,7 @@ export class MainColumn implements VirtualDOM<'div'> {
                                               router,
                                               displayModeToc$: displayModeToc$,
                                               footer: badge,
+                                              bookmarks$: undefined,
                                           }),
                                       ],
                                   }
@@ -256,13 +152,6 @@ export class MainColumn implements VirtualDOM<'div'> {
                     titleVDom,
                 ],
             },
-            child$({
-                source$: displayModeNav$,
-                vdomMap: (mode) =>
-                    mode === 'Full'
-                        ? new NavItemsView({ router })
-                        : { tag: 'div' },
-            }),
         ]
     }
 }

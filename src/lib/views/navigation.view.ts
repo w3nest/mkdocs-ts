@@ -15,8 +15,34 @@ import {
 import { Router } from '../router'
 import { NavNodeBase } from '../navigation.node'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
-import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs'
 import { DisplayMode, TocWrapperView } from './default-layout.view'
+
+export class NavActionView implements VirtualDOM<'button'> {
+    public readonly tag = 'button'
+    public readonly class =
+        'NavActionView btn btn-sm mkdocs-hover-bg-4 mkdocs-text-5'
+    public readonly style = {
+        transform: 'scale(0.75)',
+    }
+    public readonly children: ChildrenLike
+    public readonly onclick: (ev: MouseEvent) => void
+
+    constructor({
+        content,
+        action,
+    }: {
+        content: AnyVirtualDOM
+        action: () => void
+    }) {
+        this.children = [content]
+        this.onclick = (ev: MouseEvent) => {
+            ev.stopPropagation()
+            ev.preventDefault()
+            action()
+        }
+    }
+}
 
 export class HandlerView implements VirtualDOM<'div'> {
     public readonly node: NavNodeBase
@@ -24,7 +50,7 @@ export class HandlerView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-HandlerView d-flex flex-column justify-content-center text-center rounded-circle mkdocs-ts-expand-nav-node  mkdocs-hover-bg-1'
+        'mkdocs-HandlerView d-flex flex-column justify-content-center text-center rounded-circle mkdocs-ts-expand-nav-node  mkdocs-hover-bg-1 mkdocs-hover-text-1'
     public readonly style = {
         width: '20px',
         height: '20px',
@@ -89,10 +115,12 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         node,
         router,
         withChildren,
+        bookmarks$,
     }: {
         node: NavNodeBase
         router: Router
         withChildren?: AnyVirtualDOM[]
+        bookmarks$: BehaviorSubject<string[]>
     }) {
         this.class =
             node.decoration?.wrapperClass ||
@@ -102,29 +130,64 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             node.id == '/'
                 ? {
                       textDecoration: 'none',
-                      color: 'black',
+                      color: 'inherit',
                       fontWeight: 'bolder' as const,
                   }
                 : {
                       textDecoration: 'none',
-                      color: 'black',
+                      color: 'inherit',
                   }
+        const bookmark = new NavActionView({
+            content: {
+                tag: 'i',
+                class: attr$({
+                    source$: bookmarks$.pipe(
+                        map((ids) => ids.includes(node.id)),
+                    ),
+                    vdomMap: (toggled) =>
+                        toggled ? 'fas fa-bookmark' : 'far fa-bookmark',
+                }),
+            },
+            action: () => {
+                const selected = bookmarks$.value.includes(node.href)
+                if (selected) {
+                    const filtered = bookmarks$.value.filter(
+                        (href) => href !== node.href,
+                    )
+                    bookmarks$.next(filtered)
+                    return
+                }
+                bookmarks$.next([...bookmarks$.value, node.href])
+            },
+        })
+        const sep: (i: number) => AnyVirtualDOM = (i) => ({
+            tag: 'div',
+            class: `mx-${i}`,
+        })
+        const hExpand: AnyVirtualDOM = {
+            tag: 'div',
+            class: 'flex-grow-1',
+        }
         this.children = [
             node.decoration?.icon,
+            sep(2),
             {
                 tag: 'div',
                 class: attr$({
                     source$: router.explorerState.selectedNode$,
-                    vdomMap: (selected) =>
-                        selected.id == node.id
-                            ? 'fv-text-focus font-weight-bold'
-                            : '',
-                    wrapper: (d) =>
-                        `${d} flex-grow-1 fv-hover-text-focus mkdocs-NavigationHeader-title`,
-                    untilFirst: 'flex-grow-1 fv-hover-text-focus',
+                    vdomMap: (selected): string =>
+                        selected.id == node.id ? 'font-weight-bold' : '',
+                    wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,
                 }),
                 innerText: node.name,
             },
+            sep(1),
+            child$({
+                source$: router.explorerState.selectedNode$,
+                vdomMap: (selected) =>
+                    selected.id === node.id ? bookmark : { tag: 'div' },
+            }),
+            hExpand,
             {
                 tag: 'div',
                 class: 'mkdocs-NavigationHeader-actions',
@@ -148,19 +211,23 @@ export class NavigationView implements VirtualDOM<'div'> {
 
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-NavigationView h-100 w-100 mkdocs-thin-v-scroller'
+        'mkdocs-NavigationView mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 w-100 px-1'
     public readonly children: ChildrenLike
 
-    constructor(params: { router: Router }) {
+    constructor(params: {
+        router: Router
+        bookmarks$: BehaviorSubject<string[]>
+    }) {
         Object.assign(this, params)
 
         this.children = [
             new ImmutableTree.View({
                 state: this.router.explorerState,
-                headerView: (explorerState, node) => {
+                headerView: (_, node) => {
                     return new NavigationHeader({
                         node,
                         router: this.router,
+                        bookmarks$: params.bookmarks$,
                         withChildren: node.children &&
                             node.id !== '/' && [
                                 new HandlerView({
@@ -204,6 +271,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
         router: Router
         displayModeToc$: Observable<DisplayMode>
         footer?: AnyVirtualDOM
+        bookmarks$: BehaviorSubject<string[]>
     }) {
         Object.assign(this, params)
 
@@ -217,6 +285,7 @@ export class ModalNavigationView implements VirtualDOM<'div'> {
                               collapse: () => this.expanded$.next(false),
                               displayModeToc$: this.displayModeToc$,
                               footer: params.footer,
+                              bookmarks$: params.bookmarks$,
                           })
                         : {
                               tag: 'div',
@@ -257,6 +326,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
         collapse: () => void
         displayModeToc$: Observable<DisplayMode>
         footer?: AnyVirtualDOM
+        bookmarks$: BehaviorSubject<string[]>
     }) {
         Object.assign(this, params)
         this.children = [
@@ -280,6 +350,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                                 router: this.router,
                                 node,
                                 displayModeToc$: this.displayModeToc$,
+                                bookmarks$: params.bookmarks$,
                             }),
                             {
                                 tag: 'div',
@@ -288,6 +359,7 @@ export class ExpandedNavigationView implements VirtualDOM<'div'> {
                                     new ModalNavChildrenView({
                                         router: this.router,
                                         node,
+                                        bookmarks$: params.bookmarks$,
                                     }),
                                 ],
                             },
@@ -333,6 +405,7 @@ export class ModalNavParentView implements VirtualDOM<'div'> {
         router: Router
         node: NavNodeBase
         displayModeToc$: Observable<DisplayMode>
+        bookmarks$: BehaviorSubject<string[]>
     }) {
         Object.assign(this, params)
 
@@ -369,7 +442,11 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'mkdocs-ModalNavChildrenView'
     public readonly children: ChildrenLike
-    constructor(params: { router: Router; node: NavNodeBase }) {
+    constructor(params: {
+        router: Router
+        node: NavNodeBase
+        bookmarks$: BehaviorSubject<string[]>
+    }) {
         Object.assign(this, params)
         const node = this.node.children
             ? this.node
@@ -402,6 +479,7 @@ export class ModalNavChildrenView implements VirtualDOM<'div'> {
                                         class: 'fas fa-chevron-right',
                                     },
                                 ],
+                                bookmarks$: params.bookmarks$,
                             }),
                         ],
                     }
