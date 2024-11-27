@@ -1,7 +1,7 @@
 {
     "name": "mkdocs-ts",
     "description": "Typescript based mkdocs like solution",
-    "version": "0.1.2-wip",
+    "version": "0.2.0-wip",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts#README.md",
     "main": "dist/mkdocs-ts.js",
@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "@w3nest/http-clients": "^0.1.0",
-        "@w3nest/rx-tree-views": "^0.1.0",
+        "@w3nest/rx-tree-views": "file:.local-dependencies/w3nest-rx-tree-views-0.2.0-wip-1732685569.tgz",
         "@w3nest/webpm-client": "^0.1.0",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
@@ -63,7 +63,7 @@
     },
     "webpm": {
         "dependencies": {
-            "@w3nest/rx-tree-views": "^0.1.0",
+            "@w3nest/rx-tree-views": "^0.2.0",
             "highlight.js": "11.2.0",
             "marked": "^4.2.3",
             "rx-vdom": "^0.1.0",
@@ -90,5 +90,8 @@
                 }
             }
         ]
+    },
+    "resolutions": {
+        "@w3nest/rx-tree-views": "file:.local-dependencies/w3nest-rx-tree-views-0.2.0-wip-1732685569.tgz"
     }
 }

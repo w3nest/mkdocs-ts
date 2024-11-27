@@ -1201,10 +1201,9 @@
   dependencies:
     rxjs "^7.5.6"
 
-"@w3nest/rx-tree-views@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@w3nest/rx-tree-views/-/rx-tree-views-0.1.1.tgz#910e05c32f8785019ce913c9cb342e0123b492a8"
-  integrity sha512-GOE4jGHDWzYrgUmfktFM90PFNl4lV7QXGzkCNg6g4yeywfuUega/dE/4qji+EQogxNtfUrecufc9OKqyiAfcMA==
+"@w3nest/rx-tree-views@file:.local-dependencies/w3nest-rx-tree-views-0.2.0-wip-1732685569.tgz":
+  version "0.2.0-wip"
+  resolved "file:.local-dependencies/w3nest-rx-tree-views-0.2.0-wip-1732685569.tgz#019a703bb517fc764251e70a61f5b9441d01a276"
   dependencies:
     rx-vdom "^0.1.0"
     rxjs "^7.5.6"

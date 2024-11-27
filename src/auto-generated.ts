@@ -2,7 +2,7 @@
 const runTimeDependencies = {
     "externals": {
         "@w3nest/http-clients": "^0.1.0",
-        "@w3nest/rx-tree-views": "^0.1.0",
+        "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/webpm-client": "^0.1.0",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
@@ -22,7 +22,7 @@ const externals = {
     "@w3nest/rx-tree-views": {
         "commonjs": "@w3nest/rx-tree-views",
         "commonjs2": "@w3nest/rx-tree-views",
-        "root": "@w3nest/rx-tree-views_APIv01"
+        "root": "@w3nest/rx-tree-views_APIv02"
     },
     "@w3nest/webpm-client": {
         "commonjs": "@w3nest/webpm-client",
@@ -82,7 +82,7 @@ const exportedSymbols = {
         "exportedSymbol": "@w3nest/http-clients"
     },
     "@w3nest/rx-tree-views": {
-        "apiKey": "01",
+        "apiKey": "02",
         "exportedSymbol": "@w3nest/rx-tree-views"
     },
     "@w3nest/webpm-client": {
@@ -155,13 +155,13 @@ const entries = {
 export const setup = {
     name:'mkdocs-ts',
         assetId:'bWtkb2NzLXRz',
-    version:'0.1.2-wip',
+    version:'0.2.0-wip',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/mkdocs-ts',
     sourceGithub:'https://github.com/mkdocs-ts',
     userGuide:'',
-    apiVersion:'01',
+    apiVersion:'02',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -186,7 +186,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`mkdocs-ts_APIv01`]
+            return window[`mkdocs-ts_APIv02`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -201,7 +201,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `mkdocs-ts#0.1.2-wip~dist/mkdocs-ts/${entry.name}.js`
+            `mkdocs-ts#0.2.0-wip~dist/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -212,7 +212,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`mkdocs-ts/${entry.name}_APIv01`]
+            return window[`mkdocs-ts/${entry.name}_APIv02`]
         })
     },
     getCdnDependencies(name?: string){
