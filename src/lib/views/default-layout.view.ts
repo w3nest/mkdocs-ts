@@ -32,10 +32,6 @@ export type DisplayMode = 'Full' | 'Minimized'
  */
 export type LayoutOptions = {
     /**
-     * Navigation panel's width.
-     */
-    navWidth: string
-    /**
      * Page's width.
      */
     pageWidth: string
@@ -43,10 +39,6 @@ export type LayoutOptions = {
      * Page's maximum width.
      */
     pageMaxWidth: string
-    /**
-     * TOC panel's width.
-     */
-    tocWidth: string
 }
 
 /**
@@ -231,9 +223,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: 'w-100 overflow-auto',
-                style: {
-                    maxHeight: '95vh',
-                },
                 connectedCallback: (e) => {
                     router.scrollableElement = e
                 },
@@ -337,11 +326,6 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
             nav: 'mkdocs-bg-5 mkdocs-text-5',
             toc: 'mkdocs-bg-0 mkdocs-text-0',
         }
-        const widths: Record<Container, string> = {
-            favorites: 'fit-content',
-            nav: this.layoutOptions.navWidth,
-            toc: this.layoutOptions.tocWidth,
-        }
         this.content.style = {
             ...(this.content.style || {}),
             position: 'sticky',
@@ -350,7 +334,7 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
         }
         this.class = `mkdocs-WrapperSideNav ${classes[this.type]} ${StickyColumnContainer.topStickyPadding} d-flex`
         this.style = {
-            width: widths[this.type],
+            flexGrow: this.type === 'favorites' ? 0 : 2,
         }
         this.children = [this.content]
     }
