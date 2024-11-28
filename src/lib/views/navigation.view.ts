@@ -15,6 +15,8 @@ import { Router } from '../router'
 import { NavNodeBase } from '../navigation.node'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { BehaviorSubject, map } from 'rxjs'
+import { ToggleNavButton } from './favorites.view'
+import { DisplayMode } from './default-layout.view'
 
 export class NavActionView implements VirtualDOM<'button'> {
     public readonly tag = 'button'
@@ -211,14 +213,18 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly class =
         'mkdocs-NavigationView mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 w-100 px-1'
     public readonly children: ChildrenLike
-
+    public readonly displayMode$: BehaviorSubject<DisplayMode>
     constructor(params: {
         router: Router
         bookmarks$: BehaviorSubject<string[]>
+        displayMode$: BehaviorSubject<DisplayMode>
     }) {
         Object.assign(this, params)
 
         this.children = [
+            new ToggleNavButton({
+                displayMode$: this.displayMode$,
+            }),
             new ImmutableTree.View({
                 state: this.router.explorerState,
                 headerView: (_, node) => {

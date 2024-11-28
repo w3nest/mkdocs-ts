@@ -1,9 +1,11 @@
 import {
     AnyVirtualDOM,
+    attr$,
     child$,
     ChildrenLike,
     CSSAttribute,
     VirtualDOM,
+    AttributeLike,
 } from 'rx-vdom'
 import { NavigationView } from './navigation.view'
 import { Router } from '../router'
@@ -14,12 +16,13 @@ import {
     debounceTime,
     from,
     mergeMap,
+    Observable,
     of,
     Subject,
 } from 'rxjs'
-import { BookmarksView } from './bookmarks.view'
+import { FavoritesView } from './favorites.view'
 
-export type DisplayMode = 'Full' | 'Minimized'
+export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
 /**
  * Hints regarding sizing of the main elements on the page.
@@ -29,6 +32,11 @@ export type DisplayMode = 'Full' | 'Minimized'
  * See {@link defaultLayoutOptions}.
  */
 export type LayoutOptions = {
+    /**
+     * Screen size in pixel transitioning from pined Navigation panel, to
+     * collapsable one.
+     */
+    toggleNavWidth: number
     /**
      * Page's width.
      */
@@ -44,7 +52,7 @@ export type LayoutOptions = {
  */
 export const defaultLayoutOptions = () => {
     return {
-        navWidth: '450px',
+        toggleNavWidth: 1300,
         pageWidth: '95%',
         pageMaxWidth: '47em',
         tocWidth: '350px',
@@ -85,11 +93,11 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     /**
      * The display mode regarding the navigation panel.
      */
-    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('Full')
+    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('pined')
     /**
      * The display mode regarding the table of content.
      */
-    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('Full')
+    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('pined')
 
     public readonly connectedCallback: (e: HTMLElement) => undefined
 
@@ -130,32 +138,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         this.connectedCallback = (e: HTMLElement) => {
             const resizeObserver = new ResizeObserver((entries) => {
                 const width = entries[0].contentRect.width
-                e.classList.remove(
-                    'mkdocs-DefaultLayoutView',
-                    'mkdocs-DefaultLayoutView-s',
-                    'mkdocs-DefaultLayoutView-xs',
-                    'mkdocs-DefaultLayoutView-xxs',
-                )
 
-                if (width < 1300) {
-                    e.classList.add('mkdocs-DefaultLayoutView-s')
-                }
-
-                if (width < 1000) {
-                    e.classList.add('mkdocs-DefaultLayoutView-xxs')
-                    this.displayModeNav$.next('Minimized')
-                    this.displayModeToc$.next('Minimized')
+                if (width < this.layoutOptions.toggleNavWidth) {
+                    this.displayModeNav$.next('hidden')
                     return
                 }
-                if (width < 1300) {
-                    e.classList.add('mkdocs-DefaultLayoutView-xs')
-                    this.displayModeNav$.next('Minimized')
-                    this.displayModeToc$.next('Full')
-                    return
-                }
-                e.classList.add('mkdocs-DefaultLayoutView')
-                this.displayModeNav$.next('Full')
-                this.displayModeToc$.next('Full')
+                this.displayModeNav$.next('pined')
             })
             resizeObserver.observe(e)
         }
@@ -169,7 +157,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         const topBannerView = topBanner(viewInputs)
         const favoritesView = new StickyColumnContainer({
             type: 'favorites',
-            content: new BookmarksView({ router, bookmarks$ }),
+            content: new FavoritesView({
+                router,
+                bookmarks$,
+                displayMode$: this.displayModeNav$,
+            }),
+            mode$: of('pined'),
             layoutOptions: this.layoutOptions,
         })
         const navView = new StickyColumnContainer({
@@ -177,7 +170,9 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             content: new NavigationView({
                 router,
                 bookmarks$,
+                displayMode$: this.displayModeNav$,
             }),
+            mode$: this.displayModeNav$,
             layoutOptions: this.layoutOptions,
         })
         const tocView = new StickyColumnContainer({
@@ -185,6 +180,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             content: new TocWrapperView({
                 router,
             }),
+            mode$: of('pined'),
             layoutOptions: this.layoutOptions,
         })
         const pageView = {
@@ -279,8 +275,8 @@ type Container = 'favorites' | 'nav' | 'toc'
 
 class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class: string
-    public readonly style: CSSAttribute
+    public readonly class: AttributeLike<string>
+    public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
     public readonly layoutOptions: LayoutOptions
     public readonly content: AnyVirtualDOM
@@ -292,12 +288,13 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
         type: Container
         content: AnyVirtualDOM
         layoutOptions: LayoutOptions
+        mode$: Observable<DisplayMode>
     }) {
         Object.assign(this, params)
         const classes: Record<Container, string> = {
-            favorites: 'mkdocs-bg-6 mkdocs-text-6',
-            nav: 'mkdocs-bg-5 mkdocs-text-5',
-            toc: 'mkdocs-bg-0 mkdocs-text-0',
+            favorites: 'for-FavoritesView mkdocs-bg-6 mkdocs-text-6',
+            nav: 'for-NavigationView mkdocs-bg-5 mkdocs-text-5',
+            toc: 'for-TocWrapperView mkdocs-bg-0 mkdocs-text-0',
         }
         this.content.style = {
             ...(this.content.style || {}),
@@ -305,10 +302,31 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
             top: '10px',
             maxHeight: '85vh',
         }
-        this.class = `mkdocs-WrapperSideNav ${classes[this.type]} ${StickyColumnContainer.topStickyPadding} d-flex`
-        this.style = {
-            flexGrow: this.type === 'favorites' ? 0 : 2,
-        }
+        this.class = attr$({
+            source$: params.mode$,
+            vdomMap: (mode): string => {
+                return mode
+            },
+            wrapper: (c) =>
+                `mkdocs-WrapperSideNav ${c} ${classes[this.type]} ${StickyColumnContainer.topStickyPadding} d-flex`,
+        })
+        this.style = attr$({
+            source$: params.mode$,
+            vdomMap: (mode) => {
+                if (this.type === 'favorites') {
+                    return {}
+                }
+                if (mode === 'pined') {
+                    return { position: 'unset', height: 'unset', flexGrow: 2 }
+                }
+                return {
+                    position: 'absolute',
+                    height: '100%',
+                    transition: 'left 200ms',
+                    left: mode === 'expanded' ? '0px' : '-100%',
+                }
+            },
+        })
         this.children = [this.content]
     }
 }
