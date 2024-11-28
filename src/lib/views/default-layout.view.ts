@@ -185,7 +185,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         })
         const pageView = {
             tag: 'div' as const,
-            class: `w-100 ${StickyColumnContainer.topStickyPadding}`,
+            class: `w-100 ${StickyColumnContainer.topStickyPadding} px-3`,
             style: {
                 maxWidth: this.layoutOptions.pageMaxWidth,
                 height: 'fit-content',
