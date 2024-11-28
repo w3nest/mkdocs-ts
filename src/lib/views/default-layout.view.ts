@@ -12,13 +12,11 @@ import {
     BehaviorSubject,
     combineLatest,
     debounceTime,
-    distinctUntilChanged,
     from,
     mergeMap,
     of,
     Subject,
 } from 'rxjs'
-import { TopBannerView } from './top-banner.view'
 import { BookmarksView } from './bookmarks.view'
 
 export type DisplayMode = 'Full' | 'Minimized'
@@ -168,14 +166,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             displayModeToc$: this.displayModeToc$,
             layoutOptions: this.layoutOptions,
         }
-        const topBannerView = topBanner
-            ? topBanner(viewInputs)
-            : new TopBannerView({
-                  name,
-                  displayModeNav$: this.displayModeNav$,
-                  displayModeToc$: this.displayModeToc$,
-                  router,
-              })
+        const topBannerView = topBanner(viewInputs)
         const favoritesView = new StickyColumnContainer({
             type: 'favorites',
             content: new BookmarksView({ router, bookmarks$ }),
@@ -232,29 +223,11 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                         class: 'd-flex w-100',
                         children: [
                             favoritesView,
-                            child$({
-                                source$: this.displayModeNav$.pipe(
-                                    distinctUntilChanged(),
-                                ),
-                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
-                                    return mode === 'Minimized'
-                                        ? { tag: 'div' }
-                                        : navView
-                                },
-                            }),
+                            navView,
                             hSep,
                             pageView,
                             hSep,
-                            child$({
-                                source$: this.displayModeToc$.pipe(
-                                    distinctUntilChanged(),
-                                ),
-                                vdomMap: (mode: DisplayMode): AnyVirtualDOM => {
-                                    return mode === 'Minimized'
-                                        ? { tag: 'div' }
-                                        : tocView
-                                },
-                            }),
+                            tocView,
                             hSep,
                         ],
                     },
