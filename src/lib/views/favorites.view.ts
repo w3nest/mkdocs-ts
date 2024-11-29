@@ -154,9 +154,11 @@ export class BookmarksView implements VirtualDOM<'div'> {
             router.explorerState.root$.pipe(debounceTime(500)),
         ]).pipe(
             map(([favorites]) => {
-                return favorites.map((favorite) => {
-                    return router.explorerState.getNode(favorite)
-                })
+                return favorites
+                    .map((favorite) => {
+                        return router.explorerState.getNode(favorite)
+                    })
+                    .filter((node) => node !== undefined)
             }),
         )
         this.children = replace$({
