@@ -43,13 +43,16 @@ export class Dependencies {
 }
 
 export const tocConvertor = (heading: HTMLHeadingElement): AnyVirtualDOM => {
-    const classes = heading.firstChild
-        ? (heading.firstChild as HTMLElement).classList?.value
-        : ''
+    const firstHTMLElement = [...heading.children].find(
+        (c) => c instanceof HTMLElement,
+    )
+    const classes = firstHTMLElement ? firstHTMLElement.classList?.value : ''
 
     return {
         tag: 'div' as const,
-        innerText: heading.firstChild['innerText'] || heading.innerText,
+        innerText:
+            (firstHTMLElement && firstHTMLElement.innerText) ||
+            heading.innerText,
         class: `${classes} fv-hover-text-focus`,
     }
 }
@@ -183,7 +186,7 @@ export function codeApiEntryNode(params: {
     return {
         name: params.name,
         decoration: params.decoration,
-        html: ({ router }) => {
+        html: ({ router }: { router: Router }) => {
             return fetchModuleDoc({
                 modulePath: project.name,
                 basePath: project.docBasePath,
@@ -205,7 +208,7 @@ export function codeApiEntryNode(params: {
                 ...d,
                 domConvertor: tocConvertor,
             }),
-        '...': ({ router, path }) =>
+        '...': ({ router, path }: { router: Router; path: string }) =>
             docNavigation({
                 modulePath: path,
                 router,

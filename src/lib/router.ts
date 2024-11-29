@@ -92,7 +92,7 @@ export class Router {
      *          If `undefined` is returned, the navigation will be canceled.
      */
     public readonly redirects: (target: string) => Promise<string | undefined> =
-        async (target) => target
+        (target) => Promise.resolve(target)
 
     /**
      * Observable that emit the current main HTML page.
@@ -158,7 +158,10 @@ export class Router {
     }) {
         Object.assign(this, params)
         this.basePath = this.basePath || document.location.pathname
-        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])
+
+        if (this.mockBrowserLocation) {
+            this.mockBrowserLocation.history = []
+        }
         const { rootNode, reactiveNavs, promiseNavs } = createRootNode({
             navigation: this.navigation,
             router: this,
@@ -173,7 +176,7 @@ export class Router {
 
         if (this.mockBrowserLocation === undefined) {
             window.onpopstate = (event: PopStateEvent) => {
-                const state = event.state
+                const state = event.state as unknown as { path: string }
                 if (state) {
                     this.navigateTo(state)
                 } else {
@@ -203,7 +206,14 @@ export class Router {
     }
 
     navigateTo({ path }: { path: string }) {
-        this.awaitNavigateTo({ path }).then()
+        this.awaitNavigateTo({ path }).then(
+            () => {
+                /*NoOp*/
+            },
+            () => {
+                throw Error(`Can no navigate to ${path}`)
+            },
+        )
     }
 
     /**
@@ -249,7 +259,7 @@ export class Router {
             }),
             map((html) => ({
                 html,
-                sectionId: sectionId == '' ? undefined : sectionId,
+                sectionId: sectionId === '' ? undefined : sectionId,
             })),
         ).subscribe((d) => {
             this.currentPage$.next(d)
@@ -257,9 +267,11 @@ export class Router {
         // This part is to select the appropriate node in the navigation.
         this.expand(pagePath)
         const url = `${this.basePath}?nav=${path}`
-        this.mockBrowserLocation
-            ? this.mockBrowserLocation.history.push({ url, data: { path } })
-            : history.pushState({ path }, undefined, url)
+        if (this.mockBrowserLocation) {
+            this.mockBrowserLocation.history.push({ url, data: { path } })
+        } else {
+            history.pushState({ path }, undefined, url)
+        }
         this.currentPath$.next(path)
     }
 
@@ -294,7 +306,7 @@ export class Router {
                 ? target
                 : findElementById(this.scrollableElement, target)
 
-        if (!div) {
+        if (!div && typeof target === 'string') {
             console.warn(`Can not scroll to element #${target}`)
             return
         }
@@ -311,41 +323,39 @@ export class Router {
         history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)
     }
 
-    refresh({
-        resolverPath,
-        path,
-        redirectTo,
-    }: {
-        resolverPath: string
-        path?: string
-        redirectTo?: string
-    }) {
-        const currentPath = this.getCurrentPath()
-        path = path || this.getCurrentPath()
-        const resolver =
-            this.navUpdates[resolverPath] ||
-            this.navigation[resolverPath][CatchAllKey]
-        const oldNode = this.explorerState.getNode(path)
-        const relative = sanitizeNavPath(path.split(resolverPath)[1])
-        const children = createImplicitChildren$({
-            resolver: resolver,
-            hrefBase: resolverPath,
-            path: relative,
-            withExplicit: [],
-            router: this,
-        })
-        const newNode = new oldNode.factory({
-            ...oldNode,
-            children,
-        }) as NavNodeBase
-        this.explorerState.replaceNode(oldNode, newNode)
-        //this.explorerState.selectNodeAndExpand(newNode)
-        if (redirectTo) {
-            this.navigateTo({ path })
-            return
-        }
-        this.navigateTo({ path: currentPath })
-    }
+    // refresh({
+    //     resolverPath,
+    //     path,
+    //     redirectTo,
+    // }: {
+    //     resolverPath: string
+    //     path?: string
+    //     redirectTo?: string
+    // }) {
+    //     const currentPath = this.getCurrentPath()
+    //     path = path || this.getCurrentPath()
+    //     const resolver = this.navUpdates[resolverPath]
+    //     const oldNode = this.explorerState.getNode(path)
+    //     const relative = sanitizeNavPath(path.split(resolverPath)[1])
+    //     const children = createImplicitChildren$({
+    //         resolver: resolver,
+    //         hrefBase: resolverPath,
+    //         path: relative,
+    //         withExplicit: [],
+    //         router: this,
+    //     })
+    //     const newNode = new oldNode.factory({
+    //         ...oldNode,
+    //         children,
+    //     }) as NavNodeBase
+    //     this.explorerState.replaceNode(oldNode, newNode)
+    //     //this.explorerState.selectNodeAndExpand(newNode)
+    //     if (redirectTo) {
+    //         this.navigateTo({ path })
+    //         return
+    //     }
+    //     this.navigateTo({ path: currentPath })
+    // }
 
     /**
      * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.
@@ -385,8 +395,15 @@ export class Router {
                     }
                     treePart = resolved
                 }
-
-                if (!treePart && !tree[CatchAllKey]) {
+                if (treePart) {
+                    return {
+                        tree: treePart,
+                        resolvedPath: `${resolvedPath}/${part}`,
+                        keepGoing: true,
+                    }
+                }
+                // For there treePart is undefined
+                if (!tree[CatchAllKey]) {
                     this.currentPage$.next({
                         html: new UnresolvedPageView({ path }),
                     })
@@ -394,18 +411,10 @@ export class Router {
                         `Can not find target navigation ${resolvedPath}`,
                     )
                 }
-                if (!treePart) {
-                    return {
-                        tree:
-                            this.navUpdates[resolvedPath] || tree[CatchAllKey],
-                        resolvedPath,
-                        keepGoing: false,
-                    }
-                }
                 return {
-                    tree: treePart,
-                    resolvedPath: `${resolvedPath}/${part}`,
-                    keepGoing: true,
+                    tree: this.navUpdates[resolvedPath] || tree[CatchAllKey],
+                    resolvedPath,
+                    keepGoing: false,
                 }
             },
             { tree: this.navigation, resolvedPath: ``, keepGoing: true },
@@ -425,11 +434,10 @@ export class Router {
             // case: LazyNavResolver, remove starting '/'
             const relative = sanitizeNavPath(path.split(node.resolvedPath)[1])
             const nav = node.tree({ path: relative, router: this })
-            return nav instanceof Observable
-                ? nav
-                : nav instanceof Promise
-                  ? from(nav)
-                  : of(nav)
+            if (nav instanceof Observable) {
+                return nav
+            }
+            return nav instanceof Promise ? from(nav) : of(nav)
         }
         // node.tree: Navigation
         return of(node.tree)
@@ -438,10 +446,10 @@ export class Router {
     private expand(path: string) {
         const parts = path.split('/')
         const ids = parts
-            .map((p, i) => parts.slice(0, i + 1).join('/'))
+            .map((_p, i) => parts.slice(0, i + 1).join('/'))
             .slice(1)
-        const getLastResolved = (ids: string[]) => {
-            if (ids.length == 0) {
+        const getLastResolved = (ids: string[]): NavNodeBase => {
+            if (ids.length === 0) {
                 return this.explorerState.getNode('/')
             }
             const id = ids.slice(-1)[0]
@@ -455,28 +463,28 @@ export class Router {
         }
 
         const idsRemaining = ids.slice(ids.indexOf(node.id) + 1)
-        if (idsRemaining.length == 0) {
+        if (idsRemaining.length === 0) {
             this.explorerState.selectNodeAndExpand(node)
             return
         }
-        const expandRec = (ids: string[], node: NavNodeBase) => {
-            if (ids.length == 0 || node.children === undefined) {
+        const expandRec = (ids: string[], node: NavNodeBase): void => {
+            if (ids.length === 0 || node.children === undefined) {
                 return this.explorerState.selectNodeAndExpand(node)
             }
             const maybeChildResolved = this.explorerState.getNode(ids[0])
-            return maybeChildResolved
-                ? expandRec(ids.slice(1), maybeChildResolved)
-                : this.explorerState.getChildren(node, (_, children) => {
-                      const nodeNew = children.find(
-                          (child) => child.id === ids[0],
-                      )
-                      if (!nodeNew) {
-                          console.warn(`Can not find node ${ids[0]} (yet?)`)
-                      }
-                      if (nodeNew) {
-                          expandRec(ids.slice(1), nodeNew)
-                      }
-                  })
+            if (maybeChildResolved) {
+                expandRec(ids.slice(1), maybeChildResolved)
+                return
+            }
+            this.explorerState.getChildren(node, (_, children) => {
+                const nodeNew = children.find((child) => child.id === ids[0])
+                if (!nodeNew) {
+                    console.warn(`Can not find node ${ids[0]} (yet?)`)
+                }
+                if (nodeNew) {
+                    expandRec(ids.slice(1), nodeNew)
+                }
+            })
         }
         expandRec(idsRemaining, node)
     }
@@ -519,19 +527,27 @@ export class Router {
         [href: string]: Promise<Navigation>
     }) {
         Object.entries(promiseNavs).forEach(([href, v]) => {
-            v.then((nav) => {
-                this.navResolved[href] = nav
-                const oldNode = this.explorerState.getNode(href)
+            v.then(
+                (nav) => {
+                    this.navResolved[href] = nav
+                    const oldNode = this.explorerState.getNode(href)
 
-                const { rootNode, reactiveNavs, promiseNavs } = createRootNode({
-                    navigation: nav,
-                    router: this,
-                    hrefBase: href,
-                })
-                this.explorerState.replaceNode(oldNode, rootNode)
-                this.bindReactiveNavs(reactiveNavs)
-                this.bindPromiseNavs(promiseNavs)
-            })
+                    const { rootNode, reactiveNavs, promiseNavs } =
+                        createRootNode({
+                            navigation: nav,
+                            router: this,
+                            hrefBase: href,
+                        })
+                    this.explorerState.replaceNode(oldNode, rootNode)
+                    this.bindReactiveNavs(reactiveNavs)
+                    this.bindPromiseNavs(promiseNavs)
+                },
+                () => {
+                    throw Error(
+                        `Router.bindPromiseNavs: unable to bind promise navigation on ${href}`,
+                    )
+                },
+            )
         })
     }
 }

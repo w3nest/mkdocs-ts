@@ -129,13 +129,16 @@ export function executeInterpreter$({
     const reactives: [string, Observable<unknown>][] = Object.entries(
         body.capturedIn,
     )
-        .filter(([_, v]) => v instanceof Observable || v instanceof Promise)
+        .filter(([, v]) => v instanceof Observable || v instanceof Promise)
         .map(([k, v]: [string, Promise<unknown> | Observable<unknown>]) => [
             k,
             v instanceof Promise ? from(v) : v,
         ])
 
-    const capturedOut$ = body.capturedOut
+    const capturedOut$: Record<
+        string,
+        ReplaySubject<unknown>
+    > = body.capturedOut
         .map((k) => {
             return [k, new ReplaySubject()]
         })
@@ -148,7 +151,7 @@ export function executeInterpreter$({
         )
 
     const inputs: Observable<unknown>[] = reactives.map(
-        ([_, v]) => v,
+        ([, v]) => v,
     ) as unknown as Observable<unknown>[]
 
     combineLatest(inputs)
@@ -169,7 +172,7 @@ export function executeInterpreter$({
                     method: 'post',
                     body: JSON.stringify(body$),
                     headers: { 'Content-Type': 'application/json' },
-                })
+                }) as Observable<RunResponse>
             }),
             tap((resp) => {
                 output$.next(undefined)

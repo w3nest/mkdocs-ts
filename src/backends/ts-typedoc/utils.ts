@@ -41,5 +41,6 @@ export function findProjectRoot(directory: string): string | null {
     }
 
     // Recursively search in the parent directory
+    // noinspection TailRecursionJS
     return findProjectRoot(parentDirectory)
 }

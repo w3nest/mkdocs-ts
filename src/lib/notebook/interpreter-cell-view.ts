@@ -6,6 +6,7 @@ import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, from, Observable } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import {
+    BackendClient,
     executeInterpreter,
     executeInterpreter$,
 } from './interpreter-execution'
@@ -163,7 +164,14 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             readOnly: false,
             content: params.content,
             lineNumbers: this.cellAttributes.lineNumbers,
-            onExecute: () => this.state.execute(this.cellId).then(() => {}),
+            onExecute: () => {
+                this.state.execute(this.cellId).then(
+                    () => {},
+                    () => {
+                        throw Error(`Failed to execute cell ${this.cellId}`)
+                    },
+                )
+            },
         })
         this.content$ = this.editorView.content$
         this.children = [
@@ -217,7 +225,9 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             capturedOut: this.cellAttributes.capturedOut,
         }
         this.reactive$.next(isReactive)
-        const interpreter = window[this.cellAttributes.interpreter]
+        const interpreter = window[
+            this.cellAttributes.interpreter
+        ] as unknown as BackendClient
         if (isReactive) {
             return executeInterpreter$({
                 body,
@@ -287,7 +297,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
         fontSize: 'small',
     }
     constructor(params: { mode: 'in' | 'out'; variables: string[] }) {
-        if (params.variables.filter((v) => v !== '').length == 0) {
+        if (params.variables.filter((v) => v !== '').length === 0) {
             return
         }
         const icons = {

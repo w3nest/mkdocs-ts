@@ -1,4 +1,4 @@
-import { patchSrc, removeEscapedText } from '../lib/markdown'
+import { patchSrc, removeEscapedText } from '../lib'
 
 test('patchSrc happy path', () => {
     const inner = `Some content\n<i>some HTML content</i>\nAnd special characters: > < &`

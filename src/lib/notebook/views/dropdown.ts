@@ -58,7 +58,7 @@ export class DropDown implements VirtualDOM<'div'> {
         Object.assign(this, params)
         this.value$ = new BehaviorSubject(params.items[params.selected])
         this.itemId$ = new BehaviorSubject(params.selected)
-        const displayedNames =
+        const displayedNames: Record<string, string> =
             params.displayedNames ||
             Object.keys(params.items).reduce(
                 (acc, e) => ({ ...acc, [e]: e }),
@@ -67,7 +67,7 @@ export class DropDown implements VirtualDOM<'div'> {
         this.children = replace$({
             policy: 'replace',
             source$: from(install({ esm: ['bootstrap#^5.3.0'] })),
-            vdomMap: (_): AnyVirtualDOM[] => {
+            vdomMap: (): AnyVirtualDOM[] => {
                 return [
                     {
                         tag: 'button',

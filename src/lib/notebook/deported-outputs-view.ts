@@ -1,5 +1,4 @@
 import {
-    AnyVirtualDOM,
     attr$,
     AttributeLike,
     child$,

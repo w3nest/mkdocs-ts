@@ -3,6 +3,7 @@ import { display, DisplayFactory } from './display-utils'
 import { parseScript } from 'esprima'
 import { Output, Scope } from './state'
 import { AnyVirtualDOM } from 'rx-vdom'
+/* eslint-disable */
 
 export function extractKeys(obj: { [k: string]: unknown } | string[]) {
     return (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
@@ -93,7 +94,7 @@ export async function executeJs({
     scope: Scope
     output$: Subject<AnyVirtualDOM>
     displayFactory: DisplayFactory
-    load: (path: string) => Promise<{ [k: string]: unknown }>
+    load: (path: string) => Promise<{ [_k: string]: unknown }>
     reactive?: boolean
     invalidated$: Observable<unknown>
 }): Promise<Scope> {
@@ -295,13 +296,16 @@ export function extractGlobalDeclarations(body): {
     }
 }
 
-export function extractUndefinedReferences(body, scope: string[] = []) {
-    let allIds = find_children({
+export function extractUndefinedReferences(
+    body,
+    scope: string[] = [],
+): string[] {
+    let allIds: string[] = find_children({
         node: body,
         skipNode: (n) =>
             ['BlockStatement', 'FunctionDeclaration'].includes(n.type),
         match: (d) => d['type'] === 'Identifier',
-        leafs: (n) => {
+        leafs: (n): unknown[] | undefined => {
             if (n.type === 'CallExpression') {
                 return [n.callee.object, ...n.arguments]
             }
@@ -351,3 +355,4 @@ export function extractUndefinedReferences(body, scope: string[] = []) {
 
     return [undefs, ...undefsBlocks, ...undefsFct].flat()
 }
+/* eslint-enable */

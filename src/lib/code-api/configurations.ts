@@ -38,7 +38,7 @@ export interface Configuration {
 
     /**
      * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API
-     * files, eventually forwarding the parameters provided to the {@link Notebook.NotebookPage} constructor.
+     * files, eventually forwarding the parameters provided to the {@link NotebookPage} constructor.
      */
     notebook?:
         | boolean

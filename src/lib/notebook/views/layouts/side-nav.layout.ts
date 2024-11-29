@@ -160,9 +160,11 @@ export class SideNavLayout implements VirtualDOM<'div'> {
                                     : `btn btn-light ${elem.icon} p-1 border rounded`,
                         }),
                         onclick: () => {
-                            this.selected$.value === key
-                                ? this.selected$.next('')
-                                : this.selected$.next(key)
+                            if (this.selected$.value === key) {
+                                this.selected$.next('')
+                            } else {
+                                this.selected$.next(key)
+                            }
                         },
                     }
                 },

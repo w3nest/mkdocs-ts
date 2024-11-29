@@ -22,6 +22,7 @@ function getScore(s: string) {
         })
         .reduce((acc, e) => acc + e, 0)
 }
+
 function getDeclaration(
     node:
         | ts.ClassDeclaration
@@ -44,7 +45,8 @@ function getDeclaration(
         .printNode(ts.EmitHint.Unspecified, methodDeclarationNode, sourceFile)
 
     // How to access the jsDoc ?
-    const doc = node['jsDoc'] && node['jsDoc'][0].getText(sourceFile)
+    const jsDocs = getJsDoc(node)
+    const doc: string = jsDocs && jsDocs[0].getText(sourceFile)
     const docLinesCount = doc ? doc.split('\n').length : 0
     const processed = withDoc
         .split('\n')
@@ -65,25 +67,49 @@ function getDeclaration(
         }
         s += getScore(raw[i])
         if (s >= score) {
+            // noinspection BreakStatementJS
             break
         }
     }
     return raw.substring(0, i + 1)
 }
 
-function getPrefix(rootPath: string, file: string, node = undefined) {
+function getEscapedName(node: { name?: unknown }): string {
+    if (node.name['escapedText']) {
+        return node.name['escapedText'] as string
+    }
+    return node.name ? `${node.name as string}` : ''
+}
+
+type JsDoc = { comment: string; getText: (src: ts.SourceFile) => string }
+
+type JsDocTrait = { jsDoc: JsDoc[] }
+
+function getJsDoc(node: unknown): JsDoc[] {
+    if (!node || !(node as JsDocTrait).jsDoc) {
+        return undefined
+    }
+    return node['jsDoc'] as JsDoc[]
+}
+
+function getPrefix(
+    rootPath: string,
+    file: string,
+    node: ts.NamedDeclaration = undefined,
+) {
     if (!node) {
         return file.replace(rootPath, '')
     }
-    return `${file.replace(rootPath, '')}:${node.name.escapedText}`
+    return `${file.replace(rootPath, '')}:${getEscapedName(node)}`
 }
 
-function getFileDoc(node) {
-    if (!node['statements']?.[0]?.jsDoc) {
+function getFileDoc(node: ts.SourceFile) {
+    const jsDoc = getJsDoc(node.statements?.[0])
+    if (!jsDoc) {
         return ''
     }
     let parsed = ''
-    for (const doc of node['statements'][0].jsDoc) {
+    for (const doc of jsDoc) {
         parsed +=
             typeof doc.comment === 'string'
                 ? doc.comment
@@ -110,7 +136,7 @@ export function processFile(
     )
     const file = filePath
     function visit(node: ts.Node) {
-        if (node.kind === ts.SyntaxKind.SourceFile) {
+        if (ts.isSourceFile(node)) {
             elements[getPrefix(rootPath, file)] = {
                 comment: getFileDoc(node),
             }
@@ -138,7 +164,7 @@ export function processFile(
                     ts.isConstructorDeclaration(member),
                 )
                 if (constructor) {
-                    const className = node.name.escapedText
+                    const className = getEscapedName(node)
                     const prefix = `${file.replace(rootPath, '')}:${className}.new ${className}`
                     elements[prefix] = {
                         declaration: getDeclaration(constructor, sourceFile),
@@ -150,10 +176,10 @@ export function processFile(
                 declaration: getDeclaration(node, sourceFile),
                 implementation: node.getText(sourceFile),
             }
-            node.members.forEach((member) => {
+            node.members.forEach((member: ts.Node) => {
                 if (ts.isMethodDeclaration(member)) {
                     elements[
-                        `${getPrefix(rootPath, file, node)}.${member.name['escapedText']}`
+                        `${getPrefix(rootPath, file, node)}.${getEscapedName(member)}`
                     ] = {
                         declaration: getDeclaration(member, sourceFile),
                         implementation: member.getText(sourceFile),
@@ -161,7 +187,7 @@ export function processFile(
                 }
                 if (ts.isPropertyDeclaration(member)) {
                     elements[
-                        `${getPrefix(rootPath, file, node)}.${member.name['escapedText']}`
+                        `${getPrefix(rootPath, file, node)}.${getEscapedName(member)}`
                     ] = { declaration: member.getText(sourceFile) }
                 }
                 if (
@@ -169,7 +195,7 @@ export function processFile(
                     ts.isMethodSignature(member)
                 ) {
                     elements[
-                        `${getPrefix(rootPath, file, node)}.${member.name['escapedText']}`
+                        `${getPrefix(rootPath, file, node)}.${getEscapedName(member)}`
                     ] = { declaration: member.getText(sourceFile) }
                 }
             })

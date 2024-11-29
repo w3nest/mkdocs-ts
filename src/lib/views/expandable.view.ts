@@ -21,7 +21,7 @@ function slidingStyle({
     layoutOptions: LayoutOptions
 }): CSSAttribute {
     const maxWidth =
-        side == 'right' ? layoutOptions.tocMaxWidth : layoutOptions.navMaxWidth
+        side === 'right' ? layoutOptions.tocMaxWidth : layoutOptions.navMaxWidth
     return {
         position: 'absolute',
         height: layoutOptions.sidePanelHeight,

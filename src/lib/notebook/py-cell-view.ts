@@ -4,7 +4,7 @@ import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
-import { executePy } from './py-execution'
+import { executePy, Pyodide } from './py-execution'
 
 /**
  * All attributes available for a python cell are the common ones for now.
@@ -63,10 +63,11 @@ export class PyCellExecutor implements CellTrait {
      * @param args See {@link ExecArgs}.
      */
     async execute(args: ExecArgs): Promise<Scope> {
+        const pyodide = window['pyodide'] as Pyodide
         return await executePy({
             ...args,
             invalidated$: this.invalidated$,
-            pyNamespace: this.state.getPyNamespace(window['pyodide']),
+            pyNamespace: this.state.getPyNamespace(pyodide),
         })
     }
 }
@@ -153,7 +154,14 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
             readOnly: params.cellAttributes.readOnly,
             content: params.content,
             lineNumbers: params.cellAttributes.lineNumbers,
-            onExecute: () => this.state.execute(this.cellId).then(() => {}),
+            onExecute: () => {
+                this.state.execute(this.cellId).then(
+                    () => {},
+                    () => {
+                        throw Error(`Failed to execute cell ${this.cellId}`)
+                    },
+                )
+            },
         })
 
         super({ ...params, content$: editorView.content$ })

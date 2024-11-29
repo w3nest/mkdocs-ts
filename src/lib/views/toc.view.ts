@@ -50,6 +50,7 @@ const headingsPadding: Record<SupportedHeading, string> = {
     H5: '4.5em',
 }
 
+const debounceTimeToc = 200
 /**
  * The table of content view.
  */
@@ -97,13 +98,15 @@ export class TOCView implements VirtualDOM<'div'> {
                     )
                     .flat()
                 return (
-                    addedNodes.find(
-                        (node) =>
-                            node['tagName'] && node['tagName'].startsWith('H'),
-                    ) !== undefined
+                    addedNodes
+                        .filter((node) => node instanceof HTMLElement)
+                        .find(
+                            (node) =>
+                                node.tagName && node.tagName.startsWith('H'),
+                        ) !== undefined
                 )
             }),
-            debounceTime(200),
+            debounceTime(debounceTimeToc),
         )
 
         this.connectedCallback = (elem) => {
@@ -147,7 +150,7 @@ export class TOCView implements VirtualDOM<'div'> {
                 connectedCallback: (elem: RxHTMLElement<'ul'>) => {
                     elem.ownSubscriptions(
                         this.indexFirstVisibleHeading$
-                            .pipe(debounceTime(200))
+                            .pipe(debounceTime(debounceTimeToc))
                             .subscribe((index) => {
                                 const headings = [
                                     ...elem.querySelectorAll('li'),
@@ -214,20 +217,32 @@ class TocItemView implements VirtualDOM<'li'> {
         router: Router
         domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
     }) {
+        const getText = (heading: HTMLElement) => {
+            if (heading.innerText) {
+                return heading.innerText
+            }
+            const firstTextElement = [...heading.children]
+                .filter((c) => c instanceof HTMLElement)
+                .find((c) => c.innerText !== undefined)
+            return firstTextElement.innerText || ''
+        }
         const defaultConv = (heading: HTMLElement) => ({
             tag: 'div' as const,
             class: '',
-            innerText: heading.innerText
-                ? heading.innerText
-                : heading.firstChild['innerText'],
+            innerText: getText(heading),
         })
         const getItemClass = (firstIndex: number): string => {
-            if (index == firstIndex) {
+            if (index === firstIndex) {
                 return 'fw-bolder'
             }
             return index < firstIndex ? 'text-dark' : 'mkdocs-text-1'
         }
-        this.style = { paddingLeft: headingsPadding[heading.tagName] }
+        this.style = ['H1', 'H2', 'H3', 'H4', 'H5'].includes(heading.tagName)
+            ? {
+                  paddingLeft:
+                      headingsPadding[heading.tagName as SupportedHeading],
+              }
+            : {}
         this.class = `mkdocs-TocItemView ${heading.classList.value} pe-1`
         this.children = [
             {
@@ -286,7 +301,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                             this.router.currentNode$,
                             this.router.currentHtml$,
                         ]).pipe(
-                            debounceTime(200),
+                            debounceTime(debounceTimeToc),
                             mergeMap(([node, elem]) => {
                                 return node.tableOfContent
                                     ? from(
@@ -309,7 +324,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     }
 }
 
-export async function tocView({
+export function tocView({
     html,
     router,
     domConvertor,
@@ -317,6 +332,6 @@ export async function tocView({
     html: HTMLElement
     router: Router
     domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
-}) {
-    return new TOCView({ router: router, html, domConvertor })
+}): Promise<TOCView> {
+    return Promise.resolve(new TOCView({ router: router, html, domConvertor }))
 }

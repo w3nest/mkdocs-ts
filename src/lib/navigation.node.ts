@@ -108,12 +108,13 @@ export function createNavNode({
     node: NavNodeInput
     asyncChildren: LazyNavResolver
     router: Router
-}) {
+}): NavNode {
     const href =
-        path !== ''
-            ? `${hrefBase}/${path}/${node.id}`
-            : `${hrefBase}/${node.id}`
+        path === ''
+            ? `${hrefBase}/${node.id}`
+            : `${hrefBase}/${path}/${node.id}`
 
+    const sanitizedPath = path === '' ? node.id : `${path}/${node.id}`
     return new NavNode({
         id: href,
         href,
@@ -123,7 +124,7 @@ export function createNavNode({
             : createImplicitChildren$({
                   resolver: asyncChildren,
                   hrefBase,
-                  path: path !== '' ? `${path}/${node.id}` : node.id,
+                  path: sanitizedPath,
                   withExplicit: [],
                   router,
               }),
@@ -144,7 +145,7 @@ export function createImplicitChildren$({
     hrefBase: string
     withExplicit: NavNode[]
     router: Router
-}) {
+}): NavNode[] | Observable<NavNode[]> {
     path = sanitizeNavPath(path)
     const resolved = resolver({ path: path, router })
 
@@ -190,7 +191,7 @@ export function createChildren({
     reactiveNavs: { [_href: string]: Observable<LazyNavResolver> }
     promiseNavs: { [_href: string]: Promise<Navigation> }
 }) {
-    const explicitChildren = Object.entries(navigation)
+    const explicitChildren: NavNodeBase[] = Object.entries(navigation)
         .filter(([k]) => k.startsWith('/') && k !== CatchAllKey)
         .map(([k, v]: [string, Navigation | Promise<Navigation>]) => {
             const href = hRefBase + k
@@ -200,16 +201,17 @@ export function createChildren({
             }
             return new NavNode({
                 id: href,
-                name: v['name'],
+                name: v.name,
                 children: createChildren({
-                    navigation: navigation[k],
+                    // k is an entry of navigation & do start by `/` => safe cast
+                    navigation: navigation[k] as unknown as Navigation,
                     hRefBase: hRefBase + k,
                     router,
                     reactiveNavs,
                     promiseNavs,
                 }),
                 href,
-                decoration: v['decoration'],
+                decoration: v.decoration,
             })
         })
     if (
@@ -230,7 +232,7 @@ export function createChildren({
     ) {
         reactiveNavs[hRefBase] = navigation[CatchAllKey]
     }
-    return explicitChildren.length == 0 ? undefined : explicitChildren
+    return explicitChildren.length === 0 ? undefined : explicitChildren
 }
 export function createRootNode({
     navigation,
@@ -282,7 +284,7 @@ export type NavigationCommon = {
      * @param router Router instance.
      * @returns A resolvable view
      */
-    html: ({ router }) => Resolvable<AnyVirtualDOM>
+    html: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
     /**
      * This function represents the view of the table of content in the page.
      *

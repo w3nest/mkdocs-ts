@@ -19,10 +19,10 @@ export type * as NotebookTypes from './lib/notebook'
  * Install and returns the {@link CodeApiModule} module.
  */
 export async function installCodeApiModule() {
-    const module: typeof CodeApiModule = await setup.installAuxiliaryModule({
+    const module = (await setup.installAuxiliaryModule({
         name: 'CodeApi',
         cdnClient: webpmClient,
-    })
+    })) as typeof CodeApiModule
     module.Dependencies.parseMd = parseMd
     module.Dependencies.Views = Views
     module.Dependencies.installNotebookModule = installNotebookModule
@@ -34,10 +34,10 @@ export async function installCodeApiModule() {
  * Install and returns the {@link NotebookModule} module.
  */
 export async function installNotebookModule() {
-    const module: typeof NotebookModule = await setup.installAuxiliaryModule({
+    const module = (await setup.installAuxiliaryModule({
         name: 'Notebook',
         cdnClient: webpmClient,
-    })
+    })) as typeof NotebookModule
     module.Dependencies.parseMd = parseMd
     return module
 }

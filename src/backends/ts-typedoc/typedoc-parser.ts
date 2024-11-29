@@ -16,6 +16,11 @@ import {
     SignaturesTrait,
     SymbolTrait,
     MethodTrait,
+    Source,
+    hasSignatureTrait,
+    hasInheritedTrait,
+    Comment,
+    hasBlockTagsTrait,
 } from './typedoc-models'
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -124,9 +129,9 @@ export function gatherTsFiles({
 }: {
     typedocNode: TypedocNode & ProjectTrait
 }) {
-    const nodeWithSources = find_children(
+    const nodeWithSources = find_children<{ sources: Source[] }>(
         typedocNode,
-        (n: TypedocNode) => n['sources'],
+        (n: TypedocNode) => n['sources'] !== undefined,
     )
     const files = nodeWithSources
         .map(({ sources }) => sources.map((source) => source.fileName))
@@ -155,7 +160,8 @@ export function generateApiFiles({
         'utf8',
     )
     // module name should not include '/', before finding a better solution
-    const project = JSON.parse(projectPackageJson).name.split('/').slice(-1)[0]
+    const pkgJSON = JSON.parse(projectPackageJson) as { name: string }
+    const project = pkgJSON.name.split('/').slice(-1)[0]
     function generateApiFilesRec(
         modulePath: string,
         typedocNode: TypedocNode & ProjectTrait,
@@ -226,18 +232,21 @@ export function generateNavigationPathsInModule(
                 `${module}/${child.name}`,
                 child,
             )
+            // noinspection ContinueStatementJS
             continue
         }
         if (firstLevelKinds.includes(child.kind)) {
             paths[child.id] = toNav(`${basePath}/${module}.${child.name}`)
-            const children = find_children(child, (n: TypedocNode) =>
-                secondLevelKinds.includes(n.kind),
+            const children = find_children<TypedocNode>(
+                child,
+                (n: TypedocNode) => secondLevelKinds.includes(n.kind),
             )
             children.forEach((c) => {
                 paths[c.id] = toNav(
                     `${basePath}/${module}.${child.name}.${c.name}`,
                 )
             })
+            // noinspection ContinueStatementJS
             continue
         }
         generateNavigationPathsInModule(basePath, module, child)
@@ -311,6 +320,7 @@ export function parseModule({
             .map((c) => [1 + c.name.search(/\//), c])
         children.sort((a, b) => b[0] - a[0])
         if (children.length > 0) {
+            // noinspection TailRecursionJS
             return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))
         }
         throw new Error(`Module not found: ${parts.join('.')}`)
@@ -383,10 +393,12 @@ export function parseModule({
           })
         : noDoc
 
+    const nodeWitSources = module.children.filter(
+        (child) => child['sources'] !== undefined,
+    ) as (TypedocNode & SymbolTrait)[]
+
     const files = [
-        ...new Set(
-            module.children.map((child) => child['sources'][0].fileName),
-        ),
+        ...new Set(nodeWitSources.map((child) => child['sources'][0].fileName)),
     ].map((file) => parseFile({ path: file, projectGlobals }))
 
     return {
@@ -552,8 +564,10 @@ export function parseCode({
     parentElement?: TypedocNode
 }): Code {
     const symbols = projectGlobals.tsInputs
-    const signatureNode =
-        typedocNode['signatures'] && typedocNode['signatures'][0]
+    const signatureNode = hasSignatureTrait(typedocNode)
+        ? typedocNode.signatures[0]
+        : undefined
+
     const name = signatureNode?.name || typedocNode.name
 
     const source = typedocNode.sources[0]
@@ -608,8 +622,8 @@ export function parseCallable({
     parentElement?: TypedocNode
 }): Callable {
     if (
-        typedocNode['inheritedFrom'] &&
-        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]
+        hasInheritedTrait(typedocNode) &&
+        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]
     ) {
         return undefined
     }
@@ -673,13 +687,13 @@ function parseArgumentsDoc({
     projectGlobals: ProjectGlobals
 }) {
     type Targeted = TypedocNode & { type: { type: string } }
-    const attributes = find_children(
+    const attributes = find_children<{ comment: Comment }>(
         fromElement,
         (node: TypedocNode & Targeted) => {
             return (
                 [1024, 131072, 32768].includes(node.kind) &&
                 !node.name.startsWith('_') &&
-                node.comment
+                node.comment !== undefined
             )
         },
     )
@@ -712,7 +726,13 @@ function parseReturnsDoc({
     typedocNode: TypedocNode
     projectGlobals: ProjectGlobals
 }) {
-    const returnNode = typedocNode.comment?.['blockTags']?.find(
+    if (!typedocNode.comment) {
+        return
+    }
+    if (!hasBlockTagsTrait(typedocNode.comment)) {
+        return
+    }
+    const returnNode = typedocNode.comment.blockTags.find(
         (block) => block.tag === '@returns',
     )
     if (!returnNode) {
@@ -783,7 +803,9 @@ export function parseType({
         parentElement: typedocNode,
         projectGlobals,
     })
-    tParamDoc && doc.sections.push(tParamDoc)
+    if (tParamDoc) {
+        doc.sections.push(tParamDoc)
+    }
     return {
         name: typedocNode.name,
         documentation: doc,
@@ -842,15 +864,16 @@ export function parseAttribute({
     parentElement?: TypedocNode
 }): Attribute {
     if (
-        typedocNode['inheritedFrom'] &&
-        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]
+        hasInheritedTrait(typedocNode) &&
+        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]
     ) {
         return undefined
     }
+
     const name = typedocNode.name
-    if (typedocNode['inheritedFrom']) {
+    if (hasInheritedTrait(typedocNode)) {
         typedocNode = projectGlobals.typedocIdMap[
-            typedocNode['inheritedFrom'].target
+            typedocNode.inheritedFrom.target
         ] as TypedocNode & SymbolTrait
         parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]
     }
@@ -875,7 +898,10 @@ export function parseAttribute({
     }
 }
 
-function find_children(jsonObject: unknown, match) {
+function find_children<T = unknown>(
+    jsonObject: unknown,
+    match: (obj: unknown) => boolean,
+): (TypedocNode & T)[] {
     const references = []
 
     function traverse(obj: unknown) {
@@ -897,19 +923,24 @@ function find_children(jsonObject: unknown, match) {
     }
 
     traverse(jsonObject)
-    return references
+    return references as (TypedocNode & T)[]
 }
 
-function find_references(jsonObject: unknown) {
-    const references = []
+function find_references(
+    jsonObject: unknown,
+): { target: number; name: string }[] {
+    const references: { target: number; name: string }[] = []
 
     function traverse(obj: unknown) {
         if (!obj) {
             return
         }
         if (typeof obj === 'object') {
-            if (obj['type'] === 'reference') {
-                references.push(obj)
+            if (
+                obj['type'] === 'reference' &&
+                typeof (obj['target'] === 'number')
+            ) {
+                references.push(obj as { target: number; name: string })
             }
             for (const value of Object.values(obj)) {
                 traverse(value)
@@ -932,10 +963,8 @@ function gather_symbol_references(
     const refs = find_references(element)
     const result: { [key: string]: string } = {}
     refs.forEach((ref) => {
-        if (typeof ref.target === 'number') {
-            const link = projectGlobals.navigations[ref.target]
-            result[ref.name] = link ? `${link}` : ref.target.toString()
-        }
+        const link = projectGlobals.navigations[ref.target]
+        result[ref.name] = link ? `${link}` : ref.target.toString()
     })
     return result
 }

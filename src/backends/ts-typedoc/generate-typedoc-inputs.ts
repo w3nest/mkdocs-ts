@@ -30,14 +30,14 @@ export function generateTypedocInputs(
     )
 
     if (result.stdout) {
-        console.log(`stdout: ${result.stdout}`)
+        console.log(`stdout: ${result.stdout.toString()}`)
     }
 
     // Log process exit code
     console.log(`typedoc process exited with code ${result.status}`)
     if (result.status > 0) {
         console.error(
-            `Error executing typedoc: ${result.error} ${result.stderr}`,
+            `Error executing typedoc: ${result.error} ${result.stderr.toString()}`,
         )
         throw Error(
             `Typedoc exited with non zero status code (${result.status})`,
@@ -45,5 +45,5 @@ export function generateTypedocInputs(
     }
     const fileContent = fs.readFileSync(output, 'utf8')
     fs.unlinkSync(output)
-    return JSON.parse(fileContent)
+    return JSON.parse(fileContent) as TypedocNode & ProjectTrait
 }

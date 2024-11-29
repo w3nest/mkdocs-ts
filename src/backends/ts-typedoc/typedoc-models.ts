@@ -133,6 +133,21 @@ export type SignatureTrait = SymbolTrait & {
 export type SignaturesTrait = SymbolTrait & {
     signatures: (TypedocNode & SignatureTrait)[]
 }
+export function hasSignatureTrait(node: unknown): node is SignaturesTrait {
+    return (
+        (node as SignaturesTrait).signatures &&
+        (node as SignaturesTrait).signatures.length > 0
+    )
+}
+/**
+ * Trait for comment having block tags.
+ */
+export type BlockTagsTrait = {
+    blockTags: { tag: string; content: (DocText | DocInlineTag | DocCode)[] }[]
+}
+export function hasBlockTagsTrait(node: unknown): node is BlockTagsTrait {
+    return (node as BlockTagsTrait).blockTags !== undefined
+}
 
 /**
  * Base type for typedoc node.
@@ -142,7 +157,7 @@ export type TypedocNode = {
     name: string
     kind: Kind
     flags: Record<string, string>
-    comment: Comment
+    comment?: Comment
     children: TypedocNode[]
 }
 /**
@@ -155,6 +170,16 @@ export type MethodTrait = SignaturesTrait & {
         name: string
     }
 }
+
+export type InheritedTrait = {
+    inheritedFrom: {
+        target: number
+    }
+}
+export function hasInheritedTrait(node: unknown): node is InheritedTrait {
+    return (node as InheritedTrait).inheritedFrom !== undefined
+}
+
 export type SymbolId = {
     sourceFileName: string | null
     qualifiedName: string

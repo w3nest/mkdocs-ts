@@ -91,11 +91,13 @@ export class HandlerView implements VirtualDOM<'div'> {
             ev.stopPropagation()
             ev.preventDefault()
             const ids = this.expandedNodes$.value
-            ids.includes(this.node.id)
-                ? this.expandedNodes$.next(
-                      ids.filter((id) => id != this.node.id),
-                  )
-                : this.expandedNodes$.next([...ids, this.node.id])
+            if (ids.includes(this.node.id)) {
+                this.expandedNodes$.next(
+                    ids.filter((id) => id !== this.node.id),
+                )
+                return
+            }
+            this.expandedNodes$.next([...ids, this.node.id])
         }
     }
 }
@@ -126,7 +128,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             NavigationHeader.DefaultWrapperClass
 
         this.style =
-            node.id == '/'
+            node.id === '/'
                 ? {
                       textDecoration: 'none',
                       color: 'inherit',
@@ -175,7 +177,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                 class: attr$({
                     source$: router.explorerState.selectedNode$,
                     vdomMap: (selected): string =>
-                        selected.id == node.id ? 'font-weight-bold' : '',
+                        selected.id === node.id ? 'font-weight-bold' : '',
                     wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,
                 }),
                 innerText: node.name,

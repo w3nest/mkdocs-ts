@@ -12,6 +12,10 @@ import {
 import { Scope } from './state'
 import { type WorkersPoolTypes } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
+import {
+    EntryPointArguments,
+    MessageExit,
+} from '@w3nest/webpm-client/src/lib/workers-pool/workers-factory'
 
 /**
  * Execute a given JavaScript or Python statement within a workers' pool.
@@ -50,7 +54,10 @@ export async function executeWorkersPool({
               })
             : patchPySrc({ src, capturedOut })
 
-    const task = new Function(srcPatched)()
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+    const task = new Function(srcPatched)() as (
+        input: EntryPointArguments<Record<string, unknown>>,
+    ) => void
 
     const r$ = workersPool.schedule({
         title: 'Test',
@@ -59,9 +66,11 @@ export async function executeWorkersPool({
     })
 
     const lastMessage = await lastValueFrom(r$)
+    const data = lastMessage.data as MessageExit
+    const results = typeof data.result === 'object' ? data.result : {}
     return {
         let: scope.let,
-        const: { ...scope.const, ...lastMessage.data['result'] },
+        const: { ...scope.const, ...results },
         python: scope.python,
     }
 }
@@ -80,7 +89,7 @@ export async function executeWorkersPool({
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
  * @returns Promise over the scope at exit.
  */
-export async function executeWorkersPool$({
+export function executeWorkersPool$({
     src,
     mode,
     workersPool,
@@ -100,13 +109,13 @@ export async function executeWorkersPool$({
     const reactives: [string, Observable<unknown>][] = Object.entries(
         capturedIn,
     )
-        .filter(([_, v]) => v instanceof Observable || v instanceof Promise)
+        .filter(([, v]) => v instanceof Observable || v instanceof Promise)
         .map(([k, v]: [string, Promise<unknown> | Observable<unknown>]) => [
             k,
             v instanceof Promise ? from(v) : v,
         ])
 
-    const capturedOut$ = capturedOut
+    const capturedOut$: Record<string, ReplaySubject<unknown>> = capturedOut
         .map((k) => {
             return [k, new ReplaySubject()]
         })
@@ -118,7 +127,7 @@ export async function executeWorkersPool$({
             {},
         )
     const inputs: Observable<unknown>[] = reactives.map(
-        ([_, v]) => v,
+        ([, v]) => v,
     ) as unknown as Observable<unknown>[]
 
     combineLatest(inputs)
@@ -142,7 +151,11 @@ export async function executeWorkersPool$({
                               capturedIn: Object.keys(capturedIn),
                           })
                         : patchPySrc({ src, capturedOut })
-                const task = new Function(srcPatched)()
+                // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+                const task = new Function(srcPatched)() as (
+                    input: EntryPointArguments<Record<string, unknown>>,
+                ) => void
+
                 return workersPool
                     .schedule({
                         title: 'Test',
@@ -154,17 +167,20 @@ export async function executeWorkersPool$({
             shareReplay({ bufferSize: 1, refCount: true }),
         )
         .subscribe((resp) => {
-            Object.entries(resp.data['result']).forEach(([k, v]) => {
+            const data = resp.data as MessageExit
+            const results = typeof data.result === 'object' ? data.result : {}
+
+            Object.entries(results).forEach(([k, v]) => {
                 capturedOut$[k].next(v)
             })
         })
-    return {
+    return Promise.resolve({
         ...scope,
         const: {
             ...scope.const,
             ...capturedOut$,
         },
-    }
+    })
 }
 
 function patchSrc({

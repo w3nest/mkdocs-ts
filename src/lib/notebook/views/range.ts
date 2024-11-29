@@ -75,7 +75,7 @@ export class Range implements VirtualDOM<'div'> {
     ) {
         Object.assign(this, params)
         if (!params.value) {
-            this.value = 0.5 * (this.max - this.min)
+            this.value = (1 / 2) * (this.max - this.min)
         }
         if (!this.value$) {
             this.value$ = new BehaviorSubject(this.value)
@@ -104,7 +104,7 @@ export class Range implements VirtualDOM<'div'> {
                     source$: this.value$,
                     vdomMap: (v) => `${v}`,
                 }),
-                onchange: (ev: MouseEvent) => {
+                onchange: (ev: InputEvent & { target: HTMLInputElement }) => {
                     this.value$.next(getValue(ev.target['value']))
                 },
             },
@@ -117,10 +117,10 @@ export class Range implements VirtualDOM<'div'> {
                     source$: this.value$,
                     vdomMap: (v) => `${v}`,
                 }),
-                onchange: (ev: MouseEvent) => {
+                onchange: (ev: InputEvent & { target: HTMLInputElement }) => {
                     this.value$.next(getValue(ev.target['value']))
                 },
-                oninput: (ev: MouseEvent) => {
+                oninput: (ev: InputEvent & { target: HTMLInputElement }) => {
                     if (this.emitDrag) {
                         this.value$.next(getValue(ev.target['value']))
                     }

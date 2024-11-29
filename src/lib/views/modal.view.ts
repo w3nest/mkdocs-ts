@@ -1,6 +1,9 @@
 import { AnyVirtualDOM, render } from 'rx-vdom'
 
-function isSizeRelativeToParent(element, dimension: 'width' | 'height') {
+function isSizeRelativeToParent(
+    element: HTMLElement,
+    dimension: 'width' | 'height',
+) {
     const style = element.style
 
     // Check if width or height is set to percentage or is auto in inline styles
@@ -13,22 +16,19 @@ function isSizeRelativeToParent(element, dimension: 'width' | 'height') {
     for (const stylesheet of stylesheets) {
         const rules = stylesheet.cssRules
         for (const rule of rules) {
-            if (rule['style']) {
+            if (rule instanceof CSSStyleRule) {
                 try {
-                    const selectorMatches = element.matches(
-                        rule['selectorText'],
-                    )
-                    const target = rule['style'][dimension]
-
-                    if (
-                        selectorMatches &&
-                        target &&
-                        (target.includes('%') || target === 'auto')
-                    ) {
+                    const selectorMatches = element.matches(rule.selectorText)
+                    const target = rule.style[dimension]
+                    const isRelative = target.includes('%') || target === 'auto'
+                    if (selectorMatches && target && isRelative) {
                         return true
                     }
-                } catch (error) {
-                    // Skip any invalid CSS rules
+                } catch (error: unknown) {
+                    console.error('Failed to process CSSStyleRule', {
+                        rule,
+                        error,
+                    })
                 }
             }
         }
@@ -77,7 +77,7 @@ export function popupModal({
                     maxWidth: maxWidth,
                 },
                 connectedCallback: (elem: HTMLElement) => {
-                    const firstChild = elem.firstChild
+                    const firstChild = elem.firstChild as HTMLElement
                     if (isSizeRelativeToParent(firstChild, 'width')) {
                         elem.style.width = maxWidth
                     }
@@ -94,7 +94,9 @@ export function popupModal({
             element = elem
         },
         onclick: () => {
-            element && element.remove()
+            if (element) {
+                element.remove()
+            }
         },
     }
     document.body.appendChild(render(vdom))

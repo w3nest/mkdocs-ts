@@ -29,6 +29,17 @@ const externals = {
         "commonjs2": "@w3nest/webpm-client",
         "root": "@w3nest/webpm-client_APIv01"
     },
+    "@w3nest/webpm-client/src/lib/workers-pool/workers-factory": {
+        "commonjs": "@w3nest/webpm-client/src/lib/workers-pool/workers-factory",
+        "commonjs2": "@w3nest/webpm-client/src/lib/workers-pool/workers-factory",
+        "root": [
+            "@w3nest/webpm-client_APIv01",
+            "src",
+            "lib",
+            "workers-pool",
+            "workers-factory"
+        ]
+    },
     "codemirror": {
         "commonjs": "codemirror",
         "commonjs2": "codemirror",

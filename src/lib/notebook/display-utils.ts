@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, child$, CSSAttribute } from 'rx-vdom'
+import { AnyVirtualDOM, child$, CSSAttribute, RxChild } from 'rx-vdom'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 import { Observable, Subject } from 'rxjs'
 
@@ -12,7 +12,7 @@ import { Observable, Subject } from 'rxjs'
 export function display(
     output$: Subject<AnyVirtualDOM>,
     factory: DisplayFactory,
-    ...elements: (unknown | Observable<unknown>)[]
+    ...elements: unknown[]
 ) {
     const pickView = (e) => {
         const component = [...factory]
@@ -34,7 +34,7 @@ export function display(
         }
         return pickView(element)
     })
-    if (views.length == 1) {
+    if (views.length === 1) {
         output$.next(views[0])
         return
     }
@@ -73,10 +73,11 @@ export type DisplayComponent<T = unknown> = {
 export type DisplayFactory = DisplayComponent[]
 
 function rawView(element: unknown): AnyVirtualDOM {
+    type PrimitiveType = 'string' | 'number' | 'boolean'
     if (['string', 'number', 'boolean'].includes(typeof element)) {
         return {
             tag: 'div',
-            innerText: `${element}`,
+            innerText: `${element as PrimitiveType}`,
         }
     }
     const state = new ObjectJs.State({ title: '', data: element })
@@ -112,13 +113,17 @@ function htmlView(element: HTMLElement | AnyVirtualDOM): AnyVirtualDOM {
  * @returns The default factory.
  */
 export function defaultDisplayFactory(): DisplayFactory {
-    function isVirtualDOM(obj: unknown): obj is AnyVirtualDOM {
-        return obj?.['tag'] || (obj?.['source$'] && obj?.['vdomMap'])
+    function isVirtualDOM(obj: unknown): obj is AnyVirtualDOM | RxChild {
+        return (
+            (obj as AnyVirtualDOM).tag !== undefined ||
+            ((obj as RxChild).source$ !== undefined &&
+                (obj as RxChild).vdomMap !== undefined)
+        )
     }
     return [
         {
             name: 'Raw',
-            isCompatible: (_: unknown) => true,
+            isCompatible: () => true,
             view: rawView,
         },
         {

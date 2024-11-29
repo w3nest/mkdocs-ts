@@ -81,7 +81,7 @@ export class SectionHeader implements VirtualDOM<'div'> {
         'mkapi-section-header w-100 p-2 my-3 d-flex align-items-center text-dark border-bottom'
 
     constructor(section: DocumentationSection) {
-        const factory = {
+        const factory: Record<string, string> = {
             warning: 'fas fa-exclamation fv-text-focus',
             example: 'fas fa-code fv-text-success',
             todos: 'fas fa-forward fv-text-success',

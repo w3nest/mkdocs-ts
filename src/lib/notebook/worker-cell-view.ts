@@ -157,7 +157,14 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
             readOnly: false,
             content: params.content,
             lineNumbers: this.cellAttributes.lineNumbers,
-            onExecute: () => this.state.execute(this.cellId).then(() => {}),
+            onExecute: () => {
+                this.state.execute(this.cellId).then(
+                    () => {},
+                    () => {
+                        console.error(`Failed to executed ${this.cellId}`)
+                    },
+                )
+            },
         })
         this.content$ = this.editorView.content$
         this.children = [

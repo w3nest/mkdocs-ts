@@ -136,11 +136,11 @@ export class NotebookPage implements VirtualDOM<'div'> {
         })
 
         const source$ =
-            params.src !== undefined
-                ? of(params.src)
-                : from(fetch(this.url).then((resp) => resp.text())).pipe(
+            params.src === undefined
+                ? from(fetch(this.url).then((resp) => resp.text())).pipe(
                       take(1),
                   )
+                : of(params.src)
 
         this.children = [
             child$({
@@ -158,7 +158,13 @@ export class NotebookPage implements VirtualDOM<'div'> {
                         },
                     })
                     if (params?.options?.runAtStart) {
-                        this.state.execute(this.state.ids.slice(-1)[0]).then()
+                        const cellId = this.state.ids.slice(-1)[0]
+                        this.state.execute(cellId).then(
+                            () => {},
+                            () => {
+                                throw Error(`Failed to execute cell ${cellId}`)
+                            },
+                        )
                     }
                     return vdom
                 },

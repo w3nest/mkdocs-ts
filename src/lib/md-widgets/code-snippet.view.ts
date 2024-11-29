@@ -2,7 +2,6 @@ import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
-import { type Editor } from 'codemirror'
 
 export type CodeLanguage =
     | 'python'
@@ -13,13 +12,24 @@ export type CodeLanguage =
     | 'yaml'
     | 'unknown'
 
+type CodeMirrorEditor = {
+    on: (event: string, cb: (args: { getValue: () => string }) => void) => void
+    refresh: () => void
+    addLineClass: (line: number, kind: string, classes: string) => void
+}
+
+type CodeMirror = (
+    element: HTMLElement,
+    config: Record<string, unknown>,
+) => CodeMirrorEditor
+
 /**
  * The widget for code snippet.
  */
 export class CodeSnippetView implements VirtualDOM<'div'> {
     static readonly cmDependencies$: Record<
         CodeLanguage,
-        Observable<WindowOrWorkerGlobalScope> | undefined
+        Observable<{ CodeMirror: CodeMirror }> | undefined
     > = {
         python: undefined,
         javascript: undefined,
@@ -31,7 +41,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     }
     static fetchCmDependencies$(
         language: CodeLanguage,
-    ): Observable<WindowOrWorkerGlobalScope> {
+    ): Observable<{ CodeMirror: CodeMirror }> {
         if (CodeSnippetView.cmDependencies$[language]) {
             return CodeSnippetView.cmDependencies$[language]
         }
@@ -57,7 +67,9 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                 scripts: scripts[language],
                 css: ['codemirror#5.52.0~codemirror.min.css'],
             }),
-        ).pipe(shareReplay(1))
+        ).pipe(shareReplay(1)) as unknown as Observable<{
+            CodeMirror: CodeMirror
+        }>
         return CodeSnippetView.cmDependencies$[language]
     }
 
@@ -97,7 +109,9 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
 
     public readonly content$: BehaviorSubject<string>
 
-    public readonly editor$ = new BehaviorSubject<Editor | undefined>(undefined)
+    public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(
+        undefined,
+    )
     /**
      * Initialize the widget.
      *
@@ -124,7 +138,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
         language: CodeLanguage
         highlightedLines?: string
         content: string //| Observable<string>
-        cmConfig?: { [k: string]: unknown }
+        cmConfig?: { [_k: string]: unknown }
     }) {
         const content$ = typeof content == 'string' ? of(content) : content
         const linesToHighlight = parseLineIndices(highlightedLines)
@@ -135,7 +149,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                     content$,
                     CodeSnippetView.fetchCmDependencies$(language),
                 ]),
-                vdomMap: ([content, _]) => {
+                vdomMap: ([content, { CodeMirror }]) => {
                     return {
                         tag: 'div',
                         class: 'h-100 w-100',
@@ -148,10 +162,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                                 value: content,
                                 ...cmConfig,
                             }
-                            const editor = window['CodeMirror'](
-                                htmlElement,
-                                config,
-                            ) as Editor
+                            const editor = CodeMirror(htmlElement, config)
                             editor.on('change', (args) => {
                                 this.content$.next(args.getValue())
                             })
@@ -178,7 +189,7 @@ function parseLineIndices(input?: string): number[] {
         return []
     }
     const parts = input.split(' ')
-    let indices = []
+    const indices: number[] = []
 
     parts.forEach((part) => {
         if (part.includes('-')) {
@@ -190,7 +201,5 @@ function parseLineIndices(input?: string): number[] {
             indices.push(parseInt(part))
         }
     })
-    indices = [...new Set(indices)].sort((a, b) => a - b)
-
-    return indices
+    return [...new Set(indices)].sort((a, b) => a - b)
 }

@@ -1,6 +1,6 @@
 /**
  * This module gathers the definition of simple views to use within a notebook page,
- * it also re-exports the {@link MainModule.MdWidgets.CodeSnippetView}.
+ * it also re-exports the {@link CodeSnippetView}.
  *
  * Some layout elements are included in the {@link Layouts} submodule.
  *

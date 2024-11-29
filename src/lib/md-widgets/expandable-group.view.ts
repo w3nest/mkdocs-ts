@@ -100,21 +100,26 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                 ? child$({
                       source$: expanded$,
                       vdomMap: (expanded) => {
-                          return expanded
-                              ? {
-                                    tag: 'div',
-                                    class: wrapperClass,
-                                    children: [content()],
-                                }
-                              : { tag: 'div' }
+                          if (expanded) {
+                              return {
+                                  tag: 'div',
+                                  class: wrapperClass,
+                                  children: [content()],
+                              }
+                          }
+                          return { tag: 'div' }
                       },
                   })
                 : {
                       tag: 'div' as const,
                       class: attr$({
                           source$: expanded$,
-                          vdomMap: (expanded) =>
-                              expanded ? wrapperClass : 'd-none',
+                          vdomMap: (expanded) => {
+                              if (expanded) {
+                                  return wrapperClass
+                              }
+                              return 'd-none'
+                          },
                       }),
                       children: [content()],
                   }

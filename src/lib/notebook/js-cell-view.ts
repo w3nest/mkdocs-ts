@@ -159,7 +159,14 @@ export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
             readOnly: params.cellAttributes.readOnly,
             content: params.content,
             lineNumbers: params.cellAttributes.lineNumbers,
-            onExecute: () => this.state.execute(this.cellId).then(() => {}),
+            onExecute: () => {
+                this.state.execute(this.cellId).then(
+                    () => {},
+                    () => {
+                        throw Error(`Failed to execute cell ${this.cellId}`)
+                    },
+                )
+            },
         })
 
         super({ ...params, content$: editorView.content$ })

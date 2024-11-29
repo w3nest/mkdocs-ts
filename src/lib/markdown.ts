@@ -120,6 +120,9 @@ export class GlobalMarkdownViews {
     }
 }
 
+export type FetchMdInput = {
+    url: string
+} & MdParsingOptions
 /**
  * Fetch & parse a Markdown file from specified with a URL.
  *
@@ -127,27 +130,23 @@ export class GlobalMarkdownViews {
  * @param params.url The URL of the file.
  */
 export function fetchMd(
-    params: {
-        url: string
-    } & MdParsingOptions,
+    params: FetchMdInput,
 ): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
-    return ({ router }: { router: Router }) => {
-        return fetch(params.url)
-            .then((resp) => resp.text())
-            .then((src) => {
-                return parseMd({
-                    src,
-                    router,
-                    ...params,
-                })
-            })
+    return async ({ router }: { router: Router }) => {
+        const resp = await fetch(params.url)
+        const src = await resp.text()
+        return parseMd({
+            src,
+            router,
+            ...params,
+        })
     }
 }
 
-export function fetchMarkdown(p) {
+export function fetchMarkdown(p: FetchMdInput) {
     return fetchMd(p)
 }
-export function fromMarkdown(p) {
+export function fromMarkdown(p: FetchMdInput) {
     return fetchMarkdown(p)
 }
 
@@ -193,7 +192,7 @@ export function parseMd({
 }: {
     src: string
     router?: Router
-    navigations?: { [k: string]: (e: HTMLAnchorElement) => void }
+    navigations?: { [_k: string]: (e: HTMLAnchorElement) => void }
 } & MdParsingOptions): VirtualDOM<'div'> {
     if (typeof src !== 'string') {
         console.error('Given MD source is not a string', src)
@@ -212,23 +211,30 @@ export function parseMd({
         input: src,
         views: views,
     })
-
-    latex && window['MathJax'] && window['MathJax'].typeset([div])
+    if (latex && window['MathJax']) {
+        // eslint-disable-next-line
+        window['MathJax'].typeset([div])
+    }
 
     const customs = div.querySelectorAll('.language-custom-view')
-    customs.forEach((custom) => {
-        const fct = new Function(custom['innerText'])()({ webpm })
-        const view = render({
-            tag: 'div',
-            children: [
-                child$({
-                    source$: from(fct),
-                    vdomMap: (vDom) => vDom as AnyVirtualDOM,
-                }),
-            ],
+    ;[...customs]
+        .filter((custom) => custom instanceof HTMLElement)
+        .forEach((custom) => {
+            // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+            const fct = new Function(custom.innerText)()({
+                webpm,
+            }) as unknown as Promise<AnyVirtualDOM>
+            const view = render({
+                tag: 'div',
+                children: [
+                    child$({
+                        source$: from(fct),
+                        vdomMap: (vDom) => vDom,
+                    }),
+                ],
+            })
+            custom.parentNode.parentNode.replaceChild(view, custom.parentNode)
         })
-        custom.parentNode.parentNode.replaceChild(view, custom.parentNode)
-    })
 
     const options = {
         router,
@@ -238,19 +244,23 @@ export function parseMd({
         views,
         emitHtmlUpdated,
     }
-    const viewsTagUpperCase = Object.entries(views).reduce(
+    const viewsTagUpperCase: Record<
+        Uppercase<string>,
+        ViewGenerator
+    > = Object.entries(views).reduce(
         (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),
         {},
     )
     Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {
-        const elem = div.querySelector(`#${k}`)
+        const elem: HTMLElement = div.querySelector(`#${k}`)
         if (!elem) {
             return
         }
         elem.textContent = content
-        const factory = viewsTagUpperCase[elem.tagName]
-        factory &&
+        const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]
+        if (factory) {
             elem.parentNode.replaceChild(render(factory(elem, options)), elem)
+        }
     })
 
     return {
@@ -279,7 +289,9 @@ export function parseMd({
                     })
                 }
             })
-            emitHtmlUpdated && router.emitHtmlUpdated()
+            if (emitHtmlUpdated) {
+                router.emitHtmlUpdated()
+            }
         },
     }
 }
@@ -290,7 +302,7 @@ export function patchSrc({
     idGenerator,
 }: {
     src: string
-    views
+    views: Record<string, unknown>
     idGenerator?: () => string
 }) {
     let patchedSrc = ''
@@ -322,12 +334,13 @@ export function patchSrc({
         )
         if (!processor) {
             patchedSrc += line + '\n'
+            // noinspection ContinueStatementJS
             continue
         }
 
         const id = idGenerator
             ? idGenerator()
-            : `id_${Math.floor(Math.random() * 1e6)}`
+            : `id_${Math.floor(Math.random() * Math.pow(10, 6))}`
         if (line.includes(`</${processor}>`)) {
             const { patchedLine, content } = extractInlinedElem(
                 line,
@@ -336,6 +349,7 @@ export function patchSrc({
             )
             patchedSrc += patchedLine + '\n'
             contents[id] = content
+            // noinspection ContinueStatementJS
             continue
         }
         patchedSrc += `${line.trim().slice(0, -1)} id="${id}"></${processor}>\n`
@@ -346,6 +360,7 @@ export function patchSrc({
             if (newLine.includes(`<${processor}`)) {
                 acc += newLine + '\n'
                 openedCount++
+                // noinspection ContinueStatementJS
                 continue
             }
             if (newLine.includes(`</${processor}>`)) {
@@ -353,18 +368,21 @@ export function patchSrc({
             }
             if (openedCount > 0) {
                 acc += newLine + '\n'
+                // noinspection ContinueStatementJS
                 continue
             }
             // If there was a content, remove the last '\n'
             if (acc !== '') {
                 acc = acc.slice(0, -1)
             }
+            // noinspection AssignmentToForLoopParameterJS
             i = j
             const restOfLine = newLine.split(`</${processor}>`)[1].trim()
             if (restOfLine !== '') {
                 patchedSrc += restOfLine + `\n`
             }
             contents[id] = acc
+            // noinspection BreakStatementJS
             break
         }
     }
@@ -396,14 +414,11 @@ export function removeEscapedText(src: string): {
     const tripleBackquotePattern = /```([\s\S]*?)```/g
 
     // Replace triple back-quote escaped parts
-    escapedContent = escapedContent.replace(
-        tripleBackquotePattern,
-        (match, _) => {
-            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
-            replaced[id] = match // Store the escaped part in the replaced object
-            return id // Replace the escaped part with the unique ID
-        },
-    )
+    escapedContent = escapedContent.replace(tripleBackquotePattern, (match) => {
+        const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+        replaced[id] = match // Store the escaped part in the replaced object
+        return id // Replace the escaped part with the unique ID
+    })
 
     // Regular expression pattern to match single back-quoted escaped parts spanning multiple lines
     const multilineBackquotePattern = /`([\s\S]*?)`/g
@@ -411,7 +426,7 @@ export function removeEscapedText(src: string): {
     // Replace single back-quote escaped parts
     escapedContent = escapedContent.replace(
         multilineBackquotePattern,
-        (match, _) => {
+        (match) => {
             const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
             replaced[id] = match // Store the escaped part in the replaced object
             return id // Replace the escaped part with the unique ID
@@ -425,7 +440,7 @@ function fixedMarkedParseCustomViews({
     views,
 }: {
     input: string
-    views: { [k: string]: ViewGenerator }
+    views: Record<string, ViewGenerator>
 }) {
     /**
      * The library 'marked' parse the innerHTML of HTML elements as markdown,
@@ -437,9 +452,10 @@ function fixedMarkedParseCustomViews({
 
     const divResult = document.createElement('div')
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setOptions({
         langPrefix: 'hljs language-',
-        highlight: function (code, lang) {
+        highlight: function (code: string, lang: string) {
             return highlight.highlightAuto(code, [lang]).value
         },
         // deprecated since v0.3.0, removed in v8.0.0,
@@ -447,6 +463,7 @@ function fixedMarkedParseCustomViews({
         headerPrefix: headingPrefixId,
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
     divResult.innerHTML = parse(patchedInput)
     Object.entries(contents).forEach(([id, content]) => {
         const elem = divResult.querySelector(`#${id}`)

@@ -19,6 +19,8 @@ import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
 
+type Language = 'javascript' | 'markdown' | 'python'
+
 /**
  * Represents the view of a cell that will render once the associated cell is registered in the {@link State}.
  * Upon registration, this container includes one child of type {@link CellView}.
@@ -47,7 +49,7 @@ export class FutureCellView implements VirtualDOM<'div'> {
     constructor(params: {
         editorView: AnyVirtualDOM
         cellId: string
-        language: string
+        language: Language
         state: State
         cellAttributes: MdCellAttributes | JsCellAttributes
         reactive$: Observable<boolean>
@@ -95,7 +97,7 @@ export class CellView implements VirtualDOM<'div'> {
      */
     constructor(params: {
         cellId: string
-        language: string
+        language: Language
         editorView: AnyVirtualDOM
         cellAttributes: MdCellAttributes | JsCellAttributes
         reactive$: Observable<boolean>
@@ -283,10 +285,10 @@ export class CellTagsView implements VirtualDOM<'div'> {
     constructor(params: {
         cellStatus$: Observable<CellStatus>
         reactive$: Observable<boolean>
-        language: string
+        language: Language
         cellAttributes: CellCommonAttributes
     }) {
-        const lang = {
+        const lang: Record<Language, string> = {
             javascript: 'js',
             markdown: 'md',
             python: 'py',
@@ -361,7 +363,7 @@ export class OutputsView implements VirtualDOM<'div'> {
     }) {
         Object.assign(this, params)
         this.class = `${this.class} ${params.classList}`
-        const outputs$ = new BehaviorSubject([])
+        const outputs$ = new BehaviorSubject<Output[]>([])
         this.output$.subscribe((out: Output) => {
             if (out === undefined) {
                 outputs$.next([])

@@ -64,9 +64,13 @@ function parseMd({
 }): AnyVirtualDOM {
     return {
         tag: 'div',
-        innerHTML: parse(src),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        innerHTML: parse(src) as string,
         connectedCallback: (div: HTMLDivElement) => {
-            latex && window['MathJax'] && window['MathJax'].typeset([div])
+            if (latex) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+                window['MathJax']?.typeset([div])
+            }
         },
     }
 }

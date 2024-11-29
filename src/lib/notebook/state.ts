@@ -30,6 +30,7 @@ import { fromFetch } from 'rxjs/fetch'
 import type { MdParsingOptions } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
+import { Pyodide, PyodideNamespace } from './py-execution'
 
 export type CellStatus =
     | 'unready'
@@ -209,7 +210,7 @@ export class State {
      * This is a python dictionary initialized with `pyodide.globals.get("dict")()`
      * when the notebook page is loaded and reused across python cells.
      */
-    private pyNamespace: { get: (key: string) => unknown }
+    private pyNamespace: PyodideNamespace
 
     constructor(params: {
         initialScope?: Partial<Scope>
@@ -247,7 +248,7 @@ export class State {
         }
     }
 
-    getPyNamespace(pyodide) {
+    getPyNamespace(pyodide: Pyodide): PyodideNamespace {
         this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()
         return this.pyNamespace
     }
@@ -266,9 +267,9 @@ export class State {
             this.ids.length === 1 ? 'ready' : 'unready',
         )
         this.scopes$[cell.cellId] =
-            Object.keys(this.scopes$).length == 0
-                ? new BehaviorSubject(this.initialScope)
-                : new BehaviorSubject(undefined)
+            Object.keys(this.scopes$).length === 0
+                ? new BehaviorSubject<Scope>(this.initialScope)
+                : new BehaviorSubject<Scope>(undefined)
         cell.content$.subscribe((src) => {
             this.updateSrc({ cellId: cell.cellId, src })
         })
@@ -361,9 +362,13 @@ export class State {
             this.scopes$[nextId].next(scope)
             this.cellsStatus$[nextId].next('ready')
         }
-        nextId && this.scopes$[nextId].next(scope)
+        if (nextId) {
+            this.scopes$[nextId].next(scope)
+        }
         remainingIds.forEach((id) => {
-            rootExecution && this.cellsStatus$[id].next('unready')
+            if (rootExecution) {
+                this.cellsStatus$[id].next('unready')
+            }
             this.scopes$[id].next(undefined)
             this.executing$[id].next(false)
         })
@@ -402,10 +407,10 @@ export class State {
             cellOptions: CellCommonAttributes
         }) => {
             return {
-                'js-cell': (elem) => {
+                'js-cell': (elem: HTMLElement) => {
                     const id =
                         elem.getAttribute('cell-id') || elem.getAttribute('id')
-                    const reactive = elem.getAttribute('reactive')
+                    const reactive = elem.getAttribute('reactive') === 'true'
                     const cell = new JsCellExecutor({
                         cellId: id,
                         content$: new BehaviorSubject(elem.textContent),
@@ -417,7 +422,7 @@ export class State {
                     state.appendCell(cell)
                     return { tag: 'div' as const }
                 },
-                'py-cell': (elem) => {
+                'py-cell': (elem: HTMLElement) => {
                     const id =
                         elem.getAttribute('cell-id') || elem.getAttribute('id')
                     const cell = new PyCellExecutor({
@@ -432,7 +437,7 @@ export class State {
             }
         }
 
-        return (path: string) => {
+        return async (path: string) => {
             const router = this.router
             if (this.modules[path]) {
                 this.modules[path].state.dispose()
@@ -469,28 +474,34 @@ export class State {
                 }),
             )
 
-            return firstValueFrom(module$).then(({ exports }) => ({
+            const { exports } = await firstValueFrom(module$)
+            return {
                 ...exports.const,
                 ...exports.let,
                 ...exports.python,
-            }))
+            }
         }
     }
 }
 
 function extractExportedCode(text: string) {
     let acc = ''
-    let exported = false
-    text.split('\n').forEach((line) => {
-        if (line.startsWith('<js-cell') || line.startsWith('<py-cell')) {
-            exported = true
-        }
-        if (exported) {
+    text.split('\n').reduce((isExported, line) => {
+        const startsExport =
+            line.startsWith('<js-cell') || line.startsWith('<py-cell')
+        const endsExport =
+            line.startsWith('</js-cell>') || line.startsWith('</py-cell')
+
+        if (isExported || startsExport) {
             acc += `${line}\n`
         }
-        if (line.startsWith('</js-cell>') || line.startsWith('</py-cell>')) {
-            exported = false
+        if (startsExport) {
+            return true
         }
-    })
+        if (endsExport) {
+            return false
+        }
+        return isExported
+    }, false)
     return acc
 }

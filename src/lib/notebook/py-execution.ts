@@ -4,8 +4,17 @@ import { Scope } from './state'
 import { AnyVirtualDOM } from 'rx-vdom'
 import { extractKeys } from './js-execution'
 
-function registerMknbModule(pyodide) {
-    const isRegistered = pyodide.runPython(`import sys\n'mknb' in sys.modules`)
+export type PyodideNamespace = { get: (key: string) => unknown }
+export type Pyodide = {
+    globals: { get: (key: string) => () => PyodideNamespace }
+    runPython: <T>(code: string) => T
+    registerJsModule: (name: string, mdle: unknown) => void
+}
+
+function registerMknbModule(pyodide: Pyodide) {
+    const isRegistered = pyodide.runPython<boolean>(
+        `import sys\n'mknb' in sys.modules`,
+    )
     if (isRegistered) {
         return
     }
@@ -27,14 +36,18 @@ wrapper
     })
 }
 
-function registerMknbCellModule(pyodide, displayInOutput, scope) {
+function registerMknbCellModule(
+    pyodide: Pyodide,
+    displayInOutput: (...element: HTMLElement[]) => void,
+    scope: Scope,
+) {
     pyodide.runPython(`
 import sys
 if 'mknb_cell' in sys.modules:
     del sys.modules['mknb_cell']    
     `)
     pyodide['registerJsModule']('mknb_cell', {
-        display: (e) => displayInOutput(e),
+        display: (...element: HTMLElement[]) => displayInOutput(...element),
         ...scope.let,
         ...scope.const,
     })
@@ -64,9 +77,9 @@ export async function executePy({
     output$: Subject<AnyVirtualDOM>
     displayFactory: DisplayFactory
     invalidated$: Observable<unknown>
-    pyNamespace: unknown
+    pyNamespace: PyodideNamespace
 }) {
-    const pyodide = scope.const.pyodide
+    const pyodide = scope.const.pyodide as Pyodide
     registerMknbModule(pyodide)
 
     const displayInOutput = (...element: HTMLElement[]) =>
@@ -107,12 +120,13 @@ ${wrapped}
 ${footer}
 }
     `
-    const pyScopeOut = await new Function(srcPatched)()(scope, {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
+    const pyScopeOut = (await new Function(srcPatched)()(scope, {
         display: displayInOutput,
         invalidated$,
         output$,
         pyNamespace,
-    })
+    })) as Record<string, unknown>
     const scopeOut = {
         let: scope.let,
         const: scope.const,

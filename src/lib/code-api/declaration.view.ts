@@ -4,10 +4,10 @@ import { Code, Entity } from './models'
 export function processDeclaration(
     declaration: string,
     entries: { [k: string]: string },
-    replace: (k, v) => string,
+    replace: (k: string, v: string) => string,
 ) {
     const wordsToReplace = Object.keys(entries || {})
-    if (wordsToReplace.length == 0) {
+    if (wordsToReplace.length === 0) {
         return declaration
     }
     declaration += '\n'
@@ -45,8 +45,8 @@ export function processDeclaration(
         'g',
     )
 
-    const replaceWords = (inputString) => {
-        return inputString.replace(regex, (matchedWord) => {
+    const replaceWords = (inputString: string) => {
+        return inputString.replace(regex, (matchedWord: string) => {
             return matchedWord === ''
                 ? matchedWord
                 : `_mklink_${matchedWord}_mklink_`
@@ -84,7 +84,7 @@ export class DeclarationView implements VirtualDOM<'div'> {
         const declaration = processDeclaration(
             code.declaration,
             nonNullReferences,
-            (k, v) => `<a target='_blank' href='${v}'>${k}</a>`,
+            (k: string, v: string) => `<a target='_blank' href='${v}'>${k}</a>`,
         )
         // const commentRegexOneLine = /\/\/.*$/gm
         // // Replace comments with span elements having a class to change color

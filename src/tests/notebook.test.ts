@@ -3,8 +3,9 @@ import {
     extractUndefinedReferences,
     extractGlobalDeclarations,
     parseProgram,
-} from '../lib/notebook/js-execution'
+} from '../lib/notebook'
 import { Subject } from 'rxjs'
+import { DisplayFactory } from '../lib/notebook'
 
 test('extract global declarations 1', () => {
     const input = `
@@ -23,6 +24,7 @@ let { gamma: [a, b] } = { gamma: [3, 4] }
 
 y = 5
 `
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const ast = parseProgram(input)
     const declarations = extractGlobalDeclarations(ast)
     expect(declarations).toEqual({
@@ -37,6 +39,7 @@ const { MkDocs } = await webpm.install({
     modules:['@youwol/mkdocs-ts#0.3.4 as MkDocs']
 })
 `
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const ast = parseProgram(input)
     const declarations = extractGlobalDeclarations(ast)
     expect(declarations).toEqual({
@@ -47,7 +50,7 @@ const { MkDocs } = await webpm.install({
 
 test('execute', async () => {
     let scope = { const: {}, let: {}, python: {} }
-    const displayFactory = []
+    const displayFactory: DisplayFactory = []
     const invalidated$ = new Subject()
     scope = await executeJs({
         src: `
@@ -120,6 +123,7 @@ function baz(i, j, {k, l}, [m,{n,o}]){
     return a + i + j + k + l + m + n + o + var4.x.y
 }
 `
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = parseProgram(input)
     const ids = extractUndefinedReferences(body)
     expect(ids).toEqual(['var1', 'console', 'var2', 'var3', 'var4'])

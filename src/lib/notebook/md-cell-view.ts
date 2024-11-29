@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes, notebookViews } from './notebook-page'
 import { CellTrait, ExecArgs, Output, Scope, State } from './state'
@@ -40,10 +40,19 @@ export class InlinedCode implements VirtualDOM<'div'> {
             output$,
             displayFactory: this.displayFactory,
             invalidated$: this.invalidated$,
-        })
+        }).then(
+            () => {
+                /*No Op*/
+            },
+            () => {
+                throw Error(
+                    `InlinedCode failed to execute in markdown cell: ${this.src}`,
+                )
+            },
+        )
         this.children = [
             child$({
-                source$: output$.pipe(filter((d) => d != undefined)),
+                source$: output$.pipe(filter((d) => d !== undefined)),
                 vdomMap: (vDom) => vDom,
             }),
         ]
@@ -168,7 +177,18 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
             readOnly: false,
             content: params.content,
             lineNumbers: this.cellAttributes.lineNumbers,
-            onExecute: () => this.state.execute(this.cellId).then(() => {}),
+            onExecute: () => {
+                this.state.execute(this.cellId).then(
+                    () => {
+                        /*No OP*/
+                    },
+                    () => {
+                        throw Error(
+                            `Failed to execute the Mardown cell with content: ${params.content}`,
+                        )
+                    },
+                )
+            },
         })
         this.content$ = this.editorView.content$
         this.children = [

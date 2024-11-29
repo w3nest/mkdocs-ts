@@ -3,8 +3,6 @@
  *
  *  This is the role of backend API generators to construct them and store them appropriately.
  */
-// Dummy variable for documentation not merging the next section.
-const _x = 0
 
 /**
  * EntityPath defines ownership between symbols (separated by a dot) and referenced from the actual owning module.
