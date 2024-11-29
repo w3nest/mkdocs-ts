@@ -100,13 +100,11 @@ export const defaultLayoutOptions = (): LayoutOptions => {
 }
 
 export type LayoutElementView = ({
-    title,
     router,
     displayModeNav$,
     displayModeToc$,
     layoutOptions,
 }: {
-    title: string | AnyVirtualDOM
     router: Router
     displayModeNav$: Subject<DisplayMode>
     displayModeToc$: Subject<DisplayMode>
@@ -149,8 +147,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      *
      * @param _p
      * @param _p.router The router.
-     * @param _p.name The name of the application or a VirtualDOM to display instead as title.
-     * If the parameter `topBanner` is provided, this name is forwarded as `title` parameter.
      * @param _p.topBanner Optional custom top-banner view to use.
      * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
@@ -158,14 +154,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      */
     constructor({
         router,
-        name,
         topBanner,
         footer,
         layoutOptions,
         bookmarks$,
     }: {
         router: Router
-        name: string | AnyVirtualDOM
         topBanner?: LayoutElementView
         footer?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
@@ -179,13 +173,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             this.plugResizer(e)
         }
         const viewInputs = {
-            title: name,
             router,
             displayModeNav$: this.displayModeNav$,
             displayModeToc$: this.displayModeToc$,
             layoutOptions: this.layoutOptions,
         }
-        const topBannerView = topBanner(viewInputs)
+        const topBannerView = topBanner?.(viewInputs)
         const favoritesView = new FavoritesView({
             router,
             bookmarks$,
