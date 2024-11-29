@@ -2,7 +2,9 @@ import {
     attr$,
     AttributeLike,
     ChildrenLike,
+    CSSAttribute,
     replace$,
+    RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
 import {
@@ -11,10 +13,11 @@ import {
     debounceTime,
     map,
     Observable,
+    ReplaySubject,
 } from 'rxjs'
 import { NavNodeBase } from '../navigation.node'
 import { Router } from '../router'
-import { DisplayMode } from './default-layout.view'
+import { DisplayMode, LayoutOptions } from './default-layout.view'
 
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
@@ -31,28 +34,41 @@ export class FavoritesView implements VirtualDOM<'div'> {
     public readonly class =
         'mkdocs-FavoritesView d-flex flex-column align-items-center mkdocs-bg-6 px-1'
     public readonly children: ChildrenLike
+    public readonly style: CSSAttribute
 
+    public readonly displayMode$: BehaviorSubject<DisplayMode>
+    public readonly layoutOptions: LayoutOptions
+    public readonly bookmarks$: Observable<string[]>
+    public readonly router: Router
+
+    public readonly htmlElement$ = new ReplaySubject<RxHTMLElement<'div'>>(1)
+    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     /**
-     *
-     * @param bookmarks$ Observable over the bookmarked pages' href.
-     * @param router Application's router.
-     * @param displayMode$ The display mode.
+     * @param params
+     * @param params.bookmarks$ Observable over the bookmarked pages' href.
+     * @param params.router Application's router.
+     * @param params.displayMode$ The display mode.
      */
-    constructor({
-        bookmarks$,
-        router,
-        displayMode$,
-    }: {
+    constructor(params: {
         bookmarks$: Observable<string[]>
         router: Router
         displayMode$: BehaviorSubject<DisplayMode>
+        layoutOptions: LayoutOptions
     }) {
+        Object.assign(this, params)
+        const { layoutOptions, displayMode$, bookmarks$, router } = this
+        this.style = {
+            height: layoutOptions.sidePanelHeight,
+        }
         this.children = [
             new ToggleNavButton({
                 displayMode$: displayMode$,
             }),
             new BookmarksView({ bookmarks$, router }),
         ]
+        this.connectedCallback = (elem) => {
+            this.htmlElement$.next(elem)
+        }
     }
 }
 
@@ -64,7 +80,8 @@ export class ToggleNavButton implements VirtualDOM<'div'> {
     public readonly class: AttributeLike<string>
     public readonly children: ChildrenLike
     /**
-     * @param displayMode$ The display mode.
+     * @param params
+     * @param params.displayMode$ The display mode.
      */
     constructor(params: { displayMode$: BehaviorSubject<DisplayMode> }) {
         const sep = {
@@ -117,7 +134,7 @@ export class BookmarksView implements VirtualDOM<'div'> {
      * Class list of the element.
      */
     public readonly class =
-        'mkdocs-BookmarksView d-flex flex-column align-items-center overflow-auto'
+        'mkdocs-BookmarksView d-flex flex-column align-items-center overflow-auto flex-grow-1'
     public readonly children: ChildrenLike
 
     /**

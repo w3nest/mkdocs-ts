@@ -5,6 +5,7 @@
 import {
     AnyVirtualDOM,
     attr$,
+    child$,
     ChildrenLike,
     CSSAttribute,
     replace$,
@@ -14,13 +15,18 @@ import {
 import { Router } from '../router'
 import {
     BehaviorSubject,
+    combineLatest,
     debounceTime,
     filter,
+    from,
+    mergeMap,
     Observable,
+    of,
     Subject,
     switchMap,
     timer,
 } from 'rxjs'
+import { DisplayMode, LayoutOptions } from './default-layout.view'
 
 type H1 = 'H1'
 type H2 = 'H2'
@@ -45,14 +51,17 @@ const headingsPadding: Record<SupportedHeading, string> = {
 }
 
 /**
- * The table of content view when the screen is large enough to display it, otherwise see {@link ModalTocView}
+ * The table of content view.
  */
 export class TOCView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly html: HTMLElement
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-TOCView h-100 border-primary border-start'
+    public readonly class =
+        'mkdocs-TOCView h-100 border-primary border-start rounded px-3'
     public readonly children: ChildrenLike
+
+    public readonly style: CSSAttribute
 
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
@@ -219,7 +228,7 @@ class TocItemView implements VirtualDOM<'li'> {
             return index < firstIndex ? 'text-dark' : 'mkdocs-text-1'
         }
         this.style = { paddingLeft: headingsPadding[heading.tagName] }
-        this.class = `mkdocs-TocItemView ${heading.classList.value} `
+        this.class = `mkdocs-TocItemView ${heading.classList.value} pe-1`
         this.children = [
             {
                 tag: 'a' as const,
@@ -243,6 +252,63 @@ class TocItemView implements VirtualDOM<'li'> {
         ]
     }
 }
+
+export class TocWrapperView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class =
+        'mkdocs-TocWrapperView w-100 h-100 d-flex flex-grow-1'
+
+    public readonly children: ChildrenLike
+
+    public readonly displayMode$: BehaviorSubject<DisplayMode>
+    public readonly router: Router
+    public readonly layoutOptions: LayoutOptions
+
+    constructor(params: {
+        router: Router
+        displayMode$: BehaviorSubject<DisplayMode>
+        layoutOptions: LayoutOptions
+    }) {
+        Object.assign(this, params)
+        const hSep = {
+            tag: 'div' as const,
+            class: 'flex-grow-1',
+        }
+        this.children = [
+            {
+                tag: 'div',
+                style: {
+                    minWidth: `${this.layoutOptions.tocMinWidth}px`,
+                },
+                children: [
+                    child$({
+                        source$: combineLatest([
+                            this.router.currentNode$,
+                            this.router.currentHtml$,
+                        ]).pipe(
+                            debounceTime(200),
+                            mergeMap(([node, elem]) => {
+                                return node.tableOfContent
+                                    ? from(
+                                          node.tableOfContent({
+                                              html: elem,
+                                              router: this.router,
+                                          }),
+                                      )
+                                    : of(undefined)
+                            }),
+                        ),
+                        vdomMap: (toc?): AnyVirtualDOM => {
+                            return toc || { tag: 'div' }
+                        },
+                    }),
+                ],
+            },
+            hSep,
+        ]
+    }
+}
+
 export async function tocView({
     html,
     router,

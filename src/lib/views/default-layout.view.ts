@@ -1,6 +1,5 @@
 import {
     AnyVirtualDOM,
-    attr$,
     child$,
     ChildrenLike,
     CSSAttribute,
@@ -12,15 +11,14 @@ import { Router } from '../router'
 import { FooterView, PageView } from './page.view'
 import {
     BehaviorSubject,
-    combineLatest,
-    debounceTime,
-    from,
-    mergeMap,
+    distinctUntilChanged,
+    map,
     Observable,
-    of,
     Subject,
 } from 'rxjs'
-import { FavoritesView, ToggleNavButton } from './favorites.view'
+import { FavoritesView } from './favorites.view'
+import { ExpandableLeftSide, ExpandableRightSide } from './expandable.view'
+import { TocWrapperView } from './toc.view'
 
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
@@ -43,13 +41,43 @@ export type LayoutOptions = {
      */
     toggleTocWidth: number
     /**
-     * Page's width.
+     * Minimum width for the TOC panel in pixel.
      */
-    pageWidth: string
+    tocMinWidth: number
+    /**
+     * Maximum width for the TOC panel in pixel.
+     */
+    tocMaxWidth: number
+    /**
+     * Minimum width for the navigation panel in pixel.
+     */
+    navMinWidth: number
+    /**
+     * Maximum width for the navigation panel in pixel.
+     */
+    navMaxWidth: number
     /**
      * Page's maximum width.
      */
     pageMaxWidth: string
+    /**
+     * Translation duration for panels in ms.
+     */
+    translationTime: number
+
+    /**
+     * The side panels (navigation & TOC) height.
+     */
+    sidePanelHeight: string
+    /**
+     * Top maximum padding of the main layout, collapsing to `topStickyPaddingMin` when scrolling down.
+     */
+    topStickyPaddingMax: string
+
+    /**
+     * Top minimum padding of the main layout, extending to `topStickyPaddingMax` when scrolling up.
+     */
+    topStickyPaddingMin: string
 }
 
 /**
@@ -58,9 +86,16 @@ export type LayoutOptions = {
 export const defaultLayoutOptions = (): LayoutOptions => {
     return {
         toggleTocWidth: 1500,
+        tocMinWidth: 250,
+        tocMaxWidth: 400,
         toggleNavWidth: 1300,
-        pageWidth: '95%',
+        navMaxWidth: 500,
+        navMinWidth: 300,
         pageMaxWidth: '45rem',
+        translationTime: 400,
+        topStickyPaddingMax: 'pt-5',
+        sidePanelHeight: '85vh',
+        topStickyPaddingMin: '10px',
     }
 }
 
@@ -116,7 +151,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      * @param _p.router The router.
      * @param _p.name The name of the application or a VirtualDOM to display instead as title.
      * If the parameter `topBanner` is provided, this name is forwarded as `title` parameter.
-     * @param _p.topBanner Optional custom top-banner view to use, default to {@link TopBannerView}.
+     * @param _p.topBanner Optional custom top-banner view to use.
      * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
      * @param _p.bookmarks$ Subject emitting the `href` of the bookmarked pages.
@@ -141,32 +176,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             layoutOptions || {},
         )
         this.connectedCallback = (e: HTMLElement) => {
-            const switcher = (
-                width: number,
-                treshold: number,
-                displayMode$: BehaviorSubject<DisplayMode>,
-            ) => {
-                if (width > treshold) {
-                    displayMode$.next('pined')
-                }
-                if (width <= treshold && displayMode$.value === 'pined') {
-                    displayMode$.next('hidden')
-                }
-            }
-            const resizeObserver = new ResizeObserver((entries) => {
-                const width = entries[0].contentRect.width
-                switcher(
-                    width,
-                    this.layoutOptions.toggleTocWidth,
-                    this.displayModeToc$,
-                )
-                switcher(
-                    width,
-                    this.layoutOptions.toggleNavWidth,
-                    this.displayModeNav$,
-                )
-            })
-            resizeObserver.observe(e)
+            this.plugResizer(e)
         }
         const viewInputs = {
             title: name,
@@ -176,38 +186,55 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             layoutOptions: this.layoutOptions,
         }
         const topBannerView = topBanner(viewInputs)
-        const favoritesView = new StickyColumnContainer({
-            type: 'favorites',
-            content: new FavoritesView({
-                router,
-                bookmarks$,
-                displayMode$: this.displayModeNav$,
-            }),
-            mode$: of('pined'),
+        const favoritesView = new FavoritesView({
+            router,
+            bookmarks$,
+            displayMode$: this.displayModeNav$,
             layoutOptions: this.layoutOptions,
         })
-        const navView = new StickyColumnContainer({
-            type: 'nav',
-            content: new NavigationView({
-                router,
-                bookmarks$,
-                displayMode$: this.displayModeNav$,
-            }),
-            mode$: this.displayModeNav$,
+        const navView = new NavigationView({
+            router,
+            bookmarks$,
             layoutOptions: this.layoutOptions,
         })
-        const tocView = new StickyColumnContainer({
+        const leftSideNav = {
+            tag: 'div' as const,
+            class: 'd-flex flex-grow-1',
+            children: [
+                new StickyColumnContainer({
+                    type: 'favorites',
+                    content: favoritesView,
+                    layoutOptions: this.layoutOptions,
+                }),
+                new StickyColumnContainer({
+                    type: 'nav',
+                    content: navView,
+                    layoutOptions: this.layoutOptions,
+                }),
+            ],
+        }
+        const expandableLeftSideNav = new ExpandableLeftSide({
+            favoritesView,
+            navView,
+        })
+        const tocView = new TocWrapperView({
+            router,
+            displayMode$: this.displayModeToc$,
+            layoutOptions: this.layoutOptions,
+        })
+        const rightSideNav = new StickyColumnContainer({
             type: 'toc',
-            content: new TocWrapperView({
-                router,
-                displayMode$: this.displayModeToc$,
-            }),
-            mode$: this.displayModeToc$,
+            content: tocView,
             layoutOptions: this.layoutOptions,
         })
+        const expandableRightSideNav = new ExpandableRightSide({
+            tocView,
+            layoutOptions: this.layoutOptions,
+        })
+
         const pageView = {
             tag: 'div' as const,
-            class: `w-100 ${StickyColumnContainer.topStickyPadding} px-3`,
+            class: `w-100 ${this.layoutOptions.topStickyPaddingMax} px-3`,
             style: {
                 maxWidth: this.layoutOptions.pageMaxWidth,
                 height: 'fit-content',
@@ -215,25 +242,11 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             },
             children: [new PageView({ router: router })],
         }
-        const tocExpandMenuView = new StickyColumnContainer({
-            type: 'tocMenu',
-            content: {
-                tag: 'div',
-                children: [
-                    new ToggleNavButton({
-                        displayMode$: this.displayModeToc$,
-                    }),
-                ],
-            },
-            mode$: of('pined'),
-            layoutOptions: this.layoutOptions,
-        })
         const footerView = {
             tag: 'footer' as const,
             style: {
                 position: 'sticky' as const,
                 top: '100%',
-                zIndex: 1,
             },
             children: [footer ? footer(viewInputs) : new FooterView()],
         }
@@ -241,11 +254,25 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             tag: 'div' as const,
             class: 'flex-grow-1',
         }
+        const switchMode = (
+            mode$: Observable<DisplayMode>,
+            pined: AnyVirtualDOM,
+            expandable: AnyVirtualDOM,
+        ) =>
+            child$({
+                source$: mode$.pipe(
+                    map((mode) => (mode === 'pined' ? 'pined' : 'expandable')),
+                    distinctUntilChanged(),
+                ),
+                vdomMap: (mode: 'pined' | 'expandable') =>
+                    mode === 'pined' ? pined : expandable,
+            })
+
         this.children = [
             topBannerView,
             {
                 tag: 'div',
-                class: 'w-100 overflow-auto',
+                class: 'w-100',
                 connectedCallback: (e) => {
                     router.scrollableElement = e
                 },
@@ -254,13 +281,19 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                         tag: 'div',
                         class: 'd-flex w-100',
                         children: [
-                            favoritesView,
-                            navView,
+                            switchMode(
+                                this.displayModeNav$,
+                                leftSideNav,
+                                expandableLeftSideNav,
+                            ),
                             hSep,
                             pageView,
                             hSep,
-                            tocView,
-                            tocExpandMenuView,
+                            switchMode(
+                                this.displayModeToc$,
+                                rightSideNav,
+                                expandableRightSideNav,
+                            ),
                         ],
                     },
                     footerView,
@@ -268,73 +301,40 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             },
         ]
     }
-}
 
-export class TocWrapperView implements VirtualDOM<'div'> {
-    public readonly router: Router
-
-    public readonly tag = 'div'
-    public readonly class =
-        'mkdocs-TocWrapperView w-100 h-100 d-flex flex-grow-1'
-
-    public readonly children: ChildrenLike
-
-    constructor(params: {
-        router: Router
-        displayMode$: BehaviorSubject<DisplayMode>
-    }) {
-        Object.assign(this, params)
-        const hSep = {
-            tag: 'div' as const,
-            class: 'flex-grow-1',
+    private plugResizer(thisElement: HTMLElement) {
+        const switcher = (
+            width: number,
+            treshold: number,
+            displayMode$: BehaviorSubject<DisplayMode>,
+        ) => {
+            if (width > treshold) {
+                displayMode$.next('pined')
+            }
+            if (width <= treshold && displayMode$.value === 'pined') {
+                displayMode$.next('hidden')
+            }
         }
-        this.children = [
-            {
-                tag: 'div',
-                children: [
-                    {
-                        tag: 'div',
-                        style: {
-                            position: 'absolute',
-                            right: '0rem',
-                        },
-                        children: [
-                            new ToggleNavButton({
-                                displayMode$: params.displayMode$,
-                            }),
-                        ],
-                    },
-                    child$({
-                        source$: combineLatest([
-                            this.router.currentNode$,
-                            this.router.currentHtml$,
-                        ]).pipe(
-                            debounceTime(200),
-                            mergeMap(([node, elem]) => {
-                                return node.tableOfContent
-                                    ? from(
-                                          node.tableOfContent({
-                                              html: elem,
-                                              router: this.router,
-                                          }),
-                                      )
-                                    : of(undefined)
-                            }),
-                        ),
-                        vdomMap: (toc?): AnyVirtualDOM => {
-                            return toc || { tag: 'div' }
-                        },
-                    }),
-                ],
-            },
-            hSep,
-        ]
+        const resizeObserver = new ResizeObserver((entries) => {
+            const width = entries[0].contentRect.width
+            switcher(
+                width,
+                this.layoutOptions.toggleTocWidth,
+                this.displayModeToc$,
+            )
+            switcher(
+                width,
+                this.layoutOptions.toggleNavWidth,
+                this.displayModeNav$,
+            )
+        })
+        resizeObserver.observe(thisElement)
     }
 }
 
-type Container = 'favorites' | 'nav' | 'toc' | 'tocMenu'
+type Container = 'favorites' | 'nav' | 'toc'
 
-class StickyColumnContainer implements VirtualDOM<'div'> {
+export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class: AttributeLike<string>
     public readonly style: AttributeLike<CSSAttribute>
@@ -343,68 +343,34 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly content: AnyVirtualDOM
     public readonly type: Container
 
-    static readonly topStickyPadding = 'pt-5'
-
     constructor(params: {
         type: Container
         content: AnyVirtualDOM
         layoutOptions: LayoutOptions
-        mode$: Observable<DisplayMode>
     }) {
         Object.assign(this, params)
-        const classes: Record<Container, string> = {
-            favorites: 'for-FavoritesView mkdocs-bg-6 mkdocs-text-6',
-            nav: 'for-NavigationView mkdocs-bg-5 mkdocs-text-5',
-            toc: 'for-TocWrapperView mkdocs-bg-0 mkdocs-text-0',
-            tocMenu: 'mkdocs-bg-0 mkdocs-text-0',
+        const colors: Record<Container, string> = {
+            favorites: 'mkdocs-bg-6 mkdocs-text-6',
+            nav: 'mkdocs-bg-5 mkdocs-text-5',
+            toc: 'mkdocs-bg-0 mkdocs-text-0',
         }
         this.content.style = {
             ...(this.content.style || {}),
-            position: 'sticky',
-            top: '10px',
-            maxHeight: '85vh',
+            ...StickyColumnContainer.stickyStyle(this.layoutOptions),
+            maxHeight: this.layoutOptions.sidePanelHeight,
         }
-        this.class = attr$({
-            source$: params.mode$,
-            vdomMap: (mode): string => {
-                return mode
-            },
-            wrapper: (c) =>
-                `mkdocs-WrapperSideNav ${c} ${classes[this.type]} ${StickyColumnContainer.topStickyPadding} d-flex`,
-        })
-        this.style = attr$({
-            source$: params.mode$,
-            vdomMap: (mode) => {
-                if (this.type === 'favorites' || this.type === 'tocMenu') {
-                    return {}
-                }
-                if (this.type === 'nav' && mode === 'pined') {
-                    return { position: 'unset', height: 'unset', flexGrow: 1 }
-                }
-                if (this.type === 'toc' && mode === 'pined') {
-                    return { position: 'unset', height: 'unset', flexGrow: 1 }
-                }
-                if (this.type === 'nav') {
-                    return {
-                        position: 'absolute',
-                        height: '100%',
-                        transition: 'left 200ms',
-                        left: mode === 'expanded' ? '0px' : '-100%',
-                        zIndex: 1,
-                    }
-                }
-                if (this.type === 'toc') {
-                    return {
-                        position: 'absolute',
-                        height: '100%',
-                        transition: 'right 200ms',
-                        right: mode === 'expanded' ? '0px' : '-100%',
-                        zIndex: 1,
-                    }
-                }
-                return {}
-            },
-        })
+        const flexGrow = params.type === 'favorites' ? 0 : 1
+        const stickyPadingTop = this.layoutOptions.topStickyPaddingMax
+        const color = colors[this.type]
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${flexGrow} ${color} ${stickyPadingTop} d-flex`
+
         this.children = [this.content]
+    }
+
+    static stickyStyle(layoutOptions: LayoutOptions): CSSAttribute {
+        return {
+            position: 'sticky',
+            top: layoutOptions.topStickyPaddingMin,
+        }
     }
 }
