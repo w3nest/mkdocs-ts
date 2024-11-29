@@ -12,6 +12,8 @@
     line-height: 1.7rem;
     border-radius: 5px;
     padding-left: 10%;
+    white-space: nowrap;
+    min-width: 250px;
 }
 .mkdocs-TocItemView:hover {
     border: solid 1px $color-focus;

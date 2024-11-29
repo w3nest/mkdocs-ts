@@ -20,7 +20,7 @@ import {
     of,
     Subject,
 } from 'rxjs'
-import { FavoritesView } from './favorites.view'
+import { FavoritesView, ToggleNavButton } from './favorites.view'
 
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
@@ -38,6 +38,11 @@ export type LayoutOptions = {
      */
     toggleNavWidth: number
     /**
+     * Screen size in pixel transitioning from pined TOC panel, to
+     * collapsable one.
+     */
+    toggleTocWidth: number
+    /**
      * Page's width.
      */
     pageWidth: string
@@ -50,12 +55,12 @@ export type LayoutOptions = {
 /**
  * Default layout options.
  */
-export const defaultLayoutOptions = () => {
+export const defaultLayoutOptions = (): LayoutOptions => {
     return {
+        toggleTocWidth: 1500,
         toggleNavWidth: 1300,
         pageWidth: '95%',
-        pageMaxWidth: '47em',
-        tocWidth: '350px',
+        pageMaxWidth: '45rem',
     }
 }
 
@@ -88,7 +93,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: AnyVirtualDOM[]
     public readonly class =
-        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto'
+        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto overflow-x-hidden'
 
     /**
      * The display mode regarding the navigation panel.
@@ -136,14 +141,30 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             layoutOptions || {},
         )
         this.connectedCallback = (e: HTMLElement) => {
+            const switcher = (
+                width: number,
+                treshold: number,
+                displayMode$: BehaviorSubject<DisplayMode>,
+            ) => {
+                if (width > treshold) {
+                    displayMode$.next('pined')
+                }
+                if (width <= treshold && displayMode$.value === 'pined') {
+                    displayMode$.next('hidden')
+                }
+            }
             const resizeObserver = new ResizeObserver((entries) => {
                 const width = entries[0].contentRect.width
-
-                if (width < this.layoutOptions.toggleNavWidth) {
-                    this.displayModeNav$.next('hidden')
-                    return
-                }
-                this.displayModeNav$.next('pined')
+                switcher(
+                    width,
+                    this.layoutOptions.toggleTocWidth,
+                    this.displayModeToc$,
+                )
+                switcher(
+                    width,
+                    this.layoutOptions.toggleNavWidth,
+                    this.displayModeNav$,
+                )
             })
             resizeObserver.observe(e)
         }
@@ -179,8 +200,9 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             type: 'toc',
             content: new TocWrapperView({
                 router,
+                displayMode$: this.displayModeToc$,
             }),
-            mode$: of('pined'),
+            mode$: this.displayModeToc$,
             layoutOptions: this.layoutOptions,
         })
         const pageView = {
@@ -193,11 +215,25 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             },
             children: [new PageView({ router: router })],
         }
+        const tocExpandMenuView = new StickyColumnContainer({
+            type: 'tocMenu',
+            content: {
+                tag: 'div',
+                children: [
+                    new ToggleNavButton({
+                        displayMode$: this.displayModeToc$,
+                    }),
+                ],
+            },
+            mode$: of('pined'),
+            layoutOptions: this.layoutOptions,
+        })
         const footerView = {
             tag: 'footer' as const,
             style: {
                 position: 'sticky' as const,
                 top: '100%',
+                zIndex: 1,
             },
             children: [footer ? footer(viewInputs) : new FooterView()],
         }
@@ -224,7 +260,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                             pageView,
                             hSep,
                             tocView,
-                            hSep,
+                            tocExpandMenuView,
                         ],
                     },
                     footerView,
@@ -238,40 +274,65 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly router: Router
 
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-TocWrapperView w-100 h-100'
+    public readonly class =
+        'mkdocs-TocWrapperView w-100 h-100 d-flex flex-grow-1'
 
     public readonly children: ChildrenLike
 
-    constructor(params: { router: Router }) {
+    constructor(params: {
+        router: Router
+        displayMode$: BehaviorSubject<DisplayMode>
+    }) {
         Object.assign(this, params)
-
+        const hSep = {
+            tag: 'div' as const,
+            class: 'flex-grow-1',
+        }
         this.children = [
-            child$({
-                source$: combineLatest([
-                    this.router.currentNode$,
-                    this.router.currentHtml$,
-                ]).pipe(
-                    debounceTime(200),
-                    mergeMap(([node, elem]) => {
-                        return node.tableOfContent
-                            ? from(
-                                  node.tableOfContent({
-                                      html: elem,
-                                      router: this.router,
-                                  }),
-                              )
-                            : of(undefined)
+            {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        style: {
+                            position: 'absolute',
+                            right: '0rem',
+                        },
+                        children: [
+                            new ToggleNavButton({
+                                displayMode$: params.displayMode$,
+                            }),
+                        ],
+                    },
+                    child$({
+                        source$: combineLatest([
+                            this.router.currentNode$,
+                            this.router.currentHtml$,
+                        ]).pipe(
+                            debounceTime(200),
+                            mergeMap(([node, elem]) => {
+                                return node.tableOfContent
+                                    ? from(
+                                          node.tableOfContent({
+                                              html: elem,
+                                              router: this.router,
+                                          }),
+                                      )
+                                    : of(undefined)
+                            }),
+                        ),
+                        vdomMap: (toc?): AnyVirtualDOM => {
+                            return toc || { tag: 'div' }
+                        },
                     }),
-                ),
-                vdomMap: (toc?): AnyVirtualDOM => {
-                    return toc || { tag: 'div' }
-                },
-            }),
+                ],
+            },
+            hSep,
         ]
     }
 }
 
-type Container = 'favorites' | 'nav' | 'toc'
+type Container = 'favorites' | 'nav' | 'toc' | 'tocMenu'
 
 class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -295,6 +356,7 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
             favorites: 'for-FavoritesView mkdocs-bg-6 mkdocs-text-6',
             nav: 'for-NavigationView mkdocs-bg-5 mkdocs-text-5',
             toc: 'for-TocWrapperView mkdocs-bg-0 mkdocs-text-0',
+            tocMenu: 'mkdocs-bg-0 mkdocs-text-0',
         }
         this.content.style = {
             ...(this.content.style || {}),
@@ -313,18 +375,34 @@ class StickyColumnContainer implements VirtualDOM<'div'> {
         this.style = attr$({
             source$: params.mode$,
             vdomMap: (mode) => {
-                if (this.type === 'favorites') {
+                if (this.type === 'favorites' || this.type === 'tocMenu') {
                     return {}
                 }
-                if (mode === 'pined') {
-                    return { position: 'unset', height: 'unset', flexGrow: 2 }
+                if (this.type === 'nav' && mode === 'pined') {
+                    return { position: 'unset', height: 'unset', flexGrow: 1 }
                 }
-                return {
-                    position: 'absolute',
-                    height: '100%',
-                    transition: 'left 200ms',
-                    left: mode === 'expanded' ? '0px' : '-100%',
+                if (this.type === 'toc' && mode === 'pined') {
+                    return { position: 'unset', height: 'unset', flexGrow: 1 }
                 }
+                if (this.type === 'nav') {
+                    return {
+                        position: 'absolute',
+                        height: '100%',
+                        transition: 'left 200ms',
+                        left: mode === 'expanded' ? '0px' : '-100%',
+                        zIndex: 1,
+                    }
+                }
+                if (this.type === 'toc') {
+                    return {
+                        position: 'absolute',
+                        height: '100%',
+                        transition: 'right 200ms',
+                        right: mode === 'expanded' ? '0px' : '-100%',
+                        zIndex: 1,
+                    }
+                }
+                return {}
             },
         })
         this.children = [this.content]
