@@ -192,6 +192,10 @@ export class BookmarkView implements VirtualDOM<'div'> {
      * @param router Application's router.
      */
     constructor({ node, router }: { node: NavNodeBase; router: Router }) {
+        const decoration =
+            typeof node.decoration === 'function'
+                ? node.decoration({ router })
+                : node.decoration
         this.children = [
             {
                 tag: 'div',
@@ -214,7 +218,7 @@ export class BookmarkView implements VirtualDOM<'div'> {
                         },
                         href: node.href,
                         children: [
-                            node.decoration?.icon,
+                            decoration?.icon,
                             {
                                 tag: 'div',
                                 style: {

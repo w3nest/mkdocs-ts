@@ -6,7 +6,7 @@ import { AnyVirtualDOM, AttributeLike, ChildrenLike, ChildLike } from 'rx-vdom'
 /**
  * Defines attributes regarding the visual rendering of the node if the navigation view.
  */
-export type Decoration = {
+export type NodeDecorationSpec = {
     /**
      * Optional class added as wrapper to the HTML element representing the node.
      */
@@ -20,6 +20,17 @@ export type Decoration = {
      */
     actions?: ChildrenLike
 }
+
+/**
+ * A specification for node decorations, either as a resolved object or a function
+ * returning a resolved decoration.
+ *
+ * - If an object is provided, it directly specifies the decorations.
+ * - If a function is provided, it dynamically computes the decorations based on the router state.
+ */
+export type NodeDecoration =
+    | NodeDecorationSpec
+    | ((p: { router: Router }) => NodeDecorationSpec)
 
 /**
  * Fully resolved navigation node when using {@link CatchAllNav}.
@@ -49,14 +60,14 @@ export type NavNodeParams = {
     /**
      * Optional decoration.
      */
-    decoration?: Decoration
+    decoration?: NodeDecoration
 }
 
 export class NavNodeBase extends ImmutableTree.Node {
     public readonly name: string
     public readonly href: string
     public readonly data: unknown
-    public readonly decoration?: Decoration
+    public readonly decoration?: NodeDecoration
 
     protected constructor(parameters: NavNodeParams) {
         super({ id: parameters.id, children: parameters.children })
@@ -344,7 +355,7 @@ export type Navigation = NavigationCommon & {
     /**
      * Decoration configuration for the node.
      */
-    decoration?: Decoration
+    decoration?: NodeDecoration
 
     /**
      * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.

@@ -30,7 +30,7 @@ import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
 import { install } from '@w3nest/webpm-client'
-import type { Decoration, Navigation, Router, Views } from '../index'
+import type { NodeDecoration, Navigation, Router, Views } from '../index'
 import type { installNotebookModule } from '../../index'
 import type { parseMd } from '../markdown'
 
@@ -173,7 +173,7 @@ export const docNavigation = ({
 
 export function codeApiEntryNode(params: {
     name: string
-    decoration: Decoration
+    decoration: NodeDecoration
     docBasePath: string
     entryModule: string
     configuration: Configuration

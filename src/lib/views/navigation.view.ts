@@ -123,9 +123,12 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         withChildren?: AnyVirtualDOM[]
         bookmarks$: BehaviorSubject<string[]>
     }) {
+        const decoration =
+            typeof node.decoration === 'function'
+                ? node.decoration({ router })
+                : node.decoration
         this.class =
-            node.decoration?.wrapperClass ||
-            NavigationHeader.DefaultWrapperClass
+            decoration?.wrapperClass || NavigationHeader.DefaultWrapperClass
 
         this.style =
             node.id === '/'
@@ -170,7 +173,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             class: 'flex-grow-1',
         }
         this.children = [
-            node.decoration?.icon,
+            decoration?.icon,
             sep(2),
             {
                 tag: 'div',
@@ -192,7 +195,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             {
                 tag: 'div',
                 class: 'mkdocs-NavigationHeader-actions',
-                children: node.decoration?.actions || [],
+                children: decoration?.actions || [],
             },
             ...(withChildren || []),
         ]
