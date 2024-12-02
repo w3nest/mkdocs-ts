@@ -28,6 +28,10 @@ import { FuturePageView, UnresolvedPageView } from './views'
  */
 export type Destination = {
     /**
+     * Target destination path.
+     */
+    path: string
+    /**
      * The table of content view.
      */
     tableOfContent?: HTMLElement | AnyVirtualDOM
@@ -235,6 +239,7 @@ export class Router {
         if (!nav) {
             console.log('Try to wait...')
             this.currentPage$.next({
+                path: pagePath,
                 html: new FuturePageView(),
             })
             const timeoutId = setTimeout(
@@ -258,6 +263,7 @@ export class Router {
                 return of(html)
             }),
             map((html) => ({
+                path: pagePath,
                 html,
                 sectionId: sectionId === '' ? undefined : sectionId,
             })),
@@ -405,6 +411,7 @@ export class Router {
                 // For there treePart is undefined
                 if (!tree[CatchAllKey]) {
                     this.currentPage$.next({
+                        path,
                         html: new UnresolvedPageView({ path }),
                     })
                     throw Error(

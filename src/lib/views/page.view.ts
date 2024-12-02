@@ -5,8 +5,9 @@ import {
     RxHTMLElement,
     child$,
 } from 'rx-vdom'
-import { Router } from '../router'
+import { Destination, Router } from '../router'
 import { parseMd } from '../markdown'
+import { filter } from 'rxjs'
 
 /**
  * The main content of the page.
@@ -17,13 +18,18 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page text-justify'
     public readonly children: ChildrenLike
 
+    public readonly filter?: (destination: Destination) => boolean
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void
 
-    constructor(params: { router: Router }) {
+    constructor(params: {
+        router: Router
+        filter?: (destination: Destination) => boolean
+    }) {
         Object.assign(this, params)
+        const filterFct = this.filter || (() => true)
         this.children = [
             child$({
-                source$: this.router.currentPage$,
+                source$: this.router.currentPage$.pipe(filter(filterFct)),
                 vdomMap: ({ html, sectionId }) => {
                     return {
                         tag: 'div',
