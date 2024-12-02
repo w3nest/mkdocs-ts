@@ -148,6 +148,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      * @param _p
      * @param _p.router The router.
      * @param _p.topBanner Optional custom top-banner view to use.
+     * @param _p.page Optional custom page to use, default to {@link PageView} .
      * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
      * @param _p.bookmarks$ Subject emitting the `href` of the bookmarked pages.
@@ -155,12 +156,14 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     constructor({
         router,
         topBanner,
+        page,
         footer,
         layoutOptions,
         bookmarks$,
     }: {
         router: Router
         topBanner?: LayoutElementView
+        page?: LayoutElementView
         footer?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
         bookmarks$: BehaviorSubject<string[]>
@@ -225,7 +228,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             layoutOptions: this.layoutOptions,
         })
 
-        const pageView = {
+        const pageView: AnyVirtualDOM = {
             tag: 'div' as const,
             class: `w-100 ${this.layoutOptions.topStickyPaddingMax} px-3`,
             style: {
@@ -233,7 +236,9 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 height: 'fit-content',
                 minHeight: '100vh',
             },
-            children: [new PageView({ router: router })],
+            children: [
+                page ? page(viewInputs) : new PageView({ router: router }),
+            ],
         }
         const footerView = {
             tag: 'footer' as const,
