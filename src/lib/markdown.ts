@@ -36,12 +36,12 @@ export type ViewGenerator = (
 /**
  * Options for parsing Markdown content.
  */
-export type MdParsingOptions = {
+export interface MdParsingOptions {
     /**
      * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
      * in the source by their corresponding values.
      */
-    placeholders?: { [k: string]: string }
+    placeholders?: Record<string, string>
     /**
      * Preprocessing step. This callback is called to transform the source before parsing is executed.
      * @param text original text
@@ -51,7 +51,7 @@ export type MdParsingOptions = {
     /**
      *  Custom views generators corresponding to HTMLElement referenced in the Markdown source.
      */
-    views?: { [k: string]: ViewGenerator }
+    views?: Record<string, ViewGenerator>
 
     /**
      * Whether to parse Latex equations.
@@ -88,33 +88,35 @@ export type MdParsingOptions = {
  * *  Returns a virtual dom defining the corresponding implementation of the HTML element.
  *
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class GlobalMarkdownViews {
     /**
      * Static factory for markdown inlined views.
      */
-    static factory: { [k: string]: ViewGenerator } = {
+    static factory: Record<string, ViewGenerator> = {
         'code-snippet': (elem: HTMLElement) => {
             return new CodeSnippetView({
                 language: elem.getAttribute('language') as CodeLanguage,
-                highlightedLines: elem.getAttribute('highlightedLines'),
-                content: elem.textContent,
+                highlightedLines:
+                    elem.getAttribute('highlightedLines') ?? undefined,
+                content: elem.textContent ?? '',
             })
         },
         note: (elem: HTMLElement, parsingArgs) => {
             return new NoteView({
                 level: elem.getAttribute('level') as NoteLevel,
-                label: elem.getAttribute('label'),
-                content: elem.textContent,
+                label: elem.getAttribute('label') ?? undefined,
+                content: elem.textContent ?? '',
                 parsingArgs,
             })
         },
         expandable: (elem: HTMLElement, parsingArgs) => {
             return new ExpandableGroupView({
-                title: elem.getAttribute('title'),
-                icon: elem.getAttribute('icon'),
+                title: elem.getAttribute('title') ?? '',
+                icon: elem.getAttribute('icon') ?? '',
                 mode: elem.getAttribute('mode') as 'stateful' | 'stateless',
                 content: () =>
-                    parseMd({ src: elem.textContent, ...parsingArgs }),
+                    parseMd({ src: elem.textContent ?? '', ...parsingArgs }),
             })
         },
     }
@@ -192,18 +194,11 @@ export function parseMd({
 }: {
     src: string
     router?: Router
-    navigations?: { [_k: string]: (e: HTMLAnchorElement) => void }
+    navigations?: Record<string, (e: HTMLAnchorElement) => void>
 } & MdParsingOptions): VirtualDOM<'div'> {
-    if (typeof src !== 'string') {
-        console.error('Given MD source is not a string', src)
-        return {
-            tag: 'div',
-            innerText: 'Error: given MD source is not a string"',
-        }
-    }
-    src = preprocessing?.(src) || src
+    src = preprocessing?.(src) ?? src
     if (placeholders && Object.keys(placeholders).length > 0) {
-        const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')
+        const regex = new RegExp(Object.keys(placeholders).join('|'), 'g')
         src = src.replace(regex, (match) => placeholders[match])
     }
     views = { ...views, ...GlobalMarkdownViews.factory }
@@ -211,7 +206,9 @@ export function parseMd({
         input: src,
         views: views,
     })
-    if (latex && window['MathJax']) {
+
+    // @ts-expect-error Need to find a better way
+    if (latex && window.MathJax) {
         // eslint-disable-next-line
         window['MathJax'].typeset([div])
     }
@@ -233,7 +230,7 @@ export function parseMd({
                     }),
                 ],
             })
-            custom.parentNode.parentNode.replaceChild(view, custom.parentNode)
+            custom.parentNode?.parentNode?.replaceChild(view, custom.parentNode)
         })
 
     const options = {
@@ -252,15 +249,16 @@ export function parseMd({
         {},
     )
     Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {
-        const elem: HTMLElement = div.querySelector(`#${k}`)
-        if (!elem) {
+        const elem = div.querySelector(`#${k}`)
+        if (!elem || !(elem instanceof HTMLElement)) {
             return
         }
         elem.textContent = content
-        const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]
-        if (factory) {
-            elem.parentNode.replaceChild(render(factory(elem, options)), elem)
+        if (!((elem.tagName as Uppercase<string>) in viewsTagUpperCase)) {
+            return
         }
+        const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]
+        elem.parentNode?.replaceChild(render(factory(elem, options)), elem)
     })
 
     return {
@@ -289,7 +287,7 @@ export function parseMd({
                     })
                 }
             })
-            if (emitHtmlUpdated) {
+            if (emitHtmlUpdated && router) {
                 router.emitHtmlUpdated()
             }
         },
@@ -307,7 +305,7 @@ export function patchSrc({
 }) {
     let patchedSrc = ''
     const lines = src.split('\n')
-    const contents = {}
+    const contents: Record<string, string> = {}
 
     function extractInlinedElem(line: string, tagName: string, id: string) {
         const regex = new RegExp(
@@ -337,18 +335,14 @@ export function patchSrc({
             // noinspection ContinueStatementJS
             continue
         }
-
-        const id = idGenerator
-            ? idGenerator()
-            : `id_${Math.floor(Math.random() * Math.pow(10, 6))}`
+        const rndNumber = Math.floor(Math.random() * Math.pow(10, 6))
+        const id = idGenerator ? idGenerator() : `id_${String(rndNumber)}`
         if (line.includes(`</${processor}>`)) {
-            const { patchedLine, content } = extractInlinedElem(
-                line,
-                processor,
-                id,
-            )
-            patchedSrc += patchedLine + '\n'
-            contents[id] = content
+            const extracted = extractInlinedElem(line, processor, id)
+            if (extracted) {
+                patchedSrc += extracted.patchedLine + '\n'
+                contents[id] = extracted.content
+            }
             // noinspection ContinueStatementJS
             continue
         }
@@ -400,12 +394,12 @@ export function patchSrc({
  * *  a line include a single back quote: the remaining of the line as well as all the following line until a corresponding
  * single back-quote is found.
  *
- * When a part of the input is escaped it is replace by a string `__ESCAPED_${ID}` where ID is a unique ID,
+ * When a part of the input is escaped it is replaced by a string `__ESCAPED_${ID}` where ID is a unique ID,
  * the function returned the escaped text as well as a dict that gathers the escaped elements.
  */
 export function removeEscapedText(src: string): {
     escapedContent: string
-    replaced: { [k: string]: string }
+    replaced: Record<string, string>
 } {
     let escapedContent = src // Initialize the escaped content with the source text
     const replaced = {} // Initialize an object to store the replaced escaped elements
@@ -415,7 +409,7 @@ export function removeEscapedText(src: string): {
 
     // Replace triple back-quote escaped parts
     escapedContent = escapedContent.replace(tripleBackquotePattern, (match) => {
-        const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+        const id = `__ESCAPED_${String(Object.keys(replaced).length)}` // Generate a unique ID
         replaced[id] = match // Store the escaped part in the replaced object
         return id // Replace the escaped part with the unique ID
     })
@@ -427,7 +421,7 @@ export function removeEscapedText(src: string): {
     escapedContent = escapedContent.replace(
         multilineBackquotePattern,
         (match) => {
-            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID
+            const id = `__ESCAPED_${String(Object.keys(replaced).length)}` // Generate a unique ID
             replaced[id] = match // Store the escaped part in the replaced object
             return id // Replace the escaped part with the unique ID
         },

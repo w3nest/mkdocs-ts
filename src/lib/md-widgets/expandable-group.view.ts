@@ -50,8 +50,8 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
         mode?: 'stateful' | 'stateless'
         expanded?: boolean
     }) {
-        const expanded$ = new BehaviorSubject(expanded || false)
-        mode = mode || 'stateless'
+        const expanded$ = new BehaviorSubject(expanded ?? false)
+        mode ??= 'stateless'
         const header: AnyVirtualDOM = {
             tag: 'div',
             class: attr$({
@@ -90,7 +90,9 @@ export class ExpandableGroupView implements VirtualDOM<'div'> {
                         wrapper: (d) =>
                             `${d} fas fv-pointer fv-hover-text-focus`,
                     }),
-                    onclick: () => expanded$.next(!expanded$.value),
+                    onclick: () => {
+                        expanded$.next(!expanded$.value)
+                    },
                 },
             ],
         }

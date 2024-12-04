@@ -4,7 +4,7 @@ import { layoutStyleBase } from './common'
 /**
  * Type definition for the arguments to create a {@link SuperposedLayout}.
  */
-export type SuperposedArguments = {
+export interface SuperposedArguments {
     /**
      * Main content of the layout.
      */

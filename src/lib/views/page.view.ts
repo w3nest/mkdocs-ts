@@ -26,7 +26,7 @@ export class PageView implements VirtualDOM<'div'> {
         filter?: (destination: Destination) => boolean
     }) {
         Object.assign(this, params)
-        const filterFct = this.filter || (() => true)
+        const filterFct = this.filter ?? (() => true)
         this.children = [
             child$({
                 source$: this.router.currentPage$.pipe(filter(filterFct)),
@@ -35,7 +35,9 @@ export class PageView implements VirtualDOM<'div'> {
                         tag: 'div',
                         children: [html as AnyVirtualDOM],
                         connectedCallback: (page) => {
-                            this.router.scrollTo(sectionId)
+                            if (sectionId) {
+                                this.router.scrollTo(sectionId)
+                            }
                             this.router.setDisplayedPage({ page })
                             replaceCrossReferences(page, this.router)
                         },

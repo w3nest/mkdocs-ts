@@ -29,7 +29,7 @@ export type DisplayMode = 'pined' | 'hidden' | 'expanded'
  *
  * See {@link defaultLayoutOptions}.
  */
-export type LayoutOptions = {
+export interface LayoutOptions {
     /**
      * Screen size in pixel transitioning from pined Navigation panel, to
      * collapsable one.
@@ -124,7 +124,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     public readonly layoutOptions: LayoutOptions = defaultLayoutOptions()
 
     public readonly tag = 'div'
-    public readonly children: AnyVirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly class =
         'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto overflow-x-hidden'
 
@@ -170,7 +170,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
     }) {
         this.layoutOptions = Object.assign(
             this.layoutOptions,
-            layoutOptions || {},
+            layoutOptions ?? {},
         )
         this.connectedCallback = (e: HTMLElement) => {
             this.plugResizer(e)
@@ -353,14 +353,14 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
             toc: 'mkdocs-bg-0 mkdocs-text-0',
         }
         this.content.style = {
-            ...(this.content.style || {}),
+            ...(this.content.style ?? {}),
             ...StickyColumnContainer.stickyStyle(this.layoutOptions),
             maxHeight: this.layoutOptions.sidePanelHeight,
         }
         const flexGrow = params.type === 'favorites' ? 0 : 1
         const stickyPadingTop = this.layoutOptions.topStickyPaddingMax
         const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${flexGrow} ${color} ${stickyPadingTop} d-flex`
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} ${stickyPadingTop} d-flex`
 
         this.children = [this.content]
     }

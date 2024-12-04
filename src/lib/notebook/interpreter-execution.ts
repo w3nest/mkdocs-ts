@@ -10,8 +10,7 @@ import {
     tap,
 } from 'rxjs'
 import { shareReplay } from 'rxjs/operators'
-import { AnyVirtualDOM } from 'rx-vdom'
-import { Scope } from './state'
+import { Output, Scope } from './state'
 
 /**
  * Represents the minimal required interface from a backend's client provided by py-youwol.
@@ -54,7 +53,7 @@ export interface RunBody {
      * *  keys are variable's name
      * *  values are their associated value, they must be serializable as JSON object.
      */
-    capturedIn: { [k: string]: unknown }
+    capturedIn: Record<string, unknown>
     /**
      * Output variables to capture.
      */
@@ -70,7 +69,7 @@ export interface RunResponse {
      * *  keys are variable's name
      * *  values are their associated value, they must be serializable as JSON object.
      */
-    capturedOut: { [k: string]: unknown }
+    capturedOut: Record<string, unknown>
     /**
      * Error if any.
      */
@@ -90,7 +89,7 @@ export async function executeInterpreter({
     body: RunBody
     interpreter: BackendClient
     scope: Scope
-    output$: Subject<AnyVirtualDOM>
+    output$: Subject<Output>
 }) {
     const resp: RunResponse = (await interpreter.fetchJson(`/run`, {
         method: 'post',
@@ -102,7 +101,7 @@ export async function executeInterpreter({
         tag: 'pre',
         style: { maxHeight: '50vh' },
         class: 'overflow-auto',
-        textContent: resp.output,
+        innerText: resp.output,
     })
     return {
         ...scope,
@@ -123,7 +122,7 @@ export function executeInterpreter$({
     body: RunBody
     interpreter: BackendClient
     scope: Scope
-    output$: Subject<AnyVirtualDOM>
+    output$: Subject<Output>
     invalidated$: Observable<unknown>
 }) {
     const reactives: [string, Observable<unknown>][] = Object.entries(
@@ -180,13 +179,13 @@ export function executeInterpreter$({
                     tag: 'pre',
                     style: { maxHeight: '50vh' },
                     class: 'overflow-auto',
-                    textContent: resp['output'],
+                    innerText: resp.output,
                 })
             }),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
         .subscribe((resp) => {
-            Object.entries(resp['capturedOut']).forEach(([k, v]) => {
+            Object.entries(resp.capturedOut).forEach(([k, v]) => {
                 capturedOut$[k].next(v)
             })
         })

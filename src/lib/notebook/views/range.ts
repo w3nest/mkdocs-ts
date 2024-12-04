@@ -10,7 +10,7 @@ import { BehaviorSubject, Subject } from 'rxjs'
  * display(range.value$)
  * </js-cell>
  *
- * To setup min, max and step:
+ * To set up min, max and step:
  * <js-cell>
  * display(new Views.Range({min:0, max:100, step: 1}))
  * </js-cell>
@@ -77,7 +77,7 @@ export class Range implements VirtualDOM<'div'> {
         if (!params.value) {
             this.value = (1 / 2) * (this.max - this.min)
         }
-        if (!this.value$) {
+        if (!params.value$) {
             this.value$ = new BehaviorSubject(this.value)
         }
         const getValue = (from: string) => {
@@ -91,9 +91,9 @@ export class Range implements VirtualDOM<'div'> {
             return v
         }
         const options = {
-            min: `${this.min}`,
-            max: `${this.max}`,
-            step: `${this.step}`,
+            min: String(this.min),
+            max: String(this.max),
+            step: String(this.step),
         }
         this.children = [
             {
@@ -102,10 +102,10 @@ export class Range implements VirtualDOM<'div'> {
                 ...options,
                 value: attr$({
                     source$: this.value$,
-                    vdomMap: (v) => `${v}`,
+                    vdomMap: (v) => String(v),
                 }),
                 onchange: (ev: InputEvent & { target: HTMLInputElement }) => {
-                    this.value$.next(getValue(ev.target['value']))
+                    this.value$.next(getValue(ev.target.value))
                 },
             },
             { tag: 'i', class: 'mx-1' },
@@ -115,14 +115,14 @@ export class Range implements VirtualDOM<'div'> {
                 ...options,
                 value: attr$({
                     source$: this.value$,
-                    vdomMap: (v) => `${v}`,
+                    vdomMap: (v) => String(v),
                 }),
                 onchange: (ev: InputEvent & { target: HTMLInputElement }) => {
-                    this.value$.next(getValue(ev.target['value']))
+                    this.value$.next(getValue(ev.target.value))
                 },
                 oninput: (ev: InputEvent & { target: HTMLInputElement }) => {
                     if (this.emitDrag) {
-                        this.value$.next(getValue(ev.target['value']))
+                        this.value$.next(getValue(ev.target.value))
                     }
                 },
             },

@@ -29,19 +29,19 @@ export function generateTypedocInputs(
         { cwd: folder },
     )
 
-    if (result.stdout) {
-        console.log(`stdout: ${result.stdout.toString()}`)
-    }
+    console.log(`stdout: ${result.stdout.toString()}`)
 
     // Log process exit code
-    console.log(`typedoc process exited with code ${result.status}`)
-    if (result.status > 0) {
-        console.error(
-            `Error executing typedoc: ${result.error} ${result.stderr.toString()}`,
-        )
-        throw Error(
-            `Typedoc exited with non zero status code (${result.status})`,
-        )
+    if (result.status !== null) {
+        console.log(`typedoc process exited with code ${String(result.status)}`)
+        if (result.status > 0) {
+            console.error(
+                `Error executing typedoc: ${String(result.error)} ${result.stderr.toString()}`,
+            )
+            throw Error(
+                `Typedoc exited with non zero status code (${String(result.status)})`,
+            )
+        }
     }
     const fileContent = fs.readFileSync(output, 'utf8')
     fs.unlinkSync(output)

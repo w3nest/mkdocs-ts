@@ -11,7 +11,7 @@ import { layoutStyleBase } from './common'
 /**
  * Type definition for the arguments to create a {@link ViewPortOnlyLayout}.
  */
-export type ViewPortOnlyArguments = {
+export interface ViewPortOnlyArguments {
     /**
      * Content of the layout.
      */

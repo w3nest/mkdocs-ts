@@ -8,7 +8,7 @@ import {
     sync$,
     VirtualDOM,
 } from 'rx-vdom'
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs'
 import { Output } from './state'
 import { parseStyle } from './display-utils'
 import { OutputMode } from './cell-views'
@@ -51,11 +51,11 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) => e.getAttribute('cell-id'),
-        defaultContent: (e: HTMLElement) => e.textContent,
+        defaultContent: (e: HTMLElement) => e.textContent ?? '',
         fullScreen: (e: HTMLElement) =>
             e.getAttribute('full-screen') === 'true',
-        style: (e: HTMLElement) => parseStyle(e.getAttribute('style')),
-        class: (e: HTMLElement) => e.getAttribute('class') || '',
+        style: (e: HTMLElement) => parseStyle(e.getAttribute('style') ?? ''),
+        class: (e: HTMLElement) => e.getAttribute('class') ?? '',
         inlined: (e: HTMLElement) => e.getAttribute('inlined') === 'true',
     }
 
@@ -136,9 +136,10 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                 if (outputs.length === 0) {
                     return ''
                 }
+                const fwdClass = params.class ?? ''
                 return mode === 'normal'
-                    ? params.class
-                    : `p-2 border rounded h-75 w-75 mx-auto ${params.class} overflow-auto`
+                    ? fwdClass
+                    : `p-2 border rounded h-75 w-75 mx-auto ${fwdClass} overflow-auto`
             },
         })
         const contentView: VirtualDOM<'div'> = {
@@ -146,11 +147,17 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             style: style$,
             class: class$,
             children: sync$({
-                source$: outputs$,
+                source$: outputs$.pipe(
+                    map((outputs) =>
+                        outputs.filter((out) => out !== undefined),
+                    ),
+                ),
                 policy: 'sync',
                 vdomMap: (output) => output,
             }),
-            onclick: (ev) => ev.stopPropagation(),
+            onclick: (ev) => {
+                ev.stopPropagation()
+            },
         }
         if (params.inlined) {
             this.children = [contentView]
@@ -171,7 +178,9 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                         {
                             tag: 'div',
                             class: 'fas fa-expand fv-pointer',
-                            onclick: () => this.mode$.next('fullscreen'),
+                            onclick: () => {
+                                this.mode$.next('fullscreen')
+                            },
                         },
                     ],
                 }
@@ -213,7 +222,9 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                 class: 'd-flex flex-column justify-content-center mkdocs-bg-info',
                 style: displayModeStyle$,
                 children: [defaultView, contentView],
-                onclick: () => this.mode$.next('normal'),
+                onclick: () => {
+                    this.mode$.next('normal')
+                },
             },
         ]
     }

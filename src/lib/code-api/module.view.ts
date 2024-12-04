@@ -27,7 +27,7 @@ export class ModuleView implements VirtualDOM<'div'> {
      * @param params Arguments
      * @param params.module Model of the module.
      * @param params.router Router of the application.
-     * @param params.configuration Rendering configuration..
+     * @param params.configuration Rendering configuration.
      */
     constructor(params: {
         module: Module
@@ -96,11 +96,13 @@ export class ModuleView implements VirtualDOM<'div'> {
                             },
                             relativeToPath: module.path,
                         }),
-                        new DocumentationView({
-                            documentation: fileDoc.documentation,
-                            router: this.router,
-                            configuration: this.configuration,
-                        }),
+                        fileDoc?.documentation
+                            ? new DocumentationView({
+                                  documentation: fileDoc.documentation,
+                                  router: this.router,
+                                  configuration: this.configuration,
+                              })
+                            : undefined,
                         {
                             tag: 'div',
                             children: attributes

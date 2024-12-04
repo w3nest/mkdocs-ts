@@ -36,6 +36,7 @@ export {
 
 import type { parseMd } from '../markdown'
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
-    public static parseMd: typeof parseMd = undefined
+    public static parseMd: typeof parseMd
 }

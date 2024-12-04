@@ -50,7 +50,7 @@ export const DOC_KINDS = {
 /**
  * Simple text element in documentation.
  */
-export type DocText = {
+export interface DocText {
     kind: 'text'
     text: string
 }
@@ -58,7 +58,7 @@ export type DocText = {
 /**
  * Anchor element in documentation.
  */
-export type DocInlineTag = {
+export interface DocInlineTag {
     kind: 'inline-tag'
     tag: '@link'
     text: string
@@ -68,7 +68,7 @@ export type DocInlineTag = {
 /**
  * Code element in documentation.
  */
-export type DocCode = {
+export interface DocCode {
     kind: 'code'
     text: string
 }
@@ -81,7 +81,7 @@ export type CommentSection = (DocText | DocInlineTag | DocCode)[]
 /**
  * A comment.
  */
-export type Comment = {
+export interface Comment {
     /**
      * The summary.
      */
@@ -91,7 +91,7 @@ export type Comment = {
 /**
  * Source specification
  */
-export type Source = {
+export interface Source {
     /**
      * Filename including the snippet.
      */
@@ -105,10 +105,18 @@ export type Source = {
 /**
  * Trait specific of a symbol.
  */
-export type SymbolTrait = {
+export interface SymbolTrait {
     sources: Source[]
     typeParameters?: TypedocNode[] | null
 }
+
+export function hasSymbolTrait(n: unknown): n is SymbolTrait {
+    if (n === null || typeof n !== 'object') {
+        return false
+    }
+    return 'sources' in n
+}
+
 /**
  * Trait specific of a class.
  */
@@ -134,31 +142,38 @@ export type SignaturesTrait = SymbolTrait & {
     signatures: (TypedocNode & SignatureTrait)[]
 }
 export function hasSignatureTrait(node: unknown): node is SignaturesTrait {
+    if (node === null || typeof node !== 'object') {
+        return false
+    }
     return (
-        (node as SignaturesTrait).signatures &&
-        (node as SignaturesTrait).signatures.length > 0
+        'signatures' in node &&
+        Array.isArray(node.signatures) &&
+        node.signatures.length > 0
     )
 }
 /**
  * Trait for comment having block tags.
  */
-export type BlockTagsTrait = {
+export interface BlockTagsTrait {
     blockTags: { tag: string; content: (DocText | DocInlineTag | DocCode)[] }[]
 }
 export function hasBlockTagsTrait(node: unknown): node is BlockTagsTrait {
-    return (node as BlockTagsTrait).blockTags !== undefined
+    if (node === null || typeof node !== 'object') {
+        return false
+    }
+    return 'blockTags' in node
 }
 
 /**
  * Base type for typedoc node.
  */
-export type TypedocNode = {
+export interface TypedocNode {
     id: number
     name: string
     kind: Kind
     flags: Record<string, string>
     comment?: Comment
-    children: TypedocNode[]
+    children?: TypedocNode[]
 }
 /**
  * Trait specific of a method.
@@ -171,20 +186,23 @@ export type MethodTrait = SignaturesTrait & {
     }
 }
 
-export type InheritedTrait = {
+export interface InheritedTrait {
     inheritedFrom: {
         target: number
     }
 }
 export function hasInheritedTrait(node: unknown): node is InheritedTrait {
-    return (node as InheritedTrait).inheritedFrom !== undefined
+    if (node === null || typeof node !== 'object') {
+        return false
+    }
+    return 'inheritedFrom' in node
 }
 
-export type SymbolId = {
+export interface SymbolId {
     sourceFileName: string | null
     qualifiedName: string
 }
 
-export type ProjectTrait = {
+export interface ProjectTrait {
     symbolIdMap: Record<string, SymbolId>
 }

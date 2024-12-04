@@ -1,14 +1,14 @@
 /* eslint-disable */
 const runTimeDependencies = {
     "externals": {
-        "@w3nest/http-clients": "^0.1.0",
+        "@w3nest/http-clients": "^0.1.2",
         "@w3nest/rx-tree-views": "^0.2.0",
-        "@w3nest/webpm-client": "^0.1.0",
+        "@w3nest/webpm-client": "^0.1.1",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
         "highlight.js": "11.2.0",
         "marked": "^4.2.3",
-        "rx-vdom": "^0.1.0",
+        "rx-vdom": "^0.1.1",
         "rxjs": "^7.5.6"
     },
     "includedInBundle": {}

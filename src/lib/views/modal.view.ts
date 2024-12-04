@@ -52,9 +52,9 @@ export function popupModal({
     maxWidth?: string
     maxHeight?: string
 }) {
-    let element: HTMLElement
-    maxWidth = maxWidth || '75%'
-    maxHeight = maxHeight || '75%'
+    let element: HTMLElement | undefined = undefined
+    maxWidth ??= '75%'
+    maxHeight ??= '75%'
     const vdom: AnyVirtualDOM = {
         tag: 'div',
         style: {
@@ -91,6 +91,7 @@ export function popupModal({
             },
         ],
         connectedCallback: (elem: HTMLElement) => {
+            // noinspection ReuseOfLocalVariableJS
             element = elem
         },
         onclick: () => {

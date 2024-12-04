@@ -71,7 +71,7 @@ export interface Code {
     /**
      * References to other entities in the declaration.
      */
-    references: { [name: string]: EntityPath }
+    references: Record<string, EntityPath>
 }
 
 /**
@@ -91,11 +91,11 @@ export interface Semantic {
     /**
      * Some attributes.
      */
-    attributes: { [k: string]: string }
+    attributes: Record<string, string>
     /**
      * Some relation with other entities (grouped by a category keyword, *e.g.* `InheritedBy`).
      */
-    relations: { [category: string]: EntityPath[] }
+    relations: Record<string, EntityPath[]>
 }
 /**
  * Base structure to represent an entity within the code, e.g. class, structure, function, variable,
@@ -212,7 +212,7 @@ export type Module = Omit<Entity, 'code'> & {
 /**
  * Representation of the project to document
  */
-export type Project = {
+export interface Project {
     /**
      * Its name.
      */

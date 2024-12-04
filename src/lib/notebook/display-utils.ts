@@ -1,6 +1,7 @@
 import { AnyVirtualDOM, child$, CSSAttribute, RxChild } from 'rx-vdom'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 import { Observable, Subject } from 'rxjs'
+import { Output } from './state'
 
 /**
  * Implementation of the `display` function used in {@link JsCellView}.
@@ -10,14 +11,14 @@ import { Observable, Subject } from 'rxjs'
  * @param factory Display factory.
  */
 export function display(
-    output$: Subject<AnyVirtualDOM>,
+    output$: Subject<Output>,
     factory: DisplayFactory,
     ...elements: unknown[]
 ) {
     const pickView = (e) => {
         const component = [...factory]
             .reverse()
-            .find((component) => component.isCompatible(e))
+            .find((component) => component.isCompatible(e)) as DisplayComponent
         return component.view(e)
     }
     const views: AnyVirtualDOM[] = elements.map((element) => {
@@ -48,7 +49,7 @@ export function display(
 /**
  * Represents the type of component of {@link DisplayFactory}.
  */
-export type DisplayComponent<T = unknown> = {
+export interface DisplayComponent<T = unknown> {
     /**
      * Name of the component.
      */
@@ -77,7 +78,7 @@ function rawView(element: unknown): AnyVirtualDOM {
     if (['string', 'number', 'boolean'].includes(typeof element)) {
         return {
             tag: 'div',
-            innerText: `${element as PrimitiveType}`,
+            innerText: element as PrimitiveType,
         }
     }
     const state = new ObjectJs.State({ title: '', data: element })
@@ -88,14 +89,22 @@ function rawView(element: unknown): AnyVirtualDOM {
     }
 }
 
-function htmlView(element: HTMLElement | AnyVirtualDOM): AnyVirtualDOM {
+function htmlView(
+    element: HTMLElement | AnyVirtualDOM | RxChild,
+): AnyVirtualDOM {
     if (element instanceof HTMLElement) {
         return {
             tag: 'div',
             children: [element],
         }
     }
-    if (element['source$']) {
+    function isRxChild(e: unknown): e is RxChild {
+        if (typeof e !== 'object' || e === null) {
+            return false
+        }
+        return 'source$' in e && 'vdomMap' in e
+    }
+    if (isRxChild(element)) {
         return { tag: 'div', children: [element] }
     }
     return element
@@ -114,11 +123,10 @@ function htmlView(element: HTMLElement | AnyVirtualDOM): AnyVirtualDOM {
  */
 export function defaultDisplayFactory(): DisplayFactory {
     function isVirtualDOM(obj: unknown): obj is AnyVirtualDOM | RxChild {
-        return (
-            (obj as AnyVirtualDOM).tag !== undefined ||
-            ((obj as RxChild).source$ !== undefined &&
-                (obj as RxChild).vdomMap !== undefined)
-        )
+        if (typeof obj !== 'object' || obj === null) {
+            return false
+        }
+        return 'tag' in obj || ('source$' in obj && 'vdomMap' in obj)
     }
     return [
         {

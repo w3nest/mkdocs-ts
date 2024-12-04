@@ -103,7 +103,7 @@ export class HandlerView implements VirtualDOM<'div'> {
 }
 
 export class NavigationHeader implements VirtualDOM<'a'> {
-    static DefaultWrapperClass: string =
+    static DefaultWrapperClass =
         'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pe-2'
     public readonly tag = 'a'
     public readonly href: string
@@ -128,7 +128,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                 ? node.decoration({ router })
                 : node.decoration
         this.class =
-            decoration?.wrapperClass || NavigationHeader.DefaultWrapperClass
+            decoration?.wrapperClass ?? NavigationHeader.DefaultWrapperClass
 
         this.style =
             node.id === '/'
@@ -166,7 +166,7 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         })
         const sep: (i: number) => AnyVirtualDOM = (i) => ({
             tag: 'div',
-            class: `mx-${i}`,
+            class: `mx-${String(i)}`,
         })
         const hExpand: AnyVirtualDOM = {
             tag: 'div',
@@ -195,9 +195,9 @@ export class NavigationHeader implements VirtualDOM<'a'> {
             {
                 tag: 'div',
                 class: 'mkdocs-NavigationHeader-actions',
-                children: decoration?.actions || [],
+                children: decoration?.actions ?? [],
             },
-            ...(withChildren || []),
+            ...(withChildren ?? []),
         ]
         this.href = `${router.basePath}?nav=` + node.href
         this.onclick = (e) => {
@@ -232,7 +232,7 @@ export class NavigationView implements VirtualDOM<'div'> {
             this.class = `${this.class} w-100`
         }
         this.style = {
-            minWidth: `${params.layoutOptions.navMinWidth}px`,
+            minWidth: `${String(params.layoutOptions.navMinWidth)}px`,
             height: params.layoutOptions.sidePanelHeight,
         }
         this.children = [
@@ -243,15 +243,17 @@ export class NavigationView implements VirtualDOM<'div'> {
                         node,
                         router: this.router,
                         bookmarks$: params.bookmarks$,
-                        withChildren: node.children &&
-                            node.id !== '/' && [
-                                new HandlerView({
-                                    node: node,
-                                    expandedNodes$:
-                                        this.router.explorerState
-                                            .expandedNodes$,
-                                }),
-                            ],
+                        withChildren:
+                            node.children && node.id !== '/'
+                                ? [
+                                      new HandlerView({
+                                          node: node,
+                                          expandedNodes$:
+                                              this.router.explorerState
+                                                  .expandedNodes$,
+                                      }),
+                                  ]
+                                : undefined,
                     })
                 },
                 options: {

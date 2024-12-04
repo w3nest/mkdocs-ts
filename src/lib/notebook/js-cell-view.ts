@@ -2,7 +2,7 @@ import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { CellTrait, ExecArgs, Scope, State } from './state'
+import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { executeJs } from './js-execution'
 
@@ -105,8 +105,8 @@ export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
-            e.getAttribute('cell-id') || e.getAttribute('id'),
-        content: (e: HTMLElement) => e.textContent,
+            e.getAttribute('cell-id') ?? e.getAttribute('id'),
+        content: (e: HTMLElement) => e.textContent ?? '',
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
@@ -128,7 +128,7 @@ export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
      */
     static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
         const params = {
-            cellId: JsCellView.FromDomAttributes.cellId(elem),
+            cellId: JsCellView.FromDomAttributes.cellId(elem) ?? getCellUid(),
             content: JsCellView.FromDomAttributes.content(elem),
             cellAttributes: {
                 readOnly: JsCellView.FromDomAttributes.readOnly(elem),
@@ -161,7 +161,9 @@ export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
             lineNumbers: params.cellAttributes.lineNumbers,
             onExecute: () => {
                 this.state.execute(this.cellId).then(
-                    () => {},
+                    () => {
+                        /*No OP*/
+                    },
                     () => {
                         throw Error(`Failed to execute cell ${this.cellId}`)
                     },

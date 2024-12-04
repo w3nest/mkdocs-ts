@@ -34,11 +34,11 @@ import type { NodeDecoration, Navigation, Router, Views } from '../index'
 import type { installNotebookModule } from '../../index'
 import type { parseMd } from '../markdown'
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
-    public static parseMd: typeof parseMd = undefined
-    public static Views: typeof Views = undefined
-    public static installNotebookModule: typeof installNotebookModule =
-        undefined
+    public static parseMd: typeof parseMd
+    public static Views: typeof Views
+    public static installNotebookModule: typeof installNotebookModule
     public static headingPrefixId: string
 }
 
@@ -46,13 +46,11 @@ export const tocConvertor = (heading: HTMLHeadingElement): AnyVirtualDOM => {
     const firstHTMLElement = [...heading.children].find(
         (c) => c instanceof HTMLElement,
     )
-    const classes = firstHTMLElement ? firstHTMLElement.classList?.value : ''
+    const classes = firstHTMLElement ? firstHTMLElement.classList.value : ''
 
     return {
         tag: 'div' as const,
-        innerText:
-            (firstHTMLElement && firstHTMLElement.innerText) ||
-            heading.innerText,
+        innerText: firstHTMLElement?.innerText ?? heading.innerText,
         class: `${classes} fv-hover-text-focus`,
     }
 }
@@ -146,7 +144,7 @@ export const docNavigation = ({
         map((module) => {
             return {
                 children:
-                    module.children?.length > 0
+                    module.children.length > 0
                         ? module.children.map((m) => ({
                               name: m.name,
                               leaf: m.isLeaf,

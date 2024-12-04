@@ -46,7 +46,7 @@ function getDeclaration(
 
     // How to access the jsDoc ?
     const jsDocs = getJsDoc(node)
-    const doc: string = jsDocs && jsDocs[0].getText(sourceFile)
+    const doc = jsDocs?.[0].getText(sourceFile)
     const docLinesCount = doc ? doc.split('\n').length : 0
     const processed = withDoc
         .split('\n')
@@ -74,28 +74,36 @@ function getDeclaration(
     return raw.substring(0, i + 1)
 }
 
-function getEscapedName(node: { name?: unknown }): string {
-    if (node.name['escapedText']) {
-        return node.name['escapedText'] as string
+function getEscapedName(node: ts.NamedDeclaration): string {
+    function hasEscapedTrait(name: unknown): name is { escapedText: string } {
+        return (name as { escapedText?: string }).escapedText !== undefined
     }
-    return node.name ? `${node.name as string}` : ''
+    if (hasEscapedTrait(node.name)) {
+        return node.name.escapedText
+    }
+    return node.name ? node.name.getText() : ''
 }
 
-type JsDoc = { comment: string; getText: (src: ts.SourceFile) => string }
+interface JsDoc {
+    comment: string | ts.SymbolDisplayPart[]
+    getText: (src: ts.SourceFile) => string
+}
 
-type JsDocTrait = { jsDoc: JsDoc[] }
+interface JsDocTrait {
+    jsDoc?: JsDoc[]
+}
 
-function getJsDoc(node: unknown): JsDoc[] {
+function getJsDoc(node: unknown): JsDoc[] | undefined {
     if (!node || !(node as JsDocTrait).jsDoc) {
         return undefined
     }
-    return node['jsDoc'] as JsDoc[]
+    return (node as JsDocTrait).jsDoc
 }
 
 function getPrefix(
     rootPath: string,
     file: string,
-    node: ts.NamedDeclaration = undefined,
+    node: ts.NamedDeclaration | undefined = undefined,
 ) {
     if (!node) {
         return file.replace(rootPath, '')
@@ -104,7 +112,7 @@ function getPrefix(
 }
 
 function getFileDoc(node: ts.SourceFile) {
-    const jsDoc = getJsDoc(node.statements?.[0])
+    const jsDoc = getJsDoc(node.statements[0])
     if (!jsDoc) {
         return ''
     }
@@ -141,18 +149,18 @@ export function processFile(
                 comment: getFileDoc(node),
             }
         }
-        if (ts.isVariableDeclaration(node) && node.name) {
+        if (ts.isVariableDeclaration(node)) {
             elements[getPrefix(rootPath, file, node)] = {
                 declaration: node.getText(sourceFile),
             }
         }
 
-        if (ts.isTypeAliasDeclaration(node) && node.name) {
+        if (ts.isTypeAliasDeclaration(node)) {
             elements[getPrefix(rootPath, file, node)] = {
                 declaration: node.getText(sourceFile),
             }
         }
-        if (ts.isFunctionDeclaration(node) && node.name) {
+        if (ts.isFunctionDeclaration(node)) {
             elements[getPrefix(rootPath, file, node)] = {
                 declaration: getDeclaration(node, sourceFile),
                 implementation: node.getText(sourceFile),
@@ -228,7 +236,7 @@ export interface TsSrcElement {
  * Gather additional  source code information w/ typedoc required for parsing for all files.
  * Keys are in the form "FILE_PATH:ENTITY_PATH".
  */
-export type TsSrcElements = { [k: string]: TsSrcElement }
+export type TsSrcElements = Record<string, TsSrcElement>
 
 /**
  * Generate the global dictionary of typescript inputs required for parsing.

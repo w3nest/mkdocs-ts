@@ -6,7 +6,7 @@ import { AnyVirtualDOM, AttributeLike, ChildrenLike, ChildLike } from 'rx-vdom'
 /**
  * Defines attributes regarding the visual rendering of the node if the navigation view.
  */
-export type NodeDecorationSpec = {
+export interface NodeDecorationSpec {
     /**
      * Optional class added as wrapper to the HTML element representing the node.
      */
@@ -36,9 +36,9 @@ export type NodeDecoration =
  * Fully resolved navigation node when using {@link CatchAllNav}.
  * In practical usage, consumers of the library only needs to provide {@link NavNodeInput}.
  */
-export type NavNodeParams = {
+export interface NavNodeParams {
     /**
-     * Id of the node.
+     * ID of the node.
      */
     id: string
     /**
@@ -69,7 +69,7 @@ export class NavNodeBase extends ImmutableTree.Node {
     public readonly data: unknown
     public readonly decoration?: NodeDecoration
 
-    protected constructor(parameters: NavNodeParams) {
+    constructor(parameters: NavNodeParams) {
         super({ id: parameters.id, children: parameters.children })
         this.name = parameters.name
         this.href = parameters.href
@@ -78,11 +78,7 @@ export class NavNodeBase extends ImmutableTree.Node {
     }
 }
 
-export class NavNode extends NavNodeBase {
-    constructor(parameters: NavNodeParams) {
-        super(parameters)
-    }
-}
+export class NavNode extends NavNodeBase {}
 
 export class NavNodePromise extends NavNodeBase {
     constructor({ href }: { href: string }) {
@@ -199,8 +195,8 @@ export function createChildren({
     navigation: Navigation
     hRefBase: string
     router: Router
-    reactiveNavs: { [_href: string]: Observable<LazyNavResolver> }
-    promiseNavs: { [_href: string]: Promise<Navigation> }
+    reactiveNavs: Record<string, Observable<LazyNavResolver>>
+    promiseNavs: Record<string, Promise<Navigation>>
 }) {
     const explicitChildren: NavNodeBase[] = Object.entries(navigation)
         .filter(([k]) => k.startsWith('/') && k !== CatchAllKey)
@@ -254,9 +250,9 @@ export function createRootNode({
     router: Router
     hrefBase?: string
 }) {
-    const href = hrefBase || ''
-    const reactiveNavs: { [k: string]: ReactiveLazyNavResolver } = {}
-    const promiseNavs: { [k: string]: Promise<Navigation> } = {}
+    const href = hrefBase ?? ''
+    const reactiveNavs: Record<string, ReactiveLazyNavResolver> = {}
+    const promiseNavs: Record<string, Promise<Navigation>> = {}
     const rootNode = new NavNode({
         id: href === '' ? '/' : href,
         name: navigation.name,
@@ -288,7 +284,7 @@ export type Resolvable<T> = T | Promise<T> | Observable<T>
 /**
  * The common part of a navigation node, whether it is static or dynamic.
  */
-export type NavigationCommon = {
+export interface NavigationCommon {
     /**
      * This function represents the view of the main content.
      *

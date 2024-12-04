@@ -1,20 +1,21 @@
 import { Observable, Subject } from 'rxjs'
 import { display, DisplayFactory } from './display-utils'
-import { Scope } from './state'
-import { AnyVirtualDOM } from 'rx-vdom'
+import { Output, Scope } from './state'
 import { extractKeys } from './js-execution'
 
-export type PyodideNamespace = { get: (key: string) => unknown }
-export type Pyodide = {
+export interface PyodideNamespace {
+    get: (key: string) => unknown
+}
+export interface Pyodide {
     globals: { get: (key: string) => () => PyodideNamespace }
-    runPython: <T>(code: string) => T
+    runPython: (code: string) => unknown
     registerJsModule: (name: string, mdle: unknown) => void
 }
 
 function registerMknbModule(pyodide: Pyodide) {
-    const isRegistered = pyodide.runPython<boolean>(
+    const isRegistered = pyodide.runPython(
         `import sys\n'mknb' in sys.modules`,
-    )
+    ) as boolean
     if (isRegistered) {
         return
     }
@@ -46,8 +47,10 @@ import sys
 if 'mknb_cell' in sys.modules:
     del sys.modules['mknb_cell']    
     `)
-    pyodide['registerJsModule']('mknb_cell', {
-        display: (...element: HTMLElement[]) => displayInOutput(...element),
+    pyodide.registerJsModule('mknb_cell', {
+        display: (...element: HTMLElement[]) => {
+            displayInOutput(...element)
+        },
         ...scope.let,
         ...scope.const,
     })
@@ -74,7 +77,7 @@ export async function executePy({
 }: {
     src: string
     scope: Scope
-    output$: Subject<AnyVirtualDOM>
+    output$: Subject<Output>
     displayFactory: DisplayFactory
     invalidated$: Observable<unknown>
     pyNamespace: PyodideNamespace
@@ -82,8 +85,9 @@ export async function executePy({
     const pyodide = scope.const.pyodide as Pyodide
     registerMknbModule(pyodide)
 
-    const displayInOutput = (...element: HTMLElement[]) =>
+    const displayInOutput = (...element: HTMLElement[]) => {
         display(output$, displayFactory, ...element)
+    }
     registerMknbCellModule(pyodide, displayInOutput, scope)
 
     const pyHeader = [...Object.keys(scope.let), ...Object.keys(scope.const)]

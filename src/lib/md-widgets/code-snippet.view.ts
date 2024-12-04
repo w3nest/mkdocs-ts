@@ -12,7 +12,7 @@ export type CodeLanguage =
     | 'yaml'
     | 'unknown'
 
-type CodeMirrorEditor = {
+interface CodeMirrorEditor {
     on: (event: string, cb: (args: { getValue: () => string }) => void) => void
     refresh: () => void
     addLineClass: (line: number, kind: string, classes: string) => void
@@ -138,9 +138,9 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
         language: CodeLanguage
         highlightedLines?: string
         content: string //| Observable<string>
-        cmConfig?: { [_k: string]: unknown }
+        cmConfig?: Record<string, unknown>
     }) {
-        const content$ = typeof content == 'string' ? of(content) : content
+        const content$ = of(content)
         const linesToHighlight = parseLineIndices(highlightedLines)
         this.content$ = new BehaviorSubject<string>(content)
         this.children = [

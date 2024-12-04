@@ -59,14 +59,16 @@ export class NoteView implements VirtualDOM<'div'> {
         this.label = this.label || defaultLabels[this.level]
         this.class = `${this.class} ${fact[this.level]}`
         this.children = [
-            includeLabel && {
-                tag: 'div',
-                innerText: this.label,
-                class: factLabel[this.level],
-                style: {
-                    fontWeight: 'bolder' as const,
-                },
-            },
+            includeLabel
+                ? {
+                      tag: 'div',
+                      innerText: this.label,
+                      class: factLabel[this.level],
+                      style: {
+                          fontWeight: 'bolder' as const,
+                      },
+                  }
+                : undefined,
             { tag: 'i', class: 'my-1' },
             parseMd({ src: this.content, ...this.parsingArgs }),
         ]

@@ -45,20 +45,20 @@ export type CellStatus =
  *
  * This is a work in progress: at least functions and classes are missing.
  */
-export type Scope = {
+export interface Scope {
     /**
      * The `let` variables: keyed by their name and mapped to their values.
      */
-    let: { [k: string]: unknown }
+    let: Record<string, unknown>
     /**
      * The `const` variables: keyed by their name and mapped to their values.
      */
-    const: { [k: string]: unknown }
+    const: Record<string, unknown>
 
     /**
      * The exported globals of python runtime.
      */
-    python: { [k: string]: unknown }
+    python: Record<string, unknown>
 }
 
 /**
@@ -71,7 +71,7 @@ export type Output = AnyVirtualDOM | undefined
 /**
  * Arguments used to execute a cell, see {@link CellTrait.execute}.
  */
-export type ExecArgs = {
+export interface ExecArgs {
     /**
      * Cell ID.
      */
@@ -87,7 +87,7 @@ export type ExecArgs = {
      * @param path Navigation path of the submodule.
      * @returns The exported symbols.
      */
-    load: (path: string) => Promise<{ [k: string]: unknown }>
+    load: (path: string) => Promise<Record<string, unknown>>
 
     /**
      * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.
@@ -127,6 +127,11 @@ export interface CellTrait {
     execute: (args: ExecArgs) => Promise<Scope>
 }
 
+export function getCellUid(): string {
+    const rnd = Math.floor(Math.random() * Math.pow(10, 6))
+    return `cell-${String(rnd)}`
+}
+
 /**
  * Represents the state of a {@link NotebookPage}.
  */
@@ -134,9 +139,10 @@ export class State {
     /**
      * Observables over the cell's entering scopes keyed by the cell's ID.
      */
-    public readonly scopes$: {
-        [k: string]: BehaviorSubject<Scope | undefined>
-    } = {}
+    public readonly scopes$: Record<
+        string,
+        BehaviorSubject<Scope | undefined>
+    > = {}
 
     /**
      * The factory used to pick up the right mapping between variable and view when `display` is called.
@@ -150,15 +156,15 @@ export class State {
     /**
      * Observables over the cell's output keyed by the cell's ID.
      */
-    public readonly outputs$: { [k: string]: ReplaySubject<Output> } = {}
+    public readonly outputs$: Record<string, ReplaySubject<Output>> = {}
     /**
      * Observables over the cell's source keyed by the cell's ID.
      */
-    public readonly src$: { [k: string]: BehaviorSubject<string> } = {}
+    public readonly src$: Record<string, BehaviorSubject<string>> = {}
     /**
      * Observables over the cell's status keyed by the cell's ID.
      */
-    public readonly cellsStatus$: { [k: string]: BehaviorSubject<CellStatus> } =
+    public readonly cellsStatus$: Record<string, BehaviorSubject<CellStatus>> =
         {}
 
     /**
@@ -169,7 +175,7 @@ export class State {
     /**
      * Observables over whether the cell is currently executing keyed by the cell's ID.
      */
-    public readonly executing$: { [k: string]: BehaviorSubject<boolean> } = {}
+    public readonly executing$: Record<string, BehaviorSubject<boolean>> = {}
 
     /**
      * The deported output views as a list of their associated cell ID.
@@ -199,9 +205,8 @@ export class State {
      */
     public readonly router: Router
 
-    public readonly modules: {
-        [k: string]: { state: State; exports: Scope }
-    } = {}
+    public readonly modules: Record<string, { state: State; exports: Scope }> =
+        {}
 
     /**
      * Pyodide execution should be namespaced by notebook page,
@@ -210,7 +215,7 @@ export class State {
      * This is a python dictionary initialized with `pyodide.globals.get("dict")()`
      * when the notebook page is loaded and reused across python cells.
      */
-    private pyNamespace: PyodideNamespace
+    private pyNamespace?: PyodideNamespace
 
     constructor(params: {
         initialScope?: Partial<Scope>
@@ -221,35 +226,36 @@ export class State {
         Object.assign(this, { router: params.router, parent: params.parent })
         this.displayFactory = [
             ...this.displayFactory,
-            ...(params.displayFactory || []),
+            ...(params.displayFactory ?? []),
         ]
         this.initialScope = {
-            let: params.initialScope?.let || {},
+            let: params.initialScope?.let ?? {},
             const: {
                 webpm,
                 Views,
-                ...(params.initialScope?.const || {}),
+                ...(params.initialScope?.const ?? {}),
             },
-            python: params.initialScope?.python || {},
+            python: params.initialScope?.python ?? {},
         }
 
-        if (params.parent) {
-            params.parent.state.invalidated$
-                .pipe(filter((cellId) => cellId === params.parent.cellId))
+        if (params.parent !== undefined) {
+            const parent = params.parent
+            parent.state.invalidated$
+                .pipe(filter((cellId) => cellId === parent.cellId))
                 .subscribe(() => {
                     if (this.ids.length === 0) {
                         return
                     }
                     this.unreadyCells({ afterCellId: this.ids[0] })
-                    Object.values(this.outputs$).forEach((output$) =>
-                        output$.next(undefined),
-                    )
+                    Object.values(this.outputs$).forEach((output$) => {
+                        output$.next(undefined)
+                    })
                 })
         }
     }
 
     getPyNamespace(pyodide: Pyodide): PyodideNamespace {
-        this.pyNamespace = this.pyNamespace || pyodide.globals.get('dict')()
+        this.pyNamespace ??= pyodide.globals.get('dict')()
         return this.pyNamespace
     }
 
@@ -257,7 +263,7 @@ export class State {
         this.ids.push(cell.cellId)
         this.cellIds$.next(this.ids)
         this.cells.push(cell)
-        if (!this.outputs$[cell.cellId]) {
+        if (!(cell.cellId in this.outputs$)) {
             this.outputs$[cell.cellId] = new ReplaySubject()
             this.executing$[cell.cellId] = new BehaviorSubject(false)
             this.src$[cell.cellId] = cell.content$
@@ -268,8 +274,8 @@ export class State {
         )
         this.scopes$[cell.cellId] =
             Object.keys(this.scopes$).length === 0
-                ? new BehaviorSubject<Scope>(this.initialScope)
-                : new BehaviorSubject<Scope>(undefined)
+                ? new BehaviorSubject<Scope | undefined>(this.initialScope)
+                : new BehaviorSubject<Scope | undefined>(undefined)
         cell.content$.subscribe((src) => {
             this.updateSrc({ cellId: cell.cellId, src })
         })
@@ -310,7 +316,10 @@ export class State {
 
     createDeportedOutputsView(elem: HTMLElement): OutputsView {
         const cellId = DeportedOutputsView.FromDomAttributes.cellId(elem)
-        if (!this.outputs$[cellId]) {
+        if (!cellId) {
+            throw Error("Can not find 'cell-id' to create deported output.")
+        }
+        if (!(cellId in this.outputs$)) {
             this.outputs$[cellId] = new ReplaySubject()
             this.executing$[cellId] = new BehaviorSubject(false)
         }
@@ -322,7 +331,7 @@ export class State {
     }
 
     updateSrc({ cellId, src }: { cellId: string; src: string }) {
-        if (!this.src$[cellId]) {
+        if (!(cellId in this.src$)) {
             this.src$[cellId] = new BehaviorSubject(src)
         }
         this.cellsStatus$[cellId].next('ready')
@@ -331,7 +340,16 @@ export class State {
             this.parent.state.unreadyCells({ afterCellId: this.parent.cellId })
         }
     }
-    async execute(id: string, rootExecution: boolean = true) {
+    getResolvedScope(cellId: string): Scope {
+        if (
+            !(cellId in this.scopes$) ||
+            this.scopes$[cellId].value === undefined
+        ) {
+            throw Error(`Can not find scope for ${cellId}`)
+        }
+        return this.scopes$[cellId].value
+    }
+    async execute(id: string, rootExecution = true) {
         if (this.ids.length === 0) {
             return this.initialScope
         }
@@ -340,7 +358,7 @@ export class State {
         if (!this.scopes$[id].value) {
             await this.execute(this.ids[index - 1], false)
         }
-        const scope$ = this.scopes$[id]
+        const inputScope = this.getResolvedScope(id)
         const output$ = this.outputs$[id]
 
         output$.next(undefined)
@@ -348,7 +366,7 @@ export class State {
         this.executing$[id].next(true)
         const scope = await this.cells[index].execute({
             src: this.src$[id].value,
-            scope: scope$.getValue(),
+            scope: inputScope,
             output$,
             displayFactory: this.displayFactory,
             load: this.loadModule(id),
@@ -409,11 +427,12 @@ export class State {
             return {
                 'js-cell': (elem: HTMLElement) => {
                     const id =
-                        elem.getAttribute('cell-id') || elem.getAttribute('id')
+                        elem.getAttribute('cell-id') ?? elem.getAttribute('id')
                     const reactive = elem.getAttribute('reactive') === 'true'
+                    const uid = Math.floor(Math.random() * Math.pow(10, 6))
                     const cell = new JsCellExecutor({
-                        cellId: id,
-                        content$: new BehaviorSubject(elem.textContent),
+                        cellId: id ?? `cell-${String(uid)}`,
+                        content$: new BehaviorSubject(elem.textContent ?? ''),
                         state: state,
                         cellAttributes: {
                             reactive,
@@ -424,10 +443,11 @@ export class State {
                 },
                 'py-cell': (elem: HTMLElement) => {
                     const id =
-                        elem.getAttribute('cell-id') || elem.getAttribute('id')
+                        elem.getAttribute('cell-id') ?? elem.getAttribute('id')
+                    const uid = Math.floor(Math.random() * Math.pow(10, 6))
                     const cell = new PyCellExecutor({
-                        cellId: id,
-                        content$: new BehaviorSubject(elem.textContent),
+                        cellId: id ?? `cell-${String(uid)}`,
+                        content$: new BehaviorSubject(elem.textContent ?? ''),
                         state: state,
                         cellAttributes: {},
                     })
@@ -439,10 +459,14 @@ export class State {
 
         return async (path: string) => {
             const router = this.router
-            if (this.modules[path]) {
+            if (path in this.modules) {
                 this.modules[path].state.dispose()
             }
-            const module$ = router.getNav({ path }).pipe(
+            const nav = router.getNav({ path })
+            if (!nav) {
+                throw Error(`Can not find module at ${path}`)
+            }
+            const module$ = nav.pipe(
                 switchMap((nav) => {
                     const nbPage = nav.html({
                         router,

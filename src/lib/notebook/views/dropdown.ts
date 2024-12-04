@@ -51,15 +51,15 @@ export class DropDown implements VirtualDOM<'div'> {
      * @param params.displayedNames Dictionary itemId -> displayed names.
      */
     constructor(params: {
-        items: { [k: string]: unknown }
+        items: Record<string, unknown>
         selected: string
-        displayedNames?: { [k: string]: unknown }
+        displayedNames?: Record<string, unknown>
     }) {
         Object.assign(this, params)
         this.value$ = new BehaviorSubject(params.items[params.selected])
         this.itemId$ = new BehaviorSubject(params.selected)
         const displayedNames: Record<string, string> =
-            params.displayedNames ||
+            params.displayedNames ??
             Object.keys(params.items).reduce(
                 (acc, e) => ({ ...acc, [e]: e }),
                 {},

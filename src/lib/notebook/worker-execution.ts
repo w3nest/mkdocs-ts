@@ -42,7 +42,7 @@ export async function executeWorkersPool({
     mode: 'javascript' | 'python'
     workersPool: WorkersPoolTypes.WorkersPool
     scope: Scope
-    capturedIn: { [_k: string]: unknown }
+    capturedIn: Record<string, unknown>
     capturedOut: string[]
 }): Promise<Scope> {
     const srcPatched =
@@ -102,7 +102,7 @@ export function executeWorkersPool$({
     mode: 'javascript' | 'python'
     workersPool: WorkersPoolTypes.WorkersPool
     scope: Scope
-    capturedIn: { [_k: string]: unknown }
+    capturedIn: Record<string, unknown>
     capturedOut: string[]
     invalidated$: Observable<unknown>
 }): Promise<Scope> {
@@ -140,7 +140,7 @@ export function executeWorkersPool$({
                         [reactives[currentIndex][0]]: e,
                     }),
                     capturedIn,
-                )
+                ) as Record<string, unknown>
             }),
             switchMap((capturedIn) => {
                 const srcPatched =
@@ -168,11 +168,11 @@ export function executeWorkersPool$({
         )
         .subscribe((resp) => {
             const data = resp.data as MessageExit
-            const results = typeof data.result === 'object' ? data.result : {}
-
-            Object.entries(results).forEach(([k, v]) => {
-                capturedOut$[k].next(v)
-            })
+            if (data.result !== null && typeof data.result === 'object') {
+                Object.entries(data.result).forEach(([k, v]) => {
+                    capturedOut$[k].next(v)
+                })
+            }
         })
     return Promise.resolve({
         ...scope,

@@ -7,7 +7,7 @@ import { from } from 'rxjs'
 import { Dependencies } from './index'
 
 export class DocumentationView implements VirtualDOM<'div'> {
-    public readonly documentation?: Documentation
+    public readonly documentation: Documentation
     public readonly router: Router
     public readonly configuration: Configuration
     public readonly tag = 'div'
@@ -44,16 +44,10 @@ export class SectionView implements VirtualDOM<'div'> {
         router: Router
         configuration: Configuration
     }) {
-        if (!section) {
-            return
-        }
-        const nbConfig: object =
-            typeof configuration === 'boolean'
-                ? {}
-                : (configuration.notebook as object)
+        const nbConfig: object = configuration.notebook as object
 
         this.children = [
-            section.title && new SectionHeader(section),
+            new SectionHeader(section),
             configuration.notebook
                 ? child$({
                       source$: from(Dependencies.installNotebookModule()),

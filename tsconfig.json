@@ -18,6 +18,7 @@
         "paths": {
             "@rxVDomConfig": ["./rx-vdom.config"]
         },
+        "strictNullChecks": true,
     },
     "ts-node": {
         "compilerOptions": {

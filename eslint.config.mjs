@@ -6,8 +6,8 @@ import eslintPluginPrettier from 'eslint-config-prettier'
 export default tseslint.config(
     eslint.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
-    //...tseslint.configs.strictTypeChecked,
-    //...tseslint.configs.stylisticTypeChecked,
+    ...tseslint.configs.strictTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked,
     {
         languageOptions: {
             parserOptions: {
@@ -30,4 +30,7 @@ export default tseslint.config(
         },
     },
     eslintPluginPrettier,
+    {
+        ignores: ['src/tests/**'],
+    },
 )

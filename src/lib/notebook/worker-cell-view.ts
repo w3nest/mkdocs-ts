@@ -2,7 +2,7 @@ import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { CellTrait, ExecArgs, Scope, State } from './state'
+import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { DropDownCaptureView } from './interpreter-cell-view'
 import { executeWorkersPool, executeWorkersPool$ } from './worker-execution'
@@ -23,11 +23,11 @@ export type WorkerCellAttributes = CellCommonAttributes & {
     /**
      * The names of the captured variables forwarded to the worker along with the processing task.
      */
-    capturedIn?: string[]
+    capturedIn: string[]
     /**
      * The names of the captured variable name forwarded to the main-thread from the worker.
      */
-    capturedOut?: string[]
+    capturedOut: string[]
 }
 
 /**
@@ -86,20 +86,26 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
-            e.getAttribute('cell-id') || e.getAttribute('id'),
-        content: (e: HTMLElement) => e.textContent,
+            e.getAttribute('cell-id') ?? e.getAttribute('id') ?? getCellUid(),
+        content: (e: HTMLElement) => e.textContent ?? '',
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
-        workersPool: (e: HTMLElement) => e.getAttribute('workers-pool'),
+        workersPool: (e: HTMLElement) => {
+            const wp = e.getAttribute('workers-pool')
+            if (!wp) {
+                throw Error('No worker pool has been bound to the cell')
+            }
+            return wp
+        },
         mode: (e: HTMLElement) =>
             e.getAttribute('mode') as unknown as 'javascript' | 'python',
         capturedIn: (e: HTMLElement) =>
-            (e.getAttribute('captured-in') || '')
+            (e.getAttribute('captured-in') ?? '')
                 .split(' ')
                 .filter((c) => c !== ''),
         capturedOut: (e: HTMLElement) =>
-            (e.getAttribute('captured-out') || '')
+            (e.getAttribute('captured-out') ?? '')
                 .split(' ')
                 .filter((c) => c !== ''),
     }
@@ -156,10 +162,12 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
             language: this.cellAttributes.mode,
             readOnly: false,
             content: params.content,
-            lineNumbers: this.cellAttributes.lineNumbers,
+            lineNumbers: this.cellAttributes.lineNumbers ?? false,
             onExecute: () => {
                 this.state.execute(this.cellId).then(
-                    () => {},
+                    () => {
+                        /*No OP*/
+                    },
                     () => {
                         console.error(`Failed to executed ${this.cellId}`)
                     },

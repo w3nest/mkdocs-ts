@@ -100,10 +100,8 @@ export class TOCView implements VirtualDOM<'div'> {
                 return (
                     addedNodes
                         .filter((node) => node instanceof HTMLElement)
-                        .find(
-                            (node) =>
-                                node.tagName && node.tagName.startsWith('H'),
-                        ) !== undefined
+                        .find((node) => node.tagName.startsWith('H')) !==
+                    undefined
                 )
             }),
             debounceTime(debounceTimeToc),
@@ -130,8 +128,10 @@ export class TOCView implements VirtualDOM<'div'> {
         this.disconnectedCallback = () => {
             observer.disconnect()
         }
-        this.router.scrollableElement.onscroll = () => {
-            this.getFirstVisible(headings$.value)
+        if (this.router.scrollableElement) {
+            this.router.scrollableElement.onscroll = () => {
+                this.getFirstVisible(headings$.value)
+            }
         }
 
         this.children = [
@@ -223,8 +223,8 @@ class TocItemView implements VirtualDOM<'li'> {
             }
             const firstTextElement = [...heading.children]
                 .filter((c) => c instanceof HTMLElement)
-                .find((c) => c.innerText !== undefined)
-            return firstTextElement.innerText || ''
+                .find((c) => c.innerText !== '')
+            return firstTextElement?.innerText ?? ''
         }
         const defaultConv = (heading: HTMLElement) => ({
             tag: 'div' as const,
@@ -258,7 +258,7 @@ class TocItemView implements VirtualDOM<'li'> {
                 href: `${
                     router.basePath
                 }?nav=${router.getCurrentPath()}.${heading.id}`,
-                children: [(domConvertor || defaultConv)(heading)],
+                children: [(domConvertor ?? defaultConv)(heading)],
                 onclick: (ev) => {
                     ev.preventDefault()
                     router.scrollTo(heading)
@@ -293,7 +293,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 style: {
-                    minWidth: `${this.layoutOptions.tocMinWidth}px`,
+                    minWidth: `${String(this.layoutOptions.tocMinWidth)}px`,
                 },
                 children: [
                     child$({
@@ -314,7 +314,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                             }),
                         ),
                         vdomMap: (toc?): AnyVirtualDOM => {
-                            return toc || { tag: 'div' }
+                            return toc ?? { tag: 'div' }
                         },
                     }),
                 ],

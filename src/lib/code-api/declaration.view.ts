@@ -3,10 +3,10 @@ import { Code, Entity } from './models'
 
 export function processDeclaration(
     declaration: string,
-    entries: { [k: string]: string },
+    entries: Record<string, string>,
     replace: (k: string, v: string) => string,
 ) {
-    const wordsToReplace = Object.keys(entries || {})
+    const wordsToReplace = Object.keys(entries)
     if (wordsToReplace.length === 0) {
         return declaration
     }

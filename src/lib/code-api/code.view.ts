@@ -66,7 +66,9 @@ class CodeHeaderView implements VirtualDOM<'div'> {
                         expanded ? 'fa-chevron-down' : 'fa-chevron-right',
                     wrapper: (d) => `fas fv-pointer ${d}`,
                 }),
-                onclick: () => this.expanded$.next(!this.expanded$.value),
+                onclick: () => {
+                    this.expanded$.next(!this.expanded$.value)
+                },
             },
         ]
     }
@@ -92,45 +94,49 @@ export class CodeView implements VirtualDOM<'div'> {
         project: Project
     }) {
         Object.assign(this, params)
+        const declarationView = new DeclarationView({
+            code: this.code,
+            parent: params.parent,
+        })
+        if (this.code.implementation === undefined) {
+            this.children = [declarationView]
+            return
+        }
+        const implementation = this.code.implementation
         this.children = [
-            new DeclarationView({
+            declarationView,
+            { tag: 'div', class: 'my-1' },
+            new CodeHeaderView({
                 code: this.code,
                 parent: params.parent,
+                expanded$: this.expanded$,
+                configuration: this.configuration,
+                project: this.project,
             }),
-            { tag: 'div', class: 'my-1' },
-            this.code.implementation &&
-                new CodeHeaderView({
-                    code: this.code,
-                    parent: params.parent,
-                    expanded$: this.expanded$,
-                    configuration: this.configuration,
-                    project: this.project,
-                }),
-            this.code.implementation &&
-                child$({
-                    source$: this.expanded$,
-                    vdomMap: (expanded) => {
-                        if (!expanded) {
-                            return { tag: 'div' }
-                        }
-                        return {
-                            tag: 'div',
-                            class: 'ms-1 me-1 mt-1 code-api-snippet ',
-                            style: {
-                                fontSize: '0.8em',
-                            },
-                            children: [
-                                Dependencies.parseMd({
-                                    src: `
+            child$({
+                source$: this.expanded$,
+                vdomMap: (expanded) => {
+                    if (!expanded) {
+                        return { tag: 'div' }
+                    }
+                    return {
+                        tag: 'div',
+                        class: 'ms-1 me-1 mt-1 code-api-snippet ',
+                        style: {
+                            fontSize: '0.8em',
+                        },
+                        children: [
+                            Dependencies.parseMd({
+                                src: `
 <code-snippet language="javascript">
-${this.code.implementation}
+${implementation}
 </code-snippet>`,
-                                    router: this.router,
-                                }),
-                            ],
-                        }
-                    },
-                }),
+                                router: this.router,
+                            }),
+                        ],
+                    }
+                },
+            }),
         ]
     }
 }

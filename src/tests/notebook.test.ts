@@ -3,6 +3,7 @@ import {
     extractUndefinedReferences,
     extractGlobalDeclarations,
     parseProgram,
+    Output,
 } from '../lib/notebook'
 import { Subject } from 'rxjs'
 import { DisplayFactory } from '../lib/notebook'
@@ -24,7 +25,7 @@ let { gamma: [a, b] } = { gamma: [3, 4] }
 
 y = 5
 `
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     const ast = parseProgram(input)
     const declarations = extractGlobalDeclarations(ast)
     expect(declarations).toEqual({
@@ -39,7 +40,7 @@ const { MkDocs } = await webpm.install({
     modules:['@youwol/mkdocs-ts#0.3.4 as MkDocs']
 })
 `
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     const ast = parseProgram(input)
     const declarations = extractGlobalDeclarations(ast)
     expect(declarations).toEqual({
@@ -58,9 +59,9 @@ const x = 2
 let y = 3
 `,
         scope,
-        output$: undefined,
+        output$: new Subject<Output>(),
         displayFactory,
-        load: undefined,
+        load: () => Promise.resolve({}),
         invalidated$,
     })
     expect(scope).toEqual({
@@ -74,9 +75,9 @@ y = y + 1
 const foo = { z: x + y}
 `,
         scope,
-        output$: undefined,
+        output$: new Subject<Output>(),
         displayFactory,
-        load: undefined,
+        load: () => Promise.resolve({}),
         invalidated$,
     })
     expect(scope).toEqual({
@@ -89,9 +90,9 @@ const foo = { z: x + y}
 const bar = { a: x + foo.z + y }
 `,
         scope,
-        output$: undefined,
+        output$: new Subject<Output>(),
         displayFactory,
-        load: undefined,
+        load: () => Promise.resolve({}),
         invalidated$,
     })
     expect(scope).toEqual({
@@ -123,7 +124,7 @@ function baz(i, j, {k, l}, [m,{n,o}]){
     return a + i + j + k + l + m + n + o + var4.x.y
 }
 `
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     const body = parseProgram(input)
     const ids = extractUndefinedReferences(body)
     expect(ids).toEqual(['var1', 'console', 'var2', 'var3', 'var4'])

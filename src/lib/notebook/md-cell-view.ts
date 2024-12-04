@@ -1,7 +1,7 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes, notebookViews } from './notebook-page'
-import { CellTrait, ExecArgs, Output, Scope, State } from './state'
+import { CellTrait, ExecArgs, getCellUid, Output, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, Observable, of, ReplaySubject } from 'rxjs'
 import type { MdParsingOptions } from '../markdown'
@@ -112,8 +112,8 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
-            e.getAttribute('cell-id') || e.getAttribute('id'),
-        content: (e: HTMLElement) => e.textContent,
+            e.getAttribute('cell-id') ?? e.getAttribute('id') ?? getCellUid(),
+        content: (e: HTMLElement) => e.textContent ?? '',
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
@@ -204,7 +204,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
     }
 
     /**
-     * Execute the cell. Because markdown cell can include other cells, this function own a dedicated {@link State}).
+     * Execute the cell. Because markdown cell can include other cells, this function own a dedicated {@link State}.
      *
      * @param args See {@link ExecArgs}.
      */
@@ -231,7 +231,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
             views: {
                 'js-inlined': (elem) => {
                     return new InlinedCode({
-                        src: elem.textContent,
+                        src: elem.textContent ?? '',
                         scope,
                         displayFactory,
                         invalidated$: this.invalidated$,

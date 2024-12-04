@@ -99,6 +99,7 @@ export class ToggleNavButton implements VirtualDOM<'div'> {
                     if (mode === 'expanded') {
                         return 'fa-minus-square'
                     }
+                    return ''
                 },
                 wrapper: (c) => {
                     return `btn btn-sm fas ${c} mkdocs-text-5 mkdocs-bg-3 mkdocs-hover-bg-2`

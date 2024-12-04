@@ -2,7 +2,7 @@ import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { CellTrait, ExecArgs, Scope, State } from './state'
+import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { executePy, Pyodide } from './py-execution'
 
@@ -63,7 +63,7 @@ export class PyCellExecutor implements CellTrait {
      * @param args See {@link ExecArgs}.
      */
     async execute(args: ExecArgs): Promise<Scope> {
-        const pyodide = window['pyodide'] as Pyodide
+        const pyodide = (window as unknown as { pyodide: Pyodide }).pyodide
         return await executePy({
             ...args,
             invalidated$: this.invalidated$,
@@ -102,8 +102,8 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
-            e.getAttribute('cell-id') || e.getAttribute('id'),
-        content: (e: HTMLElement) => e.textContent,
+            e.getAttribute('cell-id') ?? e.getAttribute('id') ?? getCellUid(),
+        content: (e: HTMLElement) => e.textContent ?? '',
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
@@ -151,12 +151,14 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
     }) {
         const editorView = new SnippetEditorView({
             language: 'python',
-            readOnly: params.cellAttributes.readOnly,
+            readOnly: params.cellAttributes.readOnly ?? false,
             content: params.content,
-            lineNumbers: params.cellAttributes.lineNumbers,
+            lineNumbers: params.cellAttributes.lineNumbers ?? false,
             onExecute: () => {
                 this.state.execute(this.cellId).then(
-                    () => {},
+                    () => {
+                        /*No OP*/
+                    },
                     () => {
                         throw Error(`Failed to execute cell ${this.cellId}`)
                     },

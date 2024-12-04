@@ -2,8 +2,79 @@ import { Observable, Subject } from 'rxjs'
 import { display, DisplayFactory } from './display-utils'
 import { parseScript } from 'esprima'
 import { Output, Scope } from './state'
-import { AnyVirtualDOM } from 'rx-vdom'
 /* eslint-disable */
+
+type AstType =
+    | 'Identifier'
+    | 'VariableDeclaration'
+    | 'BlockStatement'
+    | 'FunctionDeclaration'
+    | 'CallExpression'
+    | 'ObjectExpression'
+    | 'MemberExpression'
+
+export interface AstNode<T extends AstType = AstType> {
+    type: T
+    name: string
+    kind: 'const' | 'let'
+}
+interface AstBlockStatementTrait {
+    body: AstNode
+}
+
+function hasBlockStatementTrait(
+    node: AstNode,
+): node is AstNode & AstCallExpressionTrait {
+    return node.type === 'BlockStatement'
+}
+
+function isAstNode(node: unknown): node is AstNode {
+    if (node === null || typeof node !== 'object') {
+        return false
+    }
+    return 'type' in node
+}
+
+interface AstCallExpressionTrait {
+    callee: { object: AstNode }
+    arguments: AstNode[]
+}
+
+function hasCallExpressionTrait(
+    node: AstNode,
+): node is AstNode & AstCallExpressionTrait {
+    return node.type === 'CallExpression'
+}
+
+interface AstFunctionDeclarationTrait {
+    body: AstNode & { body: AstNode }
+}
+
+function hasFunctionDeclarationTrait(
+    node: AstNode,
+): node is AstNode & AstFunctionDeclarationTrait {
+    return node.type === 'FunctionDeclaration'
+}
+
+interface AstObjectExpressionTrait {
+    properties: { value: AstNode }[]
+}
+
+function hasObjectExpressionTrait(
+    node: AstNode,
+): node is AstNode & AstObjectExpressionTrait {
+    return node.type === 'ObjectExpression'
+}
+
+interface AstMemberExpressionTrait {
+    object: AstNode
+}
+
+function hasMemberExpressionTrait(
+    node: AstNode,
+): node is AstNode & AstMemberExpressionTrait {
+    return node.type === 'MemberExpression'
+}
 
 export function extractKeys(obj: { [k: string]: unknown } | string[]) {
     return (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
@@ -54,7 +125,7 @@ let {${extractKeys(scope.let)}} = scope.let
 
     // original src
     
-${patchedReactive.wrapped}
+${patchedReactive?.wrapped ?? ''}
     
 }
     `
@@ -92,7 +163,7 @@ export async function executeJs({
 }: {
     src: string
     scope: Scope
-    output$: Subject<AnyVirtualDOM>
+    output$: Subject<Output>
     displayFactory: DisplayFactory
     load: (path: string) => Promise<{ [_k: string]: unknown }>
     reactive?: boolean
@@ -218,32 +289,37 @@ function find_children({
     match,
     leafs,
 }: {
-    node: unknown
+    node: AstNode
     skipKeys?: string[]
-    skipNode?: (n) => boolean
-    leafs?: (n) => unknown[]
-    match: (node: unknown) => boolean
-}) {
-    const references = []
-    skipKeys = skipKeys || []
-    skipNode = skipNode || (() => false)
-    function traverse(obj: unknown) {
+    skipNode?: (n: AstNode) => boolean
+    leafs?: (n: AstNode) => AstNode[] | undefined
+    match: (node: AstNode) => boolean
+}): AstNode[] {
+    const references: AstNode[] = []
+    function traverse(obj: AstNode | AstNode[]) {
         if (!obj) {
             return
         }
-        if (leafs && leafs(obj)) {
-            traverse(leafs(obj))
-            //references.push(...leafs(obj))
-            return
+        if (leafs && !Array.isArray(obj)) {
+            const nodeLeafs = leafs(obj)
+            if (nodeLeafs) {
+                traverse(nodeLeafs)
+                return
+            }
         }
-        if (typeof obj === 'object') {
+        if (isAstNode(obj)) {
             if (match(obj)) {
                 references.push(obj)
             }
             for (const [k, value] of Object.entries(obj)) {
-                if (!skipKeys.includes(k) && !skipNode(obj)) {
-                    traverse(value)
+                if (
+                    (skipKeys ?? []).includes(k) ||
+                    (skipNode ?? (() => false))(obj)
+                ) {
+                    // noinspection ContinueStatementJS
+                    continue
                 }
+                traverse(value)
             }
         } else if (Array.isArray(obj)) {
             for (const item of obj) {
@@ -256,7 +332,7 @@ function find_children({
     return references
 }
 
-export function parseProgram(src: string) {
+export function parseProgram(src: string): AstNode[] {
     // Missing the case of '...' not suported by esprima
     const srcPatched = src.replace(/\?\./g, '.')
     const ast = parseScript(
@@ -265,19 +341,20 @@ export function parseProgram(src: string) {
     return ast.body[0].expression.callee.body.body
 }
 
-export function extractGlobalDeclarations(body): {
+export function extractGlobalDeclarations(body: AstNode[]): {
     const: string[]
     let: string[]
 } {
-    const declarations = body.filter((a) => a['type'] === 'VariableDeclaration')
-    const extractName = (d) => {
+    const declarations = body.filter((a) => a.type === 'VariableDeclaration')
+    const extractName = (d: AstNode) => {
         //d.init = undefined
         const children = find_children({
             node: d,
             skipKeys: ['init'],
-            match: (e) => e['type'] === 'Identifier' && e['name'] !== undefined,
+            match: (e: AstNode) =>
+                e.type === 'Identifier' && e.name !== undefined,
         })
-        return children.map((child) => child.name)
+        return children.map((child: { name: string }) => child.name)
     }
     const consts: string[] = declarations
         .filter((d) => d.kind === 'const')
@@ -304,20 +381,21 @@ export function extractUndefinedReferences(
         node: body,
         skipNode: (n) =>
             ['BlockStatement', 'FunctionDeclaration'].includes(n.type),
-        match: (d) => d['type'] === 'Identifier',
-        leafs: (n): unknown[] | undefined => {
-            if (n.type === 'CallExpression') {
+        match: (d: AstNode) => d.type === 'Identifier',
+        leafs: (n: AstNode): AstNode[] | undefined => {
+            if (hasCallExpressionTrait(n)) {
                 return [n.callee.object, ...n.arguments]
             }
-            if (n.type === 'FunctionDeclaration') {
+            if (hasFunctionDeclarationTrait(n)) {
                 return [n.body]
             }
-            if (n.type === 'ObjectExpression') {
+            if (hasObjectExpressionTrait(n)) {
                 return n.properties.map((p) => p.value)
             }
-            if (n.type === 'MemberExpression') {
+            if (hasMemberExpressionTrait(n)) {
                 return [n.object]
             }
+            return undefined
         },
     }).map((n) => n.name)
     allIds = [...new Set(allIds)]
@@ -327,17 +405,19 @@ export function extractUndefinedReferences(
 
     const blocks = find_children({
         node: body,
-        match: (n) => n['type'] === 'BlockStatement',
+        match: (n) => hasBlockStatementTrait(n),
         skipNode: (n) => ['FunctionDeclaration'].includes(n.type),
-    })
+    }) as (AstNode<'BlockStatement'> & AstBlockStatementTrait)[]
+
     const undefsBlocks = blocks
         .map((b) => extractUndefinedReferences(b.body, scope))
         .flat()
 
     const fcts = find_children({
         node: body,
-        match: (n) => n['type'] === 'FunctionDeclaration',
-    })
+        match: (n) => hasFunctionDeclarationTrait(n),
+    }) as (AstNode<'FunctionDeclaration'> & AstFunctionDeclarationTrait)[]
+
     const undefsFct = fcts
         .map((b) => {
             let params = find_children({

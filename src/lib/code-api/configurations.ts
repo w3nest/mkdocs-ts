@@ -22,7 +22,7 @@ export interface Configuration {
     /**
      * External types to link in the documentation, where keys are symbol path and values associated URL.
      */
-    externalTypes: { [k: string]: string }
+    externalTypes: Record<string, string>
     /**
      * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).
      */
@@ -58,7 +58,7 @@ export const configurationDefault: Configuration = {
         path: string
         startLine: number
     }) => {
-        return `https://github.com/${project.name}/tree/main/src/${path}#L${startLine}`
+        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`
     },
     externalTypes: {},
     css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,

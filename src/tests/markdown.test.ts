@@ -23,7 +23,7 @@ ${inner}
         idGenerator: () => 'generatedId',
     })
     expect(r.patchedInput).toBe(srcToBe)
-    expect(r.contents['generatedId']).toBe(inner)
+    expect(r.contents.generatedId).toBe(inner)
 })
 
 test('patchSrc inline', () => {
@@ -36,7 +36,7 @@ test('patchSrc inline', () => {
     expect(r.patchedInput).toBe(
         'some inline element <test-view id="generatedId" attr="a"></test-view>',
     )
-    expect(r.contents['generatedId']).toBe('A simple content')
+    expect(r.contents.generatedId).toBe('A simple content')
 })
 
 test('patchSrc test no content & rest of line', () => {
@@ -49,7 +49,7 @@ test('patchSrc test no content & rest of line', () => {
     expect(r.patchedInput).toBe(
         'Foo <test-view attr="a" id="generatedId"></test-view>\nbar\n---\n# New section',
     )
-    expect(r.contents['generatedId']).toBe('')
+    expect(r.contents.generatedId).toBe('')
 })
 
 test('escape text', () => {

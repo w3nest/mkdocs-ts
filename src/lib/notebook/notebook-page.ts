@@ -14,7 +14,7 @@ import { Dependencies } from './index'
  * <some-cell line-numbers='true' read-only='false'></some-cell>
  * ```
  */
-export type CellCommonAttributes = {
+export interface CellCommonAttributes {
     /**
      * Whether to display line numbers on cell.
      */
@@ -36,7 +36,7 @@ export const defaultCellAttributes: CellCommonAttributes = {
 /**
  * Global options for a {@link NotebookPage}.
  */
-export type NotebookOptions = {
+export interface NotebookOptions {
     /**
      * Whether to run all the cells of a notebook page when loaded.
      */
@@ -90,7 +90,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
      */
     public readonly class = 'mknb-NotebookPage'
     public readonly url: string
-    public readonly views: { [k: string]: ViewGenerator }
+    public readonly views: Record<string, ViewGenerator>
     public readonly router: Router
     public readonly children: ChildrenLike = []
 
@@ -149,18 +149,20 @@ export class NotebookPage implements VirtualDOM<'div'> {
                     const vdom = Dependencies.parseMd({
                         src,
                         router: this.router,
-                        ...(this.options?.markdown || {}),
+                        ...(this.options.markdown ?? {}),
                         views: {
-                            ...(this.options?.markdown?.views || {}),
+                            ...(this.options.markdown?.views ?? {}),
                             ...notebookViews({
                                 state: this.state,
                             }),
                         },
                     })
-                    if (params?.options?.runAtStart) {
+                    if (params.options?.runAtStart) {
                         const cellId = this.state.ids.slice(-1)[0]
                         this.state.execute(cellId).then(
-                            () => {},
+                            () => {
+                                /*No OP*/
+                            },
                             () => {
                                 throw Error(`Failed to execute cell ${cellId}`)
                             },

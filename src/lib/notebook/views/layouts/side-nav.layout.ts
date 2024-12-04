@@ -5,13 +5,13 @@ import { layoutStyleBase } from './common'
 /**
  * Type definition for an element in the side navigation.
  */
-export type SideNavElement = {
+export interface SideNavElement {
     /**
-     * Icon in the side-bar.
+     * Icon in the sidebar.
      */
     icon: string
     /**
-     * Content when the side-bar is expanded.
+     * Content when the sidebar is expanded.
      */
     content: AnyVirtualDOM
 }
@@ -19,11 +19,11 @@ export type SideNavElement = {
 /**
  * Type definition for the arguments to create a {@link SideNavLayout}.
  */
-export type SideNavArguments = {
+export interface SideNavArguments {
     /**
      * An object mapping keys to side navigation elements.
      */
-    sideNavElements: { [k: string]: SideNavElement }
+    sideNavElements: Record<string, SideNavElement>
     /**
      * The main content of the layout.
      */
@@ -44,7 +44,7 @@ export function sideNav(params: SideNavArguments) {
  * It features:
  * - A main content area.
  * - A side navigation bar on the right:
- *   - When collapsed, it includes the icons of the multiple elements declared in the side-bar in a vertical layout.
+ *   - When collapsed, it includes the icons of the multiple elements declared in the sidebar in a vertical layout.
  *   - When an element is expanded, it displays the associated content.
  *
  * <js-cell>

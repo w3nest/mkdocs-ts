@@ -1,7 +1,7 @@
 import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
-import { CellTrait, ExecArgs, Scope, State } from './state'
+import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, from, Observable } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
@@ -22,19 +22,19 @@ export type InterpreterCellAttributes = CellCommonAttributes & {
     /**
      * Language used for syntax highlighting in the editor.
      */
-    language: 'javascript' | 'python'
+    language: 'javascript' | 'python' | 'unknown'
     /**
      * Captured variable name forwarded to the interpreter as input.
      * In the `interpreter-cell` DOM element, it is the attribute `captured-in` with
      * value defining the name of captured variables separated by space.
      */
-    capturedIn?: string[]
+    capturedIn: string[]
     /**
      * Captured variable name forwarded from the interpreter as output.
      * In the `interpreter-cell` DOM element, it is the attribute `captured-out` with
      * value defining the name of captured variables separated by space.
      */
-    capturedOut?: string[]
+    capturedOut: string[]
 }
 
 /**
@@ -90,20 +90,31 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
-            e.getAttribute('cell-id') || e.getAttribute('id'),
-        content: (e: HTMLElement) => e.textContent,
+            e.getAttribute('cell-id') ?? e.getAttribute('id'),
+        content: (e: HTMLElement) => e.textContent ?? '',
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
-        interpreter: (e: HTMLElement) => e.getAttribute('interpreter'),
+        interpreter: (e: HTMLElement) => {
+            const interpreter = e.getAttribute('interpreter')
+            if (interpreter === null) {
+                throw Error(
+                    "An interpreter cell should define an 'interpreter'",
+                )
+            }
+            return interpreter
+        },
         language: (e: HTMLElement) =>
-            e.getAttribute('language') as unknown as 'javascript' | 'python',
+            (e.getAttribute('language') ?? 'unknown') as unknown as
+                | 'javascript'
+                | 'python'
+                | 'unknown',
         capturedIn: (e: HTMLElement) =>
-            (e.getAttribute('captured-in') || '')
+            (e.getAttribute('captured-in') ?? '')
                 .split(' ')
                 .filter((c) => c !== ''),
         capturedOut: (e: HTMLElement) =>
-            (e.getAttribute('captured-out') || '')
+            (e.getAttribute('captured-out') ?? '')
                 .split(' ')
                 .filter((c) => c !== ''),
     }
@@ -122,7 +133,9 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
      */
     static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
         const params = {
-            cellId: InterpreterCellView.FromDomAttributes.cellId(elem),
+            cellId:
+                InterpreterCellView.FromDomAttributes.cellId(elem) ??
+                getCellUid(),
             content: InterpreterCellView.FromDomAttributes.content(elem),
             cellAttributes: {
                 readOnly: InterpreterCellView.FromDomAttributes.readOnly(elem),
@@ -163,10 +176,12 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             language: this.cellAttributes.language,
             readOnly: false,
             content: params.content,
-            lineNumbers: this.cellAttributes.lineNumbers,
+            lineNumbers: this.cellAttributes.lineNumbers ?? false,
             onExecute: () => {
                 this.state.execute(this.cellId).then(
-                    () => {},
+                    () => {
+                        /*No OP*/
+                    },
                     () => {
                         throw Error(`Failed to execute cell ${this.cellId}`)
                     },
@@ -203,7 +218,6 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
                     this.cellAttributes.interpreter,
             )
         const currentIndex = compatibleCells.indexOf(this)
-
         const capturedIn = this.cellAttributes.capturedIn.reduce(
             (acc, name) => {
                 return { ...acc, [name]: scope.const[name] || scope.let[name] }
@@ -316,20 +330,24 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                     ariaExpanded: 'false',
                 },
                 children: [
-                    params.mode === 'in' && {
-                        tag: 'div',
-                        innerText: 'In',
-                        class: 'mx-1',
-                    },
+                    params.mode === 'in'
+                        ? {
+                              tag: 'div',
+                              innerText: 'In',
+                              class: 'mx-1',
+                          }
+                        : undefined,
                     {
                         tag: 'i',
                         class: `fas ${icons[params.mode]} mx-1`,
                     },
-                    params.mode === 'out' && {
-                        tag: 'div',
-                        innerText: 'Out',
-                        class: 'mx-1',
-                    },
+                    params.mode === 'out'
+                        ? {
+                              tag: 'div',
+                              innerText: 'Out',
+                              class: 'mx-1',
+                          }
+                        : undefined,
                 ],
             },
             child$({

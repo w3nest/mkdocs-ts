@@ -19,7 +19,7 @@ import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
 
-type Language = 'javascript' | 'markdown' | 'python'
+type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
 
 /**
  * Represents the view of a cell that will render once the associated cell is registered in the {@link State}.
@@ -191,19 +191,19 @@ export class SnippetEditorView extends CodeSnippetView {
         onExecute,
     }: {
         content: string
-        language: 'markdown' | 'javascript' | 'python'
-        readOnly: boolean
-        lineNumbers: boolean
+        language: 'markdown' | 'javascript' | 'python' | 'unknown'
+        readOnly?: boolean
+        lineNumbers?: boolean
         onExecute: () => void
     }) {
         super({
             content,
             language,
             cmConfig: {
-                lineNumbers,
+                lineNumbers: lineNumbers ?? false,
                 lineWrapping: false,
                 indentUnit: 4,
-                readOnly,
+                readOnly: readOnly ?? false,
                 extraKeys: {
                     'Ctrl-Enter': onExecute,
                 },
@@ -292,6 +292,7 @@ export class CellTagsView implements VirtualDOM<'div'> {
             javascript: 'js',
             markdown: 'md',
             python: 'py',
+            unknown: '?',
         }
         this.children = [
             {
@@ -362,7 +363,7 @@ export class OutputsView implements VirtualDOM<'div'> {
         classList?: string
     }) {
         Object.assign(this, params)
-        this.class = `${this.class} ${params.classList}`
+        this.class = `${this.class} ${params.classList ?? ''}`
         const outputs$ = new BehaviorSubject<Output[]>([])
         this.output$.subscribe((out: Output) => {
             if (out === undefined) {

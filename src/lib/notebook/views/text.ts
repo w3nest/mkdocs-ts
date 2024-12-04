@@ -39,12 +39,12 @@ export class Text implements VirtualDOM<'div'> {
     constructor(
         text: string,
         options: {
-            style: CSSAttribute
-            class: string
+            style?: CSSAttribute
+            class?: string
         } = { style: {}, class: '' },
     ) {
-        this.style = options.style || {}
-        this.class = `${this.class} ${options.class || ''}`
+        this.style = options.style ?? {}
+        this.class = `${this.class} ${options.class ?? ''}`
         const div = parseMd({
             src: text.replace(/\\[()]/g, (match) => {
                 return '\\' + match
@@ -69,7 +69,7 @@ function parseMd({
         connectedCallback: (div: HTMLDivElement) => {
             if (latex) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-                window['MathJax']?.typeset([div])
+                ;(window as unknown as { MathJax }).MathJax?.typeset([div])
             }
         },
     }

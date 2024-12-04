@@ -3,7 +3,7 @@ import { layoutStyleBase } from './common'
 /**
  * Type definition for the arguments to create a {@link SingleLayout}.
  */
-export type SingleArguments = {
+export interface SingleArguments {
     /**
      * Content of the layout.
      */

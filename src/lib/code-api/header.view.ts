@@ -3,12 +3,16 @@ import { Semantic } from './models'
 import { Dependencies } from './index'
 
 type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4'
-type Doc = { semantic?: Semantic; path: string; name: string }
+interface Doc {
+    semantic?: Semantic
+    path: string
+    name: string
+}
 
 export class HeaderView implements VirtualDOM<HeadingLevel> {
     public readonly doc: Doc
     public readonly relativeToPath: string
-    public readonly withChildren: AnyVirtualDOM[]
+    public readonly withChildren: AnyVirtualDOM[] = []
     public readonly withClass: string
     public readonly text: string
     public readonly tag: HeadingLevel
@@ -29,7 +33,6 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
         const semantic = this.doc.semantic ? this.doc.semantic.role : ''
         this.class += ` mkapi-role-${semantic}`
         this.text = this.text || this.doc.name
-        this.withChildren = this.withChildren || []
         const relativePath =
             this.relativeToPath !== '' &&
             this.doc.path.startsWith(this.relativeToPath + '.')

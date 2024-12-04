@@ -25,8 +25,11 @@ function slidingStyle({
     return {
         position: 'absolute',
         height: layoutOptions.sidePanelHeight,
-        transition: `${side} ${layoutOptions.translationTime}ms`,
-        [side]: mode === 'expanded' ? `${offset}px` : `-${maxWidth + offset}px`,
+        transition: `${side} ${String(layoutOptions.translationTime)}ms`,
+        [side]:
+            mode === 'expanded'
+                ? `${String(offset)}px`
+                : `-${String(maxWidth + offset)}px`,
         top: '0px',
         zIndex: -1,
     }
@@ -46,7 +49,7 @@ export class ExpandableRightSide implements VirtualDOM<'div'> {
         tocView: TocWrapperView
     }) {
         Object.assign(this, params)
-        this.class = `${this.layoutOptions.topStickyPaddingMax}`
+        this.class = this.layoutOptions.topStickyPaddingMax
 
         this.children = [
             {

@@ -21,6 +21,7 @@ import {
     hasInheritedTrait,
     Comment,
     hasBlockTagsTrait,
+    hasSymbolTrait,
 } from './typedoc-models'
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -44,11 +45,11 @@ import * as pathLib from 'node:path'
 /**
  * Global project information.
  */
-export type ProjectGlobals = {
+export interface ProjectGlobals {
     /**
      * Map `node.id` => navigation path
      */
-    navigations: { [k: number]: string }
+    navigations: Record<number, string>
     /**
      * Map `navigation path` => source information
      */
@@ -56,11 +57,11 @@ export type ProjectGlobals = {
     /**
      * Map `node.id` => `TypedocNode`
      */
-    typedocIdMap: { [k: number]: TypedocNode }
+    typedocIdMap: Record<number, TypedocNode | undefined>
     /**
      * Map `node.id` => parent's node `TypedocNode`
      */
-    typedocParentIdMap: { [k: number]: TypedocNode }
+    typedocParentIdMap: Record<number, TypedocNode>
 }
 
 const noSemantic: Semantic = {
@@ -131,7 +132,7 @@ export function gatherTsFiles({
 }) {
     const nodeWithSources = find_children<{ sources: Source[] }>(
         typedocNode,
-        (n: TypedocNode) => n['sources'] !== undefined,
+        (n: TypedocNode) => hasSymbolTrait(n),
     )
     const files = nodeWithSources
         .map(({ sources }) => sources.map((source) => source.fileName))
@@ -224,7 +225,7 @@ export function generateNavigationPathsInModule(
     elem: TypedocNode,
 ) {
     const toNav = (p: string) => `@nav${p.replace('//', '/')}`
-    for (const child of elem?.children || []) {
+    for (const child of elem.children ?? []) {
         if (zeroOrderLevelKinds.includes(child.kind)) {
             paths[child.id] = toNav(`${basePath}/${module}/${child.name}`)
             generateNavigationPathsInModule(
@@ -274,8 +275,8 @@ export function parseModule({
     tsInputs: TsSrcElements
     baseNav: string
 }): Module {
-    const symbolIdMap: { [key: number]: TypedocNode } = {}
-    const parentSymbolIdMap: { [key: number]: TypedocNode } = {}
+    const symbolIdMap: Record<number, TypedocNode> = {}
+    const parentSymbolIdMap: Record<number, TypedocNode> = {}
     const navMap = generateNavigationPathsInModule(baseNav, '', typedocNode)
     function constructSymbolsMap(elem: TypedocNode, parentId: number | null) {
         symbolIdMap[elem.id] = elem
@@ -311,7 +312,7 @@ export function parseModule({
         ) {
             return fromElem
         }
-        const modules = fromElem.children.filter((c) =>
+        const modules = (fromElem.children ?? []).filter((c) =>
             [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         )
         const targetPath = pathLib.join(...parts)
@@ -335,15 +336,15 @@ export function parseModule({
             TYPEDOC_KINDS.ENTRY_MODULE,
         ].includes(module.kind)
     ) {
-        throw new Error(`Kind of module not knows (got ${module.kind})`)
+        throw new Error(`Kind of module not knows (got ${String(module.kind)})`)
     }
 
     const path = modulePath
-
-    const subModules = module.children.filter((child) =>
+    const children = module.children ?? []
+    const subModules = children.filter((child) =>
         [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(child.kind),
     )
-    const types = module.children
+    const types = children
         .filter((child) =>
             [
                 TYPEDOC_KINDS.CLASS,
@@ -360,7 +361,7 @@ export function parseModule({
                 projectGlobals,
             }),
         )
-    const functions = module.children
+    const functions = children
         .filter((child) => child.kind === TYPEDOC_KINDS.FUNCTION)
         .map((func) => func as unknown as TypedocNode & SignaturesTrait)
         .filter((func) => func.signatures[0].comment)
@@ -372,7 +373,8 @@ export function parseModule({
                 semantic: { ...noSemantic, role: 'function' },
             }),
         )
-    const globals = module.children
+        .filter((func) => func !== undefined)
+    const globals = children
         .filter((child) => child.kind === TYPEDOC_KINDS.VARIABLE)
         .filter((attr) => attr.comment)
         .map((attr) => attr as unknown as TypedocNode & SymbolTrait)
@@ -383,6 +385,7 @@ export function parseModule({
                 parentPath: modulePath,
             }),
         )
+        .filter((attr) => attr !== undefined)
 
     const documentation = module.comment
         ? parseDocumentation({
@@ -393,12 +396,10 @@ export function parseModule({
           })
         : noDoc
 
-    const nodeWitSources = module.children.filter(
-        (child) => child['sources'] !== undefined,
-    ) as (TypedocNode & SymbolTrait)[]
+    const nodeWitSources = children.filter((child) => hasSymbolTrait(child))
 
     const files = [
-        ...new Set(nodeWitSources.map((child) => child['sources'][0].fileName)),
+        ...new Set(nodeWitSources.map((child) => child.sources[0].fileName)),
     ].map((file) => parseFile({ path: file, projectGlobals }))
 
     return {
@@ -431,10 +432,11 @@ export function parseChildModule({
     typedocNode: TypedocNode
     parentPath: string
 }): ChildModule {
+    const children = typedocNode.children ?? []
     return {
         name: typedocNode.name,
         path: `${parentPath}.${typedocNode.name}`,
-        isLeaf: !typedocNode.children.some((c) =>
+        isLeaf: !children.some((c) =>
             [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         ),
     }
@@ -464,7 +466,7 @@ export function parseFile({
             sections: [
                 {
                     semantic: noSemantic,
-                    content: comment,
+                    content: comment ?? '',
                     contentType: 'markdown',
                 },
             ],
@@ -531,7 +533,7 @@ function parseDocumentationElements({
             if (element.kind === DOC_KINDS.INLINE_TAG) {
                 if (!('target' in element)) {
                     throw new Error(
-                        `Can not resolve @link ${element['text']} in element ${parent.name}`,
+                        `Can not resolve @link ${element.text} in element ${parent.name}`,
                     )
                 }
                 const ref = projectGlobals.navigations[element.target]
@@ -560,7 +562,7 @@ export function parseCode({
 }: {
     typedocNode: TypedocNode & SymbolTrait
     projectGlobals: ProjectGlobals
-    references: { [_name: string]: string }
+    references: Record<string, string>
     parentElement?: TypedocNode
 }): Code {
     const symbols = projectGlobals.tsInputs
@@ -568,7 +570,7 @@ export function parseCode({
         ? typedocNode.signatures[0]
         : undefined
 
-    const name = signatureNode?.name || typedocNode.name
+    const name = signatureNode?.name ?? typedocNode.name
 
     const source = typedocNode.sources[0]
     const file_path = source.fileName
@@ -587,15 +589,15 @@ export function parseCode({
         }
     }
     const symbol = symbols[key]
-    const implementation = symbol.implementation || ''
+    const implementation = symbol.implementation ?? ''
     const nav = projectGlobals.navigations[typedocNode.id]
     return {
         filePath: source.fileName,
-        declaration: symbol.declaration,
+        declaration: symbol.declaration ?? '',
         implementation,
         startLine: source.line,
         endLine: source.line + implementation.split('\n').length,
-        references: { [name]: `${nav}`, ...references },
+        references: { [name]: nav, ...references },
     }
 }
 
@@ -618,9 +620,9 @@ export function parseCallable({
     typedocNode: TypedocNode & SignaturesTrait
     parentPath: string
     semantic: Semantic
-    projectGlobals?: ProjectGlobals
+    projectGlobals: ProjectGlobals
     parentElement?: TypedocNode
-}): Callable {
+}): Callable | undefined {
     if (
         hasInheritedTrait(typedocNode) &&
         !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]
@@ -634,15 +636,13 @@ export function parseCallable({
         parent: typedocFct,
         projectGlobals,
     })
-    const params_ref = gather_symbol_references(
-        typedocFct['parameters'] as unknown as TypedocNode,
-        projectGlobals,
-    )
+    const params_ref = typedocFct.parameters
+        ? gather_symbol_references(typedocFct.parameters, projectGlobals)
+        : {}
     const returns_ref = gather_symbol_references(
         typedocFct.type,
         projectGlobals,
     )
-
     const functionDoc = getSummaryDoc(documentation)
     const parametersDoc = parseArgumentsDoc({
         fromElement: typedocFct,
@@ -774,35 +774,36 @@ export function parseType({
     const name = typedocNode.name
     const semantic = semantics[typedocNode.kind]
     const path = `${parentPath}.${name}`
-    const documentation = parseDocumentationElements({
-        typedocNodes: typedocNode.comment.summary,
-        parent: typedocNode,
-        projectGlobals,
-    })
-    const attributes =
-        typedocNode.children?.filter(
-            (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,
-        ) || []
-    const methods =
-        typedocNode.children
-            ?.filter((child) =>
-                [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(
-                    child.kind,
-                ),
-            )
-            // For now inherited methods are only documented in the class they belong.
-            .filter(
-                (child: TypedocNode & MethodTrait) => !child.inheritedFrom,
-            ) || []
+    const children = typedocNode.children ?? []
+    const documentation = typedocNode.comment
+        ? parseDocumentationElements({
+              typedocNodes: typedocNode.comment.summary,
+              parent: typedocNode,
+              projectGlobals,
+          })
+        : ''
+    const attributes = children.filter(
+        (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,
+    )
+    const methods = children
+        .filter((child) =>
+            [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(
+                child.kind,
+            ),
+        )
+        // For now inherited methods are only documented in the class they belong.
+        .filter((child: TypedocNode & MethodTrait) => !child.inheritedFrom)
 
     const references = gather_symbol_references(typedocNode, projectGlobals)
     const doc = getSummaryDoc(documentation)
-    const tParamDoc = parseArgumentsDoc({
-        fromElement: typedocNode.typeParameters,
-        title: 'Generics',
-        parentElement: typedocNode,
-        projectGlobals,
-    })
+    const tParamDoc =
+        typedocNode.typeParameters &&
+        parseArgumentsDoc({
+            fromElement: typedocNode.typeParameters,
+            title: 'Generics',
+            parentElement: typedocNode,
+            projectGlobals,
+        })
     if (tParamDoc) {
         doc.sections.push(tParamDoc)
     }
@@ -821,7 +822,7 @@ export function parseType({
                     parentElement: typedocNode,
                 }),
             )
-            .filter((attr) => attr),
+            .filter((attr) => attr !== undefined),
         callables: methods
             .map((meth) => meth as unknown as TypedocNode & SignaturesTrait)
             .filter((meth) => meth.signatures[0].comment)
@@ -834,7 +835,7 @@ export function parseType({
                     parentElement: typedocNode,
                 }),
             )
-            .filter((meth) => meth),
+            .filter((meth) => meth !== undefined),
         code: parseCode({
             typedocNode: typedocNode,
             projectGlobals,
@@ -862,7 +863,7 @@ export function parseAttribute({
     projectGlobals: ProjectGlobals
     parentPath: string
     parentElement?: TypedocNode
-}): Attribute {
+}): Attribute | undefined {
     if (
         hasInheritedTrait(typedocNode) &&
         !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]
@@ -878,11 +879,14 @@ export function parseAttribute({
         parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]
     }
     const references = gather_symbol_references(typedocNode, projectGlobals)
-    const documentation = parseDocumentationElements({
-        typedocNodes: typedocNode.comment.summary,
-        parent: parentElement,
-        projectGlobals,
-    })
+    const documentation =
+        typedocNode.comment && parentElement
+            ? parseDocumentationElements({
+                  typedocNodes: typedocNode.comment.summary,
+                  parent: parentElement,
+                  projectGlobals,
+              })
+            : ''
     const semantic = semantics[typedocNode.kind]
     return {
         name: name,
@@ -902,7 +906,7 @@ function find_children<T = unknown>(
     jsonObject: unknown,
     match: (obj: unknown) => boolean,
 ): (TypedocNode & T)[] {
-    const references = []
+    const references: (TypedocNode & T)[] = []
 
     function traverse(obj: unknown) {
         if (!obj) {
@@ -910,7 +914,7 @@ function find_children<T = unknown>(
         }
         if (typeof obj === 'object') {
             if (match(obj)) {
-                references.push(obj)
+                references.push(obj as TypedocNode & T)
             }
             for (const value of Object.values(obj)) {
                 traverse(value)
@@ -923,11 +927,11 @@ function find_children<T = unknown>(
     }
 
     traverse(jsonObject)
-    return references as (TypedocNode & T)[]
+    return references
 }
 
 function find_references(
-    jsonObject: unknown,
+    jsonObject: TypedocNode | TypedocNode[],
 ): { target: number; name: string }[] {
     const references: { target: number; name: string }[] = []
 
@@ -936,10 +940,8 @@ function find_references(
             return
         }
         if (typeof obj === 'object') {
-            if (
-                obj['type'] === 'reference' &&
-                typeof (obj['target'] === 'number')
-            ) {
+            // @ts-expect-error typings to improve
+            if (obj.type === 'reference' && typeof obj.target === 'number') {
                 references.push(obj as { target: number; name: string })
             }
             for (const value of Object.values(obj)) {
@@ -957,14 +959,14 @@ function find_references(
 }
 
 function gather_symbol_references(
-    element: { [k: string]: unknown },
+    element: TypedocNode | TypedocNode[],
     projectGlobals: ProjectGlobals,
 ) {
     const refs = find_references(element)
-    const result: { [key: string]: string } = {}
+    const result: Record<string, string> = {}
     refs.forEach((ref) => {
         const link = projectGlobals.navigations[ref.target]
-        result[ref.name] = link ? `${link}` : ref.target.toString()
+        result[ref.name] = link ? link : ref.target.toString()
     })
     return result
 }
