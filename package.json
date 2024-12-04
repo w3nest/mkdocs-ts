@@ -25,14 +25,14 @@
         "build-css": "yarn build-css-default && prettier ./assets -w"
     },
     "dependencies": {
-        "@w3nest/http-clients": "^0.1.0",
-        "@w3nest/rx-tree-views": "file:.local-dependencies/w3nest-rx-tree-views-0.2.0-wip-1732685569.tgz",
-        "@w3nest/webpm-client": "^0.1.0",
+        "@w3nest/http-clients": "^0.1.2",
+        "@w3nest/rx-tree-views": "^0.2.0",
+        "@w3nest/webpm-client": "^0.1.1",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
         "highlight.js": "11.2.0",
         "marked": "^4.2.3",
-        "rx-vdom": "^0.1.0",
+        "rx-vdom": "^0.1.1",
         "rxjs": "^7.5.6"
     },
     "devDependencies": {
@@ -66,7 +66,7 @@
             "@w3nest/rx-tree-views": "^0.2.0",
             "highlight.js": "11.2.0",
             "marked": "^4.2.3",
-            "rx-vdom": "^0.1.0",
+            "rx-vdom": "^0.1.1",
             "rxjs": "^7.5.6"
         },
         "aliases": []
@@ -90,8 +90,5 @@
                 }
             }
         ]
-    },
-    "resolutions": {
-        "@w3nest/rx-tree-views": "file:.local-dependencies/w3nest-rx-tree-views-0.2.0-wip-1732685569.tgz"
     }
 }
