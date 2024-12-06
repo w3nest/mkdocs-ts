@@ -59,7 +59,7 @@ export class TOCView implements VirtualDOM<'div'> {
     public readonly html: HTMLElement
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-TOCView h-100 border-primary border-start rounded px-3'
+        'mkdocs-TOCView h-100 border-primary border-start rounded px-3 d-flex flex-column'
     public readonly children: ChildrenLike
 
     public readonly style: CSSAttribute
@@ -146,7 +146,7 @@ export class TOCView implements VirtualDOM<'div'> {
             },
             {
                 tag: 'ul',
-                class: 'p-0 h-100 mkdocs-thin-v-scroller',
+                class: 'px-0 py-2 flex-grow-1 mkdocs-thin-v-scroller',
                 connectedCallback: (elem: RxHTMLElement<'ul'>) => {
                     elem.ownSubscriptions(
                         this.indexFirstVisibleHeading$
