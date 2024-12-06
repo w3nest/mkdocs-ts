@@ -1,5 +1,5 @@
 type AllTags = keyof HTMLElementTagNameMap
-export type Configuration = {
+export interface Configuration {
     TypeCheck: 'strict'
     SupportedHTMLTags: 'Dev' extends 'Prod' ? AllTags : DevTags
 }
@@ -20,3 +20,4 @@ type DevTags =
     | 'footer'
     | 'input'
     | 'button'
+    | 'img'
