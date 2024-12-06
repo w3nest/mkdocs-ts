@@ -47,7 +47,7 @@ export class SectionView implements VirtualDOM<'div'> {
         const nbConfig: object = configuration.notebook as object
 
         this.children = [
-            new SectionHeader(section),
+            section.title ? new SectionHeader(section) : undefined,
             configuration.notebook
                 ? child$({
                       source$: from(Dependencies.installNotebookModule()),
