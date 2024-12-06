@@ -14,6 +14,7 @@ import {
     NoteLevel,
     NoteView,
     ExpandableGroupView,
+    CodeBadgesView,
 } from './md-widgets'
 
 /**
@@ -117,6 +118,12 @@ export class GlobalMarkdownViews {
                 mode: elem.getAttribute('mode') as 'stateful' | 'stateless',
                 content: () =>
                     parseMd({ src: elem.textContent ?? '', ...parsingArgs }),
+            })
+        },
+        'code-badges': (elem: HTMLElement) => {
+            return new CodeBadgesView({
+                npm: elem.getAttribute('npm') ?? undefined,
+                github: elem.getAttribute('github') ?? undefined,
             })
         },
     }
