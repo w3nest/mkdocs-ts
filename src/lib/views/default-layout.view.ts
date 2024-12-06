@@ -174,6 +174,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         )
         this.connectedCallback = (e: HTMLElement) => {
             this.plugResizer(e)
+            router.scrollableElement = e
         }
         const viewInputs = {
             router,
@@ -271,9 +272,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             {
                 tag: 'div',
                 class: 'w-100',
-                connectedCallback: (e) => {
-                    router.scrollableElement = e
-                },
                 children: [
                     {
                         tag: 'div',

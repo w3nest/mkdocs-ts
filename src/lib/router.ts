@@ -178,6 +178,11 @@ export class Router {
         this.bindPromiseNavs(promiseNavs)
         this.navigateTo({ path: this.getCurrentPath() })
 
+        this.currentPage$.subscribe((page) => {
+            if (page.sectionId === undefined) {
+                this.scrollTo()
+            }
+        })
         if (this.mockBrowserLocation === undefined) {
             window.onpopstate = (event: PopStateEvent) => {
                 const state = event.state as unknown as
@@ -297,12 +302,11 @@ export class Router {
      *
      * @param target The target HTML element, or its id.
      */
-    scrollTo(target: string | HTMLElement) {
+    scrollTo(target?: string | HTMLElement) {
         if (!this.scrollableElement) {
             return
         }
         const scrollableElement = this.scrollableElement
-        const br = scrollableElement.getBoundingClientRect()
         if (!target) {
             scrollableElement.scrollTo({
                 top: 0,
@@ -310,6 +314,7 @@ export class Router {
             })
             return
         }
+        const br = scrollableElement.getBoundingClientRect()
         const div =
             target instanceof HTMLElement
                 ? target
@@ -321,7 +326,7 @@ export class Router {
         }
         setTimeout(() => {
             scrollableElement.scrollTo({
-                top: div.offsetTop - br.top,
+                top: div.offsetTop - br.top - 1,
                 left: 0,
                 behavior: 'smooth',
             })
