@@ -6,6 +6,7 @@
 import * as ts from 'typescript'
 import * as fs from 'fs'
 import * as path from 'path'
+import { SourceFile } from 'typescript'
 
 function getScore(s: string) {
     s = s.endsWith('{\n}') ? s.slice(0, -3) : s
@@ -74,14 +75,17 @@ function getDeclaration(
     return raw.substring(0, i + 1)
 }
 
-function getEscapedName(node: ts.NamedDeclaration): string {
+function getEscapedName(
+    node: ts.NamedDeclaration,
+    srcFile: ts.SourceFile,
+): string {
     function hasEscapedTrait(name: unknown): name is { escapedText: string } {
         return (name as { escapedText?: string }).escapedText !== undefined
     }
     if (hasEscapedTrait(node.name)) {
         return node.name.escapedText
     }
-    return node.name ? node.name.getText() : ''
+    return node.name ? node.name.getText(srcFile) : ''
 }
 
 interface JsDoc {
@@ -100,15 +104,20 @@ function getJsDoc(node: unknown): JsDoc[] | undefined {
     return (node as JsDocTrait).jsDoc
 }
 
-function getPrefix(
-    rootPath: string,
-    file: string,
-    node: ts.NamedDeclaration | undefined = undefined,
-) {
+function getPrefix({
+    rootPath,
+    sourceFile,
+    node,
+}: {
+    rootPath: string
+    sourceFile: ts.SourceFile
+    node?: ts.NamedDeclaration
+}) {
+    const file = sourceFile.fileName
     if (!node) {
         return file.replace(rootPath, '')
     }
-    return `${file.replace(rootPath, '')}:${getEscapedName(node)}`
+    return `${file.replace(rootPath, '')}:${getEscapedName(node, sourceFile)}`
 }
 
 function getFileDoc(node: ts.SourceFile) {
@@ -144,24 +153,28 @@ export function processFile(
     )
     const file = filePath
     function visit(node: ts.Node) {
+        const params = {
+            rootPath,
+            sourceFile,
+        }
         if (ts.isSourceFile(node)) {
-            elements[getPrefix(rootPath, file)] = {
+            elements[getPrefix(params)] = {
                 comment: getFileDoc(node),
             }
         }
         if (ts.isVariableDeclaration(node)) {
-            elements[getPrefix(rootPath, file, node)] = {
+            elements[getPrefix({ ...params, node })] = {
                 declaration: node.getText(sourceFile),
             }
         }
 
         if (ts.isTypeAliasDeclaration(node)) {
-            elements[getPrefix(rootPath, file, node)] = {
+            elements[getPrefix({ ...params, node })] = {
                 declaration: node.getText(sourceFile),
             }
         }
         if (ts.isFunctionDeclaration(node)) {
-            elements[getPrefix(rootPath, file, node)] = {
+            elements[getPrefix({ ...params, node })] = {
                 declaration: getDeclaration(node, sourceFile),
                 implementation: node.getText(sourceFile),
             }
@@ -172,7 +185,7 @@ export function processFile(
                     ts.isConstructorDeclaration(member),
                 )
                 if (constructor) {
-                    const className = getEscapedName(node)
+                    const className = getEscapedName(node, sourceFile)
                     const prefix = `${file.replace(rootPath, '')}:${className}.new ${className}`
                     elements[prefix] = {
                         declaration: getDeclaration(constructor, sourceFile),
@@ -180,14 +193,14 @@ export function processFile(
                     }
                 }
             }
-            elements[getPrefix(rootPath, file, node)] = {
+            elements[getPrefix({ ...params, node })] = {
                 declaration: getDeclaration(node, sourceFile),
                 implementation: node.getText(sourceFile),
             }
             node.members.forEach((member: ts.Node) => {
                 if (ts.isMethodDeclaration(member)) {
                     elements[
-                        `${getPrefix(rootPath, file, node)}.${getEscapedName(member)}`
+                        `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`
                     ] = {
                         declaration: getDeclaration(member, sourceFile),
                         implementation: member.getText(sourceFile),
@@ -195,7 +208,7 @@ export function processFile(
                 }
                 if (ts.isPropertyDeclaration(member)) {
                     elements[
-                        `${getPrefix(rootPath, file, node)}.${getEscapedName(member)}`
+                        `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`
                     ] = { declaration: member.getText(sourceFile) }
                 }
                 if (
@@ -203,7 +216,7 @@ export function processFile(
                     ts.isMethodSignature(member)
                 ) {
                     elements[
-                        `${getPrefix(rootPath, file, node)}.${getEscapedName(member)}`
+                        `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`
                     ] = { declaration: member.getText(sourceFile) }
                 }
             })
