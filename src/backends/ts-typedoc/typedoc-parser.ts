@@ -41,6 +41,7 @@ import {
 } from '../../lib/code-api'
 import fs from 'fs'
 import * as pathLib from 'node:path'
+import path from 'path'
 
 /**
  * Global project information.
@@ -156,6 +157,8 @@ export function generateApiFiles({
     outputFolder: string
     baseNav: string
 }) {
+    projectFolder = path.resolve(projectFolder)
+    outputFolder = path.resolve(outputFolder)
     const projectPackageJson = fs.readFileSync(
         pathLib.resolve(projectFolder, 'package.json'),
         'utf8',
