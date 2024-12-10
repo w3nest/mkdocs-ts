@@ -38,7 +38,7 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
             this.doc.path.startsWith(this.relativeToPath + '.')
                 ? this.doc.path.replace(this.relativeToPath + '.', '')
                 : this.doc.path
-        this.id = `${Dependencies.headingPrefixId}${relativePath}`
+        this.id = Dependencies.headingId(relativePath)
         this.children = [
             {
                 tag: 'span',

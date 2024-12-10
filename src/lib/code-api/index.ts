@@ -39,7 +39,7 @@ export class Dependencies {
     public static parseMd: typeof parseMd
     public static Views: typeof Views
     public static installNotebookModule: typeof installNotebookModule
-    public static headingPrefixId: string
+    public static headingId: (id: string) => string
 }
 
 export const tocConvertor = (heading: HTMLHeadingElement): AnyVirtualDOM => {

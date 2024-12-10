@@ -62,6 +62,13 @@ export interface MockBrowserLocation {
 
 export const headingPrefixId = 'mk-head-'
 
+function sanitizedCssId(id: string): string {
+    return id.replace(/[^a-zA-Z0-9-_]/g, '')
+}
+
+export function headingId(id: string): string {
+    return `${headingPrefixId}${sanitizedCssId(id)}`
+}
 /**
  * Represents the router of the application.
  */
@@ -538,8 +545,9 @@ function findElementById(
     parent: HTMLElement,
     targetId: string,
 ): HTMLElement | undefined {
-    const shortSelector = `#${targetId.replace('.', '\\.')}̀`
-    const prefixedSelector = `#${headingPrefixId}${targetId.replace('.', '\\.')}̀`
+    const sanitizedId = sanitizedCssId(targetId.replace('.', '\\.'))
+    const shortSelector = `#${sanitizedId}`
+    const prefixedSelector = `#${headingPrefixId}${sanitizedId}`
     const divByCssQuery =
         parent.querySelector(shortSelector) ??
         parent.querySelector(prefixedSelector)
