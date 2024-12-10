@@ -3,7 +3,7 @@ import { setup } from '../../auto-generated'
 
 class BadgeView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'd-flex align-items-center p-2 border rounded m-1'
+    public readonly class = 'd-flex align-items-center p-2 border rounded me-1'
     public readonly style = {
         width: 'fit-content',
     }
@@ -32,8 +32,24 @@ class BadgeView implements VirtualDOM<'div'> {
     }
 }
 
+export class VersionBadge implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class = 'd-flex align-items-center p-2 border rounded me-1'
+    public readonly children: ChildrenLike
+
+    constructor({ version }: { version: string }) {
+        this.children = [
+            { tag: 'i', class: 'fas fa-bookmark', style: { width: '25px' } },
+            {
+                tag: 'div',
+                class: 'mx-1',
+                innerText: version,
+            },
+        ]
+    }
+}
 /**
- * Display bagdes for github and/or npm.
+ * Display bagdes for version, github, npm...
  */
 export class CodeBadgesView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -48,9 +64,22 @@ export class CodeBadgesView implements VirtualDOM<'div'> {
      * The final url is `https://github.com/${github}`.
      * @param _args.npm NPM target, if not provided the associated bagde is not displayed.
      * The final url is `https://npmjs.com/package/${npm}`.
+     * @param _args.version Version bookmark, if not provided the associated bagde is not displayed.
+     * @param _args.license License badge (only 'MIT' supported), if not provided the associated bagde is not displayed.
      */
-    constructor({ github, npm }: { github?: string; npm?: string }) {
+    constructor({
+        github,
+        npm,
+        version,
+        license,
+    }: {
+        github?: string
+        npm?: string
+        version?: string
+        license?: string
+    }) {
         this.children = [
+            version ? new VersionBadge({ version }) : undefined,
             github
                 ? new BadgeView({
                       name: 'Github Sources',
@@ -63,6 +92,13 @@ export class CodeBadgesView implements VirtualDOM<'div'> {
                       name: 'Package',
                       filename: 'npm.svg',
                       href: `https://npmjs.com/package/${npm}`,
+                  })
+                : undefined,
+            license && license === 'mit'
+                ? new BadgeView({
+                      name: 'MIT',
+                      filename: 'mit.svg',
+                      href: `https://en.wikipedia.org/wiki/MIT_License`,
                   })
                 : undefined,
         ]

@@ -122,6 +122,8 @@ export class GlobalMarkdownViews {
         },
         'code-badges': (elem: HTMLElement) => {
             return new CodeBadgesView({
+                license: elem.getAttribute('license') ?? undefined,
+                version: elem.getAttribute('version') ?? undefined,
                 npm: elem.getAttribute('npm') ?? undefined,
                 github: elem.getAttribute('github') ?? undefined,
             })
