@@ -1,7 +1,7 @@
-import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import type { MdParsingOptions, ViewGenerator } from '../markdown'
 import { Router } from '../router'
-import { from, of, take } from 'rxjs'
+import { delay, filter, from, of, take } from 'rxjs'
 import { Scope, State } from './state'
 import { DisplayFactory } from './display-utils'
 import { Dependencies } from './index'
@@ -84,6 +84,8 @@ export const notebookViews = ({ state }: { state: State }) => {
  * Cells run in the order of inclusion, and share their top level scope.
  */
 export class NotebookPage implements VirtualDOM<'div'> {
+    public readonly scrollToDelay = 200
+
     public readonly tag = 'div'
     /**
      * Classes associated to the view.
@@ -168,7 +170,23 @@ export class NotebookPage implements VirtualDOM<'div'> {
                             },
                         )
                     }
-                    return vdom
+                    return {
+                        ...vdom,
+                        connectedCallback: (elem: RxHTMLElement<'div'>) => {
+                            vdom.connectedCallback?.(elem)
+                            this.router.currentPage$
+                                .pipe(
+                                    take(1),
+                                    filter(
+                                        (page) => page.sectionId !== undefined,
+                                    ),
+                                    delay(this.scrollToDelay),
+                                )
+                                .subscribe((page) => {
+                                    this.router.scrollTo(page.sectionId)
+                                })
+                        },
+                    }
                 },
             }),
         ]
