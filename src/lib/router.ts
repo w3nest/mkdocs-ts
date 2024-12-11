@@ -63,7 +63,7 @@ export interface MockBrowserLocation {
 export const headingPrefixId = 'mk-head-'
 
 function sanitizedCssId(id: string): string {
-    return id.replace(/[^a-zA-Z0-9-_]/g, '')
+    return id.replace(/[^a-zA-Z0-9\-_.]/g, '')
 }
 
 export function headingId(id: string): string {
