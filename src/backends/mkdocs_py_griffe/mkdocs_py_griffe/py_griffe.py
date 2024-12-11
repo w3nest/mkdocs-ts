@@ -735,11 +735,11 @@ def parse_raises(
     if raises:
         try:
 
-            def format_raise(e):
+            def format_raise(raise_ast):
                 with_links = replace_links(
-                    e.description, parent=ast.canonical_path, project=project
+                    raise_ast.description, parent=ast.canonical_path, project=project
                 )
-                annotation = e.annotation
+                annotation = raise_ast.annotation
                 exception_nav = navigation_path(
                     py_path=annotation.canonical_path,
                     name=annotation.name,
@@ -759,10 +759,10 @@ def parse_raises(
                     role="raises", labels=[], attributes={}, relations={}
                 ),
             )
-        except RuntimeError as e:
+        except RuntimeError as error:
             DocReporter.add_error(
                 ast.canonical_path,
-                f"Failed to parse 'raises' of function {ast.name}: {e}",
+                f"Failed to parse 'raises' of function {ast.name}: {error}",
             )
 
     return None
