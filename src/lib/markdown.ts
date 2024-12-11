@@ -284,6 +284,13 @@ export function parseMd({
                         e.preventDefault()
                         router.navigateTo({ path })
                     }
+                    const title = link.title
+                    if(title){
+                        const metadata_json: Record<string, string> = JSON.parse(title)
+                        link.title = ''
+                        const classes = metadata_json?.class.split(' ') || []
+                        link.classList.add(...classes)
+                    }
                 }
                 if (navigations) {
                     Object.entries(navigations).forEach(([k, v]) => {
