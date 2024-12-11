@@ -285,10 +285,12 @@ export function parseMd({
                         router.navigateTo({ path })
                     }
                     const title = link.title
-                    if(title){
-                        const metadata_json: Record<string, string> = JSON.parse(title)
+                    if (title) {
+                        const metadata_json = JSON.parse(
+                            title,
+                        ) as unknown as Record<string, string | undefined>
                         link.title = ''
-                        const classes = metadata_json?.class.split(' ') || []
+                        const classes = metadata_json.class?.split(' ') ?? []
                         link.classList.add(...classes)
                     }
                 }
