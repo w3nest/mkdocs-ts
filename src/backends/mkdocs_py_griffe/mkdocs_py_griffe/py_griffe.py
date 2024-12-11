@@ -342,7 +342,7 @@ def navigation_path(
             return symbol_alias
         return None
 
-    if py_path.startswith(project.root_ast.name):
+    if py_path.startswith(f"{project.root_ast.name}."):
         symbol = get_symbol(path=py_path)
         if not symbol:
             parent_symbol = get_symbol(path=py_path.replace(f".{name}", ""))
@@ -350,9 +350,11 @@ def navigation_path(
                 # This is when linking an instance's attribute (from implementation in declaration).
                 # We link to the parent global attribute if it exists.
                 return f"@nav{project.config.base_nav}/{parent_symbol.navigation_path}"
-            DocReporter.add_internal_cross_ref_error(py_path)
+            if report_error:
+                DocReporter.add_internal_cross_ref_error(py_path)
             return None
         return f"@nav{project.config.base_nav}/{symbol.navigation_path}"
+
     if py_path in project.config.external_links:
         return project.config.external_links[py_path]
 
@@ -371,9 +373,16 @@ def navigation_path(
 
 
 def navigation_path_ast(
-    ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName, project: Project
+    ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName,
+    project: Project,
+    report_error: bool = True,
 ) -> str | None:
-    return navigation_path(py_path=ast.canonical_path, name=ast.name, project=project)
+    return navigation_path(
+        py_path=ast.canonical_path,
+        name=ast.name,
+        project=project,
+        report_error=report_error,
+    )
 
 
 class ModuleElements(NamedTuple):
@@ -961,8 +970,33 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
         The parsed model.
     """
 
-    def nav_path(e: ExprName | AstClass | AstFunction):
-        return navigation_path_ast(ast=e, project=project)
+    def nav_path(e: ExprName | AstClass | AstFunction) -> str | None:
+        nav = navigation_path_ast(ast=e, project=project, report_error=False)
+        if nav:
+            return nav
+        if e.parent and e.parent.canonical_path == "self":
+            # When declaring a variable in '__init__'.
+            parent_class = e.parent.parent.parent.canonical_path
+            nav = navigation_path(
+                py_path=f"{parent_class}.{e.name}", name=e.name, project=project
+            )
+            return nav
+
+        if e.parent and e.parent.canonical_path.endswith(".__init__"):
+            # This is when a symbol is coming from the '__init__' parameters
+            nav = navigation_path(
+                py_path=e.parent.canonical_path, name=e.name, project=project
+            )
+            return nav
+
+        # Let's try if a unique symbol with given name exists
+        keys = [v for k, v in project.all_symbols.items() if k.endswith(f".{e.name}")]
+        if len(keys) == 1:
+            return keys[0].navigation_path
+
+        DocReporter.add_internal_cross_ref_error(e.canonical_path)
+
+        return None
 
     file_path = str(ast.filepath.relative_to(project.root_ast.filepath.parent))
     references = {}
