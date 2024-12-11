@@ -206,6 +206,17 @@ The supported tags for sphinx like cross links.
 *  :tag:`a custom text <foo.bar.symbol>`
 ```
 """
+TAGS_TO_SEMANTIC: dict[str, str] = {
+    "mod": "mkapi-role-module",
+    "class": "mkapi-role-class",
+    "func": "mkapi-role-function",
+    "attr": "mkapi-role-attribute",
+    "meth": "mkapi-role-method",
+    "glob": "mkapi-role-global",
+}
+"""
+Tags to semantic convertor.
+"""
 
 
 class DocReporter:
@@ -753,7 +764,8 @@ def replace_links(text: str, parent: str, project: Project) -> str:
         py_path = sanitize_py_path(py_path)
         if project.all_symbols.get(py_path, None):
             nav_path = get_nav_path(tag=tag, py_path=py_path)
-            return f"[{label}](@nav{project.config.base_nav}/{nav_path})"
+            metadata_link = {"class": f"mkapi-semantic-flag {TAGS_TO_SEMANTIC[tag]}"}
+            return f"[{label}](@nav{project.config.base_nav}/{nav_path} '{json.dumps(metadata_link)}')"
 
         package_name = py_path.split(".")[0]
         if project.config.cross_linked_packages.get(package_name, None):
