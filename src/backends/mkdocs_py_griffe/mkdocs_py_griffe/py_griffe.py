@@ -19,18 +19,30 @@ from griffe.dataclasses import Class as AstClass
 from griffe.dataclasses import Docstring as AstDocstring
 from griffe.dataclasses import Function as AstFunction
 from griffe.dataclasses import Module as AstModule
-from griffe.docstrings.dataclasses import (DocstringSection,
-                                           DocstringSectionAdmonition,
-                                           DocstringSectionParameters,
-                                           DocstringSectionRaises,
-                                           DocstringSectionReturns,
-                                           DocstringSectionText)
+from griffe.docstrings.dataclasses import (
+    DocstringSection,
+    DocstringSectionAdmonition,
+    DocstringSectionParameters,
+    DocstringSectionRaises,
+    DocstringSectionReturns,
+    DocstringSectionText,
+)
 from griffe.enumerations import Kind
 from griffe.exceptions import AliasResolutionError
 from griffe.expressions import ExprName
 
-from .models import (Attribute, Callable, ChildModule, Code, Documentation,
-                     DocumentationSection, File, Module, Semantic, Type)
+from .models import (
+    Attribute,
+    Callable,
+    ChildModule,
+    Code,
+    Documentation,
+    DocumentationSection,
+    File,
+    Module,
+    Semantic,
+    Type,
+)
 
 INIT_FILENAME = "__init__.py"
 """
@@ -107,6 +119,7 @@ SymbolKind = Literal["function", "attribute", "class", "property", "method", "mo
 Possible kinds for a symbol.
 """
 
+
 class SymbolRef(NamedTuple):
     """
     Represents a reference of a symbol in the library.
@@ -120,6 +133,21 @@ class SymbolRef(NamedTuple):
     navigation_path: str
     """
     Navigation path.
+    """
+
+
+class CrossLinkedPackage(NamedTuple):
+    """
+    Encapsulates symbols definition of a cross-linked package.
+    """
+
+    all_symbols: dict[str, SymbolRef]
+    """
+    The list of all symbols defined in the documented module.
+    """
+    all_aliases: dict[str, str]
+    """
+    The list of aliases defined in the documented module (from the library).
     """
 
 
@@ -143,6 +171,10 @@ class Project(NamedTuple):
     all_aliases: dict[str, str]
     """
     The list of aliases defined in the documented module (from the library).
+    """
+    cross_linked_packages: dict[str, CrossLinkedPackage]
+    """
+    Data prepared for cross-linked packages.
     """
 
 
@@ -268,7 +300,35 @@ def canonical_path(
     return ast.canonical_path.replace(f"{project.root_ast.name}.", "")
 
 
-def navigation_path(py_path: str, name: str, project: Project) -> str | None:
+def get_cross_link_package_nav(
+    package_name: str, py_path: str, project: Project
+) -> str | None:
+
+    direct_path = ".".join(py_path.split(".")[1:])
+    symbol = project.cross_linked_packages[package_name].all_symbols.get(
+        direct_path, None
+    )
+    if not symbol:
+        # try with aliases
+        full_path = project.cross_linked_packages[package_name].all_aliases.get(
+            py_path, None
+        )
+        if not full_path:
+            return None
+        # Remove the package name from the path (e.g. 'numpy.foo.bar' => 'foo.bar')
+        direct_path = ".".join(full_path.split(".")[1:])
+        symbol = project.cross_linked_packages[package_name].all_symbols.get(
+            direct_path, None
+        )
+    if not symbol:
+        return None
+    base_path = project.config.cross_linked_packages[package_name]
+    return f"@nav{base_path}/{symbol.navigation_path}"
+
+
+def navigation_path(
+    py_path: str, name: str, project: Project, report_error: bool = True
+) -> str | None:
 
     def get_symbol(path: str):
         base = path.replace(f"{project.root_ast.name}.", "")
@@ -296,7 +356,17 @@ def navigation_path(py_path: str, name: str, project: Project) -> str | None:
     if py_path in project.config.external_links:
         return project.config.external_links[py_path]
 
-    DocReporter.add_external_cross_ref_error(py_path)
+    package_name = py_path.split(".")[0]
+    if project.config.cross_linked_packages.get(package_name, None):
+        nav = get_cross_link_package_nav(
+            package_name=package_name, py_path=py_path, project=project
+        )
+        if not nav and report_error:
+            DocReporter.add_internal_cross_ref_error(py_path)
+        return nav
+
+    if report_error:
+        DocReporter.add_external_cross_ref_error(py_path)
     return None
 
 
@@ -769,11 +839,13 @@ def replace_links(text: str, parent: str, project: Project) -> str:
 
         package_name = py_path.split(".")[0]
         if project.config.cross_linked_packages.get(package_name, None):
-            # Remove the package name from the path (e.g. 'youwol.foo.bar' => 'foo.bar')
-            relative_path = ".".join(py_path.split(".")[1:])
-            nav_path = get_nav_path(tag=tag, py_path=relative_path)
-            base_path = project.config.cross_linked_packages[package_name]
-            return f"[{label}](@nav{base_path}/{nav_path})"
+            nav = get_cross_link_package_nav(
+                package_name=package_name, py_path=py_path, project=project
+            )
+            if not nav:
+                DocReporter.add_sphinx_link_unresolved(parent, match.group(0), [])
+                return label
+            return f"[{label}]({nav})"
 
         candidates = get_cross_link_candidates(
             link_type=tag,
@@ -1184,11 +1256,19 @@ def generate_api(root_ast: AstModule, config: Configuration):
     DocReporter.clear()
     all_symbols = init_symbols(root_ast=root_ast)
     all_aliases = init_aliases(root_ast=root_ast)
+    cross_packages: dict[str, CrossLinkedPackage] = {}
+    for key in config.cross_linked_packages.keys():
+        root_package_ast = cast(griffe.Module, griffe.load(key, submodules=True))
+        cross_packages[key] = CrossLinkedPackage(
+            all_aliases=init_aliases(root_ast=root_package_ast),
+            all_symbols=init_symbols(root_ast=root_package_ast),
+        )
     project = Project(
         config=config,
         root_ast=root_ast,
         all_symbols=all_symbols,
         all_aliases=all_aliases,
+        cross_linked_packages=cross_packages,
     )
 
     def get_doc_rec(module: AstModule, path: str):
