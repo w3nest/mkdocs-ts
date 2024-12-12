@@ -1,7 +1,29 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { setup } from '../../auto-generated'
+const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`
 
-class BadgeView implements VirtualDOM<'div'> {
+export const githubIcon = {
+    tag: 'img' as const,
+    src: `${baseIconPath}/github.svg`,
+    width: 25,
+}
+
+export const pypiIcon = {
+    tag: 'img' as const,
+    src: `${baseIconPath}/pypi.svg`,
+    width: 25,
+}
+export const mitIcon = {
+    tag: 'img' as const,
+    src: `${baseIconPath}/mit.svg`,
+    width: 25,
+}
+export const npmIcon = {
+    tag: 'img' as const,
+    src: `${baseIconPath}/npm.svg`,
+    width: 25,
+}
+export class BadgeView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'd-flex align-items-center p-2 border rounded me-1'
     public readonly style = {
@@ -18,9 +40,8 @@ class BadgeView implements VirtualDOM<'div'> {
         filename: string
         href: string
     }) {
-        const basePath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`
         this.children = [
-            { tag: 'img', src: `${basePath}/${filename}`, width: 25 },
+            { tag: 'img', src: `${baseIconPath}/${filename}`, width: 25 },
             {
                 tag: 'a',
                 class: 'mx-1',
