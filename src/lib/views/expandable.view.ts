@@ -122,7 +122,6 @@ export class ExpandableLeftSide implements VirtualDOM<'div'> {
                         children: [
                             new NavigationView({
                                 ...params.navView,
-                                wFitContent: true,
                             }),
                         ],
                     },

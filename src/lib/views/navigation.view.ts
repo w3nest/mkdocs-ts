@@ -103,7 +103,7 @@ export class HandlerView implements VirtualDOM<'div'> {
 }
 
 export class NavigationHeader implements VirtualDOM<'a'> {
-    static DefaultWrapperClass =
+    static readonly DefaultWrapperClass =
         'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pe-2'
     public readonly tag = 'a'
     public readonly href: string
@@ -225,12 +225,8 @@ export class NavigationView implements VirtualDOM<'div'> {
         router: Router
         bookmarks$: BehaviorSubject<string[]>
         layoutOptions: LayoutOptions
-        wFitContent?: boolean
     }) {
         Object.assign(this, params)
-        if (!params.wFitContent) {
-            this.class = `${this.class} w-100`
-        }
         this.style = {
             minWidth: `${String(params.layoutOptions.navMinWidth)}px`,
             height: params.layoutOptions.sidePanelHeight,
@@ -242,7 +238,7 @@ export class NavigationView implements VirtualDOM<'div'> {
                     return new NavigationHeader({
                         node,
                         router: this.router,
-                        bookmarks$: params.bookmarks$,
+                        bookmarks$: this.bookmarks$,
                         withChildren:
                             node.children && node.id !== '/'
                                 ? [
