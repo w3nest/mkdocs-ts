@@ -93,7 +93,7 @@ export const defaultLayoutOptions = (): LayoutOptions => {
         navMinWidth: 300,
         pageMaxWidth: '45rem',
         translationTime: 400,
-        topStickyPaddingMax: 'pt-5',
+        topStickyPaddingMax: '2rem',
         sidePanelHeight: '85vh',
         topStickyPaddingMin: '10px',
     }
@@ -159,12 +159,14 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         page,
         footer,
         layoutOptions,
+        navHeader,
         bookmarks$,
     }: {
         router: Router
         topBanner?: LayoutElementView
         page?: LayoutElementView
         footer?: LayoutElementView
+        navHeader?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
         bookmarks$: BehaviorSubject<string[]>
     }) {
@@ -194,6 +196,21 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             bookmarks$,
             layoutOptions: this.layoutOptions,
         })
+        const defaultNavHeader = {
+            tag: 'div' as const,
+            style: {
+                height: this.layoutOptions.topStickyPaddingMax,
+            },
+        }
+        const navHeaderView = navHeader?.(viewInputs) ?? defaultNavHeader
+        const footerView = {
+            tag: 'footer' as const,
+            style: {
+                position: 'sticky' as const,
+                top: '100%',
+            },
+            children: [footer ? footer(viewInputs) : new FooterView()],
+        }
         const leftSideNav = {
             tag: 'div' as const,
             class: 'd-flex flex-grow-1',
@@ -202,11 +219,14 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                     type: 'favorites',
                     content: favoritesView,
                     layoutOptions: this.layoutOptions,
+                    header: defaultNavHeader,
                 }),
                 new StickyColumnContainer({
                     type: 'nav',
                     content: navView,
                     layoutOptions: this.layoutOptions,
+                    header: navHeaderView,
+                    footer: footerView,
                 }),
             ],
         }
@@ -223,6 +243,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             type: 'toc',
             content: tocView,
             layoutOptions: this.layoutOptions,
+            header: defaultNavHeader,
         })
         const expandableRightSideNav = new ExpandableRightSide({
             tocView,
@@ -238,16 +259,9 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 minHeight: '100vh',
             },
             children: [
+                defaultNavHeader,
                 page ? page(viewInputs) : new PageView({ router: router }),
             ],
-        }
-        const footerView = {
-            tag: 'footer' as const,
-            style: {
-                position: 'sticky' as const,
-                top: '100%',
-            },
-            children: [footer ? footer(viewInputs) : new FooterView()],
         }
         const hSep = {
             tag: 'div' as const,
@@ -292,7 +306,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                             ),
                         ],
                     },
-                    footerView,
                 ],
             },
         ]
@@ -336,13 +349,17 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
     public readonly layoutOptions: LayoutOptions
+    public readonly header?: AnyVirtualDOM
     public readonly content: AnyVirtualDOM
+    public readonly footer?: AnyVirtualDOM
     public readonly type: Container
 
     constructor(params: {
         type: Container
         content: AnyVirtualDOM
         layoutOptions: LayoutOptions
+        header?: AnyVirtualDOM
+        footer?: AnyVirtualDOM
     }) {
         Object.assign(this, params)
         const colors: Record<Container, string> = {
@@ -358,9 +375,9 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
         const flexGrow = params.type === 'favorites' ? 0 : 1
         const stickyPadingTop = this.layoutOptions.topStickyPaddingMax
         const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} ${stickyPadingTop} d-flex`
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} ${stickyPadingTop} d-flex flex-column`
 
-        this.children = [this.content]
+        this.children = [this.header, this.content, this.footer]
     }
 
     static stickyStyle(layoutOptions: LayoutOptions): CSSAttribute {
