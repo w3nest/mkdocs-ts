@@ -125,6 +125,7 @@ export class GlobalMarkdownViews {
                 license: elem.getAttribute('license') ?? undefined,
                 version: elem.getAttribute('version') ?? undefined,
                 npm: elem.getAttribute('npm') ?? undefined,
+                pypi: elem.getAttribute('pypi') ?? undefined,
                 github: elem.getAttribute('github') ?? undefined,
             })
         },

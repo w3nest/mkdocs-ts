@@ -60,21 +60,25 @@ export class CodeBadgesView implements VirtualDOM<'div'> {
      * Initializes a new instance.
      *
      * @param _args The arguments.
-     * @param _args.github Github target, if not provided the associated bagde is not displayed.
+     * @param _args.github Github target, if not provided the associated badge is not displayed.
      * The final url is `https://github.com/${github}`.
-     * @param _args.npm NPM target, if not provided the associated bagde is not displayed.
+     * @param _args.npm NPM target, if not provided the associated badge is not displayed.
      * The final url is `https://npmjs.com/package/${npm}`.
-     * @param _args.version Version bookmark, if not provided the associated bagde is not displayed.
-     * @param _args.license License badge (only 'MIT' supported), if not provided the associated bagde is not displayed.
+     * @param _args.pypi Pypi target, if not provided the associated badge is not displayed.
+     * The final url is `https://pypi.org/project/${pypi}`.
+     * @param _args.version Version bookmark, if not provided the associated badge is not displayed.
+     * @param _args.license License badge (only 'MIT' supported), if not provided the associated badge is not displayed.
      */
     constructor({
         github,
         npm,
+        pypi,
         version,
         license,
     }: {
         github?: string
         npm?: string
+        pypi?: string
         version?: string
         license?: string
     }) {
@@ -92,6 +96,13 @@ export class CodeBadgesView implements VirtualDOM<'div'> {
                       name: 'Package',
                       filename: 'npm.svg',
                       href: `https://npmjs.com/package/${npm}`,
+                  })
+                : undefined,
+            pypi
+                ? new BadgeView({
+                      name: 'Package',
+                      filename: 'pypi.svg',
+                      href: `https://pypi.org/project/${pypi}`,
                   })
                 : undefined,
             license && license === 'mit'
