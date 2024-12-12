@@ -166,13 +166,13 @@ const entries = {
 export const setup = {
     name:'mkdocs-ts',
         assetId:'bWtkb2NzLXRz',
-    version:'0.2.1',
+    version:'0.3.0-wip',
     shortDescription:"Typescript based mkdocs like solution",
     developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=mkdocs-ts&tab=doc',
     npmPackage:'https://www.npmjs.com/package/mkdocs-ts',
     sourceGithub:'https://github.com/mkdocs-ts',
     userGuide:'',
-    apiVersion:'02',
+    apiVersion:'03',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -197,7 +197,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`mkdocs-ts_APIv02`]
+            return window[`mkdocs-ts_APIv03`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -212,7 +212,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `mkdocs-ts#0.2.1~dist/mkdocs-ts/${entry.name}.js`
+            `mkdocs-ts#0.3.0-wip~dist/mkdocs-ts/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -223,7 +223,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`mkdocs-ts/${entry.name}_APIv02`]
+            return window[`mkdocs-ts/${entry.name}_APIv03`]
         })
     },
     getCdnDependencies(name?: string){
