@@ -8,6 +8,7 @@ import {
 import { Destination, Router } from '../router'
 import { parseMd } from '../markdown'
 import { filter } from 'rxjs'
+import { setup } from '../../auto-generated'
 
 /**
  * The main content of the page.
@@ -68,45 +69,32 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
  */
 export class FooterView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'w-100 mkdocs-FooterView d-flex align-items-center'
+    public readonly class =
+        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center justify-content-center border-top py-1'
     public readonly children: ChildrenLike
 
-    public readonly style = {
-        padding: '0.9em',
-        backgroundColor: 'black',
-        color: 'white',
-    }
     constructor() {
+        const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`
         this.children = [
             {
                 tag: 'div',
-                class: 'flex-grow-1',
+                innerText: 'Made with',
             },
             {
                 tag: 'div',
-                class: 'd-flex align-items-center',
-                children: [
-                    {
-                        tag: 'div',
-                        innerText: 'Made with',
-                    },
-                    {
-                        tag: 'div',
-                        class: 'mx-2',
-                    },
-                    {
-                        tag: 'a',
-                        innerText: 'mkdocs-ts',
-                        target: '_blank',
-                        href: 'https://github.com/youwol/mkdocs-ts',
-                    },
-                ],
+                class: 'mx-2',
             },
             {
-                tag: 'div',
-                style: {
-                    flexGrow: 2,
-                },
+                tag: 'img',
+                src: `${baseIconPath}/mkdocs-ts.svg`,
+                width: 25,
+            },
+            {
+                tag: 'a',
+                class: 'mx-1',
+                innerText: 'mkdocs-ts',
+                target: '_blank',
+                href: '/apps/@mkdocs-ts/doc',
             },
         ]
     }
