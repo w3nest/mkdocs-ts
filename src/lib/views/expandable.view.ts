@@ -24,7 +24,7 @@ function slidingStyle({
         side === 'right' ? layoutOptions.tocMaxWidth : layoutOptions.navMaxWidth
     return {
         position: 'absolute',
-        height: layoutOptions.sidePanelHeight,
+        height: `calc(100vh-${layoutOptions.topStickyPaddingMax} - ${layoutOptions.bottomStickyPaddingMax})`,
         transition: `${side} ${String(layoutOptions.translationTime)}ms`,
         [side]:
             mode === 'expanded'

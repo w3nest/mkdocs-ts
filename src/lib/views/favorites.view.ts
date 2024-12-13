@@ -17,7 +17,7 @@ import {
 } from 'rxjs'
 import { NavNodeBase } from '../navigation.node'
 import { Router } from '../router'
-import { DisplayMode, LayoutOptions } from './default-layout.view'
+import { DisplayMode } from './default-layout.view'
 
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
@@ -37,7 +37,8 @@ export class FavoritesView implements VirtualDOM<'div'> {
     public readonly style: CSSAttribute
 
     public readonly displayMode$: BehaviorSubject<DisplayMode>
-    public readonly layoutOptions: LayoutOptions
+    public readonly topStickyPaddingMax: string
+    public readonly bottomStickyPaddingMax: string
     public readonly bookmarks$: Observable<string[]>
     public readonly router: Router
 
@@ -53,12 +54,13 @@ export class FavoritesView implements VirtualDOM<'div'> {
         bookmarks$: Observable<string[]>
         router: Router
         displayMode$: BehaviorSubject<DisplayMode>
-        layoutOptions: LayoutOptions
+        topStickyPaddingMax: string
+        bottomStickyPaddingMax: string
     }) {
         Object.assign(this, params)
-        const { layoutOptions, displayMode$, bookmarks$, router } = this
+        const { displayMode$, bookmarks$, router } = this
         this.style = {
-            height: layoutOptions.sidePanelHeight,
+            height: `calc(100vh - ${this.topStickyPaddingMax} - ${this.bottomStickyPaddingMax})`,
         }
         this.children = [
             new ToggleNavButton({

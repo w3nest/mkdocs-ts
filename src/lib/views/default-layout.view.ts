@@ -23,13 +23,36 @@ import { TocWrapperView } from './toc.view'
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
 /**
+ * Hints regarding sizing of the side navigation panels on the page.
+ *
+ * See {@link defaultLayoutOptions}.
+ */
+export interface SidePanelLayoutOptions {
+    /**
+     * Top maximum padding of the left side panels, collapsing to `topStickyPaddingMin` when scrolling down.
+     * If a navigation header is provided, the header should fit into it.
+     */
+    topStickyPaddingMax: string
+
+    /**
+     * Top minimum padding of the left side panels, extending to `topStickyPaddingMax` when scrolling up.
+     */
+    topStickyPaddingMin: string
+
+    /**
+     * Bottom maximum padding of the left side panels.
+     * If a navigation footer is provided, the header should fit into it.
+     */
+    bottomStickyPaddingMax: string
+}
+/**
  * Hints regarding sizing of the main elements on the page.
  *
  * The 'page' element refers to the text-content area.
  *
  * See {@link defaultLayoutOptions}.
  */
-export interface LayoutOptions {
+export type LayoutOptions = SidePanelLayoutOptions & {
     /**
      * Screen size in pixel transitioning from pined Navigation panel, to
      * collapsable one.
@@ -64,20 +87,6 @@ export interface LayoutOptions {
      * Translation duration for panels in ms.
      */
     translationTime: number
-
-    /**
-     * The side panels (navigation & TOC) height.
-     */
-    sidePanelHeight: string
-    /**
-     * Top maximum padding of the main layout, collapsing to `topStickyPaddingMin` when scrolling down.
-     */
-    topStickyPaddingMax: string
-
-    /**
-     * Top minimum padding of the main layout, extending to `topStickyPaddingMax` when scrolling up.
-     */
-    topStickyPaddingMin: string
 }
 
 /**
@@ -94,8 +103,8 @@ export const defaultLayoutOptions = (): LayoutOptions => {
         pageMaxWidth: '45rem',
         translationTime: 400,
         topStickyPaddingMax: '2rem',
-        sidePanelHeight: '85vh',
         topStickyPaddingMin: '10px',
+        bottomStickyPaddingMax: '0rem',
     }
 }
 
@@ -112,7 +121,6 @@ export type LayoutElementView = ({
 }) => AnyVirtualDOM
 /**
  * Defines the default layout:
- * *  A top banner at the top.
  * *  Navigation on the left-side.
  * *  Page's html content as main content.
  * *  On the right the table of content.
@@ -147,7 +155,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      *
      * @param _p
      * @param _p.router The router.
-     * @param _p.topBanner Optional custom top-banner view to use.
      * @param _p.page Optional custom page to use, default to {@link PageView} .
      * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
@@ -155,7 +162,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      */
     constructor({
         router,
-        topBanner,
         page,
         footer,
         layoutOptions,
@@ -163,7 +169,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
         bookmarks$,
     }: {
         router: Router
-        topBanner?: LayoutElementView
         page?: LayoutElementView
         footer?: LayoutElementView
         navHeader?: LayoutElementView
@@ -184,12 +189,12 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             displayModeToc$: this.displayModeToc$,
             layoutOptions: this.layoutOptions,
         }
-        const topBannerView = topBanner?.(viewInputs)
         const favoritesView = new FavoritesView({
             router,
             bookmarks$,
             displayMode$: this.displayModeNav$,
-            layoutOptions: this.layoutOptions,
+            topStickyPaddingMax: this.layoutOptions.topStickyPaddingMax,
+            bottomStickyPaddingMax: this.layoutOptions.bottomStickyPaddingMax,
         })
         const navView = new NavigationView({
             router,
@@ -282,7 +287,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             })
 
         this.children = [
-            topBannerView,
             {
                 tag: 'div',
                 class: 'w-100',
@@ -348,7 +352,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly class: AttributeLike<string>
     public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
-    public readonly layoutOptions: LayoutOptions
+    public readonly layoutOptions: Partial<SidePanelLayoutOptions>
     public readonly header?: AnyVirtualDOM
     public readonly content: AnyVirtualDOM
     public readonly footer?: AnyVirtualDOM
@@ -357,11 +361,15 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     constructor(params: {
         type: Container
         content: AnyVirtualDOM
-        layoutOptions: LayoutOptions
+        layoutOptions: Partial<SidePanelLayoutOptions>
         header?: AnyVirtualDOM
         footer?: AnyVirtualDOM
     }) {
         Object.assign(this, params)
+        const layoutOptions = {
+            ...defaultLayoutOptions(),
+            ...this.layoutOptions,
+        }
         const colors: Record<Container, string> = {
             favorites: 'mkdocs-bg-6 mkdocs-text-6',
             nav: 'mkdocs-bg-5 mkdocs-text-5',
@@ -369,21 +377,21 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
         }
         this.content.style = {
             ...(this.content.style ?? {}),
-            ...StickyColumnContainer.stickyStyle(this.layoutOptions),
-            maxHeight: this.layoutOptions.sidePanelHeight,
+            ...StickyColumnContainer.stickyStyle(layoutOptions),
         }
         const flexGrow = params.type === 'favorites' ? 0 : 1
         const stickyPadingTop = this.layoutOptions.topStickyPaddingMax
         const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} ${stickyPadingTop} d-flex flex-column`
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} ${stickyPadingTop ?? ''} d-flex flex-column`
 
         this.children = [this.header, this.content, this.footer]
     }
 
-    static stickyStyle(layoutOptions: LayoutOptions): CSSAttribute {
+    static stickyStyle(layoutOptions: SidePanelLayoutOptions): CSSAttribute {
         return {
             position: 'sticky',
             top: layoutOptions.topStickyPaddingMin,
+            height: `calc( 100vh - ${layoutOptions.topStickyPaddingMax} - ${layoutOptions.bottomStickyPaddingMax})`,
         }
     }
 }

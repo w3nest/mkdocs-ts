@@ -229,7 +229,7 @@ export class NavigationView implements VirtualDOM<'div'> {
         Object.assign(this, params)
         this.style = {
             minWidth: `${String(params.layoutOptions.navMinWidth)}px`,
-            height: params.layoutOptions.sidePanelHeight,
+            height: `calc(100vh-${params.layoutOptions.topStickyPaddingMax}-${params.layoutOptions.bottomStickyPaddingMax})`,
         }
         this.children = [
             new ImmutableTree.View({
