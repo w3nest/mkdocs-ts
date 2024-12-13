@@ -356,7 +356,7 @@ export type Navigation = NavigationCommon & {
     /**
      * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.
      *
-     * The sub-paths defined in it can also be made reaction (using {@link ReactiveLazyNavResolver})
+     * The sub-paths defined in it can also be made reactive (using {@link ReactiveLazyNavResolver})
      * if changes in organisation over time are expected.
      */
     [CatchAllKey]?: LazyNavResolver | ReactiveLazyNavResolver
