@@ -511,4 +511,8 @@
     font-size: 1rem;
 }
 
+.mkdocs-PageView .mkdocs-markdown p {
+    text-align: justify;
+}
+
 /*# sourceMappingURL=mkdocs-light.css.map */

@@ -464,7 +464,7 @@ function fixedMarkedParseCustomViews({
     const { patchedInput, contents } = patchSrc({ src: input, views })
 
     const divResult = document.createElement('div')
-
+    divResult.classList.add('mkdocs-markdown')
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setOptions({
         langPrefix: 'hljs language-',
