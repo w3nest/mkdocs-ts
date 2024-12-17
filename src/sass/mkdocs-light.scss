@@ -1,9 +1,16 @@
 $color-bg: white;
 $color-text: black;
-$color-danger: #f84d3d;
-$color-warning: #ffa657;
-$color-success: #5cad0f;
-$color-info: #9b9b9b;
+$color-abstract: #00b0ff;
+$color-info: #00b8d4;
+$color-hint: #00bfa5;
+$color-success: #00c853;
+$color-question: #64dd17;
+$color-warning: #ff9100;
+$color-failure: #ff5252;
+$color-danger: #ff1744;
+$color-bug: #f50057;
+$color-example: #7c4dff;
+$color-quote: #9e9e9e;
 $color-focus: #1a7bf6;
 $color-focus-light: rgba(
     red($color-focus),

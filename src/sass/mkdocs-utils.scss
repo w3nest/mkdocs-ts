@@ -54,8 +54,15 @@ $colorsMap: (
     'danger': $color-danger,
     'warning': $color-warning,
     'success': $color-success,
+    'abstract': $color-abstract,
     'info': $color-info,
     'focus': $color-focus,
+    'hint': $color-hint,
+    'question': $color-question,
+    'failure': $color-failure,
+    'bug': $color-bug,
+    'example': $color-example,
+    'quote': $color-quote,
 );
 
 .mkdocs-disabled {

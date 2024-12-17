@@ -11,7 +11,6 @@ import { headingPrefixId, type Router } from './router'
 import {
     CodeLanguage,
     CodeSnippetView,
-    NoteLevel,
     NoteView,
     ExpandableGroupView,
     CodeBadgesView,
@@ -103,14 +102,7 @@ export class GlobalMarkdownViews {
                 content: elem.textContent ?? '',
             })
         },
-        note: (elem: HTMLElement, parsingArgs) => {
-            return new NoteView({
-                level: elem.getAttribute('level') as NoteLevel,
-                label: elem.getAttribute('label') ?? undefined,
-                content: elem.textContent ?? '',
-                parsingArgs,
-            })
-        },
+        note: (...args) => NoteView.fromHTMLElement(...args),
         expandable: (elem: HTMLElement, parsingArgs) => {
             return new ExpandableGroupView({
                 title: elem.getAttribute('title') ?? '',
