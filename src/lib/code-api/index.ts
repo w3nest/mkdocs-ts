@@ -30,14 +30,14 @@ import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
 import { install } from '@w3nest/webpm-client'
-import type { Navigation, Router, Views } from '../index'
+import type { Navigation, Router, DefaultLayout } from '../index'
 import type { installNotebookModule } from '../../index'
 import type { parseMd } from '../markdown'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
     public static parseMd: typeof parseMd
-    public static Views: typeof Views
+    public static DefaultLayout: typeof DefaultLayout
     public static installNotebookModule: typeof installNotebookModule
     public static headingId: (id: string) => string
 }
@@ -78,7 +78,7 @@ export function fetchModuleDoc({
 const layout = (kind: string) => ({
     kind,
     toc: (d: { html: HTMLElement; router: Router }) =>
-        Dependencies.Views.tocView({
+        Dependencies.DefaultLayout.tocView({
             ...d,
             domConvertor: tocConvertor,
         }),

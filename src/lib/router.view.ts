@@ -29,6 +29,8 @@ export type LayoutFactory = Record<string, LayoutGeneratorTrait>
  * This view leverages a provided layout factory to map the {@link NavigationCommon.layout.kind}
  * specified in {@link Navigation} to the appropriate layout.
  *
+ * If a layout kind is not found, the {@link LayoutNotFoundView} is displayed.
+ *
  * <note level="hint">
  * The layout factory is invoked only when there is a change in the layout kind during navigation.
  * This optimization prevents unnecessary redrawing of the entire view if the layout kind remains unchanged.
@@ -96,7 +98,10 @@ export class RouterView implements VirtualDOM<'div'> {
     }
 }
 
-export class UnknownLayoutView implements VirtualDOM<'div'> {
+/**
+ * The view displayed when a layout referenced in {@link Navigation} is not found.
+ */
+export class LayoutNotFoundView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     constructor({

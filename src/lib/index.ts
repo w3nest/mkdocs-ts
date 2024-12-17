@@ -3,5 +3,5 @@ export * from './navigation.node'
 export * from './router.view'
 export * from './router'
 
-export * as Views from './views'
+export * as DefaultLayout from './default-layout'
 export * as MdWidgets from './md-widgets'

@@ -122,15 +122,10 @@ export type LayoutElementView = ({
 }) => AnyVirtualDOM
 
 /**
- * Dynamic options (defined in {@link Navigation}) for {@link DefaultLayoutView}.
- * Static options are provided in {@link DefaultLayoutView} constructor.
+ * Dynamic options (defined in {@link Navigation}) for {@link View}.
+ * Static options are provided in {@link View} constructor.
  */
-export interface DefaultLayoutDynamicOptions {
-    /**
-     * ID of the layout construct in {@link RouterView}'s layout factory.
-     * It should point to the construction of a {@link DefaultLayoutView}.
-     */
-    kind: string
+export interface NavNodeOptions {
     /**
      * This function represents the view of the table of content in the page.
      *
@@ -154,28 +149,14 @@ export interface DefaultLayoutDynamicOptions {
 }
 
 /**
- * Type helper function (implementation is identity) that validates
- * layout specification in {@link NavigationCommon} for dynamic options of
- * {@link DefaultLayoutView}.
- *
- * @param p Options to validate
- * @returns The given parameter
- */
-export function defaultLayoutSpec(
-    p: DefaultLayoutDynamicOptions & Record<string, unknown>,
-): DefaultLayoutDynamicOptions & Record<string, unknown> {
-    return p
-}
-/**
- * Defines the default layout:
+ * Defines the default layout view:
  * *  Navigation on the left-side.
  * *  Page's html content as main content.
  * *  On the right the table of content.
  *
- * Depending on the screen size, the navigation and TOC can be collapsed into a top-banner menu.
- *
+ * Depending on the screen size, the navigation and TOC can be collapsed into an expandable menu.
  */
-export class DefaultLayoutView implements VirtualDOM<'div'> {
+export class View implements VirtualDOM<'div'> {
     public readonly layoutOptions: LayoutOptions = defaultLayoutOptions()
 
     public readonly tag = 'div'
