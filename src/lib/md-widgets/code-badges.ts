@@ -74,7 +74,7 @@ export class VersionBadge implements VirtualDOM<'div'> {
  */
 export class CodeBadgesView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'd-flex align-items-center'
+    public readonly class = 'd-flex align-items-center flex-wrap'
     public readonly children: ChildrenLike
 
     /**

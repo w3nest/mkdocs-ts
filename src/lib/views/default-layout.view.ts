@@ -435,10 +435,12 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     }
 
     static stickyStyle(layoutOptions: SidePanelLayoutOptions): CSSAttribute {
+        const height = `calc( 100vh - ${layoutOptions.topStickyPaddingMax} - ${layoutOptions.bottomStickyPaddingMax})`
         return {
             position: 'sticky',
             top: layoutOptions.topStickyPaddingMin,
-            height: `calc( 100vh - ${layoutOptions.topStickyPaddingMax} - ${layoutOptions.bottomStickyPaddingMax})`,
+            height,
+            maxHeight: height,
         }
     }
 }
