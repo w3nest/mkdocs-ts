@@ -77,7 +77,8 @@ config = ProjectConfig(
         ],
     ),
     inPackageJson={
-        "scripts" :{
+        "bin": {"mkdocs-ts-init": "./bin/mkdocs-ts-init.js"},
+        "scripts": {
             "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
             "build-css": "yarn build-css-default && prettier ./assets -w",
             "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",

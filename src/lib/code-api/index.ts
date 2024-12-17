@@ -30,9 +30,16 @@ import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
 import { install } from '@w3nest/webpm-client'
-import type { Navigation, Router, DefaultLayout } from '../index'
+import {
+    Resolvable,
+    Navigation,
+    Router,
+    DefaultLayout,
+    CatchAllNav,
+} from '../index'
 import type { installNotebookModule } from '../../index'
 import type { parseMd } from '../markdown'
+import { LayoutOptionsMap } from '@mkdocsTsConfig'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
@@ -74,8 +81,16 @@ export function fetchModuleDoc({
         }),
     ]).pipe(map(([mdle]) => mdle))
 }
+type LayoutMap = {
+    [Property in keyof LayoutOptionsMap]: LayoutOptionsMap[Property] extends {
+        content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
+    }
+        ? LayoutOptionsMap[Property] & { kind: Property }
+        : never
+}
+export type LayoutKindUnion = LayoutMap[keyof LayoutMap]['kind']
 
-const layout = (kind: string) => ({
+const layout = (kind: LayoutKindUnion) => ({
     kind,
     toc: (d: { html: HTMLElement; router: Router }) =>
         Dependencies.DefaultLayout.tocView({
@@ -83,19 +98,26 @@ const layout = (kind: string) => ({
             domConvertor: tocConvertor,
         }),
 })
+const decoration = {
+    icon: {
+        tag: 'i' as const,
+        class: 'mkapi-semantic-flag mkapi-role-module',
+    },
+}
 
 export const docNode: ({
     layoutKind,
     project,
     configuration,
 }: {
-    layoutKind: string
+    layoutKind: LayoutKindUnion
     project: Project
     configuration: Configuration
 }) => Navigation = ({ layoutKind, project, configuration }) => ({
     name: 'API',
+    decoration,
     layout: {
-        ...layout(layoutKind),
+        kind: layoutKind,
         content: () => ({
             tag: 'div',
             innerText: 'The modules of the project',
@@ -103,6 +125,7 @@ export const docNode: ({
     },
     '/api': {
         name: project.name,
+        decoration,
         layout: {
             ...layout(layoutKind),
             content: ({ router }: { router: Router }) =>
@@ -139,12 +162,12 @@ export const docNavigation = ({
     project,
     configuration,
 }: {
-    layoutKind: string
+    layoutKind: LayoutKindUnion
     modulePath: string
     router: Router
     project: Project
     configuration: Configuration
-}) => {
+}): CatchAllNav => {
     if (modulePath === '') {
         modulePath = project.name
     }
@@ -159,18 +182,14 @@ export const docNavigation = ({
     }).pipe(
         map((module) => {
             return {
+                decoration,
                 children:
                     module.children.length > 0
                         ? module.children.map((m) => ({
                               name: m.name,
                               leaf: m.isLeaf,
                               id: m.name,
-                              decoration: {
-                                  icon: {
-                                      tag: 'i' as const,
-                                      class: 'mkapi-semantic-flag mkapi-role-module',
-                                  },
-                              },
+                              decoration,
                           }))
                         : [],
                 layout: {
@@ -190,12 +209,12 @@ export const docNavigation = ({
 
 export function codeApiEntryNode(params: {
     name: string
-    layoutKind: string
+    layoutKind: LayoutKindUnion
     icon: AnyVirtualDOM
     docBasePath: string
     entryModule: string
     configuration: Configuration
-}) {
+}): Navigation {
     const project = {
         name: params.entryModule,
         docBasePath: params.docBasePath,
@@ -203,11 +222,9 @@ export function codeApiEntryNode(params: {
     const configuration = params.configuration
     return {
         name: params.name,
+        decoration: { icon: params.icon },
         layout: {
             ...layout(params.layoutKind),
-            node: {
-                icon: params.icon,
-            },
             content: ({ router }: { router: Router }) => {
                 return fetchModuleDoc({
                     modulePath: project.name,

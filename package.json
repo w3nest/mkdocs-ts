@@ -71,24 +71,7 @@
         },
         "aliases": []
     },
-    "eslintConfig": {
-        "extends": [
-            "@youwol"
-        ],
-        "ignorePatterns": [
-            "/dist/",
-            "/coverage/",
-            "mkdocs-ts-doc"
-        ],
-        "overrides": [
-            {
-                "files": [
-                    "bin/index.js"
-                ],
-                "env": {
-                    "node": true
-                }
-            }
-        ]
+    "bin": {
+        "mkdocs-ts-init": "./bin/mkdocs-ts-init.js"
     }
 }

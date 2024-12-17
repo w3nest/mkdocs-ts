@@ -16,7 +16,8 @@
         "lib": ["es5", "es6", "dom", "es2020"],
         "typeRoots": ["./node_modules/@types"],
         "paths": {
-            "@rxVDomConfig": ["./rx-vdom.config"]
+            "@rxVDomConfig": ["./rx-vdom.config"],
+            "@mkdocsTsConfig": ["./mkdocs-ts.config"]
         },
         "strictNullChecks": true,
     },

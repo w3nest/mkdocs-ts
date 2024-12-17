@@ -2,6 +2,11 @@ import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { Router } from './router'
 import { from, map, Observable } from 'rxjs'
 
+import type { LayoutUnion } from './layout-types'
+import { NavDecoration, NavMetadata } from '@mkdocsTsConfig'
+
+type AnyChild = NavNodeBase | NavNodePromise
+
 /**
  * Fully resolved navigation node when using {@link CatchAllNav}.
  * In practical usage, consumers of the library only needs to provide {@link NavNodeInput}.
@@ -20,45 +25,46 @@ export interface NavNodeParams {
      */
     href: string
     /**
-     * Optional data associated to the node.
-     */
-    data?: unknown
-    /**
      * Optional children.
      */
-    children?: NavNodeBase[] | Observable<NavNodeBase[]>
+    children?: AnyChild[] | Observable<AnyChild[]>
     /**
-     * Optional decoration.
+     * Some user-defined metadata.
      */
-    layout?: LayoutSpec
+    metadata?: NavMetadata
+    /**
+     * Encapsulates data for node rendering
+     */
+    decoration?: NavDecoration
 }
 
 export class NavNodeBase extends ImmutableTree.Node {
     public readonly name: string
     public readonly href: string
-    public readonly data: unknown
-    public readonly layout?: LayoutSpec
+    public readonly decoration?: NavDecoration
+    public readonly metadata?: NavMetadata
 
     constructor(parameters: NavNodeParams) {
         super({ id: parameters.id, children: parameters.children })
         this.name = parameters.name
         this.href = parameters.href
-        this.data = parameters.data
+        this.decoration = parameters.decoration
+        this.metadata = parameters.metadata
+    }
+}
+
+export class NavNodeResolved extends NavNodeBase {
+    public readonly layout: LayoutUnion
+    constructor(parameters: NavNodeParams & { layout: LayoutUnion }) {
+        super(parameters)
         this.layout = parameters.layout
     }
 }
 
-export class NavNode extends NavNodeBase {}
-
-export class NavNodePromise extends NavNodeBase {
+export class NavNodePromise extends ImmutableTree.Node {
     constructor({ href }: { href: string }) {
         super({
             id: href,
-            name: '',
-            href,
-            layout: {
-                kind: 'NavNodePending',
-            },
         })
     }
 }
@@ -73,7 +79,7 @@ export type NavNodeInput = Omit<NavNodeParams, 'href' | 'children'> & {
     leaf?: boolean
 }
 
-export function createNavNode({
+export function createImplicitNavNode({
     hrefBase,
     path,
     node,
@@ -85,14 +91,14 @@ export function createNavNode({
     node: NavNodeInput
     asyncChildren: LazyNavResolver
     router: Router
-}): NavNode {
+}): NavNodeBase {
     const href =
         path === ''
             ? `${hrefBase}/${node.id}`
             : `${hrefBase}/${path}/${node.id}`
 
     const sanitizedPath = path === '' ? node.id : `${path}/${node.id}`
-    return new NavNode({
+    return new NavNodeBase({
         id: href,
         href,
         name: node.name,
@@ -105,8 +111,8 @@ export function createNavNode({
                   withExplicit: [],
                   router,
               }),
-        data: node.data,
-        layout: node.layout,
+        metadata: node.metadata,
+        decoration: node.decoration,
     })
 }
 
@@ -120,15 +126,17 @@ export function createImplicitChildren$({
     resolver: LazyNavResolver
     path: string
     hrefBase: string
-    withExplicit: NavNode[]
+    withExplicit: (NavNodeResolved | NavNodePromise)[]
     router: Router
-}): NavNode[] | Observable<NavNode[]> {
+}):
+    | (NavNodeBase | NavNodePromise)[]
+    | Observable<(NavNodeBase | NavNodePromise)[]> {
     path = sanitizeNavPath(path)
     const resolved = resolver({ path: path, router })
 
     const toChildren = (from: NavNodeInput[]) => [
         ...from.map((n) => {
-            return createNavNode({
+            return createImplicitNavNode({
                 hrefBase: hrefBase,
                 path,
                 node: n,
@@ -168,7 +176,9 @@ export function createChildren({
     reactiveNavs: Record<string, Observable<LazyNavResolver>>
     promiseNavs: Record<string, Promise<Navigation>>
 }) {
-    const explicitChildren: NavNodeBase[] = Object.entries(navigation)
+    const explicitChildren: (NavNodeBase | NavNodePromise)[] = Object.entries(
+        navigation,
+    )
         .filter(([k]) => k.startsWith('/') && k !== CatchAllKey)
         .map(([k, v]: [string, Navigation | Promise<Navigation>]) => {
             const href = hRefBase + k
@@ -176,7 +186,7 @@ export function createChildren({
                 promiseNavs[href] = v
                 return new NavNodePromise({ href })
             }
-            return new NavNode({
+            return new NavNodeResolved({
                 id: href,
                 name: v.name,
                 children: createChildren({
@@ -189,6 +199,8 @@ export function createChildren({
                 }),
                 href,
                 layout: v.layout,
+                metadata: v.metadata,
+                decoration: v.decoration,
             })
         })
     if (
@@ -223,7 +235,7 @@ export function createRootNode({
     const href = hrefBase ?? ''
     const reactiveNavs: Record<string, ReactiveLazyNavResolver> = {}
     const promiseNavs: Record<string, Promise<Navigation>> = {}
-    const rootNode = new NavNode({
+    const rootNode = new NavNodeResolved({
         id: href === '' ? '/' : href,
         name: navigation.name,
         layout: navigation.layout,
@@ -235,6 +247,8 @@ export function createRootNode({
             promiseNavs,
         }),
         href,
+        metadata: navigation.metadata,
+        decoration: navigation.decoration,
     })
     return {
         rootNode,
@@ -251,16 +265,13 @@ export function createRootNode({
  */
 export type Resolvable<T> = T | Promise<T> | Observable<T>
 
-export interface LayoutSpec {
-    kind: string
-
-    [k: string]: unknown
-}
 /**
  * The common part of a navigation node, whether it is static or dynamic.
  */
 export interface NavigationCommon {
-    layout: LayoutSpec
+    layout: LayoutUnion
+    metadata?: NavMetadata
+    decoration?: NavDecoration
 }
 
 /**

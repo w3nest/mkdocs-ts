@@ -17,6 +17,7 @@ import { NavNodeBase } from '../navigation.node'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { BehaviorSubject, map } from 'rxjs'
 import { LayoutOptions } from './default-layout.view'
+import { NavNodeView } from '../router.view'
 
 export class NavActionView implements VirtualDOM<'button'> {
     public readonly tag = 'button'
@@ -131,18 +132,7 @@ export type NodeDecoration =
     | NodeDecorationSpec
     | ((p: { router: Router }) => NodeDecorationSpec)
 
-interface NodeHeaderTrait {
-    layout: {
-        node: NodeDecoration
-    }
-}
-
-export function hasNodeHeaderViewTrait(node: unknown): node is NodeHeaderTrait {
-    //eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition -- It simplifies reading
-    return (node as NodeHeaderTrait)?.layout?.node !== undefined
-}
-
-export class NavigationHeader implements VirtualDOM<'a'> {
+export class NavigationNodeHeader implements VirtualDOM<'a'> {
     static readonly DefaultWrapperClass =
         'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pe-2'
     public readonly tag = 'a'
@@ -155,24 +145,19 @@ export class NavigationHeader implements VirtualDOM<'a'> {
     constructor({
         node,
         router,
-        withChildren,
         bookmarks$,
     }: {
         node: NavNodeBase
         router: Router
-        withChildren?: AnyVirtualDOM[]
         bookmarks$: BehaviorSubject<string[]>
     }) {
-        let decoration: NodeDecorationSpec | undefined = undefined
-        this.class = NavigationHeader.DefaultWrapperClass
-        if (hasNodeHeaderViewTrait(node)) {
-            decoration =
-                typeof node.layout.node === 'function'
-                    ? node.layout.node({ router })
-                    : node.layout.node
-            this.class =
-                decoration.wrapperClass ?? NavigationHeader.DefaultWrapperClass
-        }
+        const decoration =
+            typeof node.decoration === 'function'
+                ? node.decoration({ router })
+                : node.decoration
+
+        this.class =
+            decoration?.wrapperClass ?? NavigationNodeHeader.DefaultWrapperClass
 
         this.style =
             node.id === '/'
@@ -241,7 +226,12 @@ export class NavigationHeader implements VirtualDOM<'a'> {
                 class: 'mkdocs-NavigationHeader-actions',
                 children: decoration?.actions ?? [],
             },
-            ...(withChildren ?? []),
+            node.children
+                ? new HandlerView({
+                      node: node,
+                      expandedNodes$: router.explorerState.expandedNodes$,
+                  })
+                : undefined,
         ]
         this.href = `${router.basePath}?nav=` + node.href
         this.onclick = (e) => {
@@ -262,12 +252,12 @@ export class NavigationView implements VirtualDOM<'div'> {
         'mkdocs-NavigationView mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 px-1 rounded'
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
-    public readonly bookmarks$: BehaviorSubject<string[]>
     public readonly layoutOptions: LayoutOptions
+    public readonly navNodeView: NavNodeView
 
     constructor(params: {
         router: Router
-        bookmarks$: BehaviorSubject<string[]>
+        navNodeView: NavNodeView
         layoutOptions: LayoutOptions
     }) {
         Object.assign(this, params)
@@ -279,22 +269,7 @@ export class NavigationView implements VirtualDOM<'div'> {
             new ImmutableTree.View({
                 state: this.router.explorerState,
                 headerView: (_, node) => {
-                    return new NavigationHeader({
-                        node,
-                        router: this.router,
-                        bookmarks$: this.bookmarks$,
-                        withChildren:
-                            node.children && node.id !== '/'
-                                ? [
-                                      new HandlerView({
-                                          node: node,
-                                          expandedNodes$:
-                                              this.router.explorerState
-                                                  .expandedNodes$,
-                                      }),
-                                  ]
-                                : undefined,
-                    })
+                    return this.navNodeView({ node, router: this.router })
                 },
                 options: {
                     autoScroll: {

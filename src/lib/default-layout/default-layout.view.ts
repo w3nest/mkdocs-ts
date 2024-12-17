@@ -20,6 +20,7 @@ import { FavoritesView } from './favorites.view'
 import { ExpandableLeftSide, ExpandableRightSide } from './expandable.view'
 import { TocWrapperView } from './toc.view'
 import { Resolvable } from '../navigation.node'
+import { NavNodeView } from '../router.view'
 
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
@@ -190,12 +191,14 @@ export class View implements VirtualDOM<'div'> {
      */
     constructor({
         router,
+        navNodeView,
         navHeader,
         navFooter,
         layoutOptions,
         bookmarks$,
     }: {
         router: Router
+        navNodeView: NavNodeView
         navHeader?: LayoutElementView
         navFooter?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
@@ -244,7 +247,7 @@ export class View implements VirtualDOM<'div'> {
         })
         const navView = new NavigationView({
             router,
-            bookmarks$,
+            navNodeView,
             layoutOptions: this.layoutOptions,
         })
         const navHeaderView = navHeader?.(viewInputs) ?? defaultNavHeader

@@ -18,7 +18,6 @@ import {
 import { NavNodeBase } from '../navigation.node'
 import { Router } from '../router'
 import { DisplayMode } from './default-layout.view'
-import { hasNodeHeaderViewTrait, NodeDecorationSpec } from './navigation.view'
 
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
@@ -196,13 +195,10 @@ export class BookmarkView implements VirtualDOM<'div'> {
      * @param router Application's router.
      */
     constructor({ node, router }: { node: NavNodeBase; router: Router }) {
-        let decoration: NodeDecorationSpec | undefined = undefined
-        if (hasNodeHeaderViewTrait(node)) {
-            decoration =
-                typeof node.layout.node === 'function'
-                    ? node.layout.node({ router })
-                    : node.layout.node
-        }
+        const decoration =
+            typeof node.decoration === 'function'
+                ? node.decoration({ router })
+                : node.decoration
         this.children = [
             {
                 tag: 'div',
