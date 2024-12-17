@@ -12,19 +12,18 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
-import { Router } from '../router'
+import { isResolvedTarget, Router } from '../router'
 import {
     BehaviorSubject,
-    combineLatest,
     debounceTime,
     filter,
     from,
     mergeMap,
     Observable,
-    of,
     Subject,
     switchMap,
     timer,
+    withLatestFrom,
 } from 'rxjs'
 import { DisplayMode, LayoutOptions } from './default-layout.view'
 
@@ -268,6 +267,22 @@ class TocItemView implements VirtualDOM<'li'> {
     }
 }
 
+interface TocTrait {
+    layout: {
+        toc: ({
+            router,
+            html,
+        }: {
+            html: HTMLElement
+            router: Router
+        }) => Promise<AnyVirtualDOM>
+    }
+}
+function hasTocViewTrait(node: unknown): node is TocTrait {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return (node as TocTrait)?.layout?.toc !== undefined
+}
+
 export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
@@ -278,11 +293,13 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly displayMode$: BehaviorSubject<DisplayMode>
     public readonly router: Router
     public readonly layoutOptions: LayoutOptions
+    public readonly content$: Observable<HTMLElement>
 
     constructor(params: {
         router: Router
         displayMode$: BehaviorSubject<DisplayMode>
         layoutOptions: LayoutOptions
+        content$: Observable<HTMLElement>
     }) {
         Object.assign(this, params)
         const hSep = {
@@ -297,22 +314,35 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                 },
                 children: [
                     child$({
-                        source$: combineLatest([
-                            this.router.currentNode$,
-                            this.router.currentHtml$,
-                        ]).pipe(
-                            debounceTime(debounceTimeToc),
-                            mergeMap(([node, elem]) => {
-                                return node.tableOfContent
-                                    ? from(
-                                          node.tableOfContent({
-                                              html: elem,
-                                              router: this.router,
-                                          }),
-                                      )
-                                    : of(undefined)
-                            }),
-                        ),
+                        source$: this.content$
+                            .pipe(
+                                withLatestFrom(
+                                    this.router.target$.pipe(
+                                        filter((target) =>
+                                            isResolvedTarget(target),
+                                        ),
+                                    ),
+                                ),
+                            )
+                            .pipe(
+                                debounceTime(debounceTimeToc),
+                                mergeMap(([elem, target]) => {
+                                    if (!hasTocViewTrait(target.node)) {
+                                        return from(
+                                            tocView({
+                                                html: elem,
+                                                router: this.router,
+                                            }),
+                                        )
+                                    }
+                                    return from(
+                                        target.node.layout.toc({
+                                            html: elem,
+                                            router: this.router,
+                                        }),
+                                    )
+                                }),
+                            ),
                         vdomMap: (toc?): AnyVirtualDOM => {
                             return toc ?? { tag: 'div' }
                         },

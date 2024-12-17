@@ -31,6 +31,7 @@ import type { MdParsingOptions } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
+import { Resolvable } from '../navigation.node'
 
 export type CellStatus =
     | 'unready'
@@ -130,6 +131,16 @@ export interface CellTrait {
 export function getCellUid(): string {
     const rnd = Math.floor(Math.random() * Math.pow(10, 6))
     return `cell-${String(rnd)}`
+}
+
+interface ContentTrait {
+    layout: {
+        content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
+    }
+}
+function hasContentViewTrait(node: unknown): node is ContentTrait {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return (node as ContentTrait)?.layout?.content !== undefined
 }
 
 /**
@@ -467,10 +478,19 @@ export class State {
                 throw Error(`Can not find module at ${path}`)
             }
             const module$ = nav.pipe(
-                switchMap((nav) => {
-                    const nbPage = nav.html({
+                filter((nav) => hasContentViewTrait(nav)),
+                map((nav) => {
+                    const nbPage = nav.layout.content({
                         router,
-                    }) as unknown as NotebookPage
+                    })
+                    if (nbPage instanceof NotebookPage) {
+                        return nbPage
+                    }
+                    throw Error(
+                        `The page imported with ${path} is not a 'NotebookPage'`,
+                    )
+                }),
+                switchMap((nbPage) => {
                     return fromFetch(nbPage.url)
                 }),
                 switchMap((resp) => resp.text()),

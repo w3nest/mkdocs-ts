@@ -1,14 +1,4 @@
-import {
-    from,
-    map,
-    Observable,
-    of,
-    ReplaySubject,
-    Subject,
-    switchMap,
-    take,
-} from 'rxjs'
-import { AnyVirtualDOM } from 'rx-vdom'
+import { filter, from, Observable, of, ReplaySubject, Subject } from 'rxjs'
 import {
     createRootNode,
     Navigation,
@@ -21,30 +11,43 @@ import {
     ReactiveLazyNavResolver,
 } from './navigation.node'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
-import { FuturePageView, UnresolvedPageView } from './views'
 
 /**
- * Gathers the resolved elements when navigating to a specific path.
+ * A target destination specification when the path is not resolved, either because it does not exist or because
+ * it is not resolved yet.
  */
-export interface Destination {
+export interface UnresolvedTarget {
+    /**
+     * Target destination path.
+     */
+    path: string
+
+    /**
+     * Reason for the target destination to be unresolved.
+     */
+    reason: 'Pending' | 'NotFound'
+}
+
+/**
+ * Target destination specification when navigating to a (resolved) specific path.
+ */
+export interface Target {
     /**
      * Target destination path.
      */
     path: string
     /**
-     * The table of content view.
-     */
-    tableOfContent?: HTMLElement | AnyVirtualDOM
-    /**
-     * The main page view.
-     */
-    html: HTMLElement | AnyVirtualDOM
-    /**
      * The typedocNodes's ID if provided in the URL.
      */
     sectionId?: string
+
+    node: NavigationCommon
 }
 
+export function isResolvedTarget(target: unknown): target is Target {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return (target as Target)?.node !== undefined
+}
 /**
  * A simple proxy for mocking browser navigation to new URL.
  * Can be useful in testing or documenting contexts where actual re-location is not desirable.
@@ -106,25 +109,15 @@ export class Router {
         (target) => Promise.resolve(target)
 
     /**
-     * Observable that emit the current main HTML page.
-     */
-    public readonly currentHtml$: Subject<HTMLElement> =
-        new ReplaySubject<HTMLElement>(1)
-    /**
      * Observable that emit the current page.
      */
-    public readonly currentPage$: Subject<Destination> =
-        new ReplaySubject<Destination>(1)
-    /**
-     * Observable that emit the current navigation node.
-     */
-    public readonly currentNode$: Subject<NavigationCommon> =
-        new ReplaySubject<NavigationCommon>(1)
+    public readonly target$: Subject<Target | UnresolvedTarget> =
+        new ReplaySubject<Target | UnresolvedTarget>(1)
 
     /**
      * Observable that emit the current navigation path.
      */
-    public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)
+    public readonly path$: Subject<string> = new ReplaySubject<string>(1)
 
     /**
      * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)
@@ -185,11 +178,17 @@ export class Router {
         this.bindPromiseNavs(promiseNavs)
         this.navigateTo({ path: this.getCurrentPath() })
 
-        this.currentPage$.subscribe((page) => {
-            if (page.sectionId === undefined) {
-                this.scrollTo()
-            }
-        })
+        this.target$
+            .pipe(
+                filter((page) => {
+                    return isResolvedTarget(page)
+                }),
+            )
+            .subscribe((page) => {
+                if (page.sectionId === undefined) {
+                    this.scrollTo()
+                }
+            })
         if (this.mockBrowserLocation === undefined) {
             window.onpopstate = (event: PopStateEvent) => {
                 const state = event.state as unknown as
@@ -251,38 +250,25 @@ export class Router {
         const nav = this.getNav({ path: pagePath })
         if (!nav) {
             console.log('Try to wait...')
-            this.currentPage$.next({
+            this.target$.next({
                 path: pagePath,
-                html: new FuturePageView(),
+                reason: 'Pending',
             })
             const timeoutId = setTimeout(() => {
                 this.navigateTo({ path })
             }, this.retryNavPeriod)
-            this.currentPath$.subscribe(() => {
+            this.path$.subscribe(() => {
                 clearTimeout(timeoutId)
             })
             return
         }
         // This part is to resolve the html content of the selected page.
-        nav.pipe(
-            switchMap((resolved: NavigationCommon) => {
-                this.currentNode$.next(resolved)
-                const html = resolved.html({ router: this })
-                if (html instanceof Promise) {
-                    return from(html)
-                }
-                if (html instanceof Observable) {
-                    return html.pipe(take(1))
-                }
-                return of(html)
-            }),
-            map((html) => ({
+        nav.subscribe((resolved: NavigationCommon) => {
+            this.target$.next({
+                node: resolved,
                 path: pagePath,
-                html,
                 sectionId: sectionId === '' ? undefined : sectionId,
-            })),
-        ).subscribe((d) => {
-            this.currentPage$.next(d)
+            })
         })
         // This part is to select the appropriate node in the navigation.
         this.expand(pagePath)
@@ -292,7 +278,7 @@ export class Router {
         } else {
             history.pushState({ path }, '', url)
         }
-        this.currentPath$.next(path)
+        this.path$.next(path)
     }
 
     /**
@@ -390,9 +376,9 @@ export class Router {
                 }
                 // For there treePart is undefined
                 if (!tree[CatchAllKey]) {
-                    this.currentPage$.next({
+                    this.target$.next({
                         path,
-                        html: new UnresolvedPageView({ path }),
+                        reason: 'NotFound',
                     })
                     throw Error(
                         `Can not find target navigation ${resolvedPath}`,
@@ -478,10 +464,6 @@ export class Router {
             })
         }
         expandRec(idsRemaining, node)
-    }
-
-    setDisplayedPage({ page }: { page: HTMLElement }) {
-        this.currentHtml$.next(page)
     }
 
     /**

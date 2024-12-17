@@ -6,7 +6,7 @@ import {
     VirtualDOM,
     AttributeLike,
 } from 'rx-vdom'
-import { NavigationView } from './navigation.view'
+import { NavigationView, NodeDecoration } from './navigation.view'
 import { Router } from '../router'
 import { FooterView, PageView } from './page.view'
 import {
@@ -19,6 +19,7 @@ import {
 import { FavoritesView } from './favorites.view'
 import { ExpandableLeftSide, ExpandableRightSide } from './expandable.view'
 import { TocWrapperView } from './toc.view'
+import { Resolvable } from '../navigation.node'
 
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
@@ -119,6 +120,52 @@ export type LayoutElementView = ({
     displayModeToc$: Subject<DisplayMode>
     layoutOptions: LayoutOptions
 }) => AnyVirtualDOM
+
+/**
+ * Dynamic options (defined in {@link Navigation}) for {@link DefaultLayoutView}.
+ * Static options are provided in {@link DefaultLayoutView} constructor.
+ */
+export interface DefaultLayoutDynamicOptions {
+    /**
+     * ID of the layout construct in {@link RouterView}'s layout factory.
+     * It should point to the construction of a {@link DefaultLayoutView}.
+     */
+    kind: string
+    /**
+     * This function represents the view of the table of content in the page.
+     *
+     * @param p arguments of the view generator:
+     *   *  html : Content of the HTML page
+     *   *  router : Router instance.
+     * @returns A promise on the view
+     */
+    toc?: (p: { html: HTMLElement; router: Router }) => Promise<AnyVirtualDOM>
+    /**
+     * Specification for the display of navigation node in the {@link NavigationHeader}.
+     */
+    node?: NodeDecoration
+    /**
+     * This function represents the view of the main content.
+     *
+     * @param router Router instance.
+     * @returns A resolvable view
+     */
+    content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
+}
+
+/**
+ * Type helper function (implementation is identity) that validates
+ * layout specification in {@link NavigationCommon} for dynamic options of
+ * {@link DefaultLayoutView}.
+ *
+ * @param p Options to validate
+ * @returns The given parameter
+ */
+export function defaultLayoutSpec(
+    p: DefaultLayoutDynamicOptions & Record<string, unknown>,
+): DefaultLayoutDynamicOptions & Record<string, unknown> {
+    return p
+}
 /**
  * Defines the default layout:
  * *  Navigation on the left-side.
@@ -155,23 +202,21 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
      *
      * @param _p
      * @param _p.router The router.
-     * @param _p.page Optional custom page to use, default to {@link PageView} .
-     * @param _p.footer Optional custom footer view to use, default to {@link FooterView}.
+     * @param _p.navHeader Optional custom header view to use in navigation panel, empty if not provided.
+     * @param _p.navFooter Optional custom footer view to use in navigation panel, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
      * @param _p.bookmarks$ Subject emitting the `href` of the bookmarked pages.
      */
     constructor({
         router,
-        page,
-        footer,
-        layoutOptions,
         navHeader,
+        navFooter,
+        layoutOptions,
         bookmarks$,
     }: {
         router: Router
-        page?: LayoutElementView
-        footer?: LayoutElementView
         navHeader?: LayoutElementView
+        navFooter?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
         bookmarks$: BehaviorSubject<string[]>
     }) {
@@ -189,6 +234,26 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             displayModeToc$: this.displayModeToc$,
             layoutOptions: this.layoutOptions,
         }
+
+        const defaultNavHeader = {
+            tag: 'div' as const,
+            style: {
+                height: this.layoutOptions.topStickyPaddingMax,
+            },
+        }
+        const contentView = new PageView({ router: router })
+        const pageView: AnyVirtualDOM = {
+            tag: 'div' as const,
+            class: `flex-grow-1 ${this.layoutOptions.topStickyPaddingMax} px-3`,
+            style: {
+                maxWidth: this.layoutOptions.pageMaxWidth,
+                height: 'fit-content',
+                minHeight: '100vh',
+                minWidth: '0px',
+            },
+            children: [defaultNavHeader, contentView],
+        }
+
         const favoritesView = new FavoritesView({
             router,
             bookmarks$,
@@ -201,12 +266,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             bookmarks$,
             layoutOptions: this.layoutOptions,
         })
-        const defaultNavHeader = {
-            tag: 'div' as const,
-            style: {
-                height: this.layoutOptions.topStickyPaddingMax,
-            },
-        }
         const navHeaderView = navHeader?.(viewInputs) ?? defaultNavHeader
         const footerView = {
             tag: 'footer' as const,
@@ -214,7 +273,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
                 position: 'sticky' as const,
                 top: '100%',
             },
-            children: [footer ? footer(viewInputs) : new FooterView()],
+            children: [navFooter ? navFooter(viewInputs) : new FooterView()],
         }
         const leftSideNav = {
             tag: 'div' as const,
@@ -243,6 +302,7 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             router,
             displayMode$: this.displayModeToc$,
             layoutOptions: this.layoutOptions,
+            content$: contentView.content$,
         })
         const rightSideNav = new StickyColumnContainer({
             type: 'toc',
@@ -255,19 +315,6 @@ export class DefaultLayoutView implements VirtualDOM<'div'> {
             layoutOptions: this.layoutOptions,
         })
 
-        const pageView: AnyVirtualDOM = {
-            tag: 'div' as const,
-            class: `w-100 ${this.layoutOptions.topStickyPaddingMax} px-3`,
-            style: {
-                maxWidth: this.layoutOptions.pageMaxWidth,
-                height: 'fit-content',
-                minHeight: '100vh',
-            },
-            children: [
-                defaultNavHeader,
-                page ? page(viewInputs) : new PageView({ router: router }),
-            ],
-        }
         const hSep = {
             tag: 'div' as const,
             class: 'flex-grow-1',

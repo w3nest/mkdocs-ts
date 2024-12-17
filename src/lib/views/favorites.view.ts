@@ -18,6 +18,7 @@ import {
 import { NavNodeBase } from '../navigation.node'
 import { Router } from '../router'
 import { DisplayMode } from './default-layout.view'
+import { hasNodeHeaderViewTrait, NodeDecorationSpec } from './navigation.view'
 
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
@@ -195,10 +196,13 @@ export class BookmarkView implements VirtualDOM<'div'> {
      * @param router Application's router.
      */
     constructor({ node, router }: { node: NavNodeBase; router: Router }) {
-        const decoration =
-            typeof node.decoration === 'function'
-                ? node.decoration({ router })
-                : node.decoration
+        let decoration: NodeDecorationSpec | undefined = undefined
+        if (hasNodeHeaderViewTrait(node)) {
+            decoration =
+                typeof node.layout.node === 'function'
+                    ? node.layout.node({ router })
+                    : node.layout.node
+        }
         this.children = [
             {
                 tag: 'div',
@@ -206,7 +210,7 @@ export class BookmarkView implements VirtualDOM<'div'> {
                     {
                         tag: 'a',
                         class: attr$({
-                            source$: router.currentPath$,
+                            source$: router.path$,
                             vdomMap: (path) => {
                                 return path === node.href
                                     ? 'mkdocs-text-5 selected mkdocs-text-focus'

@@ -1,36 +1,6 @@
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { Router } from './router'
 import { from, map, Observable } from 'rxjs'
-import { AnyVirtualDOM, AttributeLike, ChildrenLike, ChildLike } from 'rx-vdom'
-
-/**
- * Defines attributes regarding the visual rendering of the node if the navigation view.
- */
-export interface NodeDecorationSpec {
-    /**
-     * Optional class added as wrapper to the HTML element representing the node.
-     */
-    wrapperClass?: AttributeLike<string>
-    /**
-     * Optional icon, inserted before the node's name.
-     */
-    icon?: ChildLike
-    /**
-     * Optional actions, inserted after the node's name.
-     */
-    actions?: ChildrenLike
-}
-
-/**
- * A specification for node decorations, either as a resolved object or a function
- * returning a resolved decoration.
- *
- * - If an object is provided, it directly specifies the decorations.
- * - If a function is provided, it dynamically computes the decorations based on the router state.
- */
-export type NodeDecoration =
-    | NodeDecorationSpec
-    | ((p: { router: Router }) => NodeDecorationSpec)
 
 /**
  * Fully resolved navigation node when using {@link CatchAllNav}.
@@ -60,21 +30,21 @@ export interface NavNodeParams {
     /**
      * Optional decoration.
      */
-    decoration?: NodeDecoration
+    layout?: LayoutSpec
 }
 
 export class NavNodeBase extends ImmutableTree.Node {
     public readonly name: string
     public readonly href: string
     public readonly data: unknown
-    public readonly decoration?: NodeDecoration
+    public readonly layout?: LayoutSpec
 
     constructor(parameters: NavNodeParams) {
         super({ id: parameters.id, children: parameters.children })
         this.name = parameters.name
         this.href = parameters.href
         this.data = parameters.data
-        this.decoration = parameters.decoration
+        this.layout = parameters.layout
     }
 }
 
@@ -86,8 +56,8 @@ export class NavNodePromise extends NavNodeBase {
             id: href,
             name: '',
             href,
-            decoration: {
-                icon: { tag: 'i' as const, class: 'fas fa-spinner fa-spin' },
+            layout: {
+                kind: 'NavNodePending',
             },
         })
     }
@@ -136,7 +106,7 @@ export function createNavNode({
                   router,
               }),
         data: node.data,
-        decoration: node.decoration,
+        layout: node.layout,
     })
 }
 
@@ -218,7 +188,7 @@ export function createChildren({
                     promiseNavs,
                 }),
                 href,
-                decoration: v.decoration,
+                layout: v.layout,
             })
         })
     if (
@@ -256,7 +226,7 @@ export function createRootNode({
     const rootNode = new NavNode({
         id: href === '' ? '/' : href,
         name: navigation.name,
-        decoration: navigation.decoration,
+        layout: navigation.layout,
         children: createChildren({
             navigation,
             hRefBase: href,
@@ -281,29 +251,16 @@ export function createRootNode({
  */
 export type Resolvable<T> = T | Promise<T> | Observable<T>
 
+export interface LayoutSpec {
+    kind: string
+
+    [k: string]: unknown
+}
 /**
  * The common part of a navigation node, whether it is static or dynamic.
  */
 export interface NavigationCommon {
-    /**
-     * This function represents the view of the main content.
-     *
-     * @param router Router instance.
-     * @returns A resolvable view
-     */
-    html: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
-    /**
-     * This function represents the view of the table of content in the page.
-     *
-     * @param p arguments of the view generator:
-     *   *  html : Content of the HTML page
-     *   *  router : Router instance.
-     * @returns A promise on the view
-     */
-    tableOfContent?: (p: {
-        html: HTMLElement
-        router: Router
-    }) => Promise<AnyVirtualDOM>
+    layout: LayoutSpec
 }
 
 /**
@@ -347,11 +304,6 @@ export type Navigation = NavigationCommon & {
      * Name of the node.
      */
     name: string
-
-    /**
-     * Decoration configuration for the node.
-     */
-    decoration?: NodeDecoration
 
     /**
      * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.

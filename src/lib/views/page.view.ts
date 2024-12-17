@@ -1,14 +1,34 @@
 import {
-    AnyVirtualDOM,
     ChildrenLike,
     VirtualDOM,
     RxHTMLElement,
     child$,
+    AnyVirtualDOM,
 } from 'rx-vdom'
-import { Destination, Router } from '../router'
+import { Target, isResolvedTarget, Router } from '../router'
 import { parseMd } from '../markdown'
-import { filter } from 'rxjs'
+import {
+    filter,
+    from,
+    map,
+    Observable,
+    of,
+    ReplaySubject,
+    switchMap,
+    take,
+} from 'rxjs'
 import { setup } from '../../auto-generated'
+import { Resolvable } from '../navigation.node'
+
+interface ContentTrait {
+    layout: {
+        content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
+    }
+}
+function hasContentViewTrait(node: unknown): node is ContentTrait {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return (node as ContentTrait)?.layout?.content !== undefined
+}
 
 /**
  * The main content of the page.
@@ -19,27 +39,71 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page text-justify'
     public readonly children: ChildrenLike
 
-    public readonly filter?: (destination: Destination) => boolean
+    public readonly content$ = new ReplaySubject<HTMLElement>(1)
+    public readonly filter?: (target: Target) => boolean
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void
 
     constructor(params: {
         router: Router
-        filter?: (destination: Destination) => boolean
+        filter?: (target: Target) => boolean
     }) {
         Object.assign(this, params)
         const filterFct = this.filter ?? (() => true)
+        const maybeError$ = child$({
+            source$: this.router.target$,
+            vdomMap: (target) => {
+                if (isResolvedTarget(target)) {
+                    return { tag: 'div' }
+                }
+                if (target.reason === 'NotFound') {
+                    return new UnresolvedPageView({ path: target.path })
+                }
+                return new FuturePageView()
+            },
+        })
         this.children = [
+            maybeError$,
             child$({
-                source$: this.router.currentPage$.pipe(filter(filterFct)),
-                vdomMap: ({ html, sectionId }) => {
+                source$: this.router.target$.pipe(
+                    filter((target) => {
+                        return isResolvedTarget(target)
+                    }),
+                    filter(filterFct),
+                    filter((target) => {
+                        return hasContentViewTrait(target.node)
+                    }),
+                    switchMap((target: Target & { node: ContentTrait }) => {
+                        console.log('Display page', target)
+                        const html = target.node.layout.content({
+                            router: this.router,
+                        })
+                        if (html instanceof Promise) {
+                            return from(html).pipe(
+                                map((html) => ({ html, ...target })),
+                            )
+                        }
+                        if (html instanceof Observable) {
+                            return html.pipe(take(1)).pipe(
+                                map((html) => ({
+                                    html,
+                                    ...target,
+                                })),
+                            )
+                        }
+                        return of(html).pipe(
+                            map((html) => ({ html, ...target })),
+                        )
+                    }),
+                ),
+                vdomMap: (destination) => {
                     return {
                         tag: 'div',
-                        children: [html as AnyVirtualDOM],
+                        children: [destination.html],
                         connectedCallback: (page) => {
-                            if (sectionId) {
-                                this.router.scrollTo(sectionId)
+                            if (destination.sectionId) {
+                                this.router.scrollTo(destination.sectionId)
                             }
-                            this.router.setDisplayedPage({ page })
+                            this.content$.next(page)
                             replaceCrossReferences(page, this.router)
                         },
                     }

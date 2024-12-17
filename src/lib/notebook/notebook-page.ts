@@ -1,6 +1,6 @@
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import type { MdParsingOptions, ViewGenerator } from '../markdown'
-import { Router } from '../router'
+import { isResolvedTarget, Router } from '../router'
 import { delay, filter, from, of, take } from 'rxjs'
 import { Scope, State } from './state'
 import { DisplayFactory } from './display-utils'
@@ -174,9 +174,10 @@ export class NotebookPage implements VirtualDOM<'div'> {
                         ...vdom,
                         connectedCallback: (elem: RxHTMLElement<'div'>) => {
                             vdom.connectedCallback?.(elem)
-                            this.router.currentPage$
+                            this.router.target$
                                 .pipe(
                                     take(1),
+                                    filter((page) => isResolvedTarget(page)),
                                     filter(
                                         (page) => page.sectionId !== undefined,
                                     ),

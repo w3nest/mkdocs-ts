@@ -30,7 +30,7 @@ import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
 import { install } from '@w3nest/webpm-client'
-import type { NodeDecoration, Navigation, Router, Views } from '../index'
+import type { Navigation, Router, Views } from '../index'
 import type { installNotebookModule } from '../../index'
 import type { parseMd } from '../markdown'
 
@@ -75,42 +75,56 @@ export function fetchModuleDoc({
     ]).pipe(map(([mdle]) => mdle))
 }
 
+const layout = (kind: string) => ({
+    kind,
+    toc: (d: { html: HTMLElement; router: Router }) =>
+        Dependencies.Views.tocView({
+            ...d,
+            domConvertor: tocConvertor,
+        }),
+})
+
 export const docNode: ({
+    layoutKind,
     project,
     configuration,
 }: {
+    layoutKind: string
     project: Project
     configuration: Configuration
-}) => Navigation = ({ project, configuration }) => ({
+}) => Navigation = ({ layoutKind, project, configuration }) => ({
     name: 'API',
-    tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-        Dependencies.Views.tocView({ ...d, domConvertor: tocConvertor }),
-    html: () => ({
-        tag: 'div',
-        innerText: 'The modules of the project',
-    }),
+    layout: {
+        ...layout(layoutKind),
+        content: () => ({
+            tag: 'div',
+            innerText: 'The modules of the project',
+        }),
+    },
     '/api': {
         name: project.name,
-        tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-            Dependencies.Views.tocView({ ...d, domConvertor: tocConvertor }),
-        html: ({ router }) =>
-            fetchModuleDoc({
-                modulePath: project.name,
-                basePath: project.docBasePath,
-                configuration,
-                project,
-            }).pipe(
-                map((module: Module) => {
-                    return new ModuleView({
-                        module,
-                        router,
-                        configuration,
-                        project,
-                    })
-                }),
-            ),
+        layout: {
+            ...layout(layoutKind),
+            content: ({ router }: { router: Router }) =>
+                fetchModuleDoc({
+                    modulePath: project.name,
+                    basePath: project.docBasePath,
+                    configuration,
+                    project,
+                }).pipe(
+                    map((module: Module) => {
+                        return new ModuleView({
+                            module,
+                            router,
+                            configuration,
+                            project,
+                        })
+                    }),
+                ),
+        },
         '...': ({ path, router }: { path: string; router: Router }) =>
             docNavigation({
+                layoutKind,
                 modulePath: path,
                 router,
                 project,
@@ -119,11 +133,13 @@ export const docNode: ({
     },
 })
 export const docNavigation = ({
+    layoutKind,
     modulePath,
     router,
     project,
     configuration,
 }: {
+    layoutKind: string
     modulePath: string
     router: Router
     project: Project
@@ -157,13 +173,16 @@ export const docNavigation = ({
                               },
                           }))
                         : [],
-                html: () =>
-                    new ModuleView({ module, router, configuration, project }),
-                tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-                    Dependencies.Views.tocView({
-                        ...d,
-                        domConvertor: tocConvertor,
-                    }),
+                layout: {
+                    ...layout(layoutKind),
+                    content: () =>
+                        new ModuleView({
+                            module,
+                            router,
+                            configuration,
+                            project,
+                        }),
+                },
             }
         }),
     )
@@ -171,7 +190,8 @@ export const docNavigation = ({
 
 export function codeApiEntryNode(params: {
     name: string
-    decoration: NodeDecoration
+    layoutKind: string
+    icon: AnyVirtualDOM
     docBasePath: string
     entryModule: string
     configuration: Configuration
@@ -183,31 +203,32 @@ export function codeApiEntryNode(params: {
     const configuration = params.configuration
     return {
         name: params.name,
-        decoration: params.decoration,
-        html: ({ router }: { router: Router }) => {
-            return fetchModuleDoc({
-                modulePath: project.name,
-                basePath: project.docBasePath,
-                configuration,
-                project,
-            }).pipe(
-                map((module) => {
-                    return new ModuleView({
-                        module,
-                        router,
-                        configuration,
-                        project,
-                    })
-                }),
-            )
+        layout: {
+            ...layout(params.layoutKind),
+            node: {
+                icon: params.icon,
+            },
+            content: ({ router }: { router: Router }) => {
+                return fetchModuleDoc({
+                    modulePath: project.name,
+                    basePath: project.docBasePath,
+                    configuration,
+                    project,
+                }).pipe(
+                    map((module) => {
+                        return new ModuleView({
+                            module,
+                            router,
+                            configuration,
+                            project,
+                        })
+                    }),
+                )
+            },
         },
-        tableOfContent: (d: { html: HTMLElement; router: Router }) =>
-            Dependencies.Views.tocView({
-                ...d,
-                domConvertor: tocConvertor,
-            }),
         '...': ({ router, path }: { router: Router; path: string }) =>
             docNavigation({
+                layoutKind: params.layoutKind,
                 modulePath: path,
                 router,
                 project,

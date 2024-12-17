@@ -10,6 +10,7 @@ import {
     AttributeLike,
     attr$,
     child$,
+    ChildLike,
 } from 'rx-vdom'
 import { Router } from '../router'
 import { NavNodeBase } from '../navigation.node'
@@ -101,6 +102,45 @@ export class HandlerView implements VirtualDOM<'div'> {
         }
     }
 }
+/**
+ * Defines attributes regarding the visual rendering of the node if the navigation view.
+ */
+export interface NodeDecorationSpec {
+    /**
+     * Optional class added as wrapper to the HTML element representing the node.
+     */
+    wrapperClass?: AttributeLike<string>
+    /**
+     * Optional icon, inserted before the node's name.
+     */
+    icon?: ChildLike
+    /**
+     * Optional actions, inserted after the node's name.
+     */
+    actions?: ChildrenLike
+}
+
+/**
+ * A specification for node decorations, either as a resolved object or a function
+ * returning a resolved decoration.
+ *
+ * - If an object is provided, it directly specifies the decorations.
+ * - If a function is provided, it dynamically computes the decorations based on the router state.
+ */
+export type NodeDecoration =
+    | NodeDecorationSpec
+    | ((p: { router: Router }) => NodeDecorationSpec)
+
+interface NodeHeaderTrait {
+    layout: {
+        node: NodeDecoration
+    }
+}
+
+export function hasNodeHeaderViewTrait(node: unknown): node is NodeHeaderTrait {
+    //eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition -- It simplifies reading
+    return (node as NodeHeaderTrait)?.layout?.node !== undefined
+}
 
 export class NavigationHeader implements VirtualDOM<'a'> {
     static readonly DefaultWrapperClass =
@@ -123,12 +163,16 @@ export class NavigationHeader implements VirtualDOM<'a'> {
         withChildren?: AnyVirtualDOM[]
         bookmarks$: BehaviorSubject<string[]>
     }) {
-        const decoration =
-            typeof node.decoration === 'function'
-                ? node.decoration({ router })
-                : node.decoration
-        this.class =
-            decoration?.wrapperClass ?? NavigationHeader.DefaultWrapperClass
+        let decoration: NodeDecorationSpec | undefined = undefined
+        this.class = NavigationHeader.DefaultWrapperClass
+        if (hasNodeHeaderViewTrait(node)) {
+            decoration =
+                typeof node.layout.node === 'function'
+                    ? node.layout.node({ router })
+                    : node.layout.node
+            this.class =
+                decoration.wrapperClass ?? NavigationHeader.DefaultWrapperClass
+        }
 
         this.style =
             node.id === '/'
