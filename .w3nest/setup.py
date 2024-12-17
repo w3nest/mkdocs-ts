@@ -82,19 +82,7 @@ config = ProjectConfig(
             "build-css": "yarn build-css-default && prettier ./assets -w",
             "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
         },
-        "eslintConfig": {
-            "extends": [
-                "@youwol"
-            ],
-            "ignorePatterns": ["/dist/", "/coverage/","mkdocs-ts-doc"],
-            "overrides": [{
-                "files": ["bin/index.js"],
-                "env": {
-                    "node": True
-                }
-            }]
-        }
-    }
+    },
 )
 template_folder = project_folder / ".w3nest" / ".template"
 generate_template(config=config, dst_folder=template_folder)
