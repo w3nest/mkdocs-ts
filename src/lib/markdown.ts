@@ -12,7 +12,6 @@ import {
     CodeLanguage,
     CodeSnippetView,
     NoteView,
-    ExpandableGroupView,
     CodeBadgesView,
 } from './md-widgets'
 
@@ -103,15 +102,6 @@ export class GlobalMarkdownViews {
             })
         },
         note: (...args) => NoteView.fromHTMLElement(...args),
-        expandable: (elem: HTMLElement, parsingArgs) => {
-            return new ExpandableGroupView({
-                title: elem.getAttribute('title') ?? '',
-                icon: elem.getAttribute('icon') ?? '',
-                mode: elem.getAttribute('mode') as 'stateful' | 'stateless',
-                content: () =>
-                    parseMd({ src: elem.textContent ?? '', ...parsingArgs }),
-            })
-        },
         'code-badges': (elem: HTMLElement) => {
             return new CodeBadgesView({
                 license: elem.getAttribute('license') ?? undefined,
