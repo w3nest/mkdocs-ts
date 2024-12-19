@@ -1,4 +1,12 @@
-import { filter, from, Observable, of, ReplaySubject, Subject } from 'rxjs'
+import {
+    filter,
+    from,
+    Observable,
+    of,
+    ReplaySubject,
+    Subject,
+    take,
+} from 'rxjs'
 import {
     createRootNode,
     Navigation,
@@ -290,6 +298,22 @@ export class Router {
         this.navigateTo({ path: parentPath })
     }
 
+    /**
+     * Set the element in page that can be 'scrolled' to reach target destination's section ID (reference from URL).
+     *
+     * @param element Scrollable element.
+     */
+    setScrollableElement(element: HTMLElement) {
+        this.scrollableElement = element
+        this.target$
+            .pipe(
+                take(1),
+                filter((target) => 'node' in target),
+            )
+            .subscribe((target) => {
+                this.scrollTo(target.sectionId)
+            })
+    }
     /**
      * Scroll the main HTML content to focus on an HTML element.
      *

@@ -210,7 +210,7 @@ export class View implements VirtualDOM<'div'> {
         )
         this.connectedCallback = (e: HTMLElement) => {
             this.plugResizer(e)
-            router.scrollableElement = e
+            router.setScrollableElement(e)
         }
         const viewInputs = {
             router,
