@@ -378,10 +378,11 @@ export class Router {
                 if (!keepGoing) {
                     return { tree, resolvedPath, keepGoing }
                 }
+                const fullPath = `${resolvedPath}/${part}`
                 let treePart = `/${part}` in tree ? tree[`/${part}`] : undefined
 
                 if (treePart instanceof Promise) {
-                    if (!(`/${part}` in this.navResolved)) {
+                    if (!(fullPath in this.navResolved)) {
                         // a retry in some period of time will be executed
                         return {
                             tree: treePart,
@@ -389,7 +390,7 @@ export class Router {
                             keepGoing: false,
                         }
                     }
-                    treePart = this.navResolved[`/${part}`]
+                    treePart = this.navResolved[fullPath]
                 }
                 if (treePart) {
                     return {
@@ -398,7 +399,7 @@ export class Router {
                         keepGoing: true,
                     }
                 }
-                // For there treePart is undefined
+                // From there, treePart is undefined
                 if (!tree[CatchAllKey]) {
                     this.target$.next({
                         path,
