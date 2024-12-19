@@ -134,33 +134,55 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
 export class FooterView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
-        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center justify-content-center border-top py-1'
+        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center flex-wrap justify-content-center border-top py-1'
     public readonly children: ChildrenLike
 
-    constructor() {
+    constructor(params?: { sourceName: string; sourceUrl: string }) {
         const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`
-        this.children = [
-            {
-                tag: 'div',
-                innerText: 'Made with',
-            },
-            {
-                tag: 'div',
-                class: 'mx-2',
-            },
-            {
-                tag: 'img',
-                src: `${baseIconPath}/mkdocs-ts.svg`,
-                width: 25,
-            },
-            {
-                tag: 'a',
-                class: 'mx-1',
-                innerText: 'mkdocs-ts',
-                target: '_blank',
-                href: '/apps/@mkdocs-ts/doc',
-            },
-        ]
+        const mkdocs: AnyVirtualDOM = {
+            tag: 'div',
+            class: 'd-flex align-items-center',
+            children: [
+                {
+                    tag: 'div',
+                    innerText: 'Made with',
+                },
+                {
+                    tag: 'div',
+                    class: 'mx-2',
+                },
+                {
+                    tag: 'img',
+                    src: `${baseIconPath}/mkdocs-ts.svg`,
+                    width: 25,
+                },
+                {
+                    tag: 'a',
+                    class: 'mx-1',
+                    innerText: 'mkdocs-ts',
+                    target: '_blank',
+                    href: '/apps/@mkdocs-ts/doc',
+                },
+            ],
+        }
+        const sources = () => ({
+            tag: 'div' as const,
+            class: 'd-flex align-items-center px-1 border rounded mx-2 my-1',
+            children: [
+                {
+                    tag: 'i' as const,
+                    class: 'fas fa-code-branch',
+                },
+                {
+                    tag: 'a' as const,
+                    class: 'mx-1',
+                    innerText: params?.sourceName,
+                    target: '_blank',
+                    href: params?.sourceUrl,
+                },
+            ],
+        })
+        this.children = [params ? sources() : undefined, mkdocs]
     }
 }
 
