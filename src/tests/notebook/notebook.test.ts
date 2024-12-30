@@ -4,9 +4,9 @@ import {
     extractGlobalDeclarations,
     parseProgram,
     Output,
-} from '../lib/notebook'
+} from '../../lib/notebook'
 import { Subject } from 'rxjs'
-import { DisplayFactory } from '../lib/notebook'
+import { DisplayFactory } from '../../lib/notebook'
 
 test('extract global declarations 1', () => {
     const input = `

@@ -1,4 +1,4 @@
-import { processDeclaration } from '../lib/code-api/declaration.view'
+import { processDeclaration } from '../../lib/code-api/declaration.view'
 
 test('declaration view', () => {
     const declaration = `This is a word1, this is (word2), yet a word3\n among other words like word1word2.`
