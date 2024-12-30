@@ -7,11 +7,17 @@
 import { Project } from './models'
 import { setup } from '../../auto-generated'
 import type { DisplayFactory, NotebookOptions, Scope } from '../notebook'
+import { NavNodeData } from '../navigation.node'
+
+import { DefaultLayout } from '../index'
 
 /**
  * Specification of the configuration interface.
  */
-export interface Configuration {
+export interface Configuration<
+    TLayout = DefaultLayout.NavLayout,
+    THeader = DefaultLayout.NavHeader,
+> {
     /**
      * Defines the stylesheet to install.
      *
@@ -47,6 +53,16 @@ export interface Configuration {
               displayFactory?: DisplayFactory
               options?: NotebookOptions
           }
+
+    navNode: ({
+        name,
+        header,
+        layout,
+    }: {
+        name: string
+        header: DefaultLayout.NavHeader
+        layout: DefaultLayout.NavLayout
+    }) => NavNodeData<TLayout, THeader>
 }
 export const configurationDefault: Configuration = {
     codeUrl: ({
@@ -63,6 +79,11 @@ export const configurationDefault: Configuration = {
     externalTypes: {},
     css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,
     notebook: undefined,
+    navNode: ({ name, header, layout }) => ({
+        name,
+        header,
+        layout,
+    }),
 }
 
 /**

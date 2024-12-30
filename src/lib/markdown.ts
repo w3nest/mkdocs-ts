@@ -265,7 +265,7 @@ export function parseMd({
                     link.href = `${router.basePath}?nav=${path}`
                     link.onclick = (e: MouseEvent) => {
                         e.preventDefault()
-                        router.navigateTo({ path })
+                        router.fireNavigateTo({ path })
                     }
                     const title = link.title
                     if (title) {

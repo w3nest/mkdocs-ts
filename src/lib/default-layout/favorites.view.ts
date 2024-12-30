@@ -15,9 +15,10 @@ import {
     Observable,
     ReplaySubject,
 } from 'rxjs'
-import { NavNodeBase } from '../navigation.node'
+import { NavNodeResolved } from '../navigation.node'
 import { Router } from '../router'
 import { DisplayMode } from './default-layout.view'
+import { NavHeader } from './navigation.view'
 
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
@@ -40,7 +41,7 @@ export class FavoritesView implements VirtualDOM<'div'> {
     public readonly topStickyPaddingMax: string
     public readonly bottomStickyPaddingMax: string
     public readonly bookmarks$: Observable<string[]>
-    public readonly router: Router
+    public readonly router: Router<unknown, NavHeader>
 
     public readonly htmlElement$ = new ReplaySubject<RxHTMLElement<'div'>>(1)
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
@@ -52,7 +53,7 @@ export class FavoritesView implements VirtualDOM<'div'> {
      */
     constructor(params: {
         bookmarks$: Observable<string[]>
-        router: Router
+        router: Router<unknown, NavHeader>
         displayMode$: BehaviorSubject<DisplayMode>
         topStickyPaddingMax: string
         bottomStickyPaddingMax: string
@@ -150,7 +151,7 @@ export class BookmarksView implements VirtualDOM<'div'> {
         router,
     }: {
         bookmarks$: Observable<string[]>
-        router: Router
+        router: Router<unknown, NavHeader>
     }) {
         const source$ = combineLatest([
             bookmarks$,
@@ -167,7 +168,7 @@ export class BookmarksView implements VirtualDOM<'div'> {
         this.children = replace$({
             policy: 'replace',
             source$,
-            vdomMap: (nodes) => {
+            vdomMap: (nodes: NavNodeResolved<unknown, NavHeader>[]) => {
                 return nodes.map((node) => {
                     return new BookmarkView({
                         node,
@@ -194,11 +195,17 @@ export class BookmarkView implements VirtualDOM<'div'> {
      * @param node node associated to the bookmark.
      * @param router Application's router.
      */
-    constructor({ node, router }: { node: NavNodeBase; router: Router }) {
-        const decoration =
-            typeof node.decoration === 'function'
-                ? node.decoration({ router })
-                : node.decoration
+    constructor({
+        node,
+        router,
+    }: {
+        node: NavNodeResolved<unknown, NavHeader>
+        router: Router
+    }) {
+        const header =
+            typeof node.header === 'function'
+                ? node.header({ router })
+                : node.header
         this.children = [
             {
                 tag: 'div',
@@ -221,7 +228,7 @@ export class BookmarkView implements VirtualDOM<'div'> {
                         },
                         href: node.href,
                         children: [
-                            decoration?.icon,
+                            header?.icon,
                             {
                                 tag: 'div',
                                 style: {
@@ -232,7 +239,7 @@ export class BookmarkView implements VirtualDOM<'div'> {
                         ],
                         onclick: (ev) => {
                             ev.preventDefault()
-                            router.navigateTo({ path: node.href })
+                            router.fireNavigateTo({ path: node.href })
                             if (node.href === '/') {
                                 router.explorerState.expandedNodes$.next(['/'])
                                 return

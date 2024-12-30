@@ -7,6 +7,7 @@ import {
     from,
     map,
     firstValueFrom,
+    Observable,
 } from 'rxjs'
 import { OutputsView } from './cell-views'
 import * as webpm from '@w3nest/webpm-client'
@@ -474,7 +475,7 @@ export class State {
                 this.modules[path].state.dispose()
             }
             const nav = router.getNav({ path })
-            if (!nav) {
+            if (!(nav instanceof Observable)) {
                 throw Error(`Can not find module at ${path}`)
             }
             const module$ = nav.pipe(

@@ -6,7 +6,7 @@ import {
     VirtualDOM,
     AttributeLike,
 } from 'rx-vdom'
-import { NavigationView, NodeDecoration } from './navigation.view'
+import { NavHeader, NavigationView } from './navigation.view'
 import { Router } from '../router'
 import { FooterView, PageView } from './page.view'
 import {
@@ -20,7 +20,6 @@ import { FavoritesView } from './favorites.view'
 import { ExpandableLeftSide, ExpandableRightSide } from './expandable.view'
 import { TocWrapperView } from './toc.view'
 import { Resolvable } from '../navigation.node'
-import { NavNodeView } from '../router.view'
 
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
@@ -126,7 +125,7 @@ export type LayoutElementView = ({
  * Dynamic options (defined in {@link Navigation}) for {@link View}.
  * Static options are provided in {@link View} constructor.
  */
-export interface NavNodeOptions {
+export interface NavLayout {
     /**
      * This function represents the view of the table of content in the page.
      *
@@ -136,10 +135,6 @@ export interface NavNodeOptions {
      * @returns A promise on the view
      */
     toc?: (p: { html: HTMLElement; router: Router }) => Promise<AnyVirtualDOM>
-    /**
-     * Specification for the display of navigation node in the {@link NavigationHeader}.
-     */
-    node?: NodeDecoration
     /**
      * This function represents the view of the main content.
      *
@@ -184,25 +179,23 @@ export class View implements VirtualDOM<'div'> {
      *
      * @param _p
      * @param _p.router The router.
-     * @param _p.navHeader Optional custom header view to use in navigation panel, empty if not provided.
-     * @param _p.navFooter Optional custom footer view to use in navigation panel, default to {@link FooterView}.
+     * @param _p.sideNavHeader Optional custom header view to use in navigation panel, empty if not provided.
+     * @param _p.sideNavFooter Optional custom footer view to use in navigation panel, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
      * @param _p.bookmarks$ Subject emitting the `href` of the bookmarked pages.
      */
     constructor({
         router,
-        navNodeView,
-        navHeader,
-        navFooter,
+        sideNavHeader,
+        sideNavFooter,
         layoutOptions,
         bookmarks$,
     }: {
-        router: Router
-        navNodeView: NavNodeView
-        navHeader?: LayoutElementView
-        navFooter?: LayoutElementView
+        router: Router<NavLayout, NavHeader>
+        sideNavHeader?: LayoutElementView
+        sideNavFooter?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
-        bookmarks$: BehaviorSubject<string[]>
+        bookmarks$?: BehaviorSubject<string[]>
     }) {
         this.layoutOptions = Object.assign(
             this.layoutOptions,
@@ -240,35 +233,39 @@ export class View implements VirtualDOM<'div'> {
 
         const favoritesView = new FavoritesView({
             router,
-            bookmarks$,
+            bookmarks$: bookmarks$ ?? new BehaviorSubject([]),
             displayMode$: this.displayModeNav$,
             topStickyPaddingMax: this.layoutOptions.topStickyPaddingMax,
             bottomStickyPaddingMax: this.layoutOptions.bottomStickyPaddingMax,
         })
         const navView = new NavigationView({
             router,
-            navNodeView,
             layoutOptions: this.layoutOptions,
+            bookmarks$,
         })
-        const navHeaderView = navHeader?.(viewInputs) ?? defaultNavHeader
+        const navHeaderView = sideNavHeader?.(viewInputs) ?? defaultNavHeader
         const footerView = {
             tag: 'footer' as const,
             style: {
                 position: 'sticky' as const,
                 top: '100%',
             },
-            children: [navFooter ? navFooter(viewInputs) : new FooterView()],
+            children: [
+                sideNavFooter ? sideNavFooter(viewInputs) : new FooterView(),
+            ],
         }
         const leftSideNav = {
             tag: 'div' as const,
             class: 'd-flex flex-grow-1',
             children: [
-                new StickyColumnContainer({
-                    type: 'favorites',
-                    content: favoritesView,
-                    layoutOptions: this.layoutOptions,
-                    header: defaultNavHeader,
-                }),
+                bookmarks$
+                    ? new StickyColumnContainer({
+                          type: 'favorites',
+                          content: favoritesView,
+                          layoutOptions: this.layoutOptions,
+                          header: defaultNavHeader,
+                      })
+                    : undefined,
                 new StickyColumnContainer({
                     type: 'nav',
                     content: navView,

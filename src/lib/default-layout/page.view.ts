@@ -73,7 +73,6 @@ export class PageView implements VirtualDOM<'div'> {
                         return hasContentViewTrait(target.node)
                     }),
                     switchMap((target: Target & { node: ContentTrait }) => {
-                        console.log('Display page', target)
                         const html = target.node.layout.content({
                             router: this.router,
                         })
@@ -122,7 +121,7 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
             link.href = `${router.basePath}?nav=${path}`
             link.onclick = (e: MouseEvent) => {
                 e.preventDefault()
-                router.navigateTo({ path })
+                router.fireNavigateTo({ path })
             }
         }
     })

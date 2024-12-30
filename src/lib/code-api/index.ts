@@ -23,23 +23,16 @@ export * from './models'
 export * from './module.view'
 export * from './utils'
 
-import { combineLatest, map, Observable } from 'rxjs'
+import { combineLatest, map, Observable, of, tap } from 'rxjs'
 import { ModuleView } from './module.view'
 import { AnyVirtualDOM } from 'rx-vdom'
 import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
 import { install } from '@w3nest/webpm-client'
-import {
-    Resolvable,
-    Navigation,
-    Router,
-    DefaultLayout,
-    CatchAllNav,
-} from '../index'
+import { Navigation, Router, DefaultLayout, LazyRoutes } from '../index'
 import type { installNotebookModule } from '../../index'
 import type { parseMd } from '../markdown'
-import { LayoutOptionsMap } from '@mkdocsTsConfig'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
@@ -49,55 +42,78 @@ export class Dependencies {
     public static headingId: (id: string) => string
 }
 
-export const tocConvertor = (heading: HTMLHeadingElement): AnyVirtualDOM => {
-    const firstHTMLElement = [...heading.children].find(
-        (c) => c instanceof HTMLElement,
-    )
-    const classes = firstHTMLElement ? firstHTMLElement.classList.value : ''
+export class HttpClient {
+    public readonly cache: Record<string, Module> = {}
+    public readonly configuration: Configuration<unknown, unknown>
+    public readonly project: Project
+    constructor(params: {
+        configuration: Configuration<unknown, unknown>
+        project: Project
+    }) {
+        Object.assign(this, params)
+    }
 
-    return {
-        tag: 'div' as const,
-        innerText: firstHTMLElement?.innerText ?? heading.innerText,
-        class: `${classes} fv-hover-text-focus`,
+    fetchModule(modulePath: string): Observable<Module> {
+        const assetPath = `${this.project.docBasePath}/${modulePath}.json`
+        if (assetPath in this.cache) {
+            return of(this.cache[assetPath])
+        }
+        return request$<Module>(new Request(assetPath)).pipe(
+            raiseHTTPErrors(),
+            tap((m) => (this.cache[assetPath] = m)),
+        )
     }
 }
 
-export function fetchModuleDoc({
-    modulePath,
-    basePath,
-    configuration,
+const moduleView = <TLayout, THeader>({
+    httpClient,
+    path,
+    router,
     project,
+    configuration,
 }: {
-    modulePath: string
-    basePath: string
-    configuration: Configuration
+    httpClient: HttpClient
+    path: string
+    router: Router
     project: Project
-}): Observable<Module> {
-    const assetPath = `${basePath}/${modulePath}.json`
+    configuration: Configuration<TLayout, THeader>
+}) => {
     return combineLatest([
-        request$<Module>(new Request(assetPath)).pipe(raiseHTTPErrors()),
+        httpClient.fetchModule(path.replace(/\./g, '/')),
         install({
             css: [configuration.css(project)],
         }),
-    ]).pipe(map(([mdle]) => mdle))
-}
-type LayoutMap = {
-    [Property in keyof LayoutOptionsMap]: LayoutOptionsMap[Property] extends {
-        content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
-    }
-        ? LayoutOptionsMap[Property] & { kind: Property }
-        : never
-}
-export type LayoutKindUnion = LayoutMap[keyof LayoutMap]['kind']
-
-const layout = (kind: LayoutKindUnion) => ({
-    kind,
-    toc: (d: { html: HTMLElement; router: Router }) =>
-        Dependencies.DefaultLayout.tocView({
-            ...d,
-            domConvertor: tocConvertor,
+    ]).pipe(
+        map(([m]) => {
+            return new ModuleView({
+                module: m,
+                router,
+                configuration,
+                project,
+            })
         }),
-})
+    )
+}
+const toc = (d: { html: HTMLElement; router: Router }) => {
+    return Dependencies.DefaultLayout.tocView({
+        ...d,
+        domConvertor: (heading: HTMLHeadingElement): AnyVirtualDOM => {
+            const firstHTMLElement = [...heading.children].find(
+                (c) => c instanceof HTMLElement,
+            )
+            const classes = firstHTMLElement
+                ? firstHTMLElement.classList.value
+                : ''
+
+            return {
+                tag: 'div' as const,
+                innerText: firstHTMLElement?.innerText ?? heading.innerText,
+                class: `${classes} fv-hover-text-focus`,
+            }
+        },
+    })
+}
+
 const decoration = {
     icon: {
         tag: 'i' as const,
@@ -105,151 +121,99 @@ const decoration = {
     },
 }
 
-export const docNode: ({
-    layoutKind,
-    project,
-    configuration,
-}: {
-    layoutKind: LayoutKindUnion
-    project: Project
-    configuration: Configuration
-}) => Navigation = ({ layoutKind, project, configuration }) => ({
-    name: 'API',
-    decoration,
-    layout: {
-        kind: layoutKind,
-        content: () => ({
-            tag: 'div',
-            innerText: 'The modules of the project',
-        }),
-    },
-    '/api': {
-        name: project.name,
-        decoration,
-        layout: {
-            ...layout(layoutKind),
-            content: ({ router }: { router: Router }) =>
-                fetchModuleDoc({
-                    modulePath: project.name,
-                    basePath: project.docBasePath,
-                    configuration,
-                    project,
-                }).pipe(
-                    map((module: Module) => {
-                        return new ModuleView({
-                            module,
-                            router,
-                            configuration,
-                            project,
-                        })
-                    }),
-                ),
-        },
-        '...': ({ path, router }: { path: string; router: Router }) =>
-            docNavigation({
-                layoutKind,
-                modulePath: path,
-                router,
-                project,
-                configuration,
-            }),
-    },
-})
-export const docNavigation = ({
-    layoutKind,
+export const docNavigation = <TLayout, THeader>({
     modulePath,
     router,
     project,
     configuration,
+    httpClient,
 }: {
-    layoutKind: LayoutKindUnion
     modulePath: string
     router: Router
     project: Project
-    configuration: Configuration
-}): CatchAllNav => {
-    if (modulePath === '') {
+    configuration: Configuration<TLayout, THeader>
+    httpClient: HttpClient
+}): Observable<LazyRoutes<TLayout, THeader>> => {
+    if (modulePath === '/') {
         modulePath = project.name
+    } else if (!modulePath.startsWith(project.name)) {
+        modulePath = `/${project.name}${modulePath}`
     }
-    if (!modulePath.startsWith(project.name)) {
-        modulePath = `${project.name}/${modulePath}`
-    }
-    return fetchModuleDoc({
-        modulePath,
-        basePath: project.docBasePath,
-        configuration,
-        project,
-    }).pipe(
+    return httpClient.fetchModule(modulePath).pipe(
         map((module) => {
-            return {
-                decoration,
-                children:
-                    module.children.length > 0
-                        ? module.children.map((m) => ({
-                              name: m.name,
-                              leaf: m.isLeaf,
-                              id: m.name,
-                              decoration,
-                          }))
-                        : [],
-                layout: {
-                    ...layout(layoutKind),
-                    content: () =>
-                        new ModuleView({
-                            module,
-                            router,
-                            configuration,
-                            project,
-                        }),
-                },
+            if (module.children.length === 0) {
+                return {}
             }
+            const children = module.children.map((m) => ({
+                leaf: m.isLeaf,
+                id: m.name,
+                ...configuration.navNode({
+                    name: m.name,
+                    header: decoration,
+                    layout: {
+                        toc,
+                        content: () =>
+                            moduleView({
+                                httpClient,
+                                router,
+                                configuration,
+                                project,
+                                path: m.path,
+                            }),
+                    },
+                }),
+            }))
+            return children.reduce(
+                (acc, m) => ({
+                    ...acc,
+                    [`/${m.id}`]: m,
+                }),
+                {},
+            )
         }),
     )
 }
 
-export function codeApiEntryNode(params: {
+export function codeApiEntryNode<TLayout, THeader>(params: {
     name: string
-    layoutKind: LayoutKindUnion
     icon: AnyVirtualDOM
     docBasePath: string
     entryModule: string
-    configuration: Configuration
-}): Navigation {
+    configuration: Configuration<TLayout, THeader>
+}): Navigation<TLayout, THeader> {
     const project = {
         name: params.entryModule,
         docBasePath: params.docBasePath,
     }
     const configuration = params.configuration
+    const httpClient = new HttpClient({
+        project,
+        configuration,
+    })
     return {
-        name: params.name,
-        decoration: { icon: params.icon },
-        layout: {
-            ...layout(params.layoutKind),
-            content: ({ router }: { router: Router }) => {
-                return fetchModuleDoc({
-                    modulePath: project.name,
-                    basePath: project.docBasePath,
-                    configuration,
-                    project,
-                }).pipe(
-                    map((module) => {
-                        return new ModuleView({
-                            module,
-                            router,
-                            configuration,
-                            project,
-                        })
-                    }),
-                )
+        ...configuration.navNode({
+            name: params.name,
+            header: { icon: params.icon },
+            layout: {
+                toc,
+                content: ({ router }: { router: Router }) => {
+                    return moduleView({
+                        path: project.name,
+                        router,
+                        configuration,
+                        project,
+                        httpClient,
+                    })
+                },
             },
-        },
-        '...': ({ router, path }: { router: Router; path: string }) =>
+        }),
+        routes: ({ router, path }: { router: Router; path: string }) =>
             docNavigation({
-                layoutKind: params.layoutKind,
                 modulePath: path,
                 router,
                 project,
                 configuration,
+                httpClient,
             }),
     }
 }

@@ -33,7 +33,7 @@ export class ModuleView implements VirtualDOM<'div'> {
         module: Module
         router: Router
         project: Project
-        configuration: Configuration
+        configuration: Configuration<unknown, unknown>
     }) {
         Object.assign(this, params)
         this.class += ` mkapi-role-${this.module.semantic.role}`

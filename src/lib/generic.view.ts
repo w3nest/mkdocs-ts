@@ -2,30 +2,24 @@ import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { isResolvedTarget, Router } from './router'
 import { distinctUntilChanged, map } from 'rxjs'
 import { parseMd } from './markdown'
-import { LayoutMap, LayoutKindUnion } from './layout-types'
-import { NavNodeBase } from './navigation.node'
-
-export type NavNodeView = ({
-    router,
-    node,
-}: {
-    router: Router
-    node: NavNodeBase
-}) => AnyVirtualDOM
 
 /**
- * Defines a trait for a layout generator function that can be registered in {@link RouterView.layoutsFactory}.
+ * Defines a trait for a layout generator function that can be registered in {@link GenericView.layoutsFactory}.
  *
  * @param router The application's router instance.
  * @returns A virtual DOM structure representing the layout.
  */
-export type LayoutGeneratorTrait = ({
+export type LayoutGeneratorTrait<TLayout, THeader> = ({
     router,
-    navNodeView,
 }: {
-    router: Router
-    navNodeView: NavNodeView
+    router: Router<TLayout, THeader>
 }) => AnyVirtualDOM
+
+export type LayoutMap<LayoutOptionsMap> = {
+    [Property in keyof LayoutOptionsMap]: LayoutOptionsMap[Property] & {
+        kind: Property
+    }
+}
 
 /**
  * Represents a factory for creating layouts.
@@ -33,12 +27,27 @@ export type LayoutGeneratorTrait = ({
  * The factory is a mapping of layout kind identifiers to corresponding layout generator functions.
  * These identifiers are referenced in {@link NavigationCommon.layout.kind}.
  */
-export type LayoutFactory = Record<keyof LayoutMap, LayoutGeneratorTrait>
+// export type LayoutFactory<LayoutOptionsMap, THeader> = Record<
+//     keyof LayoutMap<LayoutOptionsMap>,
+//     LayoutGeneratorTrait<LayoutUnion<LayoutOptionsMap>, THeader>
+// >
+export type LayoutFactory<LayoutOptionsMap, THeader> = {
+    [Property in keyof LayoutOptionsMap]: LayoutGeneratorTrait<
+        LayoutOptionsMap[Property],
+        THeader
+    >
+}
+
+export type LayoutUnion<LayoutOptionsMap> =
+    LayoutMap<LayoutOptionsMap>[keyof LayoutMap<LayoutOptionsMap>]
+
+export type LayoutKindUnion<LayoutOptionsMap> =
+    LayoutMap<LayoutOptionsMap>[keyof LayoutMap<LayoutOptionsMap>]['kind']
 
 /**
- * Represents the output view of a router.
+ * Represents a generic view of a router that can manages multiple layouts.
  *
- * This view leverages a provided layout factory to map the {@link NavigationCommon.layout.kind}
+ * This view leverages a provided layout factory to map the {@link NavNodeData.layout}
  * specified in {@link Navigation} to the appropriate layout.
  *
  * If a layout kind is not found, the {@link LayoutNotFoundView} is displayed.
@@ -49,14 +58,15 @@ export type LayoutFactory = Record<keyof LayoutMap, LayoutGeneratorTrait>
  * The layouts themselves should dynamically reflect the state of the {@link Router.target$} observable.
  * </note>
  */
-export class RouterView implements VirtualDOM<'div'> {
+export class GenericView<LayoutOptionsMap, THeader>
+    implements VirtualDOM<'div'>
+{
     public readonly tag = 'div'
     public readonly class = 'w-100 h-100'
     public readonly children: ChildrenLike
 
-    public readonly router: Router
-    public readonly layoutsFactory: LayoutFactory
-    public readonly navNodeView: NavNodeView
+    public readonly router: Router<LayoutUnion<LayoutOptionsMap>, THeader>
+    public readonly layoutsFactory: LayoutFactory<LayoutOptionsMap, THeader>
     public readonly onNotFound: string
     public readonly onPending: string
 
@@ -73,11 +83,10 @@ export class RouterView implements VirtualDOM<'div'> {
      * navigation path because navigation is currently resolving.
      */
     constructor(params: {
-        router: Router
-        navNodeView: NavNodeView
-        layoutsFactory: LayoutFactory
-        onNotFound: LayoutKindUnion
-        onPending: LayoutKindUnion
+        router: Router<LayoutUnion<LayoutOptionsMap>, THeader>
+        layoutsFactory: LayoutFactory<LayoutOptionsMap, THeader>
+        onNotFound: LayoutKindUnion<LayoutOptionsMap>
+        onPending: LayoutKindUnion<LayoutOptionsMap>
     }) {
         Object.assign(this, params)
         const layout$ = this.router.target$.pipe(
@@ -97,15 +106,19 @@ export class RouterView implements VirtualDOM<'div'> {
                 source$: layout$,
                 vdomMap: (layoutKind) => {
                     if (layoutKind in this.layoutsFactory) {
+                        type TLayoutOptions =
+                            LayoutOptionsMap[LayoutKindUnion<LayoutOptionsMap>]
                         return this.layoutsFactory[
-                            layoutKind as LayoutKindUnion
+                            layoutKind as LayoutKindUnion<LayoutOptionsMap>
                         ]({
-                            router: this.router,
-                            navNodeView: this.navNodeView,
+                            router: this.router as unknown as Router<
+                                TLayoutOptions,
+                                THeader
+                            >,
                         })
                     }
                     return new LayoutNotFoundView({
-                        unknownKey: layoutKind,
+                        unknownKey: layoutKind as string,
                         availableKeys: Object.keys(this.layoutsFactory),
                         path: this.router.getCurrentPath(),
                     })
@@ -121,6 +134,8 @@ export class RouterView implements VirtualDOM<'div'> {
 export class LayoutNotFoundView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
+    public readonly class = 'mkdocs-LayoutNotFoundView'
+
     constructor({
         unknownKey,
         availableKeys,
