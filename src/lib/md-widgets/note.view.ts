@@ -54,7 +54,7 @@ export class NoteView implements VirtualDOM<'div'> {
     public readonly label: string
     public readonly content: string
     public readonly parsingArgs: { router: Router } & MdParsingOptions
-    public readonly expandable: boolean
+    public readonly expandable: boolean = false
     public readonly expanded$ = new BehaviorSubject(false)
     public readonly mode: ExpandableMode = 'stateless'
     /**
@@ -63,6 +63,7 @@ export class NoteView implements VirtualDOM<'div'> {
      * @param params.label Label to display. If none is provided, it uses the level as default value.
      * @param params.content Text content.
      * @param params.expandable Whether the note is expandable. Expandable note are collapsed by default.
+     * Default to `false`,
      * @param params.mode Only relevant for expandable note, see {@link ExpandableMode}.
      * @param params.parsingArgs Parsing options used to parse the content in MarkDown.
      */
@@ -70,7 +71,7 @@ export class NoteView implements VirtualDOM<'div'> {
         level: NoteLevel
         label?: string
         content: string
-        expandable: boolean
+        expandable?: boolean
         mode?: ExpandableMode
         parsingArgs: { router?: Router } & MdParsingOptions
     }) {
