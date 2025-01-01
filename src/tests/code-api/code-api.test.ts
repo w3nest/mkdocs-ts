@@ -1,30 +1,103 @@
-import { processDeclaration } from '../../lib/code-api/declaration.view'
+import {
+    Navigation,
+    Router,
+    DefaultLayout,
+    parseMd,
+    headingId,
+} from '../../lib'
+import { BehaviorSubject, firstValueFrom, from, Observable, of } from 'rxjs'
+import {
+    codeApiEntryNode,
+    configurationTsTypedoc,
+    Dependencies,
+    HttpClientTrait,
+    Module,
+    Project,
+} from '../../lib/code-api'
+import fs from 'fs'
+import { mockMissingUIComponents, navigateAndAssert } from '../lib/utils'
+import { render } from 'rx-vdom'
+import { installNotebookModule } from '../../index'
+import { HeaderView } from '../../lib/code-api/header.view'
 
-test('declaration view', () => {
-    const declaration = `This is a word1, this is (word2), yet a word3\n among other words like word1word2.`
+type TLayout = DefaultLayout.NavLayout
+type THeader = DefaultLayout.NavHeader
 
-    const entries = {
-        word1: '@nav/api/word1',
-        word2: '@nav/api/word2',
-        word3: '@nav/api/word3',
+class TestHttpClient implements HttpClientTrait {
+    public readonly project: Project
+    constructor(params: { project: Project }) {
+        Object.assign(this, params)
     }
-    const replaced = processDeclaration(
-        declaration,
-        entries,
-        (k, v) => `${k}:${v}`,
-    )
-    expect(replaced).toBe(
-        'This is a word1:@nav/api/word1, this is (word2:@nav/api/word2), yet a word3:@nav/api/word3\n' +
-            ' among other words like word1word2.',
-    )
-    const declaration2 = 'This a <word1> in html element.'
-    const replaced2 = processDeclaration(
-        declaration2,
-        entries,
-        (k, v) => `${k}:${v}`,
-    )
 
-    expect(replaced2).toBe(
-        'This a &lt;word1:@nav/api/word1&gt; in html element.',
-    )
+    fetchModule(modulePath: string): Observable<Module> {
+        const assetPath = `${this.project.docBasePath}/${modulePath}.json`
+        const content = fs.readFileSync(assetPath, 'utf8')
+        return of(JSON.parse(content) as unknown as Module)
+    }
+    installCss(): Promise<unknown> {
+        return Promise.resolve()
+    }
+}
+describe('Typescript/Typedoc documentation', () => {
+    let router: Router<TLayout, THeader>
+    beforeAll(() => {
+        mockMissingUIComponents()
+
+        Dependencies.parseMd = parseMd
+        Dependencies.DefaultLayout = DefaultLayout
+        Dependencies.headingId = headingId
+
+        const navigation: Navigation<
+            DefaultLayout.NavLayout,
+            DefaultLayout.NavHeader
+        > = {
+            name: 'API',
+            header: { icon: { tag: 'div' as const, class: 'fas fa-code' } },
+            layout: {
+                content: () => ({ tag: 'h1', innerText: 'Code API' }),
+            },
+            routes: {
+                '/mkdocs': Promise.resolve().then(() => {
+                    return codeApiEntryNode({
+                        name: 'mkdocs',
+                        icon: { tag: 'div', class: 'fas fa-box-open' },
+                        entryModule: 'mkdocs-ts',
+                        docBasePath: `${__dirname}/api`,
+                        httpClient: ({ project }) =>
+                            new TestHttpClient({ project }),
+                        configuration: {
+                            ...configurationTsTypedoc,
+                            codeUrl: (params: {
+                                path: string
+                                startLine: number
+                            }) => {
+                                return `code/${params.path}#L${params.startLine}`
+                            },
+                        },
+                    })
+                }),
+            },
+        }
+        router = new Router({ navigation })
+        const view = new DefaultLayout.View({
+            router,
+            bookmarks$: new BehaviorSubject(['/', '/md']),
+        })
+        document.body.append(render(view))
+    })
+
+    it("Should load on '/'", async () => {
+        const node = await firstValueFrom(router.explorerState.selectedNode$)
+        expect(node.id).toBe('/')
+    })
+    it.each([
+        ['/mkdocs', 'mkdocs', 1],
+        ['/mkdocs/MainModule', 'MainModule', 48],
+    ])("Navigates to '%i'", async (path, name, expectedHeadingsCount) => {
+        await navigateAndAssert(router, path, name)
+        const headings = Array.from(
+            document.querySelectorAll('.mkapi-header'),
+        ).map((elem) => elem['vDom'] as HeaderView)
+        expect(headings).toHaveLength(expectedHeadingsCount)
+    })
 })

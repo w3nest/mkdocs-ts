@@ -1,0 +1,1807 @@
+{
+    "name": "MainModule",
+    "documentation": {
+        "sections": [
+            {
+                "content": "Main module of the library.",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "",
+    "attributes": [
+        {
+            "name": "CatchAllKey",
+            "semantic": {
+                "role": "global",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Key representing an implicit 'catch-all' navigation referenced in  [Navigation](@nav/api/MainModule.Navigation) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CatchAllKey",
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "CatchAllKey = '...'",
+                "implementation": "",
+                "startLine": 336,
+                "endLine": 337,
+                "references": {
+                    "CatchAllKey": "@nav/api/MainModule.CatchAllKey"
+                }
+            }
+        }
+    ],
+    "types": [
+        {
+            "name": "GlobalMarkdownViews",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents global Markdown views that can be referenced when using  [parseMd](undefined) .\n\nBy default, it is populated with  `code-snippet` , more information in  [CodeSnippetView](@nav/api/MainModule/MdWidgets.CodeSnippetView) .\n\nThe definition of a custom view is provided using a function that:\n*  Takes as single argument the HTML element as declared in the markdown file.\nThe raw text content within the DOM element can be accessed using  `elem.textContent`  and attributes using\n `elem.getAttribute` .\n*  Returns a virtual dom defining the corresponding implementation of the HTML element.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "GlobalMarkdownViews",
+            "attributes": [
+                {
+                    "name": "factory",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Static factory for markdown inlined views.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "GlobalMarkdownViews.factory",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "static factory: { [k: string]: ViewGenerator } = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines: elem.getAttribute('highlightedLines'),\n                content: elem.textContent,\n            })\n        },\n        note: (elem: HTMLElement, parsingArgs) => {\n            return new NoteView({\n                level: elem.getAttribute('level') as NoteLevel,\n                label: elem.getAttribute('label'),\n                content: elem.textContent,\n                parsingArgs,\n            })\n        },\n        expandable: (elem: HTMLElement, parsingArgs) => {\n            return new ExpandableGroupView({\n                title: elem.getAttribute('title'),\n                icon: elem.getAttribute('icon'),\n                mode: elem.getAttribute('mode') as 'stateful' | 'stateless',\n                content: () =>\n                    parseMd({ src: elem.textContent, ...parsingArgs }),\n            })\n        },\n    }",
+                        "implementation": "",
+                        "startLine": 95,
+                        "endLine": 96,
+                        "references": {
+                            "factory": "@nav/api/MainModule.GlobalMarkdownViews.factory",
+                            "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export class GlobalMarkdownViews",
+                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * Static factory for markdown inlined views.\n     */\n    static factory: { [k: string]: ViewGenerator } = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines: elem.getAttribute('highlightedLines'),\n                content: elem.textContent,\n            })\n        },\n        note: (elem: HTMLElement, parsingArgs) => {\n            return new NoteView({\n                level: elem.getAttribute('level') as NoteLevel,\n                label: elem.getAttribute('label'),\n                content: elem.textContent,\n                parsingArgs,\n            })\n        },\n        expandable: (elem: HTMLElement, parsingArgs) => {\n            return new ExpandableGroupView({\n                title: elem.getAttribute('title'),\n                icon: elem.getAttribute('icon'),\n                mode: elem.getAttribute('mode') as 'stateful' | 'stateless',\n                content: () =>\n                    parseMd({ src: elem.textContent, ...parsingArgs }),\n            })\n        },\n    }\n}",
+                "startLine": 91,
+                "endLine": 122,
+                "references": {
+                    "GlobalMarkdownViews": "@nav/api/MainModule.GlobalMarkdownViews",
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Router",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents the router of the application.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Router",
+            "attributes": [
+                {
+                    "name": "basePath",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The base path on which the router is defined.\n\nIf the application is served from  `https://my-domain/my-app/version`  it is  `/my-app/version` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.basePath",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly basePath: string",
+                        "implementation": "",
+                        "startLine": 70,
+                        "endLine": 71,
+                        "references": {
+                            "basePath": "@nav/api/MainModule.Router.basePath"
+                        }
+                    }
+                },
+                {
+                    "name": "currentHtml$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable that emit the current main HTML page.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.currentHtml$",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly currentHtml$: Subject<HTMLElement> =\n        new ReplaySubject<HTMLElement>(1)",
+                        "implementation": "",
+                        "startLine": 100,
+                        "endLine": 101,
+                        "references": {
+                            "currentHtml$": "@nav/api/MainModule.Router.currentHtml$"
+                        }
+                    }
+                },
+                {
+                    "name": "currentNode$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable that emit the current navigation node.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.currentNode$",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly currentNode$: Subject<NavigationCommon> =\n        new ReplaySubject<NavigationCommon>(1)",
+                        "implementation": "",
+                        "startLine": 110,
+                        "endLine": 111,
+                        "references": {
+                            "currentNode$": "@nav/api/MainModule.Router.currentNode$",
+                            "NavigationCommon": "@nav/api/MainModule.NavigationCommon"
+                        }
+                    }
+                },
+                {
+                    "name": "currentPage$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable that emit the current page.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.currentPage$",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly currentPage$: Subject<Destination> =\n        new ReplaySubject<Destination>(1)",
+                        "implementation": "",
+                        "startLine": 105,
+                        "endLine": 106,
+                        "references": {
+                            "currentPage$": "@nav/api/MainModule.Router.currentPage$",
+                            "Destination": "@nav/api/MainModule.Destination"
+                        }
+                    }
+                },
+                {
+                    "name": "currentPath$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable that emit the current navigation path.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.currentPath$",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)",
+                        "implementation": "",
+                        "startLine": 116,
+                        "endLine": 117,
+                        "references": {
+                            "currentPath$": "@nav/api/MainModule.Router.currentPath$"
+                        }
+                    }
+                },
+                {
+                    "name": "explorerState",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Encapsulates the state of the navigation view (node selected, expanded, *etc.*)",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.explorerState",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly explorerState: ImmutableTree.State<NavNodeBase>",
+                        "implementation": "",
+                        "startLine": 121,
+                        "endLine": 122,
+                        "references": {
+                            "explorerState": "@nav/api/MainModule.Router.explorerState",
+                            "NavNodeBase": "@nav/api/MainModule.NavNodeBase"
+                        }
+                    }
+                },
+                {
+                    "name": "mockBrowserLocation",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "If this attribute is set, navigation to nodes do not trigger browser re-location.\n\nSee  [MockBrowserLocation](@nav/api/MainModule.MockBrowserLocation) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.mockBrowserLocation",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly mockBrowserLocation?: MockBrowserLocation",
+                        "implementation": "",
+                        "startLine": 140,
+                        "endLine": 141,
+                        "references": {
+                            "mockBrowserLocation": "@nav/api/MainModule.Router.mockBrowserLocation",
+                            "MockBrowserLocation": "@nav/api/MainModule.MockBrowserLocation"
+                        }
+                    }
+                },
+                {
+                    "name": "navigation",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Definition of the navigation.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.navigation",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly navigation: Navigation",
+                        "implementation": "",
+                        "startLine": 82,
+                        "endLine": 83,
+                        "references": {
+                            "navigation": "@nav/api/MainModule.Router.navigation",
+                            "Navigation": "@nav/api/MainModule.Navigation"
+                        }
+                    }
+                },
+                {
+                    "name": "redirects",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Handles navigation redirections.\n\nThis function is invoked whenever a specific path is requested for navigation.\nIt allows modifying the target path before the navigation occurs.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.redirects",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly redirects: (target: string) => Promise<string | undefined> =\n        async (target) => target",
+                        "implementation": "",
+                        "startLine": 94,
+                        "endLine": 95,
+                        "references": {
+                            "redirects": "@nav/api/MainModule.Router.redirects"
+                        }
+                    }
+                },
+                {
+                    "name": "retryNavPeriod",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "When using a dynamic definition of the routes (see  [Navigation](@nav/api/MainModule.Navigation) ),\nit may be the case that the routes are not yet available when navigating to a page.\nAttempt to re-navigate to the page is executed every  `retryNavPeriod`  second.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.retryNavPeriod",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public readonly retryNavPeriod: number = 1000",
+                        "implementation": "",
+                        "startLine": 77,
+                        "endLine": 78,
+                        "references": {
+                            "retryNavPeriod": "@nav/api/MainModule.Router.retryNavPeriod"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "new Router",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initialize a router instance.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **params**: See corresponding documentation in the class's attributes.\n*  **basePath**: Deprecated should not be used.\n*  **mockBrowserLocation**: See  [Router.mockBrowserLocation](@nav/api/MainModule.Router.mockBrowserLocation) .\n*  **navigation**: See  [Router.navigation](@nav/api/MainModule.Router.navigation) .\n*  **redirects**: See  [Router.redirects](@nav/api/MainModule.Router.redirects) .\n*  **retryNavPeriod**: See  [Router.retryNavPeriod](@nav/api/MainModule.Router.retryNavPeriod) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.new Router",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    })",
+                        "implementation": "constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    }) {\n        Object.assign(this, params)\n        this.basePath = this.basePath || document.location.pathname\n        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])\n        const { rootNode, reactiveNavs, promiseNavs } = createRootNode({\n            navigation: this.navigation,\n            router: this,\n        })\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        this.bindReactiveNavs(reactiveNavs)\n        this.bindPromiseNavs(promiseNavs)\n        this.navigateTo({ path: this.getCurrentPath() })\n\n        if (this.mockBrowserLocation === undefined) {\n            window.onpopstate = (event: PopStateEvent) => {\n                const state = event.state\n                if (state) {\n                    this.navigateTo(state)\n                } else {\n                    this.navigateTo({ path: '/' })\n                }\n            }\n        }\n        this.currentHtml$.subscribe(() => {})\n    }",
+                        "startLine": 152,
+                        "endLine": 186,
+                        "references": {
+                            "new Router": "@nav/api/MainModule.Router.constructor",
+                            "Navigation": "@nav/api/MainModule.Navigation",
+                            "Router": "@nav/api/MainModule.Router"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "awaitNavigateTo",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Navigate to a specific path.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **path**: The path to navigate to.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.awaitNavigateTo",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "private async awaitNavigateTo({ path }: { path: string })",
+                        "implementation": "private async awaitNavigateTo({ path }: { path: string }) {\n        path = `/${sanitizeNavPath(path)}`\n        path = await this.redirects(path)\n        if (!path) {\n            return\n        }\n\n        const pagePath = path.split('.')[0]\n        const sectionId = path.split('.').slice(1).join('.')\n\n        const nav = this.getNav({ path: pagePath })\n        if (!nav) {\n            console.log('Try to wait...')\n            this.currentPage$.next({\n                html: new FuturePageView(),\n            })\n            const timeoutId = setTimeout(\n                () => this.navigateTo({ path }),\n                this.retryNavPeriod,\n            )\n            this.currentPath$.subscribe(() => clearTimeout(timeoutId))\n            return\n        }\n        // This part is to resolve the html content of the selected page.\n        nav.pipe(\n            switchMap((resolved: NavigationCommon) => {\n                this.currentNode$.next(resolved)\n                const html = resolved.html({ router: this })\n                if (html instanceof Promise) {\n                    return from(html)\n                }\n                if (html instanceof Observable) {\n                    return html.pipe(take(1))\n                }\n                return of(html)\n            }),\n            map((html) => ({\n                html,\n                sectionId: sectionId == '' ? undefined : sectionId,\n            })),\n        ).subscribe((d) => {\n            this.currentPage$.next(d)\n        })\n        // This part is to select the appropriate node in the navigation.\n        this.expand(pagePath)\n        const url = `${this.basePath}?nav=${path}`\n        this.mockBrowserLocation\n            ? this.mockBrowserLocation.history.push({ url, data: { path } })\n            : history.pushState({ path }, undefined, url)\n        this.currentPath$.next(path)\n    }",
+                        "startLine": 214,
+                        "endLine": 265,
+                        "references": {
+                            "awaitNavigateTo": "@nav/api/MainModule.Router.awaitNavigateTo"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "emitHtmlUpdated",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\ninitial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.emitHtmlUpdated",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "emitHtmlUpdated()",
+                        "implementation": "emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }",
+                        "startLine": 492,
+                        "endLine": 495,
+                        "references": {
+                            "emitHtmlUpdated": "@nav/api/MainModule.Router.emitHtmlUpdated"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "getCurrentPath",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Returns the current navigation path.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.getCurrentPath",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "getCurrentPath(): string",
+                        "implementation": "getCurrentPath(): string {\n        const urlParams = new URLSearchParams(\n            this.mockBrowserLocation?.initialPath || window.location.search,\n        )\n        return urlParams.get('nav') || '/'\n    }",
+                        "startLine": 190,
+                        "endLine": 196,
+                        "references": {
+                            "getCurrentPath": "@nav/api/MainModule.Router.getCurrentPath"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "getNav",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Retrieves the navigation node corresponding to a given path, or  `undefined`  if it does not exist.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **path**: The target path.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.getNav",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined",
+                        "implementation": "public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined {\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                let treePart = tree[`/${part}`]\n\n                if (treePart instanceof Promise) {\n                    const resolved = this.navResolved[`/${part}`]\n                    if (!resolved) {\n                        // a retry in some period of time will be executed\n                        return {\n                            tree: treePart,\n                            resolvedPath,\n                            keepGoing: false,\n                        }\n                    }\n                    treePart = resolved\n                }\n\n                if (!treePart && !tree[CatchAllKey]) {\n                    this.currentPage$.next({\n                        html: new UnresolvedPageView({ path }),\n                    })\n                    throw Error(\n                        `Can not find target navigation ${resolvedPath}`,\n                    )\n                }\n                if (!treePart) {\n                    return {\n                        tree:\n                            this.navUpdates[resolvedPath] || tree[CatchAllKey],\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return {\n                    tree: treePart,\n                    resolvedPath: `${resolvedPath}/${part}`,\n                    keepGoing: true,\n                }\n            },\n            { tree: this.navigation, resolvedPath: ``, keepGoing: true },\n        )\n        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver\n        if (node.tree instanceof Observable) {\n            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed\n            return undefined\n        }\n        if (node.tree instanceof Promise) {\n            // case: Promise not yet resolved -> a retry in some period of time will be executed\n            return undefined\n        }\n\n        // node.tree: Navigation | LazyNavResolver\n        if (typeof node.tree === 'function') {\n            // case: LazyNavResolver, remove starting '/'\n            const relative = sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const nav = node.tree({ path: relative, router: this })\n            return nav instanceof Observable\n                ? nav\n                : nav instanceof Promise\n                  ? from(nav)\n                  : of(nav)\n        }\n        // node.tree: Navigation\n        return of(node.tree)\n    }",
+                        "startLine": 355,
+                        "endLine": 437,
+                        "references": {
+                            "getNav": "@nav/api/MainModule.Router.getNav",
+                            "NavigationCommon": "@nav/api/MainModule.NavigationCommon"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "getParentPath",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Returns the parent path of the current navigation path.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.getParentPath",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "getParentPath(): string",
+                        "implementation": "getParentPath(): string {\n        const currentPath = this.getCurrentPath()\n        return currentPath.split('/').slice(0, -1).join('/')\n    }",
+                        "startLine": 200,
+                        "endLine": 204,
+                        "references": {
+                            "getParentPath": "@nav/api/MainModule.Router.getParentPath"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "navigateToParent",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Navigate to the parent node.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.navigateToParent",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "navigateToParent()",
+                        "implementation": "navigateToParent() {\n        const path = this.getCurrentPath()\n        const parentPath = path.split('/').slice(0, -1).join('/')\n        this.navigateTo({ path: parentPath })\n    }",
+                        "startLine": 269,
+                        "endLine": 274,
+                        "references": {
+                            "navigateToParent": "@nav/api/MainModule.Router.navigateToParent"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "scrollTo",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Scroll the main HTML content to focus on an HTML element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **target**: The target HTML element, or its id.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Router.scrollTo",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "scrollTo(target: string | HTMLElement)",
+                        "implementation": "scrollTo(target: string | HTMLElement) {\n        if (!this.scrollableElement) {\n            return\n        }\n        const br = this.scrollableElement.getBoundingClientRect()\n        if (!target) {\n            this.scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const div: HTMLElement =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(this.scrollableElement, target)\n\n        if (!div) {\n            console.warn(`Can not scroll to element #${target}`)\n            return\n        }\n        setTimeout(() => {\n            this.scrollableElement.scrollTo({\n                top: div.offsetTop - br.top,\n                left: 0,\n                behavior: 'smooth',\n            })\n        }, 0)\n\n        const currentPath = this.getCurrentPath().split('.')[0]\n        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`\n        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)\n    }",
+                        "startLine": 280,
+                        "endLine": 313,
+                        "references": {
+                            "scrollTo": "@nav/api/MainModule.Router.scrollTo"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/router.ts",
+                "declaration": "export class Router",
+                "implementation": "export class Router {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation\n\n    /**\n     * Handles navigation redirections.\n     *\n     * This function is invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * @param target - The requested path that the user intends to navigate to.\n     * @returns The modified path to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: (target: string) => Promise<string | undefined> =\n        async (target) => target\n\n    /**\n     * Observable that emit the current main HTML page.\n     */\n    public readonly currentHtml$: Subject<HTMLElement> =\n        new ReplaySubject<HTMLElement>(1)\n    /**\n     * Observable that emit the current page.\n     */\n    public readonly currentPage$: Subject<Destination> =\n        new ReplaySubject<Destination>(1)\n    /**\n     * Observable that emit the current navigation node.\n     */\n    public readonly currentNode$: Subject<NavigationCommon> =\n        new ReplaySubject<NavigationCommon>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly currentPath$: Subject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<NavNodeBase>\n\n    public scrollableElement: HTMLElement\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        { [k: string]: unknown[] }\n    > = { Warning: {}, Error: {} }\n\n    private navUpdates: { [href: string]: LazyNavResolver } = {}\n    private navResolved: { [href: string]: Navigation } = {}\n\n    /**\n     * If this attribute is set, navigation to nodes do not trigger browser re-location.\n     *\n     * See {@link MockBrowserLocation}.\n     */\n    public readonly mockBrowserLocation?: MockBrowserLocation\n\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.mockBrowserLocation See {@link Router.mockBrowserLocation}.\n     */\n    constructor(params: {\n        navigation: Navigation\n        basePath?: string\n        retryNavPeriod?: number\n        redirects?: (target: string) => Promise<string | undefined>\n        mockBrowserLocation?: { initialPath: string }\n    }) {\n        Object.assign(this, params)\n        this.basePath = this.basePath || document.location.pathname\n        this.mockBrowserLocation && (this.mockBrowserLocation.history = [])\n        const { rootNode, reactiveNavs, promiseNavs } = createRootNode({\n            navigation: this.navigation,\n            router: this,\n        })\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        this.bindReactiveNavs(reactiveNavs)\n        this.bindPromiseNavs(promiseNavs)\n        this.navigateTo({ path: this.getCurrentPath() })\n\n        if (this.mockBrowserLocation === undefined) {\n            window.onpopstate = (event: PopStateEvent) => {\n                const state = event.state\n                if (state) {\n                    this.navigateTo(state)\n                } else {\n                    this.navigateTo({ path: '/' })\n                }\n            }\n        }\n        this.currentHtml$.subscribe(() => {})\n    }\n\n    /**\n     * Returns the current navigation path.\n     */\n    getCurrentPath(): string {\n        const urlParams = new URLSearchParams(\n            this.mockBrowserLocation?.initialPath || window.location.search,\n        )\n        return urlParams.get('nav') || '/'\n    }\n\n    /**\n     * Returns the parent path of the current navigation path.\n     */\n    getParentPath(): string {\n        const currentPath = this.getCurrentPath()\n        return currentPath.split('/').slice(0, -1).join('/')\n    }\n\n    navigateTo({ path }: { path: string }) {\n        this.awaitNavigateTo({ path }).then()\n    }\n\n    /**\n     * Navigate to a specific path.\n     *\n     * @param path The path to navigate to.\n     */\n    private async awaitNavigateTo({ path }: { path: string }) {\n        path = `/${sanitizeNavPath(path)}`\n        path = await this.redirects(path)\n        if (!path) {\n            return\n        }\n\n        const pagePath = path.split('.')[0]\n        const sectionId = path.split('.').slice(1).join('.')\n\n        const nav = this.getNav({ path: pagePath })\n        if (!nav) {\n            console.log('Try to wait...')\n            this.currentPage$.next({\n                html: new FuturePageView(),\n            })\n            const timeoutId = setTimeout(\n                () => this.navigateTo({ path }),\n                this.retryNavPeriod,\n            )\n            this.currentPath$.subscribe(() => clearTimeout(timeoutId))\n            return\n        }\n        // This part is to resolve the html content of the selected page.\n        nav.pipe(\n            switchMap((resolved: NavigationCommon) => {\n                this.currentNode$.next(resolved)\n                const html = resolved.html({ router: this })\n                if (html instanceof Promise) {\n                    return from(html)\n                }\n                if (html instanceof Observable) {\n                    return html.pipe(take(1))\n                }\n                return of(html)\n            }),\n            map((html) => ({\n                html,\n                sectionId: sectionId == '' ? undefined : sectionId,\n            })),\n        ).subscribe((d) => {\n            this.currentPage$.next(d)\n        })\n        // This part is to select the appropriate node in the navigation.\n        this.expand(pagePath)\n        const url = `${this.basePath}?nav=${path}`\n        this.mockBrowserLocation\n            ? this.mockBrowserLocation.history.push({ url, data: { path } })\n            : history.pushState({ path }, undefined, url)\n        this.currentPath$.next(path)\n    }\n\n    /**\n     * Navigate to the parent node.\n     */\n    navigateToParent() {\n        const path = this.getCurrentPath()\n        const parentPath = path.split('/').slice(0, -1).join('/')\n        this.navigateTo({ path: parentPath })\n    }\n\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    scrollTo(target: string | HTMLElement) {\n        if (!this.scrollableElement) {\n            return\n        }\n        const br = this.scrollableElement.getBoundingClientRect()\n        if (!target) {\n            this.scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const div: HTMLElement =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(this.scrollableElement, target)\n\n        if (!div) {\n            console.warn(`Can not scroll to element #${target}`)\n            return\n        }\n        setTimeout(() => {\n            this.scrollableElement.scrollTo({\n                top: div.offsetTop - br.top,\n                left: 0,\n                behavior: 'smooth',\n            })\n        }, 0)\n\n        const currentPath = this.getCurrentPath().split('.')[0]\n        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`\n        history.pushState({ path }, undefined, `${this.basePath}?nav=${path}`)\n    }\n\n    refresh({\n        resolverPath,\n        path,\n        redirectTo,\n    }: {\n        resolverPath: string\n        path?: string\n        redirectTo?: string\n    }) {\n        const currentPath = this.getCurrentPath()\n        path = path || this.getCurrentPath()\n        const resolver =\n            this.navUpdates[resolverPath] ||\n            this.navigation[resolverPath][CatchAllKey]\n        const oldNode = this.explorerState.getNode(path)\n        const relative = sanitizeNavPath(path.split(resolverPath)[1])\n        const children = createImplicitChildren$({\n            resolver: resolver,\n            hrefBase: resolverPath,\n            path: relative,\n            withExplicit: [],\n            router: this,\n        })\n        const newNode = new oldNode.factory({\n            ...oldNode,\n            children,\n        }) as NavNodeBase\n        this.explorerState.replaceNode(oldNode, newNode)\n        //this.explorerState.selectNodeAndExpand(newNode)\n        if (redirectTo) {\n            this.navigateTo({ path })\n            return\n        }\n        this.navigateTo({ path: currentPath })\n    }\n\n    /**\n     * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.\n     *\n     * @param path The target path.\n     */\n    public getNav({\n        path,\n    }: {\n        path: string\n    }): Observable<NavigationCommon> | undefined {\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                let treePart = tree[`/${part}`]\n\n                if (treePart instanceof Promise) {\n                    const resolved = this.navResolved[`/${part}`]\n                    if (!resolved) {\n                        // a retry in some period of time will be executed\n                        return {\n                            tree: treePart,\n                            resolvedPath,\n                            keepGoing: false,\n                        }\n                    }\n                    treePart = resolved\n                }\n\n                if (!treePart && !tree[CatchAllKey]) {\n                    this.currentPage$.next({\n                        html: new UnresolvedPageView({ path }),\n                    })\n                    throw Error(\n                        `Can not find target navigation ${resolvedPath}`,\n                    )\n                }\n                if (!treePart) {\n                    return {\n                        tree:\n                            this.navUpdates[resolvedPath] || tree[CatchAllKey],\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return {\n                    tree: treePart,\n                    resolvedPath: `${resolvedPath}/${part}`,\n                    keepGoing: true,\n                }\n            },\n            { tree: this.navigation, resolvedPath: ``, keepGoing: true },\n        )\n        // node.tree: Navigation | LazyNavResolver | ReactiveLazyNavResolver\n        if (node.tree instanceof Observable) {\n            // case: ReactiveLazyNavResolver -> a retry in some period of time will be executed\n            return undefined\n        }\n        if (node.tree instanceof Promise) {\n            // case: Promise not yet resolved -> a retry in some period of time will be executed\n            return undefined\n        }\n\n        // node.tree: Navigation | LazyNavResolver\n        if (typeof node.tree === 'function') {\n            // case: LazyNavResolver, remove starting '/'\n            const relative = sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const nav = node.tree({ path: relative, router: this })\n            return nav instanceof Observable\n                ? nav\n                : nav instanceof Promise\n                  ? from(nav)\n                  : of(nav)\n        }\n        // node.tree: Navigation\n        return of(node.tree)\n    }\n\n    private expand(path: string) {\n        const parts = path.split('/')\n        const ids = parts\n            .map((p, i) => parts.slice(0, i + 1).join('/'))\n            .slice(1)\n        const getLastResolved = (ids: string[]) => {\n            if (ids.length == 0) {\n                return this.explorerState.getNode('/')\n            }\n            const id = ids.slice(-1)[0]\n            const childNode = this.explorerState.getNode(id)\n            return childNode || getLastResolved(ids.slice(0, -1))\n        }\n        const node = getLastResolved(ids)\n        if (node.id === ids.slice(-1)[0] || node.children === undefined) {\n            this.explorerState.selectNodeAndExpand(node)\n            return\n        }\n\n        const idsRemaining = ids.slice(ids.indexOf(node.id) + 1)\n        if (idsRemaining.length == 0) {\n            this.explorerState.selectNodeAndExpand(node)\n            return\n        }\n        const expandRec = (ids: string[], node: NavNodeBase) => {\n            if (ids.length == 0 || node.children === undefined) {\n                return this.explorerState.selectNodeAndExpand(node)\n            }\n            const maybeChildResolved = this.explorerState.getNode(ids[0])\n            return maybeChildResolved\n                ? expandRec(ids.slice(1), maybeChildResolved)\n                : this.explorerState.getChildren(node, (_, children) => {\n                      const nodeNew = children.find(\n                          (child) => child.id === ids[0],\n                      )\n                      if (!nodeNew) {\n                          console.warn(`Can not find node ${ids[0]} (yet?)`)\n                      }\n                      if (nodeNew) {\n                          expandRec(ids.slice(1), nodeNew)\n                      }\n                  })\n        }\n        expandRec(idsRemaining, node)\n    }\n\n    setDisplayedPage({ page }: { page: HTMLElement }) {\n        this.currentHtml$.next(page)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n\n    private bindReactiveNavs(reactiveNavs: {\n        [href: string]: ReactiveLazyNavResolver\n    }) {\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNode(href)\n                const children = createImplicitChildren$({\n                    resolver: resolver,\n                    hrefBase: href,\n                    path: '',\n                    withExplicit: [],\n                    router: this,\n                })\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                })\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n    }\n    private bindPromiseNavs(promiseNavs: {\n        [href: string]: Promise<Navigation>\n    }) {\n        Object.entries(promiseNavs).forEach(([href, v]) => {\n            v.then((nav) => {\n                this.navResolved[href] = nav\n                const oldNode = this.explorerState.getNode(href)\n\n                const { rootNode, reactiveNavs, promiseNavs } = createRootNode({\n                    navigation: nav,\n                    router: this,\n                    hrefBase: href,\n                })\n                this.explorerState.replaceNode(oldNode, rootNode)\n                this.bindReactiveNavs(reactiveNavs)\n                this.bindPromiseNavs(promiseNavs)\n            })\n        })\n    }\n}",
+                "startLine": 64,
+                "endLine": 538,
+                "references": {
+                    "Router": "@nav/api/MainModule.Router",
+                    "Navigation": "@nav/api/MainModule.Navigation",
+                    "NavigationCommon": "@nav/api/MainModule.NavigationCommon",
+                    "Destination": "@nav/api/MainModule.Destination",
+                    "NavNodeBase": "@nav/api/MainModule.NavNodeBase",
+                    "MockBrowserLocation": "@nav/api/MainModule.MockBrowserLocation",
+                    "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver",
+                    "ReactiveLazyNavResolver": "@nav/api/MainModule.ReactiveLazyNavResolver"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "MockBrowserLocation",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A simple proxy for mocking browser navigation to new URL.\nCan be useful in testing or documenting contexts where actual re-location is not desirable.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "MockBrowserLocation",
+            "attributes": [
+                {
+                    "name": "history",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "History of navigation.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "MockBrowserLocation.history",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "history?: { url: string; data: unknown }[]",
+                        "implementation": "",
+                        "startLine": 56,
+                        "endLine": 57,
+                        "references": {
+                            "history": "@nav/api/MainModule.MockBrowserLocation.history"
+                        }
+                    }
+                },
+                {
+                    "name": "initialPath",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Initial path.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "MockBrowserLocation.initialPath",
+                    "code": {
+                        "filePath": "src/lib/router.ts",
+                        "declaration": "initialPath: string",
+                        "implementation": "",
+                        "startLine": 52,
+                        "endLine": 53,
+                        "references": {
+                            "initialPath": "@nav/api/MainModule.MockBrowserLocation.initialPath"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/router.ts",
+                "declaration": "export interface MockBrowserLocation",
+                "implementation": "export interface MockBrowserLocation {\n    /**\n     * Initial path.\n     */\n    initialPath: string\n    /**\n     * History of navigation.\n     */\n    history?: { url: string; data: unknown }[]\n}",
+                "startLine": 48,
+                "endLine": 58,
+                "references": {
+                    "MockBrowserLocation": "@nav/api/MainModule.MockBrowserLocation"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "CatchAllNav",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Node definition when using implicit 'catch-all' sub-navigation resolver,\nsee  [Navigation](@nav/api/MainModule.Navigation) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CatchAllNav",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type CatchAllNav = Resolvable<\n    NavigationCommon & { children: NavNodeInput[] }\n>",
+                "implementation": "",
+                "startLine": 309,
+                "endLine": 310,
+                "references": {
+                    "CatchAllNav": "@nav/api/MainModule.CatchAllNav",
+                    "Resolvable": "@nav/api/MainModule.Resolvable",
+                    "NavigationCommon": "@nav/api/MainModule.NavigationCommon",
+                    "NavNodeInput": "@nav/api/MainModule.NavNodeInput"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Decoration",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Defines attributes regarding the visual rendering of the node if the navigation view.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Decoration",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type Decoration = {\n    /**\n     * Optional class added as wrapper to the HTML element representing the node.\n     */\n    wrapperClass?: AttributeLike<string>\n    /**\n     * Optional icon, inserted before the node's name.\n     */\n    icon?: ChildLike\n    /**\n     * Optional actions, inserted after the node's name.\n     */\n    actions?: ChildrenLike\n}",
+                "implementation": "",
+                "startLine": 14,
+                "endLine": 15,
+                "references": {
+                    "Decoration": "@nav/api/MainModule.Decoration"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Destination",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Gathers the resolved elements when navigating to a specific path.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Destination",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/router.ts",
+                "declaration": "export type Destination = {\n    /**\n     * The table of content view.\n     */\n    tableOfContent?: HTMLElement | AnyVirtualDOM\n    /**\n     * The main page view.\n     */\n    html: HTMLElement | AnyVirtualDOM\n    /**\n     * The typedocNodes's ID if provided in the URL.\n     */\n    sectionId?: string\n}",
+                "implementation": "",
+                "startLine": 29,
+                "endLine": 30,
+                "references": {
+                    "Destination": "@nav/api/MainModule.Destination"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "LazyNavResolver",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a lazy navigation resolver, used when the navigation is only known at runtime.\n\nIt is a function that takes the target path and router's instance as parameters, and returns\nthe instance of  [CatchAllNav](@nav/api/MainModule.CatchAllNav)  that explicits node attributes ( `name` ,  `id` ,  `children` , *etc.*).",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "LazyNavResolver",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type LazyNavResolver = (p: {\n    // The targeted path in the navigation\n    path: string\n    // Router instance\n    router: Router\n}) => CatchAllNav",
+                "implementation": "",
+                "startLine": 319,
+                "endLine": 320,
+                "references": {
+                    "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver",
+                    "Router": "@nav/api/MainModule.Router",
+                    "CatchAllNav": "@nav/api/MainModule.CatchAllNav"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "MdParsingOptions",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Options for parsing Markdown content.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "MdParsingOptions",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export type MdParsingOptions = {\n    /**\n     * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys\n     * in the source by their corresponding values.\n     */\n    placeholders?: { [k: string]: string }\n    /**\n     * Preprocessing step. This callback is called to transform the source before parsing is executed.\n     * @param text original text\n     * @return transformed text\n     */\n    preprocessing?: (text: string) => string\n    /**\n     *  Custom views generators corresponding to HTMLElement referenced in the Markdown source.\n     */\n    views?: { [k: string]: ViewGenerator }\n\n    /**\n     * Whether to parse Latex equations.\n     * If `true` the MathJax module needs to be loaded by the consumer before parsing occurs.\n     *\n     * Using the webpm client:\n     * ````js\n     * import { install } from '@youwol/webpm-client'\n     *\n     * await install({\n     *     modules: ['mathjax#^3.1.4'],\n     * })\n     * ```\n     *\n     * Within the markdown page, equation blocks are written between `$$` and inline elements between\n     * `\\\\(` and `\\\\)`\n     */\n    latex?: boolean\n\n    /**\n     * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.\n     */\n    emitHtmlUpdated?: boolean\n}",
+                "implementation": "",
+                "startLine": 39,
+                "endLine": 40,
+                "references": {
+                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "NavNodeInput",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Arguments defining the children part of a navigation node when using dynamic  [CatchAllNav](@nav/api/MainModule.CatchAllNav) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "NavNodeInput",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type NavNodeInput = Omit<NavNodeParams, 'href' | 'children'> & {\n    /**\n     * Whether the node is a leaf (no children expected).\n     */\n    leaf?: boolean\n}",
+                "implementation": "",
+                "startLine": 97,
+                "endLine": 98,
+                "references": {
+                    "NavNodeInput": "@nav/api/MainModule.NavNodeInput",
+                    "NavNodeParams": "@nav/api/MainModule.NavNodeParams"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "NavNodeParams",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Fully resolved navigation node when using  [CatchAllNav](@nav/api/MainModule.CatchAllNav) .\nIn practical usage, consumers of the library only needs to provide  [NavNodeInput](@nav/api/MainModule.NavNodeInput) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "NavNodeParams",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type NavNodeParams = {\n    /**\n     * Id of the node.\n     */\n    id: string\n    /**\n     * Name of the node.\n     */\n    name: string\n    /**\n     * Hyperlink reference.\n     */\n    href: string\n    /**\n     * Optional data associated to the node.\n     */\n    data?: unknown\n    /**\n     * Optional children.\n     */\n    children?: NavNodeBase[] | Observable<NavNodeBase[]>\n    /**\n     * Optional decoration.\n     */\n    decoration?: Decoration\n}",
+                "implementation": "",
+                "startLine": 33,
+                "endLine": 34,
+                "references": {
+                    "NavNodeParams": "@nav/api/MainModule.NavNodeParams",
+                    "NavNodeBase": "@nav/api/MainModule.NavNodeBase",
+                    "Decoration": "@nav/api/MainModule.Decoration"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Navigation",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a node in the navigation.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Navigation",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type Navigation = NavigationCommon & {\n    /**\n     * Name of the node.\n     */\n    name: string\n\n    /**\n     * Decoration configuration for the node.\n     */\n    decoration?: Decoration\n\n    /**\n     * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.\n     *\n     * The sub-paths defined in it can also be made reaction (using {@link ReactiveLazyNavResolver})\n     * if changes in organisation over time are expected.\n     */\n    [CatchAllKey]?: LazyNavResolver | ReactiveLazyNavResolver\n\n    /**\n     * Static sub-navigation resolver.\n     */\n    [key: `/${string}`]: Navigation | Promise<Navigation>\n}",
+                "implementation": "",
+                "startLine": 341,
+                "endLine": 342,
+                "references": {
+                    "Navigation": "@nav/api/MainModule.Navigation",
+                    "NavigationCommon": "@nav/api/MainModule.NavigationCommon",
+                    "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver",
+                    "ReactiveLazyNavResolver": "@nav/api/MainModule.ReactiveLazyNavResolver",
+                    "Decoration": "@nav/api/MainModule.Decoration"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "NavigationCommon",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The common part of a navigation node, whether it is static or dynamic.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "NavigationCommon",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type NavigationCommon = {\n    /**\n     * This function represents the view of the main content.\n     *\n     * @param router Router instance.\n     * @returns A resolvable view\n     */\n    html: ({ router }) => Resolvable<AnyVirtualDOM>\n    /**\n     * This function represents the view of the table of content in the page.\n     *\n     * @param p arguments of the view generator:\n     *   *  html : Content of the HTML page\n     *   *  router : Router instance.\n     * @returns A promise on the view\n     */\n    tableOfContent?: (p: {\n        html: HTMLElement\n        router: Router\n    }) => Promise<AnyVirtualDOM>\n}",
+                "implementation": "",
+                "startLine": 283,
+                "endLine": 284,
+                "references": {
+                    "NavigationCommon": "@nav/api/MainModule.NavigationCommon",
+                    "Resolvable": "@nav/api/MainModule.Resolvable",
+                    "Router": "@nav/api/MainModule.Router"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ReactiveLazyNavResolver",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a reactive lazy navigation resolver, used when changes in a navigation node children are expected\n(within  [Navigation](@nav/api/MainModule.Navigation) ).",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ReactiveLazyNavResolver",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type ReactiveLazyNavResolver = Observable<LazyNavResolver>",
+                "implementation": "",
+                "startLine": 330,
+                "endLine": 331,
+                "references": {
+                    "ReactiveLazyNavResolver": "@nav/api/MainModule.ReactiveLazyNavResolver",
+                    "LazyNavResolver": "@nav/api/MainModule.LazyNavResolver"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Resolvable",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents something resolvable.\n\nImportant:\n    When an observable is provided, only its **first emission** is accounted.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Resolvable",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export type Resolvable<T> = T | Promise<T> | Observable<T>",
+                "implementation": "",
+                "startLine": 278,
+                "endLine": 279,
+                "references": {
+                    "Resolvable": "@nav/api/MainModule.Resolvable",
+                    "T": "965"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ViewGenerator",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type definition for custom view generators.\n\nThe function takes as arguments:\n*  **elem**: The HTMLElement in Markdown that triggered the generator.\n*  **options**: The options that were provided to the MD parser.\n\nIt returns the generated virtual DOM.\n\n See details in the documentation of  [parseMd](undefined)  to register views.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ViewGenerator",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export type ViewGenerator = (\n    elem: HTMLElement,\n    options: { router?: Router } & MdParsingOptions,\n) => AnyVirtualDOM",
+                "implementation": "",
+                "startLine": 31,
+                "endLine": 32,
+                "references": {
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
+                    "Router": "@nav/api/MainModule.Router",
+                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [
+        {
+            "name": "fetchMd",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Fetch & parse a Markdown file from specified with a URL.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **params**: see  [MdParsingOptions](@nav/api/MainModule.MdParsingOptions)  for additional options.\n*  **url**: The URL of the file.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "fetchMd",
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export function fetchMd(\n    params: {\n        url: string\n    } & MdParsingOptions,\n): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>>",
+                "implementation": "export function fetchMd(\n    params: {\n        url: string\n    } & MdParsingOptions,\n): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {\n    return ({ router }: { router: Router }) => {\n        return fetch(params.url)\n            .then((resp) => resp.text())\n            .then((src) => {\n                return parseMd({\n                    src,\n                    router,\n                    ...params,\n                })\n            })\n    }\n}",
+                "startLine": 129,
+                "endLine": 146,
+                "references": {
+                    "fetchMd": "@nav/api/MainModule.fetchMd",
+                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
+                    "Router": "@nav/api/MainModule.Router"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "installCodeApiModule",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Install and returns the  [CodeApiModule](@nav/api/CodeApi)  module.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "installCodeApiModule",
+            "code": {
+                "filePath": "src/index.ts",
+                "declaration": "export async function installCodeApiModule()",
+                "implementation": "export async function installCodeApiModule() {\n    const module: typeof CodeApiModule = await setup.installAuxiliaryModule({\n        name: 'CodeApi',\n        cdnClient: webpmClient,\n    })\n    module.Dependencies.parseMd = parseMd\n    module.Dependencies.Views = Views\n    module.Dependencies.installNotebookModule = installNotebookModule\n    module.Dependencies.headingPrefixId = headingPrefixId\n    return module\n}",
+                "startLine": 21,
+                "endLine": 32,
+                "references": {
+                    "installCodeApiModule": "@nav/api/MainModule.installCodeApiModule",
+                    "__module": "@nav/api/CodeApi"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "installNotebookModule",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Install and returns the  [NotebookModule](@nav/api/Notebook)  module.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "installNotebookModule",
+            "code": {
+                "filePath": "src/index.ts",
+                "declaration": "export async function installNotebookModule()",
+                "implementation": "export async function installNotebookModule() {\n    const module: typeof NotebookModule = await setup.installAuxiliaryModule({\n        name: 'Notebook',\n        cdnClient: webpmClient,\n    })\n    module.Dependencies.parseMd = parseMd\n    return module\n}",
+                "startLine": 36,
+                "endLine": 44,
+                "references": {
+                    "installNotebookModule": "@nav/api/MainModule.installNotebookModule",
+                    "__module": "@nav/api/Notebook"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "parseMd",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Parse a Markdown file specified with a URL.\n\nNote that custom views provided using the attribute  `views ̀ comes in addition to those registered globally in\n{@link GlobalMarkdownViews}.\n\n**Notes on custom views**\n\nCustom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.\n\n\nFor instance, a custom view ` foo-view ` can be referenced in the Markdown:\n ```\n # An example of custom-view\n\n This is a custom view:\n <foo-view barAttr='bar' bazAttr=\"baz\">some content</foo-view>\n ```\n When parsed, it will be replaced by its corresponding generated view if ` foo-view ` is included in this\n ` views ` mapping provided to this function. The associated generator can access attributes (here ` barAttr ` &\n ` bazAttr `) as well as the original text content (` some content`).\n\n The generator functions are called in the order of their corresponding elements in the Markdown source.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **args**: see  [MdParsingOptions](@nav/api/MainModule.MdParsingOptions)  for additional options.\n*  **navigations**: Specify custom redirections for HTMLAnchorElement.\n*  **router**: The router instance.\n*  **src**: Markdown source.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "A virtual DOM encapsulating the parsed Markdown.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "parseMd",
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export function parseMd({\n    src,\n    router,\n    navigations,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n    latex,\n}: {\n    src: string\n    router?: Router\n    navigations?: { [k: string]: (e: HTMLAnchorElement) => void }\n} & MdParsingOptions): VirtualDOM<'div'>",
+                "implementation": "export function parseMd({\n    src,\n    router,\n    navigations,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n    latex,\n}: {\n    src: string\n    router?: Router\n    navigations?: { [k: string]: (e: HTMLAnchorElement) => void }\n} & MdParsingOptions): VirtualDOM<'div'> {\n    if (typeof src !== 'string') {\n        console.error('Given MD source is not a string', src)\n        return {\n            tag: 'div',\n            innerText: 'Error: given MD source is not a string\"',\n        }\n    }\n    src = preprocessing?.(src) || src\n    if (placeholders && Object.keys(placeholders).length > 0) {\n        const regex = new RegExp(Object.keys(placeholders || {}).join('|'), 'g')\n        src = src.replace(regex, (match) => placeholders[match])\n    }\n    views = { ...views, ...GlobalMarkdownViews.factory }\n    const { div, replacedViews } = fixedMarkedParseCustomViews({\n        input: src,\n        views: views,\n    })\n\n    latex && window['MathJax'] && window['MathJax'].typeset([div])\n\n    const customs = div.querySelectorAll('.language-custom-view')\n    customs.forEach((custom) => {\n        const fct = new Function(custom['innerText'])()({ webpm })\n        const view = render({\n            tag: 'div',\n            children: [\n                {\n                    source$: from(fct),\n                    vdomMap: (vDom) => vDom as AnyVirtualDOM,\n                },\n            ],\n        })\n        custom.parentNode.parentNode.replaceChild(view, custom.parentNode)\n    })\n\n    const options = {\n        router,\n        preprocessing,\n        placeholders,\n        latex,\n        views,\n        emitHtmlUpdated,\n    }\n    const viewsTagUpperCase = Object.entries(views).reduce(\n        (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),\n        {},\n    )\n    Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {\n        const elem = div.querySelector(`#${k}`)\n        if (!elem) {\n            return\n        }\n        elem.textContent = content\n        const factory = viewsTagUpperCase[elem.tagName]\n        factory &&\n            elem.parentNode.replaceChild(render(factory(elem, options)), elem)\n    })\n\n    return {\n        tag: 'div',\n        children: [div],\n        connectedCallback: (elem) => {\n            // Navigation links\n            const links = elem.querySelectorAll('a')\n            links.forEach((link) => {\n                if (link.href.includes('@nav') && router) {\n                    const path = link.href.split('@nav')[1]\n                    link.href = `${router.basePath}?nav=${path}`\n                    link.onclick = (e: MouseEvent) => {\n                        e.preventDefault()\n                        router.navigateTo({ path })\n                    }\n                }\n                if (navigations) {\n                    Object.entries(navigations).forEach(([k, v]) => {\n                        if (link.href.includes(`@${k}`)) {\n                            link.onclick = (e: MouseEvent) => {\n                                e.preventDefault()\n                                v(link)\n                            }\n                        }\n                    })\n                }\n            })\n            emitHtmlUpdated && router.emitHtmlUpdated()\n        },\n    }\n}",
+                "startLine": 184,
+                "endLine": 286,
+                "references": {
+                    "parseMd": "@nav/api/MainModule.parseMd",
+                    "Router": "@nav/api/MainModule.Router",
+                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "removeEscapedText",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "This function takes an input text, remove the escaped parts:\n*  a line start with triple back-quote: this line is escaped as well as all the following line until one starts\nwith triple back-quote.\n*  a line include a single back quote: the remaining of the line as well as all the following line until a corresponding\nsingle back-quote is found.\n\nWhen a part of the input is escaped it is replace by a string  `__ESCAPED_${ID}`  where ID is a unique ID,\nthe function returned the escaped text as well as a dict that gathers the escaped elements.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "removeEscapedText",
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export function removeEscapedText(src: string): {\n    escapedContent: string\n    replaced: { [k: string]: string }\n}",
+                "implementation": "export function removeEscapedText(src: string): {\n    escapedContent: string\n    replaced: { [k: string]: string }\n} {\n    let escapedContent = src // Initialize the escaped content with the source text\n    const replaced = {} // Initialize an object to store the replaced escaped elements\n\n    // Regular expression patterns to match escaped parts\n    const tripleBackquotePattern = /```([\\s\\S]*?)```/g\n\n    // Replace triple back-quote escaped parts\n    escapedContent = escapedContent.replace(\n        tripleBackquotePattern,\n        (match, _) => {\n            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID\n            replaced[id] = match // Store the escaped part in the replaced object\n            return id // Replace the escaped part with the unique ID\n        },\n    )\n\n    // Regular expression pattern to match single back-quoted escaped parts spanning multiple lines\n    const multilineBackquotePattern = /`([\\s\\S]*?)`/g\n\n    // Replace single back-quote escaped parts\n    escapedContent = escapedContent.replace(\n        multilineBackquotePattern,\n        (match, _) => {\n            const id = `__ESCAPED_${Object.keys(replaced).length}` // Generate a unique ID\n            replaced[id] = match // Store the escaped part in the replaced object\n            return id // Replace the escaped part with the unique ID\n        },\n    )\n\n    return { escapedContent, replaced }\n}",
+                "startLine": 388,
+                "endLine": 423,
+                "references": {
+                    "removeEscapedText": "@nav/api/MainModule.removeEscapedText"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "sanitizeNavPath",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Sanitize an input navigation path:\n*  Remove starting '/' (multiple too)\n*  Correct for empty path sequence, *e.g.*  `foo//bar/.baz`  ->  `foo/bar.baz`",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **path**: The input path.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "The sanitized path.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "sanitizeNavPath",
+            "code": {
+                "filePath": "src/lib/navigation.node.ts",
+                "declaration": "export function sanitizeNavPath(path: string)",
+                "implementation": "export function sanitizeNavPath(path: string) {\n    return path.replace(/^\\/+/, '').replace(/\\/+/g, '/').replace('/.', '.')\n}",
+                "startLine": 374,
+                "endLine": 377,
+                "references": {
+                    "sanitizeNavPath": "@nav/api/MainModule.sanitizeNavPath"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "files": [
+        {
+            "name": "index.ts",
+            "path": "src/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Main module of the library.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/lib/md-widgets/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Gathers markdown widgets definition.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/lib/views/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "This module gathers views definition.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "markdown.ts",
+            "path": "src/lib/markdown.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "This file gathers entry points related to Mardown parsing.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "navigation.node.ts",
+            "path": "src/lib/navigation.node.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "router.ts",
+            "path": "src/lib/router.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "auto-generated.ts",
+            "path": "src/auto-generated.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [
+        {
+            "name": "MdWidgets",
+            "path": "mkdocs-ts/MainModule.MdWidgets",
+            "isLeaf": true
+        },
+        {
+            "name": "Views",
+            "path": "mkdocs-ts/MainModule.Views",
+            "isLeaf": true
+        }
+    ],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

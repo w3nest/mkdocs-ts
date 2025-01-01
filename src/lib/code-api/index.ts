@@ -42,7 +42,12 @@ export class Dependencies {
     public static headingId: (id: string) => string
 }
 
-export class HttpClient {
+export interface HttpClientTrait {
+    fetchModule(modulePath: string): Observable<Module>
+    installCss(): Promise<unknown>
+}
+
+export class HttpClient implements HttpClientTrait {
     public readonly cache: Record<string, Module> = {}
     public readonly configuration: Configuration<unknown, unknown>
     public readonly project: Project
@@ -63,6 +68,12 @@ export class HttpClient {
             tap((m) => (this.cache[assetPath] = m)),
         )
     }
+
+    installCss(): Promise<unknown> {
+        return install({
+            css: [this.configuration.css(this.project)],
+        })
+    }
 }
 
 const moduleView = <TLayout, THeader>({
@@ -72,7 +83,7 @@ const moduleView = <TLayout, THeader>({
     project,
     configuration,
 }: {
-    httpClient: HttpClient
+    httpClient: HttpClientTrait
     path: string
     router: Router
     project: Project
@@ -80,9 +91,7 @@ const moduleView = <TLayout, THeader>({
 }) => {
     return combineLatest([
         httpClient.fetchModule(path.replace(/\./g, '/')),
-        install({
-            css: [configuration.css(project)],
-        }),
+        httpClient.installCss(),
     ]).pipe(
         map(([m]) => {
             return new ModuleView({
@@ -132,7 +141,7 @@ export const docNavigation = <TLayout, THeader>({
     router: Router
     project: Project
     configuration: Configuration<TLayout, THeader>
-    httpClient: HttpClient
+    httpClient: HttpClientTrait
 }): Observable<LazyRoutes<TLayout, THeader>> => {
     if (modulePath === '/') {
         modulePath = project.name
@@ -180,16 +189,25 @@ export function codeApiEntryNode<TLayout, THeader>(params: {
     docBasePath: string
     entryModule: string
     configuration: Configuration<TLayout, THeader>
+    httpClient?: ({
+        project,
+        configuration,
+    }: {
+        project: Project
+        configuration: Configuration<TLayout, THeader>
+    }) => HttpClientTrait
 }): Navigation<TLayout, THeader> {
     const project = {
         name: params.entryModule,
         docBasePath: params.docBasePath,
     }
     const configuration = params.configuration
-    const httpClient = new HttpClient({
-        project,
-        configuration,
-    })
+    const httpClient =
+        params.httpClient?.({ configuration, project }) ??
+        new HttpClient({
+            project,
+            configuration,
+        })
     return {
         ...configuration.navNode({
             name: params.name,
