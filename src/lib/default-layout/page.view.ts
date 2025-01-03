@@ -34,9 +34,10 @@ function hasContentViewTrait(node: unknown): node is ContentTrait {
  * The main content of the page.
  */
 export class PageView implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'mkdocs-PageView'
     public readonly router: Router
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-PageView w-100 mkdocs-ts-page text-justify'
+    public readonly class = `${PageView.CssSelector} w-100 mkdocs-ts-page text-justify`
     public readonly children: ChildrenLike
 
     public readonly content$ = new ReplaySubject<HTMLElement>(1)

@@ -54,11 +54,11 @@ const debounceTimeToc = 200
  * The table of content view.
  */
 export class TOCView implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'mkdocs-TOCView'
     public readonly router: Router
     public readonly html: HTMLElement
     public readonly tag = 'div'
-    public readonly class =
-        'mkdocs-TOCView h-100 border-primary border-start rounded px-3 d-flex flex-column'
+    public readonly class = `${TOCView.CssSelector} h-100 border-primary border-start rounded px-3 d-flex flex-column`
     public readonly children: ChildrenLike
 
     public readonly style: CSSAttribute

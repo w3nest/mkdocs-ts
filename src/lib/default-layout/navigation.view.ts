@@ -38,11 +38,11 @@ export interface NavHeader {
  * The 'regular' navigation view (when the screen size is large enough).
  */
 export class NavigationView implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'mkdocs-NavigationView'
     public readonly router: Router<unknown, NavHeader>
 
     public readonly tag = 'div'
-    public readonly class: string =
-        'mkdocs-NavigationView mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 px-1 rounded'
+    public readonly class: string = `${NavigationView.CssSelector} mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 px-1 rounded`
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
     public readonly layoutOptions: LayoutOptions

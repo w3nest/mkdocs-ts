@@ -10,6 +10,7 @@ import {
 } from '../../lib'
 import { mockMissingUIComponents, navigateAndAssert } from './utils'
 import { render } from 'rx-vdom'
+import { NavigationView, PageView, TOCView } from '../../lib/default-layout'
 
 type TLayout = DefaultLayout.NavLayout
 type THeader = DefaultLayout.NavHeader
@@ -61,7 +62,7 @@ const navigation: Navigation<TLayout, THeader> = {
     },
 }
 
-describe('Scroll-to behavior', () => {
+describe('Nav, Page & TOC', () => {
     let router: Router<TLayout, THeader>
     beforeAll(() => {
         mockMissingUIComponents()
@@ -71,6 +72,16 @@ describe('Scroll-to behavior', () => {
             bookmarks$: new BehaviorSubject(['/', '/md']),
         })
         document.body.append(render(view))
+    })
+    it('Should display Nav, Page & TOC on load', async () => {
+        const node = await firstValueFrom(router.explorerState.selectedNode$)
+        expect(node.id).toBe('/')
+        const nav = document.querySelector(`.${NavigationView.CssSelector}`)
+        expect(nav).toBeTruthy()
+        const page = document.querySelector(`.${PageView.CssSelector}`)
+        expect(page).toBeTruthy()
+        const toc = document.querySelector(`.${TOCView.CssSelector}`)
+        expect(toc).toBeTruthy()
     })
     it("Navigate to '/.home'", async () => {
         await router.navigateTo({ path: '/.home' })
