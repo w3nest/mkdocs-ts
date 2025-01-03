@@ -14,6 +14,7 @@ import {
     distinctUntilChanged,
     map,
     Observable,
+    ReplaySubject,
     Subject,
 } from 'rxjs'
 import { FavoritesView } from './favorites.view'
@@ -109,7 +110,7 @@ export const defaultLayoutOptions = (): LayoutOptions => {
     }
 }
 
-export type LayoutElementView = ({
+export type LayoutElementView<TView extends AnyVirtualDOM = AnyVirtualDOM> = ({
     router,
     displayModeNav$,
     displayModeToc$,
@@ -119,7 +120,7 @@ export type LayoutElementView = ({
     displayModeNav$: Subject<DisplayMode>
     displayModeToc$: Subject<DisplayMode>
     layoutOptions: LayoutOptions
-}) => AnyVirtualDOM
+}) => TView
 
 /**
  * Dynamic options (defined in {@link Navigation}) for {@link View}.
@@ -179,6 +180,7 @@ export class View implements VirtualDOM<'div'> {
      *
      * @param _p
      * @param _p.router The router.
+     * @param _p.page Optional custom page to use, default to {@link PageView}.
      * @param _p.sideNavHeader Optional custom header view to use in navigation panel, empty if not provided.
      * @param _p.sideNavFooter Optional custom footer view to use in navigation panel, default to {@link FooterView}.
      * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
@@ -186,12 +188,16 @@ export class View implements VirtualDOM<'div'> {
      */
     constructor({
         router,
+        page,
         sideNavHeader,
         sideNavFooter,
         layoutOptions,
         bookmarks$,
     }: {
         router: Router<NavLayout, NavHeader>
+        page?: LayoutElementView<
+            AnyVirtualDOM & { content$: ReplaySubject<HTMLElement> }
+        >
         sideNavHeader?: LayoutElementView
         sideNavFooter?: LayoutElementView
         layoutOptions?: Partial<LayoutOptions>
@@ -218,7 +224,9 @@ export class View implements VirtualDOM<'div'> {
                 height: this.layoutOptions.topStickyPaddingMax,
             },
         }
-        const contentView = new PageView({ router: router })
+        const contentView = page
+            ? page(viewInputs)
+            : new PageView({ router: router })
         const pageView: AnyVirtualDOM = {
             tag: 'div' as const,
             class: `flex-grow-1 ${this.layoutOptions.topStickyPaddingMax} px-3`,
