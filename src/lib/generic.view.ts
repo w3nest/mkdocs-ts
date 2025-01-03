@@ -120,7 +120,7 @@ export class GenericView<LayoutOptionsMap, THeader>
                     return new LayoutNotFoundView({
                         unknownKey: layoutKind as string,
                         availableKeys: Object.keys(this.layoutsFactory),
-                        path: this.router.getCurrentPath(),
+                        path: this.router.parseUrl().path,
                     })
                 },
             }),

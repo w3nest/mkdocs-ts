@@ -1,4 +1,5 @@
-import { Router } from './router'
+import { Router, UrlTarget } from './router'
+import { sanitizeNavPath } from './navigation.node'
 
 /**
  * Defines the interface for interacting with the browser's navigation system.
@@ -10,13 +11,13 @@ export interface BrowserInterface {
      * @param data - The state data to associate with the history entry, including the navigation path.
      * @param url - The associated URL.
      */
-    pushState(data: { path: string }, url: string): void
+    pushState(data: { target: UrlTarget }, url: string): void
     /**
      * Retrieves the current navigation path.
      *
      * @returns The current navigation path as a string.
      */
-    getPath(): string
+    parseUrl(): UrlTarget
 }
 
 /**
@@ -34,12 +35,20 @@ export class WebBrowser implements BrowserInterface {
             }
         }
     }
-    pushState(data: { path: string }, url: string): void {
-        history.pushState({ path: data.path }, '', url)
+    pushState(data: { target: UrlTarget }, url: string): void {
+        history.pushState(data, '', url)
     }
 
-    getPath(): string {
+    parseUrl(): UrlTarget {
         const urlParams = new URLSearchParams(window.location.search)
-        return urlParams.get('nav') ?? '/'
+        const nav = urlParams.get('nav') ?? '/'
+        const sectionId = nav.split('.').slice(1).join('.')
+        const parameters = Object.fromEntries(urlParams.entries())
+        delete parameters.nav
+        return {
+            path: sanitizeNavPath(nav),
+            parameters,
+            sectionId: sectionId,
+        }
     }
 }

@@ -256,7 +256,7 @@ class TocItemView implements VirtualDOM<'li'> {
                 }),
                 href: `${
                     router.basePath
-                }?nav=${router.getCurrentPath()}.${heading.id}`,
+                }?nav=${router.parseUrl().path}.${heading.id}`,
                 children: [(domConvertor ?? defaultConv)(heading)],
                 onclick: (ev) => {
                     ev.preventDefault()

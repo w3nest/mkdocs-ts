@@ -118,11 +118,18 @@ function replaceCrossReferences(div: HTMLDivElement, router: Router) {
     const links = div.querySelectorAll('a')
     links.forEach((link) => {
         if (link.href.includes('@nav')) {
-            const path = link.href.split('@nav')[1]
-            link.href = `${router.basePath}?nav=${path}`
+            const path = link.href.split('@nav')[1].split('&')[0]
+            const params = link.href.includes('&')
+                ? link.href.split('&')[1]
+                : undefined
+            link.href = params
+                ? `${router.basePath}?nav=${path}&${params}`
+                : `${router.basePath}?nav=${path}`
+            const urlParams = new URLSearchParams(params)
+            const parameters = Object.fromEntries(urlParams.entries())
             link.onclick = (e: MouseEvent) => {
                 e.preventDefault()
-                router.fireNavigateTo({ path })
+                router.fireNavigateTo({ path, parameters })
             }
         }
     })

@@ -7,7 +7,7 @@ export const navigateAndAssert = async (
     expectedName: string,
 ) => {
     await router.navigateTo({ path })
-    expect(router.getCurrentPath()).toBe(path)
+    expect(router.parseUrl().path).toBe(path)
 
     const target = await firstValueFrom(router.target$)
     if (!isResolvedTarget(target)) {

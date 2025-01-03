@@ -25,6 +25,21 @@ import {
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { BrowserInterface, WebBrowser } from './browser.interface'
 
+export interface UrlTarget {
+    /**
+     * Target destination path.
+     */
+    path: string
+    /**
+     * The typedocNodes's ID if provided in the URL.
+     */
+    sectionId?: string
+    /**
+     * URL parameters
+     */
+    parameters?: Record<string, string>
+}
+
 /**
  * A target destination specification when the path is not resolved, either because it does not exist or because
  * it is not resolved yet.
@@ -44,16 +59,10 @@ export interface UnresolvedTarget {
 /**
  * Target destination specification when navigating to a (resolved) specific path.
  */
-export interface Target<TLayout = unknown, THeader = unknown> {
+export type Target<TLayout = unknown, THeader = unknown> = UrlTarget & {
     /**
-     * Target destination path.
+     * Associated navigation's node.
      */
-    path: string
-    /**
-     * The typedocNodes's ID if provided in the URL.
-     */
-    sectionId?: string
-
     node: Navigation<TLayout, THeader>
 }
 
@@ -208,55 +217,41 @@ export class Router<TLayout = unknown, THeader = unknown> {
                     this.scrollTo()
                 }
             })
-        fireAndForget(this.navigateTo({ path: this.getCurrentPath() }))
+        fireAndForget(this.navigateTo(this.parseUrl()))
     }
 
     /**
      * Returns the current navigation path.
      */
-    getCurrentPath(): string {
-        return this.browserClient.getPath()
-    }
-
-    /**
-     * Returns the parent path of the current navigation path.
-     */
-    getParentPath(): string {
-        const currentPath = this.getCurrentPath()
-        return currentPath.split('/').slice(0, -1).join('/')
+    parseUrl(): UrlTarget {
+        return this.browserClient.parseUrl()
     }
 
     /**
      * Fire navigation to given path with no `await`.
      *
-     * @param path  The path to navigate to.
+     * @param target  The path to navigate to.
      * @param onError Callback called if errors happen.
      */
-    fireNavigateTo(
-        { path }: { path: string },
-        onError?: (err: unknown) => void,
-    ) {
-        fireAndForget(this.navigateTo({ path }), onError)
+    fireNavigateTo(target: UrlTarget, onError?: (err: unknown) => void) {
+        fireAndForget(this.navigateTo(target), onError)
     }
 
     /**
-     * Navigate to a specific path.
+     * Navigate to a specific target.
      *
-     * @param path The path to navigate to.
+     * @param target The URL target.
      */
-    async navigateTo({ path }: { path: string }) {
-        path = sanitizeNavPath(path)
-        const maybePath = await this.redirects(path)
-        if (!maybePath) {
+    async navigateTo(target: UrlTarget) {
+        const path = await this.redirects(sanitizeNavPath(target.path))
+        if (!path) {
             return
         }
-        path = maybePath
-        const pagePath = path.split('.')[0]
-        const sectionId = path.split('.').slice(1).join('.')
+        const sectionId = target.sectionId
 
         const nav = timer(0, this.retryNavPeriod).pipe(
             switchMap(() => {
-                const nav = this.getNav({ path: pagePath })
+                const nav = this.getNav({ path })
                 if (nav instanceof Observable) {
                     return nav
                 }
@@ -266,7 +261,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 if (nav === 'unresolved') {
                     console.log('Try to wait...')
                     this.target$.next({
-                        path: pagePath,
+                        path,
                         reason: 'Pending',
                     })
                 }
@@ -277,30 +272,26 @@ export class Router<TLayout = unknown, THeader = unknown> {
         const resolved = await firstValueFrom(nav)
         if (resolved === 'not-found') {
             this.target$.next({
-                path: pagePath,
+                path,
                 reason: 'NotFound',
             })
             return
         }
+
+        const params =
+            target.parameters && Object.keys(target.parameters).length > 0
+                ? `&${new URLSearchParams(target.parameters)}`
+                : ''
+        const url = `${this.basePath}?nav=${path}${params}`
+        this.browserClient.pushState({ target }, url)
+        this.path$.next(path)
+
         this.target$.next({
             node: resolved,
-            path: pagePath,
+            path,
             sectionId: sectionId === '' ? undefined : sectionId,
         })
-        await this.expandNavigationTree(pagePath)
-
-        const url = `${this.basePath}?nav=${path}`
-        this.browserClient.pushState({ path }, url)
-        this.path$.next(path)
-    }
-
-    /**
-     * Navigate to the parent node.
-     */
-    async navigateToParent() {
-        const path = this.getCurrentPath()
-        const parentPath = path.split('/').slice(0, -1).join('/')
-        return this.navigateTo({ path: parentPath })
+        await this.expandNavigationTree(path)
     }
 
     /**
@@ -356,10 +347,6 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 behavior: 'smooth',
             })
         }, 0)
-
-        const currentPath = this.getCurrentPath().split('.')[0]
-        const path = `${currentPath}.${div.id.replace(headingPrefixId, '')}`
-        history.pushState({ path }, '', `${this.basePath}?nav=${path}`)
     }
 
     /**

@@ -84,7 +84,7 @@ describe('Nav, Page & TOC', () => {
         expect(toc).toBeTruthy()
     })
     it("Navigate to '/.home'", async () => {
-        await router.navigateTo({ path: '/.home' })
+        await router.navigateTo({ path: '/', sectionId: 'home' })
         const title = document.querySelector('h1')
         expect(title?.innerText).toBe('Home')
         expect(title?.id).toBe('home')
@@ -99,7 +99,7 @@ describe('Nav, Page & TOC', () => {
          * When parsing MD, heading ids are in the form 'mk-head-${sanitizedId(...)}'.
          * Here we make sure that 'mk-head' is optional.
          */
-        await router.navigateTo({ path: '/md.section-1' })
+        await router.navigateTo({ path: '/md', sectionId: 'section-1' })
         const title = document.querySelector('h2')
         expect(title?.innerHTML).toBe('Section 1')
         expect(title?.id).toBe(headingId('section-1'))
