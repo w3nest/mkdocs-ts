@@ -314,35 +314,26 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                 },
                 children: [
                     child$({
-                        source$: this.content$
-                            .pipe(
-                                withLatestFrom(
-                                    this.router.target$.pipe(
-                                        filter((target) =>
-                                            isResolvedTarget(target),
-                                        ),
-                                    ),
-                                ),
-                            )
-                            .pipe(
-                                debounceTime(debounceTimeToc),
-                                mergeMap(([elem, target]) => {
-                                    if (!hasTocViewTrait(target.node)) {
-                                        return from(
-                                            tocView({
-                                                html: elem,
-                                                router: this.router,
-                                            }),
-                                        )
-                                    }
+                        source$: this.router.target$.pipe(
+                            filter((target) => isResolvedTarget(target)),
+                            withLatestFrom(this.content$),
+                            mergeMap(([target, elem]) => {
+                                if (!hasTocViewTrait(target.node)) {
                                     return from(
-                                        target.node.layout.toc({
+                                        tocView({
                                             html: elem,
                                             router: this.router,
                                         }),
                                     )
-                                }),
-                            ),
+                                }
+                                return from(
+                                    target.node.layout.toc({
+                                        html: elem,
+                                        router: this.router,
+                                    }),
+                                )
+                            }),
+                        ),
                         vdomMap: (toc?): AnyVirtualDOM => {
                             return toc ?? { tag: 'div' }
                         },

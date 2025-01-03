@@ -92,7 +92,7 @@ describe('Typescript/Typedoc documentation', () => {
     })
     it.each([
         ['/mkdocs', 'mkdocs', 1],
-        ['/mkdocs/MainModule', 'MainModule', 48],
+        ['/mkdocs/MainModule', 'MainModule', 49],
     ])("Navigates to '%i'", async (path, name, expectedHeadingsCount) => {
         await navigateAndAssert(router, path, name)
         const headings = Array.from(
