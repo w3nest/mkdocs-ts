@@ -82,9 +82,9 @@ export type LayoutOptions = SidePanelLayoutOptions & {
      */
     navMaxWidth: number
     /**
-     * Page's maximum width.
+     * Page's width.
      */
-    pageMaxWidth: string
+    pageWidth: string
     /**
      * Translation duration for panels in ms.
      */
@@ -102,11 +102,11 @@ export const defaultLayoutOptions = (): LayoutOptions => {
         toggleNavWidth: 1300,
         navMaxWidth: 500,
         navMinWidth: 300,
-        pageMaxWidth: '45rem',
+        pageWidth: '35rem',
         translationTime: 400,
         topStickyPaddingMax: '2rem',
         topStickyPaddingMin: '10px',
-        bottomStickyPaddingMax: '0rem',
+        bottomStickyPaddingMax: '2rem',
     }
 }
 
@@ -231,7 +231,7 @@ export class View implements VirtualDOM<'div'> {
             tag: 'div' as const,
             class: `flex-grow-1 ${this.layoutOptions.topStickyPaddingMax} px-3`,
             style: {
-                maxWidth: this.layoutOptions.pageMaxWidth,
+                width: this.layoutOptions.pageWidth,
                 height: 'fit-content',
                 minHeight: '100vh',
                 minWidth: '0px',
