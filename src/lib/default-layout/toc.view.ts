@@ -23,7 +23,7 @@ import {
     Subject,
     switchMap,
     timer,
-    withLatestFrom,
+    combineLatest,
 } from 'rxjs'
 import { DisplayMode, LayoutOptions } from './default-layout.view'
 
@@ -314,9 +314,12 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                 },
                 children: [
                     child$({
-                        source$: this.router.target$.pipe(
-                            filter((target) => isResolvedTarget(target)),
-                            withLatestFrom(this.content$),
+                        source$: combineLatest([
+                            this.router.target$.pipe(
+                                filter((t) => isResolvedTarget(t)),
+                            ),
+                            this.content$,
+                        ]).pipe(
                             mergeMap(([target, elem]) => {
                                 if (!hasTocViewTrait(target.node)) {
                                     return from(

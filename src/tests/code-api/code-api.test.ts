@@ -17,8 +17,8 @@ import {
 import fs from 'fs'
 import { mockMissingUIComponents, navigateAndAssert } from '../lib/utils'
 import { render } from 'rx-vdom'
-import { installNotebookModule } from '../../index'
 import { HeaderView } from '../../lib/code-api/header.view'
+import { PageView, TOCView } from '../../lib/default-layout'
 
 type TLayout = DefaultLayout.NavLayout
 type THeader = DefaultLayout.NavHeader
@@ -92,12 +92,29 @@ describe('Typescript/Typedoc documentation', () => {
     })
     it.each([
         ['/mkdocs', 'mkdocs', 1],
-        ['/mkdocs/MainModule', 'MainModule', 49],
+        ['/mkdocs/MainModule', 'MainModule', 48],
     ])("Navigates to '%i'", async (path, name, expectedHeadingsCount) => {
         await navigateAndAssert(router, path, name)
-        const headings = Array.from(
-            document.querySelectorAll('.mkapi-header'),
+        const pageView = document.querySelector<HTMLElement>(
+            `.${PageView.CssSelector}`,
+        )
+        if (!pageView) {
+            throw Error('Page view not included in document')
+        }
+        const headingsInPage = Array.from(
+            pageView.querySelectorAll('.mkapi-header'),
         ).map((elem) => elem['vDom'] as HeaderView)
-        expect(headings).toHaveLength(expectedHeadingsCount)
+        expect(headingsInPage).toHaveLength(expectedHeadingsCount)
+
+        const tocView = document.querySelector<HTMLElement>(
+            `.${TOCView.CssSelector}`,
+        )
+        if (!tocView) {
+            throw Error('Page view not included in document')
+        }
+        const headingsInToc = Array.from(
+            tocView.querySelectorAll('.mkapi-header'),
+        ).map((elem) => elem['vDom'] as HeaderView)
+        expect(headingsInToc).toHaveLength(expectedHeadingsCount)
     })
 })
