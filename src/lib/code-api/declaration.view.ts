@@ -65,12 +65,14 @@ export function processDeclaration(
 export class DeclarationView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    // public readonly style = {
-    //     fontWeight: 'bolder' as const,
-    // }
     public readonly class = 'mkapi-declaration mkapi-semantic-color p-2 rounded'
-    constructor({ code, parent }: { code: Code; parent: Entity }) {
-        // const separators = /[[\],<>@.():;]/g
+    constructor({
+        code,
+        parent,
+    }: {
+        code: Pick<Code, 'references' | 'declaration'>
+        parent: Pick<Entity, 'semantic'>
+    }) {
         this.class += ` mkapi-role-${parent.semantic.role}`
         const nonNullReferences = Object.entries(code.references).reduce(
             (acc, [k, v]) => {
@@ -86,18 +88,6 @@ export class DeclarationView implements VirtualDOM<'div'> {
             nonNullReferences,
             (k: string, v: string) => `<a target='_blank' href='${v}'>${k}</a>`,
         )
-        // const commentRegexOneLine = /\/\/.*$/gm
-        // // Replace comments with span elements having a class to change color
-        // declaration = declaration.replace(
-        //     commentRegexOneLine,
-        //     '<span class="comment">$&</span>',
-        // )
-        // const commentRegexMultiLines = /\/\*(.|\n)*?\*\//gm
-        // // Replace multi-line comments with span elements having a class to change color
-        // declaration = declaration.replace(
-        //     commentRegexMultiLines,
-        //     '<span class="comment">$&</span>',
-        // )
 
         this.children = [
             {
