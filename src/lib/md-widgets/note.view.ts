@@ -51,8 +51,9 @@ export class NoteView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     public readonly level: NoteLevel
-    public readonly label: string
-    public readonly content: string
+    public readonly icon?: string | AnyVirtualDOM
+    public readonly label: string | AnyVirtualDOM
+    public readonly content: string | AnyVirtualDOM
     public readonly parsingArgs: { router: Router } & MdParsingOptions
     public readonly expandable: boolean = false
     public readonly expanded$ = new BehaviorSubject(false)
@@ -60,6 +61,7 @@ export class NoteView implements VirtualDOM<'div'> {
     /**
      * @param params
      * @param params.level Level of the note.
+     * @param params.icon If provided, overrides the default icon associated to the given level.
      * @param params.label Label to display. If none is provided, it uses the level as default value.
      * @param params.content Text content.
      * @param params.expandable Whether the note is expandable. Expandable note are collapsed by default.
@@ -69,8 +71,9 @@ export class NoteView implements VirtualDOM<'div'> {
      */
     constructor(params: {
         level: NoteLevel
-        label?: string
-        content: string
+        icon?: string | AnyVirtualDOM
+        label?: string | AnyVirtualDOM
+        content: string | AnyVirtualDOM
         expandable?: boolean
         mode?: ExpandableMode
         parsingArgs: { router?: Router } & MdParsingOptions
@@ -95,14 +98,16 @@ export class NoteView implements VirtualDOM<'div'> {
         }
         this.label = this.label || defaultLabels[this.level]
         this.class = `${this.class} mkdocs-border-${this.level}`
-        const content = () => ({
+        const content = (): AnyVirtualDOM => ({
             tag: 'div' as const,
             class: 'p-2',
             children: [
-                parseMd({
-                    src: this.content,
-                    ...this.parsingArgs,
-                }),
+                typeof this.content === 'string'
+                    ? parseMd({
+                          src: this.content,
+                          ...this.parsingArgs,
+                      })
+                    : this.content,
             ],
         })
 
@@ -126,6 +131,7 @@ export class NoteView implements VirtualDOM<'div'> {
             new NoteHeaderView({
                 level: this.level,
                 label: this.label,
+                icon: this.icon,
                 expandable: this.expandable,
                 expanded$: this.expanded$,
             }),
@@ -151,6 +157,7 @@ export class NoteView implements VirtualDOM<'div'> {
         mode:
             (element.getAttribute('mode') as ExpandableMode | null) ??
             undefined,
+        icon: element.getAttribute('icon') ?? undefined,
     })
 
     /**
@@ -181,31 +188,33 @@ class NoteHeaderView implements VirtualDOM<'div'> {
         fontWeight: 'bolder' as const,
     }
     public readonly level: NoteLevel
-    public readonly label: string
+    public readonly icon?: string | AnyVirtualDOM
+    public readonly label: string | AnyVirtualDOM
     public readonly expandable: boolean
     public readonly expanded$: BehaviorSubject<boolean>
 
     constructor(params: {
         level: NoteLevel
-        label: string
+        icon?: string | AnyVirtualDOM
+        label: string | AnyVirtualDOM
         expandable: boolean
         expanded$: BehaviorSubject<boolean>
     }) {
         Object.assign(this, params)
         this.class = `${this.class} mkdocs-bg-${this.level} `
+
         this.children = [
-            {
-                tag: 'i',
-                class: `${icons[this.level]} mkdocs-text-${this.level}`,
-            },
+            iconFactory(this.level, this.icon),
             {
                 tag: 'div',
                 class: 'mx-1',
             },
-            {
-                tag: 'div',
-                innerText: this.label,
-            },
+            typeof this.label === 'string'
+                ? {
+                      tag: 'div',
+                      innerText: this.label,
+                  }
+                : this.label,
             {
                 tag: 'div',
                 class: 'flex-grow-1',
@@ -226,5 +235,28 @@ class NoteHeaderView implements VirtualDOM<'div'> {
                   }
                 : undefined,
         ]
+    }
+}
+
+function iconFactory(
+    level: NoteLevel,
+    icon?: string | AnyVirtualDOM,
+): AnyVirtualDOM {
+    if (!icon) {
+        return {
+            tag: 'i',
+            class: `mkdocs-text-${level} ${icons[level]}`,
+        }
+    }
+    if (typeof icon === 'string') {
+        return {
+            tag: 'i',
+            class: `mkdocs-text-${level} ${icon}`,
+        }
+    }
+    return {
+        tag: 'i',
+        class: `mkdocs-text-${level}`,
+        children: [icon],
     }
 }
