@@ -23,7 +23,7 @@ import {
     pathIds,
 } from './navigation.node'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
-import { BrowserInterface, WebBrowser } from './browser.interface'
+import { BrowserInterface, parseUrl, WebBrowser } from './browser.interface'
 
 export interface UrlTarget {
     /**
@@ -233,7 +233,10 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param target  The path to navigate to.
      * @param onError Callback called if errors happen.
      */
-    fireNavigateTo(target: UrlTarget, onError?: (err: unknown) => void) {
+    fireNavigateTo(
+        target: UrlTarget | string,
+        onError?: (err: unknown) => void,
+    ) {
         fireAndForget(this.navigateTo(target), onError)
     }
 
@@ -242,7 +245,9 @@ export class Router<TLayout = unknown, THeader = unknown> {
      *
      * @param target The URL target.
      */
-    async navigateTo(target: UrlTarget) {
+    async navigateTo(target: UrlTarget | string) {
+        target = typeof target === 'string' ? parseUrl(target) : target
+
         const path = await this.redirects(sanitizeNavPath(target.path))
         if (!path) {
             return

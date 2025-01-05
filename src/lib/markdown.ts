@@ -171,13 +171,11 @@ export function fromMarkdown(p: FetchMdInput) {
  * @param args see {@link MdParsingOptions} for additional options.
  * @param args.src Markdown source.
  * @param args.router The router instance.
- * @param args.navigations Specify custom redirections for HTMLAnchorElement.
  * @returns A virtual DOM encapsulating the parsed Markdown.
  */
 export function parseMd({
     src,
     router,
-    navigations,
     views,
     placeholders,
     preprocessing,
@@ -258,36 +256,9 @@ export function parseMd({
         children: [div],
         connectedCallback: (elem) => {
             // Navigation links
-            const links = elem.querySelectorAll('a')
-            links.forEach((link) => {
-                if (link.href.includes('@nav') && router) {
-                    const path = link.href.split('@nav')[1]
-                    link.href = `${router.basePath}?nav=${path}`
-                    link.onclick = (e: MouseEvent) => {
-                        e.preventDefault()
-                        router.fireNavigateTo({ path })
-                    }
-                    const title = link.title
-                    if (title) {
-                        const metadata_json = JSON.parse(
-                            title,
-                        ) as unknown as Record<string, string | undefined>
-                        link.title = ''
-                        const classes = metadata_json.class?.split(' ') ?? []
-                        link.classList.add(...classes)
-                    }
-                }
-                if (navigations) {
-                    Object.entries(navigations).forEach(([k, v]) => {
-                        if (link.href.includes(`@${k}`)) {
-                            link.onclick = (e: MouseEvent) => {
-                                e.preventDefault()
-                                v(link)
-                            }
-                        }
-                    })
-                }
-            })
+            if (router) {
+                replaceLinks({ router, elem, fromMarkdown: true })
+            }
             if (emitHtmlUpdated && router) {
                 router.emitHtmlUpdated()
             }
@@ -473,4 +444,36 @@ function fixedMarkedParseCustomViews({
     })
 
     return { div: divResult, replacedViews: contents }
+}
+
+export function replaceLinks({
+    router,
+    elem,
+    fromMarkdown,
+}: {
+    router: Router
+    elem: HTMLElement
+    fromMarkdown: boolean
+}) {
+    const links = elem.querySelectorAll('a')
+    links.forEach((link) => {
+        if (link.href.includes('@nav')) {
+            const path = `nav=${link.href.split('@nav')[1]}`
+            link.href = `${router.basePath}?${path}`
+            link.onclick = (e: MouseEvent) => {
+                e.preventDefault()
+                router.fireNavigateTo(path)
+            }
+            if (fromMarkdown && link.title) {
+                // When the anchor is generated from markdown, the title is used to append classes to the generated
+                // element.
+                const metadata_json = JSON.parse(
+                    link.title,
+                ) as unknown as Record<string, string | undefined>
+                link.title = ''
+                const classes = metadata_json.class?.split(' ') ?? []
+                link.classList.add(...classes)
+            }
+        }
+    })
 }

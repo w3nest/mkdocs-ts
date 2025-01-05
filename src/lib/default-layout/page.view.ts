@@ -6,7 +6,7 @@ import {
     AnyVirtualDOM,
 } from 'rx-vdom'
 import { Target, isResolvedTarget, Router } from '../router'
-import { parseMd } from '../markdown'
+import { parseMd, replaceLinks } from '../markdown'
 import {
     filter,
     from,
@@ -104,35 +104,17 @@ export class PageView implements VirtualDOM<'div'> {
                                 this.router.scrollTo(destination.sectionId)
                             }
                             this.content$.next(page)
-                            replaceCrossReferences(page, this.router)
+                            replaceLinks({
+                                router: this.router,
+                                elem: page,
+                                fromMarkdown: false,
+                            })
                         },
                     }
                 },
             }),
         ]
     }
-}
-
-function replaceCrossReferences(div: HTMLDivElement, router: Router) {
-    // Navigation links
-    const links = div.querySelectorAll('a')
-    links.forEach((link) => {
-        if (link.href.includes('@nav')) {
-            const path = link.href.split('@nav')[1].split('&')[0]
-            const params = link.href.includes('&')
-                ? link.href.split('&')[1]
-                : undefined
-            link.href = params
-                ? `${router.basePath}?nav=${path}&${params}`
-                : `${router.basePath}?nav=${path}`
-            const urlParams = new URLSearchParams(params)
-            const parameters = Object.fromEntries(urlParams.entries())
-            link.onclick = (e: MouseEvent) => {
-                e.preventDefault()
-                router.fireNavigateTo({ path, parameters })
-            }
-        }
-    })
 }
 
 /**

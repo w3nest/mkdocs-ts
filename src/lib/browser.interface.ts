@@ -13,7 +13,7 @@ export interface BrowserInterface {
      */
     pushState(data: { target: UrlTarget }, url: string): void
     /**
-     * Retrieves the current navigation path.
+     * Retrieves the target from the current URL.
      *
      * @returns The current navigation path as a string.
      */
@@ -38,17 +38,26 @@ export class WebBrowser implements BrowserInterface {
     pushState(data: { target: UrlTarget }, url: string): void {
         history.pushState(data, '', url)
     }
-
     parseUrl(): UrlTarget {
-        const urlParams = new URLSearchParams(window.location.search)
-        const nav = urlParams.get('nav') ?? '/'
-        const sectionId = nav.split('.').slice(1).join('.')
-        const parameters = Object.fromEntries(urlParams.entries())
-        delete parameters.nav
+        return parseUrl(window.location.search)
+    }
+}
+
+export function parseUrl(url: string) {
+    const urlParams = new URLSearchParams(url)
+    const nav = sanitizeNavPath(urlParams.get('nav') ?? '/')
+
+    const parameters = Object.fromEntries(urlParams.entries())
+    delete parameters.nav
+    if (!nav.includes('.')) {
         return {
-            path: sanitizeNavPath(nav),
+            path: nav,
             parameters,
-            sectionId: sectionId,
         }
+    }
+    return {
+        path: nav.split('.')[0],
+        parameters,
+        sectionId: nav.split('.').slice(1).join('.'),
     }
 }
