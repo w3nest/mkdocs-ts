@@ -1,6 +1,6 @@
 require('./style.css')
 export {}
-import * as webpmClient from '@youwol/webpm-client'
+import * as webpmClient from '@w3nest/webpm-client'
 
 import { setup } from '../auto-generated'
 
@@ -10,9 +10,8 @@ await setup.installMainModule({
         css: [
             'bootstrap#5.3.3~bootstrap.min.css',
             'fontawesome#5.12.1~css/all.min.css',
-            '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
-            `@youwol/mkdocs-ts#${setup.runTimeDependencies.externals['@youwol/mkdocs-ts']}~assets/mkdocs-light.css`,
-            `@youwol/mkdocs-ts#${setup.runTimeDependencies.externals['@youwol/mkdocs-ts']}~assets/notebook.css`,
+            `mkdocs-ts#${setup.runTimeDependencies.externals['mkdocs-ts']}~assets/mkdocs-light.css`,
+            `mkdocs-ts#${setup.runTimeDependencies.externals['mkdocs-ts']}~assets/notebook.css`,
         ],
         displayLoadingScreen: true,
     },

@@ -1,3 +1,14 @@
+:root {
+    --font-size-base: clamp(12px, 2.5vw, 18px);
+    --font-family-base: 'Georgia', serif;
+    --line-height-base: 1.6;
+}
+
 html {
-    font-size: 18px;
+    font-size: var(--font-size-base);
+}
+
+body {
+    font-family: var(--font-family-base) !important;
+    line-height: var(--line-height-base);
 }

@@ -1,33 +1,68 @@
-import { render } from '@youwol/rx-vdom'
+import { render, VirtualDOM, ChildrenLike, CSSAttribute } from 'rx-vdom'
 import { navigation } from './navigation'
-import { Router, Views } from '@youwol/mkdocs-ts'
-import { setup } from '../auto-generated'
+import { Router, DefaultLayout, MdWidgets } from 'mkdocs-ts'
+import { BehaviorSubject } from 'rxjs'
 
 export const router = new Router({
     navigation,
 })
+const bookmarks$ = new BehaviorSubject([
+    '/' /*, '/how-to', '/tutorials', '/api'*/,
+])
+export const topStickyPaddingMax = '3rem'
 
-document.getElementById('content').appendChild(
-    render(
-        new Views.DefaultLayoutView({
-            router,
-            name: 'MkDocs-TS',
-            topBanner: (params) =>
-                new Views.TopBannerClassicView({
-                    ...params,
-                    logo: {
-                        tag: 'img',
-                        src: '../assets/logo-raw.svg',
+export class NavHeaderView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class = 'd-flex align-items-center justify-content-center'
+    public readonly children: ChildrenLike
+    public readonly style: CSSAttribute
+
+    constructor(params: { topStickyPaddingMax: string }) {
+        this.style = {
+            height: params.topStickyPaddingMax,
+        }
+        this.children = [
+            {
+                tag: 'a',
+                class: 'mx-2',
+                href: 'https://github.com/w3nest/mkdocs-ts',
+                children: [
+                    {
+                        ...MdWidgets.githubIcon,
                         style: {
-                            height: '30px',
+                            filter: 'invert(1)',
                         },
                     },
-                    badge: new Views.SourcesLink({
-                        href: 'https://github.com/youwol/mkdocs-ts/',
-                        version: setup.version,
-                        name: '@youwol/mkdocs-ts',
-                    }),
-                }),
+                ],
+            },
+            {
+                tag: 'a',
+                class: 'mx-2',
+                href: 'https://www.npmjs.com/package/mkdocs-ts',
+                children: [MdWidgets.npmIcon],
+            },
+            {
+                tag: 'a',
+                class: 'mx-2',
+                href: 'https://github.com/w3nest/mkdocs-ts/blob/main/doc/LICENSE',
+                children: [MdWidgets.mitIcon],
+            },
+        ]
+    }
+}
+
+const routerView = new DefaultLayout.View({
+    router,
+    bookmarks$,
+    layoutOptions: {
+        topStickyPaddingMax,
+    },
+    sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
+    sideNavFooter: () =>
+        new DefaultLayout.FooterView({
+            sourceName: '@mkdocs-ts/doc',
+            sourceUrl: 'https://github.com/w3nest/mkdocs-ts/tree/main/doc',
         }),
-    ),
-)
+})
+
+document.getElementById('content').appendChild(render(routerView))

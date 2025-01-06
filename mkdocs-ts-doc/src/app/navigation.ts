@@ -1,30 +1,27 @@
 import {
     fromMarkdown,
-    Router,
-    Views,
+    DefaultLayout,
     installCodeApiModule,
     installNotebookModule,
     Navigation,
-} from '@youwol/mkdocs-ts'
+    Router,
+} from 'mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
 import { example1 } from './js-plaground-examples'
 
-const tableOfContent = Views.tocView
-
 const project = {
     name: 'mkdocs-ts',
-    docBasePath: `/api/assets-gateway/cdn-backend/resources/${setup.assetId}/${setup.version}/assets/api`,
+    docBasePath: `../assets/api`,
 }
 
-const url = (restOfPath: string) =>
-    `/api/assets-gateway/cdn-backend/resources/${setup.assetId}/${setup.version}/assets/${restOfPath}`
+const url = (restOfPath: string) => `../assets/${restOfPath}`
 
 const placeholders = {
     '{{project}}': project.name,
     '{{mkdocs-version}}': setup.version,
-    '{{URL-example1}}': `/applications/@youwol/js-playground/latest?content=${encodeURIComponent(example1)}`,
-    '{{assetsBasePath}}': `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets`,
+    '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
+    '{{assetsBasePath}}': `../assets`,
 }
 function fromMd(file: string) {
     return fromMarkdown({
@@ -32,7 +29,6 @@ function fromMd(file: string) {
         placeholders,
     })
 }
-const CodeApiModule = await installCodeApiModule()
 const NotebookModule = await installNotebookModule()
 const notebookOptions = {
     runAtStart: true,
@@ -53,172 +49,230 @@ await Promise.all([
     ),
 ])
 
-export const navigation: Navigation = {
+type AppNav = Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>
+
+export const navigation: AppNav = {
     name: 'Home',
-    tableOfContent,
-    decoration: {
+    header: {
         icon: {
             tag: 'i',
             class: 'fas fa-home me-1',
         },
     },
-    html: fromMd('index.md'),
-    '/how-to': {
-        name: 'How to',
-        decoration: {
-            icon: {
-                tag: 'i',
-                class: 'fas fa-question-circle me-1',
-            },
-        },
-        tableOfContent,
-        html: fromMd('how-to.md'),
-        '/install': {
-            name: 'Install',
-            tableOfContent,
-            html: fromMd('how-to.install.md'),
-        },
-        '/api-backend': {
-            name: 'Code API backends',
-            tableOfContent,
-            html: fromMd('how-to.api-backend.md'),
-        },
+    layout: {
+        content: fromMd('index.md'),
     },
-    '/tutorials': {
-        name: 'Tutorials',
-        decoration: {
-            icon: {
-                tag: 'i',
-                class: 'fas fa-graduation-cap me-1',
-            },
-        },
-        tableOfContent,
-        html: fromMd('tutorials.md'),
-        '/basics': {
-            name: 'Getting started',
-            tableOfContent,
-            html: ({ router }) =>
-                new NotebookModule.NotebookPage({
-                    url: url('tutorials.basics.md'),
-                    router,
-                    options: notebookOptions,
-                }),
-        },
-        '/markdown': {
-            name: 'Markdown',
-            tableOfContent,
-            html: ({ router }) =>
-                new NotebookModule.NotebookPage({
-                    url: url('tutorials.markdown.md'),
-                    router,
-                    options: notebookOptions,
-                }),
-        },
-        '/code-api': {
-            name: 'Code API',
-            tableOfContent,
-            html: fromMd('tutorials.code-api.md'),
-        },
-        '/notebook': {
-            name: 'Notebook',
-            tableOfContent,
-            html: ({ router }) =>
-                new NotebookModule.NotebookPage({
-                    url: url('tutorials.notebook.md'),
-                    router,
-                    options: notebookOptions,
-                }),
-            '/import': {
-                name: 'Import',
-                tableOfContent,
-                html: ({ router }) =>
-                    new NotebookModule.NotebookPage({
-                        url: url('tutorials.notebook.import.md'),
-                        router,
-                        options: notebookOptions,
-                    }),
-            },
-            '/scope': {
-                name: 'Scope & Mutations',
-                tableOfContent,
-                html: ({ router }) =>
-                    new NotebookModule.NotebookPage({
-                        url: url('tutorials.notebook.scope.md'),
-                        router,
-                        options: notebookOptions,
-                    }),
-            },
-            '/python': {
-                name: 'Python',
-                tableOfContent,
-                html: ({ router }) =>
-                    new NotebookModule.NotebookPage({
-                        url: url('tutorials.notebook.python.md'),
-                        router,
-                        options: notebookOptions,
-                    }),
-                '/matplotlib': {
-                    name: 'Matplotlib',
-                    tableOfContent,
-                    html: ({ router }) =>
-                        new NotebookModule.NotebookPage({
-                            url: url('tutorials.notebook.python.matplotlib.md'),
-                            router,
-                            options: notebookOptions,
-                        }),
+    routes: {
+        '/how-to': {
+            name: 'How to',
+            header: {
+                icon: {
+                    tag: 'i',
+                    class: 'fas fa-question-circle me-1',
                 },
             },
-            '/workers': {
-                name: "Workers' Pool",
-                tableOfContent,
-                html: ({ router }) =>
-                    new NotebookModule.NotebookPage({
-                        url: url('tutorials.notebook.workers.md'),
-                        router,
-                        options: notebookOptions,
-                    }),
+            layout: {
+                content: fromMd('how-to.md'),
             },
-            '/interpreter': {
-                name: 'Interpreter',
-                tableOfContent,
-                html: ({ router }) =>
-                    new NotebookModule.NotebookPage({
-                        url: url('tutorials.notebook.interpreter.md'),
-                        router,
-                        options: notebookOptions,
-                    }),
-            },
-            '/import-utils': {
-                name: 'Import Utilities',
-                tableOfContent,
-                html: ({ router }) =>
-                    new NotebookModule.NotebookPage({
-                        url: url('tutorials.notebook.import-utils.md'),
-                        router,
-                        options: notebookOptions,
-                    }),
+            routes: {
+                '/install': {
+                    name: 'Install',
+                    layout: {
+                        content: fromMd('how-to.install.md'),
+                    },
+                },
+                '/api-backend': {
+                    name: 'Code API backends',
+                    layout: {
+                        content: fromMd('how-to.api-backend.md'),
+                    },
+                },
             },
         },
+        '/tutorials': {
+            name: 'Tutorials',
+            header: {
+                icon: {
+                    tag: 'i',
+                    class: 'fas fa-graduation-cap me-1',
+                },
+            },
+            layout: {
+                content: fromMd('tutorials.md'),
+            },
+            routes: {
+                '/basics': {
+                    name: 'Getting started',
+                    layout: {
+                        content: ({ router }) =>
+                            new NotebookModule.NotebookPage({
+                                url: url('tutorials.basics.md'),
+                                router,
+                                options: notebookOptions,
+                            }),
+                    },
+                },
+                '/markdown': {
+                    name: 'Markdown',
+                    layout: {
+                        content: ({ router }) =>
+                            new NotebookModule.NotebookPage({
+                                url: url('tutorials.markdown.md'),
+                                router,
+                                options: notebookOptions,
+                            }),
+                    },
+                },
+                '/code-api': {
+                    name: 'Code API',
+                    layout: {
+                        content: fromMd('tutorials.code-api.md'),
+                    },
+                },
+                '/notebook': {
+                    name: 'Notebook',
+                    layout: {
+                        content: ({ router }) =>
+                            new NotebookModule.NotebookPage({
+                                url: url('tutorials.notebook.md'),
+                                router,
+                                options: notebookOptions,
+                            }),
+                    },
+                    routes: {
+                        '/import': {
+                            name: 'Import',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.notebook.import.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                        '/scope': {
+                            name: 'Scope & Mutations',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url('tutorials.notebook.scope.md'),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                        '/python': {
+                            name: 'Python',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.notebook.python.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                            routes: {
+                                '/matplotlib': {
+                                    name: 'Matplotlib',
+                                    layout: {
+                                        content: ({ router }) =>
+                                            new NotebookModule.NotebookPage({
+                                                url: url(
+                                                    'tutorials.notebook.python.matplotlib.md',
+                                                ),
+                                                router,
+                                                options: notebookOptions,
+                                            }),
+                                    },
+                                },
+                            },
+                        },
+                        '/workers': {
+                            name: "Workers' Pool",
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.notebook.workers.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                        '/interpreter': {
+                            name: 'Interpreter',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.notebook.interpreter.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                        '/import-utils': {
+                            name: 'Import Utilities',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.notebook.import-utils.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '/api': apiNav(),
+        //
+        // '/api': {
+        //     name: 'API',
+        //     header: {
+        //         icon: {
+        //             tag: 'i',
+        //             class: 'fas fa-code me-1',
+        //         },
+        //     },
+        //     layout: {
+        //         content: fromMd('api.md'),
+        //     },
+        //     routes: ({ path, router }: { path: string; router: Router }) =>
+        //         CodeApiModule.docNavigation({
+        //             modulePath: path,
+        //             router,
+        //             project,
+        //             configuration: {
+        //                 ...CodeApiModule.configurationTsTypedoc,
+        //                 notebook: true,
+        //             },
+        //         }),
+        // },
     },
-    '/api': {
+}
+
+async function apiNav(): Promise<AppNav> {
+    const CodeApiModule = await installCodeApiModule()
+
+    return CodeApiModule.codeApiEntryNode({
         name: 'API',
-        decoration: {
-            icon: {
-                tag: 'i',
-                class: 'fas fa-code me-1',
-            },
+        icon: {
+            tag: 'i' as const,
+            class: `fas fa-code`,
         },
-        html: fromMd('api.md'),
-        tableOfContent,
-        '...': ({ path, router }: { path: string; router: Router }) =>
-            CodeApiModule.docNavigation({
-                modulePath: path,
-                router,
-                project,
-                configuration: {
-                    ...CodeApiModule.configurationTsTypedoc,
-                    notebook: true,
-                },
-            }),
-    },
+        entryModule: 'mkdocs-ts',
+        docBasePath: '../assets/api',
+        configuration: CodeApiModule.configurationTsTypedoc,
+    })
 }

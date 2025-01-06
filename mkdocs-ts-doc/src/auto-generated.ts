@@ -1,37 +1,37 @@
-
+/* eslint-disable */
 const runTimeDependencies = {
     "externals": {
-        "@youwol/mkdocs-ts": "^0.6.5",
-        "@youwol/rx-vdom": "^1.0.1",
-        "@youwol/webpm-client": "^3.0.0",
+        "@w3nest/webpm-client": "^0.1.2",
         "mathjax": "^3.1.4",
+        "mkdocs-ts": "^0.3.0",
+        "rx-vdom": "^0.1.0",
         "rxjs": "^7.5.6"
     },
     "includedInBundle": {}
 }
 const externals = {
-    "@youwol/mkdocs-ts": "window['@youwol/mkdocs-ts_APIv06']",
-    "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
-    "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
+    "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
     "mathjax": "window['mathjax_APIv3']",
+    "mkdocs-ts": "window['mkdocs-ts_APIv03']",
+    "rx-vdom": "window['rx-vdom_APIv01']",
     "rxjs": "window['rxjs_APIv7']"
 }
 const exportedSymbols = {
-    "@youwol/mkdocs-ts": {
-        "apiKey": "06",
-        "exportedSymbol": "@youwol/mkdocs-ts"
-    },
-    "@youwol/rx-vdom": {
-        "apiKey": "1",
-        "exportedSymbol": "@youwol/rx-vdom"
-    },
-    "@youwol/webpm-client": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/webpm-client"
+    "@w3nest/webpm-client": {
+        "apiKey": "01",
+        "exportedSymbol": "@w3nest/webpm-client"
     },
     "mathjax": {
         "apiKey": "3",
         "exportedSymbol": "mathjax"
+    },
+    "mkdocs-ts": {
+        "apiKey": "03",
+        "exportedSymbol": "mkdocs-ts"
+    },
+    "rx-vdom": {
+        "apiKey": "01",
+        "exportedSymbol": "rx-vdom"
     },
     "rxjs": {
         "apiKey": "7",
@@ -43,9 +43,9 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "entryFile": "./main.ts",
     "loadDependencies": [
         "rxjs",
-        "@youwol/rx-vdom",
-        "@youwol/mkdocs-ts",
-        "@youwol/webpm-client",
+        "rx-vdom",
+        "mkdocs-ts",
+        "@w3nest/webpm-client",
         "mathjax"
     ]
 }
@@ -53,19 +53,19 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
 const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {}
 
 const entries = {
-     '@youwol/mkdocs-ts-doc': './main.ts',
-    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`@youwol/mkdocs-ts-doc/${e.name}`]:e.entryFile}), {})
+     '@mkdocs-ts/doc': './main.ts',
+    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`@mkdocs-ts/doc/${e.name}`]:e.entryFile}), {})
 }
 export const setup = {
-    name:'@youwol/mkdocs-ts-doc',
-        assetId:'QHlvdXdvbC9ta2RvY3MtdHMtZG9j',
-    version:'0.6.5-wip',
-    shortDescription:"Documentation app for project @youwol/mkdocs-ts.",
-    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts-doc&tab=doc',
-    npmPackage:'https://www.npmjs.com/package/@youwol/mkdocs-ts-doc',
-    sourceGithub:'https://github.com/youwol/mkdocs-ts-doc',
-    userGuide:'https://l.youwol.com/doc/@youwol/mkdocs-ts-doc',
-    apiVersion:'06',
+    name:'@mkdocs-ts/doc',
+        assetId:'QG1rZG9jcy10cy9kb2M=',
+    version:'0.3.0-wip',
+    shortDescription:"Documentation app for the project mkdocs-ts.",
+    developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@mkdocs-ts/doc&tab=doc',
+    npmPackage:'https://www.npmjs.com/package/@mkdocs-ts/doc',
+    sourceGithub:'https://github.com/mkdocs-ts/doc',
+    userGuide:'https://l.youwol.com/doc/@mkdocs-ts/doc',
+    apiVersion:'03',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -76,7 +76,7 @@ export const setup = {
     },
 
     installMainModule: ({cdnClient, installParameters}:{
-        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
+        cdnClient:{install:(_:unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const parameters = installParameters || {}
@@ -90,12 +90,12 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts-doc_APIv06`]
+            return window[`@mkdocs-ts/doc_APIv03`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
         name: string,
-        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
+        cdnClient:{install:(_:unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const entry = secondaryEntries[name]
@@ -105,7 +105,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/mkdocs-ts-doc#0.6.5-wip~dist/@youwol/mkdocs-ts-doc/${entry.name}.js`
+            `@mkdocs-ts/doc#0.3.0-wip~dist/@mkdocs-ts/doc/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -116,7 +116,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/mkdocs-ts-doc/${entry.name}_APIv06`]
+            return window[`@mkdocs-ts/doc/${entry.name}_APIv03`]
         })
     },
     getCdnDependencies(name?: string){

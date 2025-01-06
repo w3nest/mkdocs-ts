@@ -1,21 +1,21 @@
-# @youwol/mkdocs-ts-doc
+# @mkdocs-ts/doc
 
-Documentation app for project @youwol/mkdocs-ts.
+Documentation app for the project mkdocs-ts.
 
 This library is part of the hybrid cloud/local ecosystem
-[YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).
+[YouWol](https://platform.youwol.com/apps/@youwol/platform/latest).
 
 ## Links
 
-[Running app.](https://platform.youwol.com/applications/@youwol/mkdocs-ts-doc/latest)
+[Running app.](https://platform.youwol.com/apps/@mkdocs-ts/doc/latest)
 
-[Online user-guide](https://l.youwol.com/doc/@youwol/mkdocs-ts-doc)
+[Online user-guide](https://l.youwol.com/doc/@mkdocs-ts/doc)
 
-[Developers documentation](https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/mkdocs-ts-doc&tab=doc)
+[Developers documentation](https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@mkdocs-ts/doc&tab=doc)
 
-[Package on npm](https://www.npmjs.com/package/@youwol/mkdocs-ts-doc)
+[Package on npm](https://www.npmjs.com/package/@mkdocs-ts/doc)
 
-[Source on GitHub](https://github.com/youwol/mkdocs-ts-doc)
+[Source on GitHub](https://github.com/mkdocs-ts/doc)
 
 # Installation, Build, Test
 
@@ -68,8 +68,8 @@ the Py-YouWol configuration needs to be updated to include a `WebpackDevServerSw
 `FlowSwitcherMiddleware`. For example:
 
 ```python
-from w3nest.app.config import *
-from w3nest.pipelines.pipeline_typescript_weback_npm import WebpackDevServerSwitch
+from w3nest.app.environment import *
+from w3nest.ci.pipeline_typescript_weback_npm import WebpackDevServerSwitch
 
 Configuration(
     customization = Customization(
@@ -77,7 +77,7 @@ Configuration(
             FlowSwitcherMiddleware(
                 name = 'front-end dev-servers',
                 oneOf = [
-                    WebpackDevServerSwitch(packageName="@youwol/mkdocs-ts-doc", port=3025),
+                    WebpackDevServerSwitch(packageName="@mkdocs-ts/doc", port=3025),
                 ]
             )
         ]
@@ -89,7 +89,7 @@ Additional information on the `Configuration` class can be found in the "Configu
 [Py-YouWol guide](https://l.youwol.com/doc/py-youwol).
 
 Once Py-YouWol is running with the updated configuration,
-the application can be accessed from [here](http://localhost:2000/applications/@youwol/mkdocs-ts-doc/latest)
+the application can be accessed from [here](http://localhost:2000/apps/@mkdocs-ts/doc/latest)
 (providing py-youwol running using the default port `2000`).
 
 ---

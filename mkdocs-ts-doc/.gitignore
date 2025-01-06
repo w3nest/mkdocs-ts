@@ -6,6 +6,6 @@ junit.xml
 cdn.zip
 __pycache__
 *.iml
-.template
+.w3nest/.template
 .env
 /src/tests/**/result.zip
