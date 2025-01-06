@@ -31,11 +31,11 @@ export interface UrlTarget {
      */
     path: string
     /**
-     * The typedocNodes's ID if provided in the URL.
+     * Section Id.
      */
     sectionId?: string
     /**
-     * URL parameters
+     * Additional URL parameters
      */
     parameters?: Record<string, string>
 }
@@ -187,13 +187,16 @@ export class Router<TLayout = unknown, THeader = unknown> {
         basePath?: string
         retryNavPeriod?: number
         redirects?: (target: string) => Promise<string | undefined>
-        browserClient?: (router: Router) => BrowserInterface
+        browserClient?: (p: {
+            router: Router
+            basePath: string
+        }) => BrowserInterface
     }) {
         Object.assign(this, params)
-        this.browserClient = params.browserClient
-            ? params.browserClient(this)
-            : new WebBrowser({ router: this })
         this.basePath = this.basePath || document.location.pathname
+        this.browserClient = params.browserClient
+            ? params.browserClient({ router: this, basePath: this.basePath })
+            : new WebBrowser({ router: this, basePath: this.basePath })
 
         const { rootNode, reactiveNavs, promiseNavs } = createRootNode({
             navigation: this.navigation,
@@ -282,13 +285,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             })
             return
         }
-
-        const params =
-            target.parameters && Object.keys(target.parameters).length > 0
-                ? `&${new URLSearchParams(target.parameters)}`
-                : ''
-        const url = `${this.basePath}?nav=${path}${params}`
-        this.browserClient.pushState({ target }, url)
+        this.browserClient.pushState({ target })
         this.path$.next(path)
 
         this.target$.next({

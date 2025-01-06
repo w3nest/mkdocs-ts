@@ -1,4 +1,4 @@
-import { Router, UrlTarget } from './router'
+import { headingPrefixId, Router, UrlTarget } from './router'
 import { sanitizeNavPath } from './navigation.node'
 
 /**
@@ -11,7 +11,7 @@ export interface BrowserInterface {
      * @param data - The state data to associate with the history entry, including the navigation path.
      * @param url - The associated URL.
      */
-    pushState(data: { target: UrlTarget }, url: string): void
+    pushState(data: { target: UrlTarget }): void
     /**
      * Retrieves the target from the current URL.
      *
@@ -25,25 +25,37 @@ export interface BrowserInterface {
  * Integrates with the browser's history API and synchronizes with a {@link Router}.
  */
 export class WebBrowser implements BrowserInterface {
-    constructor({ router }: { router: Router }) {
+    public readonly router: Router
+    public readonly basePath: string
+    constructor(params: { router: Router; basePath: string }) {
+        Object.assign(this, params)
         window.onpopstate = (event: PopStateEvent) => {
-            const state = event.state as unknown as { path: string } | undefined
+            const state = event.state as unknown as
+                | { target: UrlTarget }
+                | undefined
             if (state) {
-                router.fireNavigateTo(state)
+                this.router.fireNavigateTo(state.target)
             } else {
-                router.fireNavigateTo({ path: '/' })
+                this.router.fireNavigateTo({
+                    path: '/',
+                })
             }
         }
     }
-    pushState(data: { target: UrlTarget }, url: string): void {
-        history.pushState(data, '', url)
+    pushState(data: { target: UrlTarget }): void {
+        history.pushState(
+            data,
+            '',
+            `${this.basePath}?${formatUrl(data.target)}`,
+        )
     }
+
     parseUrl(): UrlTarget {
         return parseUrl(window.location.search)
     }
 }
 
-export function parseUrl(url: string) {
+export function parseUrl(url: string): UrlTarget {
     const urlParams = new URLSearchParams(url)
     const nav = sanitizeNavPath(urlParams.get('nav') ?? '/')
 
@@ -60,4 +72,19 @@ export function parseUrl(url: string) {
         parameters,
         sectionId: nav.split('.').slice(1).join('.'),
     }
+}
+
+export function formatUrl(urlTarget: UrlTarget) {
+    const params = { ...urlTarget.parameters }
+    if ('nav' in params) {
+        delete params.nav
+    }
+    const paramsStr =
+        urlTarget.parameters && Object.keys(params).length > 0
+            ? `&${new URLSearchParams(params)}`
+            : ''
+    const sectionId = urlTarget.sectionId
+        ? `.${urlTarget.sectionId.replace(headingPrefixId, '')}`
+        : ''
+    return `nav=${urlTarget.path}${sectionId}${paramsStr}`
 }
