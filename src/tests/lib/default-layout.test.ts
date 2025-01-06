@@ -1,4 +1,4 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs'
+import { BehaviorSubject, filter, firstValueFrom } from 'rxjs'
 import {
     DefaultLayout,
     headingId,
@@ -8,7 +8,7 @@ import {
     Router,
     segment,
 } from '../../lib'
-import { mockMissingUIComponents, navigateAndAssert } from './utils'
+import { expectTruthy, mockMissingUIComponents } from './utils'
 import { render } from 'rx-vdom'
 import { NavigationView, PageView, TOCView } from '../../lib/default-layout'
 
@@ -37,6 +37,11 @@ const navigation: Navigation<TLayout, THeader> = {
                         id: 'section-2',
                         innerText: 'Section 2',
                     },
+                    {
+                        tag: 'a',
+                        innerText: 'An internal link',
+                        href: '@nav/md.section-1',
+                    },
                 ],
             }
         },
@@ -62,17 +67,24 @@ const navigation: Navigation<TLayout, THeader> = {
     },
 }
 
+function setup() {
+    mockMissingUIComponents()
+    const router = new Router({ navigation })
+    const view = new DefaultLayout.View({
+        router,
+        bookmarks$: new BehaviorSubject(['/', '/md']),
+    })
+    document.body.innerHTML = ''
+    document.body.append(render(view))
+    return router
+}
+
 describe('Nav, Page & TOC', () => {
     let router: Router<TLayout, THeader>
     beforeAll(() => {
-        mockMissingUIComponents()
-        router = new Router({ navigation })
-        const view = new DefaultLayout.View({
-            router,
-            bookmarks$: new BehaviorSubject(['/', '/md']),
-        })
-        document.body.append(render(view))
+        router = setup()
     })
+
     it('Should display Nav, Page & TOC on load', async () => {
         const node = await firstValueFrom(router.explorerState.selectedNode$)
         expect(node.id).toBe('/')
@@ -108,5 +120,45 @@ describe('Nav, Page & TOC', () => {
             throw new Error(`Node at path '/md.section-1' should be resolved`)
         }
         expect(target.sectionId).toBe('section-1')
+    })
+
+    it("Navigate to '/md.section-1' with TOC click", async () => {
+        await router.navigateTo({ path: '/md' })
+        const toc = expectTruthy(
+            document.querySelector<HTMLElement>(`.${TOCView.CssSelector}`),
+        )
+        const links = Array.from(toc.querySelectorAll('a'))
+        expect(links).toHaveLength(3)
+        links[1].dispatchEvent(new MouseEvent('click'))
+        expect(window.location.href).toBe('http://localhost/?nav=/md.section-1')
+    })
+})
+
+describe('Page', () => {
+    let router: Router<TLayout, THeader>
+    beforeAll(() => {
+        router = setup()
+    })
+    it('Should correctly navigate on anchor click', async () => {
+        await router.navigateTo({ path: '/', sectionId: 'section-2' })
+        const target = await firstValueFrom(router.target$)
+        if (!isResolvedTarget(target)) {
+            throw new Error(`Node at path '/.section-2' should be resolved`)
+        }
+        const page = expectTruthy(
+            document.querySelector<HTMLElement>(`.${PageView.CssSelector}`),
+        )
+        const anchor = expectTruthy(page.querySelector('a'))
+        expect(anchor.innerText).toBe('An internal link')
+        anchor.dispatchEvent(new MouseEvent('click'))
+        const redirectTarget = await firstValueFrom(
+            router.target$.pipe(
+                filter((t) => isResolvedTarget(t)),
+                filter((t) => t.path === '/md'),
+            ),
+        )
+        expect(redirectTarget.path).toBe('/md')
+        expect(redirectTarget.sectionId).toBe('section-1')
+        expect(redirectTarget.node.name).toBe('Markdown')
     })
 })

@@ -1,7 +1,8 @@
 import { Navigation, segment, Router, isResolvedTarget } from '../../lib'
 import { DefaultLayout } from '../../lib'
-import { filter, firstValueFrom, map, of, Subject } from 'rxjs'
+import { filter, firstValueFrom, map, Subject } from 'rxjs'
 import { navigateAndAssert } from './utils'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 const nodeBase = (name: string) => ({
     name,
@@ -9,7 +10,21 @@ const nodeBase = (name: string) => ({
         icon: { tag: 'i' as const },
     }),
     layout: {
-        content: () => ({ tag: 'div' as const }),
+        content: (): AnyVirtualDOM => ({
+            tag: 'div',
+            children: [
+                {
+                    tag: 'h1',
+                    id: 'section1',
+                    innerText: 'Section',
+                },
+                {
+                    tag: 'h2',
+                    id: 'sub-section',
+                    innerText: 'Sub Section',
+                },
+            ],
+        }),
     },
 })
 
@@ -175,7 +190,7 @@ describe('Navigation history', () => {
     it('Navigates forward & backward with popstate', async () => {
         await navigateAndAssert(router, '/static', 'Static')
         const event = new PopStateEvent('popstate', {
-            state: { path: '/' },
+            state: { target: { path: '/' } },
         })
         window.dispatchEvent(event)
         const target = await firstValueFrom(

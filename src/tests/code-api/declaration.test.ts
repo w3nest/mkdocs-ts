@@ -1,6 +1,11 @@
-import { processDeclaration } from '../../lib/code-api/declaration.view'
+import {
+    DeclarationView,
+    processDeclaration,
+} from '../../lib/code-api/declaration.view'
+import { mockMissingUIComponents } from '../lib/utils'
+import { render } from 'rx-vdom'
 
-test('declaration view', () => {
+test('Declarations processing', () => {
     const declaration = `This is a word1, this is (word2), yet a word3\n among other words like word1word2.`
 
     const entries = {
@@ -27,4 +32,37 @@ test('declaration view', () => {
     expect(replaced2).toBe(
         'This a &lt;word1:@nav/api/word1&gt; in html element.',
     )
+})
+
+describe('Declarations rendering', () => {
+    beforeAll(() => {
+        mockMissingUIComponents()
+    })
+    beforeEach(() => (document.body.innerHTML = ''))
+
+    it('Should render links', async () => {
+        const view = new DeclarationView({
+            code: {
+                declaration: `interface Foo { bar: Bar}`,
+                references: {
+                    Bar: `@nav/api/Module.bar`,
+                },
+            },
+            parent: {
+                semantic: {
+                    role: 'global',
+                    labels: [],
+                    attributes: {},
+                    relations: {},
+                },
+            },
+        })
+        document.body.append(render(view))
+        const anchor = document.querySelector<HTMLAnchorElement>('a')
+        if (!anchor) {
+            throw Error("Can not find anchor element for 'Bar'")
+        }
+        expect(anchor.innerHTML).toBe('Bar')
+        expect(anchor.href.endsWith('@nav/api/Module.bar')).toBeTruthy()
+    })
 })

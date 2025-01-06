@@ -39,3 +39,11 @@ export function mockMissingUIComponents() {
     window['ResizeObserver'] = ResizeObserver
     window.HTMLElement.prototype.scrollTo = jest.fn()
 }
+
+export function expectTruthy<T>(data: T | null): T {
+    expect(data).toBeTruthy()
+    if (!data) {
+        throw Error('The data should be truthy')
+    }
+    return data
+}

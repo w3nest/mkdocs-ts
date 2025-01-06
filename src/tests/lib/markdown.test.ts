@@ -1,4 +1,14 @@
-import { patchSrc, removeEscapedText } from '../../lib'
+import {
+    DefaultLayout,
+    isResolvedTarget,
+    parseMd,
+    patchSrc,
+    removeEscapedText,
+    Router,
+} from '../../lib'
+import { expectTruthy } from './utils'
+import { filter, firstValueFrom } from 'rxjs'
+import { render } from 'rx-vdom'
 
 test('patchSrc happy path', () => {
     const inner = `Some content\n<i>some HTML content</i>\nAnd special characters: > < &`
@@ -68,5 +78,44 @@ test('escape text', () => {
         __ESCAPED_1: '```escape 5\nescape 6```',
         __ESCAPED_2: '`escaped 1`',
         __ESCAPED_3: '`escape 2\n escape 3`',
+    })
+})
+
+describe('render markdown', () => {
+    let router: Router
+
+    type TLayout = DefaultLayout.NavLayout
+    type THeader = DefaultLayout.NavHeader
+
+    beforeAll(() => {
+        router = new Router<TLayout, THeader>({
+            navigation: {
+                name: 'Home',
+                layout: {
+                    content: () => ({
+                        tag: 'h1',
+                        innerText: 'Home',
+                        id: 'home',
+                    }),
+                },
+            },
+        })
+    })
+
+    it('Renders MD with internal link', async () => {
+        const vdom = parseMd({
+            src: 'This is a [link](@nav/.home).',
+            router,
+        })
+        document.body.appendChild(render(vdom))
+        const anchor = expectTruthy(document.querySelector('a'))
+        anchor.dispatchEvent(new MouseEvent('click'))
+        const target = await firstValueFrom(
+            router.target$.pipe(
+                filter((t) => isResolvedTarget(t)),
+                filter((t) => t.sectionId === 'home'),
+            ),
+        )
+        expect(target).toBeTruthy()
     })
 })
