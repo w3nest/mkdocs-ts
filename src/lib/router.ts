@@ -342,6 +342,9 @@ export class Router<TLayout = unknown, THeader = unknown> {
             console.warn(`Can not scroll to element`, target)
             return
         }
+        this.browserClient.pushState({
+            target: { ...this.parseUrl(), sectionId: div.id },
+        })
         setTimeout(() => {
             scrollableElement.scrollTo({
                 top: div.offsetTop - br.top - 1,
