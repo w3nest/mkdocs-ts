@@ -4,3 +4,4 @@ dist/docs
 src/tests
 mkdocs-ts-doc
 cdn.zip
+doc/

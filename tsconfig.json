@@ -25,5 +25,5 @@
             "module": "CommonJS"
         }
     },
-    "exclude": ["./mkdocs-ts-doc"]
+    "exclude": ["./doc"]
 }
