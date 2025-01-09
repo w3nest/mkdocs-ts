@@ -1,5 +1,5 @@
 {
-    "name": "@youwol/mkdocs-ts",
+    "name": "mkdocs-ts",
     "documentation": {
         "sections": []
     },
@@ -20,7 +20,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "Backends available to parse code API.\n\nBackend API generators are in charge to convert project's sources files into a set of 'API' files,\neach file representing one module of the project.\n\n**Conditions for Generation**:\n   - The language is organized hierarchically into modules.\n   - Modules can contain entities grouped as , ,\n     or .\n   - For each entity, it should be possible to construct a  attribute, which includes:\n     - Extracting documentation from the source code.\n     - Extracting declaration and optionally implementation from the source code.\n     - Extracting the list of known types involved from a declaration (if applicable).\n   - For , it should be possible to extract associated lists of  and\n   .\n   - All entities have a  property providing language-specific semantic information\n   (e.g., `role`, `class`, `interface`, `abstract class`, etc., for ).\n   - All entities are associated with .",
+                        "content": "Backends available to parse code API.\n\nBackend API generators are in charge to convert project's sources files into a set of 'API' files,\neach file representing one module of the project.\n\n**Conditions for Generation**:\n\n   - The language is organized hierarchically into modules.\n\n   - Modules can contain entities grouped as , ,\n     or .\n\n   - For each entity, it should be possible to construct a  attribute, which includes:\n     - Extracting documentation from the source code.\n\n     - Extracting declaration and optionally implementation from the source code.\n\n     - Extracting the list of known types involved from a declaration (if applicable).\n\n   - For , it should be possible to extract associated lists of  and\n   .\n\n   - All entities have a  property providing language-specific semantic information.\n\n   - All entities are associated with .",
                         "contentType": "markdown"
                     }
                 ]

@@ -27,7 +27,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Comment can have contribution from various kind.\nThose are the one handled by the backend.",
+                        "content": "",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -61,7 +61,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "The kind handles by the backend.",
+                        "content": "",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -86,6 +86,547 @@
         }
     ],
     "types": [
+        {
+            "name": "BlockTagsTrait",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Trait for comment having block tags.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "BlockTagsTrait",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface BlockTagsTrait",
+                "implementation": "export interface BlockTagsTrait {\n    blockTags: { tag: string; content: (DocText | DocInlineTag | DocCode)[] }[]\n}",
+                "startLine": 157,
+                "endLine": 160,
+                "references": {
+                    "BlockTagsTrait": "@nav/api/Backends/TsTypedoc.BlockTagsTrait",
+                    "DocText": "@nav/api/Backends/TsTypedoc.DocText",
+                    "DocInlineTag": "@nav/api/Backends/TsTypedoc.DocInlineTag",
+                    "DocCode": "@nav/api/Backends/TsTypedoc.DocCode"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Comment",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A comment.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Comment",
+            "attributes": [
+                {
+                    "name": "summary",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The summary.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Comment.summary",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                        "declaration": "summary: CommentSection",
+                        "implementation": "",
+                        "startLine": 88,
+                        "endLine": 89,
+                        "references": {
+                            "summary": "@nav/api/Backends/TsTypedoc.Comment.summary",
+                            "CommentSection": "@nav/api/Backends/TsTypedoc.CommentSection"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface Comment",
+                "implementation": "export interface Comment {\n    /**\n     * The summary.\n     */\n    summary: CommentSection\n}",
+                "startLine": 84,
+                "endLine": 90,
+                "references": {
+                    "Comment": "@nav/api/Backends/TsTypedoc.Comment",
+                    "CommentSection": "@nav/api/Backends/TsTypedoc.CommentSection"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DocCode",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Code element in documentation.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DocCode",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface DocCode",
+                "implementation": "export interface DocCode {\n    kind: 'code'\n    text: string\n}",
+                "startLine": 71,
+                "endLine": 75,
+                "references": {
+                    "DocCode": "@nav/api/Backends/TsTypedoc.DocCode"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DocInlineTag",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Anchor element in documentation.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DocInlineTag",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface DocInlineTag",
+                "implementation": "export interface DocInlineTag {\n    kind: 'inline-tag'\n    tag: '@link'\n    text: string\n    target: number\n}",
+                "startLine": 61,
+                "endLine": 67,
+                "references": {
+                    "DocInlineTag": "@nav/api/Backends/TsTypedoc.DocInlineTag"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DocText",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Simple text element in documentation.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DocText",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface DocText",
+                "implementation": "export interface DocText {\n    kind: 'text'\n    text: string\n}",
+                "startLine": 53,
+                "endLine": 57,
+                "references": {
+                    "DocText": "@nav/api/Backends/TsTypedoc.DocText"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ProjectGlobals",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Global project information.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ProjectGlobals",
+            "attributes": [
+                {
+                    "name": "navigations",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Map  `node.id`  => navigation path",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectGlobals.navigations",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
+                        "declaration": "navigations: Record<number, string>",
+                        "implementation": "",
+                        "startLine": 53,
+                        "endLine": 54,
+                        "references": {
+                            "navigations": "@nav/api/Backends/TsTypedoc.ProjectGlobals.navigations"
+                        }
+                    }
+                },
+                {
+                    "name": "tsInputs",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Map  `navigation path`  => source information",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectGlobals.tsInputs",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
+                        "declaration": "tsInputs: TsSrcElements",
+                        "implementation": "",
+                        "startLine": 57,
+                        "endLine": 58,
+                        "references": {
+                            "tsInputs": "@nav/api/Backends/TsTypedoc.ProjectGlobals.tsInputs",
+                            "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements"
+                        }
+                    }
+                },
+                {
+                    "name": "typedocIdMap",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Map  `node.id`  =>  `TypedocNode`",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectGlobals.typedocIdMap",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
+                        "declaration": "typedocIdMap: Record<number, TypedocNode | undefined>",
+                        "implementation": "",
+                        "startLine": 61,
+                        "endLine": 62,
+                        "references": {
+                            "typedocIdMap": "@nav/api/Backends/TsTypedoc.ProjectGlobals.typedocIdMap",
+                            "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
+                        }
+                    }
+                },
+                {
+                    "name": "typedocParentIdMap",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Map  `node.id`  => parent's node  `TypedocNode`",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ProjectGlobals.typedocParentIdMap",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
+                        "declaration": "typedocParentIdMap: Record<number, TypedocNode>",
+                        "implementation": "",
+                        "startLine": 65,
+                        "endLine": 66,
+                        "references": {
+                            "typedocParentIdMap": "@nav/api/Backends/TsTypedoc.ProjectGlobals.typedocParentIdMap",
+                            "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
+                "declaration": "export interface ProjectGlobals",
+                "implementation": "export interface ProjectGlobals {\n    /**\n     * Map `node.id` => navigation path\n     */\n    navigations: Record<number, string>\n    /**\n     * Map `navigation path` => source information\n     */\n    tsInputs: TsSrcElements\n    /**\n     * Map `node.id` => `TypedocNode`\n     */\n    typedocIdMap: Record<number, TypedocNode | undefined>\n    /**\n     * Map `node.id` => parent's node `TypedocNode`\n     */\n    typedocParentIdMap: Record<number, TypedocNode>\n}",
+                "startLine": 49,
+                "endLine": 67,
+                "references": {
+                    "ProjectGlobals": "@nav/api/Backends/TsTypedoc.ProjectGlobals",
+                    "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements",
+                    "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Source",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Source specification",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Source",
+            "attributes": [
+                {
+                    "name": "fileName",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Filename including the snippet.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Source.fileName",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                        "declaration": "fileName: string",
+                        "implementation": "",
+                        "startLine": 98,
+                        "endLine": 99,
+                        "references": {
+                            "fileName": "@nav/api/Backends/TsTypedoc.Source.fileName"
+                        }
+                    }
+                },
+                {
+                    "name": "line",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Starting line.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Source.line",
+                    "code": {
+                        "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                        "declaration": "line: number",
+                        "implementation": "",
+                        "startLine": 102,
+                        "endLine": 103,
+                        "references": {
+                            "line": "@nav/api/Backends/TsTypedoc.Source.line"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface Source",
+                "implementation": "export interface Source {\n    /**\n     * Filename including the snippet.\n     */\n    fileName: string\n    /**\n     * Starting line.\n     */\n    line: number\n}",
+                "startLine": 94,
+                "endLine": 104,
+                "references": {
+                    "Source": "@nav/api/Backends/TsTypedoc.Source"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SymbolTrait",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Trait specific of a symbol.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SymbolTrait",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface SymbolTrait",
+                "implementation": "export interface SymbolTrait {\n    sources: Source[]\n    typeParameters?: TypedocNode[] | null\n}",
+                "startLine": 108,
+                "endLine": 112,
+                "references": {
+                    "SymbolTrait": "@nav/api/Backends/TsTypedoc.SymbolTrait",
+                    "Source": "@nav/api/Backends/TsTypedoc.Source",
+                    "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
         {
             "name": "TsSrcElement",
             "documentation": {
@@ -131,8 +672,8 @@
                         "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
                         "declaration": "comment?: string",
                         "implementation": "",
-                        "startLine": 198,
-                        "endLine": 199,
+                        "startLine": 245,
+                        "endLine": 246,
                         "references": {
                             "comment": "@nav/api/Backends/TsTypedoc.TsSrcElement.comment"
                         }
@@ -165,8 +706,8 @@
                         "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
                         "declaration": "declaration?: string",
                         "implementation": "",
-                        "startLine": 190,
-                        "endLine": 191,
+                        "startLine": 237,
+                        "endLine": 238,
                         "references": {
                             "declaration": "@nav/api/Backends/TsTypedoc.TsSrcElement.declaration"
                         }
@@ -199,8 +740,8 @@
                         "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
                         "declaration": "implementation?: string",
                         "implementation": "",
-                        "startLine": 194,
-                        "endLine": 195,
+                        "startLine": 241,
+                        "endLine": 242,
                         "references": {
                             "implementation": "@nav/api/Backends/TsTypedoc.TsSrcElement.implementation"
                         }
@@ -212,10 +753,47 @@
                 "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
                 "declaration": "export interface TsSrcElement",
                 "implementation": "export interface TsSrcElement {\n    /**\n     * The declaration of the symbol as included in the source file (if any).\n     */\n    declaration?: string\n    /**\n     * The implementation of the symbol as included in the source file (if any).\n     */\n    implementation?: string\n    /**\n     * The code-comment of the symbol as included in the source file (if any).\n     */\n    comment?: string\n}",
-                "startLine": 186,
-                "endLine": 200,
+                "startLine": 233,
+                "endLine": 247,
                 "references": {
                     "TsSrcElement": "@nav/api/Backends/TsTypedoc.TsSrcElement"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "TypedocNode",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Base type for typedoc node.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "TypedocNode",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
+                "declaration": "export interface TypedocNode",
+                "implementation": "export interface TypedocNode {\n    id: number\n    name: string\n    kind: Kind\n    flags: Record<string, string>\n    comment?: Comment\n    children?: TypedocNode[]\n}",
+                "startLine": 170,
+                "endLine": 178,
+                "references": {
+                    "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
+                    "Comment": "@nav/api/Backends/TsTypedoc.Comment"
                 }
             },
             "semantic": {
@@ -248,49 +826,12 @@
                 "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
                 "declaration": "export type ClassTrait = SymbolTrait & {\n    extendedTypes: TypedocNode[] | null\n    implementedTypes: TypedocNode[] | null\n}",
                 "implementation": "",
-                "startLine": 115,
-                "endLine": 116,
+                "startLine": 123,
+                "endLine": 124,
                 "references": {
                     "ClassTrait": "@nav/api/Backends/TsTypedoc.ClassTrait",
                     "SymbolTrait": "@nav/api/Backends/TsTypedoc.SymbolTrait",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "Comment",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "A comment.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "Comment",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type Comment = {\n    /**\n     * The summary.\n     */\n    summary: CommentSection\n}",
-                "implementation": "",
-                "startLine": 84,
-                "endLine": 85,
-                "references": {
-                    "Comment": "@nav/api/Backends/TsTypedoc.Comment",
-                    "CommentSection": "@nav/api/Backends/TsTypedoc.CommentSection"
                 }
             },
             "semantic": {
@@ -330,114 +871,6 @@
                     "DocText": "@nav/api/Backends/TsTypedoc.DocText",
                     "DocInlineTag": "@nav/api/Backends/TsTypedoc.DocInlineTag",
                     "DocCode": "@nav/api/Backends/TsTypedoc.DocCode"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "DocCode",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Code element in documentation.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "DocCode",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type DocCode = {\n    kind: 'code'\n    text: string\n}",
-                "implementation": "",
-                "startLine": 71,
-                "endLine": 72,
-                "references": {
-                    "DocCode": "@nav/api/Backends/TsTypedoc.DocCode"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "DocInlineTag",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Anchor element in documentation.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "DocInlineTag",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type DocInlineTag = {\n    kind: 'inline-tag'\n    tag: '@link'\n    text: string\n    target: number\n}",
-                "implementation": "",
-                "startLine": 61,
-                "endLine": 62,
-                "references": {
-                    "DocInlineTag": "@nav/api/Backends/TsTypedoc.DocInlineTag"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "DocText",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Simple text element in documentation.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "DocText",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type DocText = {\n    kind: 'text'\n    text: string\n}",
-                "implementation": "",
-                "startLine": 53,
-                "endLine": 54,
-                "references": {
-                    "DocText": "@nav/api/Backends/TsTypedoc.DocText"
                 }
             },
             "semantic": {
@@ -507,87 +940,11 @@
                 "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
                 "declaration": "export type MethodTrait = SignaturesTrait & {\n    inheritedFrom?: {\n        type: string\n        target: number\n        name: string\n    }\n}",
                 "implementation": "",
-                "startLine": 151,
-                "endLine": 152,
+                "startLine": 181,
+                "endLine": 182,
                 "references": {
                     "MethodTrait": "@nav/api/Backends/TsTypedoc.MethodTrait",
                     "SignaturesTrait": "@nav/api/Backends/TsTypedoc.SignaturesTrait"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "ProjectGlobals",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Global project information.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "ProjectGlobals",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
-                "declaration": "export type ProjectGlobals = {\n    /**\n     * Map `node.id` => navigation path\n     */\n    navigations: { [k: number]: string }\n    /**\n     * Map `navigation path` => source information\n     */\n    tsInputs: TsSrcElements\n    /**\n     * Map `node.id` => `TypedocNode`\n     */\n    typedocIdMap: { [k: number]: TypedocNode }\n    /**\n     * Map `node.id` => parent's node `TypedocNode`\n     */\n    typedocParentIdMap: { [k: number]: TypedocNode }\n}",
-                "implementation": "",
-                "startLine": 42,
-                "endLine": 43,
-                "references": {
-                    "ProjectGlobals": "@nav/api/Backends/TsTypedoc.ProjectGlobals",
-                    "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements",
-                    "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "SignatureTrait",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Trait specific of a signature.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "SignatureTrait",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type SignatureTrait = SymbolTrait & {\n    extendedTypes: TypedocNode[] | null\n    implementedTypes: TypedocNode[] | null\n    parameters: TypedocNode[] | null\n    type: TypedocNode\n    comment: string\n}",
-                "implementation": "",
-                "startLine": 123,
-                "endLine": 124,
-                "references": {
-                    "SignatureTrait": "@nav/api/Backends/TsTypedoc.SignatureTrait",
-                    "SymbolTrait": "@nav/api/Backends/TsTypedoc.SymbolTrait",
-                    "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
                 }
             },
             "semantic": {
@@ -620,8 +977,8 @@
                 "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
                 "declaration": "export type SignaturesTrait = SymbolTrait & {\n    signatures: (TypedocNode & SignatureTrait)[]\n}",
                 "implementation": "",
-                "startLine": 133,
-                "endLine": 134,
+                "startLine": 141,
+                "endLine": 142,
                 "references": {
                     "SignaturesTrait": "@nav/api/Backends/TsTypedoc.SignaturesTrait",
                     "SymbolTrait": "@nav/api/Backends/TsTypedoc.SymbolTrait",
@@ -637,11 +994,11 @@
             }
         },
         {
-            "name": "Source",
+            "name": "SignatureTrait",
             "documentation": {
                 "sections": [
                     {
-                        "content": "Source specification",
+                        "content": "Trait specific of a signature.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -652,54 +1009,18 @@
                     }
                 ]
             },
-            "path": "Source",
+            "path": "SignatureTrait",
             "attributes": [],
             "callables": [],
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type Source = {\n    /**\n     * Filename including the snippet.\n     */\n    fileName: string\n    /**\n     * Starting line.\n     */\n    line: number\n}",
+                "declaration": "export type SignatureTrait = SymbolTrait & {\n    extendedTypes: TypedocNode[] | null\n    implementedTypes: TypedocNode[] | null\n    parameters: TypedocNode[] | null\n    type: TypedocNode\n    comment: string\n}",
                 "implementation": "",
-                "startLine": 94,
-                "endLine": 95,
+                "startLine": 131,
+                "endLine": 132,
                 "references": {
-                    "Source": "@nav/api/Backends/TsTypedoc.Source"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "SymbolTrait",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Trait specific of a symbol.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "SymbolTrait",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type SymbolTrait = {\n    sources: Source[]\n    typeParameters?: TypedocNode[] | null\n}",
-                "implementation": "",
-                "startLine": 108,
-                "endLine": 109,
-                "references": {
+                    "SignatureTrait": "@nav/api/Backends/TsTypedoc.SignatureTrait",
                     "SymbolTrait": "@nav/api/Backends/TsTypedoc.SymbolTrait",
-                    "Source": "@nav/api/Backends/TsTypedoc.Source",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode"
                 }
             },
@@ -731,51 +1052,13 @@
             "callables": [],
             "code": {
                 "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
-                "declaration": "export type TsSrcElements = { [k: string]: TsSrcElement }",
+                "declaration": "export type TsSrcElements = Record<string, TsSrcElement>",
                 "implementation": "",
-                "startLine": 205,
-                "endLine": 206,
+                "startLine": 252,
+                "endLine": 253,
                 "references": {
                     "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements",
                     "TsSrcElement": "@nav/api/Backends/TsTypedoc.TsSrcElement"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "TypedocNode",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Base type for typedoc node.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "TypedocNode",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/backends/ts-typedoc/typedoc-models.ts",
-                "declaration": "export type TypedocNode = {\n    id: number\n    name: string\n    kind: Kind\n    flags: Record<string, string>\n    comment: Comment\n    children: TypedocNode[]\n}",
-                "implementation": "",
-                "startLine": 140,
-                "endLine": 141,
-                "references": {
-                    "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
-                    "Comment": "@nav/api/Backends/TsTypedoc.Comment",
-                    "Kind": "@nav/api/Backends/TsTypedoc.Kind"
                 }
             },
             "semantic": {
@@ -818,9 +1101,9 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
                 "declaration": "export function generateApiFiles({\n    projectFolder,\n    outputFolder,\n    baseNav,\n}: {\n    projectFolder: string\n    outputFolder: string\n    baseNav: string\n})",
-                "implementation": "export function generateApiFiles({\n    projectFolder,\n    outputFolder,\n    baseNav,\n}: {\n    projectFolder: string\n    outputFolder: string\n    baseNav: string\n}) {\n    const projectPackageJson = fs.readFileSync(\n        pathLib.resolve(projectFolder, 'package.json'),\n        'utf8',\n    )\n    // module name should not include '/', before finding a better solution\n    const project = JSON.parse(projectPackageJson).name.split('/').slice(-1)[0]\n    function generateApiFilesRec(\n        modulePath: string,\n        typedocNode: TypedocNode & ProjectTrait,\n        tsInputs: TsSrcElements,\n        writeFolder: string,\n    ) {\n        const doc = parseModule({\n            baseNav,\n            typedocNode,\n            modulePath,\n            tsInputs: tsInputs,\n        })\n\n        const filePath = `${writeFolder}/${modulePath}.json`\n        const directory = Path.dirname(filePath)\n        // Create missing directories if they don't exist\n        mkdirSync(directory, { recursive: true })\n        writeFileSync(filePath, JSON.stringify(doc, null, 4) + '\\n', 'utf8')\n\n        for (const m of doc.children) {\n            generateApiFilesRec(\n                m.path.replace('.', '/'),\n                typedocNode,\n                tsInputs,\n                writeFolder,\n            )\n        }\n    }\n    deleteDirectoryIfExists(outputFolder)\n\n    const typedocData = generateTypedocInputs(projectFolder)\n    const files = gatherTsFiles({ typedocNode: typedocData })\n    const tsData = generateTsInputs(projectFolder, files, {})\n    generateApiFilesRec(project, typedocData, tsData, outputFolder)\n}",
-                "startLine": 144,
-                "endLine": 194,
+                "implementation": "export function generateApiFiles({\n    projectFolder,\n    outputFolder,\n    baseNav,\n}: {\n    projectFolder: string\n    outputFolder: string\n    baseNav: string\n}) {\n    projectFolder = path.resolve(projectFolder)\n    outputFolder = path.resolve(outputFolder)\n    const projectPackageJson = fs.readFileSync(\n        pathLib.resolve(projectFolder, 'package.json'),\n        'utf8',\n    )\n    // module name should not include '/', before finding a better solution\n    const pkgJSON = JSON.parse(projectPackageJson) as { name: string }\n    const project = pkgJSON.name.split('/').slice(-1)[0]\n    function generateApiFilesRec(\n        modulePath: string,\n        typedocNode: TypedocNode & ProjectTrait,\n        tsInputs: TsSrcElements,\n        writeFolder: string,\n    ) {\n        const doc = parseModule({\n            baseNav,\n            typedocNode,\n            modulePath,\n            tsInputs: tsInputs,\n        })\n\n        const filePath = `${writeFolder}/${modulePath}.json`\n        const directory = Path.dirname(filePath)\n        // Create missing directories if they don't exist\n        mkdirSync(directory, { recursive: true })\n        writeFileSync(filePath, JSON.stringify(doc, null, 4) + '\\n', 'utf8')\n\n        for (const m of doc.children) {\n            generateApiFilesRec(\n                m.path.replace('.', '/'),\n                typedocNode,\n                tsInputs,\n                writeFolder,\n            )\n        }\n    }\n    deleteDirectoryIfExists(outputFolder)\n\n    const typedocData = generateTypedocInputs(projectFolder)\n    const files = gatherTsFiles({ typedocNode: typedocData })\n    const tsData = generateTsInputs(projectFolder, files, {})\n    generateApiFilesRec(project, typedocData, tsData, outputFolder)\n}",
+                "startLine": 151,
+                "endLine": 204,
                 "references": {
                     "generateApiFiles": "@nav/api/Backends/TsTypedoc.generateApiFiles"
                 }
@@ -864,8 +1147,8 @@
                 "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
                 "declaration": "export function generateTsInputs(\n    rootPath: string,\n    files: Set<string>,\n    elements: TsSrcElements = {},\n): TsSrcElements",
                 "implementation": "export function generateTsInputs(\n    rootPath: string,\n    files: Set<string>,\n    elements: TsSrcElements = {},\n): TsSrcElements {\n    rootPath = rootPath.endsWith('/') ? rootPath : `${rootPath}/`\n    files.forEach((file) => {\n        const filePath = path.join(rootPath, file)\n        processFile(rootPath, filePath, elements)\n    })\n    return elements\n}",
-                "startLine": 214,
-                "endLine": 226,
+                "startLine": 261,
+                "endLine": 273,
                 "references": {
                     "generateTsInputs": "@nav/api/Backends/TsTypedoc.generateTsInputs",
                     "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements"
@@ -920,7 +1203,7 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/generate-typedoc-inputs.ts",
                 "declaration": "export function generateTypedocInputs(\n    projectFolder: string,\n): TypedocNode & ProjectTrait",
-                "implementation": "export function generateTypedocInputs(\n    projectFolder: string,\n): TypedocNode & ProjectTrait {\n    const uid = randomUUID()\n    const folder = path.resolve(projectFolder)\n    console.log('Run typedoc from folder', folder)\n    const output = path.resolve(folder, `typedoc-out-${uid}.json`)\n    const typedoc = path.resolve(\n        folder,\n        'node_modules',\n        'typedoc',\n        'bin',\n        'typedoc',\n    )\n    const result = spawnSync(\n        typedoc,\n        ['--json', output, '--basePath', projectFolder],\n        { cwd: folder },\n    )\n\n    if (result.stdout) {\n        console.log(`stdout: ${result.stdout}`)\n    }\n\n    // Log process exit code\n    console.log(`typedoc process exited with code ${result.status}`)\n    if (result.status > 0) {\n        console.error(\n            `Error executing typedoc: ${result.error} ${result.stderr}`,\n        )\n        throw Error(\n            `Typedoc exited with non zero status code (${result.status})`,\n        )\n    }\n    const fileContent = fs.readFileSync(output, 'utf8')\n    fs.unlinkSync(output)\n    return JSON.parse(fileContent)\n}",
+                "implementation": "export function generateTypedocInputs(\n    projectFolder: string,\n): TypedocNode & ProjectTrait {\n    const uid = randomUUID()\n    const folder = path.resolve(projectFolder)\n    console.log('Run typedoc from folder', folder)\n    const output = path.resolve(folder, `typedoc-out-${uid}.json`)\n    const typedoc = path.resolve(\n        folder,\n        'node_modules',\n        'typedoc',\n        'bin',\n        'typedoc',\n    )\n    const result = spawnSync(\n        typedoc,\n        ['--json', output, '--basePath', projectFolder],\n        { cwd: folder },\n    )\n\n    console.log(`stdout: ${result.stdout.toString()}`)\n\n    // Log process exit code\n    if (result.status !== null) {\n        console.log(`typedoc process exited with code ${String(result.status)}`)\n        if (result.status > 0) {\n            console.error(\n                `Error executing typedoc: ${String(result.error)} ${result.stderr.toString()}`,\n            )\n            throw Error(\n                `Typedoc exited with non zero status code (${String(result.status)})`,\n            )\n        }\n    }\n    const fileContent = fs.readFileSync(output, 'utf8')\n    fs.unlinkSync(output)\n    return JSON.parse(fileContent) as TypedocNode & ProjectTrait\n}",
                 "startLine": 12,
                 "endLine": 50,
                 "references": {
@@ -977,10 +1260,10 @@
             "path": "parseAttribute",
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
-                "declaration": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement?: TypedocNode\n}): Attribute",
-                "implementation": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement?: TypedocNode\n}): Attribute {\n    if (\n        typedocNode['inheritedFrom'] &&\n        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]\n    ) {\n        return undefined\n    }\n    const name = typedocNode.name\n    if (typedocNode['inheritedFrom']) {\n        typedocNode = projectGlobals.typedocIdMap[\n            typedocNode['inheritedFrom'].target\n        ] as TypedocNode & SymbolTrait\n        parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]\n    }\n    const references = gather_symbol_references(typedocNode, projectGlobals)\n    const documentation = parseDocumentationElements({\n        typedocNodes: typedocNode.comment.summary,\n        parent: parentElement,\n        projectGlobals,\n    })\n    const semantic = semantics[typedocNode.kind]\n    return {\n        name: name,\n        semantic: semantic,\n        documentation: getSummaryDoc(documentation),\n        path: parentElement ? `${parentElement.name}.${name}` : name,\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n            parentElement,\n        }),\n    }\n}",
-                "startLine": 834,
-                "endLine": 877,
+                "declaration": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement?: TypedocNode\n}): Attribute | undefined",
+                "implementation": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement?: TypedocNode\n}): Attribute | undefined {\n    if (\n        hasInheritedTrait(typedocNode) &&\n        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]\n    ) {\n        return undefined\n    }\n\n    const name = typedocNode.name\n    if (hasInheritedTrait(typedocNode)) {\n        typedocNode = projectGlobals.typedocIdMap[\n            typedocNode.inheritedFrom.target\n        ] as TypedocNode & SymbolTrait\n        parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]\n    }\n    const references = gather_symbol_references(typedocNode, projectGlobals)\n    const documentation =\n        typedocNode.comment && parentElement\n            ? parseDocumentationElements({\n                  typedocNodes: typedocNode.comment.summary,\n                  parent: parentElement,\n                  projectGlobals,\n              })\n            : ''\n    const semantic = semantics[typedocNode.kind]\n    return {\n        name: name,\n        semantic: semantic,\n        documentation: getSummaryDoc(documentation),\n        path: parentElement ? `${parentElement.name}.${name}` : name,\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n            parentElement,\n        }),\n    }\n}",
+                "startLine": 862,
+                "endLine": 909,
                 "references": {
                     "parseAttribute": "@nav/api/Backends/TsTypedoc.parseAttribute",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
@@ -1037,10 +1320,10 @@
             "path": "parseCallable",
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
-                "declaration": "export function parseCallable({\n    typedocNode,\n    semantic,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SignaturesTrait\n    parentPath: string\n    semantic: Semantic\n    projectGlobals?: ProjectGlobals\n    parentElement?: TypedocNode\n}): Callable",
-                "implementation": "export function parseCallable({\n    typedocNode,\n    semantic,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SignaturesTrait\n    parentPath: string\n    semantic: Semantic\n    projectGlobals?: ProjectGlobals\n    parentElement?: TypedocNode\n}): Callable {\n    if (\n        typedocNode['inheritedFrom'] &&\n        !projectGlobals.typedocIdMap[typedocNode['inheritedFrom'].target]\n    ) {\n        return undefined\n    }\n    const typedocFct = typedocNode.signatures[0]\n    const name = typedocFct.name\n    const documentation = parseDocumentationElements({\n        typedocNodes: typedocFct.comment.summary,\n        parent: typedocFct,\n        projectGlobals,\n    })\n    const params_ref = gather_symbol_references(\n        typedocFct['parameters'] as unknown as TypedocNode,\n        projectGlobals,\n    )\n    const returns_ref = gather_symbol_references(\n        typedocFct.type,\n        projectGlobals,\n    )\n\n    const functionDoc = getSummaryDoc(documentation)\n    const parametersDoc = parseArgumentsDoc({\n        fromElement: typedocFct,\n        title: 'Arguments',\n        parentElement: typedocFct,\n        projectGlobals,\n    })\n    const returnsDoc = parseReturnsDoc({\n        typedocNode: typedocFct,\n        projectGlobals,\n    })\n\n    functionDoc.sections.push(\n        ...[parametersDoc, returnsDoc].filter((c) => c !== undefined),\n    )\n    return {\n        name: name,\n        documentation: functionDoc,\n        path: parentElement ? `${parentElement.name}.${name}` : name, //`${typedocFct.sources[0].fileName}:${path}`,\n        code: parseCode({\n            typedocNode,\n            projectGlobals,\n            references: {\n                ...params_ref,\n                ...returns_ref,\n            },\n            parentElement,\n        }),\n        semantic,\n    }\n}",
-                "startLine": 598,
-                "endLine": 663,
+                "declaration": "export function parseCallable({\n    typedocNode,\n    semantic,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SignaturesTrait\n    parentPath: string\n    semantic: Semantic\n    projectGlobals: ProjectGlobals\n    parentElement?: TypedocNode\n}): Callable | undefined",
+                "implementation": "export function parseCallable({\n    typedocNode,\n    semantic,\n    projectGlobals,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SignaturesTrait\n    parentPath: string\n    semantic: Semantic\n    projectGlobals: ProjectGlobals\n    parentElement?: TypedocNode\n}): Callable | undefined {\n    if (\n        hasInheritedTrait(typedocNode) &&\n        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]\n    ) {\n        return undefined\n    }\n    const typedocFct = typedocNode.signatures[0]\n    const name = typedocFct.name\n    const documentation = parseDocumentationElements({\n        typedocNodes: typedocFct.comment.summary,\n        parent: typedocFct,\n        projectGlobals,\n    })\n    const params_ref = typedocFct.parameters\n        ? gather_symbol_references(typedocFct.parameters, projectGlobals)\n        : {}\n    const returns_ref = gather_symbol_references(\n        typedocFct.type,\n        projectGlobals,\n    )\n    const functionDoc = getSummaryDoc(documentation)\n    const parametersDoc = parseArgumentsDoc({\n        fromElement: typedocFct,\n        title: 'Arguments',\n        parentElement: typedocFct,\n        projectGlobals,\n    })\n    const returnsDoc = parseReturnsDoc({\n        typedocNode: typedocFct,\n        projectGlobals,\n    })\n\n    functionDoc.sections.push(\n        ...[parametersDoc, returnsDoc].filter((c) => c !== undefined),\n    )\n    return {\n        name: name,\n        documentation: functionDoc,\n        path: parentElement ? `${parentElement.name}.${name}` : name, //`${typedocFct.sources[0].fileName}:${path}`,\n        code: parseCode({\n            typedocNode,\n            projectGlobals,\n            references: {\n                ...params_ref,\n                ...returns_ref,\n            },\n            parentElement,\n        }),\n        semantic,\n    }\n}",
+                "startLine": 619,
+                "endLine": 682,
                 "references": {
                     "parseCallable": "@nav/api/Backends/TsTypedoc.parseCallable",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
@@ -1099,9 +1382,9 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
                 "declaration": "export function parseChildModule({\n    typedocNode,\n    parentPath,\n}: {\n    typedocNode: TypedocNode\n    parentPath: string\n}): ChildModule",
-                "implementation": "export function parseChildModule({\n    typedocNode,\n    parentPath,\n}: {\n    typedocNode: TypedocNode\n    parentPath: string\n}): ChildModule {\n    return {\n        name: typedocNode.name,\n        path: `${parentPath}.${typedocNode.name}`,\n        isLeaf: !typedocNode.children.some((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        ),\n    }\n}",
-                "startLine": 415,
-                "endLine": 430,
+                "implementation": "export function parseChildModule({\n    typedocNode,\n    parentPath,\n}: {\n    typedocNode: TypedocNode\n    parentPath: string\n}): ChildModule {\n    const children = typedocNode.children ?? []\n    return {\n        name: typedocNode.name,\n        path: `${parentPath}.${typedocNode.name}`,\n        isLeaf: !children.some((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        ),\n    }\n}",
+                "startLine": 431,
+                "endLine": 447,
                 "references": {
                     "parseChildModule": "@nav/api/Backends/TsTypedoc.parseChildModule",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
@@ -1156,10 +1439,10 @@
             "path": "parseCode",
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
-                "declaration": "export function parseCode({\n    typedocNode,\n    projectGlobals,\n    references,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    references: { [_name: string]: string }\n    parentElement?: TypedocNode\n}): Code",
-                "implementation": "export function parseCode({\n    typedocNode,\n    projectGlobals,\n    references,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    references: { [_name: string]: string }\n    parentElement?: TypedocNode\n}): Code {\n    const symbols = projectGlobals.tsInputs\n    const signatureNode =\n        typedocNode['signatures'] && typedocNode['signatures'][0]\n    const name = signatureNode?.name || typedocNode.name\n\n    const source = typedocNode.sources[0]\n    const file_path = source.fileName\n    const key = parentElement\n        ? `${file_path}:${parentElement.name}.${name}`\n        : `${file_path}:${name}`\n    if (!(key in symbols)) {\n        console.warn(`Can not find reference of ${key}`)\n        return {\n            filePath: '',\n            declaration: '',\n            implementation: '',\n            startLine: 1,\n            endLine: 2,\n            references: {},\n        }\n    }\n    const symbol = symbols[key]\n    const implementation = symbol.implementation || ''\n    const nav = projectGlobals.navigations[typedocNode.id]\n    return {\n        filePath: source.fileName,\n        declaration: symbol.declaration,\n        implementation,\n        startLine: source.line,\n        endLine: source.line + implementation.split('\\n').length,\n        references: { [name]: `${nav}`, ...references },\n    }\n}",
-                "startLine": 543,
-                "endLine": 587,
+                "declaration": "export function parseCode({\n    typedocNode,\n    projectGlobals,\n    references,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    references: Record<string, string>\n    parentElement?: TypedocNode\n}): Code",
+                "implementation": "export function parseCode({\n    typedocNode,\n    projectGlobals,\n    references,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    references: Record<string, string>\n    parentElement?: TypedocNode\n}): Code {\n    const symbols = projectGlobals.tsInputs\n    const signatureNode = hasSignatureTrait(typedocNode)\n        ? typedocNode.signatures[0]\n        : undefined\n\n    const name = signatureNode?.name ?? typedocNode.name\n\n    const source = typedocNode.sources[0]\n    const file_path = source.fileName\n    const key = parentElement\n        ? `${file_path}:${parentElement.name}.${name}`\n        : `${file_path}:${name}`\n    if (!(key in symbols)) {\n        console.warn(`Can not find reference of ${key}`)\n        return {\n            filePath: '',\n            declaration: '',\n            implementation: '',\n            startLine: 1,\n            endLine: 2,\n            references: {},\n        }\n    }\n    const symbol = symbols[key]\n    const implementation = symbol.implementation ?? ''\n    const nav = projectGlobals.navigations[typedocNode.id]\n    return {\n        filePath: source.fileName,\n        declaration: symbol.declaration ?? '',\n        implementation,\n        startLine: source.line,\n        endLine: source.line + implementation.split('\\n').length,\n        references: { [name]: nav, ...references },\n    }\n}",
+                "startLine": 562,
+                "endLine": 608,
                 "references": {
                     "parseCode": "@nav/api/Backends/TsTypedoc.parseCode",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
@@ -1218,8 +1501,8 @@
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
                 "declaration": "export function parseDocumentation({\n    semantic,\n    title,\n    typedocNode,\n    parent,\n    projectGlobals,\n}: {\n    semantic: Semantic\n    title?: string\n    typedocNode: CommentSection\n    parent: TypedocNode\n    projectGlobals: ProjectGlobals\n}): Documentation",
                 "implementation": "export function parseDocumentation({\n    semantic,\n    title,\n    typedocNode,\n    parent,\n    projectGlobals,\n}: {\n    semantic: Semantic\n    title?: string\n    typedocNode: CommentSection\n    parent: TypedocNode\n    projectGlobals: ProjectGlobals\n}): Documentation {\n    return {\n        sections: [\n            {\n                title,\n                content: parseDocumentationElements({\n                    typedocNodes: typedocNode,\n                    parent,\n                    projectGlobals,\n                }),\n                contentType: 'markdown',\n                semantic,\n            },\n        ],\n    }\n}",
-                "startLine": 473,
-                "endLine": 501,
+                "startLine": 490,
+                "endLine": 518,
                 "references": {
                     "parseDocumentation": "@nav/api/Backends/TsTypedoc.parseDocumentation",
                     "TypedocNode": "@nav/api/Backends/TsTypedoc.TypedocNode",
@@ -1278,9 +1561,9 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
                 "declaration": "export function parseFile({\n    path,\n    projectGlobals,\n}: {\n    path: string\n    projectGlobals: ProjectGlobals\n}): File",
-                "implementation": "export function parseFile({\n    path,\n    projectGlobals,\n}: {\n    path: string\n    projectGlobals: ProjectGlobals\n}): File {\n    const symbols = projectGlobals.tsInputs\n    const comment = symbols[path].comment\n    return {\n        name: Path.basename(path),\n        path: path,\n        documentation: {\n            sections: [\n                {\n                    semantic: noSemantic,\n                    content: comment,\n                    contentType: 'markdown',\n                },\n            ],\n        },\n    }\n}",
-                "startLine": 439,
-                "endLine": 462,
+                "implementation": "export function parseFile({\n    path,\n    projectGlobals,\n}: {\n    path: string\n    projectGlobals: ProjectGlobals\n}): File {\n    const symbols = projectGlobals.tsInputs\n    const comment = symbols[path].comment\n    return {\n        name: Path.basename(path),\n        path: path,\n        documentation: {\n            sections: [\n                {\n                    semantic: noSemantic,\n                    content: comment ?? '',\n                    contentType: 'markdown',\n                },\n            ],\n        },\n    }\n}",
+                "startLine": 456,
+                "endLine": 479,
                 "references": {
                     "parseFile": "@nav/api/Backends/TsTypedoc.parseFile",
                     "ProjectGlobals": "@nav/api/Backends/TsTypedoc.ProjectGlobals",
@@ -1325,9 +1608,9 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
                 "declaration": "export function parseModule({\n    typedocNode,\n    modulePath,\n    tsInputs,\n    baseNav,\n}: {\n    typedocNode: TypedocNode\n    modulePath: string\n    tsInputs: TsSrcElements\n    baseNav: string\n}): Module",
-                "implementation": "export function parseModule({\n    typedocNode,\n    modulePath,\n    tsInputs,\n    baseNav,\n}: {\n    typedocNode: TypedocNode\n    modulePath: string\n    tsInputs: TsSrcElements\n    baseNav: string\n}): Module {\n    const symbolIdMap: { [key: number]: TypedocNode } = {}\n    const parentSymbolIdMap: { [key: number]: TypedocNode } = {}\n    const navMap = generateNavigationPathsInModule(baseNav, '', typedocNode)\n    function constructSymbolsMap(elem: TypedocNode, parentId: number | null) {\n        symbolIdMap[elem.id] = elem\n        if (parentId) {\n            parentSymbolIdMap[elem.id] = symbolIdMap[parentId]\n        }\n        if (!elem.children) {\n            return\n        }\n        for (const child of elem.children) {\n            constructSymbolsMap(child, elem.id)\n        }\n    }\n\n    constructSymbolsMap(typedocNode, null)\n    const projectGlobals: ProjectGlobals = {\n        navigations: navMap,\n        tsInputs,\n        typedocIdMap: symbolIdMap,\n        typedocParentIdMap: parentSymbolIdMap,\n    }\n\n    function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {\n        if (parts.length === 0) {\n            return fromElem\n        }\n        if (\n            parts.length === 1 &&\n            fromElem.name === parts[0] &&\n            [TYPEDOC_KINDS.PROJECT, TYPEDOC_KINDS.MODULE].includes(\n                fromElem.kind,\n            )\n        ) {\n            return fromElem\n        }\n        const modules = fromElem.children.filter((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        )\n        const targetPath = pathLib.join(...parts)\n        const children: [number, TypedocNode][] = modules\n            .filter((c) => targetPath.startsWith(c.name))\n            .map((c) => [1 + c.name.search(/\\//), c])\n        children.sort((a, b) => b[0] - a[0])\n        if (children.length > 0) {\n            return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))\n        }\n        throw new Error(`Module not found: ${parts.join('.')}`)\n    }\n\n    const module = getModuleRec(typedocNode, modulePath.split('/').slice(1))\n\n    if (\n        ![\n            TYPEDOC_KINDS.MODULE,\n            TYPEDOC_KINDS.PROJECT,\n            TYPEDOC_KINDS.ENTRY_MODULE,\n        ].includes(module.kind)\n    ) {\n        throw new Error(`Kind of module not knows (got ${module.kind})`)\n    }\n\n    const path = modulePath\n\n    const subModules = module.children.filter((child) =>\n        [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(child.kind),\n    )\n    const types = module.children\n        .filter((child) =>\n            [\n                TYPEDOC_KINDS.CLASS,\n                TYPEDOC_KINDS.INTERFACE,\n                TYPEDOC_KINDS.ALIAS,\n            ].includes(child.kind),\n        )\n        .filter((cls) => cls.comment)\n        .map((cls) => cls as unknown as TypedocNode & SymbolTrait & ClassTrait)\n        .map((cls) =>\n            parseType({\n                typedocNode: cls,\n                parentPath: path,\n                projectGlobals,\n            }),\n        )\n    const functions = module.children\n        .filter((child) => child.kind === TYPEDOC_KINDS.FUNCTION)\n        .map((func) => func as unknown as TypedocNode & SignaturesTrait)\n        .filter((func) => func.signatures[0].comment)\n        .map((func) =>\n            parseCallable({\n                typedocNode: func,\n                parentPath: path,\n                projectGlobals,\n                semantic: { ...noSemantic, role: 'function' },\n            }),\n        )\n    const globals = module.children\n        .filter((child) => child.kind === TYPEDOC_KINDS.VARIABLE)\n        .filter((attr) => attr.comment)\n        .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n        .map((attr) =>\n            parseAttribute({\n                typedocNode: attr,\n                projectGlobals,\n                parentPath: modulePath,\n            }),\n        )\n\n    const documentation = module.comment\n        ? parseDocumentation({\n              semantic: noSemantic,\n              typedocNode: module.comment.summary,\n              parent: module,\n              projectGlobals,\n          })\n        : noDoc\n\n    const files = [\n        ...new Set(\n            module.children.map((child) => child['sources'][0].fileName),\n        ),\n    ].map((file) => parseFile({ path: file, projectGlobals }))\n\n    return {\n        name: module.name,\n        documentation,\n        path: '',\n        attributes: globals,\n        types: types,\n        callables: functions,\n        files,\n        children: subModules.map((child) =>\n            parseChildModule({ typedocNode: child, parentPath: path }),\n        ),\n        semantic: semantics[TYPEDOC_KINDS.MODULE],\n    }\n}",
-                "startLine": 257,
-                "endLine": 406,
+                "implementation": "export function parseModule({\n    typedocNode,\n    modulePath,\n    tsInputs,\n    baseNav,\n}: {\n    typedocNode: TypedocNode\n    modulePath: string\n    tsInputs: TsSrcElements\n    baseNav: string\n}): Module {\n    const symbolIdMap: Record<number, TypedocNode> = {}\n    const parentSymbolIdMap: Record<number, TypedocNode> = {}\n    const navMap = generateNavigationPathsInModule(baseNav, '', typedocNode)\n    function constructSymbolsMap(elem: TypedocNode, parentId: number | null) {\n        symbolIdMap[elem.id] = elem\n        if (parentId) {\n            parentSymbolIdMap[elem.id] = symbolIdMap[parentId]\n        }\n        if (!elem.children) {\n            return\n        }\n        for (const child of elem.children) {\n            constructSymbolsMap(child, elem.id)\n        }\n    }\n\n    constructSymbolsMap(typedocNode, null)\n    const projectGlobals: ProjectGlobals = {\n        navigations: navMap,\n        tsInputs,\n        typedocIdMap: symbolIdMap,\n        typedocParentIdMap: parentSymbolIdMap,\n    }\n\n    function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {\n        if (parts.length === 0) {\n            return fromElem\n        }\n        if (\n            parts.length === 1 &&\n            fromElem.name === parts[0] &&\n            [TYPEDOC_KINDS.PROJECT, TYPEDOC_KINDS.MODULE].includes(\n                fromElem.kind,\n            )\n        ) {\n            return fromElem\n        }\n        const modules = (fromElem.children ?? []).filter((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        )\n        const targetPath = pathLib.join(...parts)\n        const children: [number, TypedocNode][] = modules\n            .filter((c) => targetPath.startsWith(c.name))\n            .map((c) => [1 + c.name.search(/\\//), c])\n        children.sort((a, b) => b[0] - a[0])\n        if (children.length > 0) {\n            // noinspection TailRecursionJS\n            return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))\n        }\n        throw new Error(`Module not found: ${parts.join('.')}`)\n    }\n\n    const module = getModuleRec(typedocNode, modulePath.split('/').slice(1))\n\n    if (\n        ![\n            TYPEDOC_KINDS.MODULE,\n            TYPEDOC_KINDS.PROJECT,\n            TYPEDOC_KINDS.ENTRY_MODULE,\n        ].includes(module.kind)\n    ) {\n        throw new Error(`Kind of module not knows (got ${String(module.kind)})`)\n    }\n\n    const path = modulePath\n    const children = module.children ?? []\n    const subModules = children.filter((child) =>\n        [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(child.kind),\n    )\n    const types = children\n        .filter((child) =>\n            [\n                TYPEDOC_KINDS.CLASS,\n                TYPEDOC_KINDS.INTERFACE,\n                TYPEDOC_KINDS.ALIAS,\n            ].includes(child.kind),\n        )\n        .filter((cls) => cls.comment)\n        .map((cls) => cls as unknown as TypedocNode & SymbolTrait & ClassTrait)\n        .map((cls) =>\n            parseType({\n                typedocNode: cls,\n                parentPath: path,\n                projectGlobals,\n            }),\n        )\n    const functions = children\n        .filter((child) => child.kind === TYPEDOC_KINDS.FUNCTION)\n        .map((func) => func as unknown as TypedocNode & SignaturesTrait)\n        .filter((func) => func.signatures[0].comment)\n        .map((func) =>\n            parseCallable({\n                typedocNode: func,\n                parentPath: path,\n                projectGlobals,\n                semantic: { ...noSemantic, role: 'function' },\n            }),\n        )\n        .filter((func) => func !== undefined)\n    const globals = children\n        .filter((child) => child.kind === TYPEDOC_KINDS.VARIABLE)\n        .filter((attr) => attr.comment)\n        .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n        .map((attr) =>\n            parseAttribute({\n                typedocNode: attr,\n                projectGlobals,\n                parentPath: modulePath,\n            }),\n        )\n        .filter((attr) => attr !== undefined)\n\n    const documentation = module.comment\n        ? parseDocumentation({\n              semantic: noSemantic,\n              typedocNode: module.comment.summary,\n              parent: module,\n              projectGlobals,\n          })\n        : noDoc\n\n    const nodeWitSources = children.filter((child) => hasSymbolTrait(child))\n\n    const files = [\n        ...new Set(nodeWitSources.map((child) => child.sources[0].fileName)),\n    ].map((file) => parseFile({ path: file, projectGlobals }))\n\n    return {\n        name: module.name,\n        documentation,\n        path: '',\n        attributes: globals,\n        types: types,\n        callables: functions,\n        files,\n        children: subModules.map((child) =>\n            parseChildModule({ typedocNode: child, parentPath: path }),\n        ),\n        semantic: semantics[TYPEDOC_KINDS.MODULE],\n    }\n}",
+                "startLine": 270,
+                "endLine": 422,
                 "references": {
                     "parseModule": "@nav/api/Backends/TsTypedoc.parseModule",
                     "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements",
@@ -1384,9 +1667,9 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/typedoc-parser.ts",
                 "declaration": "export function parseType({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode & ClassTrait\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): Type",
-                "implementation": "export function parseType({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode & ClassTrait\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): Type {\n    const name = typedocNode.name\n    const semantic = semantics[typedocNode.kind]\n    const path = `${parentPath}.${name}`\n    const documentation = parseDocumentationElements({\n        typedocNodes: typedocNode.comment.summary,\n        parent: typedocNode,\n        projectGlobals,\n    })\n    const attributes =\n        typedocNode.children?.filter(\n            (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,\n        ) || []\n    const methods =\n        typedocNode.children\n            ?.filter((child) =>\n                [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(\n                    child.kind,\n                ),\n            )\n            // For now inherited methods are only documented in the class they belong.\n            .filter(\n                (child: TypedocNode & MethodTrait) => !child.inheritedFrom,\n            ) || []\n\n    const references = gather_symbol_references(typedocNode, projectGlobals)\n    const doc = getSummaryDoc(documentation)\n    const tParamDoc = parseArgumentsDoc({\n        fromElement: typedocNode.typeParameters,\n        title: 'Generics',\n        parentElement: typedocNode,\n        projectGlobals,\n    })\n    tParamDoc && doc.sections.push(tParamDoc)\n    return {\n        name: typedocNode.name,\n        documentation: doc,\n        path: typedocNode.name,\n        attributes: attributes\n            .filter((attr) => attr.comment)\n            .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n            .map((attr) =>\n                parseAttribute({\n                    typedocNode: attr,\n                    projectGlobals,\n                    parentPath: path,\n                    parentElement: typedocNode,\n                }),\n            )\n            .filter((attr) => attr),\n        callables: methods\n            .map((meth) => meth as unknown as TypedocNode & SignaturesTrait)\n            .filter((meth) => meth.signatures[0].comment)\n            .map((meth) =>\n                parseCallable({\n                    typedocNode: meth,\n                    parentPath: path,\n                    projectGlobals,\n                    semantic: semantics[meth.kind],\n                    parentElement: typedocNode,\n                }),\n            )\n            .filter((meth) => meth),\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n        }),\n        semantic,\n    }\n}",
-                "startLine": 745,
-                "endLine": 824,
+                "implementation": "export function parseType({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode & ClassTrait\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): Type {\n    const name = typedocNode.name\n    const semantic = semantics[typedocNode.kind]\n    const path = `${parentPath}.${name}`\n    const children = typedocNode.children ?? []\n    const documentation = typedocNode.comment\n        ? parseDocumentationElements({\n              typedocNodes: typedocNode.comment.summary,\n              parent: typedocNode,\n              projectGlobals,\n          })\n        : ''\n    const attributes = children.filter(\n        (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,\n    )\n    const methods = children\n        .filter((child) =>\n            [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(\n                child.kind,\n            ),\n        )\n        // For now inherited methods are only documented in the class they belong.\n        .filter((child: TypedocNode & MethodTrait) => !child.inheritedFrom)\n\n    const references = gather_symbol_references(typedocNode, projectGlobals)\n    const doc = getSummaryDoc(documentation)\n    const tParamDoc =\n        typedocNode.typeParameters &&\n        parseArgumentsDoc({\n            fromElement: typedocNode.typeParameters,\n            title: 'Generics',\n            parentElement: typedocNode,\n            projectGlobals,\n        })\n    if (tParamDoc) {\n        doc.sections.push(tParamDoc)\n    }\n    return {\n        name: typedocNode.name,\n        documentation: doc,\n        path: typedocNode.name,\n        attributes: attributes\n            .filter((attr) => attr.comment)\n            .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n            .map((attr) =>\n                parseAttribute({\n                    typedocNode: attr,\n                    projectGlobals,\n                    parentPath: path,\n                    parentElement: typedocNode,\n                }),\n            )\n            .filter((attr) => attr !== undefined),\n        callables: methods\n            .map((meth) => meth as unknown as TypedocNode & SignaturesTrait)\n            .filter((meth) => meth.signatures[0].comment)\n            .map((meth) =>\n                parseCallable({\n                    typedocNode: meth,\n                    parentPath: path,\n                    projectGlobals,\n                    semantic: semantics[meth.kind],\n                    parentElement: typedocNode,\n                }),\n            )\n            .filter((meth) => meth !== undefined),\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n        }),\n        semantic,\n    }\n}",
+                "startLine": 770,
+                "endLine": 852,
                 "references": {
                     "parseType": "@nav/api/Backends/TsTypedoc.parseType",
                     "ProjectGlobals": "@nav/api/Backends/TsTypedoc.ProjectGlobals",
@@ -1433,9 +1716,9 @@
             "code": {
                 "filePath": "src/backends/ts-typedoc/generate-ts-inputs.ts",
                 "declaration": "export function processFile(\n    rootPath: string,\n    filePath: string,\n    elements: TsSrcElements,\n)",
-                "implementation": "export function processFile(\n    rootPath: string,\n    filePath: string,\n    elements: TsSrcElements,\n) {\n    const sourceFile = ts.createSourceFile(\n        filePath,\n        fs.readFileSync(filePath, 'utf8'),\n        ts.ScriptTarget.Latest,\n    )\n    const file = filePath\n    function visit(node: ts.Node) {\n        if (node.kind === ts.SyntaxKind.SourceFile) {\n            elements[getPrefix(rootPath, file)] = {\n                comment: getFileDoc(node),\n            }\n        }\n        if (ts.isVariableDeclaration(node) && node.name) {\n            elements[getPrefix(rootPath, file, node)] = {\n                declaration: node.getText(sourceFile),\n            }\n        }\n\n        if (ts.isTypeAliasDeclaration(node) && node.name) {\n            elements[getPrefix(rootPath, file, node)] = {\n                declaration: node.getText(sourceFile),\n            }\n        }\n        if (ts.isFunctionDeclaration(node) && node.name) {\n            elements[getPrefix(rootPath, file, node)] = {\n                declaration: getDeclaration(node, sourceFile),\n                implementation: node.getText(sourceFile),\n            }\n        }\n        if (ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node)) {\n            if (ts.isClassDeclaration(node)) {\n                const constructor = node.members.find((member) =>\n                    ts.isConstructorDeclaration(member),\n                )\n                if (constructor) {\n                    const className = node.name.escapedText\n                    const prefix = `${file.replace(rootPath, '')}:${className}.new ${className}`\n                    elements[prefix] = {\n                        declaration: getDeclaration(constructor, sourceFile),\n                        implementation: constructor.getText(sourceFile),\n                    }\n                }\n            }\n            elements[getPrefix(rootPath, file, node)] = {\n                declaration: getDeclaration(node, sourceFile),\n                implementation: node.getText(sourceFile),\n            }\n            node.members.forEach((member) => {\n                if (ts.isMethodDeclaration(member)) {\n                    elements[\n                        `${getPrefix(rootPath, file, node)}.${member.name['escapedText']}`\n                    ] = {\n                        declaration: getDeclaration(member, sourceFile),\n                        implementation: member.getText(sourceFile),\n                    }\n                }\n                if (ts.isPropertyDeclaration(member)) {\n                    elements[\n                        `${getPrefix(rootPath, file, node)}.${member.name['escapedText']}`\n                    ] = { declaration: member.getText(sourceFile) }\n                }\n                if (\n                    ts.isPropertySignature(member) ||\n                    ts.isMethodSignature(member)\n                ) {\n                    elements[\n                        `${getPrefix(rootPath, file, node)}.${member.name['escapedText']}`\n                    ] = { declaration: member.getText(sourceFile) }\n                }\n            })\n        }\n        ts.forEachChild(node, visit)\n    }\n\n    visit(sourceFile)\n}",
-                "startLine": 101,
-                "endLine": 182,
+                "implementation": "export function processFile(\n    rootPath: string,\n    filePath: string,\n    elements: TsSrcElements,\n) {\n    const sourceFile = ts.createSourceFile(\n        filePath,\n        fs.readFileSync(filePath, 'utf8'),\n        ts.ScriptTarget.Latest,\n    )\n    const file = filePath\n    function visit(node: ts.Node) {\n        const params = {\n            rootPath,\n            sourceFile,\n        }\n        if (ts.isSourceFile(node)) {\n            elements[getPrefix(params)] = {\n                comment: getFileDoc(node),\n            }\n        }\n        if (ts.isVariableDeclaration(node)) {\n            elements[getPrefix({ ...params, node })] = {\n                declaration: node.getText(sourceFile),\n            }\n        }\n\n        if (ts.isTypeAliasDeclaration(node)) {\n            elements[getPrefix({ ...params, node })] = {\n                declaration: node.getText(sourceFile),\n            }\n        }\n        if (ts.isFunctionDeclaration(node)) {\n            elements[getPrefix({ ...params, node })] = {\n                declaration: getDeclaration(node, sourceFile),\n                implementation: node.getText(sourceFile),\n            }\n        }\n        if (ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node)) {\n            if (ts.isClassDeclaration(node)) {\n                const constructor = node.members.find((member) =>\n                    ts.isConstructorDeclaration(member),\n                )\n                if (constructor) {\n                    const className = getEscapedName(node, sourceFile)\n                    const prefix = `${file.replace(rootPath, '')}:${className}.new ${className}`\n                    elements[prefix] = {\n                        declaration: getDeclaration(constructor, sourceFile),\n                        implementation: constructor.getText(sourceFile),\n                    }\n                }\n            }\n            elements[getPrefix({ ...params, node })] = {\n                declaration: getDeclaration(node, sourceFile),\n                implementation: node.getText(sourceFile),\n            }\n            node.members.forEach((member: ts.Node) => {\n                if (ts.isMethodDeclaration(member)) {\n                    elements[\n                        `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`\n                    ] = {\n                        declaration: getDeclaration(member, sourceFile),\n                        implementation: member.getText(sourceFile),\n                    }\n                }\n                if (ts.isPropertyDeclaration(member)) {\n                    elements[\n                        `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`\n                    ] = { declaration: member.getText(sourceFile) }\n                }\n                if (\n                    ts.isPropertySignature(member) ||\n                    ts.isMethodSignature(member)\n                ) {\n                    elements[\n                        `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`\n                    ] = { declaration: member.getText(sourceFile) }\n                }\n            })\n        }\n        ts.forEachChild(node, visit)\n    }\n\n    visit(sourceFile)\n}",
+                "startLine": 144,
+                "endLine": 229,
                 "references": {
                     "processFile": "@nav/api/Backends/TsTypedoc.processFile",
                     "TsSrcElements": "@nav/api/Backends/TsTypedoc.TsSrcElements"
@@ -1450,24 +1733,6 @@
         }
     ],
     "files": [
-        {
-            "name": "generate-ts-inputs.ts",
-            "path": "src/backends/ts-typedoc/generate-ts-inputs.ts",
-            "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "This file gathers implementations that parse project's source code using typescript's AST parser to\nextract additional information required by the backend.",
-                        "contentType": "markdown"
-                    }
-                ]
-            }
-        },
         {
             "name": "typedoc-models.ts",
             "path": "src/backends/ts-typedoc/typedoc-models.ts",
@@ -1499,6 +1764,24 @@
                             "relations": {}
                         },
                         "content": "This file gathers parsing function to convert typedoc + typescript data into mkdocs [CodeApi](@nav:/api/CodeApi)\nmodels.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "generate-ts-inputs.ts",
+            "path": "src/backends/ts-typedoc/generate-ts-inputs.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "This file gathers implementations that parse project's source code using typescript's AST parser to\nextract additional information required by the backend.",
                         "contentType": "markdown"
                     }
                 ]

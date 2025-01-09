@@ -25,6 +25,9 @@ const placeholders = {
     '{{mkdocs-version}}': setup.version,
     '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
     '{{assetsBasePath}}': `../assets`,
+    '{{mkdocs-ts}}': '**`mkdocs-ts`**',
+    '{{rx-vdom}}':
+        '<a target="_blank" href="/apps/@rx-vdom/doc/latest">rxVDom</a>',
 }
 GlobalMarkdownViews.factory = {
     ...GlobalMarkdownViews.factory,
@@ -89,9 +92,25 @@ export const navigation: AppNav = {
                     },
                 },
                 '/api-backend': {
-                    name: 'Code API backends',
+                    name: 'API Documentation',
                     layout: {
                         content: fromMd('how-to.api-backend.md'),
+                    },
+                    routes: {
+                        '/typescript': {
+                            name: 'Typescript',
+                            layout: {
+                                content: fromMd(
+                                    'how-to.api-backend.typescript.md',
+                                ),
+                            },
+                        },
+                        '/python': {
+                            name: 'Python',
+                            layout: {
+                                content: fromMd('how-to.api-backend.python.md'),
+                            },
+                        },
                     },
                 },
             },

@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "Backends available to parse code API.\n\nBackend API generators are in charge to convert project's sources files into a set of 'API' files,\neach file representing one module of the project.\n\n**Conditions for Generation**:\n   - The language is organized hierarchically into modules.\n   - Modules can contain entities grouped as  [CodeApi.Type](@nav/api/CodeApi.Type) ,  [CodeApi.Callable](@nav/api/CodeApi.Callable) ,\n     or  [CodeApi.Attribute](@nav/api/CodeApi.Attribute) .\n   - For each entity, it should be possible to construct a  [CodeApi.Code](@nav/api/CodeApi.Code)  attribute, which includes:\n     - Extracting documentation from the source code.\n     - Extracting declaration and optionally implementation from the source code.\n     - Extracting the list of known types involved from a declaration (if applicable).\n   - For  [CodeApi.Type](@nav/api/CodeApi.Type) , it should be possible to extract associated lists of  [CodeApi.Attribute](@nav/api/CodeApi.Attribute)  and\n    [CodeApi.Callable](@nav/api/CodeApi.Callable) .\n   - All entities have a  [CodeApi.Semantic](@nav/api/CodeApi.Semantic)  property providing language-specific semantic information\n   (e.g.,  `role` ,  `class` ,  `interface` ,  `abstract class` , etc., for  [CodeApi.Type](@nav/api/CodeApi.Type) ).\n   - All entities are associated with  [CodeApi.Documentation](@nav/api/CodeApi.Documentation) .",
+                "content": "Backends available to parse code API.\n\nBackend API generators are in charge to convert project's sources files into a set of 'API' files,\neach file representing one module of the project.\n\n**Conditions for Generation**:\n\n   - The language is organized hierarchically into modules.\n\n   - Modules can contain entities grouped as  [CodeApi.Type](@nav/api/CodeApi.Type) ,  [CodeApi.Callable](@nav/api/CodeApi.Callable) ,\n     or  [CodeApi.Attribute](@nav/api/CodeApi.Attribute) .\n\n   - For each entity, it should be possible to construct a  [CodeApi.Code](@nav/api/CodeApi.Code)  attribute, which includes:\n     - Extracting documentation from the source code.\n\n     - Extracting declaration and optionally implementation from the source code.\n\n     - Extracting the list of known types involved from a declaration (if applicable).\n\n   - For  [CodeApi.Type](@nav/api/CodeApi.Type) , it should be possible to extract associated lists of  [CodeApi.Attribute](@nav/api/CodeApi.Attribute)  and\n    [CodeApi.Callable](@nav/api/CodeApi.Callable) .\n\n   - All entities have a  [CodeApi.Semantic](@nav/api/CodeApi.Semantic)  property providing language-specific semantic information.\n\n   - All entities are associated with  [CodeApi.Documentation](@nav/api/CodeApi.Documentation) .",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -46,7 +46,7 @@
         },
         {
             "name": "mkdocs_py_griffe",
-            "path": "mkdocs-ts/Backends.mkdocs_py_griffe.json",
+            "path": "mkdocs-ts/Backends.mkdocs_py_griffe",
             "isLeaf": true
         }
     ],

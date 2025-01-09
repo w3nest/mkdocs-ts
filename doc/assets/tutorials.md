@@ -1,15 +1,18 @@
 # Tutorials
 
-A couple of tutorials are provided here in the form of notebook.
+Explore a series of tutorials designed to help you get started with {{mkdocs-ts}} and make the most of its features.
+These tutorials are presented in the form of interactive notebook pages.
 
-Notebook pages allows to propose a dynamically generated content from coding cells; you can alter their code 
-for rapid testing (note that modification are not persisted).
+Notebook pages enable dynamically generated content through coding cells, which you can modify for rapid testing and
+experimentation. Note that any changes made are temporary and will not be saved.
 
+Here are the tutorials available:
 
-The following tutorials are proposed:
+*  [Getting-started](@nav/tutorials/basics): Getting started with {{mkdocs-ts}}.
 
-- [Getting-started](@nav/tutorials/basics) : Getting started with `mkdocs-ts`.
-- [Markdown](@nav/tutorials/markdown) : Get the most of Markdown capabilities.
-- [Code API](@nav/tutorials/code-api) : Include code API documentation within your application.
-- [Notebook](@nav/tutorials/notebook) : Include powerful notebook pages like those used in the tutorials
-in your navigation.
+*  [Markdown](@nav/tutorials/markdown): Get the most of Markdown capabilities.
+
+*  [Notebook](@nav/tutorials/notebook) : Add dynamic and interactive notebook pages to your navigation, similar to those used in these 
+tutorials.
+
+*  [Code API](@nav/tutorials/code-api): Integrate Code API documentation into your application.
