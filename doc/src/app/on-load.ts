@@ -53,10 +53,10 @@ export class NavHeaderView implements VirtualDOM<'div'> {
     }
 }
 
-const routerView = new DefaultLayout.ViewWithCompanion({
+const routerView = new DefaultLayout.LayoutWithCompanion({
     router,
     bookmarks$,
-    layoutOptions: {
+    displayOptions: {
         topStickyPaddingMax,
         bottomStickyPaddingMax: '3rem',
     },
