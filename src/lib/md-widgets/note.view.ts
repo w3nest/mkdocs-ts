@@ -4,11 +4,13 @@ import {
     child$,
     ChildrenLike,
     RxChild,
+    RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
 import { parseMd, MdParsingOptions } from '../markdown'
 import { Router } from '../router'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, filter } from 'rxjs'
+import { refreshResizeObservers } from './traits'
 
 /**
  * Icons factory, class refers to fontawesome v5 icons.
@@ -58,6 +60,8 @@ export class NoteView implements VirtualDOM<'div'> {
     public readonly expandable: boolean = false
     public readonly expanded$ = new BehaviorSubject(false)
     public readonly mode: ExpandableMode = 'stateless'
+
+    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     /**
      * @param params
      * @param params.level Level of the note.
@@ -137,6 +141,17 @@ export class NoteView implements VirtualDOM<'div'> {
             }),
             maybeContent,
         ]
+        this.connectedCallback = (elem) => {
+            if (this.mode === 'stateful') {
+                elem.ownSubscriptions(
+                    this.expanded$
+                        .pipe(filter((expanded) => expanded))
+                        .subscribe(() => {
+                            refreshResizeObservers(elem)
+                        }),
+                )
+            }
+        }
     }
 
     /**

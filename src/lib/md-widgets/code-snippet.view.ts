@@ -2,6 +2,7 @@ import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
+import { ResizeObserverTrait } from './traits'
 
 export type CodeLanguage =
     | 'python'
@@ -26,7 +27,7 @@ type CodeMirror = (
 /**
  * The widget for code snippet.
  */
-export class CodeSnippetView implements VirtualDOM<'div'> {
+export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
     static readonly cmDependencies$: Record<
         CodeLanguage,
         Observable<{ CodeMirror: CodeMirror }> | undefined
@@ -95,7 +96,8 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
     /**
      * The class list of the associated HTML element.
      */
-    public readonly class = 'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3'
+    public readonly class =
+        'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer'
     /**
      * The style of the associated HTML element.
      */
@@ -173,7 +175,6 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                                     CodeSnippetView.hlLineClass,
                                 )
                             })
-
                             editor.refresh()
                             this.editor$.next(editor)
                         },
@@ -181,6 +182,10 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
                 },
             }),
         ]
+    }
+
+    refreshView() {
+        this.editor$.value?.refresh()
     }
 }
 
