@@ -1,14 +1,16 @@
 import { render, VirtualDOM, ChildrenLike, CSSAttribute } from 'rx-vdom'
 import { navigation } from './navigation'
-import { Router, DefaultLayout, MdWidgets } from 'mkdocs-ts'
+import { Router, DefaultLayout, MdWidgets, WebBrowser } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
+
+export const companionNodes$ = new BehaviorSubject([])
 
 export const router = new Router({
     navigation,
+    browserClient: (p) =>
+        new WebBrowser({ ...p, ignoredPaths$: companionNodes$ }),
 })
-const bookmarks$ = new BehaviorSubject([
-    '/' /*, '/how-to', '/tutorials', '/api'*/,
-])
+const bookmarks$ = new BehaviorSubject(['/', '/how-to', '/tutorials', '/api'])
 export const topStickyPaddingMax = '3rem'
 
 export class NavHeaderView implements VirtualDOM<'div'> {
@@ -51,11 +53,12 @@ export class NavHeaderView implements VirtualDOM<'div'> {
     }
 }
 
-const routerView = new DefaultLayout.View({
+const routerView = new DefaultLayout.ViewWithCompanion({
     router,
     bookmarks$,
     layoutOptions: {
         topStickyPaddingMax,
+        bottomStickyPaddingMax: '3rem',
     },
     sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
     sideNavFooter: () =>
@@ -63,6 +66,7 @@ const routerView = new DefaultLayout.View({
             sourceName: '@mkdocs-ts/doc',
             sourceUrl: 'https://github.com/w3nest/mkdocs-ts/tree/main/doc',
         }),
+    companionNodes$,
 })
 
 document.getElementById('content').appendChild(render(routerView))

@@ -9,6 +9,7 @@ import {
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
 import { logo } from './logo'
+import { companionNodes$ } from './on-load'
 import { example1 } from './js-plaground-examples'
 
 const project = {
@@ -235,29 +236,6 @@ export const navigation: AppNav = {
             },
         },
         '/api': apiNav(),
-        //
-        // '/api': {
-        //     name: 'API',
-        //     header: {
-        //         icon: {
-        //             tag: 'i',
-        //             class: 'fas fa-code me-1',
-        //         },
-        //     },
-        //     layout: {
-        //         content: fromMd('api.md'),
-        //     },
-        //     routes: ({ path, router }: { path: string; router: Router }) =>
-        //         CodeApiModule.docNavigation({
-        //             modulePath: path,
-        //             router,
-        //             project,
-        //             configuration: {
-        //                 ...CodeApiModule.configurationTsTypedoc,
-        //                 notebook: true,
-        //             },
-        //         }),
-        // },
     },
 }
 
@@ -266,9 +244,17 @@ async function apiNav(): Promise<AppNav> {
 
     return CodeApiModule.codeApiEntryNode({
         name: 'API',
-        icon: {
-            tag: 'i' as const,
-            class: `fas fa-code`,
+        header: {
+            icon: {
+                tag: 'i' as const,
+                class: `fas fa-code`,
+            },
+            actions: [
+                DefaultLayout.splitCompanionAction({
+                    path: '/api',
+                    companionNodes$,
+                }),
+            ],
         },
         entryModule: 'mkdocs-ts',
         docBasePath: '../assets/api',
