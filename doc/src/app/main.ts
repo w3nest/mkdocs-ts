@@ -12,6 +12,7 @@ await setup.installMainModule({
             'fontawesome#5.12.1~css/all.min.css',
             `mkdocs-ts#${setup.runTimeDependencies.externals['mkdocs-ts']}~assets/mkdocs-light.css`,
             `mkdocs-ts#${setup.runTimeDependencies.externals['mkdocs-ts']}~assets/notebook.css`,
+            `mkdocs-ts#${setup.runTimeDependencies.externals['mkdocs-ts']}~assets/ts-typedoc.css`,
         ],
         displayLoadingScreen: true,
     },

@@ -4,13 +4,14 @@ import {
     installCodeApiModule,
     installNotebookModule,
     Navigation,
-    Router,
+    GlobalMarkdownViews,
 } from 'mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
 import { logo } from './logo'
 import { companionNodes$ } from './on-load'
 import { example1 } from './js-plaground-examples'
+import { ApiLink, SplitApiButton } from './md-widgets'
 
 const project = {
     name: 'mkdocs-ts',
@@ -25,6 +26,12 @@ const placeholders = {
     '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
     '{{assetsBasePath}}': `../assets`,
 }
+GlobalMarkdownViews.factory = {
+    ...GlobalMarkdownViews.factory,
+    'api-link': (elem: HTMLElement) => new ApiLink(elem),
+    'split-api': () => new SplitApiButton(),
+}
+
 function fromMd(file: string) {
     return fromMarkdown({
         url: url(file),
