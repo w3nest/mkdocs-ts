@@ -830,4 +830,8 @@
     text-align: justify;
 }
 
+.mkdocs-NoteHeaderView .mkdocs-markdown p {
+    margin-bottom: 0;
+}
+
 /*# sourceMappingURL=mkdocs-light.css.map */

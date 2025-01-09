@@ -171,7 +171,7 @@ export class NoteView implements VirtualDOM<'div'> {
             : false,
         mode:
             (element.getAttribute('mode') as ExpandableMode | null) ??
-            undefined,
+            'stateless',
         icon: element.getAttribute('icon') ?? undefined,
     })
 
@@ -225,10 +225,7 @@ class NoteHeaderView implements VirtualDOM<'div'> {
                 class: 'mx-1',
             },
             typeof this.label === 'string'
-                ? {
-                      tag: 'div',
-                      innerText: this.label,
-                  }
+                ? parseMd({ src: this.label })
                 : this.label,
             {
                 tag: 'div',
