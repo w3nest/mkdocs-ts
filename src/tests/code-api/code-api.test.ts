@@ -60,7 +60,9 @@ describe('Typescript/Typedoc documentation', () => {
                 '/mkdocs': Promise.resolve().then(() => {
                     return codeApiEntryNode({
                         name: 'mkdocs',
-                        icon: { tag: 'div', class: 'fas fa-box-open' },
+                        header: {
+                            icon: { tag: 'div', class: 'fas fa-box-open' },
+                        },
                         entryModule: 'mkdocs-ts',
                         docBasePath: `${__dirname}/api`,
                         httpClient: ({ project }) =>

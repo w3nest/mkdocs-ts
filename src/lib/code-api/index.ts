@@ -185,7 +185,7 @@ export const docNavigation = <TLayout, THeader>({
 
 export function codeApiEntryNode<TLayout, THeader>(params: {
     name: string
-    icon: AnyVirtualDOM
+    header: DefaultLayout.NavHeader
     docBasePath: string
     entryModule: string
     configuration: Configuration<TLayout, THeader>
@@ -211,7 +211,7 @@ export function codeApiEntryNode<TLayout, THeader>(params: {
     return {
         ...configuration.navNode({
             name: params.name,
-            header: { icon: params.icon },
+            header: params.header,
             layout: {
                 toc,
                 content: ({ router }: { router: Router }) => {
