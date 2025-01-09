@@ -81,7 +81,7 @@ export class CellView implements VirtualDOM<'div'> {
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-CellView border-left ps-1'
+    public readonly class = 'mknb-CellView border-start ps-1'
 
     public readonly cellId: string
     public readonly state: State
