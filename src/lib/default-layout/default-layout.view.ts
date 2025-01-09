@@ -27,7 +27,7 @@ export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 /**
  * Hints regarding sizing of the side navigation panels on the page.
  *
- * See {@link defaultLayoutOptions}.
+ * See {@link defaultDisplayOptions}.
  */
 export interface SidePanelLayoutOptions {
     /**
@@ -52,9 +52,15 @@ export interface SidePanelLayoutOptions {
  *
  * The 'page' element refers to the text-content area.
  *
- * See {@link defaultLayoutOptions}.
+ * See {@link defaultDisplayOptions}.
+ *
+ *
+ * @typeParam T Extra display options that can be used for other kind of layout based on the default layout.
  */
-export type LayoutOptions = SidePanelLayoutOptions & {
+export type DisplayOptions<
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    ExtraDisplayOption extends Record<string, unknown> = {},
+> = SidePanelLayoutOptions & {
     /**
      * Screen size in pixel transitioning from pined Navigation panel, to
      * collapsable one.
@@ -89,25 +95,23 @@ export type LayoutOptions = SidePanelLayoutOptions & {
      * Translation duration for panels in ms.
      */
     translationTime: number
-}
+} & ExtraDisplayOption
 
 /**
- * Default layout options.
+ * Default values of {@link DisplayOptions}.
  */
-export const defaultLayoutOptions = (): LayoutOptions => {
-    return {
-        toggleTocWidth: 1500,
-        tocMinWidth: 250,
-        tocMaxWidth: 400,
-        toggleNavWidth: 1300,
-        navMaxWidth: 500,
-        navMinWidth: 300,
-        pageWidth: '35rem',
-        translationTime: 400,
-        topStickyPaddingMax: '2rem',
-        topStickyPaddingMin: '10px',
-        bottomStickyPaddingMax: '2rem',
-    }
+export const defaultDisplayOptions: DisplayOptions = {
+    toggleTocWidth: 1500,
+    tocMinWidth: 250,
+    tocMaxWidth: 400,
+    toggleNavWidth: 1300,
+    navMaxWidth: 500,
+    navMinWidth: 300,
+    pageWidth: '35rem',
+    translationTime: 400,
+    topStickyPaddingMax: '2rem',
+    topStickyPaddingMin: '10px',
+    bottomStickyPaddingMax: '2rem',
 }
 
 export type LayoutElementView<TView extends AnyVirtualDOM = AnyVirtualDOM> = ({
@@ -119,9 +123,48 @@ export type LayoutElementView<TView extends AnyVirtualDOM = AnyVirtualDOM> = ({
     router: Router
     displayModeNav$: Subject<DisplayMode>
     displayModeToc$: Subject<DisplayMode>
-    layoutOptions: LayoutOptions
+    layoutOptions: DisplayOptions
 }) => TView
 
+/**
+ * Parameters to construct a new default layout {@link View} (also used by the layout {@link ViewWithCompanion}).
+ *
+ * @typeParam T Extra display options that can be used for other kind of layout based on the default layout.
+ */
+export interface DefaultLayoutParams<
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    ExtraDisplayOption extends Record<string, unknown> = {},
+> {
+    /**
+     * Application router.
+     */
+    router: Router<NavLayout, NavHeader>
+    /**
+     * Optional content generator for the page, default to {@link PageView}.
+     */
+    page?: LayoutElementView<
+        AnyVirtualDOM & { content$: ReplaySubject<HTMLElement> }
+    >
+    /**
+     * Optional custom header view to use at the top of the in navigation panel, empty if not provided.
+     */
+    sideNavHeader?: LayoutElementView
+    /**
+     * Optional custom header view to use at the bottom of the in navigation panel, empty if not provided.
+     */
+    sideNavFooter?: LayoutElementView
+    /**
+     * Display options, mostly regarding sizing of the main elements in the page. Values provided - if any -
+     * are merged with {@link defaultDisplayOptions}.
+     */
+    displayOptions?: Partial<DisplayOptions<ExtraDisplayOption>>
+    /**
+     * If provided, include a {@link BookmarksView} column at the very left, as well as a
+     * <button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button in the navigation node's header.
+     * The consumer should provide this variable initialized with the URL for initial bookmarked pages.
+     */
+    bookmarks$?: BehaviorSubject<string[]>
+}
 /**
  * Dynamic options (defined in {@link Navigation}) for {@link View}.
  * Static options are provided in {@link View} constructor.
@@ -154,7 +197,7 @@ export interface NavLayout {
  * Depending on the screen size, the navigation and TOC can be collapsed into an expandable menu.
  */
 export class View implements VirtualDOM<'div'> {
-    public readonly layoutOptions: LayoutOptions = defaultLayoutOptions()
+    public readonly layoutOptions: DisplayOptions = defaultDisplayOptions
 
     public readonly tag = 'div'
     public readonly children: ChildrenLike
@@ -178,34 +221,20 @@ export class View implements VirtualDOM<'div'> {
     /**
      * Initializes a new instance.
      *
-     * @param _p
-     * @param _p.router The router.
-     * @param _p.page Optional custom page to use, default to {@link PageView}.
-     * @param _p.sideNavHeader Optional custom header view to use in navigation panel, empty if not provided.
-     * @param _p.sideNavFooter Optional custom footer view to use in navigation panel, default to {@link FooterView}.
-     * @param _p.layoutOptions Display options regarding sizing of the main elements in the page.
-     * @param _p.bookmarks$ Subject emitting the `href` of the bookmarked pages.
+     * @param params See {@link DefaultLayoutParams}.
      */
-    constructor({
-        router,
-        page,
-        sideNavHeader,
-        sideNavFooter,
-        layoutOptions,
-        bookmarks$,
-    }: {
-        router: Router<NavLayout, NavHeader>
-        page?: LayoutElementView<
-            AnyVirtualDOM & { content$: ReplaySubject<HTMLElement> }
-        >
-        sideNavHeader?: LayoutElementView
-        sideNavFooter?: LayoutElementView
-        layoutOptions?: Partial<LayoutOptions>
-        bookmarks$?: BehaviorSubject<string[]>
-    }) {
+    constructor(params: DefaultLayoutParams) {
+        const {
+            router,
+            page,
+            sideNavHeader,
+            sideNavFooter,
+            displayOptions,
+            bookmarks$,
+        } = params
         this.layoutOptions = Object.assign(
             this.layoutOptions,
-            layoutOptions ?? {},
+            displayOptions ?? {},
         )
         this.connectedCallback = (e: HTMLElement) => {
             this.plugResizer(e)
@@ -403,7 +432,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     }) {
         Object.assign(this, params)
         const layoutOptions = {
-            ...defaultLayoutOptions(),
+            ...defaultDisplayOptions,
             ...this.layoutOptions,
         }
         const colors: Record<Container, string> = {

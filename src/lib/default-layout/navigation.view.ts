@@ -11,7 +11,7 @@ import {
 } from 'rx-vdom'
 import { Router } from '../router'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
-import { LayoutOptions } from './default-layout.view'
+import { DisplayOptions } from './default-layout.view'
 import { NavHeaderView } from './nav-header.view'
 import { BehaviorSubject } from 'rxjs'
 import { NavNodePromise } from '../navigation.node'
@@ -45,12 +45,12 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly class: string = `${NavigationView.CssSelector} mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 px-1 rounded`
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
-    public readonly layoutOptions: LayoutOptions
+    public readonly layoutOptions: DisplayOptions
     public readonly bookmarks$?: BehaviorSubject<string[]>
 
     constructor(params: {
         router: Router<unknown, NavHeader>
-        layoutOptions: LayoutOptions
+        layoutOptions: DisplayOptions
         bookmarks$?: BehaviorSubject<string[]>
     }) {
         Object.assign(this, params)

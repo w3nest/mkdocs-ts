@@ -1,5 +1,6 @@
 import { headingPrefixId, Router, UrlTarget } from './router'
 import { sanitizeNavPath } from './navigation.node'
+import { BehaviorSubject } from 'rxjs'
 
 /**
  * Defines the interface for interacting with the browser's navigation system.
@@ -27,7 +28,14 @@ export interface BrowserInterface {
 export class WebBrowser implements BrowserInterface {
     public readonly router: Router
     public readonly basePath: string
-    constructor(params: { router: Router; basePath: string }) {
+    public readonly ignoredPaths$: BehaviorSubject<string[]> =
+        new BehaviorSubject<string[]>([])
+
+    constructor(params: {
+        router: Router
+        basePath: string
+        ignoredPaths$?: BehaviorSubject<string[]>
+    }) {
         Object.assign(this, params)
         window.onpopstate = (event: PopStateEvent) => {
             const state = event.state as unknown as
@@ -43,8 +51,21 @@ export class WebBrowser implements BrowserInterface {
         }
     }
     pushState(data: { target: UrlTarget }): void {
+        const isIgnored = this.ignoredPaths$.value.find((ignored) =>
+            data.target.path.startsWith(ignored),
+        )
+        if (isIgnored) {
+            return
+        }
+        console.log('Push State', data)
         history.pushState(
-            data,
+            {
+                target: {
+                    path: data.target.path,
+                    sectionId: data.target.sectionId,
+                    parameters: data.target.parameters,
+                },
+            },
             '',
             `${this.basePath}?${formatUrl(data.target)}`,
         )
@@ -55,6 +76,16 @@ export class WebBrowser implements BrowserInterface {
     }
 }
 
+/**
+ * Parse a URL as string into a {@link UrlTarget} - only query parameters are relevant.
+ *
+ * *  {@link UrlTarget.path} is extracted from the `nav` query parameter.
+ * *  {@link UrlTarget.parameters} are other query parameters.
+ * *  {@link UrlTarget.sectionId} is specified by the part after the first `.` in the `nav` query parameter.
+ *
+ * @param url String to parse.
+ * @returns The target
+ */
 export function parseUrl(url: string): UrlTarget {
     const urlParams = new URLSearchParams(url)
     const nav = sanitizeNavPath(urlParams.get('nav') ?? '/')
@@ -87,4 +118,26 @@ export function formatUrl(urlTarget: UrlTarget) {
         ? `.${urlTarget.sectionId.replace(headingPrefixId, '')}`
         : ''
     return `nav=${urlTarget.path}${sectionId}${paramsStr}`
+}
+
+/**
+ * Implements the {@link BrowserInterface} for managing browser navigation.
+ * Integrates with the browser's history API and synchronizes with a {@link Router}.
+ */
+export class MockBrowser implements BrowserInterface {
+    public readonly router: Router
+    public readonly basePath: string
+    public readonly history: UrlTarget[] = []
+    constructor(params: { router: Router; basePath: string }) {
+        Object.assign(this, params)
+    }
+    pushState(data: { target: UrlTarget }): void {
+        this.history.push(data.target)
+    }
+
+    parseUrl(): UrlTarget {
+        return this.history.length > 0
+            ? this.history.slice(-1)[0]
+            : parseUrl('/')
+    }
 }

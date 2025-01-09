@@ -25,7 +25,7 @@ import {
     timer,
     combineLatest,
 } from 'rxjs'
-import { DisplayMode, LayoutOptions } from './default-layout.view'
+import { DisplayMode, DisplayOptions } from './default-layout.view'
 
 type H1 = 'H1'
 type H2 = 'H2'
@@ -292,13 +292,13 @@ export class TocWrapperView implements VirtualDOM<'div'> {
 
     public readonly displayMode$: BehaviorSubject<DisplayMode>
     public readonly router: Router
-    public readonly layoutOptions: LayoutOptions
+    public readonly layoutOptions: DisplayOptions
     public readonly content$: Observable<HTMLElement>
 
     constructor(params: {
         router: Router
         displayMode$: BehaviorSubject<DisplayMode>
-        layoutOptions: LayoutOptions
+        layoutOptions: DisplayOptions
         content$: Observable<HTMLElement>
     }) {
         Object.assign(this, params)

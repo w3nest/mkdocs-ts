@@ -4,7 +4,7 @@ import { FavoritesView, ToggleNavButton } from './favorites.view'
 import { NavigationView } from './navigation.view'
 import {
     DisplayMode,
-    LayoutOptions,
+    DisplayOptions,
     StickyColumnContainer,
 } from './default-layout.view'
 import { TocWrapperView } from './toc.view'
@@ -18,7 +18,7 @@ function slidingStyle({
     mode: DisplayMode
     offset: number
     side: 'right' | 'left'
-    layoutOptions: LayoutOptions
+    layoutOptions: DisplayOptions
 }): CSSAttribute {
     const maxWidth =
         side === 'right' ? layoutOptions.tocMaxWidth : layoutOptions.navMaxWidth
@@ -41,11 +41,11 @@ export class ExpandableRightSide implements VirtualDOM<'div'> {
     public readonly style = {
         position: 'relative' as const,
     }
-    public readonly layoutOptions: LayoutOptions
+    public readonly layoutOptions: DisplayOptions
     public readonly tocView: TocWrapperView
 
     constructor(params: {
-        layoutOptions: LayoutOptions
+        layoutOptions: DisplayOptions
         tocView: TocWrapperView
     }) {
         Object.assign(this, params)

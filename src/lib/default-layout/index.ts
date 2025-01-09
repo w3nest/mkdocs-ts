@@ -3,6 +3,7 @@
  */
 
 export * from './default-layout.view'
+export * from './companion-layout.view'
 export * from './page.view'
 export * from './toc.view'
 export * from './navigation.view'
