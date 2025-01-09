@@ -14,6 +14,7 @@ import {
     NoteView,
     CodeBadgesView,
 } from './md-widgets'
+import { AnyView } from './navigation.node'
 
 /**
  * Type definition for custom view generators.
@@ -30,7 +31,7 @@ import {
 export type ViewGenerator = (
     elem: HTMLElement,
     options: { router?: Router } & MdParsingOptions,
-) => AnyVirtualDOM
+) => AnyView
 
 /**
  * Options for parsing Markdown content.
@@ -248,7 +249,13 @@ export function parseMd({
             return
         }
         const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]
-        elem.parentNode?.replaceChild(render(factory(elem, options)), elem)
+        const replacedView = factory(elem, options)
+        elem.parentNode?.replaceChild(
+            replacedView instanceof HTMLElement
+                ? replacedView
+                : render(replacedView),
+            elem,
+        )
     })
 
     return {

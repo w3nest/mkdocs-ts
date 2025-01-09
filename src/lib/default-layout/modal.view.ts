@@ -1,4 +1,5 @@
 import { AnyVirtualDOM, render } from 'rx-vdom'
+import { AnyView } from '../navigation.node'
 
 function isSizeRelativeToParent(
     element: HTMLElement,
@@ -48,7 +49,7 @@ export function popupModal({
     maxWidth,
     maxHeight,
 }: {
-    content: AnyVirtualDOM
+    content: AnyView
     maxWidth?: string
     maxHeight?: string
 }) {

@@ -7,7 +7,7 @@ import {
     CSSAttribute,
     VirtualDOM,
 } from 'rx-vdom'
-import { AnyNavNode, NavNodeResolved } from '../navigation.node'
+import { AnyNavNode, AnyView, NavNodeResolved } from '../navigation.node'
 import { BehaviorSubject, map } from 'rxjs'
 import { Router } from '../router'
 import { NavHeader } from './navigation.view'
@@ -22,13 +22,7 @@ export class NavActionView implements VirtualDOM<'button'> {
     public readonly children: ChildrenLike
     public readonly onclick: (ev: MouseEvent) => void
 
-    constructor({
-        content,
-        action,
-    }: {
-        content: AnyVirtualDOM
-        action: () => void
-    }) {
+    constructor({ content, action }: { content: AnyView; action: () => void }) {
         this.children = [content]
         this.onclick = (ev: MouseEvent) => {
             ev.stopPropagation()

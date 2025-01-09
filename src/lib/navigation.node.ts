@@ -1,6 +1,13 @@
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { Router } from './router'
 import { from, map, Observable, of, take } from 'rxjs'
+import { AnyVirtualDOM } from 'rx-vdom'
+
+/**
+ * Represents a view that can be rendered within the application, supporting both VirtualDOM-based components
+ * from <a target="_blank" href="/apps/@rx-vdom/doc/latest">rx-vdom</a> and standard HTML elements.
+ */
+export type AnyView = AnyVirtualDOM | HTMLElement
 
 export type NavNodeData<
     TLayout,

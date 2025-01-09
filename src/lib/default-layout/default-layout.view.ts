@@ -20,7 +20,7 @@ import {
 import { FavoritesView } from './favorites.view'
 import { ExpandableLeftSide, ExpandableRightSide } from './expandable.view'
 import { TocWrapperView } from './toc.view'
-import { Resolvable } from '../navigation.node'
+import { AnyView, Resolvable } from '../navigation.node'
 
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
@@ -114,15 +114,25 @@ export const defaultDisplayOptions: DisplayOptions = {
     bottomStickyPaddingMax: '2rem',
 }
 
-export type LayoutElementView<TView extends AnyVirtualDOM = AnyVirtualDOM> = ({
+/**
+ * Represents a function that defines the structure and behavior of a layout
+ * element view. This type allows customization of layout components.
+ *
+ * @typeParam TView The target type of view.
+ */
+export type LayoutElementView<TView extends AnyView = AnyView> = ({
     router,
     displayModeNav$,
     displayModeToc$,
     layoutOptions,
 }: {
+    // Application's router
     router: Router
+    // Current display mode regarding navigation.
     displayModeNav$: Subject<DisplayMode>
+    // Current display mode regarding table of content.
     displayModeToc$: Subject<DisplayMode>
+    // The layout options provided.
     layoutOptions: DisplayOptions
 }) => TView
 
@@ -140,11 +150,12 @@ export interface DefaultLayoutParams<
      */
     router: Router<NavLayout, NavHeader>
     /**
-     * Optional content generator for the page, default to {@link PageView}.
+     * An optional content generator for the page, defaulting to {@link PageView}.
+     *
+     * The provided type must emit itself as an `HTMLElement` through the `content$` observable
+     * whenever it completes an update triggered by a change in the navigation path.
      */
-    page?: LayoutElementView<
-        AnyVirtualDOM & { content$: ReplaySubject<HTMLElement> }
-    >
+    page?: LayoutElementView<AnyView & { content$: ReplaySubject<HTMLElement> }>
     /**
      * Optional custom header view to use at the top of the in navigation panel, empty if not provided.
      */
@@ -179,19 +190,16 @@ export type NavLayout =
            *   *  router : Router instance.
            * @returns A promise on the view
            */
-          toc?: (p: {
-              html: HTMLElement
-              router: Router
-          }) => Promise<AnyVirtualDOM>
+          toc?: (p: { html: HTMLElement; router: Router }) => Promise<AnyView>
           /**
            * This function represents the view of the main content.
            *
            * @param router Router instance.
            * @returns A resolvable view
            */
-          content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
+          content: ({ router }: { router: Router }) => Resolvable<AnyView>
       }
-    | (({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>)
+    | (({ router }: { router: Router }) => Resolvable<AnyView>)
 
 /**
  * Defines the default layout view:
@@ -423,17 +431,17 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
     public readonly layoutOptions: Partial<SidePanelLayoutOptions>
-    public readonly header?: AnyVirtualDOM
-    public readonly content: AnyVirtualDOM
-    public readonly footer?: AnyVirtualDOM
+    public readonly header?: AnyView
+    public readonly content: AnyView
+    public readonly footer?: AnyView
     public readonly type: Container
 
     constructor(params: {
         type: Container
-        content: AnyVirtualDOM
+        content: AnyView
         layoutOptions: Partial<SidePanelLayoutOptions>
-        header?: AnyVirtualDOM
-        footer?: AnyVirtualDOM
+        header?: AnyView
+        footer?: AnyView
     }) {
         Object.assign(this, params)
         const layoutOptions = {
@@ -445,9 +453,16 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
             nav: 'mkdocs-bg-5 mkdocs-text-5',
             toc: 'mkdocs-bg-0 mkdocs-text-0',
         }
-        this.content.style = {
-            ...(this.content.style ?? {}),
-            ...StickyColumnContainer.stickyStyle(layoutOptions),
+        const stickyStyle = StickyColumnContainer.stickyStyle(layoutOptions)
+        if (this.content instanceof HTMLElement) {
+            for (const [key, value] of Object.entries(stickyStyle)) {
+                this.content.style[key] = value as unknown as string
+            }
+        } else {
+            this.content.style = {
+                ...(this.content.style ?? {}),
+                ...StickyColumnContainer.stickyStyle(layoutOptions),
+            }
         }
         const flexGrow = params.type === 'favorites' ? 0 : 1
         const stickyPadingTop = this.layoutOptions.topStickyPaddingMax
