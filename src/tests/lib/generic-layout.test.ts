@@ -108,7 +108,7 @@ test('generic layout', async () => {
         router,
         layoutsFactory: {
             default: ({ router }) => {
-                return new DefaultLayout.View({ router })
+                return new DefaultLayout.Layout({ router })
             },
             custom: ({ router }) =>
                 new CustomLayout({

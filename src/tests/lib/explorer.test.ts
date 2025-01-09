@@ -172,7 +172,7 @@ describe('Display views', () => {
     beforeAll(() => {
         mockMissingUIComponents()
         router = new Router({ navigation })
-        const view = new DefaultLayout.View({
+        const view = new DefaultLayout.Layout({
             router,
         })
         document.body.append(render(view))

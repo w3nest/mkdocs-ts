@@ -1,19 +1,19 @@
 import { attr$, child$, ChildrenLike, VirtualDOM, RxHTMLElement } from 'rx-vdom'
 import { isResolvedTarget, Router } from '../router'
 import { BehaviorSubject, filter, from, map, switchMap, take, skip } from 'rxjs'
-import { View, DefaultLayoutParams } from './default-layout.view'
+import { Layout, DefaultLayoutParams } from './default-layout.view'
 import { PageView } from './page.view'
 import { MockBrowser } from '../browser.interface'
 import { NavActionView } from './nav-header.view'
 
 /**
- * Parameters for constructing {@link ViewWithCompanion} layout.
+ * Parameters for constructing {@link LayoutWithCompanion} layout.
  *
  * Mostly the {@link DefaultLayoutParams}, to which is added:
  * *  `companionNodes$` provide handle regarding companion nodes selection.
  * *  `companionWidth` (included within display options), to control the width of the companion screen in percent.
  */
-export type ViewWithCompanionParams = DefaultLayoutParams<{
+export type LayoutWithCompanionParams = DefaultLayoutParams<{
     /**
      * Width of the companion screen in percent, default to 40.
      */
@@ -26,7 +26,7 @@ export type ViewWithCompanionParams = DefaultLayoutParams<{
     companionNodes$: BehaviorSubject<string[]>
 }
 /**
- * Represents a layout based on the default {@link View}, with an additional split view feature allowing
+ * Represents a layout based on {@link Layout}, with an additional split view feature allowing
  * two pages to be displayed side-by-side.
  *
  * **Structure**
@@ -51,7 +51,7 @@ export type ViewWithCompanionParams = DefaultLayoutParams<{
  *   from the main-screen.
  *
  */
-export class ViewWithCompanion implements VirtualDOM<'div'> {
+export class LayoutWithCompanion implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'w-100 h-100 d-flex'
     public readonly children: ChildrenLike
@@ -60,11 +60,11 @@ export class ViewWithCompanion implements VirtualDOM<'div'> {
     public readonly companionNodes$: BehaviorSubject<string[]>
 
     /**
-     * Constructs a new `ViewWithCompanion` layout.
+     * Constructs a new `LayoutWithCompanion` layout.
      *
-     * @param params See {@link ViewWithCompanionParams}
+     * @param params See {@link LayoutWithCompanionParams}
      **/
-    constructor(params: ViewWithCompanionParams) {
+    constructor(params: LayoutWithCompanionParams) {
         this.companionNodes$ = params.companionNodes$
 
         const isCompanionPath = (path: string) => {
@@ -75,7 +75,7 @@ export class ViewWithCompanion implements VirtualDOM<'div'> {
             )
         }
 
-        const mainView = new View({
+        const mainView = new Layout({
             ...params,
             page: ({ router }) =>
                 new PageView({

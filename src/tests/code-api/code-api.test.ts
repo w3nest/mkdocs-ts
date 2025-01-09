@@ -81,7 +81,7 @@ describe('Typescript/Typedoc documentation', () => {
             },
         }
         router = new Router({ navigation })
-        const view = new DefaultLayout.View({
+        const view = new DefaultLayout.Layout({
             router,
             bookmarks$: new BehaviorSubject(['/', '/md']),
         })

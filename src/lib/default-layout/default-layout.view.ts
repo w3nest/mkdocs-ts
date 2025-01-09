@@ -127,7 +127,7 @@ export type LayoutElementView<TView extends AnyVirtualDOM = AnyVirtualDOM> = ({
 }) => TView
 
 /**
- * Parameters to construct a new default layout {@link View} (also used by the layout {@link ViewWithCompanion}).
+ * Parameters to construct a new default layout {@link Layout} (also used by the layout {@link LayoutWithCompanion}).
  *
  * @typeParam T Extra display options that can be used for other kind of layout based on the default layout.
  */
@@ -166,8 +166,8 @@ export interface DefaultLayoutParams<
     bookmarks$?: BehaviorSubject<string[]>
 }
 /**
- * Dynamic options (defined in {@link Navigation}) for {@link View}.
- * Static options are provided in {@link View} constructor.
+ * Dynamic options (defined in {@link Navigation}) for {@link Layout}.
+ * Static options are provided in {@link Layout} constructor.
  */
 export type NavLayout =
     | {
@@ -201,7 +201,7 @@ export type NavLayout =
  *
  * Depending on the screen size, the navigation and TOC can be collapsed into an expandable menu.
  */
-export class View implements VirtualDOM<'div'> {
+export class Layout implements VirtualDOM<'div'> {
     public readonly layoutOptions: DisplayOptions = defaultDisplayOptions
 
     public readonly tag = 'div'
