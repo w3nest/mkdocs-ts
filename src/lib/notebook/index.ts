@@ -35,8 +35,10 @@ export {
 } from './display-utils'
 
 import type { parseMd } from '../markdown'
+import type { MdWidgets } from '..'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
     public static parseMd: typeof parseMd
+    public static MdWidgets: typeof MdWidgets
 }

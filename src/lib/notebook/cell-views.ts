@@ -11,13 +11,23 @@ import {
     CSSAttribute,
     sync$,
     VirtualDOM,
+    EmptyDiv,
 } from 'rx-vdom'
 import { BehaviorSubject, filter, Observable, take } from 'rxjs'
-import { CellStatus, Output, State } from './state'
+import {
+    AstParsingError,
+    CellStatus,
+    ExecCellError,
+    Output,
+    RunTimeError,
+    State,
+} from './state'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
+import { Dependencies } from '.'
+import { ObjectJs } from '@w3nest/rx-tree-views'
 
 type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
 
@@ -159,12 +169,20 @@ export class CellView implements VirtualDOM<'div'> {
                 })
             },
         })
+        const errorsView = child$({
+            source$: this.state.errors$[this.cellId],
+            vdomMap: (error) => {
+                return error ? new ErrorView({ error }) : EmptyDiv
+            },
+        })
+
         this.children = [
             new CellHeaderView({
                 state: this.state,
                 cellId: this.cellId,
             }),
             editorView,
+            errorsView,
             outputsView,
         ]
     }
@@ -377,5 +395,82 @@ export class OutputsView implements VirtualDOM<'div'> {
             policy: 'sync',
             vdomMap: (output: AnyVirtualDOM) => output,
         })
+    }
+}
+
+/**
+ * The view of an {@link ExecCellError}.
+ */
+export class ErrorView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    /**
+     * Classes associated to the view.
+     */
+    public readonly class: string = 'mknb-ErrorView'
+    public readonly children: ChildrenLike
+    public readonly error: ExecCellError
+    /**
+     *
+     * @param params
+     * @param params.error The error to display.
+     */
+    constructor(params: { error: ExecCellError }) {
+        Object.assign(this, params)
+        const startLine = Math.max(0, this.error.line - 5)
+        const endLine = Math.min(this.error.src.length - 1, this.error.line + 5)
+        const lines = this.error.src
+            .slice(startLine, endLine)
+            .reduce((acc, e) => `${acc}${e}\n`, '')
+
+        const content = `
+**${this.error.description}**
+
+<code-snippet highlightedLines="${String(this.error.line - startLine)}">
+${lines}
+</code-snippet>
+
+<scope-in></scope-in>
+
+**Refer to your browser's debug console for more information**. 
+        `
+
+        const scopeIn = (): AnyVirtualDOM => {
+            if (!(this.error instanceof RunTimeError)) {
+                return EmptyDiv
+            }
+            return {
+                tag: 'div',
+                class: 'cm-s-default',
+                children: [
+                    {
+                        tag: 'div',
+                        innerText:
+                            'Below is displayed the available scope from the precious cells:',
+                    },
+                    new ObjectJs.View({
+                        state: new ObjectJs.State({
+                            title: '',
+                            data: this.error.scopeIn,
+                        }),
+                    }),
+                ],
+            }
+        }
+
+        this.children = [
+            new Dependencies.MdWidgets.NoteView({
+                level: 'bug' as const,
+                content,
+                parsingArgs: {
+                    views: {
+                        'scope-in': scopeIn,
+                    },
+                },
+                label:
+                    this.error instanceof AstParsingError
+                        ? 'AST parsing failed'
+                        : 'Execution error',
+            }),
+        ]
     }
 }

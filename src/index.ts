@@ -3,7 +3,7 @@
  *
  * @module MainModule
  */
-import { headingId, parseMd, DefaultLayout } from './lib'
+import { headingId, parseMd, DefaultLayout, MdWidgets } from './lib'
 
 export * from './lib'
 export { setup } from './auto-generated'
@@ -39,5 +39,6 @@ export async function installNotebookModule() {
         cdnClient: webpmClient,
     })) as typeof NotebookModule
     module.Dependencies.parseMd = parseMd
+    module.Dependencies.MdWidgets = MdWidgets
     return module
 }

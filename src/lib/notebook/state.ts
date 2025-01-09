@@ -144,6 +144,38 @@ function hasContentViewTrait(node: unknown): node is ContentTrait {
     return (node as ContentTrait)?.layout?.content !== undefined
 }
 
+export class ExecCellError extends Error {
+    description: string
+    line: number
+    column: number
+    src: string[]
+    constructor(params: {
+        description: string
+        line: number
+        column: number
+        src: string[]
+    }) {
+        super(params.description)
+        Object.assign(this, params)
+    }
+}
+
+export class AstParsingError extends ExecCellError {}
+
+export class RunTimeError extends ExecCellError {
+    public readonly scopeIn: Scope
+    constructor(params: {
+        description: string
+        line: number
+        column: number
+        src: string[]
+        scopeIn: Scope
+    }) {
+        super(params)
+        this.scopeIn = params.scopeIn
+    }
+}
+
 /**
  * Represents the state of a {@link NotebookPage}.
  */
@@ -169,6 +201,15 @@ export class State {
      * Observables over the cell's output keyed by the cell's ID.
      */
     public readonly outputs$: Record<string, ReplaySubject<Output>> = {}
+
+    /**
+     * Observables over the cell's errors keyed by the cell's ID.
+     */
+    public readonly errors$: Record<
+        string,
+        ReplaySubject<ExecCellError | undefined>
+    > = {}
+
     /**
      * Observables over the cell's source keyed by the cell's ID.
      */
@@ -277,6 +318,7 @@ export class State {
         this.cells.push(cell)
         if (!(cell.cellId in this.outputs$)) {
             this.outputs$[cell.cellId] = new ReplaySubject()
+            this.errors$[cell.cellId] = new ReplaySubject()
             this.executing$[cell.cellId] = new BehaviorSubject(false)
             this.src$[cell.cellId] = cell.content$
         }
@@ -376,33 +418,39 @@ export class State {
         output$.next(undefined)
         this.cellsStatus$[id].next('executing')
         this.executing$[id].next(true)
-        const scope = await this.cells[index].execute({
-            src: this.src$[id].value,
-            scope: inputScope,
-            output$,
-            displayFactory: this.displayFactory,
-            load: this.loadModule(id),
-            cellId: id,
-            owningState: this,
-        })
-        this.cellsStatus$[id].next('success')
-        const nextId = this.ids[index + 1]
-        const remainingIds = this.ids.slice(index + 2)
-        if (nextId) {
-            this.scopes$[nextId].next(scope)
-            this.cellsStatus$[nextId].next('ready')
-        }
-        if (nextId) {
-            this.scopes$[nextId].next(scope)
-        }
-        remainingIds.forEach((id) => {
-            if (rootExecution) {
-                this.cellsStatus$[id].next('unready')
+        this.errors$[id].next(undefined)
+        try {
+            const scope = await this.cells[index].execute({
+                src: this.src$[id].value,
+                scope: inputScope,
+                output$,
+                displayFactory: this.displayFactory,
+                load: this.loadModule(id),
+                cellId: id,
+                owningState: this,
+            })
+            this.cellsStatus$[id].next('success')
+            const nextId = this.ids[index + 1]
+            const remainingIds = this.ids.slice(index + 2)
+            if (nextId) {
+                this.scopes$[nextId].next(scope)
+                this.cellsStatus$[nextId].next('ready')
             }
-            this.scopes$[id].next(undefined)
-            this.executing$[id].next(false)
-        })
-        return scope
+            if (nextId) {
+                this.scopes$[nextId].next(scope)
+            }
+            remainingIds.forEach((id) => {
+                if (rootExecution) {
+                    this.cellsStatus$[id].next('unready')
+                }
+                this.scopes$[id].next(undefined)
+                this.executing$[id].next(false)
+            })
+            return scope
+        } catch (e: unknown) {
+            this.errors$[id].next(e as ExecCellError)
+            throw e
+        }
     }
     private invalidateCells(cellId: string) {
         this.invalidated$.next(cellId)

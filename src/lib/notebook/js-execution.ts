@@ -1,7 +1,7 @@
 import { Observable, Subject } from 'rxjs'
 import { display, DisplayFactory } from './display-utils'
 import { parseScript } from 'esprima'
-import { Output, Scope } from './state'
+import { AstParsingError, Output, RunTimeError, Scope } from './state'
 /* eslint-disable */
 
 type AstType =
@@ -201,14 +201,42 @@ ${wrapped}
 ${footer}
 }
     `
-    const scopeOut = await new Function(srcPatched)()(scope, {
-        display: displayInOutput,
-        load,
-        invalidated$,
-        output$,
-    })
-    console.log('JS cell execution done', { src, scopeIn: scope, scopeOut })
-    return scopeOut
+    try {
+        const scopeOut = await new Function(srcPatched)()(scope, {
+            display: displayInOutput,
+            load,
+            invalidated$,
+            output$,
+        })
+        console.log('JS cell execution done', { src, scopeIn: scope, scopeOut })
+        return scopeOut
+    } catch (e) {
+        const evalLoc = extractEvalLocation(e['stack'])
+        console.error('Run time exec failure', { e, srcPatched, evalLoc })
+        throw new RunTimeError({
+            description: e['message'],
+            line: evalLoc ? evalLoc.line - 12 : -1,
+            column: evalLoc ? evalLoc.column : -1,
+            src: src.split('\n'),
+            scopeIn: scope,
+        })
+    }
+}
+
+function extractEvalLocation(
+    errorMessage: string,
+): { line: number; column: number } | null {
+    const evalRegex = /eval\s\(eval\sat\s.+?,\s<anonymous>:(\d+):(\d+)\)/
+    const match = errorMessage.match(evalRegex)
+
+    if (match && match.length >= 3) {
+        return {
+            line: parseInt(match[1], 10),
+            column: parseInt(match[2], 10),
+        }
+    }
+
+    return null
 }
 
 function patchReactiveCell({
@@ -333,12 +361,21 @@ function find_children({
 }
 
 export function parseProgram(src: string): AstNode[] {
-    // Missing the case of '...' not suported by esprima
-    const srcPatched = src.replace(/\?\./g, '.')
-    const ast = parseScript(
-        `(async function({webpm}, {display}){${srcPatched}})()`,
-    )
-    return ast.body[0].expression.callee.body.body
+    try {
+        let srcPatched = src.replace(/\?\./g, '.')
+        const ast = parseScript(
+            `(async function({webpm}, {display}){${srcPatched}})()`,
+        )
+        return ast.body[0].expression.callee.body.body
+    } catch (e) {
+        console.error('AST parsing failed', e)
+        throw new AstParsingError({
+            description: e['description'],
+            line: e['lineNumber'],
+            column: e['column'],
+            src: src.split('\n'),
+        })
+    }
 }
 
 export function extractGlobalDeclarations(body: AstNode[]): {
