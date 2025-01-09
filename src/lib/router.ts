@@ -25,6 +25,11 @@ import {
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { BrowserInterface, parseUrl, WebBrowser } from './browser.interface'
 
+/**
+ * Navigation URL model.
+ *
+ * See {@link parseUrl} for construction from a `string`.
+ */
 export interface UrlTarget {
     /**
      * Target destination path.
@@ -137,7 +142,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         (target) => Promise.resolve(target)
 
     /**
-     * Observable that emit the current page.
+     * Observable that emit the current page target.
      */
     public readonly target$: Subject<
         Target<TLayout, THeader> | UnresolvedTarget
@@ -234,6 +239,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * Fire navigation to given path with no `await`.
      *
      * @param target  The path to navigate to.
+     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.
      * @param onError Callback called if errors happen.
      */
     fireNavigateTo(
@@ -247,6 +253,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * Navigate to a specific target.
      *
      * @param target The URL target.
+     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.
      */
     async navigateTo(target: UrlTarget | string) {
         target = typeof target === 'string' ? parseUrl(target) : target

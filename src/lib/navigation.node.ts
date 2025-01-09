@@ -9,25 +9,35 @@ import { AnyVirtualDOM } from 'rx-vdom'
  */
 export type AnyView = AnyVirtualDOM | HTMLElement
 
+/**
+ * Represents the minimal set of properties for defining a node in a {@link Navigation} object.
+ *
+ * It can conditionally include information about whether the node is a leaf node, depending on the value of the
+ * `WithLeafInfo` type parameter (required when specifying {@link DynamicRoutes}).
+ *
+ * @typeParam TLayout The type defining the layout configuration for the navigation.
+ * @typeParam THeader The type defining the header configuration for the navigation.
+ * @typeParam WithLeafInfo A boolean flag determining whether the node includes leaf-specific information.
+ */
 export type NavNodeData<
     TLayout,
     THeader,
     WithLeafInfo extends boolean = false,
 > = {
     /**
-     * Name of the node.
+     * The name of the node.
      */
     name: string
     /**
-     * Some user-defined metadata.
+     * Optional user-defined metadata associated with the node.
      */
     metadata?: unknown
     /**
-     * Node's header view
+     * The header configuration for the node.
      */
     header?: THeader | (({ router }: { router: Router }) => THeader)
     /**
-     * Node's layout
+     * The layout configuration for the node.
      */
     layout: TLayout
 } & (WithLeafInfo extends true ? { leaf?: boolean } : Record<never, unknown>)
@@ -268,11 +278,19 @@ export function createRootNode<TLayout, THeader>({
 }
 
 /**
- * Represents something resolvable.
+ * Represents a value that can be resolved to a specific type.
+ *
+ * A `Resolvable` can take the form of:
+ * - A direct value of type `T`.
+ * - A `Promise` resolving to a value of type `T`.
+ * - An `Observable` emitting values of type `T`.
  *
  * <note level="warning">
- *     When an observable is provided, only its **first emission** is accounted.
+ * When an `Observable` is provided, only its **first emission** is considered.
+ * Subsequent emissions are ignored.
  * </note>
+ *
+ * @typeParam T The type of the value that can be resolved.
  */
 export type Resolvable<T> = T | Promise<T> | Observable<T>
 
@@ -286,10 +304,29 @@ export function resolve<T>(resolvable: Resolvable<T>): Observable<T> {
     return of(resolvable)
 }
 
+/**
+ * Represents a mapping of path segments to corresponding values.
+ *
+ * The `SegmentsRecord` type defines a record where the keys are valid path segments,
+ * as determined by the {@link PathSegment} type, and the values are of type `T`.
+ *
+ * This is commonly used to associate specific data or configurations with individual
+ * path segments in a structured and type-safe manner.
+ *
+ * @typeParam T The type of the value associated with each path segment.
+ */
 export type SegmentsRecord<T> = Record<PathSegment<string>, T>
 
 /**
- * A mapping between segments and node attributes.
+ * Represents the specification of dynamic routes in the application.
+ *
+ * Dynamic routes are defined as a mapping where each `segmentId` (representing a segment's contribution to the URL)
+ * is associated with a {@link NavNodeData} object.
+ *
+ * It is used in the specification of {@link DynamicRoutes}.
+ *
+ * @typeParam TLayout The type defining the layout configuration for the navigation.
+ * @typeParam THeader The type defining the header configuration for the navigation.
  */
 export type LazyRoutes<TLayout, THeader> = SegmentsRecord<
     NavNodeData<TLayout, THeader, true>
@@ -299,7 +336,7 @@ export type LazyRoutes<TLayout, THeader> = SegmentsRecord<
  * Represents a lazy navigation resolver, used when the navigation is only known at runtime.
  *
  * It is a function that takes the target path and router's instance as parameters, and returns
- * the instance of {@link LazyRoutes} that explicits node attributes.
+ * the instance of {@link LazyRoutes} that explicits node attributes for the given path.
  */
 export type LazyRoutesCb<TLayout, THeader> = (p: {
     // The targeted path in the navigation
@@ -308,32 +345,70 @@ export type LazyRoutesCb<TLayout, THeader> = (p: {
     router: Router
 }) => Resolvable<LazyRoutes<TLayout, THeader>> | undefined
 
+/**
+ * Represents the definition of static routes in the application.
+ *
+ * Static routes are defined as a mapping where each `segmentId` (representing a segment's contribution to the URL)
+ * is associated with a {@link Navigation} object or a `Promise` resolving to a {@link Navigation} object.
+ *
+ * <note level="hint" title="Promise">
+ * Promises can be used, for instance, when requests need to be triggered to fetch attributes or metadata
+ * for a navigation node. In such cases, the navigation tree will wait for the promise to resolve before updating its
+ * state.
+ *
+ * In the common scenario where only the layout's content requires an asynchronous task to resolve,
+ * it is often possible to specify this dependency within the layout itself. This approach allows the
+ * navigation tree to avoid waiting for the task's resolution, as the asynchronous handling is confined
+ * to the layout specification.
+ * </note>
+ *
+ * <note level="hint">
+ * The {@link segment} function performs both static and dynamic checks to validate the segment ID.
+ * </note>
+ *
+ * @typeParam TLayout The type defining the layout configuration for the navigation.
+ * @typeParam THeader The type defining the header configuration for the navigation.
+ */
 export type StaticRoutes<TLayout, THeader> = Record<
     string,
     Navigation<TLayout, THeader> | Promise<Navigation<TLayout, THeader>>
 >
 
 /**
- * Represents a reactive lazy navigation resolver, used when changes in a navigation node children are expected
- * (within {@link Navigation}).
+ * Represents a reactive lazy navigation resolver, used when the routing schema is expected to change dynamically
+ * based on some signal.
  */
 export type LazyRoutesCb$<TLayout, THeader> = Observable<
     LazyRoutesCb<TLayout, THeader>
 >
 
-type DynamicRoutes<TLayout, THeader> =
+/**
+ * Defines dynamic routes, evaluated at runtime.
+ *
+ * Use {@link LazyRoutesCb} when the evaluation provides a constant routing schema.
+ * If the routing schema is expected to change dynamically based on some signal, use {@link LazyRoutesCb$}.
+ *
+ * @typeParam TLayout The type representing the layout of the application.
+ * @typeParam THeader The type representing the header configuration.
+ */
+export type DynamicRoutes<TLayout, THeader> =
     | LazyRoutesCb<TLayout, THeader>
     | LazyRoutesCb$<TLayout, THeader>
 
-/**
- * Represents a node in the navigation.
+/** Represents a node within the navigation hierarchy.
+ *
+ * Each navigation node is defined by a set of core properties from {@link NavNodeData}, which specify details
+ * such as the node's name, layout, and header configuration. The hierarchical structure of the navigation is
+ * established through the `routes` property, which may include either:
+ * - {@link StaticRoutes}: A predefined, fixed set of child routes.
+ * - {@link DynamicRoutes}: Dynamically generated child routes, evaluated at runtime.
+ *
+ * @typeParam TLayout The type representing the layout of the application.
+ * @typeParam THeader The type representing the header configuration.
  */
 export type Navigation<TLayout, THeader> = NavNodeData<TLayout, THeader> & {
     /**
-     * Dynamic 'catch-all' sub-navigation resolver, used when the navigation is only known at runtime.
-     *
-     * The sub-paths defined in it can also be made reactive (using {@link LazyRoutesCb$})
-     * if changes in organisation over time are expected.
+     * Children routes of the node.
      */
     routes?: StaticRoutes<TLayout, THeader> | DynamicRoutes<TLayout, THeader>
 }
@@ -352,6 +427,16 @@ export function sanitizeNavPath(path: string) {
     )
 }
 
+/**
+ * Performs static checks on a path segment.
+ *
+ * The type {@link PathSegment} ensures that the given string adheres to specific rules:
+ * - The segment must be a single static path segment (e.g., `/foo`).
+ * - Segments containing backslashes (`\\`), query parameters (`?`), or fragments (`#`) are not allowed.
+ * - Nested paths (e.g., `/foo/bar`) are disallowed.
+ *
+ * @typeParam T The type of the string segment to validate.
+ */
 export type PathSegment<T extends string> = T extends `/${string}/${string}`
     ? never
     : T extends `/${string}`
@@ -363,6 +448,16 @@ export type PathSegment<T extends string> = T extends `/${string}/${string}`
           : T
       : never
 
+/**
+ * Validates a static path segment at compile time.
+ *
+ * This function uses the {@link PathSegment} type to perform static validation
+ * of the provided segment ID. It ensures that the segment complies with the
+ * required format and restrictions.
+ *
+ * @param p - The segment ID to validate (e.g., `/foo`).
+ * @returns The validated segment if it passes all static checks.
+ */
 export function segment<T extends string>(p: PathSegment<T>) {
     return p
 }

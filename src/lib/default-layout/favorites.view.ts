@@ -83,6 +83,8 @@ export class ToggleNavButton implements VirtualDOM<'div'> {
     public readonly class: AttributeLike<string>
     public readonly children: ChildrenLike
     /**
+     * Initializes a new instance.
+     *
      * @param params
      * @param params.displayMode$ The display mode.
      */
@@ -134,17 +136,16 @@ export class ToggleNavButton implements VirtualDOM<'div'> {
  */
 export class BookmarksView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    /**
-     * Class list of the element.
-     */
     public readonly class =
         'mkdocs-BookmarksView d-flex flex-column align-items-center overflow-auto flex-grow-1'
     public readonly children: ChildrenLike
 
     /**
+     * Initializes a new instance.
      *
-     * @param bookmarks$ Observable over the bookmarked pages' href.
-     * @param router Application's router.
+     * @param _p Parameters
+     * @param _p.bookmarks$ Observable over the bookmarked pages' href.
+     * @param _p.router Application's router.
      */
     constructor({
         bookmarks$,
@@ -185,15 +186,14 @@ export class BookmarksView implements VirtualDOM<'div'> {
  */
 export class BookmarkView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    /**
-     * Class list of the element.
-     */
     public readonly class = 'mkdocs-BookmarkView mb-3'
     public readonly children: ChildrenLike
     /**
+     * Initializes a new instance.
      *
-     * @param node node associated to the bookmark.
-     * @param router Application's router.
+     * @param _p Parameters
+     * @param _p.node Node associated to the bookmark.
+     * @param _p.router Application's router.
      */
     constructor({
         node,

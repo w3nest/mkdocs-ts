@@ -202,12 +202,31 @@ export type NavLayout =
     | (({ router }: { router: Router }) => Resolvable<AnyView>)
 
 /**
- * Defines the default layout view:
- * *  Navigation on the left-side.
- * *  Page's html content as main content.
- * *  On the right the table of content.
+ * Represents the default layout of the library.
  *
- * Depending on the screen size, the navigation and TOC can be collapsed into an expandable menu.
+ * **Structure**
+ *
+ * This layout is organized into a column-based structure, proceeding from left to right:
+ *
+ * - {@link BookmarksView}:  An optional slim column dedicated to bookmarks. Users can dynamically
+ *   add or remove bookmarks at runtime.
+ *
+ * - {@link NavigationView}: The navigation panel that provides access to the various underlying  {@link Navigation}'s
+ * node.
+ *
+ * - {@link PageView}: The primary content area displaying the content of the selected navigation node.
+ *
+ * - {@link TOCView}: The table of contents view, offering quick access to structured content.
+ *
+ * **Responsive Behavior**
+ *
+ * On smaller screens, the navigation and TOC views may collapse into an expandable menu for better usability.
+ *
+ * Depending on the screen size, the navigation and TOC views can be collapsed into an expandable menu.
+ *
+ * **Configuration**
+ *
+ *  For detailed configuration options, see {@link DefaultLayoutParams}.
  */
 export class Layout implements VirtualDOM<'div'> {
     public readonly layoutOptions: DisplayOptions = defaultDisplayOptions

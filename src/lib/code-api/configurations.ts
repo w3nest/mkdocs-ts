@@ -6,9 +6,14 @@
 
 import { Project } from './models'
 import { setup } from '../../auto-generated'
-import type { DisplayFactory, NotebookOptions, Scope } from '../notebook'
+import type {
+    DisplayFactory,
+    NotebookOptions,
+    Scope,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used for documentation
+    NotebookPage,
+} from '../notebook'
 import { NavNodeData } from '../navigation.node'
-
 import { DefaultLayout } from '../index'
 
 /**
