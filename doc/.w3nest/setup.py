@@ -56,6 +56,9 @@ config = ProjectConfig(
     ),
     userGuide=True,
     devServer=DevServer(port=3025),
+    inPackageJson={
+        "scripts": {"doc": "npx tsx .w3nest/doc.ts && python .w3nest/doc.py"},
+    },
 )
 
 template_folder = project_folder / ".w3nest" / ".template"
