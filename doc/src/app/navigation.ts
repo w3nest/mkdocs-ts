@@ -8,6 +8,7 @@ import {
 } from 'mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
+import { logo } from './logo'
 import { example1 } from './js-plaground-examples'
 
 const project = {
@@ -52,12 +53,10 @@ await Promise.all([
 type AppNav = Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>
 
 export const navigation: AppNav = {
-    name: 'Home',
+    name: 'mkDocs-TS',
     header: {
-        icon: {
-            tag: 'i',
-            class: 'fas fa-home me-1',
-        },
+        icon: logo,
+        wrapperClass: `${DefaultLayout.NavHeaderView.DefaultWrapperClass} border-bottom p-1`,
     },
     layout: {
         content: fromMd('index.md'),
