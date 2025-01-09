@@ -18,16 +18,22 @@ import {
     take,
 } from 'rxjs'
 import { setup } from '../../auto-generated'
-import { Resolvable } from '../navigation.node'
+import { NavLayout } from './default-layout.view'
 
 interface ContentTrait {
-    layout: {
-        content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
-    }
+    layout: NavLayout
 }
 function hasContentViewTrait(node: unknown): node is ContentTrait {
+    const layout = (node as ContentTrait).layout
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return (node as ContentTrait)?.layout?.content !== undefined
+    if (!layout) {
+        return false
+    }
+    if (typeof layout === 'function') {
+        return true
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return layout.content !== undefined
 }
 
 /**
@@ -74,7 +80,11 @@ export class PageView implements VirtualDOM<'div'> {
                         return hasContentViewTrait(target.node)
                     }),
                     switchMap((target: Target & { node: ContentTrait }) => {
-                        const html = target.node.layout.content({
+                        const contentGetter =
+                            typeof target.node.layout === 'function'
+                                ? target.node.layout
+                                : target.node.layout.content
+                        const html = contentGetter({
                             router: this.router,
                         })
                         if (html instanceof Promise) {

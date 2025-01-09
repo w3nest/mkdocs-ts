@@ -169,24 +169,29 @@ export interface DefaultLayoutParams<
  * Dynamic options (defined in {@link Navigation}) for {@link View}.
  * Static options are provided in {@link View} constructor.
  */
-export interface NavLayout {
-    /**
-     * This function represents the view of the table of content in the page.
-     *
-     * @param p arguments of the view generator:
-     *   *  html : Content of the HTML page
-     *   *  router : Router instance.
-     * @returns A promise on the view
-     */
-    toc?: (p: { html: HTMLElement; router: Router }) => Promise<AnyVirtualDOM>
-    /**
-     * This function represents the view of the main content.
-     *
-     * @param router Router instance.
-     * @returns A resolvable view
-     */
-    content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
-}
+export type NavLayout =
+    | {
+          /**
+           * This function represents the view of the table of content in the page.
+           *
+           * @param p arguments of the view generator:
+           *   *  html : Content of the HTML page
+           *   *  router : Router instance.
+           * @returns A promise on the view
+           */
+          toc?: (p: {
+              html: HTMLElement
+              router: Router
+          }) => Promise<AnyVirtualDOM>
+          /**
+           * This function represents the view of the main content.
+           *
+           * @param router Router instance.
+           * @returns A resolvable view
+           */
+          content: ({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>
+      }
+    | (({ router }: { router: Router }) => Resolvable<AnyVirtualDOM>)
 
 /**
  * Defines the default layout view:
