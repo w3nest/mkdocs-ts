@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs'
 import { logo } from './logo'
 import { companionNodes$ } from './on-load'
 import { example1 } from './js-plaground-examples'
-import { ApiLink, SplitApiButton } from './md-widgets'
+import { ApiLink, CrossLink, ExtLink, SplitApiButton } from './md-widgets'
 
 const project = {
     name: 'mkdocs-ts',
@@ -26,12 +26,12 @@ const placeholders = {
     '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
     '{{assetsBasePath}}': `../assets`,
     '{{mkdocs-ts}}': '**`mkdocs-ts`**',
-    '{{rx-vdom}}':
-        '<a target="_blank" href="/apps/@rx-vdom/doc/latest">rxVDom</a>',
 }
 GlobalMarkdownViews.factory = {
     ...GlobalMarkdownViews.factory,
     'api-link': (elem: HTMLElement) => new ApiLink(elem),
+    'ext-link': (elem: HTMLElement) => new ExtLink(elem),
+    'cross-link': (elem: HTMLElement) => new CrossLink(elem),
     'split-api': () => new SplitApiButton(),
 }
 
