@@ -176,8 +176,8 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                     children: [
                         { tag: 'div', class: 'flex-grow-1' },
                         {
-                            tag: 'div',
-                            class: 'fas fa-expand fv-pointer',
+                            tag: 'button',
+                            class: 'btn btn-sm btn-light fas fa-expand fv-pointer',
                             onclick: () => {
                                 this.mode$.next('fullscreen')
                             },
