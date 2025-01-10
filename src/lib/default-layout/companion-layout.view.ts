@@ -53,7 +53,7 @@ export type LayoutWithCompanionParams = DefaultLayoutParams<{
  */
 export class LayoutWithCompanion implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = 'w-100 h-100 d-flex'
+    public readonly class = 'mkdocs-LayoutWithCompanion w-100 h-100 d-flex'
     public readonly children: ChildrenLike
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
 

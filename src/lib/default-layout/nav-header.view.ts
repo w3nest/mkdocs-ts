@@ -120,6 +120,30 @@ function bookmarkView({
         },
     })
 }
+
+/**
+ * Represents the header view for a navigation node.
+ * It is responsible for rendering individual navigation node headers within the navigation tree.
+ * It provides dynamic styling, interactivity, and integration with features like bookmarks and navigation state
+ * management. Customization options are gathered by {@link NavHeader} structure
+ * (defined by the attribute `header` of {@link Navigation} node).
+ *
+ *
+ * **Structure**
+ *
+ * The `NavHeaderView` is structured as a flexible, responsive layout:
+ *
+ * - **Icon**: Displays a custom icon, if provided by the node's header configuration.
+ *
+ * - **Title**: The name of the node, dynamically styled based on the node's selected state.
+ *
+ * - **Bookmark**: Displays a bookmark indicator or action, if `bookmarks$` is provided.
+ *
+ * - **Actions**: Additional user-defined actions can be added to the header.
+ *
+ * - **Expand/Collapse Control**: For nodes with children, a toggle is rendered to expand or collapse the node's
+ * subtree.
+ **/
 export class NavHeaderView implements VirtualDOM<'a'> {
     static readonly DefaultWrapperClass =
         'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pe-2'
@@ -130,6 +154,14 @@ export class NavHeaderView implements VirtualDOM<'a'> {
     public readonly children: ChildrenLike
     public readonly style: CSSAttribute
     public readonly onclick: (e: MouseEvent) => void
+
+    /**
+     * Initializes a new instance.
+     *
+     * @param node  The node.
+     * @param router The application router.
+     * @param bookmarks$ State of bookmarked URLs.
+     */
     constructor({
         node,
         router,

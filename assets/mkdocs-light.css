@@ -707,10 +707,8 @@
 }
 
 .mkdocs-thin-v-scroller {
-    scrollbar-gutter: stable;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    margin: 0 0.2rem;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: rgb(178.5, 178.5, 178.5) white;
@@ -730,7 +728,7 @@
     font-size: 0.9rem;
     line-height: 1.7rem;
     white-space: nowrap;
-    background-color: rgba(26, 123, 246, 0.05);
+    background-color: rgb(243.55, 248.4, 254.55);
 }
 
 .mkdocs-TocItemView {

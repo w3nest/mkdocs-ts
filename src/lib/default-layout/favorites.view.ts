@@ -19,23 +19,16 @@ import { NavNodeResolved } from '../navigation.node'
 import { Router } from '../router'
 import { DisplayMode } from './default-layout.view'
 import { NavHeader } from './navigation.view'
-
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
- *
- * It includes:
- * *  Optionally, a toggle button to display the navigation panel (on small screen).
- * *  The list of bookmarks.
+ * This implementation only includes the {@link BookmarksView}.
  */
 export class FavoritesView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    /**
-     * Class list of the element.
-     */
     public readonly class =
-        'mkdocs-FavoritesView d-flex flex-column align-items-center mkdocs-bg-6 px-1'
+        'mkdocs-FavoritesView d-flex flex-column align-items-center mkdocs-bg-6 p-1 h-100'
     public readonly children: ChildrenLike
-    public readonly style: CSSAttribute
+    public readonly style: AttributeLike<CSSAttribute>
 
     public readonly displayMode$: BehaviorSubject<DisplayMode>
     public readonly topStickyPaddingMax: string
@@ -55,20 +48,10 @@ export class FavoritesView implements VirtualDOM<'div'> {
         bookmarks$: Observable<string[]>
         router: Router<unknown, NavHeader>
         displayMode$: BehaviorSubject<DisplayMode>
-        topStickyPaddingMax: string
-        bottomStickyPaddingMax: string
     }) {
         Object.assign(this, params)
-        const { displayMode$, bookmarks$, router } = this
-        this.style = {
-            height: `calc(100vh - ${this.topStickyPaddingMax} - ${this.bottomStickyPaddingMax})`,
-        }
-        this.children = [
-            new ToggleNavButton({
-                displayMode$: displayMode$,
-            }),
-            new BookmarksView({ bookmarks$, router }),
-        ]
+        const { bookmarks$, router } = this
+        this.children = [new BookmarksView({ bookmarks$, router })]
         this.connectedCallback = (elem) => {
             this.htmlElement$.next(elem)
         }
@@ -76,68 +59,13 @@ export class FavoritesView implements VirtualDOM<'div'> {
 }
 
 /**
- * The toggle button to display / hide the navigation panel.
- */
-export class ToggleNavButton implements VirtualDOM<'div'> {
-    public readonly tag = 'div'
-    public readonly class: AttributeLike<string>
-    public readonly children: ChildrenLike
-    /**
-     * Initializes a new instance.
-     *
-     * @param params
-     * @param params.displayMode$ The display mode.
-     */
-    constructor(params: { displayMode$: BehaviorSubject<DisplayMode> }) {
-        const sep = {
-            tag: 'div' as const,
-            class: 'my-3 w-100 border',
-        }
-        const button = {
-            tag: 'button' as const,
-            class: attr$({
-                source$: params.displayMode$,
-                vdomMap: (mode): string => {
-                    if (mode === 'hidden') {
-                        return 'fa-bars'
-                    }
-                    if (mode === 'expanded') {
-                        return 'fa-minus-square'
-                    }
-                    return ''
-                },
-                wrapper: (c) => {
-                    return `btn btn-sm fas ${c} mkdocs-text-5 mkdocs-bg-3 mkdocs-hover-bg-2`
-                },
-            }),
-            onclick: () => {
-                if (params.displayMode$.value === 'hidden') {
-                    params.displayMode$.next('expanded')
-                    return
-                }
-                if (params.displayMode$.value === 'expanded') {
-                    params.displayMode$.next('hidden')
-                    return
-                }
-            },
-        }
-        this.children = replace$({
-            policy: 'replace',
-            source$: params.displayMode$,
-            vdomMap: (mode) => {
-                return mode === 'pined' ? [] : [button, sep]
-            },
-        })
-    }
-}
-/**
  * A column gathering the list of bookmarked pages.
  * Each bookmark is rendered using {@link BookmarkView}.
  */
 export class BookmarksView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-BookmarksView d-flex flex-column align-items-center overflow-auto flex-grow-1'
+        'mkdocs-BookmarksView d-flex flex-column align-items-center overflow-auto flex-grow-1 mkdocs-thin-v-scroller'
     public readonly children: ChildrenLike
 
     /**

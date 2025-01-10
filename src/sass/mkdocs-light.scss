@@ -12,12 +12,7 @@ $color-bug: #f50057;
 $color-example: #7c4dff;
 $color-quote: #9e9e9e;
 $color-focus: #1a7bf6;
-$color-focus-light: rgba(
-    red($color-focus),
-    green($color-focus),
-    blue($color-focus),
-    0.05
-);
+$color-focus-light: mix($color-bg, $color-focus, 95%);
 
 @import './mkdocs-utils.scss';
 @import './mkdocs-components';

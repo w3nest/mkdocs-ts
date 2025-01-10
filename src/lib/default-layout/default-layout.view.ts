@@ -5,8 +5,9 @@ import {
     CSSAttribute,
     VirtualDOM,
     AttributeLike,
+    attr$,
 } from 'rx-vdom'
-import { NavHeader, NavigationView } from './navigation.view'
+import { NavHeader, NavigationWrapperView } from './navigation.view'
 import { Router } from '../router'
 import { FooterView, PageView } from './page.view'
 import {
@@ -18,35 +19,28 @@ import {
     Subject,
 } from 'rxjs'
 import { FavoritesView } from './favorites.view'
-import { ExpandableLeftSide, ExpandableRightSide } from './expandable.view'
+import { ExpandableNavColumn, ExpandableTocColumn } from './small-screen.view'
 import { TocWrapperView } from './toc.view'
 import { AnyView, Resolvable } from '../navigation.node'
 
+/**
+ * Represents the display mode for UI components, controlling their visibility and behavior.
+ *
+ * **Possible Values**:
+ *
+ * - `'pined'`:
+ *   The component remains fixed and always visible, regardless of user interaction.
+ *
+ * - `'hidden'`:
+ *   The component is not visible and does not occupy space in the layout.
+ *
+ * - `'expanded'`:
+ *   The component is fully visible and occupies its allocated space, often as a primary focus.
+ *
+ * This type is typically used to configure the visibility states of side panel elements.
+ */
 export type DisplayMode = 'pined' | 'hidden' | 'expanded'
 
-/**
- * Hints regarding sizing of the side navigation panels on the page.
- *
- * See {@link defaultDisplayOptions}.
- */
-export interface SidePanelLayoutOptions {
-    /**
-     * Top maximum padding of the left side panels, collapsing to `topStickyPaddingMin` when scrolling down.
-     * If a navigation header is provided, the header should fit into it.
-     */
-    topStickyPaddingMax: string
-
-    /**
-     * Top minimum padding of the left side panels, extending to `topStickyPaddingMax` when scrolling up.
-     */
-    topStickyPaddingMin: string
-
-    /**
-     * Bottom maximum padding of the left side panels.
-     * If a navigation footer is provided, the header should fit into it.
-     */
-    bottomStickyPaddingMax: string
-}
 /**
  * Hints regarding sizing of the main elements on the page.
  *
@@ -54,13 +48,12 @@ export interface SidePanelLayoutOptions {
  *
  * See {@link defaultDisplayOptions}.
  *
- *
  * @typeParam T Extra display options that can be used for other kind of layout based on the default layout.
  */
 export type DisplayOptions<
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     ExtraDisplayOption extends Record<string, unknown> = {},
-> = SidePanelLayoutOptions & {
+> = {
     /**
      * Screen size in pixel transitioning from pined Navigation panel, to
      * collapsable one.
@@ -92,6 +85,10 @@ export type DisplayOptions<
      */
     pageWidth: string
     /**
+     * Page's vertical padding.
+     */
+    pageVertPadding: string
+    /**
      * Translation duration for panels in ms.
      */
     translationTime: number
@@ -109,9 +106,7 @@ export const defaultDisplayOptions: DisplayOptions = {
     navMinWidth: 300,
     pageWidth: '35rem',
     translationTime: 400,
-    topStickyPaddingMax: '2rem',
-    topStickyPaddingMin: '10px',
-    bottomStickyPaddingMax: '2rem',
+    pageVertPadding: '3rem',
 }
 
 /**
@@ -120,12 +115,7 @@ export const defaultDisplayOptions: DisplayOptions = {
  *
  * @typeParam TView The target type of view.
  */
-export type LayoutElementView<TView extends AnyView = AnyView> = ({
-    router,
-    displayModeNav$,
-    displayModeToc$,
-    layoutOptions,
-}: {
+export type LayoutElementView<TView extends AnyView = AnyView> = (p: {
     // Application's router
     router: Router
     // Current display mode regarding navigation.
@@ -134,6 +124,10 @@ export type LayoutElementView<TView extends AnyView = AnyView> = ({
     displayModeToc$: Subject<DisplayMode>
     // The layout options provided.
     layoutOptions: DisplayOptions
+    // Current bookmarked URLs
+    bookmarks$?: BehaviorSubject<string[]>
+    // Current height of the layout in pixels
+    height$: Observable<number>
 }) => TView
 
 /**
@@ -150,7 +144,7 @@ export interface DefaultLayoutParams<
      */
     router: Router<NavLayout, NavHeader>
     /**
-     * An optional content generator for the page, defaulting to {@link PageView}.
+     * An optional content generator for the page, replacing the default {@link PageView}.
      *
      * The provided type must emit itself as an `HTMLElement` through the `content$` observable
      * whenever it completes an update triggered by a change in the navigation path.
@@ -170,6 +164,10 @@ export interface DefaultLayoutParams<
      */
     displayOptions?: Partial<DisplayOptions<ExtraDisplayOption>>
     /**
+     * An optional favorites column, replacing the default {@link FavoritesView}.
+     */
+    favoritesColumn?: LayoutElementView
+    /**
      * If provided, include a {@link BookmarksView} column at the very left, as well as a
      * <button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button in the navigation node's header.
      * The consumer should provide this variable initialized with the URL for initial bookmarked pages.
@@ -177,8 +175,9 @@ export interface DefaultLayoutParams<
     bookmarks$?: BehaviorSubject<string[]>
 }
 /**
- * Dynamic options (defined in {@link Navigation}) for {@link Layout}.
- * Static options are provided in {@link Layout} constructor.
+ * The `layout` definition of {@link Navigation} nodes (essentially the page's content definition).
+ *
+ * These options are node specific, for global layout customization see {@link Layout} constructor.
  */
 export type NavLayout =
     | {
@@ -208,28 +207,37 @@ export type NavLayout =
  *
  * This layout is organized into a column-based structure, proceeding from left to right:
  *
- * - {@link BookmarksView}:  An optional slim column dedicated to bookmarks. Users can dynamically
- *   add or remove bookmarks at runtime.
+ * - **Favorites Column**:
+ *   An optional, slim column dedicated to favorites, always visible regardless of screen size (if present).
+ *   By default, it uses {@link FavoritesView}, which include the {@link BookmarksView}.
+ *   if no {@link DefaultLayoutParams.bookmarks$} parameters is provided, the column is not display.
+ *   A custom favorites view can be provided using the {@link DefaultLayoutParams.favoritesColumn} parameter.
  *
- * - {@link NavigationView}: The navigation panel that provides access to the various underlying  {@link Navigation}'s
- * node.
+ * - **Navigation Column**:
+ *   The navigation panel provides access to the various  {@link Navigation} nodes.
+ *   It supports custom header content through {@link DefaultLayoutParams.sideNavHeader}
+ *   and footer content through {@link DefaultLayoutParams.sideNavFooter}.
+ *   It is implemented by {@link NavigationWrapperView}.
  *
- * - {@link PageView}: The primary content area displaying the content of the selected navigation node.
+ * - **Page Column**:
+ *   Displays the content of the selected navigation node, by default using {@link PageView}.
+ *   This column is customizable via {@link DefaultLayoutParams.page}.
  *
- * - {@link TOCView}: The table of contents view, offering quick access to structured content.
+ * - **Table Of Content Column**:
+ *   Provides quick access to structured content, by default using {@link TOCView}.
+ *   Customization options are available through the `toc` attribute of {@link NavLayout},
+ *   applicable to navigation nodes.
  *
  * **Responsive Behavior**
  *
- * On smaller screens, the navigation and TOC views may collapse into an expandable menu for better usability.
- *
- * Depending on the screen size, the navigation and TOC views can be collapsed into an expandable menu.
+ * On smaller screens, the navigation and TOC columns collapse into an expandable menu for better usability.
  *
  * **Configuration**
  *
  *  For detailed configuration options, see {@link DefaultLayoutParams}.
  */
 export class Layout implements VirtualDOM<'div'> {
-    public readonly layoutOptions: DisplayOptions = defaultDisplayOptions
+    public readonly displayOptions: DisplayOptions = defaultDisplayOptions
 
     public readonly tag = 'div'
     public readonly children: ChildrenLike
@@ -247,9 +255,8 @@ export class Layout implements VirtualDOM<'div'> {
 
     public readonly connectedCallback: (e: HTMLElement) => undefined
 
-    public readonly style = {
-        position: 'relative' as const,
-    }
+    public readonly height$ = new ReplaySubject<number>(1)
+
     /**
      * Initializes a new instance.
      *
@@ -262,10 +269,11 @@ export class Layout implements VirtualDOM<'div'> {
             sideNavHeader,
             sideNavFooter,
             displayOptions,
+            favoritesColumn,
             bookmarks$,
         } = params
-        this.layoutOptions = Object.assign(
-            this.layoutOptions,
+        this.displayOptions = Object.assign(
+            this.displayOptions,
             displayOptions ?? {},
         )
         this.connectedCallback = (e: HTMLElement) => {
@@ -276,53 +284,43 @@ export class Layout implements VirtualDOM<'div'> {
             router,
             displayModeNav$: this.displayModeNav$,
             displayModeToc$: this.displayModeToc$,
-            layoutOptions: this.layoutOptions,
+            layoutOptions: this.displayOptions,
+            bookmarks$,
+            height$: this.height$,
         }
 
-        const defaultNavHeader = {
-            tag: 'div' as const,
-            style: {
-                height: this.layoutOptions.topStickyPaddingMax,
-            },
-        }
         const contentView = page
             ? page(viewInputs)
             : new PageView({ router: router })
         const pageView: AnyVirtualDOM = {
             tag: 'div' as const,
-            class: `flex-grow-1 ${this.layoutOptions.topStickyPaddingMax} px-3`,
+            class: `flex-grow-1 px-3`,
             style: {
-                width: this.layoutOptions.pageWidth,
+                width: this.displayOptions.pageWidth,
                 height: 'fit-content',
-                minHeight: '100vh',
                 minWidth: '0px',
+                paddingTop: this.displayOptions.pageVertPadding,
+                paddingBottom: this.displayOptions.pageVertPadding,
             },
-            children: [defaultNavHeader, contentView],
+            children: [contentView],
         }
 
-        const favoritesView = new FavoritesView({
+        const favoritesView = favoritesColumn
+            ? favoritesColumn(viewInputs)
+            : new FavoritesView({
+                  router,
+                  bookmarks$: bookmarks$ ?? new BehaviorSubject([]),
+                  displayMode$: this.displayModeNav$,
+              })
+        const navView = new NavigationWrapperView({
             router,
-            bookmarks$: bookmarks$ ?? new BehaviorSubject([]),
-            displayMode$: this.displayModeNav$,
-            topStickyPaddingMax: this.layoutOptions.topStickyPaddingMax,
-            bottomStickyPaddingMax: this.layoutOptions.bottomStickyPaddingMax,
-        })
-        const navView = new NavigationView({
-            router,
-            layoutOptions: this.layoutOptions,
+            displayOptions: this.displayOptions,
             bookmarks$,
+            header: sideNavHeader?.(viewInputs),
+            footer: sideNavFooter
+                ? sideNavFooter(viewInputs)
+                : new FooterView(),
         })
-        const navHeaderView = sideNavHeader?.(viewInputs) ?? defaultNavHeader
-        const footerView = {
-            tag: 'footer' as const,
-            style: {
-                position: 'sticky' as const,
-                top: '100%',
-            },
-            children: [
-                sideNavFooter ? sideNavFooter(viewInputs) : new FooterView(),
-            ],
-        }
         const leftSideNav = {
             tag: 'div' as const,
             class: 'd-flex flex-grow-1',
@@ -331,40 +329,40 @@ export class Layout implements VirtualDOM<'div'> {
                     ? new StickyColumnContainer({
                           type: 'favorites',
                           content: favoritesView,
-                          layoutOptions: this.layoutOptions,
-                          header: defaultNavHeader,
+                          height$: this.height$,
                       })
                     : undefined,
                 new StickyColumnContainer({
                     type: 'nav',
                     content: navView,
-                    layoutOptions: this.layoutOptions,
-                    header: navHeaderView,
-                    footer: footerView,
+                    height$: this.height$,
                 }),
             ],
         }
-        const expandableLeftSideNav = new ExpandableLeftSide({
+        const expandableLeftSideNav = new ExpandableNavColumn({
             favoritesView,
             navView,
+            height$: this.height$,
+            displayOptions: this.displayOptions,
+            displayMode$: this.displayModeNav$,
         })
         const tocView = new TocWrapperView({
             router,
             displayMode$: this.displayModeToc$,
-            layoutOptions: this.layoutOptions,
+            displayOptions: this.displayOptions,
             content$: contentView.content$,
         })
         const rightSideNav = new StickyColumnContainer({
             type: 'toc',
             content: tocView,
-            layoutOptions: this.layoutOptions,
-            header: defaultNavHeader,
+            height$: this.height$,
         })
-        const expandableRightSideNav = new ExpandableRightSide({
+        const expandableRightSideNav = new ExpandableTocColumn({
             tocView,
-            layoutOptions: this.layoutOptions,
+            displayOptions: this.displayOptions,
+            height$: this.height$,
+            displayMode$: this.displayModeToc$,
         })
-
         const hSep = {
             tag: 'div' as const,
             class: 'flex-grow-1',
@@ -408,6 +406,14 @@ export class Layout implements VirtualDOM<'div'> {
                         ],
                     },
                 ],
+                onclick: () => {
+                    if (this.displayModeNav$.value === 'expanded') {
+                        this.displayModeNav$.next('hidden')
+                    }
+                    if (this.displayModeToc$.value === 'expanded') {
+                        this.displayModeToc$.next('hidden')
+                    }
+                },
             },
         ]
     }
@@ -427,18 +433,22 @@ export class Layout implements VirtualDOM<'div'> {
         }
         const resizeObserver = new ResizeObserver((entries) => {
             const width = entries[0].contentRect.width
+            const height = entries[0].contentRect.height
+            this.height$.next(height)
             switcher(
                 width,
-                this.layoutOptions.toggleTocWidth,
+                this.displayOptions.toggleTocWidth,
                 this.displayModeToc$,
             )
             switcher(
                 width,
-                this.layoutOptions.toggleNavWidth,
+                this.displayOptions.toggleNavWidth,
                 this.displayModeNav$,
             )
         })
-        resizeObserver.observe(thisElement)
+        if (thisElement.parentElement) {
+            resizeObserver.observe(thisElement.parentElement)
+        }
     }
 }
 
@@ -449,55 +459,35 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly class: AttributeLike<string>
     public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
-    public readonly layoutOptions: Partial<SidePanelLayoutOptions>
-    public readonly header?: AnyView
-    public readonly content: AnyView
-    public readonly footer?: AnyView
+    public readonly content: AnyVirtualDOM
     public readonly type: Container
 
     constructor(params: {
         type: Container
         content: AnyView
-        layoutOptions: Partial<SidePanelLayoutOptions>
-        header?: AnyView
-        footer?: AnyView
+        height$: Observable<number>
     }) {
         Object.assign(this, params)
-        const layoutOptions = {
-            ...defaultDisplayOptions,
-            ...this.layoutOptions,
-        }
         const colors: Record<Container, string> = {
             favorites: 'mkdocs-bg-6 mkdocs-text-6',
             nav: 'mkdocs-bg-5 mkdocs-text-5',
             toc: 'mkdocs-bg-0 mkdocs-text-0',
         }
-        const stickyStyle = StickyColumnContainer.stickyStyle(layoutOptions)
-        if (this.content instanceof HTMLElement) {
-            for (const [key, value] of Object.entries(stickyStyle)) {
-                this.content.style[key] = value as unknown as string
-            }
-        } else {
-            this.content.style = {
-                ...(this.content.style ?? {}),
-                ...StickyColumnContainer.stickyStyle(layoutOptions),
-            }
-        }
+        // At least the column should take the full available height
+        this.style = attr$({
+            source$: params.height$,
+            vdomMap: (height) => {
+                return {
+                    height: `${String(height)}px`,
+                    position: 'sticky',
+                    top: '0px',
+                }
+            },
+        })
         const flexGrow = params.type === 'favorites' ? 0 : 1
-        const stickyPadingTop = this.layoutOptions.topStickyPaddingMax
         const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} ${stickyPadingTop ?? ''} d-flex flex-column`
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} d-flex flex-column`
 
-        this.children = [this.header, this.content, this.footer]
-    }
-
-    static stickyStyle(layoutOptions: SidePanelLayoutOptions): CSSAttribute {
-        const height = `calc( 100vh - ${layoutOptions.topStickyPaddingMax} - ${layoutOptions.bottomStickyPaddingMax})`
-        return {
-            position: 'sticky',
-            top: layoutOptions.topStickyPaddingMin,
-            height,
-            maxHeight: height,
-        }
+        this.children = [this.content]
     }
 }

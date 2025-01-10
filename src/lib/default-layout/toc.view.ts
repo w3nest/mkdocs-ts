@@ -286,64 +286,76 @@ function hasTocViewTrait(node: unknown): node is TocTrait {
 export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class =
-        'mkdocs-TocWrapperView w-100 h-100 d-flex flex-grow-1'
+        'mkdocs-TocWrapperView w-100 h-100 d-flex flex-grow-1 py-1'
 
     public readonly children: ChildrenLike
 
     public readonly displayMode$: BehaviorSubject<DisplayMode>
     public readonly router: Router
-    public readonly layoutOptions: DisplayOptions
+    public readonly displayOptions: DisplayOptions
     public readonly content$: Observable<HTMLElement>
 
     constructor(params: {
         router: Router
         displayMode$: BehaviorSubject<DisplayMode>
-        layoutOptions: DisplayOptions
+        displayOptions: DisplayOptions
         content$: Observable<HTMLElement>
     }) {
         Object.assign(this, params)
-        const hSep = {
-            tag: 'div' as const,
-            class: 'flex-grow-1',
-        }
-        this.children = [
-            {
-                tag: 'div',
-                style: {
-                    minWidth: `${String(this.layoutOptions.tocMinWidth)}px`,
+        const toc: AnyVirtualDOM = {
+            tag: 'div',
+            class: 'h-100',
+            style: attr$({
+                source$: this.displayMode$,
+                vdomMap: (mode) => {
+                    const padding =
+                        mode === 'pined'
+                            ? this.displayOptions.pageVertPadding
+                            : '0px'
+                    return {
+                        minWidth: `${String(this.displayOptions.tocMinWidth)}px`,
+                        paddingTop: padding,
+                        paddingBottom: padding,
+                    }
                 },
-                children: [
-                    child$({
-                        source$: combineLatest([
-                            this.router.target$.pipe(
-                                filter((t) => isResolvedTarget(t)),
-                            ),
-                            this.content$,
-                        ]).pipe(
-                            mergeMap(([target, elem]) => {
-                                if (!hasTocViewTrait(target.node)) {
-                                    return from(
-                                        tocView({
-                                            html: elem,
-                                            router: this.router,
-                                        }),
-                                    )
-                                }
+            }),
+            children: [
+                child$({
+                    source$: combineLatest([
+                        this.router.target$.pipe(
+                            filter((t) => isResolvedTarget(t)),
+                        ),
+                        this.content$,
+                    ]).pipe(
+                        mergeMap(([target, elem]) => {
+                            if (!hasTocViewTrait(target.node)) {
                                 return from(
-                                    target.node.layout.toc({
+                                    tocView({
                                         html: elem,
                                         router: this.router,
                                     }),
                                 )
-                            }),
-                        ),
-                        vdomMap: (toc?): AnyVirtualDOM => {
-                            return toc ?? { tag: 'div' }
-                        },
-                    }),
-                ],
+                            }
+                            return from(
+                                target.node.layout.toc({
+                                    html: elem,
+                                    router: this.router,
+                                }),
+                            )
+                        }),
+                    ),
+                    vdomMap: (toc?): AnyVirtualDOM => {
+                        return toc ?? { tag: 'div' }
+                    },
+                }),
+            ],
+        }
+        this.children = [
+            {
+                tag: 'div',
+                class: 'h-100',
+                children: [toc],
             },
-            hSep,
         ]
     }
 }
