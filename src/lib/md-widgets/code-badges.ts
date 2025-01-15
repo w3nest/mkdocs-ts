@@ -88,6 +88,32 @@ export class CodeBadgesView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     /**
+     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.
+     *
+     * @param element The `HTMLElement`.
+     */
+    static attributeMapper = (element: HTMLElement) => ({
+        license: element.getAttribute('license') ?? undefined,
+        version: element.getAttribute('version') ?? undefined,
+        npm: element.getAttribute('npm') ?? undefined,
+        pypi: element.getAttribute('pypi') ?? undefined,
+        github: element.getAttribute('github') ?? undefined,
+    })
+
+    /**
+     * Construct an instance of NoteView from an `HTMLElement`.
+     *
+     * See {@link CodeBadgesView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.
+     *
+     * @param element The `HTMLElement`.
+     */
+    static fromHTMLElement(element: HTMLElement) {
+        return new CodeBadgesView({
+            ...CodeBadgesView.attributeMapper(element),
+        })
+    }
+
+    /**
      * Initializes a new instance.
      *
      * @param _args The arguments.

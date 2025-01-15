@@ -118,6 +118,30 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
     public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(
         undefined,
     )
+
+    /**
+     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.
+     *
+     * @param element The `HTMLElement`.
+     */
+    static attributeMapper = (element: HTMLElement) => ({
+        language: element.getAttribute('language') as CodeLanguage,
+        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,
+        content: element.textContent ?? '',
+    })
+    /**
+     * Construct an instance of CodeSnippetView from an `HTMLElement`.
+     *
+     * See {@link CodeSnippetView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.
+     *
+     * @param element The `HTMLElement`.
+     */
+    static fromHTMLElement(element: HTMLElement) {
+        return new CodeSnippetView({
+            ...CodeSnippetView.attributeMapper(element),
+        })
+    }
+
     /**
      * Initialize the widget.
      *

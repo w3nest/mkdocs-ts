@@ -8,12 +8,7 @@ import { AnyVirtualDOM, child$, render, VirtualDOM } from 'rx-vdom'
 import * as webpm from '@w3nest/webpm-client'
 import { from } from 'rxjs'
 import { headingPrefixId, type Router } from './router'
-import {
-    CodeLanguage,
-    CodeSnippetView,
-    NoteView,
-    CodeBadgesView,
-} from './md-widgets'
+import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
 import { AnyView } from './navigation.node'
 
 /**
@@ -94,24 +89,20 @@ export class GlobalMarkdownViews {
      * Static factory for markdown inlined views.
      */
     static factory: Record<string, ViewGenerator> = {
-        'code-snippet': (elem: HTMLElement) => {
-            return new CodeSnippetView({
-                language: elem.getAttribute('language') as CodeLanguage,
-                highlightedLines:
-                    elem.getAttribute('highlightedLines') ?? undefined,
-                content: elem.textContent ?? '',
-            })
-        },
+        /**
+         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.
+         */
+        'code-snippet': (elem: HTMLElement) =>
+            CodeSnippetView.fromHTMLElement(elem),
+        /**
+         * Transforms a `<note></note>`  element into {@link NoteView}.
+         */
         note: (...args) => NoteView.fromHTMLElement(...args),
-        'code-badges': (elem: HTMLElement) => {
-            return new CodeBadgesView({
-                license: elem.getAttribute('license') ?? undefined,
-                version: elem.getAttribute('version') ?? undefined,
-                npm: elem.getAttribute('npm') ?? undefined,
-                pypi: elem.getAttribute('pypi') ?? undefined,
-                github: elem.getAttribute('github') ?? undefined,
-            })
-        },
+        /**
+         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.
+         */
+        'code-badges': (elem: HTMLElement) =>
+            CodeBadgesView.fromHTMLElement(elem),
     }
 }
 
