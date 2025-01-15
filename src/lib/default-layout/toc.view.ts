@@ -50,6 +50,17 @@ const headingsPadding: Record<SupportedHeading, string> = {
 }
 
 const debounceTimeToc = 200
+
+function isWithinDepth(
+    element: HTMLElement,
+    parent: HTMLElement,
+    maxDepth: number,
+    depth = 0,
+): boolean {
+    if (!element.parentElement || depth > maxDepth) return false
+    if (element.parentElement === parent) return true
+    return isWithinDepth(element.parentElement, parent, maxDepth, depth + 1)
+}
 /**
  * The table of content view.
  */
@@ -66,22 +77,43 @@ export class TOCView implements VirtualDOM<'div'> {
 
     public readonly style: CSSAttribute
 
+    public readonly maxHeadingDepth?: number = 3
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     public readonly disconnectedCallback: (elem: RxHTMLElement<'div'>) => void
 
+    /**
+     *
+     * @param params
+     * @param params.html The page's HTML element.
+     * @param params.router Application's router.
+     * @param params.domConvertor Optional converter from the page's headings to the TOC item view.
+     * @param params.maxHeadingsDepth If provided, only headings under this nested level limits are accounted.
+     */
     constructor(params: {
         html: HTMLElement
         router: Router
         domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM
+        maxHeadingsDepth?: number
     }) {
         Object.assign(this, params)
         const queryHeadings = supportedHeadingTags
             .reduce((acc, e) => `${acc},${e}`, '')
             .toLowerCase()
             .slice(1)
-        const headingsArray = (): HTMLElement[] =>
-            Array.from(this.html.querySelectorAll(queryHeadings))
+        const headingsArray = (): HTMLElement[] => {
+            return Array.from(
+                this.html.querySelectorAll<HTMLElement>(queryHeadings),
+            ).filter((e) => {
+                if (this.maxHeadingDepth === undefined) {
+                    return true
+                }
+                const startContentDepth = 2
+                const maxDepth = startContentDepth + this.maxHeadingDepth
+                return isWithinDepth(e, params.html, maxDepth)
+            })
+        }
+
         const headings$ = new BehaviorSubject<HTMLElement[]>(headingsArray())
 
         const allMutations$ = new Subject<MutationRecord[]>()

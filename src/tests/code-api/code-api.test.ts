@@ -93,30 +93,33 @@ describe('Typescript/Typedoc documentation', () => {
         expect(node.id).toBe('/')
     })
     it.each([
-        ['/mkdocs', 'mkdocs', 1],
-        ['/mkdocs/MainModule', 'MainModule', 48],
-    ])("Navigates to '%i'", async (path, name, expectedHeadingsCount) => {
-        await navigateAndAssert(router, path, name)
-        const pageView = document.querySelector<HTMLElement>(
-            `.${PageView.CssSelector}`,
-        )
-        if (!pageView) {
-            throw Error('Page view not included in document')
-        }
-        const headingsInPage = Array.from(
-            pageView.querySelectorAll('.mkapi-header'),
-        ).map((elem) => elem['vDom'] as HeaderView)
-        expect(headingsInPage).toHaveLength(expectedHeadingsCount)
+        ['/mkdocs', 'mkdocs', 1, 1],
+        ['/mkdocs/MainModule', 'MainModule', 48, 27],
+    ])(
+        "Navigates to '%i'",
+        async (path, name, expectedHeadingsCount, inTocHeadingsCount) => {
+            await navigateAndAssert(router, path, name)
+            const pageView = document.querySelector<HTMLElement>(
+                `.${PageView.CssSelector}`,
+            )
+            if (!pageView) {
+                throw Error('Page view not included in document')
+            }
+            const headingsInPage = Array.from(
+                pageView.querySelectorAll('.mkapi-header'),
+            ).map((elem) => elem['vDom'] as HeaderView)
+            expect(headingsInPage).toHaveLength(expectedHeadingsCount)
 
-        const tocView = document.querySelector<HTMLElement>(
-            `.${TOCView.CssSelector}`,
-        )
-        if (!tocView) {
-            throw Error('Page view not included in document')
-        }
-        const headingsInToc = Array.from(
-            tocView.querySelectorAll('.mkapi-header'),
-        ).map((elem) => elem['vDom'] as HeaderView)
-        expect(headingsInToc).toHaveLength(expectedHeadingsCount)
-    })
+            const tocView = document.querySelector<HTMLElement>(
+                `.${TOCView.CssSelector}`,
+            )
+            if (!tocView) {
+                throw Error('Page view not included in document')
+            }
+            const headingsInToc = Array.from(
+                tocView.querySelectorAll('.mkapi-header'),
+            ).map((elem) => elem['vDom'] as HeaderView)
+            expect(headingsInToc).toHaveLength(inTocHeadingsCount)
+        },
+    )
 })
