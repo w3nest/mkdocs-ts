@@ -194,7 +194,12 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
 }
 
 export class ExpandableNavColumn extends ExpandableBaseColumn {
-    public readonly class = `mkdocs-ExpandableLeftSide mkdocs-bg-6`
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-ExpandableNavColumn'
+
+    public readonly class = `${ExpandableNavColumn.CssSelector} mkdocs-bg-6`
 
     constructor(params: {
         favoritesView: AnyView
