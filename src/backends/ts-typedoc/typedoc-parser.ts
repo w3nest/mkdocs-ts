@@ -971,7 +971,9 @@ function gather_symbol_references(
     const result: Record<string, string> = {}
     refs.forEach((ref) => {
         const link = projectGlobals.navigations[ref.target]
-        result[ref.name] = link ? link : ref.target.toString()
+        if (link) {
+            result[ref.name] = link
+        }
     })
     return result
 }
