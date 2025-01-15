@@ -1,5 +1,5 @@
 
-# Dynamic 
+# Custom Layout 
 
 Up until now, the navigation structure in our examples has been static, with all pages and their hierarchy known in 
 advance. However, this isn't always the case, and **@youwol/mkdocs-ts** provides a formalism to handle dynamic 

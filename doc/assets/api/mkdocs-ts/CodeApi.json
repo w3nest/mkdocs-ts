@@ -43,8 +43,8 @@
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "configurationPython: Configuration = configurationDefault",
                 "implementation": "",
-                "startLine": 102,
-                "endLine": 103,
+                "startLine": 107,
+                "endLine": 108,
                 "references": {
                     "configurationPython": "@nav/api/CodeApi.configurationPython",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -78,8 +78,8 @@
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "configurationTsTypedoc: Configuration = configurationDefault",
                 "implementation": "",
-                "startLine": 97,
-                "endLine": 98,
+                "startLine": 102,
+                "endLine": 103,
                 "references": {
                     "configurationTsTypedoc": "@nav/api/CodeApi.configurationTsTypedoc",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -715,8 +715,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string",
                         "implementation": "",
-                        "startLine": 40,
-                        "endLine": 41,
+                        "startLine": 45,
+                        "endLine": 46,
                         "references": {
                             "codeUrl": "@nav/api/CodeApi.Configuration.codeUrl",
                             "Project": "@nav/api/CodeApi.Project"
@@ -750,8 +750,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "css: (project: Project) => string",
                         "implementation": "",
-                        "startLine": 32,
-                        "endLine": 33,
+                        "startLine": 37,
+                        "endLine": 38,
                         "references": {
                             "css": "@nav/api/CodeApi.Configuration.css",
                             "Project": "@nav/api/CodeApi.Project"
@@ -785,10 +785,45 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "externalTypes: Record<string, string>",
                         "implementation": "",
-                        "startLine": 36,
-                        "endLine": 37,
+                        "startLine": 41,
+                        "endLine": 42,
                         "references": {
                             "externalTypes": "@nav/api/CodeApi.Configuration.externalTypes"
+                        }
+                    }
+                },
+                {
+                    "name": "mdParsingOptions",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Parsing options for Markdown parser.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Configuration.mdParsingOptions",
+                    "code": {
+                        "filePath": "src/lib/code-api/configurations.ts",
+                        "declaration": "mdParsingOptions?: MdParsingOptions",
+                        "implementation": "",
+                        "startLine": 29,
+                        "endLine": 30,
+                        "references": {
+                            "mdParsingOptions": "@nav/api/CodeApi.Configuration.mdParsingOptions",
+                            "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions"
                         }
                     }
                 },
@@ -819,8 +854,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }",
                         "implementation": "",
-                        "startLine": 54,
-                        "endLine": 55,
+                        "startLine": 59,
+                        "endLine": 60,
                         "references": {
                             "notebook": "@nav/api/CodeApi.Configuration.notebook",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -834,17 +869,18 @@
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n>",
-                "implementation": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n> {\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: Record<string, string>\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API\n     * files, eventually forwarding the parameters provided to the {@link NotebookPage} constructor.\n     */\n    notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }\n\n    navNode: ({\n        name,\n        header,\n        layout,\n    }: {\n        name: string\n        header: DefaultLayout.NavHeader\n        layout: DefaultLayout.NavLayout\n    }) => NavNodeData<TLayout, THeader>\n}",
+                "implementation": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n> {\n    /**\n     * Parsing options for Markdown parser.\n     */\n    mdParsingOptions?: MdParsingOptions\n\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: Record<string, string>\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API\n     * files, eventually forwarding the parameters provided to the {@link NotebookPage} constructor.\n     */\n    notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }\n\n    navNode: ({\n        name,\n        header,\n        layout,\n    }: {\n        name: string\n        header: DefaultLayout.NavHeader\n        layout: DefaultLayout.NavLayout\n    }) => NavNodeData<TLayout, THeader>\n}",
                 "startLine": 22,
-                "endLine": 72,
+                "endLine": 77,
                 "references": {
                     "Configuration": "@nav/api/CodeApi.Configuration",
                     "Project": "@nav/api/CodeApi.Project",
+                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
                     "NavHeader": "@nav/api/MainModule/DefaultLayout.NavHeader",
                     "NavLayout": "@nav/api/MainModule/DefaultLayout.NavLayout",
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
-                    "TLayout": "1323",
-                    "THeader": "1324",
+                    "TLayout": "1429",
+                    "THeader": "1430",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
                     "Scope": "@nav/api/Notebook.Scope",
                     "NotebookOptions": "@nav/api/Notebook.NotebookOptions",

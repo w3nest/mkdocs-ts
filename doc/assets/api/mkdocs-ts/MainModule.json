@@ -179,8 +179,8 @@
                         "references": {
                             "new GenericView": "@nav/api/MainModule.GenericView.constructor",
                             "LayoutFactory": "@nav/api/MainModule.LayoutFactory",
-                            "LayoutOptionsMap": "1066",
-                            "THeader": "1067",
+                            "LayoutOptionsMap": "1171",
+                            "THeader": "1172",
                             "LayoutKindUnion": "@nav/api/MainModule.LayoutKindUnion",
                             "Router": "@nav/api/MainModule.Router",
                             "LayoutUnion": "@nav/api/MainModule.LayoutUnion",
@@ -204,8 +204,8 @@
                 "references": {
                     "GenericView": "@nav/api/MainModule.GenericView",
                     "LayoutFactory": "@nav/api/MainModule.LayoutFactory",
-                    "LayoutOptionsMap": "1066",
-                    "THeader": "1067",
+                    "LayoutOptionsMap": "1171",
+                    "THeader": "1172",
                     "LayoutKindUnion": "@nav/api/MainModule.LayoutKindUnion",
                     "Router": "@nav/api/MainModule.Router",
                     "LayoutUnion": "@nav/api/MainModule.LayoutUnion",
@@ -226,7 +226,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents global Markdown views that can be referenced when using  [parseMd](undefined) .\n\nBy default, it is populated with  `code-snippet` , more information in  [CodeSnippetView](@nav/api/MainModule/MdWidgets.CodeSnippetView) .\n\nThe definition of a custom view is provided using a function that:\n*  Takes as single argument the HTML element as declared in the markdown file.\nThe raw text content within the DOM element can be accessed using  `elem.textContent`  and attributes using\n `elem.getAttribute` .\n*  Returns a virtual dom defining the corresponding implementation of the HTML element.",
+                        "content": "Provides a collection of global Markdown views that can be referenced when using  [parseMd](undefined) .\n\nCustom views are defined as functions with the following structure:\n- **Arguments**:\n  -  `elem` : The HTML element as declared in the Markdown file. You can access its raw text content using\n     `elem.textContent`  and its attributes using  `elem.getAttribute` .\n  -  `options` : An instance of  [MdParsingOptions](@nav/api/MainModule.MdParsingOptions) , providing additional context for parsing.\n- **Returns**: A  [ViewGenerator](@nav/api/MainModule.ViewGenerator)  that implements the corresponding behavior for the HTML element.\n\nThese views enable dynamic, reusable components to be seamlessly integrated into Markdown content.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -250,7 +250,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Static factory for markdown inlined views.",
+                                "content": "A static factory object containing pre-defined Markdown inline views.\n\nSee  [MdWidgets](@nav/api/MainModule/MdWidgets)  regarding implementations.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -264,10 +264,10 @@
                     "path": "GlobalMarkdownViews.factory",
                     "code": {
                         "filePath": "src/lib/markdown.ts",
-                        "declaration": "static factory: Record<string, ViewGenerator> = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines:\n                    elem.getAttribute('highlightedLines') ?? undefined,\n                content: elem.textContent ?? '',\n            })\n        },\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        'code-badges': (elem: HTMLElement) => {\n            return new CodeBadgesView({\n                license: elem.getAttribute('license') ?? undefined,\n                version: elem.getAttribute('version') ?? undefined,\n                npm: elem.getAttribute('npm') ?? undefined,\n                pypi: elem.getAttribute('pypi') ?? undefined,\n                github: elem.getAttribute('github') ?? undefined,\n            })\n        },\n    }",
+                        "declaration": "static factory: Record<string, ViewGenerator> = {\n        /**\n         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.\n         */\n        'code-snippet': (elem: HTMLElement) =>\n            CodeSnippetView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<note></note>`  element into {@link NoteView}.\n         */\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        /**\n         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.\n         */\n        'code-badges': (elem: HTMLElement) =>\n            CodeBadgesView.fromHTMLElement(elem),\n    }",
                         "implementation": "",
-                        "startLine": 95,
-                        "endLine": 96,
+                        "startLine": 98,
+                        "endLine": 99,
                         "references": {
                             "factory": "@nav/api/MainModule.GlobalMarkdownViews.factory",
                             "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
@@ -279,9 +279,9 @@
             "code": {
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export class GlobalMarkdownViews",
-                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * Static factory for markdown inlined views.\n     */\n    static factory: Record<string, ViewGenerator> = {\n        'code-snippet': (elem: HTMLElement) => {\n            return new CodeSnippetView({\n                language: elem.getAttribute('language') as CodeLanguage,\n                highlightedLines:\n                    elem.getAttribute('highlightedLines') ?? undefined,\n                content: elem.textContent ?? '',\n            })\n        },\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        'code-badges': (elem: HTMLElement) => {\n            return new CodeBadgesView({\n                license: elem.getAttribute('license') ?? undefined,\n                version: elem.getAttribute('version') ?? undefined,\n                npm: elem.getAttribute('npm') ?? undefined,\n                pypi: elem.getAttribute('pypi') ?? undefined,\n                github: elem.getAttribute('github') ?? undefined,\n            })\n        },\n    }\n}",
-                "startLine": 91,
-                "endLine": 116,
+                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * A static factory object containing pre-defined Markdown inline views.\n     *\n     * See {@link MdWidgets} regarding implementations.\n     */\n    static factory: Record<string, ViewGenerator> = {\n        /**\n         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.\n         */\n        'code-snippet': (elem: HTMLElement) =>\n            CodeSnippetView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<note></note>`  element into {@link NoteView}.\n         */\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        /**\n         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.\n         */\n        'code-badges': (elem: HTMLElement) =>\n            CodeBadgesView.fromHTMLElement(elem),\n    }\n}",
+                "startLine": 92,
+                "endLine": 115,
                 "references": {
                     "GlobalMarkdownViews": "@nav/api/MainModule.GlobalMarkdownViews",
                     "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
@@ -444,7 +444,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Implements the  [BrowserInterface](@nav/api/MainModule.BrowserInterface)  for managing browser navigation.\nIntegrates with the browser's history API and synchronizes with a  [Router](@nav/api/MainModule.Router) .",
+                        "content": "Implements the  [BrowserInterface](@nav/api/MainModule.BrowserInterface)  for managing browser navigation within a mocked browser.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -490,8 +490,8 @@
                         "filePath": "src/lib/browser.interface.ts",
                         "declaration": "parseUrl(): UrlTarget",
                         "implementation": "parseUrl(): UrlTarget {\n        return this.history.length > 0\n            ? this.history.slice(-1)[0]\n            : parseUrl('/')\n    }",
-                        "startLine": 138,
-                        "endLine": 143,
+                        "startLine": 136,
+                        "endLine": 141,
                         "references": {
                             "parseUrl": "@nav/api/MainModule.MockBrowser.parseUrl",
                             "UrlTarget": "@nav/api/MainModule.UrlTarget"
@@ -536,8 +536,8 @@
                         "filePath": "src/lib/browser.interface.ts",
                         "declaration": "pushState(data: { target: UrlTarget }): void",
                         "implementation": "pushState(data: { target: UrlTarget }): void {\n        this.history.push(data.target)\n    }",
-                        "startLine": 134,
-                        "endLine": 137,
+                        "startLine": 132,
+                        "endLine": 135,
                         "references": {
                             "pushState": "@nav/api/MainModule.MockBrowser.pushState",
                             "UrlTarget": "@nav/api/MainModule.UrlTarget"
@@ -555,8 +555,8 @@
                 "filePath": "src/lib/browser.interface.ts",
                 "declaration": "export class MockBrowser implements BrowserInterface",
                 "implementation": "export class MockBrowser implements BrowserInterface {\n    public readonly router: Router\n    public readonly basePath: string\n    public readonly history: UrlTarget[] = []\n    constructor(params: { router: Router; basePath: string }) {\n        Object.assign(this, params)\n    }\n    pushState(data: { target: UrlTarget }): void {\n        this.history.push(data.target)\n    }\n\n    parseUrl(): UrlTarget {\n        return this.history.length > 0\n            ? this.history.slice(-1)[0]\n            : parseUrl('/')\n    }\n}",
-                "startLine": 127,
-                "endLine": 144,
+                "startLine": 125,
+                "endLine": 142,
                 "references": {
                     "MockBrowser": "@nav/api/MainModule.MockBrowser",
                     "Router": "@nav/api/MainModule.Router",
@@ -692,8 +692,8 @@
                         "references": {
                             "explorerState": "@nav/api/MainModule.Router.explorerState",
                             "AnyNavNode": "@nav/api/MainModule.AnyNavNode",
-                            "TLayout": "1118",
-                            "THeader": "1119"
+                            "TLayout": "1223",
+                            "THeader": "1224"
                         }
                     }
                 },
@@ -729,8 +729,8 @@
                         "references": {
                             "navigation": "@nav/api/MainModule.Router.navigation",
                             "Navigation": "@nav/api/MainModule.Navigation",
-                            "TLayout": "1118",
-                            "THeader": "1119"
+                            "TLayout": "1223",
+                            "THeader": "1224"
                         }
                     }
                 },
@@ -869,8 +869,8 @@
                             "target$": "@nav/api/MainModule.Router.target$",
                             "UnresolvedTarget": "@nav/api/MainModule.UnresolvedTarget",
                             "Target": "@nav/api/MainModule.Target",
-                            "TLayout": "1118",
-                            "THeader": "1119"
+                            "TLayout": "1223",
+                            "THeader": "1224"
                         }
                     }
                 }
@@ -915,8 +915,8 @@
                             "Router": "@nav/api/MainModule.Router",
                             "BrowserInterface": "@nav/api/MainModule.BrowserInterface",
                             "Navigation": "@nav/api/MainModule.Navigation",
-                            "TLayout": "1118",
-                            "THeader": "1119"
+                            "TLayout": "1223",
+                            "THeader": "1224"
                         }
                     },
                     "semantic": {
@@ -1043,8 +1043,8 @@
                         "references": {
                             "getNav": "@nav/api/MainModule.Router.getNav",
                             "Navigation": "@nav/api/MainModule.Navigation",
-                            "TLayout": "1118",
-                            "THeader": "1119"
+                            "TLayout": "1223",
+                            "THeader": "1224"
                         }
                     },
                     "semantic": {
@@ -1236,8 +1236,8 @@
                     "Router": "@nav/api/MainModule.Router",
                     "BrowserInterface": "@nav/api/MainModule.BrowserInterface",
                     "Navigation": "@nav/api/MainModule.Navigation",
-                    "TLayout": "1118",
-                    "THeader": "1119",
+                    "TLayout": "1223",
+                    "THeader": "1224",
                     "AnyNavNode": "@nav/api/MainModule.AnyNavNode",
                     "UnresolvedTarget": "@nav/api/MainModule.UnresolvedTarget",
                     "Target": "@nav/api/MainModule.Target",
@@ -1302,8 +1302,8 @@
                         "filePath": "src/lib/browser.interface.ts",
                         "declaration": "parseUrl(): UrlTarget",
                         "implementation": "parseUrl(): UrlTarget {\n        return parseUrl(window.location.search)\n    }",
-                        "startLine": 74,
-                        "endLine": 77,
+                        "startLine": 73,
+                        "endLine": 76,
                         "references": {
                             "parseUrl": "@nav/api/MainModule.WebBrowser.parseUrl",
                             "UrlTarget": "@nav/api/MainModule.UrlTarget"
@@ -1347,9 +1347,9 @@
                     "code": {
                         "filePath": "src/lib/browser.interface.ts",
                         "declaration": "pushState(data: { target: UrlTarget }): void",
-                        "implementation": "pushState(data: { target: UrlTarget }): void {\n        const isIgnored = this.ignoredPaths$.value.find((ignored) =>\n            data.target.path.startsWith(ignored),\n        )\n        if (isIgnored) {\n            return\n        }\n        console.log('Push State', data)\n        history.pushState(\n            {\n                target: {\n                    path: data.target.path,\n                    sectionId: data.target.sectionId,\n                    parameters: data.target.parameters,\n                },\n            },\n            '',\n            `${this.basePath}?${formatUrl(data.target)}`,\n        )\n    }",
+                        "implementation": "pushState(data: { target: UrlTarget }): void {\n        const isIgnored = this.ignoredPaths$.value.find((ignored) =>\n            data.target.path.startsWith(ignored),\n        )\n        if (isIgnored) {\n            return\n        }\n        history.pushState(\n            {\n                target: {\n                    path: data.target.path,\n                    sectionId: data.target.sectionId,\n                    parameters: data.target.parameters,\n                },\n            },\n            '',\n            `${this.basePath}?${formatUrl(data.target)}`,\n        )\n    }",
                         "startLine": 53,
-                        "endLine": 73,
+                        "endLine": 72,
                         "references": {
                             "pushState": "@nav/api/MainModule.WebBrowser.pushState",
                             "UrlTarget": "@nav/api/MainModule.UrlTarget"
@@ -1366,9 +1366,9 @@
             "code": {
                 "filePath": "src/lib/browser.interface.ts",
                 "declaration": "export class WebBrowser implements BrowserInterface",
-                "implementation": "export class WebBrowser implements BrowserInterface {\n    public readonly router: Router\n    public readonly basePath: string\n    public readonly ignoredPaths$: BehaviorSubject<string[]> =\n        new BehaviorSubject<string[]>([])\n\n    constructor(params: {\n        router: Router\n        basePath: string\n        ignoredPaths$?: BehaviorSubject<string[]>\n    }) {\n        Object.assign(this, params)\n        window.onpopstate = (event: PopStateEvent) => {\n            const state = event.state as unknown as\n                | { target: UrlTarget }\n                | undefined\n            if (state) {\n                this.router.fireNavigateTo(state.target)\n            } else {\n                this.router.fireNavigateTo({\n                    path: '/',\n                })\n            }\n        }\n    }\n    pushState(data: { target: UrlTarget }): void {\n        const isIgnored = this.ignoredPaths$.value.find((ignored) =>\n            data.target.path.startsWith(ignored),\n        )\n        if (isIgnored) {\n            return\n        }\n        console.log('Push State', data)\n        history.pushState(\n            {\n                target: {\n                    path: data.target.path,\n                    sectionId: data.target.sectionId,\n                    parameters: data.target.parameters,\n                },\n            },\n            '',\n            `${this.basePath}?${formatUrl(data.target)}`,\n        )\n    }\n\n    parseUrl(): UrlTarget {\n        return parseUrl(window.location.search)\n    }\n}",
+                "implementation": "export class WebBrowser implements BrowserInterface {\n    public readonly router: Router\n    public readonly basePath: string\n    public readonly ignoredPaths$: BehaviorSubject<string[]> =\n        new BehaviorSubject<string[]>([])\n\n    constructor(params: {\n        router: Router\n        basePath: string\n        ignoredPaths$?: BehaviorSubject<string[]>\n    }) {\n        Object.assign(this, params)\n        window.onpopstate = (event: PopStateEvent) => {\n            const state = event.state as unknown as\n                | { target: UrlTarget }\n                | undefined\n            if (state) {\n                this.router.fireNavigateTo(state.target)\n            } else {\n                this.router.fireNavigateTo({\n                    path: '/',\n                })\n            }\n        }\n    }\n    pushState(data: { target: UrlTarget }): void {\n        const isIgnored = this.ignoredPaths$.value.find((ignored) =>\n            data.target.path.startsWith(ignored),\n        )\n        if (isIgnored) {\n            return\n        }\n        history.pushState(\n            {\n                target: {\n                    path: data.target.path,\n                    sectionId: data.target.sectionId,\n                    parameters: data.target.parameters,\n                },\n            },\n            '',\n            `${this.basePath}?${formatUrl(data.target)}`,\n        )\n    }\n\n    parseUrl(): UrlTarget {\n        return parseUrl(window.location.search)\n    }\n}",
                 "startLine": 28,
-                "endLine": 78,
+                "endLine": 77,
                 "references": {
                     "WebBrowser": "@nav/api/MainModule.WebBrowser",
                     "Router": "@nav/api/MainModule.Router",
@@ -1562,8 +1562,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "emitHtmlUpdated?: boolean",
                         "implementation": "",
-                        "startLine": 76,
-                        "endLine": 77,
+                        "startLine": 77,
+                        "endLine": 78,
                         "references": {
                             "emitHtmlUpdated": "@nav/api/MainModule.MdParsingOptions.emitHtmlUpdated"
                         }
@@ -1596,8 +1596,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "latex?: boolean",
                         "implementation": "",
-                        "startLine": 71,
-                        "endLine": 72,
+                        "startLine": 72,
+                        "endLine": 73,
                         "references": {
                             "latex": "@nav/api/MainModule.MdParsingOptions.latex"
                         }
@@ -1630,8 +1630,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "placeholders?: Record<string, string>",
                         "implementation": "",
-                        "startLine": 43,
-                        "endLine": 44,
+                        "startLine": 44,
+                        "endLine": 45,
                         "references": {
                             "placeholders": "@nav/api/MainModule.MdParsingOptions.placeholders"
                         }
@@ -1664,8 +1664,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "preprocessing?: (text: string) => string",
                         "implementation": "",
-                        "startLine": 49,
-                        "endLine": 50,
+                        "startLine": 50,
+                        "endLine": 51,
                         "references": {
                             "preprocessing": "@nav/api/MainModule.MdParsingOptions.preprocessing"
                         }
@@ -1698,8 +1698,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "views?: Record<string, ViewGenerator>",
                         "implementation": "",
-                        "startLine": 53,
-                        "endLine": 54,
+                        "startLine": 54,
+                        "endLine": 55,
                         "references": {
                             "views": "@nav/api/MainModule.MdParsingOptions.views",
                             "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
@@ -1712,8 +1712,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export interface MdParsingOptions",
                 "implementation": "export interface MdParsingOptions {\n    /**\n     * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys\n     * in the source by their corresponding values.\n     */\n    placeholders?: Record<string, string>\n    /**\n     * Preprocessing step. This callback is called to transform the source before parsing is executed.\n     * @param text original text\n     * @return transformed text\n     */\n    preprocessing?: (text: string) => string\n    /**\n     *  Custom views generators corresponding to HTMLElement referenced in the Markdown source.\n     */\n    views?: Record<string, ViewGenerator>\n\n    /**\n     * Whether to parse Latex equations.\n     * If `true` the MathJax module needs to be loaded by the consumer before parsing occurs.\n     *\n     * Using the webpm client:\n     * ````js\n     * import { install } from '@w3nest/webpm-client'\n     *\n     * await install({\n     *     modules: ['mathjax#^3.1.4'],\n     * })\n     * ```\n     *\n     * Within the markdown page, equation blocks are written between `$$` and inline elements between\n     * `\\\\(` and `\\\\)`\n     */\n    latex?: boolean\n\n    /**\n     * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.\n     */\n    emitHtmlUpdated?: boolean\n}",
-                "startLine": 38,
-                "endLine": 78,
+                "startLine": 39,
+                "endLine": 79,
                 "references": {
                     "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
                     "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
@@ -2045,8 +2045,8 @@
                 "references": {
                     "DynamicRoutes": "@nav/api/MainModule.DynamicRoutes",
                     "LazyRoutesCb": "@nav/api/MainModule.LazyRoutesCb",
-                    "TLayout": "1035",
-                    "THeader": "1036",
+                    "TLayout": "1140",
+                    "THeader": "1141",
                     "LazyRoutesCb$": "@nav/api/MainModule.LazyRoutesCb$"
                 }
             },
@@ -2084,9 +2084,9 @@
                 "endLine": 35,
                 "references": {
                     "LayoutFactory": "@nav/api/MainModule.LayoutFactory",
-                    "LayoutOptionsMap": "1057",
+                    "LayoutOptionsMap": "1162",
                     "LayoutGeneratorTrait": "@nav/api/MainModule.LayoutGeneratorTrait",
-                    "THeader": "1058"
+                    "THeader": "1163"
                 }
             },
             "semantic": {
@@ -2124,8 +2124,8 @@
                 "references": {
                     "LayoutGeneratorTrait": "@nav/api/MainModule.LayoutGeneratorTrait",
                     "Router": "@nav/api/MainModule.Router",
-                    "TLayout": "1050",
-                    "THeader": "1051"
+                    "TLayout": "1155",
+                    "THeader": "1156"
                 }
             },
             "semantic": {
@@ -2175,8 +2175,8 @@
                     "LazyRoutes": "@nav/api/MainModule.LazyRoutes",
                     "SegmentsRecord": "@nav/api/MainModule.SegmentsRecord",
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
-                    "TLayout": "1017",
-                    "THeader": "1018"
+                    "TLayout": "1122",
+                    "THeader": "1123"
                 }
             },
             "semantic": {
@@ -2216,8 +2216,8 @@
                     "Router": "@nav/api/MainModule.Router",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
                     "LazyRoutes": "@nav/api/MainModule.LazyRoutes",
-                    "TLayout": "1026",
-                    "THeader": "1027"
+                    "TLayout": "1131",
+                    "THeader": "1132"
                 }
             },
             "semantic": {
@@ -2255,8 +2255,8 @@
                 "references": {
                     "LazyRoutesCb$": "@nav/api/MainModule.LazyRoutesCb$",
                     "LazyRoutesCb": "@nav/api/MainModule.LazyRoutesCb",
-                    "TLayout": "1032",
-                    "THeader": "1033"
+                    "TLayout": "1137",
+                    "THeader": "1138"
                 }
             },
             "semantic": {
@@ -2305,8 +2305,8 @@
                 "references": {
                     "Navigation": "@nav/api/MainModule.Navigation",
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
-                    "TLayout": "1040",
-                    "THeader": "1041",
+                    "TLayout": "1145",
+                    "THeader": "1146",
                     "StaticRoutes": "@nav/api/MainModule.StaticRoutes",
                     "DynamicRoutes": "@nav/api/MainModule.DynamicRoutes"
                 }
@@ -2356,10 +2356,10 @@
                 "endLine": 23,
                 "references": {
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
-                    "THeader": "948",
+                    "THeader": "1053",
                     "Router": "@nav/api/MainModule.Router",
-                    "TLayout": "947",
-                    "WithLeafInfo": "949",
+                    "TLayout": "1052",
+                    "WithLeafInfo": "1054",
                     "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved"
                 }
             },
@@ -2408,7 +2408,7 @@
                 "endLine": 441,
                 "references": {
                     "PathSegment": "@nav/api/MainModule.PathSegment",
-                    "T": "1043"
+                    "T": "1148"
                 }
             },
             "semantic": {
@@ -2456,7 +2456,7 @@
                 "endLine": 296,
                 "references": {
                     "Resolvable": "@nav/api/MainModule.Resolvable",
-                    "T": "1013"
+                    "T": "1118"
                 }
             },
             "semantic": {
@@ -2505,7 +2505,7 @@
                 "references": {
                     "SegmentsRecord": "@nav/api/MainModule.SegmentsRecord",
                     "PathSegment": "@nav/api/MainModule.PathSegment",
-                    "T": "1015"
+                    "T": "1120"
                 }
             },
             "semantic": {
@@ -2520,7 +2520,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the definition of static routes in the application.\n\nStatic routes are defined as a mapping where each  `segmentId`  (representing a segment's contribution to the URL)\nis associated with a  [Navigation](@nav/api/MainModule.Navigation)  object or a  `Promise`  resolving to a  [Navigation](@nav/api/MainModule.Navigation)  object.\n\n<note level=\"hint\" title=\"Promise\">\nPromises can be used, for instance, when requests need to be triggered to fetch attributes or metadata\nfor a navigation node. In such cases, the navigation tree will wait for the promise to resolve before updating its\nstate.\n\nIn the common scenario where only the layout's content requires an asynchronous task to resolve,\nit is often possible to specify this dependency within the layout itself. This approach allows the\nnavigation tree to avoid waiting for the task's resolution, as the asynchronous handling is confined\nto the layout specification.\n</note>\n\n<note level=\"hint\">\nThe  [segment](@nav/api/MainModule.segment)  function performs both static and dynamic checks to validate the segment ID.\n</note>",
+                        "content": "Represents the definition of static routes in the application.\n\nStatic routes are defined as a mapping where each  `segmentId`  (representing a segment's contribution to the URL)\nis associated with a  [Resolvable](@nav/api/MainModule.Resolvable)   [Navigation](@nav/api/MainModule.Navigation)  object.\n\n<note level=\"hint\" title=\"Promise\">\nPromises can be used, for instance, when requests need to be triggered to fetch attributes or metadata\nfor a navigation node. In such cases, the navigation tree will wait for the promise to resolve before updating its\nstate.\n\nIn the common scenario where only the layout's content requires an asynchronous task to resolve,\nit is often possible to specify this dependency within the layout itself. This approach allows the\nnavigation tree to avoid waiting for the task's resolution, as the asynchronous handling is confined\nto the layout specification.\n</note>\n\n<note level=\"hint\">\nThe  [segment](@nav/api/MainModule.segment)  function performs both static and dynamic checks to validate the segment ID.\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2547,15 +2547,16 @@
             "callables": [],
             "code": {
                 "filePath": "src/lib/navigation.node.ts",
-                "declaration": "export type StaticRoutes<TLayout, THeader> = Record<\n    string,\n    Navigation<TLayout, THeader> | Promise<Navigation<TLayout, THeader>>\n>",
+                "declaration": "export type StaticRoutes<TLayout, THeader> = Record<\n    string,\n    Resolvable<Navigation<TLayout, THeader>>\n>",
                 "implementation": "",
                 "startLine": 372,
                 "endLine": 373,
                 "references": {
                     "StaticRoutes": "@nav/api/MainModule.StaticRoutes",
+                    "Resolvable": "@nav/api/MainModule.Resolvable",
                     "Navigation": "@nav/api/MainModule.Navigation",
-                    "TLayout": "1029",
-                    "THeader": "1030"
+                    "TLayout": "1134",
+                    "THeader": "1135"
                 }
             },
             "semantic": {
@@ -2594,8 +2595,8 @@
                     "Target": "@nav/api/MainModule.Target",
                     "UrlTarget": "@nav/api/MainModule.UrlTarget",
                     "Navigation": "@nav/api/MainModule.Navigation",
-                    "TLayout": "1112",
-                    "THeader": "1113"
+                    "TLayout": "1217",
+                    "THeader": "1218"
                 }
             },
             "semantic": {
@@ -2626,14 +2627,15 @@
             "callables": [],
             "code": {
                 "filePath": "src/lib/markdown.ts",
-                "declaration": "export type ViewGenerator = (\n    elem: HTMLElement,\n    options: { router?: Router } & MdParsingOptions,\n) => AnyVirtualDOM",
+                "declaration": "export type ViewGenerator = (\n    elem: HTMLElement,\n    options: { router?: Router } & MdParsingOptions,\n) => AnyView",
                 "implementation": "",
-                "startLine": 30,
-                "endLine": 31,
+                "startLine": 31,
+                "endLine": 32,
                 "references": {
                     "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
                     "Router": "@nav/api/MainModule.Router",
-                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions"
+                    "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
+                    "AnyView": "@nav/api/MainModule.AnyView"
                 }
             },
             "semantic": {
@@ -2677,8 +2679,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function fetchMd(\n    params: FetchMdInput,\n): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>>",
                 "implementation": "export function fetchMd(\n    params: FetchMdInput,\n): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {\n    return async ({ router }: { router: Router }) => {\n        const resp = await fetch(params.url)\n        const src = await resp.text()\n        return parseMd({\n            src,\n            router,\n            ...params,\n        })\n    }\n}",
-                "startLine": 126,
-                "endLine": 139,
+                "startLine": 125,
+                "endLine": 138,
                 "references": {
                     "fetchMd": "@nav/api/MainModule.fetchMd",
                     "FetchMdInput": "@nav/api/MainModule.FetchMdInput",
@@ -2767,7 +2769,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Parse a Markdown file specified with a URL.\n\nNote that custom views provided using the attribute  `views ̀ comes in addition to those registered globally in\n{@link GlobalMarkdownViews}.\n\n**Notes on custom views**\n\nCustom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.\n\n\nFor instance, a custom view ` foo-view ` can be referenced in the Markdown:\n ```\n # An example of custom-view\n\n This is a custom view:\n <foo-view barAttr='bar' bazAttr=\"baz\">some content</foo-view>\n ```\n When parsed, it will be replaced by its corresponding generated view if ` foo-view ` is included in this\n ` views ` mapping provided to this function. The associated generator can access attributes (here ` barAttr ` &\n ` bazAttr `) as well as the original text content (` some content`).\n\n The generator functions are called in the order of their corresponding elements in the Markdown source.",
+                        "content": "Parse Markdown source to generate corresponding view.\n\nNote that custom views provided using the attribute  `views ̀ comes in addition to those registered globally in\n{@link GlobalMarkdownViews}.\n\n**Notes on custom views**\n\nCustom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.\n\n\nFor instance, a custom view ` foo-view ` can be referenced in the Markdown:\n ```\n # An example of custom-view\n\n This is a custom view:\n <foo-view barAttr='bar' bazAttr=\"baz\">some content</foo-view>\n ```\n When parsed, it will be replaced by its corresponding generated view if ` foo-view ` is included in this\n ` views ` mapping provided to this function. The associated generator can access attributes (here ` barAttr ` &\n ` bazAttr `) as well as the original text content (` some content`).\n\n The generator functions are called in the order of their corresponding elements in the Markdown source.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2804,9 +2806,9 @@
             "code": {
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function parseMd({\n    src,\n    router,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n    latex,\n}: {\n    src: string\n    router?: Router\n    navigations?: Record<string, (e: HTMLAnchorElement) => void>\n} & MdParsingOptions): VirtualDOM<'div'>",
-                "implementation": "export function parseMd({\n    src,\n    router,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n    latex,\n}: {\n    src: string\n    router?: Router\n    navigations?: Record<string, (e: HTMLAnchorElement) => void>\n} & MdParsingOptions): VirtualDOM<'div'> {\n    src = preprocessing?.(src) ?? src\n    if (placeholders && Object.keys(placeholders).length > 0) {\n        const regex = new RegExp(Object.keys(placeholders).join('|'), 'g')\n        src = src.replace(regex, (match) => placeholders[match])\n    }\n    views = { ...views, ...GlobalMarkdownViews.factory }\n    const { div, replacedViews } = fixedMarkedParseCustomViews({\n        input: src,\n        views: views,\n    })\n\n    // @ts-expect-error Need to find a better way\n    if (latex && window.MathJax) {\n        // eslint-disable-next-line\n        window['MathJax'].typeset([div])\n    }\n\n    const customs = div.querySelectorAll('.language-custom-view')\n    ;[...customs]\n        .filter((custom) => custom instanceof HTMLElement)\n        .forEach((custom) => {\n            // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call\n            const fct = new Function(custom.innerText)()({\n                webpm,\n            }) as unknown as Promise<AnyVirtualDOM>\n            const view = render({\n                tag: 'div',\n                children: [\n                    child$({\n                        source$: from(fct),\n                        vdomMap: (vDom) => vDom,\n                    }),\n                ],\n            })\n            custom.parentNode?.parentNode?.replaceChild(view, custom.parentNode)\n        })\n\n    const options = {\n        router,\n        preprocessing,\n        placeholders,\n        latex,\n        views,\n        emitHtmlUpdated,\n    }\n    const viewsTagUpperCase: Record<\n        Uppercase<string>,\n        ViewGenerator\n    > = Object.entries(views).reduce(\n        (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),\n        {},\n    )\n    Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {\n        const elem = div.querySelector(`#${k}`)\n        if (!elem || !(elem instanceof HTMLElement)) {\n            return\n        }\n        elem.textContent = content\n        if (!((elem.tagName as Uppercase<string>) in viewsTagUpperCase)) {\n            return\n        }\n        const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]\n        elem.parentNode?.replaceChild(render(factory(elem, options)), elem)\n    })\n\n    return {\n        tag: 'div',\n        children: [div],\n        connectedCallback: (elem) => {\n            // Navigation links\n            if (router) {\n                replaceLinks({ router, elem, fromMarkdown: true })\n            }\n            if (emitHtmlUpdated && router) {\n                router.emitHtmlUpdated()\n            }\n        },\n    }\n}",
-                "startLine": 176,
-                "endLine": 268,
+                "implementation": "export function parseMd({\n    src,\n    router,\n    views,\n    placeholders,\n    preprocessing,\n    emitHtmlUpdated,\n    latex,\n}: {\n    src: string\n    router?: Router\n    navigations?: Record<string, (e: HTMLAnchorElement) => void>\n} & MdParsingOptions): VirtualDOM<'div'> {\n    src = preprocessing?.(src) ?? src\n    if (placeholders && Object.keys(placeholders).length > 0) {\n        const regex = new RegExp(Object.keys(placeholders).join('|'), 'g')\n        src = src.replace(regex, (match) => placeholders[match])\n    }\n    views = { ...views, ...GlobalMarkdownViews.factory }\n    const { div, replacedViews } = fixedMarkedParseCustomViews({\n        input: src,\n        views: views,\n    })\n\n    // @ts-expect-error Need to find a better way\n    if (latex && window.MathJax) {\n        // eslint-disable-next-line\n        window['MathJax'].typeset([div])\n    }\n\n    const customs = div.querySelectorAll('.language-custom-view')\n    ;[...customs]\n        .filter((custom) => custom instanceof HTMLElement)\n        .forEach((custom) => {\n            // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call\n            const fct = new Function(custom.innerText)()({\n                webpm,\n            }) as unknown as Promise<AnyVirtualDOM>\n            const view = render({\n                tag: 'div',\n                children: [\n                    child$({\n                        source$: from(fct),\n                        vdomMap: (vDom) => vDom,\n                    }),\n                ],\n            })\n            custom.parentNode?.parentNode?.replaceChild(view, custom.parentNode)\n        })\n\n    const options = {\n        router,\n        preprocessing,\n        placeholders,\n        latex,\n        views,\n        emitHtmlUpdated,\n    }\n    const viewsTagUpperCase: Record<\n        Uppercase<string>,\n        ViewGenerator\n    > = Object.entries(views).reduce(\n        (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),\n        {},\n    )\n    Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {\n        const elem = div.querySelector(`#${k}`)\n        if (!elem || !(elem instanceof HTMLElement)) {\n            return\n        }\n        elem.textContent = content\n        if (!((elem.tagName as Uppercase<string>) in viewsTagUpperCase)) {\n            return\n        }\n        const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]\n        const replacedView = factory(elem, options)\n        elem.parentNode?.replaceChild(\n            replacedView instanceof HTMLElement\n                ? replacedView\n                : render(replacedView),\n            elem,\n        )\n    })\n\n    return {\n        tag: 'div',\n        children: [div],\n        connectedCallback: (elem) => {\n            // Navigation links\n            if (router) {\n                replaceLinks({ router, elem, fromMarkdown: true })\n            }\n            if (emitHtmlUpdated && router) {\n                router.emitHtmlUpdated()\n            }\n        },\n    }\n}",
+                "startLine": 175,
+                "endLine": 273,
                 "references": {
                     "parseMd": "@nav/api/MainModule.parseMd",
                     "Router": "@nav/api/MainModule.Router",
@@ -2863,8 +2865,8 @@
                 "filePath": "src/lib/browser.interface.ts",
                 "declaration": "export function parseUrl(url: string): UrlTarget",
                 "implementation": "export function parseUrl(url: string): UrlTarget {\n    const urlParams = new URLSearchParams(url)\n    const nav = sanitizeNavPath(urlParams.get('nav') ?? '/')\n\n    const parameters = Object.fromEntries(urlParams.entries())\n    delete parameters.nav\n    if (!nav.includes('.')) {\n        return {\n            path: nav,\n            parameters,\n        }\n    }\n    return {\n        path: nav.split('.')[0],\n        parameters,\n        sectionId: nav.split('.').slice(1).join('.'),\n    }\n}",
-                "startLine": 89,
-                "endLine": 107,
+                "startLine": 88,
+                "endLine": 106,
                 "references": {
                     "parseUrl": "@nav/api/MainModule.parseUrl",
                     "UrlTarget": "@nav/api/MainModule.UrlTarget"
@@ -2898,8 +2900,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function removeEscapedText(src: string): {\n    escapedContent: string\n    replaced: Record<string, string>\n}",
                 "implementation": "export function removeEscapedText(src: string): {\n    escapedContent: string\n    replaced: Record<string, string>\n} {\n    let escapedContent = src // Initialize the escaped content with the source text\n    const replaced = {} // Initialize an object to store the replaced escaped elements\n\n    // Regular expression patterns to match escaped parts\n    const tripleBackquotePattern = /```([\\s\\S]*?)```/g\n\n    // Replace triple back-quote escaped parts\n    escapedContent = escapedContent.replace(tripleBackquotePattern, (match) => {\n        const id = `__ESCAPED_${String(Object.keys(replaced).length)}` // Generate a unique ID\n        replaced[id] = match // Store the escaped part in the replaced object\n        return id // Replace the escaped part with the unique ID\n    })\n\n    // Regular expression pattern to match single back-quoted escaped parts spanning multiple lines\n    const multilineBackquotePattern = /`([\\s\\S]*?)`/g\n\n    // Replace single back-quote escaped parts\n    escapedContent = escapedContent.replace(\n        multilineBackquotePattern,\n        (match) => {\n            const id = `__ESCAPED_${String(Object.keys(replaced).length)}` // Generate a unique ID\n            replaced[id] = match // Store the escaped part in the replaced object\n            return id // Replace the escaped part with the unique ID\n        },\n    )\n\n    return { escapedContent, replaced }\n}",
-                "startLine": 372,
-                "endLine": 404,
+                "startLine": 377,
+                "endLine": 409,
                 "references": {
                     "removeEscapedText": "@nav/api/MainModule.removeEscapedText"
                 }
@@ -3015,7 +3017,7 @@
                 "references": {
                     "segment": "@nav/api/MainModule.segment",
                     "PathSegment": "@nav/api/MainModule.PathSegment",
-                    "T": "928"
+                    "T": "1033"
                 }
             },
             "semantic": {
@@ -3075,7 +3077,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "Gathers markdown widgets definition.",
+                        "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  function. Widgets are referenced within ,\nwhich maps `tag-name -> implementation` to enable seamless integration into Markdown content.\n\nEach widget provides a static `fromHTMLElement` method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n### \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n### \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n### \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n## New Widgets\nTo extend the functionality of , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view `controls` instantiated with `improbabilityFactor=5`:\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
                         "contentType": "markdown"
                     }
                 ]

@@ -12,6 +12,7 @@ import { logo } from './logo'
 import { companionNodes$ } from './on-load'
 import { example1 } from './js-plaground-examples'
 import { ApiLink, CrossLink, ExtLink, SplitApiButton } from './md-widgets'
+import { CSS3DModule } from './css-3d-renderer'
 
 const project = {
     name: 'mkdocs-ts',
@@ -135,7 +136,54 @@ export const navigation: AppNav = {
                                 url: url('tutorials.basics.md'),
                                 router,
                                 options: notebookOptions,
+                                initialScope: {
+                                    const: {
+                                        CSS3DModule,
+                                    },
+                                    let: {},
+                                },
                             }),
+                    },
+                    routes: {
+                        '/dynamic-nav': {
+                            name: 'Dynamic Navigation',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.basics.dynamic-nav.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                        'custom-layout': {
+                            name: 'Custom Layout',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.basics.custom-layout.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
+                        typescript: {
+                            name: 'Typescript',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.basics.typescript.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
                     },
                 },
                 '/markdown': {
@@ -284,6 +332,19 @@ async function apiNav(): Promise<AppNav> {
         },
         entryModule: 'mkdocs-ts',
         docBasePath: '../assets/api',
-        configuration: CodeApiModule.configurationTsTypedoc,
+        configuration: {
+            ...CodeApiModule.configurationTsTypedoc,
+            notebook: {
+                options: {
+                    runAtStart: true,
+                    markdown: {
+                        placeholders,
+                    },
+                },
+            },
+            mdParsingOptions: {
+                placeholders,
+            },
+        },
     })
 }

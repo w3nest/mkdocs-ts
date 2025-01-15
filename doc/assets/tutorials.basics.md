@@ -1,13 +1,21 @@
 # Getting Started
 
-This tutorial introduces you to {{mkdocs-ts}}, guiding you through its default layout and core concepts. 
-By the end, you'll have a solid foundation and links to explore more advanced topics.
+This tutorial serves as an introduction to the core concepts and features of {{mkdocs-ts}}, 
+a library designed for creating hierarchical, interactive, and dynamic documentation. 
+While the example used—a whimsical guide to *The Hitchhiker’s Guide to the Galaxy* quotes—might lean on humor, 
+the underlying purpose is to demonstrate practical techniques for building structured applications with {{mkdocs-ts}}.
+
+Through this example, you'll gain an understanding of how to use Markdown, the library's layout system,
+and its navigation features to create modular and responsive applications. 
+By the end, you'll have both a fun example application and the knowledge to build your own tailored projects.
+
+Let's get started!
 
 <note level=hint>
 Many links to the API documentation are embedded throughout this tutorial. 
-To enhance your experience, toggle a split view by clicking the split button <split-api></split-api>.
-This feature allows you to read the tutorial alongside the API documentation and is also accessible from the
-left navigation panel under the **API** node.
+To enhance your experience, you can toggle a split view by clicking <split-api></split-api>
+to read the tutorial alongside the API documentation.
+The button is also accessible from the left navigation panel under the <i class="fas fa-code">API</i> node.
 </note>
 
 <note level="info" label="About Notebook" expandable="true">
@@ -23,15 +31,15 @@ The primary exception is the `display` function, details can be found
 
 ---
 
-## Simple Application
+## Grab Your Towel
 
-Let's install {{mkdocs-ts}} along with its required stylesheets:
+Let's start with installing {{mkdocs-ts}} along with its required stylesheets:
 
 <js-cell>
 const version = "{{mkdocs-version}}"
 
 const { MkDocs } = await webpm.install({
-    modules:[ `mkdocs-ts#${version} as MkDocs`],
+    esm:[ `mkdocs-ts#${version} as MkDocs`],
     css: [
         // Required by mkdocs-ts itself:
         'bootstrap#5.3.3~bootstrap.min.css',
@@ -44,102 +52,137 @@ display(MkDocs)
 </js-cell>
 
 <note level='info' expandable="true" title="About `webpm`">
-<ext-link target="webpm">WebPM</ext-link> is an installer used here to dynamically install **{{mkdocs-ts}}**.
-For typical use cases, {{mkdocs-ts}} is usually included "statically" within the project's `node_modules`
-folder, rather than being dynamically installed.
 
-It plays however a central role in the Notebook module for dynamic dependencies installation.
-This topic is presented within the <cross-link target='notebook'>Notebook tutorial</cross-link>
+<ext-link target="webpm">WebPM</ext-link> is an installer used here to dynamically install **{{mkdocs-ts}}**,
+often used with notebook pages.
+However, for typical project setup, {{mkdocs-ts}} is included "statically" within the project's `node_modules`
+folder, rather than being dynamically installed.
 </note>
 
-### Defining Navigation
+---
+
+## Don't Panic
+
+### Step 1: Navigation
 
 Creating an application with {{mkdocs-ts}} centers around defining a  <api-link target="Navigation"></api-link> object.
 
-Below is a simple example of navigation:
+
+The navigation defined next use Markdown to create the page. Markdown is a core feature of {{mkdocs-ts}}, making
+it simple to use while offering powerful features.
+For example, this very page comes from the following <ext-link target="tutorials.basics.md">Markdown file</ext-link>.
+
+The next expandable section defines the text content for the two pages involved in the navigation.
+
+<note level='abstract' label='Texts `homePage` & `noPanicPage`' expandable="true" mode="stateful">
 
 <js-cell>
 
-// helper to construct mock view
-const loremIpsumView = (title) => ({
-    tag: 'div',
-    children: [
-        {
-            tag: 'h4',
-            innerText: title,
-        },
-        {
-            tag: 'p',
-            innerText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        }
-    ]   
+const homePage = `
+# A Guide About The Guide
+
+---
+
+**A Whimsical Guide to Crafting Documents**
+
+Welcome, dear hitchhiker, to a tutorial as whimsically nonsensical as the universe itself.
+In this journey, you’ll not only explore pearls of wisdom plucked from the mind of Douglas Adams,
+but also learn to craft a document worthy of any intergalactic traveler.
+Together, we’ll stack layers of absurdity and structure like a Vogon stacks bureaucracy—only with far less pain.
+So grab your towel, prepare to navigate nested nodes, and let’s build something delightfully improbable!
+
+
+> "*For a moment, nothing happened. Then, after a second or so, nothing continued to happen.*"
+> – Douglas Adams, *The Hitchhiker's Guide to the Galaxy*
+
+`
+
+const noPanicPage = `
+# Don't Panic
+
+---
+
+**The First Rule of Intergalactic Travel**
+
+In bold, friendly letters, this phrase reassures us that no matter how complex things may seem—whether you’re
+facing intergalactic bureaucracy or crafting a hierarchical document—you’ve got this.
+Building a structured document doesn’t require an improbability drive, just a little guidance.
+So, grab your towel, take a deep breath, and let’s prove that even the most daunting tasks can be surprisingly simple.
+
+> "*'I like the cover,' he said. 'Don't Panic. It's the first helpful or intelligible thing anybody's said to me 
+> all day.'*" – Douglas Adams, *The Hitchhiker's Guide to the Galaxy*
+
+`;
+
+</js-cell>
+</note>
+
+
+And the navigation:
+
+<js-cell>
+const header = (faIcon) => ({
+    icon: {tag:'i', class: `fas ${faIcon}`}
 })
+
+
 // Define the navigation structure
 let navigation = {
-    name: 'Home',
-    layout: () => loremIpsumView('Home'),
+    name: "A Guide",
+    layout: () => MkDocs.parseMd({src:homePage}),
+    header: header('fa-space-shuttle'),
     routes:{
-        '/node-1': {
-            name: 'First child',
-            layout: () => loremIpsumView('First Page'),
-        },
-        '/node-2': Promise.resolve({
-            name: 'Second child',
-            layout:  () => loremIpsumView('Second Page (async navigation)')
-        }),
-        '/node-3': {
-            name: 'Third child',
-            layout: () => Promise.resolve(loremIpsumView('Third Page (async layout content)')),
-            routes: {
-                '/node-1': {
-                    name: 'Nested child',
-                    layout: () => loremIpsumView('Nested Page')
-                }
-            }
+        '/dont-panic': { 
+            name: "Don't panic",
+            layout: () => MkDocs.parseMd({src:noPanicPage}),
+            header: header('fa-temperature-low')
         },
     }
 }
 </js-cell>
 
-The example above defines a static navigation tree (dynamic navigation tree exists, they are presented in a 
-[dedicated page](@nav/tutorials/basics/dynamic-nav)). 
-The structure is recursive, where child nodes are defined through the `routes` attribute. 
+The example above defines a **static** navigation tree (**dynamic** navigation tree exists, they are presented in a 
+<cross-link target="dynamic-nav">dedicated page</cross-link>). 
+The structure is recursive, child nodes are defined through the `routes` attribute. 
 Each node includes:
 
-*  **Segment ID**: The key in the mapping (e.g., `/node-1`).
+*  **Segment ID**: The key in the mapping (e.g., `/dont-panic`). It should start with '/', not use spaces or special 
+   characters not allowed in URLs as a page URL of the document is defined by the sequence of segment IDs.
 *  **Name**: A non-unique identifier typically used for display purposes.
-*  **Layout**: The content of the page, specified by a function or object (see **Defining Views** below).
+*  **Layout**: The content of the page, specified by a function or object defining one or multiple views - depending
+   on the specific layout. More on views definition in a bit.
+*  **Header**: Provide handle on how the node is rendered in the navigation panel. It defines here an icon, expressed 
+   as a Virtual DOM from <ext-link target='rx-vdom'>Rx-vDOM</ext-link> library. 
+   This could also be standard `HTMLElement`, more on that in a bit.
 
-The example also demonstrates how to handle asynchronous data at different levels (see **Async Nodes & Content** below).
+Note that the attribute `layout` & `header` have a structure that is determined by the type of layout uses
+for rendering. In the current case, showcasing the default layout, they are defined by 
+<api-link target="DefaultLayout.NavLayout"></api-link> and 
+<api-link target="DefaultLayout.NavHeader"></api-link> 
+respectively.
 
-<note level="warning" label="Important">
-When defining segment ID (e.g., `/node-1`), do not use spaces or special characters not allowed in URLs.
-</note>
+<note level="info" expandable="true" label="Asynchronous navigation">
 
-<note level="info" expandable="true" label="Defining views">
-In {{mkdocs-ts}}, views are typically built using the Virtual DOM from the 
-{{rx-vdom}} library. 
-The `loremIpsumView` function in the example returns a Virtual DOM.
+{{mkdocs-ts}} often use the <api-link target="Resolvable">Resolvable</api-link> to define elements of the navigation.
+This is for instance the case to define the <api-link target="StaticRoutes"></api-link> or for the specification of the 
+<api-link target="DefaultLayout.NavLayout"></api-link> content.
 
-Views can also integrate standard HTML elements or be rendered directly from Markdown files - as explained in a latter 
-section of this page.
-</note>
+This is for instance useful when a request to a service is needed to construct some navigation nodes.
 
-<note level="info" expandable="true" label="Async. node & content">
-Asynchronous data can be provided in navigation using `Promise` or `Observable`.
+Asynchronous data can be provided in navigation using `Promise` or `Observable` in two ways.
 
-*  **Async Node Example: /node-2** is a node defined asynchronously, requiring the navigation tree to wait for 
+*  **Async Node**: A whole node cen be defined asynchronously, requiring the navigation tree to wait for 
    resolution before updating.
-*  **Async Layout Content Example**: The layout of `/node-3` is asynchronous but does not block the tree's construction.
-   The promise resolves only when the page is displayed, offering better performance and responsiveness.
+*  **Async Layout Content**: Instead of the whole node being a promise or an observable, the layout can as well be
+   asynchronous. In such case, it does not block the navigation tree's construction: the promise resolves only when the
+   page is displayed, offering better performance and responsiveness.
 
-When possible, prefer resolving asynchronous tasks within the layout specification to avoid delays in
-building the navigation tree.
 </note>
 
-### Defining Router
+### Step 2: Router
 
-Using the navigation object, you can construct a <api-link target="Router"></api-link> instance:
+With the navigation object ready, you can create a <api-link target="Router"></api-link> instance to manage the 
+routing logic of your application:
 
 <js-cell>
 let router = new MkDocs.Router({
@@ -148,86 +191,162 @@ let router = new MkDocs.Router({
     // It is used here to not re-locate your browser when navigating in this example.
     browserClient: (p) => new MkDocs.MockBrowser(p)
 })
-display(
-    "Current (mocked) browser's path:",
-    {tag:'i', class:'mx-1'}, 
-    router.path$
-)
 </js-cell>
 
-The `Router` is the core object that encapsulates the application's navigation logic. 
-It serves as the primary construct for interacting with navigation, making it essential for handling routing in 
-your application.
+The `Router` serves as the backbone of your application’s navigation system. 
+It encapsulates all routing logic, enabling seamless transitions between pages and ensuring consistent handling 
+of navigation events.
 
-<note level="hint">
-The output of the above cell displays the `router.path$`, an observable that emits the current path whenever 
-navigation occurs. This will dynamically update as you navigate through the application built in the following section.
+For the purposes of this tutorial, a <api-link target="MockBrowser"></api-link> client is used to simulate navigation 
+without triggering browser reloads. This makes it easier to experiment with routing concepts without affecting the
+actual browser state. In production scenarios, omit the browserClient parameter to use the default browser-based routing.
+
+### Step 3: Layout
+
+{{mkdocs-ts}} includes a default layout powered by the <api-link target="DefaultLayout.Layout"></api-link> class.
+This layout provides a structured foundation out of the box.
+
+To enhance the user experience, we'll also define here a top-banner that dynamically displays the current path of the 
+mocked browser, consuming **`router.path$`**. 
+Curious about the implementation? Check out the expandable section below.
+
+<note level='abstract' icon='fas fa-code' label='Path View' expandable="true" mode="stateful">
+<js-cell>
+const homeView = (router) => {
+    return {
+        tag: 'a',
+        class:'fas fa-home',
+        href: '/',
+        onclick: (ev)=>{ ev.preventDefault(); router.fireNavigateTo({path: '/'}) }
+    }
+}
+const segmentView = ( path, router) => {
+    return {
+        tag: 'a',
+        innerText: path.split('/').slice(-1)[0],
+        href: path,
+        onclick: (ev)=>{ ev.preventDefault(); router.fireNavigateTo({path}) }
+    }
+}
+const sepView = {
+    tag: 'div',
+    class: 'mx-1',
+    innerText: '/'
+}
+const pathView = (router) => {
+    return {
+        tag: 'div',
+        class: 'text-center w-100 bg-light my-1 rounded d-flex align-items-center justify-content-center', 
+        children: {
+            policy: 'replace',
+            source$: router.path$,
+            vdomMap: (path) => {
+                const segments = path.split('/').slice(1)
+                return [ 
+                    homeView(router), 
+                    segments.map( (segment, i) => {
+                        const segmentPath = segments.slice(0,i+1).join('/')
+                        return [sepView, segmentView(segmentPath, router)]
+                    })
+                ].flat(2)
+            }
+        }
+    }
+}
+</js-cell>
 </note>
 
-
-### Defining Layout
-
-{{mkdocs-ts}} provides a default layout, rendered using the <api-link target="DefaultLayout.Layout"></api-link> class,
-which serves as a convenient starting point for your application:
+With the path view in place, here’s the complete application:
 
 <js-cell cell-id="example0">
-let app = new MkDocs.DefaultLayout.Layout({ router })
+
+const appView = { 
+    tag: 'div', 
+    class: 'flex-grow-1',
+    style: { minHeight: '0px' },
+    children:[
+        new MkDocs.DefaultLayout.Layout({ router })
+    ] 
+}
 display({
     tag: 'div',
-    class:'border p-1',
-    style:{height:'100%'},
-    children:[app]
+    class:'border p-1 d-flex flex-column w-100 h-100',
+    children:[
+        pathView(router),
+        appView
+    ]
 })
 </js-cell>
 
-
-<cell-output cell-id="example0" full-screen="true" style="height:500px;">
+<cell-output cell-id="example0" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
 </cell-output>
 
-Refer to the documentation for <api-link target="DefaultLayout.Layout.new"></api-link> to explore the various options 
 
 <note level="hint">
-As mentioned earlier, {{mkdocs-ts}} relies on the {{rx-vdom}} library for generating and rendering views.
-This topic is introduced hereafter.
+The above view is reactive and adapts to available space. 
+For small viewports - just like above when embedded -, it displays in a compact format. 
+If you're using a large enough screen, click the <button class="btn btn-sm btn-light fas fa-expand"></button> button at 
+the top right of the output to see its expanded format. 
 </note>
 
-## Views injection
+<note level="warning" label="Important">
+The `display` function used above is able to consume `Virtual DOM` components from 
+<ext-link target="rx-vdom">rx-vdom library</ext-link> (more on that in a bit). 
+In your application you'll likely need to explicitly transforms the `Virtual DOM` into plain `HTMLElement`.
+To do so, use the `render` function, *e.g.*:
 
-Views injection is a key mechanism in {{mkdocs-ts}}, essential for defining layout content or integrating views 
-across various parts of your application.
+<code-snippet language='javascript'>
+import { VirtualDOM, render } from 'rx-vdom'
 
-There are three main options for providing views:
+const appView : VirtualDOM = { tag: 'div',  /*...*/ }
 
-*  **From `HTMLElement`**: The native DOM element used by web browsers. Ultimately, every view resolves to an 
-   `HTMLElement`.
+document.body.append(render(appView))
+</code-snippet>
+</note>
 
-*  **From `VirtualDOM`**: The internal standard adopted by {{mkdocs-ts}}, which acts as a lightweight wrapper around 
-   `HTMLElement` to enable enhanced reactivity. This representation is powered by the {{rx-vdom}} library and has been 
-   used earlier within the `loremIpsumView` function.
+Through its <api-link target="DefaultLayout.Layout.new">constructor</api-link>, the default layout offers multiple
+parameters to control sizing options, they are gathered in 
+<api-link target="DefaultLayoutParams.displayOptions"></api-link>.
 
-*  **From `Markdown`**: A versatile and user-friendly approach for defining views. 
-   Markdown combines simplicity, flexibility, and refined rendering capabilities. 
-   The Markdown engine provided here extends far beyond standard syntax, as evidenced by this very page, 
-   which is generated from the following <ext-link target="tutorials.basics.md">source file</ext-link>.
+<note level="hint" label="CSS" expandable="true">
+Most components in the view come with unique class names in the form of `mkdocs-*`.
+These can be used to define custom styles, giving you more control over the visual appearance of your application.
 
-These three options are introduced hereafter;
-to simplify the upcoming examples, a helper function `displayApp` is defined in the expandable block below:
+The CSS selectors can be found from the API documentation, looking for the static attribute `CssSelector`, *e.g.*:
+*  <api-link target="DefaultLayout.Layout.CssSelector"></api-link>
+*  <api-link target="DefaultLayout.NavHeaderView.CssSelector"></api-link>
+*  <api-link target="DefaultLayout.NavigationView.CssSelector"></api-link>
+*  <api-link target="DefaultLayout.FavoritesView.CssSelector"></api-link>
 
-<note level='abstract' icon='fas fa-code' label='Code Helper: `displayApp`' expandable="true" mode="stateful">
+</note>
+
+You can also create your own layouts or use multiple layouts within your application, 
+this is presented in the <cross-link target="custom-layout">Custom Layouts</cross-link> page.
+
+For now, let's introduce the core concepts of views injection.
+
 
 <js-cell>
-const displayApp = (navigation, display, topBanner) => {
-    const app = new MkDocs.DefaultLayout.Layout({
-        router: new MkDocs.Router({
-            navigation, 
-            browserClient: (p) => new MkDocs.MockBrowser(p) 
-        }),
+const displayApp = (navigation, display) => {
+    const router = new MkDocs.Router({
+        navigation, 
+        browserClient: (p) => new MkDocs.MockBrowser(p) 
     })
+    const appView = { 
+        tag: 'div', 
+        class: 'flex-grow-1',
+        style: { minHeight: '0px' },
+        children:[
+            new MkDocs.DefaultLayout.Layout({router})
+        ] 
+    }
     display({
         tag: 'div',
-        class:'border p-1',
-        style:{ height:'100%' },
-        children:[app],
+        class:'border p-1 d-flex flex-column w-100 h-100',
+        children:[
+            pathView(router),
+            appView
+        ],
         onclick: () => {
             // Related to the 'View customization' example
             document.querySelectorAll('.ctx-menu').forEach((c) => c.remove())
@@ -235,256 +354,445 @@ const displayApp = (navigation, display, topBanner) => {
     })
 }
 </js-cell>
+
 </note>
 
-### Standard `HTMLElement`
 
-Below is an example demonstrating how to lazily load the 
-<ext-link target="tweak-pane">TweakPane</ext-link> library from WebPM's CDN and create 
-a simple view:
+---
 
-<js-cell cell-id="example3">
-navigation = {
-    name: 'Home',
-    layout: async () => {
-        // doing so will load 'tweakpane' lazily, when accessing the page.
-        const {TP} = await webpm.install({modules:['tweakpane#^4.0.1 as TP']})
-        const pane = new TP.Pane()
-        const PARAMS = {
-            title: 'Hello',
-            color: '#ff0055',
-        };        
-        pane.addBinding(PARAMS, 'title');
-        pane.addBinding(PARAMS, 'color');   
-        return pane.element // HTMLElement
-    }
-}
+## Ultimate Answer
 
-displayApp(navigation, display)
-</js-cell>
+In {{mkdocs-ts}}, views injection is a core mechanism that enables seamless integration of dynamic content 
+across your application. 
 
-<cell-output cell-id="example3" full-screen="true" style="height:500px;">
-</cell-output>
+Injected views are defined using two primary types, as defined in <api-link target="AnyView"></api-link>:
 
+*  **`HTMLElement`**: The native building block of web browsers. Every view eventually resolves into an `HTMLElement`.
+   This type allows integration with your favorite libraries to create complex, polished interfaces.
 
-### Virtual DOM
+*  **`VirtualDOM`**: The default approach in {{mkdocs-ts}}, powered by the lightweight and reactive 
+   <ext-link target="rx-vdom">Rx-vDOM</ext-link> library. It wraps `HTMLElement` with additional capabilities for
+   reactive updates and streamlined development.
 
-Internally, {{mkdocs-ts}} leverages the <ext-link target="virtual-dom">VirtualDOM</ext-link> construct to manage views. 
-For advanced scenarios, we recommend exploring the <ext-link target="rx-vdom">Rx-vDOM</ext-link> library, 
-as it integrates naturally with {{mkdocs-ts}} and provides robust support for reactivity, particularly in the Notebook 
-submodule.
+<note level="hint" label="Cross-Compatibility" expandable="true">
+Switching between these two types is straightforward.
+To convert a VirtualDOM to an HTMLElement:
 
-Here’s an example illustrating reactivity:
+<code-snippet language='javascript'>
+import { AnyVirtualDOM, render } from 'rx-vdom'
 
-<js-cell cell-id="example-vdom">
+const vDOM : AnyVirtualDOM = { tag: 'div', /* ... */ }
+const element : HTMLElement = render(vDOM)
+</code-snippet>
 
-navigation = {
-    name: 'Home',
-    layout: async () => {
-        const {TP, rxjs} = await webpm.install({modules:['tweakpane#^4.0.1 as TP', 'rxjs#7.5.6 as rxjs']})
+To use an HTMLElement within a VirtualDOM:
 
-        const title$ = new rxjs.BehaviorSubject('Hello')
-        const bgColor$ = new rxjs.BehaviorSubject('#ff0055')
+<code-snippet language='javascript'>
+import { AnyVirtualDOM } from 'rx-vdom'
 
-        const pane = new TP.Pane()
-        const PARAMS = {
-            title: title$.value,
-            color: bgColor$.value,
-        };        
-        pane.addBinding(PARAMS, 'title').on('change', (ev) => {
-            title$.next(ev.value);
-        });
-        pane.addBinding(PARAMS, 'color').on('change', (ev) => {
-            bgColor$.next(ev.value);
-        });   
-        return { 
-            tag: 'div',
-            class: 'p-2 rounded',
-            style: { 
-                source$: bgColor$, 
-                vdomMap:(color) => ({backgroundColor:color}) 
-            },
-            children:[
-                {   
-                    tag: 'p', 
-                    innerText:{ source$:title$, vdomMap: (d) => d }
-                },
-                pane.element,
-            ]
-        }
-    }
-}
-
-displayApp(navigation, display)
-</js-cell>
-
-<cell-output cell-id="example-vdom" full-screen="true" style="height:500px;">
-</cell-output>
-
-<note level="hint">
-The example above shows the ability to provide a regular `HTMLElement` (`pane.element`) as child of a `VirtualDOM`. 
-It can be useful for scenario where a `VirtualDOM` is required while an `HTMLElement` is available, *e.g.* :
-
-<code-snippet language="javascript">
-function toVirtualDOM( elem: HTMLElement ): VirtualDOM<'div'> {
-    return { tag: 'div', children:[elem] }
-}
+const element : HTMLElement = document.createElement('div') 
+const vDOM : AnyVirtualDOM = { tag: 'div', children: [element] } 
 </code-snippet>
 </note>
 
-### Markdown
+The <api-link target="parseMd">Markdown parser</api-link> function enables combining  `HTMLElement` and `VirtualDOM`
+within Markdown content to build powerful, reactive views. 
 
-Markdown is a first-class citizen of {{mkdocs-ts}}. The library provides utilities to render pages using Markdown via:
+Let’s illustrate this with a new navigation node **/answer**, showcasing a dynamic computation panel embedded in 
+Markdown text.
 
-*  <api-link target='parseMd'></api-link>: Converts Markdown source into a view.
-*  <api-link target='fetchMd'></api-link>: Fetches and renders Markdown from a URL.
+### Step 1: Page Content
 
-The {{mkdocs-ts}} Markdown parser extends standard Markdown capabilities. It supports: - LaTeX expressions - 
-Custom views - Pre-processing, and more.
-For details, refer to the [Markdown tutorial](@nav/tutorials/markdown).
+The page content references placeholders for custom views, such as `controls` and `solution`, 
+to be replaced dynamically at runtime:
 
-Here is an example using `parseMd`:
+<js-cell >
 
-<js-cell cell-id="example1">
-const mdSrc = `
-**Including Markdown**
+const pageAnswer = `
+# The Answer
 
-<!-- internal links should be prefixed by '@nav' -->
-Just a simple example with a [link to page](@nav/child-1).
+---
+
+**The Ultimate Answer to Life, the Universe, and Everything**
+
+To compute the answer provide the following parameters & hit **compute**:
+
+<controls></controls>
+
+<solution title="**The answer**: ">
+
+> "*The Ultimate Answer to Life, The Universe and Everything is...42!*"
+> – Douglas Adams, *The Hitchhiker's Guide to the Galaxy*
+
+<note level='question'>
+What does the answer really mean? Is it a cosmic joke or a profound truth?
+Either way, this iconic number continues to spark debates, inspire T-shirts, and bewilder philosophers.
+Spoiler alert: The real challenge is figuring out the Ultimate Question.
+</note>
+</solution>
+
 `
-
-navigation = {
-    name: 'Home',
-    layout: ({ router }) => MkDocs.parseMd({
-        src: mdSrc,
-        router
-    }),
-    routes:{
-        '/child-1': { 
-            name: 'Page 1',
-            layout: () => loremIpsumView('Child Page')
-        }
-    }
-}
-displayApp(navigation, display)
 </js-cell>
 
-<cell-output cell-id="example1" full-screen="true" style="height:500px;">
-</cell-output>
+The DOM element **`note`** is a custom view registered by {{mkdocs-ts}} itself, available any time Markdown are parsed.
+Other views are also available, they are defined in <api-link target="MdWidgets"></api-link>.
 
-<note level="warning" label="Cross navigation">
-Cross-navigation within Markdown content uses regular syntax except that the `href` value must be prefixed with `@nav`,
-followed by the page path, and optionally extended with a section ID (separated by a dot). 
-</note>
+### Step 2: Custom Views
 
-## Customization
+**Controls**
 
-### Nav. Header
+The controls view creates an interactive control panel using the <ext-link target='tweakpane'>Tweakpane</ext-link> 
+library:
 
-You can customize the header of a navigation node in the navigation panel to include custom icons, styles, or actions.
-The default layout defines the structure of the node's header data using 
-<api-link target="DefaultLayout.NavHeader"></api-link>
+<js-cell >
+const controls = async (computeCb) => {
+    /*
+    *  - `computeCb`: called when clicking `compute` with the parameters.
+    *
+    *  -  Returns an `HTMLElement`.
+    */
+    const {TP} = await webpm.install({
+        esm:['tweakpane#^4.0.1 as TP']
+    })
+    const pane = new TP.Pane()
 
+    const params = {
+        improbabilityFactor: 3,
+        babelFishCount: 1,
+        vogonPoetryExposure: 250,
+        towelAbsorbency: 2,
+    };   
+    Object.keys(params).forEach((k) => pane.addBinding(params, k))
+    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));
+    return pane.element
+}
+</js-cell>
 
-The following example demonstrates how to add a custom icon (<i class='fas fa-tools'></i>) to a node and display a 
-context menu when clicking on another icon (<i class='fas fa-ellipsis-h'></i>).
-Decoration can define icons and/or actions for a navigation node. Let's start by creating a simple 'popup' panel 
-to be displayed when <i class='fas fa-ellipsis-h'></i> is clicked.
-In real scenario, this panel lists available actions for the related navigation node. 
+**Solution**
 
-The context menu position is computed using the **@floating-ui/dom** library, as defined in the next expandable block.
-
-<note level='abstract' icon='fas fa-code' label='Code Helper: `showCtxMenu`' expandable="true" mode="stateful">
+The `solution` view reacts to computation results, dynamically updating the display:
 
 <js-cell>
-const { FloatingUI, RxDom } = await webpm.install({
-    modules:[
-        "@floating-ui/dom#^1.6.3 as FloatingUI",
-        "@youwol/rx-vdom#^1.0.1 as RxDom"
-    ]
-})
-const showCtxMenu = (ev) => {
-    // rough implementation of context menu using @floating-ui/dom
-    ev.stopPropagation()
-    ev.preventDefault()
-    const refElement = ev.target
-    const popup = RxDom.render({
-        tag: 'div',
-        class:'ctx-menu rounded p-2 bg-secondary text-light',
-        style: {    
-            position: 'absolute',
-            zIndex:100
-        },
-        innerText: 'Context Menu',
-    })
-    document.querySelectorAll('.ctx-menu').forEach((c) => c.remove())
-    document.body.appendChild(popup)
-    const cleanup = FloatingUI.autoUpdate(refElement, popup, () => {
-        FloatingUI.computePosition(refElement, popup, {
-            placement: 'bottom',
-            middleware: [FloatingUI.flip()],
-        }).then(({ x, y }) => {
-            Object.assign(popup.style, {
-                left: `${x}px`,
-                top: `${y}px`,
-            })
-        })
-    })
-}
-</js-cell>
-</note>
-
-To incorporate the context menu view and define an icon for the node:
-
-<js-cell cell-id="example5">
-
-navigation = {
-    name: 'Home',
-    layout: () => MkDocs.parseMd({src:"**Nav. item Customization**"}),
-    header: {
-        icon: {
-            tag: 'i',
-            class: 'fas fa-home'
-        }
-    },
-    routes:{    
-        '/config': {
-            name: 'Configuration',
-            layout: ({router}) => MkDocs.parseMd({router, src:'# Configuration'}),
-            header: {
-                icon: {
-                    tag: 'i',
-                    class: 'fas fa-tools'
-                },
-                actions: [{
-                    tag: 'i',
-                    class: 'fas fa-ellipsis-h mkdocs-hover-text-warning',
-                    onclick: (ev) => showCtxMenu(ev)
-                }]
-            },
-        }
+const solution = (elem, result$) => {
+    /*
+    *  -  `elem` is the `HTMLElement` as referenced in the markdown source. It is used to retrieve the `textContent`.
+    *  -  `result` is a stream that emits `undefined` when computation starts, and the result at the end.
+    *
+    *  -  Returns a `VirtualDOM`.
+    */
+    return { 
+        tag:'div',
+        children:[{
+            source$: result$, 
+            vdomMap: (r) => r !== undefined
+                ? MkDocs.parseMd({src:`${elem.getAttribute('title')} ${r} \n\n---\n\n ${elem.textContent}`})
+                : { tag: 'i', class: 'fas fa-spinner fa-spin'}
+        }]
     }
 }
 
+</js-cell>
+
+### Step 3: Connect 
+
+Finally, define the `/answer` navigation node and link the views:
+
+<js-cell cell-id="the-answer">
+navigation = {
+    ...navigation,
+    routes: {
+        ...navigation.routes,
+        '/answer': {
+            name: 'The Answer',
+            header: header('fa-cogs'),
+            layout: async () => {
+                const {rxjs} = await webpm.install({
+                    esm:['rxjs#7.8.1 as rxjs']
+                })
+                const result$ = new rxjs.Subject()
+                const ctrlPane = await controls((params) => {
+                    // A long-running and complex computation ;)
+                    result$.next(undefined)
+                    setTimeout(() => result$.next(42), 3000)
+                })
+                return MkDocs.parseMd({
+                    src: pageAnswer,
+                    views: {
+                        controls: () => ctrlPane,
+                        solution: (elem) => solution(elem, result$)
+                    }
+                })
+            }
+        }
+    }
+}
 displayApp(navigation, display)
 </js-cell>
 
-<cell-output cell-id="example5" full-screen="true" style="height:500px;">
+<cell-output cell-id="the-answer" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
 </cell-output>
+
+--- 
+
+##  Unprobability Drive
+
+This section is all about expanding perspectives. 
+The goal is to create a new page with a `wizard` **mode** accessible via the navigation panel and demonstrate 
+how all the components fit together.
+
+### Step 1: Page Content
+
+We begin by crafting the content of the Markdown page:
+
+<js-cell >
+
+const pageBeyond = `
+# Unprobability Drive
+
+---
+
+**One Improbable Step**
+
+As we embark on this journey, expect the unexpected—and maybe even a bit of fun! Let’s turn the improbable into the 
+delightful as we organize chaos into structure.
+
+>  *"There is a theory which states that if ever anyone discovers exactly what the Universe is for and why it is here, it 
+> will instantly disappear and be replaced by something even more bizarre and inexplicable."*
+> – Douglas Adams, *The Hitchhiker's Guide to the Galaxy*
+`
+</js-cell>
+
+### Step 2: Custom Views
+
+**Wizard Button**
+
+To give users control over the view mode, we define a toggle button using a `VirtualDOM` specification.
+This button switches between **`normal`** and **`wizard`** modes:
+
+<js-cell>
+
+const mode$ = new rxjs.BehaviorSubject('normal')
+
+const checkBox = { 
+    tag:'button', 
+    class: { 
+        source$: mode$,
+        vdomMap: (mode) => mode === 'normal' ? 'btn-dark' : 'btn-light',
+        wrapper: (d) => `btn btn-sm fas fa-hat-wizard ${d} `
+    },
+    onclick: () => mode$.next(mode$.value === 'normal' ? 'wizard' : 'normal')
+}
+</js-cell>
+
+Let's define the associated **normal** and **wizard** views.
+
+**Normal View**
+
+The normal view simply parses the Markdown content into a VirtualDOM structure:
+
+<js-cell>
+const normalView = () => MkDocs.parseMd({src:pageBeyond})
+</js-cell>
+
+**Wizard View**
+
+The wizard view transforms the content into a dynamic 3D visualization using the 
+<ext-link target="three">Three.js</ext-link> CSS3DRenderer.
+
+
+<js-cell>
+const wizardView = ({THREE, htmlElement}) => ({
+    tag: 'div',
+    class: 'w-100',
+    style: {aspectRatio: '1/1'},
+    onclick: () => mode$.next('normal'),
+    connectedCallback: (container) => {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+        const { CSS3DRenderer, CSS3DObject } = CSS3DModule(THREE)
+        const renderer = new CSS3DRenderer();
+        renderer.setSize(container.offsetWidth, container.offsetHeight);
+        container.appendChild(renderer.domElement);
+        const cssObject = new CSS3DObject(htmlElement)
+        scene.add(cssObject);
+        camera.position.z = 500;
+        function animate() {
+            requestAnimationFrame(animate);
+            cssObject.rotation.x += 0.01;
+            cssObject.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    }
+})
+</js-cell>
+
+### Step 3: Connect
+
+Add the **Unprobability Drive** to the app's navigation system, allowing users to toggle between the `normal` 
+and `wizard` views:
+
+
+<js-cell cell-id="beyond">
+navigation = {
+    ...navigation,
+    routes: {
+        ...navigation.routes,
+        '/unprobability': {
+            name: 'Unprobability',
+            header: {
+                ...header('fa-jedi'),
+                actions: [checkBox] 
+            },
+            layout: async () => {
+                const { rxVDom, THREE } = await webpm.install({
+                    esm:[
+                        'rx-vdom#^0.1.0 as rxVDom',
+                        'three#^0.152.0 as THREE',
+                    ]
+                })
+                return {
+                    source$: mode$,
+                    vdomMap: (mode) => { 
+                        const regular = normalView()
+                        return mode === 'wizard' 
+                        ? wizardView({THREE, htmlElement: rxVDom.render(regular)})
+                        : regular
+                    }
+                }
+            }
+        }
+    }
+}
+displayApp(navigation, display)
+</js-cell>
+
+<cell-output cell-id="beyond" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
+</cell-output>
+
+---
+
+## Farewell
+
+Let's add a goodbye page:
+
+<js-cell >
+const pageFarewell = `
+# Farewell
+
+---
+
+**Closing the Guide, But Not the Adventure**
+
+As you venture forth into new document-building adventures, remember the wisdom of the Guide: stay curious,
+stay creative, and most importantly, Don’t Panic.
+
+
+> "*So long, and thanks for all the fish.*"
+> – Douglas Adams, *The Hitchhiker's Guide to the Galaxy*
+
+`
+</js-cell>
+
 
 ### Banners
 
+The <api-link target="DefaultLayout.Layout"></api-link> constructor accepts providing a custom
+<api-link target="DefaultLayoutParams.sideNavHeader">sideNavHeader</api-link> and/or
+<api-link target="DefaultLayoutParams.sideNavFooter">sideNavFooter</api-link>.
+
+Let's define them as such:
+
+<js-cell cell-id="example-banners">
+const sideNavHeader = () => ({
+    tag: 'i',
+    class:'w-75 text-center my-2 border-bottom mx-auto',
+    innerText: "Don't Panic"
+})
+const sideNavFooter = () => ({
+    tag: 'i', 
+    class:'w-100 text-center border-top', 
+    innerText: 'Bring Your Towel'
+})
+</js-cell>
+
+
 ### Bookmarks
 
-### Table of Content
+Bookmarks can be included in the favorite bar at the very left of the default layout.
+They are provided through <api-link target="DefaultLayoutParams.bookmarks$">bookmarks$</api-link> of
+the <api-link target="DefaultLayout.Layout.new">default layout constructor</api-link> as
+<ext-link target="BehaviorSubject">BehaviorSubject</ext-link>.
 
-### Style & CSS
+When `bookmarks` is provided, the navigation' nodes header feature a
+<button class="btn btn-sm btn-light fas fa-bookmark"></button> button allowing the reader to dynamically add/remove
+bookmarks.
+
+<js-cell>
+const bookmarks$ = new rxjs.BehaviorSubject(['/', '/dont-panic', '/answer', '/unprobability', '/farewell'])
+</js-cell>
+
+**Finally**
+
+<js-cell cell-id="final">
+
+navigation = {
+    ...navigation,
+    routes: {
+        ...navigation.routes,
+        '/farewell': {
+            name: 'Farewell',
+            header: header('fa-fish'),
+            layout: () => MkDocs.parseMd({src:pageFarewell})
+        }
+    }
+}
+
+display({
+    tag: 'div',
+    class:'border p-1 d-flex flex-column w-100 h-100',
+    children:[
+        { 
+            tag: 'div', 
+            class: 'w-100 h-100',
+            children:[
+                new MkDocs.DefaultLayout.Layout({
+                    router:new MkDocs.Router({
+                        navigation,
+                        browserClient: (p) => new MkDocs.MockBrowser(p)
+                    }),
+                    sideNavHeader,
+                    sideNavFooter,
+                    bookmarks$
+                })
+            ] 
+        }
+    ]
+})
+</js-cell>
+
+<cell-output cell-id="final" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
+</cell-output>
 
 
-##  Going further
+---
 
-Dedicated pages:
+##  Going Further
 
-*  Dynamic navigation
+This concludes our introduction to the basics of navigation, router mechanics, and default layout concepts. 
+Hopefully, you’ve enjoyed this slightly weird adventure inspired by Douglas Adams. 
+Rest assured, the upcoming tutorials will bring us back to the comforting realm of normality.
 
-*  Multi Layout 
+For your next steps, we recommend diving into the next tutorial on Markdown parsing, which you can find 
+<cross-link target="markdown">here</cross-link>.
+
+For those looking to explore further, here are three additional sub-pages to deepen your knowledge:
+
+*  **<cross-link target="dynamic-nav">Dynamic Navigation</cross-link>**: The examples so far have used a navigation
+   structure defined at compile time. This page explores how to handle scenarios where navigation must adapt dynamically.
+
+*  **<cross-link target="custom-layout">Custom layouts</cross-link>**: Learn how to define and work with custom layouts,
+   enabling you to tailor the look and feel of your application.
+
+*  **<cross-link target="typescript">Typescript</cross-link>**: If you’re working in TypeScript, this section offers 
+   practical advice and tips for achieving type safety and smoother development.

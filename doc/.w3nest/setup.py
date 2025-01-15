@@ -36,7 +36,10 @@ externals_deps = {
     "mathjax": "^3.1.4",
 }
 in_bundle_deps = {}
-dev_deps = {}
+dev_deps = {
+    # Only for type definitions
+    "three": "^0.152.0"
+}
 
 config = ProjectConfig(
     path=project_folder,
@@ -77,54 +80,3 @@ files = [
 
 for file in files:
     shutil.copyfile(src=template_folder / file, dst=project_folder / file)
-
-
-# Generate TS API files
-# print("Generate TS API files")
-# shell_command = (
-#     "cd .. && "
-#     "node ./bin/index.js "
-#     "--project ./ "
-#     "--nav /api "
-#     "--out mkdocs-ts-doc/assets/api"
-# )
-# # Execute the shell command
-# subprocess.run(shell_command, shell=True)
-#
-# # Patch 'Backends.json' to include python API of 'mkdocs_py_griffe'
-#
-# print("Patch 'Backends.json' to include python API of 'mkdocs_py_griffe'")
-#
-# path_backends = Path(__file__).parent / "assets" / "api" / "mkdocs-ts" / "Backends.json"
-# backends = parse_json(path_backends)
-# backends["children"].append(
-#     {
-#         "name": "mkdocs_py_griffe",
-#         "path": "mkdocs-ts/Backends.mkdocs_py_griffe.json",
-#         "isLeaf": True,
-#     }
-# )
-# write_json(backends, path_backends)
-#
-# # Generate Python API files
-# print("Generate Python API files")
-#
-# NAME = "mkdocs_py_griffe"
-# GRIFFE_URL = "https://mkdocstrings.github.io/griffe/reference"
-# DST = path_backends.parent / "Backends"
-#
-# config = Configuration(
-#     base_nav=f"/api/Backends/{NAME}",
-#     external_links={
-#         **std_links(),
-#         **{
-#             f"griffe.dataclasses.{name}": f"{GRIFFE_URL}/griffe/#griffe.{name}"
-#             for name in ["Module", "Class", "Function", "Attribute"]
-#         },
-#         "griffe.docstrings.dataclasses.DocstringSection": f"{GRIFFE_URL}/api/docstrings/models/#griffe.DocstringSection",
-#     },
-#     out=DST,
-# )
-#
-# global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
-# generate_api(global_doc, config)

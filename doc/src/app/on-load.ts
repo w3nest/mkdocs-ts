@@ -57,8 +57,7 @@ const routerView = new DefaultLayout.LayoutWithCompanion({
     router,
     bookmarks$,
     displayOptions: {
-        topStickyPaddingMax,
-        bottomStickyPaddingMax: '3rem',
+        pageVertPadding: '3rem',
     },
     sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
     sideNavFooter: () =>
