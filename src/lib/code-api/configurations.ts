@@ -14,7 +14,7 @@ import type {
     NotebookPage,
 } from '../notebook'
 import { NavNodeData } from '../navigation.node'
-import { DefaultLayout } from '../index'
+import { DefaultLayout, MdParsingOptions } from '../index'
 
 /**
  * Specification of the configuration interface.
@@ -23,6 +23,11 @@ export interface Configuration<
     TLayout = DefaultLayout.NavLayout,
     THeader = DefaultLayout.NavHeader,
 > {
+    /**
+     * Parsing options for Markdown.
+     */
+    mdParsingOptions?: MdParsingOptions
+
     /**
      * Defines the stylesheet to install.
      *

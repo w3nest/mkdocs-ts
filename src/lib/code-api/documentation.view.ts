@@ -61,6 +61,7 @@ export class SectionView implements VirtualDOM<'div'> {
                       },
                   })
                 : Dependencies.parseMd({
+                      ...(configuration.mdParsingOptions ?? {}),
                       src: section.content,
                       router: router,
                   }),
