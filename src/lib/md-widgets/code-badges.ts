@@ -24,8 +24,13 @@ export const npmIcon = {
     width: 25,
 }
 export class BadgeView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-BadgeView'
+
     public readonly tag = 'div'
-    public readonly class = 'd-flex align-items-center p-2 border rounded me-1'
+    public readonly class = `${BadgeView.CssSelector} d-flex align-items-center p-2 border rounded me-1`
     public readonly style = {
         width: 'fit-content',
     }
@@ -73,8 +78,13 @@ export class VersionBadge implements VirtualDOM<'div'> {
  * Display bagdes for version, github, npm...
  */
 export class CodeBadgesView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-CodeBadgesView'
+
     public readonly tag = 'div'
-    public readonly class = 'd-flex align-items-center flex-wrap'
+    public readonly class = `${CodeBadgesView.CssSelector} d-flex align-items-center flex-wrap`
     public readonly children: ChildrenLike
 
     /**

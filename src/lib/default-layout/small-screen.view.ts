@@ -154,6 +154,13 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
 }
 
 export class ExpandableTocColumn extends ExpandableBaseColumn {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-ExpandableTocColumn'
+
+    public readonly class = ExpandableNavColumn.CssSelector
+
     constructor(params: {
         displayOptions: DisplayOptions
         tocView: TocWrapperView

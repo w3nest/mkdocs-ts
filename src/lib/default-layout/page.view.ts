@@ -40,6 +40,9 @@ function hasContentViewTrait(node: unknown): node is ContentTrait {
  * The main content of the page.
  */
 export class PageView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
     static readonly CssSelector = 'mkdocs-PageView'
     public readonly router: Router
     public readonly tag = 'div'

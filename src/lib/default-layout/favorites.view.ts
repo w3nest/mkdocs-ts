@@ -24,9 +24,13 @@ import { NavHeader } from './navigation.view'
  * This implementation only includes the {@link BookmarksView}.
  */
 export class FavoritesView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-FavoritesView'
+
     public readonly tag = 'div'
-    public readonly class =
-        'mkdocs-FavoritesView d-flex flex-column align-items-center mkdocs-bg-6 p-1 h-100'
+    public readonly class = `${FavoritesView.CssSelector} d-flex flex-column align-items-center mkdocs-bg-6 p-1 h-100`
     public readonly children: ChildrenLike
     public readonly style: AttributeLike<CSSAttribute>
 
@@ -63,9 +67,13 @@ export class FavoritesView implements VirtualDOM<'div'> {
  * Each bookmark is rendered using {@link BookmarkView}.
  */
 export class BookmarksView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-BookmarksView'
+
     public readonly tag = 'div'
-    public readonly class =
-        'mkdocs-BookmarksView d-flex flex-column align-items-center overflow-auto flex-grow-1 mkdocs-thin-v-scroller'
+    public readonly class = `${BookmarksView.CssSelector} d-flex flex-column align-items-center overflow-auto flex-grow-1 mkdocs-thin-v-scroller`
     public readonly children: ChildrenLike
 
     /**
@@ -113,8 +121,13 @@ export class BookmarksView implements VirtualDOM<'div'> {
  * A single bookmark view.
  */
 export class BookmarkView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-BookmarkView'
+
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-BookmarkView mb-3'
+    public readonly class = `${BookmarkView.CssSelector} mb-3`
     public readonly children: ChildrenLike
     /**
      * Initializes a new instance.

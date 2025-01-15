@@ -47,6 +47,9 @@ export interface NavHeader {
  *
  **/
 export class NavigationView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
     static readonly CssSelector = 'mkdocs-NavigationView'
     public readonly router: Router<unknown, NavHeader>
 
@@ -116,8 +119,13 @@ export class NavigationView implements VirtualDOM<'div'> {
  * contextual information.
  **/
 export class NavigationWrapperView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-NavigationWrapperView'
+
     public readonly tag = 'div'
-    public readonly class = 'd-flex flex-column h-100'
+    public readonly class = `${NavigationWrapperView.CssSelector} d-flex flex-column h-100`
     public readonly children: ChildrenLike
     public readonly style = {}
 

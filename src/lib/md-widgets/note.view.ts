@@ -47,9 +47,13 @@ export type ExpandableMode = 'stateful' | 'stateless'
  * using the tag `note`, see {@link NoteView.fromHTMLElement}.
  */
 export class NoteView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-CodeSnippetView'
+
     public readonly tag = 'div'
-    public readonly class: string =
-        'mkdocs-NoteView border rounded text-justify'
+    public readonly class: string = `${NoteView.CssSelector} border rounded text-justify`
     public readonly children: ChildrenLike
 
     public readonly level: NoteLevel

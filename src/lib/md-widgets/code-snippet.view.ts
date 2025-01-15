@@ -28,6 +28,11 @@ type CodeMirror = (
  * The widget for code snippet.
  */
 export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-CodeSnippetView'
+
     static readonly cmDependencies$: Record<
         CodeLanguage,
         Observable<{ CodeMirror: CodeMirror }> | undefined
@@ -96,8 +101,7 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
     /**
      * The class list of the associated HTML element.
      */
-    public readonly class =
-        'mkdocs-ts CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer'
+    public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`
     /**
      * The style of the associated HTML element.
      */

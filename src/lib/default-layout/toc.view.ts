@@ -54,6 +54,9 @@ const debounceTimeToc = 200
  * The table of content view.
  */
 export class TOCView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
     static readonly CssSelector = 'mkdocs-TOCView'
     public readonly router: Router
     public readonly html: HTMLElement
@@ -284,9 +287,12 @@ function hasTocViewTrait(node: unknown): node is TocTrait {
 }
 
 export class TocWrapperView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-TocWrapperView'
     public readonly tag = 'div'
-    public readonly class =
-        'mkdocs-TocWrapperView w-100 h-100 d-flex flex-grow-1 py-1'
+    public readonly class = `${TocWrapperView.CssSelector} w-100 h-100 d-flex flex-grow-1 py-1`
 
     public readonly children: ChildrenLike
 

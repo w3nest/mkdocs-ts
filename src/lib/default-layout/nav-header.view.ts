@@ -13,9 +13,13 @@ import { Router } from '../router'
 import { NavHeader } from './navigation.view'
 
 export class NavActionView implements VirtualDOM<'button'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-NavActionView'
+
     public readonly tag = 'button'
-    public readonly class =
-        'NavActionView btn btn-sm mkdocs-hover-bg-4 mkdocs-text-5'
+    public readonly class = `${NavActionView.CssSelector} btn btn-sm mkdocs-hover-bg-4 mkdocs-text-5`
     public readonly style = {
         transform: 'scale(0.75)',
     }
@@ -33,12 +37,16 @@ export class NavActionView implements VirtualDOM<'button'> {
 }
 
 export class HandlerView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-HandlerView'
+
     public readonly node: AnyNavNode<unknown, unknown>
     public readonly expandedNodes$: BehaviorSubject<string[]>
 
     public readonly tag = 'div'
-    public readonly class =
-        'mkdocs-HandlerView d-flex flex-column justify-content-center text-center rounded-circle mkdocs-ts-expand-nav-node  mkdocs-hover-bg-1 mkdocs-hover-text-1'
+    public readonly class = `${HandlerView.CssSelector} d-flex flex-column justify-content-center text-center rounded-circle mkdocs-ts-expand-nav-node  mkdocs-hover-bg-1 mkdocs-hover-text-1`
     public readonly style = {
         width: '20px',
         height: '20px',
@@ -145,8 +153,12 @@ function bookmarkView({
  * subtree.
  **/
 export class NavHeaderView implements VirtualDOM<'a'> {
-    static readonly DefaultWrapperClass =
-        'mkdocs-NavigationHeader w-100 d-flex align-items-center fv-pointer pe-2'
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-NavHeaderView'
+
+    static readonly DefaultWrapperClass = `${NavHeaderView.CssSelector} w-100 d-flex align-items-center fv-pointer pe-2`
     public readonly tag = 'a'
     public readonly href: string
     public readonly class: AttributeLike<string>

@@ -237,12 +237,15 @@ export type NavLayout =
  *  For detailed configuration options, see {@link DefaultLayoutParams}.
  */
 export class Layout implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-DefaultLayoutView'
     public readonly displayOptions: DisplayOptions = defaultDisplayOptions
 
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class =
-        'mkdocs-DefaultLayoutView d-flex flex-column h-100 w-100 overflow-y-auto overflow-x-hidden'
+    public readonly class = `${Layout.CssSelector} d-flex flex-column h-100 w-100 overflow-y-auto overflow-x-hidden`
 
     /**
      * The display mode regarding the navigation panel.
