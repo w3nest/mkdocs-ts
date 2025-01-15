@@ -6,6 +6,7 @@ import {
     VirtualDOM,
     AttributeLike,
     attr$,
+    RxHTMLElement,
 } from 'rx-vdom'
 import { NavHeader, NavigationWrapperView } from './navigation.view'
 import { Router } from '../router'
@@ -279,9 +280,14 @@ export class Layout implements VirtualDOM<'div'> {
             this.displayOptions,
             displayOptions ?? {},
         )
-        this.connectedCallback = (e: HTMLElement) => {
+        this.connectedCallback = (e: RxHTMLElement<'div'>) => {
             this.plugResizer(e)
             router.setScrollableElement(e)
+            e.ownSubscriptions(
+                router.path$.subscribe(() => {
+                    this.closeExpandedPanels()
+                }),
+            )
         }
         const viewInputs = {
             router,
@@ -410,12 +416,7 @@ export class Layout implements VirtualDOM<'div'> {
                     },
                 ],
                 onclick: () => {
-                    if (this.displayModeNav$.value === 'expanded') {
-                        this.displayModeNav$.next('hidden')
-                    }
-                    if (this.displayModeToc$.value === 'expanded') {
-                        this.displayModeToc$.next('hidden')
-                    }
+                    this.closeExpandedPanels()
                 },
             },
         ]
@@ -451,6 +452,15 @@ export class Layout implements VirtualDOM<'div'> {
         })
         if (thisElement.parentElement) {
             resizeObserver.observe(thisElement.parentElement)
+        }
+    }
+
+    private closeExpandedPanels() {
+        if (this.displayModeNav$.value === 'expanded') {
+            this.displayModeNav$.next('hidden')
+        }
+        if (this.displayModeToc$.value === 'expanded') {
+            this.displayModeToc$.next('hidden')
         }
     }
 }
