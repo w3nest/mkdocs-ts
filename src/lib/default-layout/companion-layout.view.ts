@@ -41,7 +41,7 @@ export type LayoutWithCompanionParams = DefaultLayoutParams<{
  *
  * - The nodes selected for the companion screen (`companionNodes$`) are provided and managed by the consumer.
  *
- * **Integration Notes***
+ * **Integration Notes**
  *
  * - Use the helper function {@link splitCompanionAction} to integrate a toggle button into the navigation headers of
  *   selected nodes, simplifying the management of `companionNodes$`.

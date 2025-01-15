@@ -72,21 +72,23 @@ export interface MdParsingOptions {
     emitHtmlUpdated?: boolean
 }
 /**
- * Represents global Markdown views that can be referenced when using {@link parseMd}.
+ * Provides a collection of global Markdown views that can be referenced when using {@link parseMd}.
  *
- * By default, it is populated with `code-snippet`, more information in {@link CodeSnippetView}.
+ * Custom views are defined as functions with the following structure:
+ * - **Arguments**:
+ *   - `elem`: The HTML element as declared in the Markdown file. You can access its raw text content using
+ *     `elem.textContent` and its attributes using `elem.getAttribute`.
+ *   - `options`: An instance of {@link MdParsingOptions}, providing additional context for parsing.
+ * - **Returns**: A {@link ViewGenerator} that implements the corresponding behavior for the HTML element.
  *
- * The definition of a custom view is provided using a function that:
- * *  Takes as single argument the HTML element as declared in the markdown file.
- * The raw text content within the DOM element can be accessed using `elem.textContent` and attributes using
- * `elem.getAttribute`.
- * *  Returns a virtual dom defining the corresponding implementation of the HTML element.
- *
+ * These views enable dynamic, reusable components to be seamlessly integrated into Markdown content.
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class GlobalMarkdownViews {
     /**
-     * Static factory for markdown inlined views.
+     * A static factory object containing pre-defined Markdown inline views.
+     *
+     * See {@link MdWidgets} regarding implementations.
      */
     static factory: Record<string, ViewGenerator> = {
         /**
@@ -137,7 +139,7 @@ export function fromMarkdown(p: FetchMdInput) {
 }
 
 /**
- * Parse a Markdown file specified with a URL.
+ * Parse Markdown source to generate corresponding view.
  *
  * Note that custom views provided using the attribute `views ̀ comes in addition to those registered globally in
  * {@link GlobalMarkdownViews}.

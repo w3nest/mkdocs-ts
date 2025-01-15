@@ -25,7 +25,146 @@ type CodeMirror = (
 ) => CodeMirrorEditor
 
 /**
- * The widget for code snippet.
+ * Represents a code snippet view.
+ *
+ * This view is registered in {@link GlobalMarkdownViews}: it can be instantiated from Markdown with an HTMLElement
+ * using the tag `code-snippet`, see {@link CodeSnippetView.fromHTMLElement}.
+ *
+ * ## Examples
+ *
+ * <note level="example" expandable="true" title="Javascript">
+ * <md-cell>
+ * <code-snippet language="javascript" highlightedLines="8">
+ *
+ * function compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){
+ *     console.log("Computation complete! The result is 42");
+ *     const result =
+ *         Math.log(improbabilityFactor + 42) +
+ *         babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +
+ *         vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +
+ *         towelAbsorbency * (Math.random() + 0.42)
+ *     return 42;
+ * }
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
+ *
+ * <note level="example" expandable="true" title="Python">
+ * <md-cell>
+ * <code-snippet language="python" highlightedLines="8">
+ *
+ * def compute(improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency ):
+ *     print("Computation complete! The result is 42");
+ *     const result =
+ *         Math.log(improbabilityFactor + 42) +
+ *         babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +
+ *         vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +
+ *         towelAbsorbency * (Math.random() + 0.42)
+ *     return 42;
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
+ * <note level="example" expandable="true" title="HTML">
+ * <md-cell>
+ * <code-snippet language="html" highlightedLines="11-25">
+ * <!DOCTYPE html>
+ * <html lang="en">
+ * <head>
+ *     <meta charset="UTF-8">
+ *     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ *     <title>Ultimate Computation</title>
+ * </head>
+ * <body>
+ *     <h1>Ultimate Computation Example</h1>
+ *     <p>Provide your parameters and compute the result!</p>
+ *
+ *     <form id="computation-form">
+ *         <label for="improbabilityFactor">Improbability Factor:</label>
+ *         <input type="number" id="improbabilityFactor" value="3"><br>
+ *
+ *         <label for="babelFishCount">Babel Fish Count:</label>
+ *         <input type="number" id="babelFishCount" value="1"><br>
+ *
+ *         <label for="vogonPoetryExposure">Vogon Poetry Exposure:</label>
+ *         <input type="number" id="vogonPoetryExposure" value="250"><br>
+ *
+ *         <label for="towelAbsorbency">Towel Absorbency:</label>
+ *         <input type="number" id="towelAbsorbency" value="2"><br>
+ *
+ *         <button type="button" id="compute-button">Compute</button>
+ *     </form>
+ * </body>
+ * </html>
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
+ * <note level="example" expandable="true" title="XML">
+ * <md-cell>
+ * <code-snippet language="xml">
+ * <Computation>
+ *     <Parameters>
+ *         <ImprobabilityFactor>3</ImprobabilityFactor>
+ *         <BabelFishCount>1</BabelFishCount>
+ *         <VogonPoetryExposure>250</VogonPoetryExposure>
+ *         <TowelAbsorbency>2</TowelAbsorbency>
+ *     </Parameters>
+ *     <Result>42</Result>
+ *     <Log>Computation complete! The result is always 42, but you knew that already.</Log>
+ * </Computation>
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
+ * <note level="example" expandable="true" title="CSS">
+ * <md-cell>
+ * <code-snippet language="css">
+ * .computation-container {
+ *    display: flex;
+ *    flex-direction: column;
+ *     align-items: center;
+ *   justify-content: center;
+ *   font-family: 'Courier New', Courier, monospace;
+ *   background-color: #f0f8ff;
+ *   border: 2px dashed #42a5f5;
+ *   padding: 20px;
+ *   margin: 20px;
+ *   border-radius: 8px;
+ *   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ * }
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
+ * <note level="example" expandable="true" title="YAML">
+ * <md-cell>
+ * <code-snippet language="yaml">
+ * computation:
+ *   improbabilityFactor: 3       # A number too high might summon a whale and a bowl of petunias.
+ *   babelFishCount: 1            # Keep it to one, unless you enjoy linguistic chaos.
+ *   vogonPoetryExposure: 250     # Measured in verses endured. 1000+ is not recommended.
+ *   towelAbsorbency: 2           # Towel quality. Higher is better for intergalactic travel.
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
+ * <note level="example" expandable="true" title="Markdown">
+ * <md-cell>
+ * <code-snippet language="markdown">
+ * ## Computation
+ *
+ * Here is a summary of the parameters:
+ *
+ * -  improbabilityFactor: 3
+ * -  babelFishCount: 1
+ * -  vogonPoetryExposure: 250
+ * -  towelAbsorbency: 2
+ * </code-snippet>
+ * </md-cell>
+ * </note>
+ *
  */
 export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
     /**

@@ -57,7 +57,6 @@ export class WebBrowser implements BrowserInterface {
         if (isIgnored) {
             return
         }
-        console.log('Push State', data)
         history.pushState(
             {
                 target: {
@@ -121,8 +120,7 @@ export function formatUrl(urlTarget: UrlTarget) {
 }
 
 /**
- * Implements the {@link BrowserInterface} for managing browser navigation.
- * Integrates with the browser's history API and synchronizes with a {@link Router}.
+ * Implements the {@link BrowserInterface} for managing browser navigation within a mocked browser.
  */
 export class MockBrowser implements BrowserInterface {
     public readonly router: Router

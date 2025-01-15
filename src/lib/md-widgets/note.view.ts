@@ -41,10 +41,61 @@ export type NoteLevel = keyof typeof icons
  */
 export type ExpandableMode = 'stateful' | 'stateless'
 /**
- * Represents a note on the page.
+ * Represents a note.
  *
  * This view is registered in {@link GlobalMarkdownViews}: it can be instantiated from Markdown with an HTMLElement
  * using the tag `note`, see {@link NoteView.fromHTMLElement}.
+ *
+ * ## Examples
+ *
+ * ### Basics
+ *
+ * A note is defined providing a `level` attribute and a text content:
+ *
+ * <md-cell>
+ * <note level='info'>
+ * This is a note with no option beside `level`.
+ * </note>
+ * </md-cell>
+ *
+ * Available levels are defined by {@link NoteLevel} and illustrated in section **Available Levels**.
+ *
+ * There are multiple options that can be provided, *e.g.*
+ *
+ * <md-cell>
+ * <note level='info' icon='fas fa-star' title='Custom label' expandable='true'>
+ * This is a note with multiple options defined:
+ * *  `icon`: Overrides the default icon for the level.
+ * *  `title`: Overrides the default title for the level.
+ * *  `expandable`: Makes the note expandable.
+ *
+ * <note level="hint">
+ * The additional option `mode` is available for expandable notes.
+ * </note>
+ * </note>
+ * </md-cell>
+ *
+ * See {@link NoteView.attributeMapper} for the list of available options.
+ *
+ * ### Available Levels
+ *
+ * <js-cell>
+ * const { MkDocs } = await webpm.install({
+ *     esm:['mkdocs-ts#{{mkdocs-version}} as MkDocs']
+ * })
+ * const src = `
+ * <note level="{{level}}">
+ * Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+ * aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+ * </note> `
+ *
+ * const levels = ['note', 'abstract', 'info', 'hint', 'success', 'question',
+ *                 'warning', 'failure', 'danger', 'bug', 'example', 'quote']
+ *
+ * levels.forEach((level)=> {
+ *     display(MkDocs.parseMd({src:src.replace('{{level}}', level)}))
+ * })
+ * </js-cell>
  */
 export class NoteView implements VirtualDOM<'div'> {
     /**

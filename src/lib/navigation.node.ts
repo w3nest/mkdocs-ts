@@ -349,7 +349,15 @@ export type LazyRoutesCb<TLayout, THeader> = (p: {
  * Represents the definition of static routes in the application.
  *
  * Static routes are defined as a mapping where each `segmentId` (representing a segment's contribution to the URL)
- * is associated with a {@link Navigation} object or a `Promise` resolving to a {@link Navigation} object.
+ * is associated with a {@link Resolvable} {@link Navigation} object.
+ *
+ * The {@link PathSegment} type define the valid string for a `segmentId` definition (in a nutshell: starts with `/`,
+ * and not using spaces or special characters not allowed in URLs).
+ *
+ * <note level="hint">
+ * The {@link segment} function performs both static and dynamic checks to validate the segment ID.
+ * </note>
+ *
  *
  * <note level="hint" title="Promise">
  * Promises can be used, for instance, when requests need to be triggered to fetch attributes or metadata
@@ -362,16 +370,13 @@ export type LazyRoutesCb<TLayout, THeader> = (p: {
  * to the layout specification.
  * </note>
  *
- * <note level="hint">
- * The {@link segment} function performs both static and dynamic checks to validate the segment ID.
- * </note>
  *
  * @typeParam TLayout The type defining the layout configuration for the navigation.
  * @typeParam THeader The type defining the header configuration for the navigation.
  */
 export type StaticRoutes<TLayout, THeader> = Record<
     string,
-    Navigation<TLayout, THeader> | Promise<Navigation<TLayout, THeader>>
+    Resolvable<Navigation<TLayout, THeader>>
 >
 
 /**
@@ -434,6 +439,19 @@ export function sanitizeNavPath(path: string) {
  * - The segment must be a single static path segment (e.g., `/foo`).
  * - Segments containing backslashes (`\\`), query parameters (`?`), or fragments (`#`) are not allowed.
  * - Nested paths (e.g., `/foo/bar`) are disallowed.
+ *
+ * To use it as validator of your segments:
+ *
+ * <code-snippet language='javascript'>
+ * import segment from 'mkdocs-ts'
+ *
+ * const routes = {
+ *     [segment('/foo')]: { ... },
+ *     // Compilation errors:
+ *     [segment('bar')]: { ... },
+ *     [segment('/bar/baz')]: { ... },
+ * }
+ * </code-snippet>
  *
  * @typeParam T The type of the string segment to validate.
  */

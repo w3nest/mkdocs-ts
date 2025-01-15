@@ -152,11 +152,11 @@ export interface DefaultLayoutParams<
      */
     page?: LayoutElementView<AnyView & { content$: ReplaySubject<HTMLElement> }>
     /**
-     * Optional custom header view to use at the top of the in navigation panel, empty if not provided.
+     * Optional custom header view to use at the top of the navigation panel, empty if not provided.
      */
     sideNavHeader?: LayoutElementView
     /**
-     * Optional custom header view to use at the bottom of the in navigation panel, empty if not provided.
+     * Optional custom header view to use at the bottom of the navigation panel, empty if not provided.
      */
     sideNavFooter?: LayoutElementView
     /**

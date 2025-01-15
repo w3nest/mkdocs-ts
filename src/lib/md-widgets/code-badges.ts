@@ -75,7 +75,17 @@ export class VersionBadge implements VirtualDOM<'div'> {
     }
 }
 /**
- * Display bagdes for version, github, npm...
+ * Represents usual code badges view (NPM, PyPI, GitHub, ...).
+ *
+ * This view is registered in {@link GlobalMarkdownViews}: it can be instantiated from Markdown with an HTMLElement
+ * using the tag `code-badge`, see {@link CodeBadgesView.fromHTMLElement}.
+ *
+ * ## Examples
+ *
+ * <md-cell>
+ * <code-badges version="{{mkdocs-version}}" npm="mkdocs-ts" github="w3nest/mkdocs-ts" license="mit">
+ * </code-badges>
+ * </md-cell>
  */
 export class CodeBadgesView implements VirtualDOM<'div'> {
     /**
