@@ -360,9 +360,47 @@ function find_children({
     return references
 }
 
+function patchSpreadOperators(jsCode: string) {
+    let stack: any[] = []
+    let patchedCode = ''
+    let i = 0
+
+    while (i < jsCode.length) {
+        const char = jsCode[i]
+
+        if (char === '{' || char === '(' || char === '[') {
+            stack.push({ char, index: i })
+            patchedCode += char
+        } else if (char === '}' || char === ')' || char === ']') {
+            stack.pop()
+            patchedCode += char
+        } else if (jsCode.slice(i, i + 3) === '...') {
+            // Peek the stack for the closest opening delimiter
+            const closest = stack.length ? stack[stack.length - 1].char : null
+
+            if (closest === '{') {
+                patchedCode += '_patch_spread:'
+            } else {
+                // If the closest is '(' or '[', skip adding '...'
+            }
+            i += 2 // Skip the next two characters of '...'
+        } else {
+            patchedCode += char
+        }
+
+        i++
+    }
+
+    return patchedCode
+}
+
 export function parseProgram(src: string): AstNode[] {
     try {
-        let srcPatched = src.replace(/\?\./g, '.')
+        /*
+        We should move to use `acornjs` as javascript AST parser
+         */
+        let srcPatched = src.replace(/\?\./g, '.').replace(/\?\?/g, '||')
+        srcPatched = patchSpreadOperators(srcPatched)
         const ast = parseScript(
             `(async function({webpm}, {display}){${srcPatched}})()`,
         )
