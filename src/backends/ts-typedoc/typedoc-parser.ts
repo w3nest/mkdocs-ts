@@ -535,9 +535,11 @@ function parseDocumentationElements({
             }
             if (element.kind === DOC_KINDS.INLINE_TAG) {
                 if (!('target' in element)) {
-                    throw new Error(
-                        `Can not resolve @link ${element.text} in element ${parent.name}`,
+                    // TypeDoc recognize a link, but failed to get the target
+                    console.warn(
+                        `[warning] Can not resolve @link ${element.text} in element ${parent.name}`,
                     )
+                    return element.text
                 }
                 const ref = projectGlobals.navigations[element.target]
                 return `[${element.text}](${ref})`
