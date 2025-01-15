@@ -6,11 +6,31 @@ export function processDeclaration(
     entries: Record<string, string>,
     replace: (k: string, v: string) => string,
 ) {
+    const escapeSpecialCharInName = (name: string, mode: 'fwd' | 'bwd') => {
+        if (mode === 'fwd') {
+            return name.replace(/\$/g, '_mkdollar_')
+        }
+        return name.replace(/_mkdollar_/g, '$').slice(0, -1)
+    }
+    const prepareFwd = (d: string) => {
+        entries = Object.entries(entries).reduce((acc, [k, v]) => {
+            const kEscaped = escapeSpecialCharInName(k, 'fwd')
+            const vEscaped = escapeSpecialCharInName(v, 'fwd')
+            return { ...acc, [kEscaped]: vEscaped }
+        }, {})
+        return escapeSpecialCharInName(d, 'fwd') + '\n'
+    }
+
+    const prepareBwd = (d: string) => {
+        return escapeSpecialCharInName(d, 'bwd')
+    }
+
+    declaration = prepareFwd(declaration)
+
     const wordsToReplace = Object.keys(entries)
     if (wordsToReplace.length === 0) {
         return declaration
     }
-    declaration += '\n'
     const separators = [
         ' ',
         '@',
@@ -52,14 +72,15 @@ export function processDeclaration(
                 : `_mklink_${matchedWord}_mklink_`
         })
     }
-    const r = Object.entries(entries).reduce(
-        (acc, [k, v]) => {
-            const r = new RegExp(`_mklink_${k}_mklink_`, 'g')
-            return acc.replace(r, replace(k, v))
-        },
-        replaceWords(declaration).replace(/</g, '&lt;').replace(/>/g, '&gt;'),
-    )
-    return r.slice(0, -1)
+    const initial = replaceWords(declaration)
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+    const rawProcessed = Object.entries(entries).reduce((acc, [k, v]) => {
+        const r = new RegExp(`_mklink_${k}_mklink_`, 'g')
+        const replacing = replace(k, v)
+        return acc.replace(r, replacing)
+    }, initial)
+    return prepareBwd(rawProcessed)
 }
 
 export class DeclarationView implements VirtualDOM<'div'> {

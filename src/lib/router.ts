@@ -81,7 +81,13 @@ export function isResolvedTarget<TLayout, THeader>(
 export const headingPrefixId = 'mk-head-'
 
 function sanitizedCssId(id: string): string {
-    return id.replace(/[^a-zA-Z0-9\-_.]/g, '')
+    let sanitizedId = id.replace(/[^a-zA-Z0-9\-_.$]/g, '')
+
+    if (!/^[a-zA-Z_]/.test(sanitizedId.charAt(0))) {
+        sanitizedId = `_${sanitizedId}`
+    }
+
+    return sanitizedId
 }
 
 export function headingId(id: string): string {
@@ -545,9 +551,14 @@ function findElementById(
     parent: HTMLElement,
     targetId: string,
 ): HTMLElement | undefined {
-    const sanitizedId = sanitizedCssId(targetId.replace('.', '\\.'))
-    const shortSelector = `#${sanitizedId}`
-    const prefixedSelector = `#${headingPrefixId}${sanitizedId}`
+    const selectorCssId = (id: string): string => {
+        const sanitized = sanitizedCssId(id)
+        return sanitized.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
+    }
+
+    const selector = selectorCssId(targetId)
+    const shortSelector = `#${selector}`
+    const prefixedSelector = `#${headingPrefixId}${selector}`
     const divByCssQuery =
         parent.querySelector(shortSelector) ??
         parent.querySelector(prefixedSelector)

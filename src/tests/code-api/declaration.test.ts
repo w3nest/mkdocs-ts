@@ -65,4 +65,37 @@ describe('Declarations rendering', () => {
         expect(anchor.innerHTML).toBe('Bar')
         expect(anchor.href.endsWith('@nav/api/Module.bar')).toBeTruthy()
     })
+    it('Should render links with $', async () => {
+        const declaration = `export type DynamicRoutes<T1, T2> = LazyRoutesCb<T1, T2> | LazyRoutesCb$<T1, T2>`
+        const view = new DeclarationView({
+            code: {
+                declaration,
+                references: {
+                    LazyRoutesCb: `@nav/api/Module.LazyRoutesCb`,
+                    LazyRoutesCb$: `@nav/api/Module.LazyRoutesCb$`,
+                },
+            },
+            parent: {
+                semantic: {
+                    role: 'global',
+                    labels: [],
+                    attributes: {},
+                    relations: {},
+                },
+            },
+        })
+        document.body.append(render(view))
+        const anchors = document.querySelectorAll<HTMLAnchorElement>('a')
+        expect(anchors).toHaveLength(2)
+
+        expect(anchors[0].innerHTML).toBe('LazyRoutesCb')
+        expect(
+            anchors[0].href.endsWith('@nav/api/Module.LazyRoutesCb'),
+        ).toBeTruthy()
+
+        expect(anchors[1].innerHTML).toBe('LazyRoutesCb$')
+        expect(
+            anchors[1].href.endsWith('@nav/api/Module.LazyRoutesCb$'),
+        ).toBeTruthy()
+    })
 })
