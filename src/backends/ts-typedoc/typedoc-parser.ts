@@ -44,6 +44,22 @@ import * as pathLib from 'node:path'
 import path from 'path'
 
 /**
+ * Represents a function that returns the link to documentation of an external symbol given its name and file path
+ * (within `node_modules`).
+ *
+ * See {@link ExternalsUrl}.
+ */
+export type ExternalUrlGetter = (target: {
+    file: string
+    name: string
+}) => string | undefined
+
+/**
+ * Mapping `package name` => `URL getter` to include links to external symbols within the documentation.
+ */
+export type ExternalsUrl = Record<string, ExternalUrlGetter>
+
+/**
  * Global project information.
  */
 export interface ProjectGlobals {
@@ -63,6 +79,13 @@ export interface ProjectGlobals {
      * Map `node.id` => parent's node `TypedocNode`
      */
     typedocParentIdMap: Record<number, TypedocNode>
+    /**
+     * URL getter for external symbols.
+     *
+     * To include links for a given package `foo`, provide an entry for `foo`.
+     * No link is generated for external packages not referenced here.
+     */
+    externals: ExternalsUrl
 }
 
 const noSemantic: Semantic = {
@@ -147,15 +170,18 @@ export function gatherTsFiles({
  * @param _options.projectFolder The folder of the project to document.
  * @param _options.outputFolder The output folder.
  * @param _options.baseNav The base path of the API node in the navigation (*e.g.* `/api`).
+ * @param _options.externals URL to documentation for symbols from external libraries (*i.e.* within `node_modules`).
  */
 export function generateApiFiles({
     projectFolder,
     outputFolder,
     baseNav,
+    externals,
 }: {
     projectFolder: string
     outputFolder: string
     baseNav: string
+    externals: ExternalsUrl
 }) {
     projectFolder = path.resolve(projectFolder)
     outputFolder = path.resolve(outputFolder)
@@ -177,6 +203,7 @@ export function generateApiFiles({
             typedocNode,
             modulePath,
             tsInputs: tsInputs,
+            externals,
         })
 
         const filePath = `${writeFolder}/${modulePath}.json`
@@ -266,17 +293,20 @@ export function generateNavigationPathsInModule(
  * @param _args.modulePath The module path.
  * @param _args.tsInputs The (global) typescript inputs.
  * @param _args.baseNav The base path of the API node in the navigation (*e.g.* `/api`).
+ * @param _args.externals URL to documentation for symbols from external libraries (*i.e.* within `node_modules`).
  */
 export function parseModule({
     typedocNode,
     modulePath,
     tsInputs,
     baseNav,
+    externals,
 }: {
     typedocNode: TypedocNode
     modulePath: string
     tsInputs: TsSrcElements
     baseNav: string
+    externals: ExternalsUrl
 }): Module {
     const symbolIdMap: Record<number, TypedocNode> = {}
     const parentSymbolIdMap: Record<number, TypedocNode> = {}
@@ -300,6 +330,7 @@ export function parseModule({
         tsInputs,
         typedocIdMap: symbolIdMap,
         typedocParentIdMap: parentSymbolIdMap,
+        externals,
     }
 
     function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {
@@ -875,7 +906,6 @@ export function parseAttribute({
     ) {
         return undefined
     }
-
     const name = typedocNode.name
     if (hasInheritedTrait(typedocNode)) {
         typedocNode = projectGlobals.typedocIdMap[
@@ -935,19 +965,58 @@ function find_children<T = unknown>(
     return references
 }
 
-function find_references(
-    jsonObject: TypedocNode | TypedocNode[],
-): { target: number; name: string }[] {
-    const references: { target: number; name: string }[] = []
+function find_references(jsonObject: TypedocNode | TypedocNode[]): {
+    crossReferences: { target: number; name: string }[]
+    extReferences: { package: string; file: string; name: string }[]
+} {
+    const crossReferences: { target: number; name: string }[] = []
+    const extReferences: { package: string; file: string; name: string }[] = []
+
+    interface IntRef {
+        target: number
+        name: string
+        type: 'reference'
+    }
+    interface ExtRef {
+        target: { sourceFileName: string }
+        name: string
+        package: string
+        type: 'reference'
+    }
+
+    function isIntRef(obj: unknown): obj is IntRef {
+        const casted = obj as IntRef
+
+        return (
+            // eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition
+            casted.type === 'reference' && typeof casted.target === 'number'
+        )
+    }
+    function isExtRef(obj: unknown): obj is ExtRef {
+        const casted = obj as ExtRef
+
+        return (
+            // eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition
+            casted.type === 'reference' &&
+            typeof casted.target === 'object' &&
+            typeof casted.target.sourceFileName === 'string'
+        )
+    }
 
     function traverse(obj: unknown) {
         if (!obj) {
             return
         }
         if (typeof obj === 'object') {
-            // @ts-expect-error typings to improve
-            if (obj.type === 'reference' && typeof obj.target === 'number') {
-                references.push(obj as { target: number; name: string })
+            if (isIntRef(obj)) {
+                crossReferences.push(obj)
+            }
+            if (isExtRef(obj)) {
+                extReferences.push({
+                    package: obj.package,
+                    file: obj.target.sourceFileName,
+                    name: obj.name,
+                })
             }
             for (const value of Object.values(obj)) {
                 traverse(value)
@@ -960,19 +1029,27 @@ function find_references(
     }
 
     traverse(jsonObject)
-    return references
+    return { crossReferences, extReferences }
 }
 
 function gather_symbol_references(
     element: TypedocNode | TypedocNode[],
     projectGlobals: ProjectGlobals,
 ) {
-    const refs = find_references(element)
+    const { crossReferences, extReferences } = find_references(element)
     const result: Record<string, string> = {}
-    refs.forEach((ref) => {
+    crossReferences.forEach((ref) => {
         const link = projectGlobals.navigations[ref.target]
         if (link) {
             result[ref.name] = link
+        }
+    })
+    extReferences.forEach((ref) => {
+        if (ref.package in projectGlobals.externals) {
+            const link = projectGlobals.externals[ref.package](ref)
+            if (link) {
+                result[ref.name] = link
+            }
         }
     })
     return result
