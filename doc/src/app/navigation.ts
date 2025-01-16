@@ -184,6 +184,19 @@ export const navigation: AppNav = {
                                     }),
                             },
                         },
+                        '/code-utils': {
+                            name: 'Code Utilities',
+                            layout: {
+                                content: ({ router }) =>
+                                    new NotebookModule.NotebookPage({
+                                        url: url(
+                                            'tutorials.basics.code-utils.md',
+                                        ),
+                                        router,
+                                        options: notebookOptions,
+                                    }),
+                            },
+                        },
                     },
                 },
                 '/markdown': {

@@ -11,6 +11,10 @@ export class ApiLink implements VirtualDOM<'a'> {
         const target = elem.getAttribute('target')!
         const navs = {
             Navigation: '@nav/api/MainModule.Navigation',
+            DynamicRoutes: '@nav/api/MainModule.DynamicRoutes',
+            LazyRoutes: '@nav/api/MainModule.LazyRoutes',
+            LazyRoutesCb: '@nav/api/MainModule.LazyRoutesCb',
+            NavNodeData: '@nav/api/MainModule.NavNodeData',
             Resolvable: '@nav/api/MainModule.Resolvable',
             AnyView: '@nav/api/MainModule.AnyView',
             Router: '@nav/api/MainModule.Router',
@@ -22,6 +26,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             fetchMd: '@nav/api/MainModule.fetchMd',
             parseMd: '@nav/api/MainModule.parseMd',
             MdWidgets: '@nav/api/MainModule/MdWidgets.fake',
+            CodeSnippetView: '@nav/api/MainModule/MdWidgets.CodeSnippetView',
             'DefaultLayout.NavHeader':
                 '@nav/api/MainModule/DefaultLayout.NavHeader',
             'DefaultLayout.NavLayout':
@@ -46,6 +51,10 @@ export class ApiLink implements VirtualDOM<'a'> {
 
         const classes = {
             Navigation: 'mkapi-role-type-alias',
+            DynamicRoutes: 'mkapi-role-type-alias',
+            LazyRoutes: 'mkapi-role-type-alias',
+            LazyRoutesCb: 'mkapi-role-type-alias',
+            NavNodeData: 'mkapi-role-type-alias',
             Resolvable: 'mkapi-role-type-alias',
             AnyView: 'mkapi-role-type-alias',
             StaticRoutes: 'mkapi-role-type-alias',
@@ -55,6 +64,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             fetchMd: 'mkapi-role-function',
             parseMd: 'mkapi-role-function',
             MdWidgets: 'mkapi-role-module',
+            CodeSnippetView: 'mkapi-role-class',
             'DefaultLayout.NavHeader': 'mkapi-role-interface',
             'DefaultLayout.NavLayout': 'mkapi-role-type-alias',
             'DefaultLayoutParams.sideNavHeader': 'mkapi-role-attribute',
@@ -130,9 +140,12 @@ export class CrossLink implements VirtualDOM<'a'> {
             notebook: '@nav/tutorials/notebook',
             'notebook.display': '@nav/tutorials/notebook.output',
             markdown: '@nav/tutorials/markdown',
+            basics: '@nav/tutorials/basics',
             'dynamic-nav': '@nav/tutorials/basics/dynamic-nav',
+            'mutable-nav': '@nav/tutorials/basics/mutable-nav',
             'custom-layout': '@nav/tutorials/basics/custom-layout',
             typescript: '@nav/tutorials/basics/typescript',
+            'basics-utils': '@nav/tutorials/basics/code-utils',
         }
         this.href = navs[target]
         this.children = [

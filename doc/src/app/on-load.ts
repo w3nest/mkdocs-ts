@@ -9,6 +9,7 @@ export const router = new Router({
     navigation,
     browserClient: (p) =>
         new WebBrowser({ ...p, ignoredPaths$: companionNodes$ }),
+    name: 'MainRouter',
 })
 const bookmarks$ = new BehaviorSubject(['/', '/how-to', '/tutorials', '/api'])
 export const topStickyPaddingMax = '3rem'

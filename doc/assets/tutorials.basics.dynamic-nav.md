@@ -1,160 +1,441 @@
 
-# Dynamic 
+# Dynamic  Navigation
 
-Up until now, the navigation structure in our examples has been static, with all pages and their hierarchy known in 
-advance. However, this isn't always the case, and **@youwol/mkdocs-ts** provides a formalism to handle dynamic 
-scenarios.
+In the <cross-link target="basics">Getting Started</cross-link> tutorial, we introduced how to set up **static**
+navigation, where all pages and their hierarchy are predefined. 
+However, in many real-world applications, navigation structures are not always known in advance, and needs to be 
+resolved at run time. This page explores how to handle such scenarios effectively.
 
-In this example, we'll create a document with a **File System** node that represents a structure typically queried using
-HTTP requests (for which responses are not known in advance). For simplicity, we'll mock the file structure and content.
+To illustrate this concept, we will build a file-browsing application for the {{mkdocs-ts}} package as published on
+<ext-link target="webpm">WebPM</ext-link>. Below is a preview of the final application in action:
 
-Here is the mocked file system structure:
+<cell-output cell-id="app-start" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;"> </cell-output>
+
+Since the package structure is not predetermined, it will be dynamically retrieved via HTTP requests to the WebPM 
+backend. 
+
+<note level='warning'>
+Any changes in the file structure after loading the application will not be reflected—this tutorial focuses on
+handling **dynamic** (resolved at run time) but **immutable** structures.
+For handling mutable navigation structures that update in real time, refer to the next tutorial:
+<cross-link target="mutable-nav">Mutable Navigation</cross-link>.
+</note>
+
+---
+
+## Requirements
+
+Before getting started, we need to install the required packages and CSS dependencies:
+
 <js-cell>
-const mockFS = {
-    '': {
-        files:[{id:'foo', name:'foo.txt'}],
-        folders:[{id:'baz', name:'baz'}]
-    },
-    'baz': {
-        files:[{id:'bar', name:'bar.txt'}],
-        folders:[]
-    }
-}
-const filesContent = {
-    'foo': '# Foo \n This is the content of the **foo** file.',
-    'baz/bar': '# Bar \n This is the content of the **bar** file.'
+const version = "{{mkdocs-version}}"
+
+const { MkDocs, rxjs, clients } = await webpm.install({
+    esm:[
+        `mkdocs-ts#${version} as MkDocs`, 
+        '@w3nest/http-clients#^0.1.3 as clients',
+        'rxjs#7.8.1 as rxjs',
+    ],
+    css: [
+        // Required by mkdocs-ts itself:
+        'bootstrap#5.3.3~bootstrap.min.css',
+        `mkdocs-ts#${version}~assets/mkdocs-light.css`,
+        // Required by the code of this page
+        'fontawesome#5.12.1~css/all.min.css',
+    ]
+})
+display({MkDocs, rxjs, clients})
+</js-cell>
+
+Alongside the core {{mkdocs-ts}} package, the following additional libraries are included:
+
+*  **`@w3nest/http-clients`**: A collection of clients for the W3Nest ecosystem, including the **WebPM** client,
+   which allows us to dynamically fetch package files content.
+*  **`rxjs`**: Used here primarily to handle data streams from the **WebPM** client.
+   It also plays a key role in {{mkdocs-ts}}, enabling reactivity throughout the application.
+
+---
+
+## Client
+
+Before navigating the file system of {{mkdocs-ts}}, we need to configure an HTTP client to retrieve files and folders.
+
+<js-cell>
+const toId = (name) => window.btoa(name)
+const libraryId = toId('mkdocs-ts')
+const client = new clients.Webpm.Client()
+</js-cell>
+
+<note level="question" title="toId?">
+Since we are dealing with URLs, it is sometimes necessary to generate **URL-safe identifiers**. This function ensures that names are properly encoded.
+</note>
+
+Now, let's define a helper function to request the contents of a folder:
+
+<js-cell>
+const queryExplorer = async (version, path) => {
+    return rxjs.firstValueFrom(client.queryExplorer$({
+        libraryId,
+        version,
+        restOfPath: path
+    }))
 }
 </js-cell>
 
-Next, we'll define a helper function to generate the main HTML content when a folder is selected. 
-This function lists the files in the folder and uses anchor elements to link to the files:
+Its primary purpose is to transform an Observable based API to a Promise based API.
+
+<note level="question" title="Why `version` in argument?" expandable="true">
+In this tutorial, the **version** of `mkdocs-ts` remains constant across all examples, so it could have been omitted 
+as an argument.
+However, this code will also be used in the
+<cross-link target="mutable-nav">Mutable Navigation</cross-link> tutorial,
+where the version can change dynamically.
+By keeping version as an argument, the helper remains flexible.
+</note>
+
+Let's retrieve and display the contents of the root folder:
 
 <js-cell>
-const filesView = (elem) => {
-    const path = elem.getAttribute('parent-folder')
-    const { files } = mockFS[path]
+const root = await queryExplorer(version, '/')
+display(root)
+</js-cell>
+
+
+---
+
+## Views
+
+This section covers the creation of multiple views for our application.
+We use <ext-link target="rx-vdom">Rx-vDOM</ext-link>, as it integrates naturally with {{mkdocs-ts}}.
+However, as noted in the <cross-link target="basics">Getting Started</cross-link> tutorial,
+you are free to use standard HTMLElements or your preferred UI framework.
+
+To first demonstrate the views independently of the full navigation system
+(which requires the <api-link target="Router"></api-link> instance created later on this page),
+let’s define a mock router:
+
+<js-cell>
+const mockRouter = {
+    path$: new rxjs.BehaviorSubject('/')
+}
+</js-cell>
+
+This allows us to simulate navigation behavior without needing the complete router setup.
+
+### Item
+
+The **item view** displays a row consisting of:
+
+*  An **icon** (file or folder)
+*  A **name**, which is a clickable link to navigate within the application
+*  A **size** indicator for files
+
+
+<js-cell>
+const rowView = ({parentPath, name, type, size}) => ({
+    tag: 'div',
+    class: 'd-flex align-items-center my-2',
+    children: [
+        {
+            tag: 'i',
+            class: type === 'file' ? 'fas fa-file' : 'fas fa-folder'
+        },
+        {   tag: 'div', class: 'mx-2' },
+        {
+            tag: 'a',
+            innerText: name,
+            href: type === 'file' ? `@nav/${parentPath}/${toId(name)}` : `@nav/${parentPath}/${name}`
+        },
+        {   tag: 'div', class: 'flex-grow-1' },
+        {   tag: 'div', innerText: `${size/1000} kB` },
+    ]
+})
+</js-cell>
+
+We can test the folder and file rendering using the `root` data:
+
+<js-cell reactive="true">
+for(let folder of root.folders ){
+    display(rowView({...folder, type:'folder', parentPath:'/'}))
+}
+for(let file of root.files ){
+    display(rowView({...file, type:'file', parentPath:'/'}))
+}
+</js-cell>
+
+<note level="bug" title="Links not working yet" expandable="true">
+The links won't work just yet, as they depend on the complete navigation system being set up later. 
+</note>
+
+### Folder
+
+The **folder view** essentially includes the above items, it is completed by a path view defined in the 
+<cross-link target='basics-utils'>Code Utilities</cross-link> page.
+
+<js-cell>
+// The header displaying the full current router path is available in another page
+const { pathView } = await load("/tutorials/basics/code-utils")
+
+const folderView = ( resp, parentPath, router) => ({
+    tag: 'div',
+    children: [
+        pathView(router),
+        {   
+            tag: 'div',
+            class: 'p-3 border rounded',
+            children: [
+                ...resp.folders.map((folder) => {
+                    return rowView({parentPath , name:folder.name, type:'folder', size:folder.size})
+                }),
+                ...resp.files.map((file) => {
+                    return rowView({parentPath , name:file.name, type:'file', size:file.size})
+                })
+            ]
+        }
+    ],
+})
+
+</js-cell>
+
+We can test the view using the `root` data:
+
+<js-cell>
+const rootFolderView = await folderView(root, '/', mockRouter)
+display(rootFolderView)
+</js-cell>
+
+### File
+
+The **file view** display a file content:
+*  **As an image** if it is a `.svg` or `.png` file
+*  **As formatted text in an editor** for all other file types.
+
+Leveraging <api-link target='CodeSnippetView'></api-link>, the file view is:
+
+<js-cell>
+
+const fileView = ({language, content, path}, router) => {
     return {
         tag: 'div',
-        children: files.map((file) => ({
-            tag:'a',
-            href: `@nav/fs/${path}/${file.id}`,
-            class: 'd-flex align-items-center',
-            children:[
-                {   tag: 'i',
-                    class: 'fas fa-file'
-                },
-                { tag:'i', class:'mx-2'},
-                {   tag: 'div',
-                    innerText: file.name
+        children: [
+            pathView(router),
+            ['svg', 'png'].includes(language)
+                ? { 
+                    tag: 'img',
+                    src: `data:image/${language}+xml;base64,${content}`, 
+                    style: {maxWidth: '100%' }
                 }
-            ]
-        }))
+                : new MkDocs.MdWidgets.CodeSnippetView({ language, content }) 
+        ],
     }
 }
 </js-cell>
+    
+Let's define a helper to retrieve the `{language, content, path}` argument from the **WebPM** `client`.
+While this factory setup is not critical to understanding the file display logic, readers can expand the following 
+section for details.
 
-The key element for defining dynamic navigation is a function that takes the **path** of the selected node 
-(and the application's router object if needed) and returns a [CatchAllNav](@nav/api/MainModule.CatchAllNav)
-navigation node:
+<note level="abstract" title='Formatter' icon="fas fa-code" expandable="true" mode="stateful">
+To correctly display files based on their type, we need a formatter, processing the raw content of a file based on its 
+extension.
+
+It consists of several helper functions, each tailored for different file types:
+
+*  Binary content (like images) → Render as HTML 
+*  Code files (.ts, .py, etc.) → Use a syntax-highlighted editor
+*  JSON files → Pretty-print using JSON.stringify()
+*  Other text files (.html, .css, etc.) → Display as plain text
 
 
 <js-cell>
-const resolveDynamicNavigation = async ({path}) => {
-    // A file is selected
-    if(filesContent[path]){
-        return {
-            name: path,
-            html: ({router}) => MkDocs.parseMd({src:filesContent[path], router}),
-            tableOfContent,
+const fromBlob = (language) =>
+    async (resp, path) => ({
+        language,
+        path,
+        content: await resp.text()
+})
+const fromImg = (language) => async (resp, path) => ({
+    path,
+    language,
+    content: await blobToBase64(resp) // Convert to Base64
+})
+
+const blobToBase64 = (blob) => new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result.split(',')[1]) // Remove e.g. "data:image/png;base64,"
+    reader.readAsDataURL(blob)
+})
+
+const fromJson = () => 
+    (resp, path) => ({path, language: 'json', content:JSON.stringify(resp, null, 4)})
+
+const fromText = (language) => 
+    (resp, path) => ({path, language, content:resp})
+
+const factory = {
+    '.ts': fromBlob('javascript'),
+    '.js': fromBlob('javascript'),
+    '.py': fromBlob('python'),
+    '.xml': fromBlob('xml'),
+    '.svg': fromImg('svg'),
+    '.png': fromImg('png'),
+    '.scss': fromBlob('css'),
+    '.json': fromJson(),
+    '.map': fromJson(),
+    '.html': fromText('htmlmixed'),
+    '.css': fromText('css'),
+}
+const formatContent = async (file, resp) => {
+    for( let [k, v] of Object.entries(factory)){
+        if(file.endsWith(k)){
+            return await v(resp, file)
         }
     }
-    // Otherwise, it is a folder
-    const {files, folders} = mockFS[path]
-    return {
-        name: path,
-        html: ({router}) => MkDocs.parseMd({
-            src: `
-# folder at ${path}
-
-Below are the files of the folder:
-
-<filesView parent-folder='${path}'></filesView>
-`,
-            views: {
-                filesView: filesView
-            }
-        }),
-        tableOfContent,
-        children: [
-            ...folders.map( folder => ({
-                name: folder.name, 
-                id: folder.id,
-                decoration: {
-                    icon:{class:'fas fa-folder px-1'}
-                }
-            })),
-            ...files.map( file => ({
-                name: file.name, 
-                id: file.id,
-                leaf: true,
-                decoration: {
-                    icon:{class:'fas fa-file px-1'}
-                }
-            }))
-       ],
-    }
+    return (resp instanceof Blob) ? await fromBlob('unknown')(resp, file) : await fromText('unknown')(resp, file)
 }
 </js-cell>
-
-<note level="info">
-
-The `filesView` helper is directly referenced within the markdown content of the folder's `html` definition.
-It uses the 'custom view' feature of Markdown parsing, which are explained in detail on the Markdown 
-dedicated [page](@nav/tutorials/markdown).
 </note>
 
-Finally, to integrate the implicit navigation resolver, the function above is referenced within its parent node using 
-the **`...`** catch-all key:
-
-<js-cell cell-id="example6">
-navigation = {
-    name: 'Root Node',
-    tableOfContent,
-    html: ({router}) => {
-        return MkDocs.parseMd({router, src:`
-# Embedding a files system
-
-<note level='info'>Navigate to the [File System](@nav/fs) node to display the 'dynamic' children. </note>
-`})},
-    '/fs': {
-        name: 'Files system',
-        tableOfContent,
-        html: ({router}) => {
-            return MkDocs.parseMd({router, src:`
-# File System
-
-This is an example of dynamic navigation: navigation nodes
-are not known in advance.
-`})},
-        '...': resolveDynamicNavigation
-    }
+<js-cell>
+const getContent = async (version, path) => {
+    const content = await rxjs.firstValueFrom(client.getResource$({
+        libraryId,
+        version,
+        restOfPath:path
+    }))
+    return await formatContent(path, content)
 }
-
-displayApp(navigation, display)
-
 </js-cell>
 
-<cell-output cell-id="example6" full-screen="true" style="height:500px;">
+Let's use our function to fetch and display the `package.json` file:
+
+<js-cell cell-id='file'>
+const resp = await getContent(version,  '/package.json')
+const packageJsonView = await fileView(resp, mockRouter)
+display(packageJsonView)
+</js-cell>
+
+<cell-output cell-id='file' class='overflow-auto' style="max-height: 33vh">
 </cell-output>
 
-<note level="warning" label="Important">
-The path provided to the 'catch-all' callback is relative to the parent node in which it is defined. 
-For example, for the global path `/fs/foo/bar/baz`, it becomes `foo/bar/baz` (since `fs` is the parent node of the
-reactive navigation).
-</note>
+### TOC
 
-<note level="hint">
-The callback definition for the **`...`** catch-all accommodates returning `Promise` or `Observable`.
-The latter allows the navigation structure to change at runtime (e.g., when the user performs an action).
-</note>
+Instead of the standard Table of Contents, we will display metadata about the currently selected file or folder:
 
+<js-cell>
+const mdContent = (data) => `
+## Metadata
+---
+*  **Size** : ${data.size/1000} kB
+`  
+
+const tocView = (data) => {
+    return {
+        tag: 'div',
+        class: 'mkdocs-TOCView p-2 rounded',
+        children: [
+            MkDocs.parseMd({src:mdContent(data)})
+        ]   
+    }
+}
+</js-cell>
+
+We can test it by displaying metadata for the root folder:
+
+<js-cell reactive="true">
+display(tocView(root))
+</js-cell>
+
+---
+
+## Navigation & App
+
+Let's now defined the <api-link target="Navigation"></api-link> object.
+Our goal is to create a <api-link target="LazyRoutes"></api-link> object, which maps URL segments to
+<api-link target="NavNodeData"></api-link> instances.
+For file and folder, the `NavNodeData` are implemented as:
+
+<js-cell>
+const navNodeDataFile = (version, path, fileResp, router) => ({ 
+    name: fileResp.name,
+    header: { icon: { tag: 'i', class: 'fas fa-file' } },
+    layout: { 
+        content: async () => {    
+            const content = await getContent(version, `${path}/${fileResp.name}`)
+            return fileView(content, router)
+        }, 
+        toc: ({html}) => tocView(fileResp)
+    },
+    leaf: true
+})
+const navNodeDataFolder = (version, path, folderResp, router) => ({ 
+    name: folderResp.name,
+    header: { icon: { tag: 'i', class: 'fas fa-folder' } },
+    layout: { 
+        content: async () => { 
+            const folderPath = `${path}/${folderResp.name}`
+            const resp = await queryExplorer(version, folderPath)
+            return folderView(resp, folderPath, router)
+        }, 
+        toc: ({html}) => tocView(folderResp)
+    }
+})
+</js-cell>
+
+Because we assume the file structure remains unchanged while the application is running,
+the routes attribute is defined using a <api-link target="LazyRoutesCb"></api-link> function:
+
+<js-cell>
+const routes = async ({ version, path, router }) => {
+    const resp = await queryExplorer(version, path)
+    const files = resp.files.reduce((acc, f) => ({
+        ...acc,
+        [`/${toId(f.name)}`]: navNodeDataFile(version, path, f, router)
+    }), {})
+    const folders = resp.folders.reduce((acc, f) => ({ 
+        ...acc, 
+        [`/${f.name}`]: navNodeDataFolder(version, path, f, router)  
+    }), {})
+    return { ...folders, ...files, }
+}
+</js-cell>
+ 
+We can finally define the navigation and application:
+
+
+<js-cell cell-id="app">
+const rootFolder = await queryExplorer(version, '/') 
+const navigation = {
+    name: 'Explorer',
+    layout: { 
+        content: ({router}) => {
+            return folderView(rootFolder, '/', router)
+        },
+        toc: ({html}) => tocView(rootFolder)
+    },
+    header: { icon: { tag: 'i', class: 'fas fa-folder-open' } },
+    routes: ({router, path}) => routes({version, router, path})
+}
+
+router = new MkDocs.Router({ 
+    name: 'dynamic-nav',
+    navigation,
+    browserClient: (p) => new MkDocs.MockBrowser(p)
+})
+const view = new MkDocs.DefaultLayout.Layout({
+    router,
+})
+display(view)
+</js-cell>
+
+
+<cell-output cell-id="app" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
+</cell-output>
+
+<note level="info" title="Top View" expandable="true" mode="stateful">
+This cell is associated with a deported view port: the one displayed at the top of this page:
+
+<js-cell cell-id="app-start">
+display(view)
+</js-cell>
+</note>
