@@ -416,8 +416,9 @@ export class ErrorView implements VirtualDOM<'div'> {
      */
     constructor(params: { error: ExecCellError }) {
         Object.assign(this, params)
-        const startLine = Math.max(0, this.error.line - 5)
-        const endLine = Math.min(this.error.src.length - 1, this.error.line + 5)
+        const line = this.error.line - 1 // highlightedLines first index is 0
+        const startLine = Math.max(0, line - 5)
+        const endLine = Math.min(this.error.src.length - 1, line + 5)
         const lines = this.error.src
             .slice(startLine, endLine)
             .reduce((acc, e) => `${acc}${e}\n`, '')
@@ -425,7 +426,7 @@ export class ErrorView implements VirtualDOM<'div'> {
         const content = `
 **${this.error.description}**
 
-<code-snippet highlightedLines="${String(this.error.line - startLine)}">
+<code-snippet highlightedLines="${String(line - startLine)}">
 ${lines}
 </code-snippet>
 

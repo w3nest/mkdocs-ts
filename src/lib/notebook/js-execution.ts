@@ -215,7 +215,7 @@ ${footer}
         console.error('Run time exec failure', { e, srcPatched, evalLoc })
         throw new RunTimeError({
             description: e['message'],
-            line: evalLoc ? evalLoc.line - 12 : -1,
+            line: evalLoc ? evalLoc.line - 10 : -1,
             column: evalLoc ? evalLoc.column : -1,
             src: src.split('\n'),
             scopeIn: scope,

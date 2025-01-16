@@ -376,6 +376,7 @@ export class State {
         if (!(cellId in this.outputs$)) {
             this.outputs$[cellId] = new ReplaySubject()
             this.executing$[cellId] = new BehaviorSubject(false)
+            this.errors$[cellId] = new ReplaySubject()
         }
         this.deportedOutputsViews.push(cellId)
         return DeportedOutputsView.FromDom({
