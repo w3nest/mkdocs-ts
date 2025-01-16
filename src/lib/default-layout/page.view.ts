@@ -116,7 +116,10 @@ export class PageView implements VirtualDOM<'div'> {
                             if (destination.sectionId) {
                                 this.router.scrollTo(destination.sectionId)
                             }
-                            this.content$.next(page)
+                            this.content$.next(
+                                // This is the `html` content returned by `destination.html`
+                                page.firstElementChild as HTMLElement,
+                            )
                             replaceLinks({
                                 router: this.router,
                                 elem: page,

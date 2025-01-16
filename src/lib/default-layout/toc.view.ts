@@ -24,8 +24,10 @@ import {
     switchMap,
     timer,
     combineLatest,
+    of,
 } from 'rxjs'
 import { DisplayMode, DisplayOptions } from './default-layout.view'
+import { AnyView } from '../navigation.node'
 
 type H1 = 'H1'
 type H2 = 'H2'
@@ -77,7 +79,7 @@ export class TOCView implements VirtualDOM<'div'> {
 
     public readonly style: CSSAttribute
 
-    public readonly maxHeadingDepth?: number = 3
+    public readonly maxHeadingDepth?: number = 2
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     public readonly disconnectedCallback: (elem: RxHTMLElement<'div'>) => void
@@ -310,7 +312,7 @@ interface TocTrait {
         }: {
             html: HTMLElement
             router: Router
-        }) => Promise<AnyVirtualDOM>
+        }) => AnyView | Promise<AnyView>
     }
 }
 function hasTocViewTrait(node: unknown): node is TocTrait {
@@ -374,15 +376,20 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                                     }),
                                 )
                             }
-                            return from(
-                                target.node.layout.toc({
-                                    html: elem,
-                                    router: this.router,
-                                }),
-                            )
+                            const toc = target.node.layout.toc({
+                                html: elem,
+                                router: this.router,
+                            })
+                            if (toc instanceof Promise) {
+                                return from(toc)
+                            }
+                            return of(toc)
                         }),
                     ),
                     vdomMap: (toc?): AnyVirtualDOM => {
+                        if (toc instanceof HTMLElement) {
+                            return { tag: 'div', children: [toc] }
+                        }
                         return toc ?? { tag: 'div' }
                     },
                 }),
