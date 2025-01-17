@@ -541,15 +541,23 @@ export class State {
                     )
                 }),
                 switchMap((nbPage) => {
-                    return fromFetch(nbPage.url)
+                    const parsingOptions = nbPage.options.markdown ?? {}
+                    return fromFetch(nbPage.url).pipe(
+                        map((resp) => ({ resp, parsingOptions })),
+                    )
                 }),
-                switchMap((resp) => resp.text()),
-                switchMap((src) => {
+                switchMap(({ resp, parsingOptions }) =>
+                    from(resp.text()).pipe(
+                        map((src) => ({ src, parsingOptions })),
+                    ),
+                ),
+                switchMap(({ src, parsingOptions }) => {
                     const state = new State({
                         router,
                         parent: { state: this, cellId },
                     })
                     Dependencies.parseMd({
+                        ...parsingOptions,
                         src: extractExportedCode(src),
                         router,
                         views: {
