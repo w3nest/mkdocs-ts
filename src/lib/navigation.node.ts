@@ -2,6 +2,7 @@ import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { Router } from './router'
 import { from, map, Observable, of, take } from 'rxjs'
 import { AnyVirtualDOM } from 'rx-vdom'
+import { shareReplay } from 'rxjs/operators'
 
 /**
  * Represents a view that can be rendered within the application, supporting both VirtualDOM-based components
@@ -175,6 +176,7 @@ export function createLazyChildren$<TLayout, THeader>({
             map((lazyChildren) => {
                 return toChildren(lazyChildren)
             }),
+            shareReplay({ refCount: true, bufferSize: 1 }),
         )
     }
     return of(toChildren(resolved))
