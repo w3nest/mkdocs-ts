@@ -7,6 +7,7 @@ import {
     AttributeLike,
     attr$,
     RxHTMLElement,
+    ChildLike,
 } from 'rx-vdom'
 import { NavHeader, NavigationWrapperView } from './navigation.view'
 import { Router } from '../router'
@@ -175,6 +176,12 @@ export interface DefaultLayoutParams<
      */
     bookmarks$?: BehaviorSubject<string[]>
 }
+
+/**
+ * Types that can be used to define views in {@link NavLayout}.
+ */
+export type NavLayoutView = Resolvable<AnyView> | ChildLike
+
 /**
  * The `layout` definition of {@link Navigation} nodes (essentially the page's content definition).
  *
@@ -190,16 +197,16 @@ export type NavLayout =
            *   *  router : Router instance.
            * @returns A promise on the view
            */
-          toc?: (p: { html: HTMLElement; router: Router }) => Promise<AnyView>
+          toc?: (p: { html: HTMLElement; router: Router }) => NavLayoutView
           /**
            * This function represents the view of the main content.
            *
            * @param router Router instance.
            * @returns A resolvable view
            */
-          content: ({ router }: { router: Router }) => Resolvable<AnyView>
+          content: ({ router }: { router: Router }) => NavLayoutView
       }
-    | (({ router }: { router: Router }) => Resolvable<AnyView>)
+    | (({ router }: { router: Router }) => NavLayoutView)
 
 /**
  * Represents the default layout of the library.

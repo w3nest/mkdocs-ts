@@ -25,9 +25,13 @@ import {
     timer,
     combineLatest,
     of,
+    take,
 } from 'rxjs'
-import { DisplayMode, DisplayOptions } from './default-layout.view'
-import { AnyView } from '../navigation.node'
+import {
+    DisplayMode,
+    DisplayOptions,
+    NavLayoutView,
+} from './default-layout.view'
 
 type H1 = 'H1'
 type H2 = 'H2'
@@ -312,7 +316,7 @@ interface TocTrait {
         }: {
             html: HTMLElement
             router: Router
-        }) => AnyView | Promise<AnyView>
+        }) => NavLayoutView
     }
 }
 function hasTocViewTrait(node: unknown): node is TocTrait {
@@ -380,17 +384,35 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                                 html: elem,
                                 router: this.router,
                             })
+                            if (!toc) {
+                                return of(undefined)
+                            }
                             if (toc instanceof Promise) {
                                 return from(toc)
+                            }
+                            if (toc instanceof Observable) {
+                                return toc.pipe(take(1))
+                            }
+                            if (toc instanceof HTMLElement) {
+                                return of(toc)
+                            }
+                            if ('source$' in toc) {
+                                return of(toc)
                             }
                             return of(toc)
                         }),
                     ),
                     vdomMap: (toc?): AnyVirtualDOM => {
+                        if (!toc) {
+                            return { tag: 'div' }
+                        }
                         if (toc instanceof HTMLElement) {
                             return { tag: 'div', children: [toc] }
                         }
-                        return toc ?? { tag: 'div' }
+                        if ('source$' in toc) {
+                            return { tag: 'div', children: [toc] }
+                        }
+                        return toc
                     },
                 }),
             ],
