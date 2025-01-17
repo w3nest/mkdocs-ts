@@ -105,7 +105,7 @@ export function createLazyNavNode<TLayout, THeader>({
     router: Router
 }): NavNodeResolved<TLayout, THeader> {
     const sanitizedPath = sanitizeNavPath(`${path}${segment}`)
-    const href = `${hrefBase}${sanitizedPath}`
+    const href = sanitizeNavPath(`${hrefBase}${sanitizedPath}`)
 
     return new NavNodeResolved({
         id: href,
@@ -218,7 +218,7 @@ export function createChildren<TLayout, THeader>({
     }
     return Object.entries(navigation.routes).map(
         ([k, v]: [string, Nav | Promise<Nav>]) => {
-            const href = hRefBase + k
+            const href = sanitizeNavPath(hRefBase + k)
             if (v instanceof Promise) {
                 promiseNavs[href] = v
                 return new NavNodePromise({ href })
@@ -229,7 +229,7 @@ export function createChildren<TLayout, THeader>({
                 children: createChildren({
                     // k is an entry of navigation & do start by `/` => safe cast
                     navigation: routes[k] as unknown as Nav,
-                    hRefBase: hRefBase + k,
+                    hRefBase: href,
                     router,
                     reactiveNavs,
                     promiseNavs,
@@ -251,14 +251,14 @@ export function createRootNode<TLayout, THeader>({
     router: Router
     hrefBase?: string
 }) {
-    const href = hrefBase ?? ''
+    const href = hrefBase ?? '/'
     const reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>> = {}
     const promiseNavs: Record<
         string,
         Promise<Navigation<TLayout, THeader>>
     > = {}
     const rootNode = new NavNodeResolved({
-        id: href === '' ? '/' : href,
+        id: href,
         name: navigation.name,
         layout: navigation.layout,
         children: createChildren({
