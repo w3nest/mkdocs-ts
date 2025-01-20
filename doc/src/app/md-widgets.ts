@@ -14,6 +14,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             DynamicRoutes: '@nav/api/MainModule.DynamicRoutes',
             LazyRoutes: '@nav/api/MainModule.LazyRoutes',
             LazyRoutesCb: '@nav/api/MainModule.LazyRoutesCb',
+            LazyRoutesCb$: '@nav/api/MainModule.LazyRoutesCb$',
             NavNodeData: '@nav/api/MainModule.NavNodeData',
             Resolvable: '@nav/api/MainModule.Resolvable',
             AnyView: '@nav/api/MainModule.AnyView',
@@ -25,8 +26,11 @@ export class ApiLink implements VirtualDOM<'a'> {
                 '@nav/api/MainModule/DefaultLayout.Layout.newLayout',
             fetchMd: '@nav/api/MainModule.fetchMd',
             parseMd: '@nav/api/MainModule.parseMd',
+            replaceLinks: '@nav/api/MainModule.replaceLinks',
             MdWidgets: '@nav/api/MainModule/MdWidgets.fake',
             CodeSnippetView: '@nav/api/MainModule/MdWidgets.CodeSnippetView',
+            'DefaultLayout.PageView':
+                '@nav/api/MainModule/DefaultLayout.PageView',
             'DefaultLayout.NavHeader':
                 '@nav/api/MainModule/DefaultLayout.NavHeader',
             'DefaultLayout.NavLayout':
@@ -54,6 +58,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             DynamicRoutes: 'mkapi-role-type-alias',
             LazyRoutes: 'mkapi-role-type-alias',
             LazyRoutesCb: 'mkapi-role-type-alias',
+            LazyRoutesCb$: 'mkapi-role-type-alias',
             NavNodeData: 'mkapi-role-type-alias',
             Resolvable: 'mkapi-role-type-alias',
             AnyView: 'mkapi-role-type-alias',
@@ -63,8 +68,10 @@ export class ApiLink implements VirtualDOM<'a'> {
             'DefaultLayout.Layout.new': 'mkapi-role-constructor',
             fetchMd: 'mkapi-role-function',
             parseMd: 'mkapi-role-function',
+            replaceLinks: 'mkapi-role-function',
             MdWidgets: 'mkapi-role-module',
             CodeSnippetView: 'mkapi-role-class',
+            'DefaultLayout.PageView': 'mkapi-role-class',
             'DefaultLayout.NavHeader': 'mkapi-role-interface',
             'DefaultLayout.NavLayout': 'mkapi-role-type-alias',
             'DefaultLayoutParams.sideNavHeader': 'mkapi-role-attribute',
@@ -108,6 +115,7 @@ export class ExtLink implements VirtualDOM<'a'> {
             three: 'https://threejs.org/',
             'rx-vdom': '/apps/@rx-vdom/doc/latest',
             'virtual-dom': '/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM',
+            RxChild: '/apps/@rx-vdom/doc/latest?nav=/api.RxChild',
             webpm: '/apps/@webpm/doc/latest',
             'floating-ui': 'https://floating-ui.com/',
             BehaviorSubject:

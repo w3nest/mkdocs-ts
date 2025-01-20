@@ -5,6 +5,7 @@ import {
     installNotebookModule,
     Navigation,
     GlobalMarkdownViews,
+    Router,
 } from 'mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
@@ -13,6 +14,7 @@ import { companionNodes$ } from './on-load'
 import { example1 } from './js-plaground-examples'
 import { ApiLink, CrossLink, ExtLink, SplitApiButton } from './md-widgets'
 import { CSS3DModule } from './css-3d-renderer'
+import { createRootContext } from './context-factory'
 
 const project = {
     name: 'mkdocs-ts',
@@ -63,6 +65,27 @@ await Promise.all([
 ])
 
 type AppNav = Navigation<DefaultLayout.NavLayout, DefaultLayout.NavHeader>
+
+const notebookPage = (target: string, router: Router) => {
+    const context = createRootContext({
+        threadName: `Notebook(${target})`,
+        labels: ['Notebook'],
+    })
+    return new NotebookModule.NotebookPage(
+        {
+            url: url(target),
+            router,
+            options: notebookOptions,
+            initialScope: {
+                const: {
+                    CSS3DModule,
+                },
+                let: {},
+            },
+        },
+        context,
+    )
+}
 
 export const navigation: AppNav = {
     name: 'mkDocs-TS',
@@ -132,69 +155,57 @@ export const navigation: AppNav = {
                     name: 'Getting started',
                     layout: {
                         content: ({ router }) =>
-                            new NotebookModule.NotebookPage({
-                                url: url('tutorials.basics.md'),
-                                router,
-                                options: notebookOptions,
-                                initialScope: {
-                                    const: {
-                                        CSS3DModule,
-                                    },
-                                    let: {},
-                                },
-                            }),
+                            notebookPage('tutorials.basics.md', router),
                     },
                     routes: {
                         '/dynamic-nav': {
                             name: 'Dynamic Navigation',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.basics.dynamic-nav.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.basics.dynamic-nav.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
-                        'custom-layout': {
+                        '/mutable-nav': {
+                            name: 'Mutable Navigation',
+                            layout: {
+                                content: ({ router }) =>
+                                    notebookPage(
+                                        'tutorials.basics.mutable-nav.md',
+                                        router,
+                                    ),
+                            },
+                        },
+                        '/custom-layout': {
                             name: 'Custom Layout',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.basics.custom-layout.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.basics.custom-layout.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
-                        typescript: {
+                        '/typescript': {
                             name: 'Typescript',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.basics.typescript.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.basics.typescript.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                         '/code-utils': {
                             name: 'Code Utilities',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.basics.code-utils.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.basics.code-utils.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                     },
@@ -203,11 +214,7 @@ export const navigation: AppNav = {
                     name: 'Markdown',
                     layout: {
                         content: ({ router }) =>
-                            new NotebookModule.NotebookPage({
-                                url: url('tutorials.markdown.md'),
-                                router,
-                                options: notebookOptions,
-                            }),
+                            notebookPage('tutorials.markdown.md', router),
                     },
                 },
                 '/code-api': {
@@ -220,61 +227,47 @@ export const navigation: AppNav = {
                     name: 'Notebook',
                     layout: {
                         content: ({ router }) =>
-                            new NotebookModule.NotebookPage({
-                                url: url('tutorials.notebook.md'),
-                                router,
-                                options: notebookOptions,
-                            }),
+                            notebookPage('tutorials.notebook.md', router),
                     },
                     routes: {
                         '/import': {
                             name: 'Import',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.notebook.import.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.notebook.import.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                         '/scope': {
                             name: 'Scope & Mutations',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url('tutorials.notebook.scope.md'),
+                                    notebookPage(
+                                        'tutorials.notebook.scope.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                         '/python': {
                             name: 'Python',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.notebook.python.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.notebook.python.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                             routes: {
                                 '/matplotlib': {
                                     name: 'Matplotlib',
                                     layout: {
                                         content: ({ router }) =>
-                                            new NotebookModule.NotebookPage({
-                                                url: url(
-                                                    'tutorials.notebook.python.matplotlib.md',
-                                                ),
+                                            notebookPage(
+                                                'tutorials.notebook.python.matplotlib.md',
                                                 router,
-                                                options: notebookOptions,
-                                            }),
+                                            ),
                                     },
                                 },
                             },
@@ -283,39 +276,30 @@ export const navigation: AppNav = {
                             name: "Workers' Pool",
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.notebook.workers.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.notebook.workers.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                         '/interpreter': {
                             name: 'Interpreter',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.notebook.interpreter.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.notebook.interpreter.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                         '/import-utils': {
                             name: 'Import Utilities',
                             layout: {
                                 content: ({ router }) =>
-                                    new NotebookModule.NotebookPage({
-                                        url: url(
-                                            'tutorials.notebook.import-utils.md',
-                                        ),
+                                    notebookPage(
+                                        'tutorials.notebook.import-utils.md',
                                         router,
-                                        options: notebookOptions,
-                                    }),
+                                    ),
                             },
                         },
                     },

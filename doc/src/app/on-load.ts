@@ -2,15 +2,26 @@ import { render, VirtualDOM, ChildrenLike, CSSAttribute } from 'rx-vdom'
 import { navigation } from './navigation'
 import { Router, DefaultLayout, MdWidgets, WebBrowser } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
+import { createRootContext, inMemReporter } from './context-factory'
 
 export const companionNodes$ = new BehaviorSubject([])
 
-export const router = new Router({
-    navigation,
-    browserClient: (p) =>
-        new WebBrowser({ ...p, ignoredPaths$: companionNodes$ }),
-    name: 'MainRouter',
+const ctx = createRootContext({
+    threadName: 'App',
+    labels: [],
 })
+
+console.log('In memory logs reporter', inMemReporter)
+
+export const router = new Router(
+    {
+        navigation,
+        browserClient: (p) =>
+            new WebBrowser({ ...p, ignoredPaths$: companionNodes$ }),
+    },
+    ctx,
+)
+
 const bookmarks$ = new BehaviorSubject(['/', '/how-to', '/tutorials', '/api'])
 export const topStickyPaddingMax = '3rem'
 
@@ -54,19 +65,22 @@ export class NavHeaderView implements VirtualDOM<'div'> {
     }
 }
 
-const routerView = new DefaultLayout.LayoutWithCompanion({
-    router,
-    bookmarks$,
-    displayOptions: {
-        pageVertPadding: '3rem',
+const routerView = new DefaultLayout.LayoutWithCompanion(
+    {
+        router,
+        bookmarks$,
+        displayOptions: {
+            pageVertPadding: '3rem',
+        },
+        sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
+        sideNavFooter: () =>
+            new DefaultLayout.FooterView({
+                sourceName: '@mkdocs-ts/doc',
+                sourceUrl: 'https://github.com/w3nest/mkdocs-ts/tree/main/doc',
+            }),
+        companionNodes$,
     },
-    sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
-    sideNavFooter: () =>
-        new DefaultLayout.FooterView({
-            sourceName: '@mkdocs-ts/doc',
-            sourceUrl: 'https://github.com/w3nest/mkdocs-ts/tree/main/doc',
-        }),
-    companionNodes$,
-})
+    ctx,
+)
 
 document.getElementById('content').appendChild(render(routerView))
