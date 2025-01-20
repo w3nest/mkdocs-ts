@@ -246,6 +246,27 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 }
             })
         fireAndForget(this.navigateTo(this.parseUrl(), context))
+
+        this.explorerState.directUpdates$
+            .pipe(
+                map((updates) =>
+                    updates.map((update) => update.removedNodes).flat(),
+                ),
+                filter((nodes) => nodes.length > 0),
+                withLatestFrom(this.target$),
+                filter(([nodes, target]) => {
+                    return (
+                        nodes.find((node) =>
+                            target.path.startsWith(node.href),
+                        ) !== undefined
+                    )
+                }),
+            )
+            .subscribe(([, target]) => {
+                context.info('Node parent of current path removed')
+                this.fireNavigateTo(target, undefined, context)
+            })
+        context.exit()
     }
 
     ctx(ctx?: ContextTrait) {
