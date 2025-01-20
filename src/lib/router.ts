@@ -1,6 +1,7 @@
 import {
     filter,
     firstValueFrom,
+    map,
     mergeMap,
     Observable,
     of,
@@ -10,20 +11,21 @@ import {
     take,
     tap,
     timer,
+    withLatestFrom,
 } from 'rxjs'
 import {
-    createRootNode,
     Navigation,
     AnyNavNode,
-    createLazyChildren$,
     LazyRoutesCb,
     sanitizeNavPath,
     LazyRoutesCb$,
     resolve,
     pathIds,
+    NavParser,
 } from './navigation.node'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { BrowserInterface, parseUrl, WebBrowser } from './browser.interface'
+import { Contextual, ContextTrait, NoContext } from './context'
 
 /**
  * Navigation URL model.
@@ -183,6 +185,8 @@ export class Router<TLayout = unknown, THeader = unknown> {
      */
     public readonly browserClient: BrowserInterface
 
+    public readonly context?: ContextTrait
+    private navParser = new NavParser()
     /**
      * Initialize a router instance.
      *
@@ -192,33 +196,43 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.
      * @param params.redirects See {@link Router.redirects}.
      * @param params.browserClient See {@link BrowserInterface}.
+     * @param ctx Executing context, used for logging purposes.
      */
-    constructor(params: {
-        navigation: Navigation<TLayout, THeader>
-        basePath?: string
-        retryNavPeriod?: number
-        redirects?: (target: string) => Promise<string | undefined>
-        browserClient?: (p: {
-            router: Router
-            basePath: string
-        }) => BrowserInterface
-    }) {
+    constructor(
+        params: {
+            navigation: Navigation<TLayout, THeader>
+            basePath?: string
+            retryNavPeriod?: number
+            redirects?: (target: string) => Promise<string | undefined>
+            browserClient?: (p: {
+                router: Router
+                basePath: string
+            }) => BrowserInterface
+        },
+        ctx?: ContextTrait,
+    ) {
         Object.assign(this, params)
+        this.context = ctx
+        const context = this.ctx().start('new Router', ['Router'])
         this.basePath = this.basePath || document.location.pathname
         this.browserClient = params.browserClient
             ? params.browserClient({ router: this, basePath: this.basePath })
             : new WebBrowser({ router: this, basePath: this.basePath })
 
-        const { rootNode, reactiveNavs, promiseNavs } = createRootNode({
-            navigation: this.navigation,
-            router: this,
-        })
+        const { rootNode, reactiveNavs, promiseNavs } =
+            this.navParser.createRootNode(
+                {
+                    navigation: this.navigation,
+                    router: this,
+                },
+                context,
+            )
         this.explorerState = new ImmutableTree.State({
             rootNode,
             expandedNodes: ['/'],
         })
-        this.bindReactiveNavs(reactiveNavs)
-        this.bindPromiseNavs(promiseNavs)
+        this.bindReactiveNavs(reactiveNavs, context)
+        this.bindPromiseNavs(promiseNavs, context)
 
         this.target$
             .pipe(
@@ -231,9 +245,15 @@ export class Router<TLayout = unknown, THeader = unknown> {
                     this.scrollTo()
                 }
             })
-        fireAndForget(this.navigateTo(this.parseUrl()))
+        fireAndForget(this.navigateTo(this.parseUrl(), context))
     }
 
+    ctx(ctx?: ContextTrait) {
+        if (ctx) {
+            return ctx
+        }
+        return this.context ?? new NoContext()
+    }
     /**
      * Returns the current navigation path.
      */
@@ -247,12 +267,15 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param target  The path to navigate to.
      * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.
      * @param onError Callback called if errors happen.
+     * @param ctx Executing context, used for logging purposes.
      */
+    @Contextual()
     fireNavigateTo(
         target: UrlTarget | string,
         onError?: (err: unknown) => void,
+        ctx?: ContextTrait,
     ) {
-        fireAndForget(this.navigateTo(target), onError)
+        fireAndForget(this.navigateTo(target, ctx), onError)
     }
 
     /**
@@ -260,8 +283,15 @@ export class Router<TLayout = unknown, THeader = unknown> {
      *
      * @param target The URL target.
      * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.
+     * @param ctx Executing context, used for logging purposes.
      */
-    async navigateTo(target: UrlTarget | string) {
+    @Contextual({
+        async: true,
+        key: (target: UrlTarget | string) =>
+            typeof target === 'string' ? target : target.path,
+    })
+    async navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {
+        ctx = this.ctx(ctx)
         target = typeof target === 'string' ? parseUrl(target) : target
 
         const path = await this.redirects(sanitizeNavPath(target.path))
@@ -270,9 +300,11 @@ export class Router<TLayout = unknown, THeader = unknown> {
         }
         const sectionId = target.sectionId
 
+        ctx.info('Schedule async nav node retrieval')
         const nav = timer(0, this.retryNavPeriod).pipe(
-            switchMap(() => {
-                const nav = this.getNav({ path })
+            switchMap((i) => {
+                ctx.info(`Attempt 'getNav' #${String(i)}`)
+                const nav = this.getNav({ path }, ctx)
                 if (nav instanceof Observable) {
                     return nav
                 }
@@ -371,12 +403,20 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.
      *
      * @param path The target path.
+     * @param ctx Executing context, used for logging purposes.
      */
-    public getNav({
-        path,
-    }: {
-        path: string
-    }): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {
+    @Contextual({
+        key: ({ path }: { path: string }) => path,
+    })
+    public getNav(
+        {
+            path,
+        }: {
+            path: string
+        },
+        ctx?: ContextTrait,
+    ): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {
+        ctx = this.ctx(ctx)
         const parts = path
             .split('/')
             .slice(1)
@@ -387,6 +427,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         }
         const node = parts.reduce(
             ({ tree, resolvedPath, keepGoing }, part) => {
+                ctx.info(`Resolve ${resolvedPath}/${part}`)
                 if (!keepGoing) {
                     return { tree, resolvedPath, keepGoing }
                 }
@@ -444,14 +485,17 @@ export class Router<TLayout = unknown, THeader = unknown> {
             { tree: this.navigation, resolvedPath: `/`, keepGoing: true },
         )
         if (node === 'not-found') {
+            ctx.info('Navigation node is not found')
             return 'not-found'
         }
         // node.tree: Navigation |  Promise<Navigation> | LazyRoutesCb | LazyRoutesCb$
         if (node.tree instanceof Observable || node.tree instanceof Promise) {
+            ctx.info('Navigation node is unresolved')
             // case: Promise<Navigation> or LazyRoutesCb$ -> a retry in some period of time will be executed
             return 'unresolved'
         }
         if (typeof node.tree === 'function') {
+            ctx.info('Navigation node is function for lazy definition')
             // case: LazyRoutesCb, remove starting '/'
             const relative =
                 node.resolvedPath === '/'
@@ -473,6 +517,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 }),
             )
         }
+        ctx.info('Navigation node found')
         // node.tree: Navigation
         return of(node.tree)
     }
@@ -496,20 +541,28 @@ export class Router<TLayout = unknown, THeader = unknown> {
         this.htmlUpdated$.next(true)
     }
 
+    @Contextual()
     private bindReactiveNavs(
         reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>>,
+        ctx?: ContextTrait,
     ) {
+        ctx = this.ctx(ctx)
         Object.entries(reactiveNavs).forEach(([href, v]) => {
             v.subscribe((resolver) => {
                 this.navUpdates[href] = resolver
                 const oldNode = this.explorerState.getNodeResolved(href)
-                const children = createLazyChildren$({
-                    resolver: resolver,
-                    hrefBase: href,
-                    path: '',
-                    withExplicit: [],
-                    router: this,
-                })
+                ctx.info(`Replace Node w/ Observable '${href}'`, oldNode)
+                const children = this.navParser.createLazyChildren$(
+                    {
+                        resolver: resolver,
+                        hrefBase: href,
+                        path: '',
+                        withExplicit: [],
+                        router: this,
+                        depth: 0,
+                    },
+                    ctx,
+                )
                 const newNode = new oldNode.factory({
                     ...oldNode,
                     children,
@@ -518,24 +571,30 @@ export class Router<TLayout = unknown, THeader = unknown> {
             })
         })
     }
+    @Contextual()
     private bindPromiseNavs(
         promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>,
+        ctx?: ContextTrait,
     ) {
+        ctx = this.ctx(ctx)
         Object.entries(promiseNavs).forEach(([href, v]) => {
             v.then(
                 (nav) => {
                     this.navResolved[href] = nav
                     const oldNode = this.explorerState.getNodeResolved(href)
-
+                    ctx.info(`Replace Node w/ Promise '${href}'`, oldNode)
                     const { rootNode, reactiveNavs, promiseNavs } =
-                        createRootNode({
-                            navigation: nav,
-                            router: this,
-                            hrefBase: href,
-                        })
+                        this.navParser.createRootNode(
+                            {
+                                navigation: nav,
+                                router: this,
+                                hrefBase: href,
+                            },
+                            ctx,
+                        )
                     this.explorerState.replaceNode(oldNode, rootNode)
-                    this.bindReactiveNavs(reactiveNavs)
-                    this.bindPromiseNavs(promiseNavs)
+                    this.bindReactiveNavs(reactiveNavs, ctx)
+                    this.bindPromiseNavs(promiseNavs, ctx)
                 },
                 () => {
                     throw Error(

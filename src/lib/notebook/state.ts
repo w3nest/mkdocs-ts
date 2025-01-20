@@ -33,6 +33,7 @@ import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
 import { Resolvable } from '../navigation.node'
+import { ContextTrait, Contextual, NoContext } from '../context'
 
 export type CellStatus =
     | 'unready'
@@ -87,9 +88,10 @@ export interface ExecArgs {
      * The function used to load a submodule from a notebook page.
      *
      * @param path Navigation path of the submodule.
+     * @param ctx Executing context, used for logging purposes.
      * @returns The exported symbols.
      */
-    load: (path: string) => Promise<Record<string, unknown>>
+    load: (path: string, ctx: ContextTrait) => Promise<Record<string, unknown>>
 
     /**
      * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.
@@ -126,7 +128,7 @@ export interface CellTrait {
     /**
      * Define the implementation of cell execution.
      */
-    execute: (args: ExecArgs) => Promise<Scope>
+    execute: (args: ExecArgs, ctx?: ContextTrait) => Promise<Scope>
 }
 
 export function getCellUid(): string {
@@ -261,6 +263,7 @@ export class State {
     public readonly modules: Record<string, { state: State; exports: Scope }> =
         {}
 
+    public readonly context: ContextTrait
     /**
      * Pyodide execution should be namespaced by notebook page,
      * this variable holds the symbols.
@@ -270,13 +273,18 @@ export class State {
      */
     private pyNamespace?: PyodideNamespace
 
-    constructor(params: {
-        initialScope?: Partial<Scope>
-        router: Router
-        displayFactory?: DisplayFactory
-        parent?: { state: State; cellId: string }
-    }) {
+    constructor(
+        params: {
+            initialScope?: Partial<Scope>
+            router: Router
+            displayFactory?: DisplayFactory
+            parent?: { state: State; cellId: string }
+        },
+        ctx?: ContextTrait,
+    ) {
         Object.assign(this, { router: params.router, parent: params.parent })
+        this.context = ctx ?? new NoContext()
+        ctx = this.context.start('new State', ['Notebook'])
         this.displayFactory = [
             ...this.displayFactory,
             ...(params.displayFactory ?? []),
@@ -305,6 +313,13 @@ export class State {
                     })
                 })
         }
+        ctx.exit()
+    }
+    ctx(ctx?: ContextTrait) {
+        if (ctx) {
+            return ctx
+        }
+        return this.context
     }
 
     getPyNamespace(pyodide: Pyodide): PyodideNamespace {
@@ -404,16 +419,22 @@ export class State {
         }
         return this.scopes$[cellId].value
     }
-    async execute(id: string, rootExecution = true) {
+    @Contextual({ async: true, key: (id: string) => id })
+    async execute(id: string, rootExecution = true, ctx?: ContextTrait) {
+        ctx = this.ctx(ctx)
+
         if (this.ids.length === 0) {
             return this.initialScope
         }
         const index = this.ids.indexOf(id)
         this.cellsStatus$[id].next('pending')
         if (!this.scopes$[id].value) {
-            await this.execute(this.ids[index - 1], false)
+            ctx.info('No scope available, run previous cell')
+            await this.execute(this.ids[index - 1], false, ctx)
         }
         const inputScope = this.getResolvedScope(id)
+
+        ctx.info('Input scope retrieved', inputScope)
         const output$ = this.outputs$[id]
 
         output$.next(undefined)
@@ -421,15 +442,18 @@ export class State {
         this.executing$[id].next(true)
         this.errors$[id].next(undefined)
         try {
-            const scope = await this.cells[index].execute({
-                src: this.src$[id].value,
-                scope: inputScope,
-                output$,
-                displayFactory: this.displayFactory,
-                load: this.loadModule(id),
-                cellId: id,
-                owningState: this,
-            })
+            const scope = await this.cells[index].execute(
+                {
+                    src: this.src$[id].value,
+                    scope: inputScope,
+                    output$,
+                    displayFactory: this.displayFactory,
+                    load: this.loadModule(id),
+                    cellId: id,
+                    owningState: this,
+                },
+                ctx,
+            )
             this.cellsStatus$[id].next('success')
             const nextId = this.ids[index + 1]
             const remainingIds = this.ids.slice(index + 2)
@@ -518,12 +542,13 @@ export class State {
             }
         }
 
-        return async (path: string) => {
+        return async (path: string, ctx: ContextTrait) => {
+            ctx.info(`Load module ${path}`)
             const router = this.router
             if (path in this.modules) {
                 this.modules[path].state.dispose()
             }
-            const nav = router.getNav({ path })
+            const nav = router.getNav({ path }, ctx)
             if (!(nav instanceof Observable)) {
                 throw Error(`Can not find module at ${path}`)
             }
@@ -543,19 +568,26 @@ export class State {
                 switchMap((nbPage) => {
                     const parsingOptions = nbPage.options.markdown ?? {}
                     return fromFetch(nbPage.url).pipe(
-                        map((resp) => ({ resp, parsingOptions })),
+                        map((resp) => ({
+                            resp,
+                            parsingOptions,
+                            nbCtx: nbPage.context,
+                        })),
                     )
                 }),
-                switchMap(({ resp, parsingOptions }) =>
+                switchMap(({ resp, parsingOptions, nbCtx }) =>
                     from(resp.text()).pipe(
-                        map((src) => ({ src, parsingOptions })),
+                        map((src) => ({ src, parsingOptions, nbCtx })),
                     ),
                 ),
-                switchMap(({ src, parsingOptions }) => {
-                    const state = new State({
-                        router,
-                        parent: { state: this, cellId },
-                    })
+                switchMap(({ src, parsingOptions, nbCtx }) => {
+                    const state = new State(
+                        {
+                            router,
+                            parent: { state: this, cellId },
+                        },
+                        nbCtx,
+                    )
                     Dependencies.parseMd({
                         ...parsingOptions,
                         src: extractExportedCode(src),

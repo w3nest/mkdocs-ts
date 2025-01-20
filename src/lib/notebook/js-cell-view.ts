@@ -5,6 +5,7 @@ import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { executeJs } from './js-execution'
+import { ContextTrait, Contextual } from '../context'
 
 /**
  * All attributes available for a javascript cell: the common ones + 'reactive'.
@@ -65,13 +66,18 @@ export class JsCellExecutor implements CellTrait {
      * Execute the cell. See {@link execute}.
      *
      * @param args See {@link ExecArgs}.
+     * @param ctx Executing context, used for logging purposes.
      */
-    async execute(args: ExecArgs): Promise<Scope> {
-        return await executeJs({
-            ...args,
-            reactive: this.cellAttributes.reactive,
-            invalidated$: this.invalidated$,
-        })
+    @Contextual({ async: true, key: (args: ExecArgs) => args.cellId })
+    async execute(args: ExecArgs, ctx?: ContextTrait): Promise<Scope> {
+        return await executeJs(
+            {
+                ...args,
+                reactive: this.cellAttributes.reactive,
+                invalidated$: this.invalidated$,
+            },
+            ctx,
+        )
     }
 }
 

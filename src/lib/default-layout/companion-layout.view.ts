@@ -5,6 +5,7 @@ import { Layout, DefaultLayoutParams } from './default-layout.view'
 import { PageView } from './page.view'
 import { MockBrowser } from '../browser.interface'
 import { NavActionView } from './nav-header.view'
+import { ContextTrait, NoContext } from '../context'
 
 /**
  * Parameters for constructing {@link LayoutWithCompanion} layout.
@@ -59,13 +60,17 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
 
     public readonly companionNodes$: BehaviorSubject<string[]>
 
+    public readonly context?: ContextTrait
     /**
      * Constructs a new `LayoutWithCompanion` layout.
      *
      * @param params See {@link LayoutWithCompanionParams}
+     * @param ctx Executing context, used for logging purposes.
      **/
-    constructor(params: LayoutWithCompanionParams) {
+    constructor(params: LayoutWithCompanionParams, ctx?: ContextTrait) {
+        this.context = ctx
         this.companionNodes$ = params.companionNodes$
+        const context = this.ctx().start('new LayoutWithCompanion', ['View'])
 
         const isCompanionPath = (path: string) => {
             return (
@@ -83,10 +88,14 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                     filter: (d) => !isCompanionPath(d.path),
                 }),
         })
-        const companionRouter = new Router({
-            navigation: params.router.navigation,
-            browserClient: (p) => new MockBrowser(p),
-        })
+        context.info('Create Router')
+        const companionRouter = new Router(
+            {
+                navigation: params.router.navigation,
+                browserClient: (p) => new MockBrowser(p),
+            },
+            context,
+        )
 
         const subs = [
             params.router.target$
@@ -166,6 +175,10 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                 },
             }),
         ]
+        context.exit()
+    }
+    ctx() {
+        return this.context ?? new NoContext()
     }
 }
 

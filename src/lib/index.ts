@@ -3,6 +3,6 @@ export * from './navigation.node'
 export * from './generic.view'
 export * from './router'
 export * from './browser.interface'
-
+export * from './context'
 export * as DefaultLayout from './default-layout'
 export * as MdWidgets from './md-widgets'

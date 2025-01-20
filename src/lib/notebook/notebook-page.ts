@@ -5,6 +5,7 @@ import { delay, filter, from, of, take } from 'rxjs'
 import { Scope, State } from './state'
 import { DisplayFactory } from './display-utils'
 import { Dependencies } from './index'
+import { ContextTrait, NoContext } from '../context'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -103,6 +104,7 @@ export class NotebookPage implements VirtualDOM<'div'> {
 
     public readonly options: NotebookOptions
 
+    public readonly context?: ContextTrait
     /**
      * Constructs the page.
      *
@@ -115,27 +117,37 @@ export class NotebookPage implements VirtualDOM<'div'> {
      * @param params.displayFactory Additional custom {@link DisplayFactory} invoked when `display` is used.
      * @param params.options Global options for the page, in particular defined the default attribute for the various
      * cells.
+     * @param ctx Executing context, used for logging purposes.
      */
-    constructor(params: {
-        url?: string
-        src?: string
-        router: Router
-        initialScope?: Partial<Scope>
-        displayFactory?: DisplayFactory
-        options?: NotebookOptions
-    }) {
+    constructor(
+        params: {
+            url?: string
+            src?: string
+            router: Router
+            initialScope?: Partial<Scope>
+            displayFactory?: DisplayFactory
+            options?: NotebookOptions
+        },
+        ctx?: ContextTrait,
+    ) {
         Object.assign(this, params)
+        this.context = ctx ?? new NoContext()
+        const context = this.context.start('new NotebookPage', ['Notebook'])
+
         if (params.src === undefined && params.url === undefined) {
             console.error(
                 'Neither url or src parameter provided to the notebook page.',
             )
             return
         }
-        this.state = new State({
-            router: this.router,
-            displayFactory: params.displayFactory,
-            initialScope: params.initialScope,
-        })
+        this.state = new State(
+            {
+                router: this.router,
+                displayFactory: params.displayFactory,
+                initialScope: params.initialScope,
+            },
+            context,
+        )
 
         const source$ =
             params.src === undefined
@@ -191,5 +203,6 @@ export class NotebookPage implements VirtualDOM<'div'> {
                 },
             }),
         ]
+        context.exit()
     }
 }

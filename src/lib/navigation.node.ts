@@ -3,6 +3,7 @@ import { Router } from './router'
 import { from, map, Observable, of, take } from 'rxjs'
 import { AnyVirtualDOM } from 'rx-vdom'
 import { shareReplay } from 'rxjs/operators'
+import { Contextual, ContextTrait, NoContext } from './context'
 
 /**
  * Represents a view that can be rendered within the application, supporting both VirtualDOM-based components
@@ -89,193 +90,266 @@ export type AnyNavNode<TLayout, THeader> =
     | NavNodePromise
     | NavNodeResolved<TLayout, THeader>
 
-export function createLazyNavNode<TLayout, THeader>({
-    hrefBase,
-    path,
-    segment,
-    node,
-    asyncChildren,
-    router,
-}: {
-    hrefBase: string
-    path: string
-    segment: string
-    node: NavNodeData<TLayout, THeader, true>
-    asyncChildren: LazyRoutesCb<TLayout, THeader>
-    router: Router
-}): NavNodeResolved<TLayout, THeader> {
-    const sanitizedPath = sanitizeNavPath(`${path}${segment}`)
-    const href = sanitizeNavPath(`${hrefBase}${sanitizedPath}`)
-
-    return new NavNodeResolved({
-        id: href,
-        href,
-        name: node.name,
-        children: node.leaf
-            ? undefined
-            : createLazyChildren$({
-                  resolver: asyncChildren,
-                  hrefBase,
-                  path: sanitizedPath,
-                  withExplicit: [],
-                  router,
-              }),
-        metadata: node.metadata,
-        header: node.header,
-        layout: node.layout,
+export class NavParser {
+    @Contextual({
+        key: ({
+            hrefBase,
+            path,
+            segment,
+        }: {
+            hrefBase: string
+            path: string
+            segment: string
+        }) => `${hrefBase}/${path}/${segment}`,
+        labels: ['Nav'],
     })
-}
-
-export function createLazyChildren$<TLayout, THeader>({
-    resolver,
-    hrefBase,
-    withExplicit,
-    router,
-    path,
-}: {
-    resolver: LazyRoutesCb<TLayout, THeader>
-    path: string
-    hrefBase: string
-    withExplicit: NavNodeResolved<TLayout, THeader>[]
-    router: Router
-}):
-    | NavNodeResolved<TLayout, THeader>[]
-    | Observable<NavNodeResolved<TLayout, THeader>[]> {
-    path = sanitizeNavPath(path)
-    const resolved = resolver({ path: path, router })
-    if (!resolved) {
-        return []
-    }
-    const toChildren = (lazyChildren: LazyRoutes<TLayout, THeader>) => [
-        ...Object.entries(lazyChildren).map(
-            ([segment, child]: [
-                PathSegment<string>,
-                NavNodeData<TLayout, THeader, true>,
-            ]) => {
-                return createLazyNavNode({
-                    hrefBase: hrefBase,
-                    path,
-                    segment,
-                    node: child,
-                    asyncChildren: resolver,
-                    router,
-                })
-            },
-        ),
-        ...withExplicit,
-    ]
-    if (resolved instanceof Observable) {
-        return resolved.pipe(
-            map((lazyChildren) => {
-                return toChildren(lazyChildren)
-            }),
-        )
-    }
-    if (resolved instanceof Promise) {
-        return from(resolved).pipe(
-            map((lazyChildren) => {
-                return toChildren(lazyChildren)
-            }),
-            shareReplay({ refCount: true, bufferSize: 1 }),
-        )
-    }
-    return of(toChildren(resolved))
-}
-
-export function createChildren<TLayout, THeader>({
-    navigation,
-    hRefBase,
-    router,
-    reactiveNavs,
-    promiseNavs,
-}: {
-    navigation: Navigation<TLayout, THeader>
-    hRefBase: string
-    router: Router
-    reactiveNavs: Record<string, Observable<LazyRoutesCb<TLayout, THeader>>>
-    promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>
-}):
-    | undefined
-    | AnyNavNode<TLayout, THeader>[]
-    | Observable<AnyNavNode<TLayout, THeader>[]> {
-    type Nav = Navigation<TLayout, THeader>
-    if (!navigation.routes) {
-        return undefined
-    }
-    const routes = navigation.routes
-    if (routes instanceof Observable) {
-        reactiveNavs[hRefBase] = routes
-        return undefined
-    }
-    if (typeof routes === 'function') {
-        return createLazyChildren$({
-            resolver: routes,
-            hrefBase: hRefBase,
-            path: '',
-            withExplicit: [],
+    createLazyNavNode<TLayout, THeader>(
+        {
+            hrefBase,
+            path,
+            segment,
+            node,
+            asyncChildren,
             router,
+            depth,
+        }: {
+            hrefBase: string
+            path: string
+            segment: string
+            node: NavNodeData<TLayout, THeader, true>
+            asyncChildren: LazyRoutesCb<TLayout, THeader>
+            router: Router
+            depth: number
+        },
+        ctx: ContextTrait = new NoContext(),
+    ): NavNodeResolved<TLayout, THeader> {
+        const sanitizedPath = sanitizeNavPath(`${path}${segment}`)
+        const href = sanitizeNavPath(`${hrefBase}${sanitizedPath}`)
+
+        return new NavNodeResolved({
+            id: href,
+            href,
+            name: node.name,
+            children: node.leaf
+                ? undefined
+                : this.createLazyChildren$(
+                      {
+                          resolver: asyncChildren,
+                          hrefBase,
+                          path: sanitizedPath,
+                          withExplicit: [],
+                          router,
+                          depth: depth + 1,
+                      },
+                      ctx,
+                  ),
+            metadata: node.metadata,
+            header: node.header,
+            layout: node.layout,
         })
     }
-    return Object.entries(navigation.routes).map(
-        ([k, v]: [string, Nav | Promise<Nav>]) => {
-            const href = sanitizeNavPath(hRefBase + k)
-            if (v instanceof Promise) {
-                promiseNavs[href] = v
-                return new NavNodePromise({ href })
-            }
-            return new NavNodeResolved({
-                id: href,
-                name: v.name,
-                children: createChildren({
-                    // k is an entry of navigation & do start by `/` => safe cast
-                    navigation: routes[k] as unknown as Nav,
+
+    @Contextual({
+        key: ({ path }: { path: string }) => path,
+        labels: ['Nav'],
+    })
+    createLazyChildren$<TLayout, THeader>(
+        {
+            resolver,
+            hrefBase,
+            withExplicit,
+            router,
+            path,
+            depth,
+        }: {
+            resolver: LazyRoutesCb<TLayout, THeader>
+            path: string
+            hrefBase: string
+            withExplicit: NavNodeResolved<TLayout, THeader>[]
+            router: Router
+            depth: number
+        },
+        ctx: ContextTrait = new NoContext(),
+    ):
+        | NavNodeResolved<TLayout, THeader>[]
+        | Observable<NavNodeResolved<TLayout, THeader>[]> {
+        path = sanitizeNavPath(path)
+        const resolved = resolver({ path: path, router })
+        if (!resolved) {
+            return []
+        }
+        const toChildren = (lazyChildren: LazyRoutes<TLayout, THeader>) => [
+            ...Object.entries(lazyChildren).map(
+                ([segment, child]: [
+                    PathSegment<string>,
+                    NavNodeData<TLayout, THeader, true>,
+                ]) => {
+                    return this.createLazyNavNode({
+                        hrefBase: hrefBase,
+                        path,
+                        segment,
+                        node: child,
+                        asyncChildren: resolver,
+                        router,
+                        depth: depth + 1,
+                    })
+                },
+            ),
+            ...withExplicit,
+        ]
+        if (resolved instanceof Observable) {
+            ctx.info(`from Observable`)
+            return resolved.pipe(
+                map((lazyChildren) => {
+                    return toChildren(lazyChildren)
+                }),
+            )
+        }
+        if (resolved instanceof Promise) {
+            ctx.info(`from Promise`)
+            return from(resolved).pipe(
+                map((lazyChildren) => {
+                    const children = toChildren(lazyChildren)
+
+                    ctx.info(`Promise resolved`, { children })
+                    return children
+                }),
+                shareReplay({ refCount: true, bufferSize: 1 }),
+            )
+        }
+        const children = toChildren(resolved)
+        ctx.info(`from static navigation`)
+        return of(children)
+    }
+
+    @Contextual({
+        key: ({ hRefBase }: { hRefBase: string }) => hRefBase,
+        labels: ['Nav'],
+    })
+    createChildren<TLayout, THeader>(
+        {
+            navigation,
+            hRefBase,
+            router,
+            reactiveNavs,
+            promiseNavs,
+            depth,
+        }: {
+            navigation: Navigation<TLayout, THeader>
+            hRefBase: string
+            router: Router
+            reactiveNavs: Record<
+                string,
+                Observable<LazyRoutesCb<TLayout, THeader>>
+            >
+            promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>
+            depth: number
+        },
+        ctx: ContextTrait = new NoContext(),
+    ):
+        | undefined
+        | AnyNavNode<TLayout, THeader>[]
+        | Observable<AnyNavNode<TLayout, THeader>[]> {
+        type Nav = Navigation<TLayout, THeader>
+        if (!navigation.routes) {
+            return undefined
+        }
+        const routes = navigation.routes
+        if (routes instanceof Observable) {
+            reactiveNavs[hRefBase] = routes
+            return undefined
+        }
+        if (typeof routes === 'function') {
+            ctx.info(`from function`)
+            return this.createLazyChildren$(
+                {
+                    resolver: routes,
+                    hrefBase: hRefBase,
+                    path: '',
+                    withExplicit: [],
+                    router,
+                    depth: depth + 1,
+                },
+                ctx,
+            )
+        }
+        return Object.entries(navigation.routes).map(
+            ([k, v]: [string, Nav | Promise<Nav>]) => {
+                const href = sanitizeNavPath(hRefBase + k)
+                if (v instanceof Promise) {
+                    promiseNavs[href] = v
+                    return new NavNodePromise({ href })
+                }
+                return new NavNodeResolved({
+                    id: href,
+                    name: v.name,
+                    children: this.createChildren(
+                        {
+                            // k is an entry of navigation & do start by `/` => safe cast
+                            navigation: routes[k] as unknown as Nav,
+                            hRefBase: href,
+                            router,
+                            reactiveNavs,
+                            promiseNavs,
+                            depth: depth + 1,
+                        },
+                        ctx,
+                    ),
+                    href,
+                    layout: v.layout,
+                    metadata: v.metadata,
+                    header: v.header,
+                })
+            },
+        )
+    }
+
+    @Contextual({
+        key: ({ hrefBase }: { hrefBase?: string }) => hrefBase ?? '/',
+        labels: ['Nav'],
+    })
+    createRootNode<TLayout, THeader>(
+        {
+            navigation,
+            router,
+            hrefBase,
+        }: {
+            navigation: Navigation<TLayout, THeader>
+            router: Router
+            hrefBase?: string
+        },
+        ctx: ContextTrait = new NoContext(),
+    ) {
+        const href = hrefBase ?? '/'
+        const reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>> = {}
+        const promiseNavs: Record<
+            string,
+            Promise<Navigation<TLayout, THeader>>
+        > = {}
+        const rootNode = new NavNodeResolved({
+            id: href,
+            name: navigation.name,
+            layout: navigation.layout,
+            children: this.createChildren(
+                {
+                    navigation,
                     hRefBase: href,
                     router,
                     reactiveNavs,
                     promiseNavs,
-                }),
-                href,
-                layout: v.layout,
-                metadata: v.metadata,
-                header: v.header,
-            })
-        },
-    )
-}
-export function createRootNode<TLayout, THeader>({
-    navigation,
-    router,
-    hrefBase,
-}: {
-    navigation: Navigation<TLayout, THeader>
-    router: Router
-    hrefBase?: string
-}) {
-    const href = hrefBase ?? '/'
-    const reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>> = {}
-    const promiseNavs: Record<
-        string,
-        Promise<Navigation<TLayout, THeader>>
-    > = {}
-    const rootNode = new NavNodeResolved({
-        id: href,
-        name: navigation.name,
-        layout: navigation.layout,
-        children: createChildren({
-            navigation,
-            hRefBase: href,
-            router,
+                    depth: 0,
+                },
+                ctx,
+            ),
+            href,
+            metadata: navigation.metadata,
+            header: navigation.header,
+        })
+        return {
+            rootNode,
             reactiveNavs,
             promiseNavs,
-        }),
-        href,
-        metadata: navigation.metadata,
-        header: navigation.header,
-    })
-    return {
-        rootNode,
-        reactiveNavs,
-        promiseNavs,
+        }
     }
 }
 
