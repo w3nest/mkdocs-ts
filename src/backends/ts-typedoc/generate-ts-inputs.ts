@@ -223,7 +223,7 @@ export function processFile(
                 )
                 if (constructor) {
                     const className = getEscapedName(node, sourceFile)
-                    const prefix = `${file.replace(rootPath, '')}:${className}.new ${className}`
+                    const prefix = `${file.replace(rootPath, '')}:${className}.${className}`
                     elements[prefix] = {
                         declaration: getDeclaration(constructor, sourceFile),
                         implementation: getImplementation(
@@ -231,6 +231,9 @@ export function processFile(
                             sourceFile,
                         ),
                     }
+                    // for typedoc < 0.27.0 (I believe, at least was required for 0.26.11)
+                    const prefixOld = `${file.replace(rootPath, '')}:${className}.new ${className}`
+                    elements[prefixOld] = elements[prefix]
                 }
             }
             elements[getPrefix({ ...params, node })] = {
