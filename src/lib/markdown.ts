@@ -446,6 +446,33 @@ function fixedMarkedParseCustomViews({
     return { div: divResult, replacedViews: contents }
 }
 
+/**
+ * This function scans all anchor (`<a>`) elements inside `elem` with `href` starting with `@nav` marker and
+ * transforms them with an anchor element that properly triggers a navigation event to the path defined
+ * after the `@nav` marker.
+ *
+ * The processed anchors typically have the form `<a href='@nav/path/to/link'>link</a>`.
+ * The transformation is basically executing:
+ * <code-snippet language="javascript">
+ * if (link.href.includes('@nav')) {
+ *     const path = `nav=${link.href.split('@nav')[1]}`
+ *     link.href = `${router.basePath}?${path}`
+ *     link.onclick = (e: MouseEvent) => {
+ *         e.preventDefault()
+ *         router.fireNavigateTo(path)
+ *     }
+ * }
+ * </code-snippet>
+ *
+ * If `fromMarkdown` is `true`, it processes metadata stored in the `title` attribute (e.g., additional CSS classes)
+ * for links that were generated from Markdown content.
+ *
+ * @param _p
+ * @param _p.router The router instance used for navigation.
+ * @param _p.elem The HTML element containing links to be processed.
+ * @param _p.fromMarkdown - Whether the links originate from Markdown content.
+ *
+ */
 export function replaceLinks({
     router,
     elem,

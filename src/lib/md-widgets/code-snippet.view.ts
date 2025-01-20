@@ -68,7 +68,7 @@ type CodeMirror = (
  *
  * <note level="example" expandable="true" title="HTML">
  * <md-cell>
- * <code-snippet language="html" highlightedLines="11-25">
+ * <code-snippet language="htmlmixed" highlightedLines="11-25">
  * <!DOCTYPE html>
  * <html lang="en">
  * <head>

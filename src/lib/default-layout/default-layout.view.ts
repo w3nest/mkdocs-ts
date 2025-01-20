@@ -179,34 +179,47 @@ export interface DefaultLayoutParams<
 
 /**
  * Types that can be used to define views in {@link NavLayout}.
+ *
+ * <note level="hint">
+ * For scenario requiring reactivity of the view, an option is to use the `RxChild` type from `ChildLike`.
+ * </note>
  */
 export type NavLayoutView = Resolvable<AnyView> | ChildLike
 
 /**
- * The `layout` definition of {@link Navigation} nodes (essentially the page's content definition).
+ * Defines the `layout` structure for {@link Navigation} nodes, which determines how a page's content is rendered.
  *
- * These options are node specific, for global layout customization see {@link Layout} constructor.
+ * These options apply to individual navigation nodes.
+ * For global layout customizations, refer to the {@link Layout} constructor.
  */
 export type NavLayout =
     | {
           /**
-           * This function represents the view of the table of content in the page.
+           * Defines the view for the table of contents (TOC) within the page.
            *
-           * @param p arguments of the view generator:
-           *   *  html : Content of the HTML page
-           *   *  router : Router instance.
-           * @returns A promise on the view
+           * <note level="warning">
+           * The function is invoked **only once** when the page content is first rendered.
+           * If the TOC needs to be updated later due to content changes, this must be handled explicitly
+           * (e.g., by using mutation observers).
+           * </note>
+           *
+           * @param params Parameters for generating the TOC view
+           * @param params.html The main HTML content of the page, obtained from the `content` function.
+           * @param params.router The active Router instance.
+           * @returns The TOC view.
            */
-          toc?: (p: { html: HTMLElement; router: Router }) => NavLayoutView
+          toc?: (params: { html: HTMLElement; router: Router }) => NavLayoutView
+
           /**
-           * This function represents the view of the main content.
+           * Defines the main content view of the page.
            *
-           * @param router Router instance.
-           * @returns A resolvable view
+           * @param params Parameters for generating the content view:
+           * @param params.router The active Router instance.
+           * @returns The content view.
            */
-          content: ({ router }: { router: Router }) => NavLayoutView
+          content: (params: { router: Router }) => NavLayoutView
       }
-    | (({ router }: { router: Router }) => NavLayoutView)
+    | ((params: { router: Router }) => NavLayoutView)
 
 /**
  * Represents the default layout of the library.

@@ -68,7 +68,13 @@ function isWithinDepth(
     return isWithinDepth(element.parentElement, parent, maxDepth, depth + 1)
 }
 /**
- * The table of content view.
+ * Represents the default Table of Contents (TOC) view for a documentation page, presenting the headings list.
+ * It dynamically observes the document structure and updates itself in response to content changes w/ headings.
+ *
+ * To customize the {@link TocItemView} displayed, the function {@link tocView} can be used to provide
+ * {@link NavLayout}'s `toc` view generator.
+ * Within the default {@link Layout}, this view is embedded within {@link TocWrapperView}.
+ *
  */
 export class TOCView implements VirtualDOM<'div'> {
     /**
@@ -83,7 +89,15 @@ export class TOCView implements VirtualDOM<'div'> {
 
     public readonly style: CSSAttribute
 
+    /**
+     * The maximum heading depth considered for the TOC.
+     * If set, headings beyond this depth are ignored.
+     */
     public readonly maxHeadingDepth?: number = 2
+    /**
+     * An observable tracking the index of the first visible heading on the page.
+     * This is updated dynamically as the user scrolls.
+     */
     public readonly indexFirstVisibleHeading$ = new BehaviorSubject<number>(0)
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     public readonly disconnectedCallback: (elem: RxHTMLElement<'div'>) => void
@@ -91,10 +105,11 @@ export class TOCView implements VirtualDOM<'div'> {
     /**
      *
      * @param params
-     * @param params.html The page's HTML element.
-     * @param params.router Application's router.
-     * @param params.domConvertor Optional converter from the page's headings to the TOC item view.
-     * @param params.maxHeadingsDepth If provided, only headings under this nested level limits are accounted.
+     * @param params.html The root HTML element of the page, returned by {@link NavLayout}'s `content`.
+     * @param params.router The application's router instance.
+     * @param params.domConvertor (Optional) A function to convert heading elements into TOC items.
+     * See {@link TocItemView}.
+     * @param params.maxHeadingsDepth (Optional) Maximum heading depth w/ root HTML element to be included in the TOC.
      */
     constructor(params: {
         html: HTMLElement
@@ -238,12 +253,26 @@ export class TOCView implements VirtualDOM<'div'> {
     }
 }
 
+/**
+ * Represents the view of an item in the {@link TOCView}.
+ * It can be customized by providing a `domConvertor` function to the constructor.
+ */
 class TocItemView implements VirtualDOM<'li'> {
     public readonly tag = 'li'
     public readonly class: string
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
 
+    /**
+     *
+     * @param _p
+     * @param _p.heading The heading.
+     * @param _p.index Heading's index in the page.
+     * @param _p.indexFirstVisibleHeading$ An observable tracking the index of the first visible heading on the page.
+     * This is updated dynamically as the user scrolls.
+     * @param _p.router The application's router instance.
+     * @param _p.domConvertor (Optional) A function to convert heading elements into TOC items.
+     */
     constructor({
         heading,
         index,
@@ -324,6 +353,14 @@ function hasTocViewTrait(node: unknown): node is TocTrait {
     return (node as TocTrait)?.layout?.toc !== undefined
 }
 
+/**
+ * Wrapper of TOC view within the default {@link Layout} , embedding either:
+ * *  {@link TOCView} for {@link NavLayout} with no custom `toc` .
+ * *  A custom view otherwise.
+ *
+ * It can be configured using the attribute {@link DisplayOptions.pageVertPadding} and
+ * {@link DisplayOptions.tocMinWidth}.
+ */
 export class TocWrapperView implements VirtualDOM<'div'> {
     /**
      * Component's class name for CSS query.
@@ -339,6 +376,15 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly displayOptions: DisplayOptions
     public readonly content$: Observable<HTMLElement>
 
+    /**
+     *
+     * @param params
+     * @param params.router The application's router instance.
+     * @param params.displayMode$ The display mode for the TOC, depending on screen size.
+     * @param params.displayOptions The display options, see {@link DisplayOptions.pageVertPadding} and
+     * {@link DisplayOptions.tocMinWidth}
+     * @param params.content$ The page content, emitting each time a new path of the navigation is hit.
+     */
     constructor(params: {
         router: Router
         displayMode$: BehaviorSubject<DisplayMode>
@@ -427,6 +473,30 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     }
 }
 
+/**
+ * Helper to specify a `toc` view in {@link NavLayout} using the default {@link TOCView} with a custom `domConverter`
+ * for rendering the {@link TocItemView}.
+ *
+ * <note level='example'>
+ * <code-snippet language='javascript'>
+ *
+ * const domConvertor = (heading: HTMLHeadingElement) => ({
+ *     tag: 'div',
+ *     class:'custom-class',
+ *     innerText: heading.innerText
+ * })
+ * const layout: NavLayout = {
+ *     content: () => ({ tag:'h1', innerText: 'Title' }),
+ *     toc: ({router, html}) => tocView({html, router,domConvertor})
+ * }
+ * </code-snippet>
+ * </note>
+ *
+ * @param _p
+ * @param _p.html
+ * @param _p.router
+ * @param _p.domConvertor
+ */
 export function tocView({
     html,
     router,

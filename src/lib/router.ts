@@ -150,14 +150,14 @@ export class Router<TLayout = unknown, THeader = unknown> {
     /**
      * Observable that emit the current page target.
      */
-    public readonly target$: Subject<
+    public readonly target$: ReplaySubject<
         Target<TLayout, THeader> | UnresolvedTarget
     > = new ReplaySubject<Target<TLayout, THeader> | UnresolvedTarget>(1)
 
     /**
      * Observable that emit the current navigation path.
      */
-    public readonly path$: Subject<string> = new ReplaySubject<string>(1)
+    public readonly path$: ReplaySubject<string> = new ReplaySubject<string>(1)
 
     /**
      * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)

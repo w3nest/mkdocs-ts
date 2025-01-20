@@ -389,11 +389,10 @@ export type LazyRoutesCb$<TLayout, THeader> = Observable<
     LazyRoutesCb<TLayout, THeader>
 >
 
-/**
- * Defines dynamic routes, evaluated at runtime.
+/** Represents dynamic routes that are evaluated at runtime.
  *
- * Use {@link LazyRoutesCb} when the evaluation provides a constant routing schema.
- * If the routing schema is expected to change dynamically based on some signal, use {@link LazyRoutesCb$}.
+ * - Use {@link LazyRoutesCb} for cases where the routing structure remains constant after its first evaluation.
+ * - Use {@link LazyRoutesCb$} when the routing schema is expected to change dynamically based on signals.
  *
  * @typeParam TLayout The type representing the layout of the application.
  * @typeParam THeader The type representing the header configuration.
