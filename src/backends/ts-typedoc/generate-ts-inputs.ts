@@ -6,7 +6,6 @@
 import * as ts from 'typescript'
 import * as fs from 'fs'
 import * as path from 'path'
-import { SourceFile } from 'typescript'
 
 function getScore(s: string) {
     s = s.endsWith('{\n}') ? s.slice(0, -3) : s
@@ -22,6 +21,31 @@ function getScore(s: string) {
             return char.charCodeAt(0)
         })
         .reduce((acc, e) => acc + e, 0)
+}
+export function removeExtraIndentation(input: string): string {
+    /**
+     * When using 'const raw = node.getText(sourceFile)' the first line does not have tabs (expected, its starts with
+     * declaration), but it happens that following lines all have extra indentation.
+     *
+     * The function removes extra leading tabs from the second line onward in a string.
+     */
+    const lines = input.split('\n')
+    if (lines.length <= 1) return input
+
+    // Find the minimum indentation (excluding the first line)
+    const minIndent = lines
+        .slice(1)
+        .filter((line) => line.trim().length > 0)
+        .reduce((min, line) => {
+            const match = /^\s*/.exec(line)
+            const leadingSpaces = match ? match[0].length : 0
+            return Math.min(min, leadingSpaces)
+        }, Infinity)
+
+    // Remove the extra indentation from the second line onward
+    return lines
+        .map((line, index) => (index === 0 ? line : line.slice(minIndent)))
+        .join('\n')
 }
 
 function getDeclaration(
@@ -72,7 +96,20 @@ function getDeclaration(
             break
         }
     }
-    return raw.substring(0, i + 1)
+    const declaration = raw.substring(0, i + 1)
+    return removeExtraIndentation(declaration)
+}
+
+function getImplementation(
+    node:
+        | ts.ClassDeclaration
+        | ts.ClassElement
+        | ts.FunctionDeclaration
+        | ts.MethodDeclaration
+        | ts.InterfaceDeclaration,
+    sourceFile: ts.SourceFile,
+) {
+    return removeExtraIndentation(node.getText(sourceFile))
 }
 
 function getEscapedName(
@@ -176,7 +213,7 @@ export function processFile(
         if (ts.isFunctionDeclaration(node)) {
             elements[getPrefix({ ...params, node })] = {
                 declaration: getDeclaration(node, sourceFile),
-                implementation: node.getText(sourceFile),
+                implementation: getImplementation(node, sourceFile),
             }
         }
         if (ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node)) {
@@ -189,13 +226,16 @@ export function processFile(
                     const prefix = `${file.replace(rootPath, '')}:${className}.new ${className}`
                     elements[prefix] = {
                         declaration: getDeclaration(constructor, sourceFile),
-                        implementation: constructor.getText(sourceFile),
+                        implementation: getImplementation(
+                            constructor,
+                            sourceFile,
+                        ),
                     }
                 }
             }
             elements[getPrefix({ ...params, node })] = {
                 declaration: getDeclaration(node, sourceFile),
-                implementation: node.getText(sourceFile),
+                implementation: getImplementation(node, sourceFile),
             }
             node.members.forEach((member: ts.Node) => {
                 if (ts.isMethodDeclaration(member)) {
@@ -203,7 +243,7 @@ export function processFile(
                         `${getPrefix({ ...params, node })}.${getEscapedName(member, sourceFile)}`
                     ] = {
                         declaration: getDeclaration(member, sourceFile),
-                        implementation: member.getText(sourceFile),
+                        implementation: getImplementation(member, sourceFile),
                     }
                 }
                 if (ts.isPropertyDeclaration(member)) {
