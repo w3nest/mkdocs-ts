@@ -13,6 +13,7 @@ type AstType =
     | 'CallExpression'
     | 'ObjectExpression'
     | 'MemberExpression'
+    | 'ClassDeclaration'
 
 export interface AstNode<T extends AstType = AstType> {
     type: T
@@ -435,6 +436,9 @@ export function extractGlobalDeclarations(body: AstNode[]): {
     let: string[]
 } {
     const declarations = body.filter((a) => a.type === 'VariableDeclaration')
+    const classes = body.filter((a) => a.type === 'ClassDeclaration')
+    const functions = body.filter((a) => a.type === 'FunctionDeclaration')
+
     const extractName = (d: AstNode) => {
         //d.init = undefined
         const children = find_children({
@@ -455,9 +459,15 @@ export function extractGlobalDeclarations(body: AstNode[]): {
         .map(extractName)
         .flat()
         .filter((d) => d !== undefined)
+    const classesName: string[] = classes.map((c) => c['id'].name)
+    const functionsName: string[] = functions.map((c) => c['id'].name)
 
     return {
-        const: [...new Set(consts)],
+        const: [
+            ...new Set(consts),
+            ...new Set(classesName),
+            ...new Set(functionsName),
+        ],
         let: [...new Set(lets)],
     }
 }

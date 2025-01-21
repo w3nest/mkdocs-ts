@@ -49,6 +49,70 @@ const { MkDocs } = await webpm.install({
     })
 })
 
+describe('Class definition', () => {
+    it('Should find the class', async () => {
+        const input = `
+class Foo extends Bar{
+    
+}
+`
+        const ast = parseProgram(input)
+        const declarations = extractGlobalDeclarations(ast)
+        expect(declarations).toEqual({
+            const: ['Foo'],
+            let: [],
+        })
+    })
+
+    it('Should not find the class', async () => {
+        const input = `
+{
+    class Foo extends Bar{
+    
+    }
+}
+`
+        const ast = parseProgram(input)
+        const declarations = extractGlobalDeclarations(ast)
+        expect(declarations).toEqual({
+            const: [],
+            let: [],
+        })
+    })
+})
+
+describe('Function definition', () => {
+    it('Should find the function', async () => {
+        const input = `
+function foo(){
+    console.log('foo')
+}
+`
+        const ast = parseProgram(input)
+        const declarations = extractGlobalDeclarations(ast)
+        expect(declarations).toEqual({
+            const: ['foo'],
+            let: [],
+        })
+    })
+
+    it('Should not find the function', async () => {
+        const input = `
+{
+    function foo(){
+        console.log('foo')
+    }
+}
+`
+        const ast = parseProgram(input)
+        const declarations = extractGlobalDeclarations(ast)
+        expect(declarations).toEqual({
+            const: [],
+            let: [],
+        })
+    })
+})
+
 test('execute', async () => {
     let scope = { const: {}, let: {}, python: {} }
     const displayFactory: DisplayFactory = []
