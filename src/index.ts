@@ -1,44 +1,57 @@
 /**
- * Main module of the library.
+ * # Overview
+ *
+ * This is the **main module** of the library.
+ *
+ * ## Core
+ *
+ * The module defines the {@link Router} class, responsible for handling navigation between {@link Navigation} nodes.
+ *
+ * ## Views
+ *
+ * In terms of views, this module provides a {@link GenericView}, which can accommodate multiple layout types.
+ * By default, the library includes a single layout: {@link _DefaultLayout.Layout | Layout}, implemented within the
+ * {@link DefaultLayout} module.
+ * If you need to define a custom layout, refer to {@link LayoutGeneratorTrait}.
+ *
+ * ## Markdown
+ *
+ * The module includes Markdown processing utilities:
+ *
+ * - Use {@link parseMd} when the source is available as a `string`.
+ *
+ * - Use {@link fetchMd} when the source is available as a URL.
+ *
+ * Various options are available, including support for defining custom views.
+ *
+ * ## Logging
+ *
+ * The module provides utilities for {@link Context} management, offering structured logging across the package.
+ * It includes two built-in reporters, both implementing {@link ReporterTrait}:
+ *
+ * - {@link ConsoleReporter} (logs to the console).
+ *
+ * - {@link InMemoryReporter} (stores logs in memory).
+ *
+ * ## Plugins
+ *
+ * Two plugins are included:
+ *
+ * - **Code API Module** ({@link _CodeApiModule})
+ *   - Installed using {@link installCodeApiModule}.
+ *   - Enables automatic generation of pages from code API documentation.
+ *
+ * - **Notebook Module** ({@link _NotebookModule})
+ *   - Installed using {@link installNotebookModule}.
+ *   - Supports pages with live code execution.
  *
  * @module MainModule
  */
-import { headingId, parseMd, DefaultLayout, MdWidgets } from './lib'
 
+// noinspection ES6UnusedImports Include for documentation
+import type * as _DefaultLayout from './lib/default-layout'
+// noinspection ES6UnusedImports Include for documentation
+import type * as _CodeApiModule from './lib/code-api'
+// noinspection ES6UnusedImports Include for documentation
+import type * as _NotebookModule from './lib/notebook'
 export * from './lib'
-export { setup } from './auto-generated'
-
-import { setup } from './auto-generated'
-import * as webpmClient from '@w3nest/webpm-client'
-import type * as CodeApiModule from './lib/code-api'
-import type * as NotebookModule from './lib/notebook'
-
-export type * as CodeApiTypes from './lib/code-api'
-export type * as NotebookTypes from './lib/notebook'
-/**
- * Install and returns the {@link CodeApiModule} module.
- */
-export async function installCodeApiModule() {
-    const module = (await setup.installAuxiliaryModule({
-        name: 'CodeApi',
-        cdnClient: webpmClient,
-    })) as typeof CodeApiModule
-    module.Dependencies.parseMd = parseMd
-    module.Dependencies.DefaultLayout = DefaultLayout
-    module.Dependencies.installNotebookModule = installNotebookModule
-    module.Dependencies.headingId = headingId
-    return module
-}
-
-/**
- * Install and returns the {@link NotebookModule} module.
- */
-export async function installNotebookModule() {
-    const module = (await setup.installAuxiliaryModule({
-        name: 'Notebook',
-        cdnClient: webpmClient,
-    })) as typeof NotebookModule
-    module.Dependencies.parseMd = parseMd
-    module.Dependencies.MdWidgets = MdWidgets
-    return module
-}

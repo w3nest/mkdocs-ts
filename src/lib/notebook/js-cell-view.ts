@@ -66,7 +66,7 @@ export class JsCellExecutor implements CellTrait {
      * Execute the cell. See {@link execute}.
      *
      * @param args See {@link ExecArgs}.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      */
     @Contextual({ async: true, key: (args: ExecArgs) => args.cellId })
     async execute(args: ExecArgs, ctx?: ContextTrait): Promise<Scope> {

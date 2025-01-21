@@ -151,7 +151,7 @@ ${patchedReactive?.wrapped ?? ''}
  * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
  * @param _args.reactive If true, observables & promises are resolved before cell execution using a `combineLatest`
  * policy.
- * @param ctx Executing context, used for logging purposes.
+ * @param ctx Execution context used for logging and tracing.
  * @returns Promise over the scope at exit
  */
 export async function executeJs(

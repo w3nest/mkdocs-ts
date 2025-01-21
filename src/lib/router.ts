@@ -196,7 +196,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.
      * @param params.redirects See {@link Router.redirects}.
      * @param params.browserClient See {@link BrowserInterface}.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      */
     constructor(
         params: {
@@ -288,7 +288,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param target  The path to navigate to.
      * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.
      * @param onError Callback called if errors happen.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      */
     @Contextual()
     fireNavigateTo(
@@ -304,7 +304,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      *
      * @param target The URL target.
      * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      */
     @Contextual({
         async: true,
@@ -421,10 +421,12 @@ export class Router<TLayout = unknown, THeader = unknown> {
     }
 
     /**
-     * Retrieves the navigation node corresponding to a given path, or `undefined` if it does not exist.
+     * Retrieves the navigation node corresponding to a given path as observable (emitting 1 item and closing),
+     * or `not-found` if it does not exist, or `unresolved` if the node is not resolved yet but maybe in a
+     * (hopefully short) future.
      *
      * @param path The target path.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      */
     @Contextual({
         key: ({ path }: { path: string }) => path,

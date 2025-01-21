@@ -88,7 +88,7 @@ export interface ExecArgs {
      * The function used to load a submodule from a notebook page.
      *
      * @param path Navigation path of the submodule.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      * @returns The exported symbols.
      */
     load: (path: string, ctx: ContextTrait) => Promise<Record<string, unknown>>

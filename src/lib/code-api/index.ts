@@ -31,7 +31,7 @@ import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
 import { install } from '@w3nest/webpm-client'
 import { Navigation, Router, DefaultLayout, LazyRoutes } from '../index'
-import type { installNotebookModule } from '../../index'
+import type { installNotebookModule } from '../plugins'
 import type { parseMd } from '../markdown'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class

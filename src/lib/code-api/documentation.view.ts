@@ -2,7 +2,7 @@ import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
-import type { NotebookTypes } from '../../index'
+import type { NotebookTypes } from '../plugins'
 import { from } from 'rxjs'
 import { Dependencies } from './index'
 

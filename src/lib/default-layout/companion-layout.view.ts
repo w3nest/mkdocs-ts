@@ -65,7 +65,7 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
      * Constructs a new `LayoutWithCompanion` layout.
      *
      * @param params See {@link LayoutWithCompanionParams}
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      **/
     constructor(params: LayoutWithCompanionParams, ctx?: ContextTrait) {
         this.context = ctx
