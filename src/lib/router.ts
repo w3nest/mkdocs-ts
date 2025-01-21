@@ -1,4 +1,5 @@
 import {
+    debounceTime,
     filter,
     firstValueFrom,
     map,
@@ -137,6 +138,11 @@ export class Router<TLayout = unknown, THeader = unknown> {
     public readonly navigation: Navigation<TLayout, THeader>
 
     /**
+     * Debounced time applied when scrolling to specific target is triggered.
+     */
+    public readonly scrollingDebounceTime: number = 100
+
+    /**
      * Handles navigation redirections.
      *
      * This function is invoked whenever a specific path is requested for navigation.
@@ -187,6 +193,8 @@ export class Router<TLayout = unknown, THeader = unknown> {
 
     public readonly context?: ContextTrait
     private navParser = new NavParser()
+    private scrollTo$ = new Subject<string | HTMLElement | undefined>()
+
     /**
      * Initialize a router instance.
      *
@@ -196,6 +204,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.
      * @param params.redirects See {@link Router.redirects}.
      * @param params.browserClient See {@link BrowserInterface}.
+     * @param params.scrollingDebounceTime See {@link Router.scrollingDebounceTime}.
      * @param ctx Execution context used for logging and tracing.
      */
     constructor(
@@ -208,6 +217,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 router: Router
                 basePath: string
             }) => BrowserInterface
+            scrollingDebounceTime?: number
         },
         ctx?: ContextTrait,
     ) {
@@ -266,6 +276,13 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 context.info('Node parent of current path removed')
                 this.fireNavigateTo(target, undefined, context)
             })
+        const scroll$ =
+            this.scrollingDebounceTime > 0
+                ? this.scrollTo$.pipe(debounceTime(this.scrollingDebounceTime))
+                : this.scrollTo$
+        scroll$.subscribe((target) => {
+            this._scrollTo(target)
+        })
         context.exit()
     }
 
@@ -383,7 +400,11 @@ export class Router<TLayout = unknown, THeader = unknown> {
      *
      * @param target The target HTML element, or its id.
      */
-    scrollTo(target?: string | HTMLElement) {
+    public scrollTo(target?: string | HTMLElement) {
+        this.scrollTo$.next(target)
+    }
+
+    private _scrollTo(target?: string | HTMLElement) {
         if (
             !this.scrollableElement ||
             !('scrollTo' in this.scrollableElement)
