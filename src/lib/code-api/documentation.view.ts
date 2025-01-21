@@ -52,7 +52,7 @@ export class SectionView implements VirtualDOM<'div'> {
                 ? child$({
                       source$: from(Dependencies.installNotebookModule()),
                       vdomMap: (mdle: typeof NotebookTypes) => {
-                          return new mdle.NotebookPage({
+                          return new mdle.NotebookSection({
                               src: section.content,
                               router,
                               options: { runAtStart: true },

@@ -2,8 +2,7 @@ import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import type { MdParsingOptions, ViewGenerator } from '../markdown'
 import { isResolvedTarget, Router } from '../router'
 import { delay, filter, from, of, take } from 'rxjs'
-import { Scope, State } from './state'
-import { DisplayFactory } from './display-utils'
+import { NotebookStateParameters, State } from './state'
 import { Dependencies } from './index'
 import { ContextTrait, NoContext } from '../context'
 
@@ -77,14 +76,33 @@ export const notebookViews = ({ state }: { state: State }) => {
 }
 
 /**
- * Represents a page of a notebook.
+ * Parameters to instantiate a notebook view - either a whole page as ({@link NotebookPage}), or a single section
+ * ({@link NotebookSection}).
+ */
+export type NotebookViewParameters = NotebookStateParameters & {
+    /**
+     * Url pointing to the markdown content, only used if the `src` attribute is not provided.
+     */
+    url?: string
+    /**
+     * Markdown source content. To fetch from a URL leave it empty & provide instead
+     * the `url` attribute.
+     */
+    src?: string
+    /**
+     * Global options for the page, in particular defined the default attribute for the various
+     */
+    options?: NotebookOptions
+}
+/**
+ * Represents a section of a page included notebook cells.
  *
  * A notebook page is a markdown content including definition of executable cells
  * (*e.g.* {@link JsCellView}, {@link MdCellView}) as well as other related components.
  *
  * Cells run in the order of inclusion, and share their top level scope.
  */
-export class NotebookPage implements VirtualDOM<'div'> {
+export class NotebookSection implements VirtualDOM<'div'> {
     public readonly scrollToDelay = 200
 
     public readonly tag = 'div'
@@ -108,25 +126,14 @@ export class NotebookPage implements VirtualDOM<'div'> {
     /**
      * Constructs the page.
      *
-     * @param params The parameters
-     * @param params.url Url pointing to the markdown content, only used if the `src` attribute is not provided.
-     * @param params.src Markdown source content. To fetch from a URL leave it empty & provide instead
-     * the `url` attribute.
-     * @param params.router Application's router.
-     * @param params.initialScope Initial scope provided to the first executing cell.
-     * @param params.displayFactory Additional custom {@link DisplayFactory} invoked when `display` is used.
-     * @param params.options Global options for the page, in particular defined the default attribute for the various
+     * @param params The parameters, see {@link NotebookViewParameters}.
+     * @param params.onDisplayed Callback triggered when the view has been displayed
      * cells.
-     * @param ctx Executing context, used for logging purposes.
+     * @param ctx Execution context used for logging and tracing.
      */
     constructor(
-        params: {
-            url?: string
-            src?: string
-            router: Router
-            initialScope?: Partial<Scope>
-            displayFactory?: DisplayFactory
-            options?: NotebookOptions
+        params: NotebookViewParameters & {
+            onDisplayed?: (elem: RxHTMLElement<'div'>) => void
         },
         ctx?: ContextTrait,
     ) {
@@ -186,23 +193,48 @@ export class NotebookPage implements VirtualDOM<'div'> {
                         ...vdom,
                         connectedCallback: (elem: RxHTMLElement<'div'>) => {
                             vdom.connectedCallback?.(elem)
-                            this.router.target$
-                                .pipe(
-                                    take(1),
-                                    filter((page) => isResolvedTarget(page)),
-                                    filter(
-                                        (page) => page.sectionId !== undefined,
-                                    ),
-                                    delay(this.scrollToDelay),
-                                )
-                                .subscribe((page) => {
-                                    this.router.scrollTo(page.sectionId)
-                                })
+                            if (params.onDisplayed) {
+                                params.onDisplayed(elem)
+                            }
                         },
                     }
                 },
             }),
         ]
         context.exit()
+    }
+}
+
+/**
+ * Represents a {@link NotebookSection} that actually defines the whole page content of a document.
+ */
+export class NotebookPage extends NotebookSection {
+    public readonly scrollToDelay = 200
+
+    /**
+     * Constructs the page.
+     *
+     * @param params The parameters, see {@link NotebookViewParameters}.
+     * @param ctx Execution context used for logging and tracing.
+     */
+    constructor(params: NotebookViewParameters, ctx?: ContextTrait) {
+        super(
+            {
+                ...params,
+                onDisplayed: () => {
+                    this.router.target$
+                        .pipe(
+                            take(1),
+                            filter((page) => isResolvedTarget(page)),
+                            filter((page) => page.sectionId !== undefined),
+                            delay(this.scrollToDelay),
+                        )
+                        .subscribe((page) => {
+                            this.router.scrollTo(page.sectionId)
+                        })
+                },
+            },
+            ctx,
+        )
     }
 }

@@ -179,6 +179,23 @@ export class RunTimeError extends ExecCellError {
 }
 
 /**
+ * Parameters to instantiate a {@link State}.
+ */
+export interface NotebookStateParameters {
+    /**
+     * Application's router.
+     */
+    router: Router
+    /**
+     * Initial scope provided to the first executing cell.
+     */
+    initialScope?: Partial<Scope>
+    /**
+     * Additional custom {@link DisplayFactory} invoked when `display` is used.
+     */
+    displayFactory?: DisplayFactory
+}
+/**
  * Represents the state of a {@link NotebookPage}.
  */
 export class State {
@@ -274,10 +291,7 @@ export class State {
     private pyNamespace?: PyodideNamespace
 
     constructor(
-        params: {
-            initialScope?: Partial<Scope>
-            router: Router
-            displayFactory?: DisplayFactory
+        params: NotebookStateParameters & {
             parent?: { state: State; cellId: string }
         },
         ctx?: ContextTrait,
