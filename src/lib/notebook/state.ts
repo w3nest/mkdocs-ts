@@ -7,7 +7,6 @@ import {
     from,
     map,
     firstValueFrom,
-    Observable,
 } from 'rxjs'
 import { OutputsView } from './cell-views'
 import * as webpm from '@w3nest/webpm-client'
@@ -32,7 +31,7 @@ import type { MdParsingOptions } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
-import { Resolvable } from '../navigation.node'
+import { Resolvable, resolve } from '../navigation.node'
 import { ContextTrait, Contextual, NoContext } from '../context'
 
 export type CellStatus =
@@ -562,16 +561,20 @@ export class State {
             if (path in this.modules) {
                 this.modules[path].state.dispose()
             }
-            const nav = router.getNav({ path }, ctx)
-            if (!(nav instanceof Observable)) {
+            const nav = await router.getNav({ path }, ctx)
+            if (nav === 'not-found') {
                 throw Error(`Can not find module at ${path}`)
             }
-            const module$ = nav.pipe(
-                filter((nav) => hasContentViewTrait(nav)),
-                map((nav) => {
-                    const nbPage = nav.layout.content({
-                        router,
-                    })
+            if (!hasContentViewTrait(nav)) {
+                throw Error(
+                    'The navigation node does not defines expected content',
+                )
+            }
+            const content = nav.layout.content({
+                router,
+            })
+            const module$ = resolve(content).pipe(
+                map((nbPage) => {
                     if (nbPage instanceof NotebookPage) {
                         return nbPage
                     }

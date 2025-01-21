@@ -339,28 +339,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         const sectionId = target.sectionId
 
         ctx.info('Schedule async nav node retrieval')
-        const nav = timer(0, this.retryNavPeriod).pipe(
-            switchMap((i) => {
-                ctx.info(`Attempt 'getNav' #${String(i)}`)
-                const nav = this.getNav({ path }, ctx)
-                if (nav instanceof Observable) {
-                    return nav
-                }
-                return of(nav)
-            }),
-            tap((nav) => {
-                if (nav === 'unresolved') {
-                    console.log('Try to wait...')
-                    this.target$.next({
-                        path,
-                        reason: 'Pending',
-                    })
-                }
-            }),
-            filter((nav) => nav !== 'unresolved'),
-            take(1),
-        )
-        const resolved = await firstValueFrom(nav)
+        const resolved = await this.getNav({ path }, ctx)
         if (resolved === 'not-found') {
             this.target$.next({
                 path,
@@ -442,6 +421,53 @@ export class Router<TLayout = unknown, THeader = unknown> {
     }
 
     /**
+     * Asynchronously retrieves the navigation node for a given path.
+     * If the node is not immediately available, it will retry for a short period before returning a result.
+     *
+     * - If the node is found, it returns the corresponding `Navigation<TLayout, THeader>` object.
+     * - If the node does not exist, it returns `'not-found'`.
+     * - If the node is still unresolved, it waits and retries periodically.
+     *
+     * @param path The target path for which to retrieve the navigation node.
+     * @param ctx Execution context used for logging and tracing.
+     * @returns A `Promise` resolving to the navigation node, or `'not-found'` if the node does not exist.
+     */
+    @Contextual({
+        key: ({ path }: { path: string }) => path,
+    })
+    async getNav(
+        {
+            path,
+        }: {
+            path: string
+        },
+        ctx?: ContextTrait,
+    ): Promise<Navigation<TLayout, THeader> | 'not-found'> {
+        ctx = this.ctx(ctx)
+        const nav = timer(0, this.retryNavPeriod).pipe(
+            switchMap((i) => {
+                ctx.info(`Attempt 'getNav' #${String(i)}`)
+                const nav = this._getNav({ path }, ctx)
+                if (nav instanceof Observable) {
+                    return nav
+                }
+                return of(nav)
+            }),
+            tap((nav) => {
+                if (nav === 'unresolved') {
+                    console.log('Try to wait...')
+                    this.target$.next({
+                        path,
+                        reason: 'Pending',
+                    })
+                }
+            }),
+            filter((nav) => nav !== 'unresolved'),
+            take(1),
+        )
+        return await firstValueFrom(nav)
+    }
+    /**
      * Retrieves the navigation node corresponding to a given path as observable (emitting 1 item and closing),
      * or `not-found` if it does not exist, or `unresolved` if the node is not resolved yet but maybe in a
      * (hopefully short) future.
@@ -452,7 +478,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
     @Contextual({
         key: ({ path }: { path: string }) => path,
     })
-    public getNav(
+    private _getNav(
         {
             path,
         }: {
@@ -461,6 +487,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         ctx?: ContextTrait,
     ): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {
         ctx = this.ctx(ctx)
+        path = sanitizeNavPath(path)
         const parts = path
             .split('/')
             .slice(1)
