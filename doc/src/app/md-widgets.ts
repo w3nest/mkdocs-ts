@@ -17,8 +17,13 @@ export class ApiLink implements VirtualDOM<'a'> {
             LazyRoutesCb$: '@nav/api/MainModule.LazyRoutesCb$',
             NavNodeData: '@nav/api/MainModule.NavNodeData',
             Resolvable: '@nav/api/MainModule.Resolvable',
+            UnresolvedTarget: '@nav/api/MainModule.UnresolvedTarget',
             AnyView: '@nav/api/MainModule.AnyView',
             Router: '@nav/api/MainModule.Router',
+            'Router.target$': '@nav/api/MainModule.Router.target$',
+            'Router.explorerState': '@nav/api/MainModule.Router.explorerState',
+            'Router.getNav': '@nav/api/MainModule.Router.getNav',
+            Target: '@nav/api/MainModule.Target',
             StaticRoutes: '@nav/api/MainModule.StaticRoutes',
             MockBrowser: '@nav/api/MainModule.MockBrowser',
             'DefaultLayout.Layout': '@nav/api/MainModule/DefaultLayout.Layout',
@@ -61,9 +66,14 @@ export class ApiLink implements VirtualDOM<'a'> {
             LazyRoutesCb$: 'mkapi-role-type-alias',
             NavNodeData: 'mkapi-role-type-alias',
             Resolvable: 'mkapi-role-type-alias',
+            UnresolvedTarget: 'mkapi-role-interface',
             AnyView: 'mkapi-role-type-alias',
             StaticRoutes: 'mkapi-role-type-alias',
             Router: 'mkapi-role-class',
+            'Router.target$': 'mkapi-role-attribute',
+            'Router.explorerState': 'mkapi-role-attribute',
+            'Router.getNav': 'mkapi-role-method',
+            Target: 'mkapi-role-alias',
             'DefaultLayout.View': 'mkapi-role-class',
             'DefaultLayout.Layout.new': 'mkapi-role-constructor',
             fetchMd: 'mkapi-role-function',
@@ -112,6 +122,7 @@ export class ExtLink implements VirtualDOM<'a'> {
             'tutorials.basics.md':
                 'https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.basics.md?raw=1',
             tweakpane: 'https://tweakpane.github.io/docs/',
+            fontawesome: 'https://fontawesome.com/v5/search',
             three: 'https://threejs.org/',
             'rx-vdom': '/apps/@rx-vdom/doc/latest',
             'virtual-dom': '/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM',
@@ -120,6 +131,7 @@ export class ExtLink implements VirtualDOM<'a'> {
             'floating-ui': 'https://floating-ui.com/',
             BehaviorSubject:
                 'https://www.learnrxjs.io/learn-rxjs/subjects/behaviorsubject',
+            Observable: 'https://rxjs.dev/guide/observable',
         }
         this.href = navs[target]
         this.children = [

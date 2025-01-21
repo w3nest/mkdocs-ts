@@ -6,6 +6,7 @@ import {
     Navigation,
     GlobalMarkdownViews,
     Router,
+    MdWidgets,
 } from 'mkdocs-ts'
 import { setup } from '../auto-generated'
 import { firstValueFrom } from 'rxjs'
@@ -312,7 +313,11 @@ export const navigation: AppNav = {
 
 async function apiNav(): Promise<AppNav> {
     const CodeApiModule = await installCodeApiModule()
-
+    // This is to preload for javascript snippets included in the API documentation, such that the `scrollTo` is
+    // working well.
+    await firstValueFrom(
+        MdWidgets.CodeSnippetView.fetchCmDependencies$('javascript'),
+    )
     return CodeApiModule.codeApiEntryNode({
         name: 'API',
         header: {

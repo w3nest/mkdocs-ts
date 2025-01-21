@@ -1,160 +1,449 @@
 
-# Custom Layout 
+# Custom Layout
 
-Up until now, the navigation structure in our examples has been static, with all pages and their hierarchy known in 
-advance. However, this isn't always the case, and **@youwol/mkdocs-ts** provides a formalism to handle dynamic 
-scenarios.
+This tutorial demonstrates how to create custom layouts using {{mkdocs-ts}}. 
+We will design a **PowerPoint-style** application that allows users to navigate through slides showcasing famous 
+physicists.
 
-In this example, we'll create a document with a **File System** node that represents a structure typically queried using
-HTTP requests (for which responses are not known in advance). For simplicity, we'll mock the file structure and content.
+Below is a preview of the final application in action:
 
-Here is the mocked file system structure:
+<cell-output cell-id="app-start" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;"> </cell-output>
+
+
+## Requirements 
+
+Before we begin, let's install the required dependencies:
+
 <js-cell>
-const mockFS = {
-    '': {
-        files:[{id:'foo', name:'foo.txt'}],
-        folders:[{id:'baz', name:'baz'}]
+const version = "{{mkdocs-version}}"
+
+const { MkDocs, rxjs, clients } = await webpm.install({
+    esm:[
+        `mkdocs-ts#${version} as MkDocs`, 
+        'rxjs#7.8.1 as rxjs',
+    ],
+    css: [
+        'bootstrap#5.3.3~bootstrap.min.css',
+        `mkdocs-ts#${version}~assets/mkdocs-light.css`,
+        'fontawesome#5.12.1~css/all.min.css',
+    ]
+})
+display({MkDocs, rxjs, clients})
+</js-cell>
+
+
+##  Data Model
+
+A custom layout requires a structured `TLayout` (for slide content) and `THeader` (for navigation)
+involved in <api-link target='Navigation'></api-link> node.
+
+### `TLayout`
+
+Each slide consists of:
+
+*  A **title** and **subtitle** (with a quote).
+*  A **picture** and **text elements** (description of contributions).
+
+This is for example the data of the **Marie Curie**'s slide:
+
+<js-cell>
+const slideCurie = {
+    title: 'Marie Curie',
+    subTitle: {   
+        quote: 'Nothing in life is to be feared, it is only to be understood.',
+        author: 'M. Curie'
     },
-    'baz': {
-        files:[{id:'bar', name:'bar.txt'}],
-        folders:[]
-    }
-}
-const filesContent = {
-    'foo': '# Foo \n This is the content of the **foo** file.',
-    'baz/bar': '# Bar \n This is the content of the **bar** file.'
+    elements: [
+        {   
+            picture: '../assets/Marie_Curie_c1920.jpg',
+            width: '50%'
+        },
+        {   
+            paragraph: `
+*  Discovery of **Radium** and **Polonium**,
+*  First woman to win not only one but two **Nobel Prizes** (Physics 1903, Chemistry 1911),
+*  Defined the science of radioactivity,
+*  Pioneered medical applications of radiation,
+`
+        }
+    ]
 }
 </js-cell>
 
-Next, we'll define a helper function to generate the main HTML content when a folder is selected. 
-This function lists the files in the folder and uses anchor elements to link to the files:
+The other slides are defined in the following expandable note.
+
+<note level="abstract" expandable="true" mode="stateful" title="Slides">
+<js-cell>
+const slideWelcome = {
+    title: 'The Minds That Shaped Physics',
+    subTitle: {   
+        quote: 'The most incomprehensible thing about the universe is that it is comprehensible.',
+        author: 'A. Einstein'
+    },
+    elements: [
+        {   
+            picture: '../assets/solar-eclipse.png',
+            width: '50%',
+        },
+        {   
+            text: 'From the motion of planets to the secrets of quantum mechanics—explore the theories that shaped ' +
+            'our world.',
+            align: 'center'
+        }
+    ]
+}
+const slideEinstein = {
+    title: 'Albert Einstein',
+    subTitle: {   
+        quote: 'Imagination is more important than knowledge.',
+        author: 'A. Einstein'
+    },
+    elements: [
+        {   
+            picture: '../assets/Albert_Einstein_sticks_his_tongue_1951.jpg',
+            width: '50%'
+        },
+        {   
+            paragraph: `
+*  Theory of General Relativity (1915),
+*  Photoelectric Effect (Nobel Prize 1921),
+*  On the Electrodynamics of Moving Bodies,
+*  Does the Inertia of a Body Depend Upon Its Energy Content?,
+`
+        }
+    ]
+}
+const slideNewton = {
+    title: 'Isaac Newton',
+    subTitle: {   
+        quote: 'If I have seen further, it is by standing on the shoulders of giants.',
+        author: 'I. Newton'
+    },
+    elements: [
+        {   
+            picture: '../assets/GodfreyKneller-IsaacNewton-1689.jpg',
+            width: '50%'
+        },
+        {   
+            paragraph: `
+*  Three Laws of Motion (Principia, 1687),
+*  Universal Gravitation Theory,
+*  Philosophiæ Naturalis Principia Mathematica (1687),
+`
+        }
+    ]
+}
+const slideFeynman = {
+    title: 'Richard Feynman',
+    subTitle: {   
+        quote: 'I think I can safely say that nobody understands quantum mechanics.',
+        author: 'R. Feynman'
+    },
+    elements: [
+        {   
+            picture: '../assets/RichardFeynman-PaineMansionWoods1984_copyrightTamikoThiel_bw.jpg',
+            width: '50%'
+        },
+        {   
+            paragraph: `
+*  Developed Feynman Diagrams,
+*  Contributions to Quantum Electrodynamics (QED),
+*  Space-Time Approach to Quantum Electrodynamics (1949),
+`
+        }
+    ]
+}
+</js-cell>
+</note>
+
+### `THeader`
+
+It defines the structure of the navigation node's header, it just a simple `string` here, representing an icon from 
+<ext-link target='fontawesome'>Font Awesome</ext-link>:
 
 <js-cell>
-const filesView = (elem) => {
-    const path = elem.getAttribute('parent-folder')
-    const { files } = mockFS[path]
+const headerWelcome = 'fa-home'
+const headerEinstein = 'fa-atom'
+const headerCurie = 'fa-radiation'
+const headerNewton = 'fa-apple-alt'
+const headerFeynman = 'fa-code-branch'
+</js-cell>
+
+## Navigation System
+
+The navigation system includes 4 transitions between the slides defined in the navigation:
+*  **left**: navigate to the previous sibling.
+*  **right**: navigate to the next sibling.
+*  **up**: navigate to the parent.
+*  **down**: navigate to the first child.
+
+### Navigation Paths
+
+The available navigation paths required for the **left**/**right**/**up**/**down** transitions need to be updated at 
+each router's re-location, exposed through <api-link target="Router.target$"></api-link>.
+
+The next cell finds out the path of the eventual parent (`up`), siblings (`left` & `right`), and first child (`down`),
+from `router.target$`:
+
+<js-cell>
+
+const getNav$ = (router) => {
+    const tree = router.explorerState
+    return router.target$.pipe(
+        rxjs.map( target => {
+            const treeNode = tree.getNode(target.path);
+            const treeParentNode = tree.getParent(treeNode.id);
+            const children = treeParentNode?.children || [];
+            const index = children.indexOf(treeNode)
+            return {
+                down: treeNode.children?.[0]?.href,
+                up: children[0] === treeNode ? treeParentNode?.href : undefined,
+                left: children[index - 1]?.href,
+                right: children[index + 1]?.href
+            };
+        }),
+        rxjs.shareReplay({refCount: true, bufferSize: 1}),
+    )
+}
+</js-cell>
+
+It constructs and returns an <ext-link target="Observable">Observable</ext-link>: each time `router.target$` is updated, 
+the returned `Observable` emits a new object with the 4 corresponding transition paths.
+
+
+<note level="question" title="explorerState?">
+When instantiating a <api-link target="Router"></api-link> instance, one of the first action realized is the 
+initialization of a <api-link target="Router.explorerState"></api-link> from the given
+<api-link target="Navigation"></api-link>.
+
+This is a convenient structure to query resolved nodes.
+Their IDs are the corresponding path computed from the input `Navigation`.
+</note>
+
+
+### Navigation Bar
+
+The navigation bar dynamically updates based on available links for `top`/`bottom`/`left`/`right` navigation.
+
+Let's start by implementing an item for the navigation:
+
+
+<js-cell>
+const navItem = (direction, nav, router) => {
+    if(!nav[direction]){
+        return { tag: 'div' }
+    }
+    return {
+        tag: 'button',
+        class: `btn btn-sm btn-dark mx-1`,
+        children: {
+            policy: 'replace',
+            source$: rxjs.from(router.getNav({path:nav[direction]})),
+            vdomMap: (navNode) => [
+                { tag: 'i', class: `fas fa-chevron-${direction}`},
+                { tag: 'i', class: `mx-2`},
+                { tag: 'i', innerText: navNode.name},
+                { tag: 'i', class: `mx-1`},
+                { tag: 'i', class: `fas ${navNode.header}`},
+            ] 
+        },  
+        onclick: () => {
+            router && router.fireNavigateTo({path:nav[direction]})
+        }
+    }
+}
+</js-cell>
+
+This function takes a direction (`'top' | 'bottom' | 'left' | 'right'`), and navigation object 
+(`{top?:string, bottom?:string, left?:string, right?:string}` - `string` being the corresponding path) 
+and a router as arguments.
+
+The returned navigation item is a **button** that triggers navigation when clicked.
+It connects to <api-link target='Router.getNav'></api-link>, a promise resolving the navigation node for the
+given path. The `vdomMap` is then called upon resolution, returning the (virtual) DOM children.
+
+Then, the navigation bar is implemented:
+
+<js-cell>
+const navBar = (router) => {
+    const nav$ = getNav$(router)
     return {
         tag: 'div',
-        children: files.map((file) => ({
-            tag:'a',
-            href: `@nav/fs/${path}/${file.id}`,
-            class: 'd-flex align-items-center',
-            children:[
-                {   tag: 'i',
-                    class: 'fas fa-file'
-                },
-                { tag:'i', class:'mx-2'},
-                {   tag: 'div',
-                    innerText: file.name
-                }
-            ]
+        class: 'd-flex align-items-center w-100 border-top py-1',
+        children: ['up', 'down', 'left', 'right'].map((direction) => ({
+            source$: nav$,
+            vdomMap: (nav) => navItem(direction, nav, router)
         }))
     }
 }
 </js-cell>
 
-The key element for defining dynamic navigation is a function that takes the **path** of the selected node 
-(and the application's router object if needed) and returns a [CatchAllNav](@nav/api/MainModule.CatchAllNav)
-navigation node:
+Here is a short description of the reactive flows involved:
+*  At first, the `navBar` is a `div` featuring a couple of class tokens and four children
+  (associated to `up`, `down`, *etc.* ) - only **placeholders** before the first update of `nav$`.
+*  When the router navigates to a given path, the `nav$` object emit the updated navigation object.
+   The placeholders are replaced with the **interactive buttons**, created using the `navItem(direction, nav, router)`.
 
+## Slides View
+
+Each slide consists of **text**, **picture**, **quotes**, **paragraph**.
+We define below the `factory` function for these elements:
 
 <js-cell>
-const resolveDynamicNavigation = async ({path}) => {
-    // A file is selected
-    if(filesContent[path]){
-        return {
-            name: path,
-            html: ({router}) => MkDocs.parseMd({src:filesContent[path], router}),
-            tableOfContent,
+const quote = (element) => {
+    return {
+        tag: 'div',
+        class: 'border-start p-2',
+        children: [
+           { tag:'i', innerText: `\"${element.quote}\"` },
+           { tag:'div', innerText: `--${element.author}`}
+        ]
+    }
+}
+const picture = (element) => {
+    return {
+        tag:'div',
+        class: 'w-100 flex-grow-1 d-flex justify-content-center py-1',
+        style: { minHeight: '0px' },
+        children:[{ tag: 'img', src: element.picture, style: { maxHeight: '100%' }}]
+    }
+}
+const text = (element) => {
+    return {
+        tag:'div',
+        class: 'd-flex w-75 mx-auto',
+        style: { fontSize: '1.5rem' },
+        children:[{ tag: 'p', class: 'text-center w-100', innerText: element.text }]
+    }
+}
+const paragraph = (element) => ({
+    tag:'div',
+    class: 'd-flex w-100 justify-content-center py-3',
+    children:[MkDocs.parseMd({src: element.paragraph})]
+})
+
+const factory = (element) => {
+    if(element['quote']){
+        return quote(element)
+    }
+    if(element['picture']){
+        return picture(element)
+    }
+    if(element['text']){
+        return text(element)
+    }
+    if(element['paragraph']){
+        return paragraph(element)
+    }
+}
+</js-cell>
+
+## Custom Layout
+
+The layout consists of a **header**, **content**, and **navigation bar**, all of them reacting to the signal
+<api-link target="Router.target$"></api-link>, emitting the updated target whenever the navigation path of the
+application changes:
+
+<js-cell>
+
+const headerView = (title, subTitle) => ({
+    tag: 'header',
+    children:[
+        { tag: 'h1', innerText: title },
+        { tag: 'h2', children:[ factory(subTitle) ] }
+    ]
+})
+
+class CustomLayout{
+    constructor({router}){
+        Object.assign(this,{
+            tag: 'div',
+            class: 'h-100 w-100 bg-light p-5 rounded',
+        })
+        const contentView = (layout) => ({
+            tag: 'div',
+            class: 'd-flex flex-column flex-grow-1',
+            style: { minHeight:'0px'},
+            children:layout.elements.map( elem => factory(elem) )
+        })
+        this.children = [   
+            {
+                source$: router.target$,
+                vdomMap: ({node}) => {
+                    const layout = node.layout
+                    return {
+                        tag: 'div',
+                        class: 'd-flex h-100 flex-column',
+                        children: [
+                            headerView(layout.title, layout.subTitle),
+                            contentView(layout),
+                            navBar(router)
+                        ]
+                    }
+                }
+            }        
+        ]
+    }
+}
+</js-cell>
+
+<note level="warning">
+For the sake of simplicity, the above cell does not account for the case of 
+<api-link target="UnresolvedTarget"></api-link> that may be emitted from 
+<api-link target="Router.target$"></api-link>.
+</note>
+
+## Navigation & App
+
+We can finally define the navigation and application:
+
+<js-cell cell-id="app">
+const navigation = { 
+    name: 'Welcome',
+    header: headerWelcome,
+    layout: slideWelcome,
+    routes: {
+        '/einstein': {
+            name: 'Einstein',
+            header: headerEinstein,
+            layout: slideEinstein
+        },
+        '/curie': {
+            name: 'Marie Curie',
+            header: headerCurie,
+            layout: slideCurie
+        },
+        '/newton': {
+            name: 'Isaac Newton',
+            header: headerNewton,
+            layout: slideNewton
+        },
+        '/feynman': {
+            name: 'Richard Feynman',
+            header: headerFeynman,
+            layout: slideFeynman
         }
     }
-    // Otherwise, it is a folder
-    const {files, folders} = mockFS[path]
-    return {
-        name: path,
-        html: ({router}) => MkDocs.parseMd({
-            src: `
-# folder at ${path}
-
-Below are the files of the folder:
-
-<filesView parent-folder='${path}'></filesView>
-`,
-            views: {
-                filesView: filesView
-            }
-        }),
-        tableOfContent,
-        children: [
-            ...folders.map( folder => ({
-                name: folder.name, 
-                id: folder.id,
-                decoration: {
-                    icon:{class:'fas fa-folder px-1'}
-                }
-            })),
-            ...files.map( file => ({
-                name: file.name, 
-                id: file.id,
-                leaf: true,
-                decoration: {
-                    icon:{class:'fas fa-file px-1'}
-                }
-            }))
-       ],
-    }
 }
-</js-cell>
-
-<note level="info">
-
-The `filesView` helper is directly referenced within the markdown content of the folder's `html` definition.
-It uses the 'custom view' feature of Markdown parsing, which are explained in detail on the Markdown 
-dedicated [page](@nav/tutorials/markdown).
-</note>
-
-Finally, to integrate the implicit navigation resolver, the function above is referenced within its parent node using 
-the **`...`** catch-all key:
-
-<js-cell cell-id="example6">
-navigation = {
-    name: 'Root Node',
-    tableOfContent,
-    html: ({router}) => {
-        return MkDocs.parseMd({router, src:`
-# Embedding a files system
-
-<note level='info'>Navigate to the [File System](@nav/fs) node to display the 'dynamic' children. </note>
-`})},
-    '/fs': {
-        name: 'Files system',
-        tableOfContent,
-        html: ({router}) => {
-            return MkDocs.parseMd({router, src:`
-# File System
-
-This is an example of dynamic navigation: navigation nodes
-are not known in advance.
-`})},
-        '...': resolveDynamicNavigation
-    }
-}
-
-displayApp(navigation, display)
+router = new MkDocs.Router({ 
+    name: 'dynamic-nav',
+    navigation,
+    browserClient: (p) => new MkDocs.MockBrowser(p)
+})
+const view = new CustomLayout({
+    router,
+})
+display(view)
 
 </js-cell>
 
-<cell-output cell-id="example6" full-screen="true" style="height:500px;">
+<cell-output cell-id="app" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
 </cell-output>
 
-<note level="warning" label="Important">
-The path provided to the 'catch-all' callback is relative to the parent node in which it is defined. 
-For example, for the global path `/fs/foo/bar/baz`, it becomes `foo/bar/baz` (since `fs` is the parent node of the
-reactive navigation).
-</note>
+<note level="info" title="Top View" expandable="true" mode="stateful">
+This cell is associated with a deported view port: the one displayed at the top of this page:
 
-<note level="hint">
-The callback definition for the **`...`** catch-all accommodates returning `Promise` or `Observable`.
-The latter allows the navigation structure to change at runtime (e.g., when the user performs an action).
+<js-cell cell-id="app-start">
+display(view)
+</js-cell>
 </note>
-
