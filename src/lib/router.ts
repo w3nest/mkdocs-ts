@@ -588,8 +588,8 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 }),
             )
         }
-        ctx.info('Navigation node found')
         // node.tree: Navigation
+        ctx.info('Navigation node found', node.tree)
         return of(node.tree)
     }
 
