@@ -410,7 +410,10 @@ export function parseProgram(src: string): AstNode[] {
         /*
         We should move to use `acornjs` as javascript AST parser
          */
-        let srcPatched = src.replace(/\?\./g, '.').replace(/\?\?/g, '||')
+        let srcPatched = src
+            .replace(/\?\./g, '.')
+            .replace(/\?\?/g, '||')
+            .replace(/\.\[/g, '[')
         srcPatched = patchSpreadOperators(srcPatched)
         const ast = parseScript(
             `(async function({webpm}, {display}){${srcPatched}})()`,
