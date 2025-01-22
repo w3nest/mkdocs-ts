@@ -2,7 +2,7 @@ import { render, VirtualDOM, ChildrenLike, CSSAttribute } from 'rx-vdom'
 import { navigation } from './navigation'
 import { Router, DefaultLayout, MdWidgets, WebBrowser } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
-import { createRootContext, inMemReporter } from './context-factory'
+import { createRootContext, inMemReporter } from './config.context'
 
 export const companionNodes$ = new BehaviorSubject([])
 

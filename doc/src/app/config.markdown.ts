@@ -1,4 +1,28 @@
 import { setup } from '../auto-generated'
+import { fromMarkdown, GlobalMarkdownViews } from 'mkdocs-ts'
+import { ApiLink, CrossLink, ExtLink, SplitApiButton } from './md-widgets'
+
+const project = {
+    name: 'mkdocs-ts',
+    docBasePath: `../assets/api`,
+}
+
+export const url = (restOfPath: string) => `../assets/${restOfPath}`
+
+GlobalMarkdownViews.factory = {
+    ...GlobalMarkdownViews.factory,
+    'api-link': (elem: HTMLElement) => new ApiLink(elem),
+    'ext-link': (elem: HTMLElement) => new ExtLink(elem),
+    'cross-link': (elem: HTMLElement) => new CrossLink(elem),
+    'split-api': () => new SplitApiButton(),
+}
+
+export function fromMd(file: string) {
+    return fromMarkdown({
+        url: url(file),
+        placeholders,
+    })
+}
 
 export const example1 = `
 <!DOCTYPE html>
@@ -61,3 +85,11 @@ Please refer to the tutorial section to learn about the multiple features propos
     </script>
 </html>
 `
+
+export const placeholders = {
+    '{{project}}': project.name,
+    '{{mkdocs-version}}': setup.version,
+    '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
+    '{{assetsBasePath}}': `../assets`,
+    '{{mkdocs-ts}}': '**`mkdocs-ts`**',
+}
