@@ -94,6 +94,16 @@ export type DisplayOptions<
      * Translation duration for panels in ms.
      */
     translationTime: number
+
+    /**
+     * If defined, force the TOC display mode to this value.
+     */
+    forceTocDisplayMode: DisplayMode | undefined
+
+    /**
+     * If defined, force the Nav display mode to this value.
+     */
+    forceNavDisplayMode: DisplayMode | undefined
 } & ExtraDisplayOption
 
 /**
@@ -109,6 +119,8 @@ export const defaultDisplayOptions: DisplayOptions = {
     pageWidth: '35rem',
     translationTime: 400,
     pageVertPadding: '3rem',
+    forceTocDisplayMode: undefined,
+    forceNavDisplayMode: undefined,
 }
 
 /**
@@ -119,7 +131,7 @@ export const defaultDisplayOptions: DisplayOptions = {
  */
 export type LayoutElementView<TView extends AnyView = AnyView> = (p: {
     // Application's router
-    router: Router
+    router: Router<NavLayout>
     // Current display mode regarding navigation.
     displayModeNav$: Subject<DisplayMode>
     // Current display mode regarding table of content.
@@ -187,6 +199,34 @@ export interface DefaultLayoutParams<
 export type NavLayoutView = Resolvable<AnyView> | ChildLike
 
 /**
+ * Defines the main content view of the page.
+ *
+ * @param params Parameters for generating the content view:
+ * @param params.router The active Router instance.
+ * @returns The content view.
+ */
+export type ClientContentView = (params: {
+    router: Router<NavLayout>
+}) => NavLayoutView
+
+/**
+ * Defines the view for the table of contents (TOC) within the page.
+ *
+ * @param params Parameters for generating the TOC view
+ * @param params.html The main HTML content of the page, obtained from the `content` function.
+ * @param params.router The active Router instance.
+ * @returns The TOC view.
+ */
+export type ClientTocView = (params: {
+    html: HTMLElement
+    router: Router
+}) => NavLayoutView
+
+/**
+ *  Marker for disabled TOC.
+ */
+export type DisabledTocMarker = 'disabled'
+/**
  * Defines the `layout` structure for {@link Navigation} nodes, which determines how a page's content is rendered.
  *
  * These options apply to individual navigation nodes.
@@ -202,24 +242,15 @@ export type NavLayout =
            * If the TOC needs to be updated later due to content changes, this must be handled explicitly
            * (e.g., by using mutation observers).
            * </note>
-           *
-           * @param params Parameters for generating the TOC view
-           * @param params.html The main HTML content of the page, obtained from the `content` function.
-           * @param params.router The active Router instance.
-           * @returns The TOC view.
            */
-          toc?: (params: { html: HTMLElement; router: Router }) => NavLayoutView
+          toc?: DisabledTocMarker | ClientTocView
 
           /**
            * Defines the main content view of the page.
-           *
-           * @param params Parameters for generating the content view:
-           * @param params.router The active Router instance.
-           * @returns The content view.
            */
-          content: (params: { router: Router }) => NavLayoutView
+          content: ClientContentView
       }
-    | ((params: { router: Router }) => NavLayoutView)
+    | ClientContentView
 
 /**
  * Represents the default layout of the library.
@@ -300,6 +331,12 @@ export class Layout implements VirtualDOM<'div'> {
             this.displayOptions,
             displayOptions ?? {},
         )
+        if (this.displayOptions.forceNavDisplayMode) {
+            this.displayModeNav$.next(this.displayOptions.forceNavDisplayMode)
+        }
+        if (this.displayOptions.forceTocDisplayMode) {
+            this.displayModeToc$.next(this.displayOptions.forceTocDisplayMode)
+        }
         this.connectedCallback = (e: RxHTMLElement<'div'>) => {
             this.plugResizer(e)
             router.setScrollableElement(e)
@@ -459,16 +496,20 @@ export class Layout implements VirtualDOM<'div'> {
             const width = entries[0].contentRect.width
             const height = entries[0].contentRect.height
             this.height$.next(height)
-            switcher(
-                width,
-                this.displayOptions.toggleTocWidth,
-                this.displayModeToc$,
-            )
-            switcher(
-                width,
-                this.displayOptions.toggleNavWidth,
-                this.displayModeNav$,
-            )
+            if (this.displayOptions.forceTocDisplayMode === undefined) {
+                switcher(
+                    width,
+                    this.displayOptions.toggleTocWidth,
+                    this.displayModeToc$,
+                )
+            }
+            if (this.displayOptions.forceNavDisplayMode === undefined) {
+                switcher(
+                    width,
+                    this.displayOptions.toggleNavWidth,
+                    this.displayModeNav$,
+                )
+            }
         })
         if (thisElement.parentElement) {
             resizeObserver.observe(thisElement.parentElement)

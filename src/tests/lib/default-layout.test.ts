@@ -10,7 +10,16 @@ import {
 } from '../../lib'
 import { expectTruthy, mockMissingUIComponents } from './utils'
 import { render } from 'rx-vdom'
-import { NavigationView, PageView, TOCView } from '../../lib/default-layout'
+import {
+    DisplayOptions,
+    NavigationView,
+    PageView,
+    TOCView,
+} from '../../lib/default-layout'
+import {
+    ExpandableTocColumn,
+    ToggleSidePanelButton,
+} from '../../lib/default-layout/small-screen.view'
 
 type TLayout = DefaultLayout.NavLayout
 type THeader = DefaultLayout.NavHeader
@@ -64,15 +73,25 @@ const navigation: Navigation<TLayout, THeader> = {
                 },
             },
         },
+        [segment('/no-toc')]: {
+            name: 'No TOC',
+            layout: {
+                toc: 'disabled',
+                content: ({ router }) => {
+                    return { tag: 'div' }
+                },
+            },
+        },
     },
 }
 
-function setup() {
+function setup(displayOptions?: Partial<DisplayOptions>) {
     mockMissingUIComponents()
-    const router = new Router({ navigation })
+    const router = new Router({ navigation, scrollingDebounceTime: 0 })
     const view = new DefaultLayout.Layout({
         router,
         bookmarks$: new BehaviorSubject(['/', '/md']),
+        displayOptions,
     })
     document.body.innerHTML = ''
     document.body.append(render(view))
@@ -131,6 +150,35 @@ describe('Nav, Page & TOC', () => {
         expect(links).toHaveLength(3)
         links[1].dispatchEvent(new MouseEvent('click'))
         expect(window.location.href).toBe('http://localhost/?nav=/md.section-1')
+    })
+})
+
+describe('TOC expandable', () => {
+    let router: Router<TLayout, THeader>
+    beforeAll(() => {
+        router = setup({ forceTocDisplayMode: 'hidden' })
+    })
+    it('Should display TOC menu on load', async () => {
+        await firstValueFrom(router.explorerState.selectedNode$)
+        const toc = document.querySelector(
+            `.${ExpandableTocColumn.CssSelector}`,
+        )
+        expect(toc).toBeTruthy()
+        const menu = document.querySelector(
+            `.${ExpandableTocColumn.CssSelector} .${ToggleSidePanelButton.CssSelector}`,
+        )
+        expect(menu).toBeTruthy()
+    })
+    it('Should not display TOC menu on /no-toc', async () => {
+        await router.navigateTo({ path: '/no-toc' })
+        const toc = document.querySelector(
+            `.${ExpandableTocColumn.CssSelector}`,
+        )
+        expect(toc).toBeTruthy()
+        const menu = document.querySelector(
+            `.${ExpandableTocColumn.CssSelector} .${ToggleSidePanelButton.CssSelector}`,
+        )
+        expect(menu).toBeFalsy()
     })
 })
 

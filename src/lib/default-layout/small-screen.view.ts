@@ -43,19 +43,32 @@ function slidingStyle({
  * The toggle button to display / hide the side panels.
  */
 export class ToggleSidePanelButton implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'mkdocs-ToggleNavButton'
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-ToggleNavButton w-100 p-1'
+    public readonly class: AttributeLike<string>
     public readonly children: ChildrenLike
     /**
      * Initializes a new instance.
      *
      * @param params
      * @param params.displayMode$ The display mode.
+     * @param params.visible$ If provided, this observable can be used to hide the button.
      */
     constructor(params: {
-        displayMode$: BehaviorSubject<DisplayMode>
+        displayMode$: BehaviorSubject<DisplayMode | 'none'>
+        visible$?: Observable<boolean>
         icon: string
     }) {
+        const classBase = `${ToggleSidePanelButton.CssSelector} w-100 p-1`
+        this.class = params.visible$
+            ? {
+                  source$: params.visible$,
+                  vdomMap: (isVisible) => {
+                      return isVisible ? classBase : 'd-none'
+                  },
+              }
+            : classBase
+
         const button: AnyVirtualDOM = {
             tag: 'button',
             class: attr$({
@@ -115,7 +128,8 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
         height$: Observable<number>
         items: AnyView[]
         toggleIcon: string
-        displayMode$: BehaviorSubject<DisplayMode>
+        displayMode$: BehaviorSubject<DisplayMode | 'none'>
+        visible$?: Observable<boolean>
         onDisplayed?: (elem: RxHTMLElement<'div'>) => void
     }) {
         this.style = attr$({
@@ -140,6 +154,7 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
                     new ToggleSidePanelButton({
                         displayMode$: params.displayMode$,
                         icon: params.toggleIcon,
+                        visible$: params.visible$,
                     }),
                     ...params.items,
                 ],
@@ -149,6 +164,7 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
             if (params.onDisplayed) {
                 params.onDisplayed(elem)
             }
+            this.htmlElement$.next(elem)
         }
     }
 }
@@ -159,7 +175,7 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
      */
     static readonly CssSelector = 'mkdocs-ExpandableTocColumn'
 
-    public readonly class = ExpandableNavColumn.CssSelector
+    public readonly class = ExpandableTocColumn.CssSelector
 
     constructor(params: {
         displayOptions: DisplayOptions
@@ -169,6 +185,7 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
     }) {
         super({
             ...params,
+            visible$: params.tocView.tocEnabled$,
             toggleIcon: 'fa-list-ul',
             items: [
                 {

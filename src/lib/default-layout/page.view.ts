@@ -44,7 +44,7 @@ export class PageView implements VirtualDOM<'div'> {
      * Component's class name for CSS query.
      */
     static readonly CssSelector = 'mkdocs-PageView'
-    public readonly router: Router
+    public readonly router: Router<NavLayout>
     public readonly tag = 'div'
     public readonly class = `${PageView.CssSelector} w-100 mkdocs-ts-page text-justify`
     public readonly children: ChildrenLike
@@ -54,7 +54,7 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void
 
     constructor(params: {
-        router: Router
+        router: Router<NavLayout>
         filter?: (target: Target) => boolean
     }) {
         Object.assign(this, params)

@@ -26,11 +26,13 @@ import {
     combineLatest,
     of,
     take,
+    map,
 } from 'rxjs'
 import {
+    ClientTocView,
+    DisabledTocMarker,
     DisplayMode,
     DisplayOptions,
-    NavLayoutView,
 } from './default-layout.view'
 
 type H1 = 'H1'
@@ -339,13 +341,7 @@ class TocItemView implements VirtualDOM<'li'> {
 
 interface TocTrait {
     layout: {
-        toc: ({
-            router,
-            html,
-        }: {
-            html: HTMLElement
-            router: Router
-        }) => NavLayoutView
+        toc: DisabledTocMarker | ClientTocView
     }
 }
 function hasTocViewTrait(node: unknown): node is TocTrait {
@@ -375,7 +371,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
     public readonly router: Router
     public readonly displayOptions: DisplayOptions
     public readonly content$: Observable<HTMLElement>
-
+    public readonly tocEnabled$: Observable<boolean>
     /**
      *
      * @param params
@@ -392,6 +388,23 @@ export class TocWrapperView implements VirtualDOM<'div'> {
         content$: Observable<HTMLElement>
     }) {
         Object.assign(this, params)
+        const target$ = this.router.target$.pipe(
+            filter((t) => isResolvedTarget(t)),
+        )
+        this.tocEnabled$ = target$.pipe(
+            map((target) => {
+                if (
+                    !target.node.layout ||
+                    typeof target.node.layout !== 'object'
+                ) {
+                    return true
+                }
+                if (!('toc' in target.node.layout)) {
+                    return true
+                }
+                return target.node.layout.toc !== 'disabled'
+            }),
+        )
         const toc: AnyVirtualDOM = {
             tag: 'div',
             class: 'h-100',
@@ -411,12 +424,7 @@ export class TocWrapperView implements VirtualDOM<'div'> {
             }),
             children: [
                 child$({
-                    source$: combineLatest([
-                        this.router.target$.pipe(
-                            filter((t) => isResolvedTarget(t)),
-                        ),
-                        this.content$,
-                    ]).pipe(
+                    source$: combineLatest([target$, this.content$]).pipe(
                         mergeMap(([target, elem]) => {
                             if (!hasTocViewTrait(target.node)) {
                                 return from(
@@ -425,6 +433,9 @@ export class TocWrapperView implements VirtualDOM<'div'> {
                                         router: this.router,
                                     }),
                                 )
+                            }
+                            if (target.node.layout.toc === 'disabled') {
+                                return of(undefined)
                             }
                             const toc = target.node.layout.toc({
                                 html: elem,
