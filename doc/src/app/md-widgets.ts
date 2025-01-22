@@ -164,9 +164,10 @@ export class CrossLink implements VirtualDOM<'a'> {
             markdown: '@nav/tutorials/markdown',
             basics: '@nav/tutorials/basics',
             'dynamic-nav': '@nav/tutorials/basics/dynamic-nav',
-            'mutable-nav': '@nav/tutorials/basics/mutable-nav',
+            'mutable-nav': '@nav/tutorials/basics/dynamic-nav/mutable-nav',
             'custom-layout': '@nav/tutorials/basics/custom-layout',
-            'composite-layout': '@nav/tutorials/basics/composite-layout',
+            'composite-layout':
+                '@nav/tutorials/basics/custom-layout/composite-layout',
             typescript: '@nav/tutorials/basics/typescript',
             'basics-utils': '@nav/tutorials/basics/code-utils',
         }

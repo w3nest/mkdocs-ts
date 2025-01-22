@@ -13,12 +13,17 @@ export const navigation: AppNav = {
                 content: ({ router }) =>
                     notebookPage('tutorials.basics.dynamic-nav.md', router),
             },
-        },
-        '/mutable-nav': {
-            name: 'Mutable Navigation',
-            layout: {
-                content: ({ router }) =>
-                    notebookPage('tutorials.basics.mutable-nav.md', router),
+            routes: {
+                '/mutable-nav': {
+                    name: 'Mutable Navigation',
+                    layout: {
+                        content: ({ router }) =>
+                            notebookPage(
+                                'tutorials.basics.dynamic-nav.mutable-nav.md',
+                                router,
+                            ),
+                    },
+                },
             },
         },
         '/custom-layout': {
@@ -27,15 +32,17 @@ export const navigation: AppNav = {
                 content: ({ router }) =>
                     notebookPage('tutorials.basics.custom-layout.md', router),
             },
-        },
-        '/composite-layout': {
-            name: 'Composite Layout',
-            layout: {
-                content: ({ router }) =>
-                    notebookPage(
-                        'tutorials.basics.composite-layout.md',
-                        router,
-                    ),
+            routes: {
+                '/composite-layout': {
+                    name: 'Composite Layout',
+                    layout: {
+                        content: ({ router }) =>
+                            notebookPage(
+                                'tutorials.basics.custom-layout.composite-layout.md',
+                                router,
+                            ),
+                    },
+                },
             },
         },
         '/typescript': {
