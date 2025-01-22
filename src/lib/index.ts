@@ -1,6 +1,6 @@
 export * from './markdown'
 export * from './navigation.node'
-export * from './generic.view'
+export * from './composite-layout.view'
 export * from './router'
 export * from './browser.interface'
 export * from './context'

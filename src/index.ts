@@ -9,10 +9,9 @@
  *
  * ## Views
  *
- * In terms of views, this module provides a {@link GenericView}, which can accommodate multiple layout types.
- * By default, the library includes a single layout: {@link _DefaultLayout.Layout | Layout}, implemented within the
- * {@link DefaultLayout} module.
- * If you need to define a custom layout, refer to {@link LayoutGeneratorTrait}.
+ * In terms of views, this module provides a {@link CompositeLayout}, which can wrap multiple layout types
+ * (the library includes a single layout: {@link DefaultLayout.Layout}, see the
+ * {@link DefaultLayout} module).
  *
  * ## Markdown
  *
@@ -37,21 +36,20 @@
  *
  * Two plugins are included:
  *
- * - **Code API Module** ({@link _CodeApiModule})
+ * - **Code API Module** ({@link CodeApiModule})
  *   - Installed using {@link installCodeApiModule}.
  *   - Enables automatic generation of pages from code API documentation.
  *
- * - **Notebook Module** ({@link _NotebookModule})
+ * - **Notebook Module** ({@link NotebookModule})
  *   - Installed using {@link installNotebookModule}.
  *   - Supports pages with live code execution.
  *
  * @module MainModule
  */
-
 // noinspection ES6UnusedImports Include for documentation
-import type * as _DefaultLayout from './lib/default-layout'
+import type * as DefaultLayout from './lib/default-layout' // eslint-disable-line  @typescript-eslint/no-unused-vars
 // noinspection ES6UnusedImports Include for documentation
-import type * as _CodeApiModule from './lib/code-api'
+import type * as CodeApiModule from './lib/code-api' // eslint-disable-line  @typescript-eslint/no-unused-vars
 // noinspection ES6UnusedImports Include for documentation
-import type * as _NotebookModule from './lib/notebook'
+import type * as NotebookModule from './lib/notebook' // eslint-disable-line  @typescript-eslint/no-unused-vars
 export * from './lib'

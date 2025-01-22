@@ -12,8 +12,9 @@ import {
     VirtualDOM,
     ChildrenLike,
     CSSAttribute,
+    attr$,
 } from 'rx-vdom'
-import { GenericView } from '../../lib'
+import { CompositeLayout } from '../../lib'
 import { filter } from 'rxjs'
 
 type CustomLayoutOptions = {
@@ -41,10 +42,18 @@ const navigation: Navigation<
             name: 'Foo',
             layout: {
                 kind: 'default',
-                content: () => {
+                content: ({ router }) => {
                     return {
                         tag: 'div' as const,
-                        innerText: 'Default Layout',
+                        innerText: attr$({
+                            source$: router.target$.pipe(
+                                filter((t) => isResolvedTarget(t)),
+                            ),
+                            vdomMap: (target) => {
+                                //expect target.node type
+                                return target.path
+                            },
+                        }),
                     }
                 },
             },
@@ -104,7 +113,7 @@ test('generic layout', async () => {
     let router = new Router({
         navigation,
     })
-    const view = new GenericView<LayoutMap, DefaultLayout.NavHeader>({
+    const view = new CompositeLayout<LayoutMap, DefaultLayout.NavHeader>({
         router,
         layoutsFactory: {
             default: ({ router }) => {
