@@ -417,8 +417,7 @@ const navigation = {
     routes: ({router, path}) => routes({version, router, path})
 }
 
-router = new MkDocs.Router({ 
-    name: 'dynamic-nav',
+router = new MkDocs.Router({
     navigation,
     browserClient: (p) => new MkDocs.MockBrowser(p)
 })

@@ -19,6 +19,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             Resolvable: '@nav/api/MainModule.Resolvable',
             UnresolvedTarget: '@nav/api/MainModule.UnresolvedTarget',
             AnyView: '@nav/api/MainModule.AnyView',
+            CompositeLayout: '@nav/api/MainModule.CompositeLayout',
             Router: '@nav/api/MainModule.Router',
             'Router.target$': '@nav/api/MainModule.Router.target$',
             'Router.explorerState': '@nav/api/MainModule.Router.explorerState',
@@ -68,6 +69,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             Resolvable: 'mkapi-role-type-alias',
             UnresolvedTarget: 'mkapi-role-interface',
             AnyView: 'mkapi-role-type-alias',
+            CompositeLayout: 'mkapi-role-class',
             StaticRoutes: 'mkapi-role-type-alias',
             Router: 'mkapi-role-class',
             'Router.target$': 'mkapi-role-attribute',
@@ -164,6 +166,7 @@ export class CrossLink implements VirtualDOM<'a'> {
             'dynamic-nav': '@nav/tutorials/basics/dynamic-nav',
             'mutable-nav': '@nav/tutorials/basics/mutable-nav',
             'custom-layout': '@nav/tutorials/basics/custom-layout',
+            'composite-layout': '@nav/tutorials/basics/composite-layout',
             typescript: '@nav/tutorials/basics/typescript',
             'basics-utils': '@nav/tutorials/basics/code-utils',
         }

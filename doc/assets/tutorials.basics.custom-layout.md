@@ -74,100 +74,113 @@ The other slides are defined in the following expandable note.
 
 <note level="abstract" expandable="true" mode="stateful" title="Slides">
 <js-cell>
-const slideWelcome = {
-    title: 'The Minds That Shaped Physics',
-    subTitle: {   
-        quote: 'The most incomprehensible thing about the universe is that it is comprehensible.',
-        author: 'A. Einstein'
-    },
-    elements: [
-        {   
-            picture: '../assets/solar-eclipse.png',
-            width: '50%',
+const slides = {
+    Welcome: {
+        title: 'The Minds That Shaped Physics',
+        subTitle: {   
+            quote: 'The most incomprehensible thing about the universe is that it is comprehensible.',
+            author: 'A. Einstein'
         },
-        {   
-            text: 'From the motion of planets to the secrets of quantum mechanics—explore the theories that shaped ' +
-            'our world.',
-            align: 'center'
-        }
-    ]
-}
-const slideEinstein = {
-    title: 'Albert Einstein',
-    subTitle: {   
-        quote: 'Imagination is more important than knowledge.',
-        author: 'A. Einstein'
+        elements: [
+            {   
+                picture: '../assets/solar-eclipse.png',
+                width: '50%',
+            },
+            {   
+                text: 'From the motion of planets to the secrets of quantum mechanics—explore the theories that shaped ' +
+                'our world.',
+                align: 'center'
+            }
+        ]
     },
-    elements: [
-        {   
-            picture: '../assets/Albert_Einstein_sticks_his_tongue_1951.jpg',
-            width: '50%'
+    Einstein: {
+        title: 'Albert Einstein',
+        subTitle: {   
+            quote: 'Imagination is more important than knowledge.',
+            author: 'A. Einstein'
         },
-        {   
-            paragraph: `
+        elements: [
+            {   
+                picture: '../assets/Albert_Einstein_sticks_his_tongue_1951.jpg',
+                width: '50%'
+            },
+            {   
+                paragraph: `
 *  Theory of General Relativity (1915),
 *  Photoelectric Effect (Nobel Prize 1921),
 *  On the Electrodynamics of Moving Bodies,
 *  Does the Inertia of a Body Depend Upon Its Energy Content?,
 `
-        }
-    ]
-}
-const slideNewton = {
-    title: 'Isaac Newton',
-    subTitle: {   
-        quote: 'If I have seen further, it is by standing on the shoulders of giants.',
-        author: 'I. Newton'
+            }
+        ]
     },
-    elements: [
-        {   
-            picture: '../assets/GodfreyKneller-IsaacNewton-1689.jpg',
-            width: '50%'
+    Curie: slideCurie,
+    Newton: {
+        title: 'Isaac Newton',
+        subTitle: {   
+            quote: 'If I have seen further, it is by standing on the shoulders of giants.',
+            author: 'I. Newton'
         },
-        {   
-            paragraph: `
+        elements: [
+            {   
+                picture: '../assets/GodfreyKneller-IsaacNewton-1689.jpg',
+                width: '50%'
+            },
+            {   
+                paragraph: `
 *  Three Laws of Motion (Principia, 1687),
 *  Universal Gravitation Theory,
 *  Philosophiæ Naturalis Principia Mathematica (1687),
-`
-        }
-    ]
-}
-const slideFeynman = {
-    title: 'Richard Feynman',
-    subTitle: {   
-        quote: 'I think I can safely say that nobody understands quantum mechanics.',
-        author: 'R. Feynman'
+    `
+            }
+        ]
     },
-    elements: [
-        {   
-            picture: '../assets/RichardFeynman-PaineMansionWoods1984_copyrightTamikoThiel_bw.jpg',
-            width: '50%'
+    Feynman: {
+        title: 'Richard Feynman',
+        subTitle: {   
+            quote: 'I think I can safely say that nobody understands quantum mechanics.',
+            author: 'R. Feynman'
         },
-        {   
-            paragraph: `
+        elements: [
+            {   
+                picture: '../assets/RichardFeynman-PaineMansionWoods1984_copyrightTamikoThiel_bw.jpg',
+                width: '50%'
+            },
+            {   
+                paragraph: `
 *  Developed Feynman Diagrams,
 *  Contributions to Quantum Electrodynamics (QED),
 *  Space-Time Approach to Quantum Electrodynamics (1949),
-`
-        }
-    ]
+    `
+            }
+        ]
+    }
 }
 </js-cell>
 </note>
 
 ### `THeader`
 
-It defines the structure of the navigation node's header, it just a simple `string` here, representing an icon from 
+It defines the structure of the navigation node's header, representing an icon from 
 <ext-link target='fontawesome'>Font Awesome</ext-link>:
 
 <js-cell>
-const headerWelcome = 'fa-home'
-const headerEinstein = 'fa-atom'
-const headerCurie = 'fa-radiation'
-const headerNewton = 'fa-apple-alt'
-const headerFeynman = 'fa-code-branch'
+const headers = {
+    Welcome: { icon: {tag:'i', class:'fas fa-home'}},
+    Einstein: { icon: {tag:'i', class:'fas fa-atom'}},
+    Curie: { icon: {tag:'i', class:'fas fa-radiation'}},
+    Newton: { icon: {tag:'i', class:'fas fa-apple-alt'}},
+    Feynman: { icon: {tag:'i', class:'fas fa-code-branch'}}
+}
 </js-cell>
+
+<note level="hint">
+We could have here defined the icon using only the relevant class name (*e.g.* `Welcome: 'fa-home'`}.
+For reasons that will be detailed in the <cross-link target="multi-layouts">Multiple Layouts</cross-link> tutorial,
+we align the API with the one used for header in the default layout 
+(see <api-link target="DefaultLayout.NavHeader"></api-link>).
+</note>
+
 
 ## Navigation System
 
@@ -244,7 +257,7 @@ const navItem = (direction, nav, router) => {
                 { tag: 'i', class: `mx-2`},
                 { tag: 'i', innerText: navNode.name},
                 { tag: 'i', class: `mx-1`},
-                { tag: 'i', class: `fas ${navNode.header}`},
+                navNode.header.icon,
             ] 
         },  
         onclick: () => {
@@ -265,13 +278,14 @@ given path. The `vdomMap` is then called upon resolution, returning the (virtual
 Then, the navigation bar is implemented:
 
 <js-cell>
-const navBar = (router) => {
-    const nav$ = getNav$(router)
-    return {
-        tag: 'div',
-        class: 'd-flex align-items-center w-100 border-top py-1',
-        children: ['up', 'down', 'left', 'right'].map((direction) => ({
-            source$: nav$,
+class NavBar{
+    constructor({router}){
+        Object.assign(this, {
+            tag: 'div',
+            class: 'd-flex align-items-center w-100 border-top py-1'
+        })
+        this.children = ['up', 'down', 'left', 'right'].map((direction) => ({
+            source$: getNav$(router),
             vdomMap: (nav) => navItem(direction, nav, router)
         }))
     }
@@ -305,7 +319,7 @@ const picture = (element) => {
         tag:'div',
         class: 'w-100 flex-grow-1 d-flex justify-content-center py-1',
         style: { minHeight: '0px' },
-        children:[{ tag: 'img', src: element.picture, style: { maxHeight: '100%' }}]
+        children:[{ tag: 'img', src: element.picture, style: { maxHeight: '100%' , maxWidth: '100%'}}]
     }
 }
 const text = (element) => {
@@ -338,60 +352,69 @@ const factory = (element) => {
 }
 </js-cell>
 
-## Custom Layout
-
-The layout consists of a **header**, **content**, and **navigation bar**, all of them reacting to the signal
-<api-link target="Router.target$"></api-link>, emitting the updated target whenever the navigation path of the
-application changes:
+Leading to the implementation of the slide view, defining **header** & **content** from the signal 
+<api-link target="Router.target$"></api-link>:
 
 <js-cell>
 
-const headerView = (title, subTitle) => ({
-    tag: 'header',
-    children:[
-        { tag: 'h1', innerText: title },
-        { tag: 'h2', children:[ factory(subTitle) ] }
-    ]
-})
-
-class CustomLayout{
-    constructor({router}){
+class SlideView{
+    constructor({layout}){
         Object.assign(this,{
             tag: 'div',
-            class: 'h-100 w-100 bg-light p-5 rounded',
+            class: 'flex-grow-1 d-flex flex-column w-100',
+            style: { minHeight: '0px' }
         })
-        const contentView = (layout) => ({
+        const header = (layout) => ({
+            tag: 'header',
+            children:[
+                { tag: 'h1', innerText: layout.title },
+                { tag: 'h2', children:[ factory(layout.subTitle) ] }
+            ]
+        })
+        const content = (layout) => ({
             tag: 'div',
             class: 'd-flex flex-column flex-grow-1',
             style: { minHeight:'0px'},
-            children:layout.elements.map( elem => factory(elem) )
+            children: layout.elements.map( elem => factory(elem) )
         })
-        this.children = [   
-            {
-                source$: router.target$,
-                vdomMap: ({node}) => {
-                    const layout = node.layout
-                    return {
-                        tag: 'div',
-                        class: 'd-flex h-100 flex-column',
-                        children: [
-                            headerView(layout.title, layout.subTitle),
-                            contentView(layout),
-                            navBar(router)
-                        ]
-                    }
-                }
-            }        
+        this.children = [
+            header(layout),
+            content(layout)
         ]
     }
 }
 </js-cell>
+
+
+## Custom Layout
+
+The layout simply wrap the previously defined `SlideView` & `NavBar`:
+
+<js-cell>
+class CustomLayout{
+    constructor({router}){
+        Object.assign(this,{
+            tag: 'div',
+            class: 'h-100 w-100 d-flex flex-column bg-light p-5 rounded',
+        })
+        this.children = [ 
+            {   
+                source$: router.target$,
+                vdomMap: ({node}) => new SlideView({layout: node.layout})
+            },
+            new NavBar({router})      
+        ]
+    }
+}
+</js-cell>
+
 
 <note level="warning">
 For the sake of simplicity, the above cell does not account for the case of 
 <api-link target="UnresolvedTarget"></api-link> that may be emitted from 
 <api-link target="Router.target$"></api-link>.
 </note>
+
 
 ## Navigation & App
 
@@ -400,40 +423,25 @@ We can finally define the navigation and application:
 <js-cell cell-id="app">
 const navigation = { 
     name: 'Welcome',
-    header: headerWelcome,
-    layout: slideWelcome,
-    routes: {
-        '/einstein': {
-            name: 'Einstein',
-            header: headerEinstein,
-            layout: slideEinstein
-        },
-        '/curie': {
-            name: 'Marie Curie',
-            header: headerCurie,
-            layout: slideCurie
-        },
-        '/newton': {
-            name: 'Isaac Newton',
-            header: headerNewton,
-            layout: slideNewton
-        },
-        '/feynman': {
-            name: 'Richard Feynman',
-            header: headerFeynman,
-            layout: slideFeynman
+    header: headers.Welcome,
+    layout: slides.Welcome,
+    routes: Object.keys(slides).filter( k => k !== 'Welcome').reduce((acc, name) => ({
+        ...acc,
+       [`/${name}`]: {
+            name,
+            header: headers[name],
+            layout: slides[name]
         }
-    }
+    }), {})
 }
-router = new MkDocs.Router({ 
-    name: 'dynamic-nav',
+router = new MkDocs.Router({
     navigation,
     browserClient: (p) => new MkDocs.MockBrowser(p)
 })
-const view = new CustomLayout({
+const customView = new CustomLayout({
     router,
 })
-display(view)
+display(customView)
 
 </js-cell>
 
@@ -444,6 +452,6 @@ display(view)
 This cell is associated with a deported view port: the one displayed at the top of this page:
 
 <js-cell cell-id="app-start">
-display(view)
+display(customView)
 </js-cell>
 </note>

@@ -144,7 +144,6 @@ const navigation = {
     routes: routes$
 }
 const router = new MkDocs.Router({
-    name: 'mutable-nav',
     navigation: navigation,
     browserClient: (p) => new MkDocs.MockBrowser(p)
 })

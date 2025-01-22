@@ -189,6 +189,16 @@ export const navigation: AppNav = {
                                     ),
                             },
                         },
+                        '/composite-layout': {
+                            name: 'Composite Layout',
+                            layout: {
+                                content: ({ router }) =>
+                                    notebookPage(
+                                        'tutorials.basics.composite-layout.md',
+                                        router,
+                                    ),
+                            },
+                        },
                         '/typescript': {
                             name: 'Typescript',
                             layout: {
