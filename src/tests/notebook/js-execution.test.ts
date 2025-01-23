@@ -113,6 +113,26 @@ function foo(){
     })
 })
 
+describe('Errors encountered (& fixed)', () => {
+    it('tests with last line commented', async () => {
+        const displayFactory: DisplayFactory = []
+        const invalidated$ = new Subject()
+        const scope = await executeJs({
+            src: `const x = { y: 2}//let y = x?.y`,
+            scope: { const: {}, let: {}, python: {} },
+            output$: new Subject<Output>(),
+            displayFactory,
+            load: () => Promise.resolve({}),
+            invalidated$,
+        })
+        expect(scope).toEqual({
+            const: { x: { y: 2 } },
+            let: {},
+            python: {},
+        })
+    })
+})
+
 test('execute', async () => {
     let scope = { const: {}, let: {}, python: {} }
     const displayFactory: DisplayFactory = []

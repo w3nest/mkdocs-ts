@@ -416,8 +416,9 @@ export function parseProgram(src: string): AstNode[] {
             .replace(/\?\?/g, '||')
             .replace(/\.\[/g, '[')
         srcPatched = patchSpreadOperators(srcPatched)
+        // Following '\n' is to avoid error if the last line is commented
         const ast = parseScript(
-            `(async function({webpm}, {display}){${srcPatched}})()`,
+            `(async function({webpm}, {display}){${srcPatched}\n})()`,
         )
         return ast.body[0].expression.callee.body.body
     } catch (e) {
