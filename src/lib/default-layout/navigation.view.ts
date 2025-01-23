@@ -19,7 +19,7 @@ import { AnyView, NavNodePromise } from '../navigation.node'
 /**
  * Defines attributes regarding the visual rendering of the node if the navigation view.
  */
-export interface NavHeader {
+export interface NavHeaderSpec {
     /**
      * Optional class added as wrapper to the HTML element representing the node.
      */
@@ -33,6 +33,10 @@ export interface NavHeader {
      */
     actions?: ChildrenLike
 }
+
+export type NavHeader =
+    | NavHeaderSpec
+    | (({ router }: { router: Router }) => NavHeaderSpec)
 
 /**
  * Represents the navigation view of the application, displaying a hierarchical structure of navigation nodes.

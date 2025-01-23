@@ -37,7 +37,7 @@ export type NavNodeData<
     /**
      * The header configuration for the node.
      */
-    header?: THeader | (({ router }: { router: Router }) => THeader)
+    header?: THeader
     /**
      * The layout configuration for the node.
      */
@@ -51,9 +51,7 @@ export class NavNodeResolved<TLayout, THeader>
     public readonly href: string
     public readonly name: string
     public readonly layout: TLayout
-    public readonly header?:
-        | THeader
-        | (({ router }: { router: Router }) => THeader)
+    public readonly header?: THeader
     public readonly metadata?: unknown
 
     constructor(
@@ -381,17 +379,13 @@ export function resolve<T>(resolvable: Resolvable<T>): Observable<T> {
 }
 
 /**
- * Represents a mapping of path segments to corresponding values.
- *
- * The `SegmentsRecord` type defines a record where the keys are valid path segments,
- * as determined by the {@link PathSegment} type, and the values are of type `T`.
- *
  * This is commonly used to associate specific data or configurations with individual
- * path segments in a structured and type-safe manner.
+ * path segments.
  *
  * @typeParam T The type of the value associated with each path segment.
  */
-export type SegmentsRecord<T> = Record<PathSegment<string>, T>
+// Using `PathSegment` instead `string` leads to subtle compile time error (included in static tests).
+export type SegmentsRecord<T> = Record<string, T>
 
 /**
  * Represents the specification of dynamic routes in the application.
@@ -409,17 +403,23 @@ export type LazyRoutes<TLayout, THeader> = SegmentsRecord<
 >
 
 /**
+ * Return type when defining dynamic routing (see {@link LazyRoutesCb}).
+ */
+export type LazyRoutesReturn<TLayout, THeader> =
+    | Resolvable<LazyRoutes<TLayout, THeader>>
+    | undefined
+/**
  * Represents a lazy navigation resolver, used when the navigation is only known at runtime.
  *
  * It is a function that takes the target path and router's instance as parameters, and returns
- * the instance of {@link LazyRoutes} that explicits node attributes for the given path.
+ * the instance of a (wrapped) {@link LazyRoutes} that explicits node attributes for the given path.
  */
 export type LazyRoutesCb<TLayout, THeader> = (p: {
     // The targeted path in the navigation
     path: string
     // Router instance
     router: Router
-}) => Resolvable<LazyRoutes<TLayout, THeader>> | undefined
+}) => LazyRoutesReturn<TLayout, THeader>
 
 /**
  * Represents the definition of static routes in the application.

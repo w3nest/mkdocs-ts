@@ -1,4 +1,10 @@
-import { Navigation, segment, Router, isResolvedTarget } from '../../lib'
+import {
+    Navigation,
+    segment,
+    Router,
+    isResolvedTarget,
+    LazyRoutesReturn,
+} from '../../lib'
 import { DefaultLayout } from '../../lib'
 import { filter, firstValueFrom, map, Subject } from 'rxjs'
 import { navigateAndAssert } from './utils'
@@ -28,7 +34,11 @@ const nodeBase = (name: string) => ({
     },
 })
 
-function dynamicResolver({ path }: { path: string }) {
+function dynamicResolver({
+    path,
+}: {
+    path: string
+}): LazyRoutesReturn<TLayout, THeader> {
     const parts = path.split('/').filter((c) => c !== '')
     if (parts.length === 0) {
         return {
