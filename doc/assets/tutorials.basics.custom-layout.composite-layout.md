@@ -51,7 +51,7 @@ const navigation = {
     header: headers.Welcome,
     layout: {
         kind: 'default',
-        content: () => new SlideView({layout: slides.Welcome}),
+        content: () => new SlideView({slide: slides.Welcome}),
         toc: 'disabled'
     },
     routes: Object.keys(slides).filter( k => k !== 'Welcome').reduce((acc, name) => ({

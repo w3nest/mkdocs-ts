@@ -10,6 +10,11 @@ Below is a preview of the final application in action:
 <cell-output cell-id="app-start" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;"> </cell-output>
 
 
+<note level="hint">
+This scenario is fully implemented in TypeScript as a test of {{mkdocs-ts}}, you can find it 
+<ext-link target="tests.custom-layout">here</ext-link>.
+</note>
+
 ## Requirements 
 
 Before we begin, let's install the required dependencies:
@@ -89,7 +94,6 @@ const slides = {
             {   
                 text: 'From the motion of planets to the secrets of quantum mechanics—explore the theories that shaped ' +
                 'our world.',
-                align: 'center'
             }
         ]
     },
@@ -204,16 +208,18 @@ const getNav$ = (router) => {
     const tree = router.explorerState
     return router.target$.pipe(
         rxjs.map( target => {
-            const treeNode = tree.getNode(target.path);
-            const treeParentNode = tree.getParent(treeNode.id);
-            const children = treeParentNode?.children || [];
+            const treeNode = tree.getNodeResolved(target.path)
+            const treeParentNode = tree.getParent(treeNode.id)
+            const children = treeParentNode?.resolvedChildren() || []
             const index = children.indexOf(treeNode)
             return {
-                down: treeNode.children?.[0]?.href,
-                up: children[0] === treeNode ? treeParentNode?.href : undefined,
-                left: children[index - 1]?.href,
-                right: children[index + 1]?.href
-            };
+                down: treeNode.children
+                    ? treeNode.resolvedChildren()[0].id
+                    : undefined,
+                up: children[0] === treeNode ? treeParentNode?.id : undefined,
+                left: children[index - 1]?.id,
+                right: children[index + 1]?.id,
+            }
         }),
         rxjs.shareReplay({refCount: true, bufferSize: 1}),
     )
@@ -358,29 +364,26 @@ Leading to the implementation of the slide view, defining **header** & **content
 <js-cell>
 
 class SlideView{
-    constructor({layout}){
+    constructor({slide}){
         Object.assign(this,{
             tag: 'div',
             class: 'flex-grow-1 d-flex flex-column w-100',
             style: { minHeight: '0px' }
         })
-        const header = (layout) => ({
+        const header = {
             tag: 'header',
             children:[
-                { tag: 'h1', innerText: layout.title },
-                { tag: 'h2', children:[ factory(layout.subTitle) ] }
+                { tag: 'h1', innerText: slide.title },
+                { tag: 'h2', children:[ factory(slide.subTitle) ] }
             ]
-        })
-        const content = (layout) => ({
+        }
+        const content = {
             tag: 'div',
             class: 'd-flex flex-column flex-grow-1',
             style: { minHeight:'0px'},
-            children: layout.elements.map( elem => factory(elem) )
-        })
-        this.children = [
-            header(layout),
-            content(layout)
-        ]
+            children: slide.elements.map( elem => factory(elem) )
+        }
+        this.children = [ header, content ]
     }
 }
 </js-cell>
@@ -400,7 +403,7 @@ class CustomLayout{
         this.children = [ 
             {   
                 source$: router.target$,
-                vdomMap: ({node}) => new SlideView({layout: node.layout})
+                vdomMap: ({node}) => new SlideView({slide: node.layout})
             },
             new NavBar({router})      
         ]

@@ -15,6 +15,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             LazyRoutes: '@nav/api/MainModule.LazyRoutes',
             LazyRoutesCb: '@nav/api/MainModule.LazyRoutesCb',
             LazyRoutesCb$: '@nav/api/MainModule.LazyRoutesCb$',
+            LazyRoutesReturn: '@nav/api/MainModule.LazyRoutesReturn',
             NavNodeData: '@nav/api/MainModule.NavNodeData',
             Resolvable: '@nav/api/MainModule.Resolvable',
             UnresolvedTarget: '@nav/api/MainModule.UnresolvedTarget',
@@ -134,6 +135,15 @@ export class ExtLink implements VirtualDOM<'a'> {
             BehaviorSubject:
                 'https://www.learnrxjs.io/learn-rxjs/subjects/behaviorsubject',
             Observable: 'https://rxjs.dev/guide/observable',
+            github: 'https://github.com/w3nest/mkdocs-ts',
+            'github-static-tests':
+                'https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests',
+            'tests.custom-layout':
+                'https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/lib/custom-layout.test.ts',
+            'static-tests.custom-layout':
+                'https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests/custom-layout.ts',
+            'static-tests.composite-layout':
+                'https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests/composite-layout.ts',
         }
         this.href = navs[target]
         this.children = [
