@@ -85,7 +85,7 @@ export interface ProjectGlobals {
      * To include links for a given package `foo`, provide an entry for `foo`.
      * No link is generated for external packages not referenced here.
      */
-    externals: ExternalsUrl
+    externals?: ExternalsUrl
 }
 
 const noSemantic: Semantic = {
@@ -1045,7 +1045,10 @@ function gather_symbol_references(
         }
     })
     extReferences.forEach((ref) => {
-        if (ref.package in projectGlobals.externals) {
+        if (
+            projectGlobals.externals &&
+            ref.package in projectGlobals.externals
+        ) {
             const link = projectGlobals.externals[ref.package](ref)
             if (link) {
                 result[ref.name] = link
