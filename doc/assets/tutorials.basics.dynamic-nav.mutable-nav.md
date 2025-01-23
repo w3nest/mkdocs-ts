@@ -143,14 +143,16 @@ const navigation = {
     header: { icon: { tag: 'i', class: 'fas fa-folder-open' } },
     routes: routes$
 }
-const router = new MkDocs.Router({
-    navigation: navigation,
-    browserClient: (p) => new MkDocs.MockBrowser(p)
+
+const { withNavBar } = await load("/tutorials/basics/code-utils")
+
+const view = await withNavBar(navigation, ({router}) => {
+    return new MkDocs.DefaultLayout.Layout({
+        router,
+        sideNavHeader: () => sideNavHeader
+    })
 })
-const view = new MkDocs.DefaultLayout.Layout({
-    router,
-    sideNavHeader: () => sideNavHeader
-})
+
 display(view)
 </js-cell>
 

@@ -5,9 +5,13 @@ a library designed for creating hierarchical, interactive, and dynamic documenta
 While the example used—a whimsical guide to *The Hitchhiker’s Guide to the Galaxy* quotes—might lean on humor, 
 the underlying purpose is to demonstrate practical techniques for building structured applications with {{mkdocs-ts}}.
 
+Below is a preview of the final application in action:
+
+<cell-output cell-id="app-start" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;"> </cell-output>
+
 Through this example, you'll gain an understanding of how to use Markdown, the library's layout system,
 and its navigation features to create modular and responsive applications. 
-By the end, you'll have both a fun example application and the knowledge to build your own tailored projects.
+By the end, you'll have both a fun example application and the knowledge to start building your own tailored projects.
 
 Let's get started!
 
@@ -53,10 +57,9 @@ display(MkDocs)
 
 <note level='info' expandable="true" title="About `webpm`">
 
-<ext-link target="webpm">WebPM</ext-link> is an installer used here to dynamically install **{{mkdocs-ts}}**,
-often used with notebook pages.
-However, for typical project setup, {{mkdocs-ts}} is included "statically" within the project's `node_modules`
-folder, rather than being dynamically installed.
+<ext-link target="webpm">WebPM</ext-link> is an installer used in this context to dynamically install {{mkdocs-ts}}.
+However, in a standard project setup, {{mkdocs-ts}} is typically installed as a dependency within the project's 
+`node_modules` folder, making this step unnecessary.
 </note>
 
 ---
@@ -206,74 +209,29 @@ actual browser state. In production scenarios, omit the browserClient parameter 
 {{mkdocs-ts}} includes a default layout powered by the <api-link target="DefaultLayout.Layout"></api-link> class.
 This layout provides a structured foundation out of the box.
 
-To enhance the user experience, we'll also define here a top-banner that dynamically displays the current path of the 
-mocked browser, consuming **`router.path$`**. 
-Curious about the implementation? Check out the expandable section below.
+To enhance the user experience, we'll also use here a **top-banner** that mock a browser's navigation bar. 
+Its implementation has been deported within <cross-link target="basics-utils">Code Utilities</cross-link> page:
 
-<note level='abstract' icon='fas fa-code' label='Path View' expandable="true" mode="stateful">
 <js-cell>
-const homeView = (router) => {
-    return {
-        tag: 'a',
-        class:'fas fa-home',
-        href: '/',
-        onclick: (ev)=>{ ev.preventDefault(); router.fireNavigateTo({path: '/'}) }
-    }
-}
-const segmentView = ( path, router) => {
-    return {
-        tag: 'a',
-        innerText: path.split('/').slice(-1)[0],
-        href: path,
-        onclick: (ev)=>{ ev.preventDefault(); router.fireNavigateTo({path}) }
-    }
-}
-const sepView = {
-    tag: 'div',
-    class: 'mx-1',
-    innerText: '/'
-}
-const pathView = (router) => {
-    return {
-        tag: 'div',
-        class: 'text-center w-100 bg-light my-1 rounded d-flex align-items-center justify-content-center', 
-        children: {
-            policy: 'replace',
-            source$: router.path$,
-            vdomMap: (path) => {
-                const segments = path.split('/').slice(1)
-                return [ 
-                    homeView(router), 
-                    segments.map( (segment, i) => {
-                        const segmentPath = segments.slice(0,i+1).join('/')
-                        return [sepView, segmentView(segmentPath, router)]
-                    })
-                ].flat(2)
-            }
-        }
-    }
-}
+const { navBarView } = await load("/tutorials/basics/code-utils")
 </js-cell>
-</note>
 
-With the path view in place, here’s the complete application:
+With the `navBarView` loaded, here’s the complete application:
 
 <js-cell cell-id="example0">
-
-const appView = { 
-    tag: 'div', 
-    class: 'flex-grow-1',
-    style: { minHeight: '0px' },
-    children:[
-        new MkDocs.DefaultLayout.Layout({ router })
-    ] 
-}
 display({
     tag: 'div',
     class:'border p-1 d-flex flex-column w-100 h-100',
     children:[
-        pathView(router),
-        appView
+        navBarView(router),
+        { 
+            tag: 'div', 
+            class: 'flex-grow-1',
+            style: { minHeight: '0px' },
+            children:[
+                new MkDocs.DefaultLayout.Layout({ router })
+            ] 
+        }
     ]
 })
 </js-cell>
@@ -286,7 +244,7 @@ display({
 The above view is reactive and adapts to available space. 
 For small viewports - just like above when embedded -, it displays in a compact format. 
 If you're using a large enough screen, click the <button class="btn btn-sm btn-light fas fa-expand"></button> button at 
-the top right of the output to see its expanded format. 
+the top right of the output to see its expanded format.
 </note>
 
 <note level="warning" label="Important">
@@ -296,11 +254,11 @@ In your application you'll likely need to explicitly transforms the `Virtual DOM
 To do so, use the `render` function, *e.g.*:
 
 <code-snippet language='javascript'>
-import { VirtualDOM, render } from 'rx-vdom'
+import { AnyVirtualDOM, render } from 'rx-vdom'
 
-const appView : VirtualDOM = { tag: 'div',  /*...*/ }
+const vDOM : AnyVirtualDOM = { tag: 'div',  /*...*/ }
 
-document.body.append(render(appView))
+document.body.append(render(vDOM))
 </code-snippet>
 </note>
 
@@ -323,40 +281,16 @@ The CSS selectors can be found from the API documentation, looking for the stati
 You can also create your own layouts or use multiple layouts within your application, 
 this is presented in the <cross-link target="custom-layout">Custom Layouts</cross-link> page.
 
-For now, let's introduce the core concepts of views injection.
+**Code Factorization**
 
+Before proceeding to the concept of views injection, the above organization of the application's view has been
+factorized within the <cross-link target="basics-utils">Code Utilities</cross-link> page in an `withNavBar` function:
 
 <js-cell>
-const displayApp = (navigation, display) => {
-    const router = new MkDocs.Router({
-        navigation, 
-        browserClient: (p) => new MkDocs.MockBrowser(p) 
-    })
-    const appView = { 
-        tag: 'div', 
-        class: 'flex-grow-1',
-        style: { minHeight: '0px' },
-        children:[
-            new MkDocs.DefaultLayout.Layout({router})
-        ] 
-    }
-    display({
-        tag: 'div',
-        class:'border p-1 d-flex flex-column w-100 h-100',
-        children:[
-            pathView(router),
-            appView
-        ],
-        onclick: () => {
-            // Related to the 'View customization' example
-            document.querySelectorAll('.ctx-menu').forEach((c) => c.remove())
-        }
-    })
-}
+const { withNavBar } = await load("/tutorials/basics/code-utils")
 </js-cell>
 
-</note>
-
+It will be used to display the application view in the next steps as well as in the others tutorials.
 
 ---
 
@@ -526,7 +460,10 @@ navigation = {
         }
     }
 }
-displayApp(navigation, display)
+
+display(
+    await withNavBar(navigation)
+)
 </js-cell>
 
 <cell-output cell-id="the-answer" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
@@ -554,7 +491,9 @@ const pageBeyond = `
 **One Improbable Step**
 
 As we embark on this journey, expect the unexpected—and maybe even a bit of fun! Let’s turn the improbable into the 
-delightful as we organize chaos into structure.
+delightful as we organize chaos into structure. 
+Ready? Trigger the <i class='fas fa-hat-wizard'></i> mode from the side
+navigation panel.
 
 >  *"There is a theory which states that if ever anyone discovers exactly what the Universe is for and why it is here, it 
 > will instantly disappear and be replaced by something even more bizarre and inexplicable."*
@@ -664,7 +603,9 @@ navigation = {
         }
     }
 }
-displayApp(navigation, display)
+display(
+    await withNavBar(navigation)
+)
 </js-cell>
 
 <cell-output cell-id="beyond" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
@@ -747,33 +688,27 @@ navigation = {
         }
     }
 }
-
-display({
-    tag: 'div',
-    class:'border p-1 d-flex flex-column w-100 h-100',
-    children:[
-        { 
-            tag: 'div', 
-            class: 'w-100 h-100',
-            children:[
-                new MkDocs.DefaultLayout.Layout({
-                    router:new MkDocs.Router({
-                        navigation,
-                        browserClient: (p) => new MkDocs.MockBrowser(p)
-                    }),
-                    sideNavHeader,
-                    sideNavFooter,
-                    bookmarks$
-                })
-            ] 
-        }
-    ]
+const finalView = await withNavBar(navigation, ({router}) => {
+    return new MkDocs.DefaultLayout.Layout({
+        router,
+        sideNavHeader,
+        sideNavFooter,
+        bookmarks$
+    })
 })
+display(finalView)
 </js-cell>
 
 <cell-output cell-id="final" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
 </cell-output>
 
+<note level="info" title="Top View" expandable="true" mode="stateful">
+This cell is associated with a deported view port: the one displayed at the top of this page:
+
+<js-cell cell-id="app-start">
+display(finalView)
+</js-cell>
+</note>
 
 ---
 
@@ -791,7 +726,7 @@ For those looking to explore further, here are three additional sub-pages to dee
 *  **<cross-link target="dynamic-nav">Dynamic Navigation</cross-link>**: The examples so far have used a navigation
    structure defined at compile time. This page explores how to handle scenarios where navigation must adapt dynamically.
 
-*  **<cross-link target="custom-layout">Custom layouts</cross-link>**: Learn how to define and work with custom layouts,
+*  **<cross-link target="custom-layout">Custom Layout</cross-link>**: Learn how to define and work with custom layouts,
    enabling you to tailor the look and feel of your application.
 
 *  **<cross-link target="typescript">Typescript</cross-link>**: If you’re working in TypeScript, this section offers 

@@ -417,13 +417,8 @@ const navigation = {
     routes: ({router, path}) => routes({version, router, path})
 }
 
-router = new MkDocs.Router({
-    navigation,
-    browserClient: (p) => new MkDocs.MockBrowser(p)
-})
-const view = new MkDocs.DefaultLayout.Layout({
-    router,
-})
+const { withNavBar } = await load("/tutorials/basics/code-utils")
+const view = await withNavBar(navigation)
 display(view)
 </js-cell>
 

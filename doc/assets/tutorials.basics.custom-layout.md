@@ -207,7 +207,11 @@ from `router.target$`:
 const getNav$ = (router) => {
     const tree = router.explorerState
     return router.target$.pipe(
-        rxjs.map( target => {
+        rxjs.map( (target) => {
+            if(!MkDocs.isResolvedTarget(target)){ 
+                // If the path is not resolved, no items displayed
+                return {}
+            }
             const treeNode = tree.getNodeResolved(target.path)
             const treeParentNode = tree.getParent(treeNode.id)
             const children = treeParentNode?.resolvedChildren() || []
@@ -394,6 +398,16 @@ class SlideView{
 The layout simply wrap the previously defined `SlideView` & `NavBar`:
 
 <js-cell>
+const errorView = (path, reason, router) => MkDocs.parseMd({ 
+    src:`
+<note level="warning">
+The slide at location \`${path}\` can not be resolved: \`${reason}\`
+
+[Home](@nav/)
+</note>`,
+    router 
+})
+
 class CustomLayout{
     constructor({router}){
         Object.assign(this,{
@@ -403,7 +417,12 @@ class CustomLayout{
         this.children = [ 
             {   
                 source$: router.target$,
-                vdomMap: ({node}) => new SlideView({slide: node.layout})
+                vdomMap: (target) => {
+                    if(!MkDocs.isResolvedTarget(target)){
+                        return errorView(target.path, target.reason, router)
+                    }
+                    return new SlideView({slide: target.node.layout})
+                }
             },
             new NavBar({router})      
         ]
@@ -437,12 +456,13 @@ const navigation = {
         }
     }), {})
 }
-router = new MkDocs.Router({
-    navigation,
-    browserClient: (p) => new MkDocs.MockBrowser(p)
-})
-const customView = new CustomLayout({
-    router,
+
+const { withNavBar } = await load("/tutorials/basics/code-utils")
+
+const customView = await withNavBar(navigation, ({router}) => {
+    return new CustomLayout({
+        router,
+    })
 })
 display(customView)
 

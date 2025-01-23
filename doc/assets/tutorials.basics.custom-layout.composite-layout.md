@@ -30,7 +30,7 @@ custom layout for all other pages.
 ## Factory
 
 The <api-link target="CompositeLayout"></api-link> requires a layout factory, which maps layout **kinds**
-to their respective layout instances:
+to their respective **layout instances**:
 
 <js-cell>
 const layoutsFactory = {
@@ -45,7 +45,6 @@ Each navigation node specifies its layout using the **`kind`** attribute:
 
 
 <js-cell>
-
 const navigation = { 
     name: 'Welcome',
     header: headers.Welcome,
@@ -88,15 +87,18 @@ router = new MkDocs.Router({
 And finally, The <api-link target="CompositeLayout"></api-link> view is instantiated and displayed:
 
 <js-cell cell-id="app">
+const { withNavBar } = await load("/tutorials/basics/code-utils")
 
-const compositeView = new MkDocs.CompositeLayout({
-    router,
-    layoutsFactory: {
-        'default': ({router}) => new MkDocs.DefaultLayout.Layout({router}),
-        'custom': ({router}) => new CustomLayout({router}),
-    },
-    onNotFound: 'default',
-    onPending: 'default',
+const compositeView = await withNavBar(navigation, ({router}) => {
+    return new MkDocs.CompositeLayout({
+        router,
+        layoutsFactory: {
+            'default': ({router}) => new MkDocs.DefaultLayout.Layout({router}),
+            'custom': ({router}) => new CustomLayout({router}),
+        },
+        onNotFound: 'default',
+        onPending: 'default',
+    })
 })
 display(compositeView)
 
