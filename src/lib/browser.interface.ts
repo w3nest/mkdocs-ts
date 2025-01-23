@@ -125,14 +125,55 @@ export function formatUrl(urlTarget: UrlTarget) {
 export class MockBrowser implements BrowserInterface {
     public readonly router: Router
     public readonly basePath: string
-    public readonly history: UrlTarget[] = []
+    public history: UrlTarget[] = []
+    public currentIndex = -1
+    public readonly hasNext$ = new BehaviorSubject(false)
+    public readonly hasPrev$ = new BehaviorSubject(false)
     constructor(params: { router: Router; basePath: string }) {
         Object.assign(this, params)
     }
     pushState(data: { target: UrlTarget }): void {
-        this.history.push(data.target)
+        if (
+            JSON.stringify(this.history[this.currentIndex]) ===
+            JSON.stringify(data.target)
+        ) {
+            this.updateState()
+            return
+        }
+        if (this.currentIndex === this.history.length - 1) {
+            this.history.push(data.target)
+            this.currentIndex++
+        } else {
+            this.currentIndex++
+            this.history[this.currentIndex] = data.target
+            this.history = this.history.slice(0, this.currentIndex + 1)
+        }
+        this.updateState()
+    }
+    private updateState() {
+        this.hasPrev$.next(this.currentIndex !== 0)
+        this.hasNext$.next(this.currentIndex < this.history.length - 1)
     }
 
+    /**
+     * Navigate back in browser's history.
+     */
+    async prev() {
+        if (this.currentIndex > 0) {
+            this.currentIndex--
+            await this.router.navigateTo(this.history[this.currentIndex])
+        }
+    }
+    /**
+     * Navigate forth in browser's history.
+     */
+    async next() {
+        if (this.currentIndex < this.history.length - 1) {
+            this.currentIndex++
+            const path = this.history[this.currentIndex]
+            await this.router.navigateTo(path)
+        }
+    }
     parseUrl(): UrlTarget {
         return this.history.length > 0
             ? this.history.slice(-1)[0]

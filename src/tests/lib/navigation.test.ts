@@ -4,6 +4,7 @@ import {
     Router,
     isResolvedTarget,
     LazyRoutesReturn,
+    MockBrowser,
 } from '../../lib'
 import { DefaultLayout } from '../../lib'
 import { filter, firstValueFrom, map, Subject } from 'rxjs'
@@ -135,7 +136,11 @@ describe('Navigation static', () => {
 describe('Navigation dynamic', () => {
     let router: Router
     beforeAll(() => {
-        router = new Router({ navigation })
+        router = new Router({
+            navigation,
+            browserClient: ({ router }) =>
+                new MockBrowser({ router, basePath: '/' }),
+        })
     })
     it.each([
         ['/', 'Home'],
@@ -156,6 +161,61 @@ describe('Navigation dynamic', () => {
             )
         }
         expect(unresolvedTarget.reason).toBe('NotFound')
+    })
+
+    it('Navigates back and forth', async () => {
+        const browser = router.browserClient as MockBrowser
+        const initialLoadPath = await firstValueFrom(router.path$)
+        expect(initialLoadPath).toBe('/')
+        expect(browser.history).toHaveLength(1)
+        expect(browser.history[0].path).toBe('/')
+        expect(browser.hasPrev$.value).toBeFalsy()
+        expect(browser.hasNext$.value).toBeFalsy()
+        await router.navigateTo({ path: '/dynamic' })
+        await router.navigateTo({ path: '/dynamic/foo' })
+        await router.navigateTo({ path: '/dynamic/bar' })
+        await router.navigateTo({ path: '/dynamic/bar/baz' })
+        expect(browser.history).toHaveLength(5)
+        expect(browser.history.map((t) => t.path)).toEqual([
+            '/',
+            '/dynamic',
+            '/dynamic/foo',
+            '/dynamic/bar',
+            '/dynamic/bar/baz',
+        ])
+        expect(browser.hasPrev$.value).toBeTruthy()
+        expect(browser.hasNext$.value).toBeFalsy()
+        const histo0 = browser.history
+        expect(browser.currentIndex).toBe(4)
+        await browser.prev()
+        await browser.prev()
+        await browser.prev()
+        let path = await firstValueFrom(router.path$)
+
+        expect(path).toBe('/dynamic')
+        expect(browser.history).toBe(histo0)
+        expect(browser.currentIndex).toBe(1)
+        expect(browser.hasPrev$.value).toBeTruthy()
+        expect(browser.hasNext$.value).toBeTruthy()
+
+        await browser.next()
+        path = await firstValueFrom(router.path$)
+        expect(path).toBe('/dynamic/foo')
+        expect(browser.history).toBe(histo0)
+        expect(browser.currentIndex).toBe(2)
+        expect(browser.hasPrev$.value).toBeTruthy()
+        expect(browser.hasNext$.value).toBeTruthy()
+
+        await router.navigateTo({ path: '/dynamic/bar/baz' })
+        expect(browser.history.map((t) => t.path)).toEqual([
+            '/',
+            '/dynamic',
+            '/dynamic/foo',
+            '/dynamic/bar/baz',
+        ])
+        expect(browser.currentIndex).toBe(3)
+        expect(browser.hasPrev$.value).toBeTruthy()
+        expect(browser.hasNext$.value).toBeFalsy()
     })
 })
 
