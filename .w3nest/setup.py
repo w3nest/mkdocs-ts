@@ -31,6 +31,7 @@ externals_deps = {
 }
 in_bundle_deps = {}
 dev_deps = {
+    "conditional-type-checks": "^1.0.6",
     "sass": "^1.69.7",
 }
 
