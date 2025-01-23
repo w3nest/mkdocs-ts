@@ -113,6 +113,106 @@ function foo(){
     })
 })
 
+describe('esprima patches', () => {
+    it('tests with `.?`', async () => {
+        const displayFactory: DisplayFactory = []
+        const invalidated$ = new Subject()
+        const scope = await executeJs({
+            src: `
+const x = { y: 2}
+let y = x?.y 
+`,
+            scope: { const: {}, let: {}, python: {} },
+            output$: new Subject<Output>(),
+            displayFactory,
+            load: () => Promise.resolve({}),
+            invalidated$,
+        })
+        expect(scope).toEqual({
+            const: { x: { y: 2 } },
+            let: { y: 2 },
+            python: {},
+        })
+    })
+    it('tests with `?.[]`', async () => {
+        const displayFactory: DisplayFactory = []
+        const invalidated$ = new Subject()
+        const scope = await executeJs({
+            src: `
+const x = [1]
+let y = x?.[0] 
+`,
+            scope: { const: {}, let: {}, python: {} },
+            output$: new Subject<Output>(),
+            displayFactory,
+            load: () => Promise.resolve({}),
+            invalidated$,
+        })
+        expect(scope).toEqual({
+            const: { x: [1] },
+            let: { y: 1 },
+            python: {},
+        })
+    })
+    it('tests with `...` w/ array', async () => {
+        const displayFactory: DisplayFactory = []
+        const invalidated$ = new Subject()
+        const scope = await executeJs({
+            src: `
+const x = [1]
+let y = [...x]
+`,
+            scope: { const: {}, let: {}, python: {} },
+            output$: new Subject<Output>(),
+            displayFactory,
+            load: () => Promise.resolve({}),
+            invalidated$,
+        })
+        expect(scope).toEqual({
+            const: { x: [1] },
+            let: { y: [1] },
+            python: {},
+        })
+    })
+    it('tests with `...` w/ object', async () => {
+        const displayFactory: DisplayFactory = []
+        const invalidated$ = new Subject()
+        const scope = await executeJs({
+            src: `
+const x = { foo : 1 }
+let y = { ...x }
+`,
+            scope: { const: {}, let: {}, python: {} },
+            output$: new Subject<Output>(),
+            displayFactory,
+            load: () => Promise.resolve({}),
+            invalidated$,
+        })
+        expect(scope).toEqual({
+            const: { x: { foo: 1 } },
+            let: { y: { foo: 1 } },
+            python: {},
+        })
+    })
+    it('tests with `...` in function', async () => {
+        const displayFactory: DisplayFactory = []
+        const invalidated$ = new Subject()
+        const scope = await executeJs({
+            src: `
+const x = [ 1, 2, 3]
+const fct = (v0, v1, v2) => [v0, v1, v2]
+const z = fct(...x)
+`,
+            scope: { const: {}, let: {}, python: {} },
+            output$: new Subject<Output>(),
+            displayFactory,
+            load: () => Promise.resolve({}),
+            invalidated$,
+        })
+        expect(scope.const.z).toEqual([1, 2, 3])
+    })
+})
+
 describe('Errors encountered (& fixed)', () => {
     it('tests with last line commented', async () => {
         const displayFactory: DisplayFactory = []
