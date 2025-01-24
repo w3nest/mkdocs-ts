@@ -166,7 +166,12 @@ export class NotebookSection implements VirtualDOM<'div'> {
         this.children = [
             child$({
                 source$,
+                untilFirst: {
+                    tag: 'i',
+                    class: 'fas fa-spinner fa-spin',
+                },
                 vdomMap: (src) => {
+                    const start = Date.now()
                     const vdom = Dependencies.parseMd({
                         src,
                         router: this.router,
@@ -178,23 +183,37 @@ export class NotebookSection implements VirtualDOM<'div'> {
                             }),
                         },
                     })
-                    if (params.options?.runAtStart) {
-                        const cellId = this.state.ids.slice(-1)[0]
-                        this.state.execute(cellId).then(
-                            () => {
-                                /*No OP*/
-                            },
-                            () => {
-                                throw Error(`Failed to execute cell ${cellId}`)
-                            },
-                        )
-                    }
+                    const end = Date.now()
+                    context.info(
+                        `Markdown parsed in: ${String(end - start)} ms`,
+                    )
                     return {
                         ...vdom,
                         connectedCallback: (elem: RxHTMLElement<'div'>) => {
+                            context.info(
+                                `View added in viewport (took ${String(Date.now() - end)} ms)`,
+                            )
                             vdom.connectedCallback?.(elem)
                             if (params.onDisplayed) {
                                 params.onDisplayed(elem)
+                            }
+
+                            if (params.options?.runAtStart) {
+                                const cellId = this.state.ids.slice(-1)[0]
+                                const start = Date.now()
+                                this.state.execute(cellId).then(
+                                    () => {
+                                        const end = Date.now()
+                                        context.info(
+                                            `Notebook execution time: ${String(end - start)} ms`,
+                                        )
+                                    },
+                                    () => {
+                                        throw Error(
+                                            `Failed to execute cell ${cellId}`,
+                                        )
+                                    },
+                                )
                             }
                         },
                     }
