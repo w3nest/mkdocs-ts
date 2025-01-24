@@ -220,6 +220,10 @@ export class NoContext implements ContextTrait {
  * Context class that provides structured logging and execution tracking.
  */
 export class Context implements ContextTrait {
+    /**
+     * If false, the decoration {@link Contextual} is disabled.
+     */
+    static Enabled = false
     public readonly reporters: ReporterTrait[]
     public readonly labels: Label[]
     public readonly threadName: string
@@ -315,6 +319,10 @@ export class Context implements ContextTrait {
  * This decorator ensures that the method receives a valid context
  * and executes within it, handling both synchronous and asynchronous methods.
  *
+ * <note level='warning' title='Important'>
+ * To disable the decorator globally, set {@link Context.Enabled} to `false`.
+ * </note>
+ *
  * @param key Optional function to generate a dynamic name for the context based on arguments.
  * @param labels Optional labels associated with the execution context.
  * @param async Specifies whether the method should be executed asynchronously.
@@ -340,6 +348,9 @@ export function Contextual({
         context: ClassMethodDecoratorContext,
     ) {
         const methodName = String(context.name)
+        if (!Context.Enabled) {
+            return originalMethod
+        }
         function replacementMethod(this, ...args) {
             const ctx = args[args.length - 1]
             if (!isContextTrait(ctx)) {
