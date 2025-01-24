@@ -8,6 +8,7 @@ import {
 import { Target, isResolvedTarget, Router } from '../router'
 import { parseMd, parseMdFromUrl, replaceLinks } from '../markdown'
 import {
+    distinctUntilChanged,
     filter,
     from,
     map,
@@ -16,9 +17,11 @@ import {
     ReplaySubject,
     switchMap,
     take,
+    tap,
 } from 'rxjs'
 import { setup } from '../../auto-generated'
 import { NavLayout } from './default-layout.view'
+import { ContextTrait, NoContext } from '../context'
 
 interface ContentTrait {
     layout: NavLayout
@@ -55,11 +58,16 @@ export class PageView implements VirtualDOM<'div'> {
     public readonly filter?: (target: Target) => boolean
     public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void
 
-    constructor(params: {
-        router: Router<NavLayout>
-        filter?: (target: Target) => boolean
-    }) {
+    constructor(
+        params: {
+            router: Router<NavLayout>
+            filter?: (target: Target) => boolean
+        },
+        ctx?: ContextTrait,
+    ) {
         Object.assign(this, params)
+        ctx = ctx ?? new NoContext()
+        const context = ctx.start('new PageView', ['PageView'])
         const filterFct = this.filter ?? (() => true)
         const maybeError$ = child$({
             source$: this.router.target$,
@@ -77,14 +85,27 @@ export class PageView implements VirtualDOM<'div'> {
             maybeError$,
             child$({
                 source$: this.router.target$.pipe(
+                    tap((t) => {
+                        context.info(`PageUpdate: Received target ${t.path}`, t)
+                        if ('reason' in t) {
+                            context.info(`PageUpdate: target is ${t.reason}`)
+                        }
+                    }),
                     filter((target) => {
                         return isResolvedTarget(target)
+                    }),
+                    distinctUntilChanged(
+                        (prev, current) => prev.path === current.path,
+                    ),
+                    tap((t) => {
+                        context.info(`PageUpdate: Distinct target ${t.path}`)
                     }),
                     filter(filterFct),
                     filter((target) => {
                         return hasContentViewTrait(target.node)
                     }),
                     switchMap((target: Target & { node: ContentTrait }) => {
+                        context.info('PageUpdate: New target to display')
                         const contentGetter =
                             typeof target.node.layout === 'function' ||
                             typeof target.node.layout === 'string'
@@ -140,6 +161,7 @@ export class PageView implements VirtualDOM<'div'> {
                 },
             }),
         ]
+        context.exit()
     }
 }
 
