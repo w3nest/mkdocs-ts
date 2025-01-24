@@ -135,11 +135,10 @@ describe('Navigation static', () => {
 
 describe('Navigation dynamic', () => {
     let router: Router
-    beforeAll(() => {
+    beforeEach(async () => {
         router = new Router({
             navigation,
-            browserClient: ({ router }) =>
-                new MockBrowser({ router, basePath: '/' }),
+            browserClient: ({ router }) => new MockBrowser({ router }),
         })
     })
     it.each([

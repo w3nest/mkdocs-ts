@@ -42,7 +42,10 @@ export class WebBrowser implements BrowserInterface {
                 | { target: UrlTarget }
                 | undefined
             if (state) {
-                this.router.fireNavigateTo(state.target)
+                this.router.fireNavigateTo({
+                    ...state.target,
+                    issuer: 'browser',
+                })
             } else {
                 this.router.fireNavigateTo({
                     path: '/',
@@ -51,6 +54,9 @@ export class WebBrowser implements BrowserInterface {
         }
     }
     pushState(data: { target: UrlTarget }): void {
+        if (data.target.issuer === 'browser') {
+            return
+        }
         const isIgnored = this.ignoredPaths$.value.find((ignored) =>
             data.target.path.startsWith(ignored),
         )
@@ -71,7 +77,7 @@ export class WebBrowser implements BrowserInterface {
     }
 
     parseUrl(): UrlTarget {
-        return parseUrl(window.location.search)
+        return { ...parseUrl(window.location.search), issuer: 'browser' }
     }
 }
 
@@ -124,15 +130,21 @@ export function formatUrl(urlTarget: UrlTarget) {
  */
 export class MockBrowser implements BrowserInterface {
     public readonly router: Router
-    public readonly basePath: string
+    public readonly initialPath: string = '/'
     public history: UrlTarget[] = []
     public currentIndex = -1
     public readonly hasNext$ = new BehaviorSubject(false)
     public readonly hasPrev$ = new BehaviorSubject(false)
-    constructor(params: { router: Router; basePath: string }) {
+    constructor(params: { router: Router; initialPath?: string }) {
         Object.assign(this, params)
+        this.history.push(this.parseUrl())
+        this.currentIndex = 0
     }
     pushState(data: { target: UrlTarget }): void {
+        if (data.target.issuer === 'browser') {
+            this.updateState()
+            return
+        }
         if (
             JSON.stringify(this.history[this.currentIndex]) ===
             JSON.stringify(data.target)
@@ -161,7 +173,10 @@ export class MockBrowser implements BrowserInterface {
     async prev() {
         if (this.currentIndex > 0) {
             this.currentIndex--
-            await this.router.navigateTo(this.history[this.currentIndex])
+            await this.router.navigateTo({
+                ...this.history[this.currentIndex],
+                issuer: 'browser',
+            })
         }
     }
     /**
@@ -170,13 +185,20 @@ export class MockBrowser implements BrowserInterface {
     async next() {
         if (this.currentIndex < this.history.length - 1) {
             this.currentIndex++
-            const path = this.history[this.currentIndex]
-            await this.router.navigateTo(path)
+            await this.router.navigateTo({
+                ...this.history[this.currentIndex],
+                issuer: 'browser',
+            })
         }
     }
     parseUrl(): UrlTarget {
-        return this.history.length > 0
-            ? this.history.slice(-1)[0]
-            : parseUrl('/')
+        const target =
+            this.history.length > 0
+                ? this.history.slice(-1)[0]
+                : parseUrl(this.initialPath)
+        return {
+            ...target,
+            issuer: 'browser',
+        }
     }
 }

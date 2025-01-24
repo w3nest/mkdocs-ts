@@ -249,7 +249,7 @@ export class NavHeaderView implements VirtualDOM<'a'> {
         this.href = `${router.basePath}?nav=` + node.href
         this.onclick = (e) => {
             e.preventDefault()
-            router.fireNavigateTo({ path: node.href })
+            router.fireNavigateTo({ path: node.href, issuer: 'navigation' })
         }
     }
 }

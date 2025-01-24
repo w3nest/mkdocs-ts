@@ -10,6 +10,7 @@ import { from } from 'rxjs'
 import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
 import { AnyView } from './navigation.node'
+import { parseUrl } from './browser.interface'
 
 /**
  * Type definition for custom view generators.
@@ -548,7 +549,8 @@ export function replaceLinks({
             link.href = `${router.basePath}?${path}`
             link.onclick = (e: MouseEvent) => {
                 e.preventDefault()
-                router.fireNavigateTo(path)
+                const target = parseUrl(path)
+                router.fireNavigateTo({ ...target, issuer: 'link' })
             }
             if (fromMarkdown && link.title) {
                 // When the anchor is generated from markdown, the title is used to append classes to the generated

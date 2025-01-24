@@ -46,6 +46,15 @@ export interface UrlTarget {
      * Additional URL parameters
      */
     parameters?: Record<string, string>
+
+    /**
+     * Issuer of the URL target.
+     *
+     * *  `browser` : when using `next` or `prev` in browser's navigation bar.
+     * *  `navigation` : when using the navigation panel.
+     * *  `link` : when clicking on a link.
+     */
+    issuer?: 'browser' | 'navigation' | 'link' | 'scroll'
 }
 
 /**
@@ -409,7 +418,11 @@ export class Router<TLayout = unknown, THeader = unknown> {
             return
         }
         this.browserClient.pushState({
-            target: { ...this.parseUrl(), sectionId: div.id },
+            target: {
+                ...this.parseUrl(),
+                sectionId: div.id,
+                issuer: 'scroll',
+            },
         })
         setTimeout(() => {
             scrollableElement.scrollTo({
