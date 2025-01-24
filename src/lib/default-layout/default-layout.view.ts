@@ -574,7 +574,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
         })
         const flexGrow = params.type === 'favorites' ? 0 : 1
         const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} d-flex flex-column`
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} d-flex flex-column overflow-auto`
 
         this.children = [this.content]
     }
