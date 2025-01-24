@@ -15,11 +15,7 @@
  *
  * ## Markdown
  *
- * The module includes Markdown processing utilities:
- *
- * - Use {@link parseMd} when the source is available as a `string`.
- *
- * - Use {@link fetchMd} when the source is available as a URL.
+ * The module includes Markdown processing utilities through the {@link parseMd} and {@link parseMdFromUrl} functions.
  *
  * Various options are available, including support for defining custom views.
  *

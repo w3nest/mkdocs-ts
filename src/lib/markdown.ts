@@ -29,47 +29,113 @@ export type ViewGenerator = (
 ) => AnyView
 
 /**
- * Options for parsing Markdown content.
+ * Configuration options for parsing Markdown content, using *e.g.* {@link parseMd}.
  */
 export interface MdParsingOptions {
     /**
-     * Placeholders to account for. A form of preprocessing that replace any occurrences of the keys
-     * in the source by their corresponding values.
+     * Defines placeholders for preprocessing. Any occurrence of a key in the source
+     * will be replaced with its corresponding value.
      */
     placeholders?: Record<string, string>
     /**
-     * Preprocessing step. This callback is called to transform the source before parsing is executed.
-     * @param text original text
-     * @return transformed text
+     * Preprocessing callback to transform the source before parsing.
+     * @param text The original Markdown content.
+     * @returns The transformed content.
      */
     preprocessing?: (text: string) => string
     /**
-     *  Custom views generators corresponding to HTMLElement referenced in the Markdown source.
+     * Custom view generators for specific HTML elements referenced in the Markdown source.
+     * These allow dynamically replacing custom DOM elements with JavaScript-generated content.
+     *
+     * **Example**:
+     *
+     * <js-cell>
+     * const { rxjs } = await webpm.install({esm:[
+     *     'mkdocs-ts#{{mkdocs-version}} as MkDocs',
+     *     'rxjs#^7.5.6 as rxjs']
+     * })
+     * const clockView = (elem) => {
+     *     // elem is the corresponding DOM element included in the MD source.
+     *     // use `elem.getAttribute` or `elem.textContent` to retrieve inputs.
+     *     const period = parseInt(elem.getAttribute('period') ?? '1000')
+     *     return {
+     *         tag: 'div',
+     *         innerText: {
+     *             source$: rxjs.timer(period, 0),
+     *             vdomMap: () => new Date().toLocaleTimeString()
+     *         }
+     *     }
+     * }
+     * const parsed = MkDocs.parseMd({
+     *     src:`
+     * **The custom view**:
+     * <clock period='1000'></clock>
+     * `,
+     *     views: {
+     *         'clock': clockView
+     *     }
+     * })
+     * display(parsed)
+     * </js-cell>
+     *
+     * <note level="hint">
+     *  Custom views specified here are in addition to globally registered ones in {@link GlobalMarkdownViews}.
+     * </note>
      */
     views?: Record<string, ViewGenerator>
 
     /**
-     * Whether to parse Latex equations.
-     * If `true` the MathJax module needs to be loaded by the consumer before parsing occurs.
+     * Enables LaTeX equation parsing. Requires `MathJax` to be loaded before parsing.
      *
-     * Using the webpm client:
-     * ````js
-     * import { install } from '@w3nest/webpm-client'
+     * **Example**
      *
-     * await install({
-     *     modules: ['mathjax#^3.1.4'],
+     * <js-cell>
+     * await webpm.install({esm: [
+     *     'mkdocs-ts#{{mkdocs-version}} as MkDocs',
+     *     'mathjax#^3.1.4'
+     * ]})
+     * const parsed = MkDocs.parseMd({
+     *     src:`
+     * This is a latex equation:
+     * $$
+     * E = mc^2
+     * $$
+     * `,
+     *     latex: true
      * })
-     * ```
+     * display(parsed)
+     * </js-cell>
      *
-     * Within the markdown page, equation blocks are written between `$$` and inline elements between
-     * `\\(` and `\\)`
+     * <note level='warning' text='Delimiters'>
+     * `MathJax` is configured by default using
+     * - Block equations: `$$ ... $$`
+     * - Inline equations: `\( ... \)`
+     *
+     *  Since Markdown escape backslashes, inline equations should be written as `\\(` and `\\)`.
+     *  If Markdown is inside JavaScript (which also escapes backslashes), it becomes `\\\\(` and `\\\\)`.
+     *
+     *  To use `$` for inline equations instead, configure MathJax **before** loading it:
+     *
+     * <code-snippet language='javascript'>
+     * window.MathJax = {
+     *     tex: { inlineMath: [ ['$', '$'] ],
+     *     },
+     * }
+     * </code-snippet>
+     *
+     * More details
+     * <a target='_blank' href='https://docs.mathjax.org/en/latest/input/tex/delimiters.html'>here </a>.
+     *
+     * </note>
      */
     latex?: boolean
 
     /**
-     * If true, call {@link Router.emitHtmlUpdated} when the markdown is rendered.
+     * Callback triggered when the view has been added to the DOM.
+     *
+     * @param elem The rendered element.
      */
-    emitHtmlUpdated?: boolean
+    onRendered?: (elem: HTMLElement) => void
 }
 /**
  * Provides a collection of global Markdown views that can be referenced when using {@link parseMd}.
@@ -111,12 +177,7 @@ export class GlobalMarkdownViews {
 export type FetchMdInput = {
     url: string
 } & MdParsingOptions
-/**
- * Fetch & parse a Markdown file from specified with a URL.
- *
- * @param params see {@link MdParsingOptions} for additional options.
- * @param params.url The URL of the file.
- */
+
 export function fetchMd(
     params: FetchMdInput,
 ): ({ router }: { router: Router }) => Promise<VirtualDOM<'div'>> {
@@ -139,32 +200,31 @@ export function fromMarkdown(p: FetchMdInput) {
 }
 
 /**
+ * Just like {@link parseMd}, but the source is first fetched using an HTTP get request using the provided URL.
+ *
+ * @param params The {@link MdParsingOptions} completed by:
+ * @param params.url The URL from which the source content is fetched.
+ * @param params.router Optional router instance,  to enable navigation related feature.
+ */
+export async function parseMdFromUrl(
+    params: {
+        url: string
+        router?: Router
+    } & MdParsingOptions,
+) {
+    const resp = await fetch(params.url)
+    return parseMd({
+        src: await resp.text(),
+        router: params.router,
+        ...params,
+    })
+}
+/**
  * Parse Markdown source to generate corresponding view.
  *
- * Note that custom views provided using the attribute `views ̀ comes in addition to those registered globally in
- * {@link GlobalMarkdownViews}.
- *
- * **Notes on custom views**
- *
- * Custom views allow to replace in Markdown sources some elements by dynamically generated ones in javascript.
- *
- *
- * For instance, a custom view `foo-view` can be referenced in the Markdown:
- *  ```
- *  # An example of custom-view
- *
- *  This is a custom view:
- *  <foo-view barAttr='bar' bazAttr="baz">some content</foo-view>
- *  ```
- *  When parsed, it will be replaced by its corresponding generated view if `foo-view` is included in this
- *  `views` mapping provided to this function. The associated generator can access attributes (here `barAttr` &
- *  `bazAttr`) as well as the original text content (`some content`).
- *
- *  The generator functions are called in the order of their corresponding elements in the Markdown source.
- *
- * @param args see {@link MdParsingOptions} for additional options.
+ * @param args  The {@link MdParsingOptions} completed by:
  * @param args.src Markdown source.
- * @param args.router The router instance.
+ * @param args.router Optional router instance, to enable navigation related feature.
  * @returns A virtual DOM encapsulating the parsed Markdown.
  */
 export function parseMd({
@@ -173,12 +233,11 @@ export function parseMd({
     views,
     placeholders,
     preprocessing,
-    emitHtmlUpdated,
     latex,
+    onRendered,
 }: {
     src: string
     router?: Router
-    navigations?: Record<string, (e: HTMLAnchorElement) => void>
 } & MdParsingOptions): VirtualDOM<'div'> {
     src = preprocessing?.(src) ?? src
     if (placeholders && Object.keys(placeholders).length > 0) {
@@ -223,7 +282,7 @@ export function parseMd({
         placeholders,
         latex,
         views,
-        emitHtmlUpdated,
+        onRendered,
     }
     const viewsTagUpperCase: Record<
         Uppercase<string>,
@@ -259,8 +318,8 @@ export function parseMd({
             if (router) {
                 replaceLinks({ router, elem, fromMarkdown: true })
             }
-            if (emitHtmlUpdated && router) {
-                router.emitHtmlUpdated()
+            if (onRendered) {
+                onRendered(elem)
             }
         },
     }
