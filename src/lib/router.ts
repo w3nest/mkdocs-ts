@@ -217,6 +217,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
     private navParser = new NavParser()
     private scrollTo$ = new Subject<string | HTMLElement | undefined>()
 
+    private navNodeCache: Record<string, Navigation<TLayout, THeader>> = {}
     /**
      * Initialize a router instance.
      *
@@ -279,12 +280,14 @@ export class Router<TLayout = unknown, THeader = unknown> {
             })
         fireAndForget(this.navigateTo(this.parseUrl(), context))
 
-        this.explorerState.directUpdates$
+        const removedNodes$ = this.explorerState.directUpdates$.pipe(
+            map((updates) =>
+                updates.map((update) => update.removedNodes).flat(),
+            ),
+            filter((nodes) => nodes.length > 0),
+        )
+        removedNodes$
             .pipe(
-                map((updates) =>
-                    updates.map((update) => update.removedNodes).flat(),
-                ),
-                filter((nodes) => nodes.length > 0),
                 withLatestFrom(this.target$),
                 filter(([nodes, target]) => {
                     return (
@@ -304,6 +307,14 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 : this.scrollTo$
         scroll$.subscribe((target) => {
             this._scrollTo(target)
+        })
+
+        removedNodes$.subscribe(() => {
+            this.navNodeCache = {}
+        })
+        this.target$.pipe(filter((t) => isResolvedTarget(t))).subscribe((t) => {
+            this.navNodeCache[t.path] = t.node
+            this.scrollTo(t.sectionId)
         })
         context.exit()
     }
@@ -466,7 +477,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * - If the node does not exist, it returns `'not-found'`.
      * - If the node is still unresolved, it waits and retries periodically.
      *
-     * @param path The target path for which to retrieve the navigation node.
+     * @param target The target.
      * @param ctx Execution context used for logging and tracing.
      * @returns A `Promise` resolving to the navigation node, or `'not-found'` if the node does not exist.
      */
@@ -474,14 +485,21 @@ export class Router<TLayout = unknown, THeader = unknown> {
         key: ({ path }: { path: string }) => path,
     })
     async getNav(
-        {
-            path,
-        }: {
-            path: string
-        },
+        target: UrlTarget,
         ctx?: ContextTrait,
     ): Promise<Navigation<TLayout, THeader> | 'not-found'> {
         ctx = this.ctx(ctx)
+        const { path, parameters } = target
+        if (
+            path in this.navNodeCache &&
+            Object.keys(parameters ?? {}).length === 0
+        ) {
+            ctx.info(
+                `No query parameters & node in cache => return it`,
+                this.navNodeCache[path],
+            )
+            return this.navNodeCache[path]
+        }
         const nav = timer(0, this.retryNavPeriod).pipe(
             switchMap((i) => {
                 ctx.info(`Attempt 'getNav' #${String(i)}`)
