@@ -24,6 +24,7 @@ import { FavoritesView } from './favorites.view'
 import { ExpandableNavColumn, ExpandableTocColumn } from './small-screen.view'
 import { TocWrapperView } from './toc.view'
 import { AnyView, Resolvable } from '../navigation.node'
+import { ContextTrait, NoContext } from '../context'
 
 /**
  * Represents the display mode for UI components, controlling their visibility and behavior.
@@ -314,12 +315,15 @@ export class Layout implements VirtualDOM<'div'> {
 
     public readonly height$ = new ReplaySubject<number>(1)
 
+    private readonly context?: ContextTrait
     /**
      * Initializes a new instance.
      *
      * @param params See {@link DefaultLayoutParams}.
      */
-    constructor(params: DefaultLayoutParams) {
+    constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {
+        this.context = ctx
+        const context = this.ctx().start('new Layout', ['View'])
         const {
             router,
             page,
@@ -359,7 +363,7 @@ export class Layout implements VirtualDOM<'div'> {
 
         const contentView = page
             ? page(viewInputs)
-            : new PageView({ router: router })
+            : new PageView({ router: router }, context)
         const pageView: AnyVirtualDOM = {
             tag: 'div' as const,
             class: `flex-grow-1 px-3`,
@@ -479,6 +483,14 @@ export class Layout implements VirtualDOM<'div'> {
                 },
             },
         ]
+        context.exit()
+    }
+
+    ctx(ctx?: ContextTrait) {
+        if (ctx) {
+            return ctx
+        }
+        return this.context ?? new NoContext()
     }
 
     private plugResizer(thisElement: HTMLElement) {

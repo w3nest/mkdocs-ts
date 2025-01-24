@@ -340,7 +340,10 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param onError Callback called if errors happen.
      * @param ctx Execution context used for logging and tracing.
      */
-    @Contextual()
+    @Contextual({
+        key: (target: UrlTarget | string) =>
+            typeof target === 'string' ? target : target.path,
+    })
     fireNavigateTo(
         target: UrlTarget | string,
         onError?: (err: unknown) => void,
@@ -429,6 +432,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
     }
 
     private _scrollTo(target?: string | HTMLElement) {
+        const ctx = this.ctx()
         if (
             !this.scrollableElement ||
             !('scrollTo' in this.scrollableElement)
@@ -437,6 +441,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         }
         const scrollableElement = this.scrollableElement
         if (!target) {
+            ctx.info('No target specified, scroll to top.')
             scrollableElement.scrollTo({
                 top: 0,
                 left: 0,
@@ -450,7 +455,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 : findElementById(scrollableElement, target)
 
         if (!div) {
-            console.warn(`Can not scroll to element`, target)
+            ctx.warning(`Can not scroll to element`, target)
             return
         }
         this.browserClient.pushState({
@@ -461,6 +466,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             },
         })
         setTimeout(() => {
+            ctx.info('Target found, scroll to it.')
             scrollableElement.scrollTo({
                 top: div.offsetTop - br.top - 1,
                 left: 0,

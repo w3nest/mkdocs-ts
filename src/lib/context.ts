@@ -1,7 +1,14 @@
 /**
  * Labels that categorize log entries.
  */
-export type Label = 'Router' | 'Nav' | 'View' | 'Notebook' | 'Exec'
+export type Label =
+    | 'Router'
+    | 'CompanionRouter'
+    | 'Nav'
+    | 'View'
+    | 'PageView'
+    | 'Notebook'
+    | 'Exec'
 /**
  * Log levels indicating severity of an entry.
  */
