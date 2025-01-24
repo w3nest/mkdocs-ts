@@ -8,7 +8,7 @@ import {
 } from 'mkdocs-ts'
 
 const DebugMode = true
-
+Context.Enabled = DebugMode
 export const inMemReporter = new InMemoryReporter()
 const consoleReporter = new ConsoleReporter()
 const reporters = [consoleReporter, inMemReporter]

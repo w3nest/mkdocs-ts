@@ -33,8 +33,12 @@ export class ApiLink implements VirtualDOM<'a'> {
                 '@nav/api/MainModule/DefaultLayout.Layout.newLayout',
             fetchMd: '@nav/api/MainModule.fetchMd',
             parseMd: '@nav/api/MainModule.parseMd',
+            MdParsingOptions: '@nav/api/MainModule.MdParsingOptions',
+            ViewGenerator: '@nav/api/MainModule.ViewGenerator',
             replaceLinks: '@nav/api/MainModule.replaceLinks',
-            MdWidgets: '@nav/api/MainModule/MdWidgets.fake',
+            GlobalMarkdownViews: '@nav/api/MainModule.GlobalMarkdownViews',
+            MdWidgets: '@nav/api/MainModule/MdWidgets',
+            NoteView: '@nav/api/MainModule/MdWidgets.NoteView',
             CodeSnippetView: '@nav/api/MainModule/MdWidgets.CodeSnippetView',
             'DefaultLayout.PageView':
                 '@nav/api/MainModule/DefaultLayout.PageView',
@@ -58,6 +62,7 @@ export class ApiLink implements VirtualDOM<'a'> {
                 '@nav/api/MainModule/DefaultLayout.NavigationView.CssSelector',
             'DefaultLayout.FavoritesView.CssSelector':
                 '@nav/api/MainModule/DefaultLayout.FavoritesView.CssSelector',
+            JsCellView: '@nav/api/Notebook.JsCellView',
         }
 
         const classes = {
@@ -81,8 +86,12 @@ export class ApiLink implements VirtualDOM<'a'> {
             'DefaultLayout.Layout.new': 'mkapi-role-constructor',
             fetchMd: 'mkapi-role-function',
             parseMd: 'mkapi-role-function',
+            MdParsingOptions: 'mkapi-role-interface',
             replaceLinks: 'mkapi-role-function',
             MdWidgets: 'mkapi-role-module',
+            GlobalMarkdownViews: 'mkapi-role-class',
+            NoteView: 'mkapi-role-class',
+            ViewGenerator: 'mkapi-role-type-alias',
             CodeSnippetView: 'mkapi-role-class',
             'DefaultLayout.PageView': 'mkapi-role-class',
             'DefaultLayout.NavHeader': 'mkapi-role-interface',
@@ -95,6 +104,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             'DefaultLayout.NavHeaderView.CssSelector': 'mkapi-role-attribute',
             'DefaultLayout.NavigationView.CssSelector': 'mkapi-role-attribute',
             'DefaultLayout.FavoritesView.CssSelector': 'mkapi-role-attribute',
+            JsCellView: 'mkapi-role-class',
         }
         this.href = navs[target]
         this.children = [

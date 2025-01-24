@@ -71,8 +71,8 @@ However, in a standard project setup, {{mkdocs-ts}} is typically installed as a 
 Creating an application with {{mkdocs-ts}} centers around defining a  <api-link target="Navigation"></api-link> object.
 
 
-The navigation defined next use Markdown to create the page. Markdown is a core feature of {{mkdocs-ts}}, making
-it simple to use while offering powerful features.
+The navigation defined next use Markdown to create the page using the <api-link target="parseMd"></api-link> function.
+Markdown is a core feature of {{mkdocs-ts}}, making it simple to use while offering powerful features.
 For example, this very page comes from the following <ext-link target="tutorials.basics.md">Markdown file</ext-link>.
 
 The next expandable section defines the text content for the two pages involved in the navigation.
