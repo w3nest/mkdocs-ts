@@ -123,6 +123,16 @@ function fireAndForget(
         },
     )
 }
+
+/**
+ * Represents a redirection function as used in {@link Router.redirects}.
+ *
+ */
+export type Redirect = (
+    target: UrlTarget,
+    ctx: ContextTrait,
+) => Promise<UrlTarget | undefined>
+
 /**
  * Represents the router of the application.
  */
@@ -154,15 +164,18 @@ export class Router<TLayout = unknown, THeader = unknown> {
     /**
      * Handles navigation redirections.
      *
-     * This function is invoked whenever a specific path is requested for navigation.
+     * These functions are invoked whenever a specific path is requested for navigation.
      * It allows modifying the target path before the navigation occurs.
      *
-     * @param target - The requested path that the user intends to navigate to.
-     * @returns The modified path to navigate to, or the original path if no changes are needed.
+     * Functions are evaluated in reversed order, if one returns `undefined`, navigation is canceled.
+     *
+     * @param target - The requested target that the user intends to navigate to.
+     * @returns The modified target to navigate to, or the original path if no changes are needed.
      *          If `undefined` is returned, the navigation will be canceled.
      */
-    public readonly redirects: (target: string) => Promise<string | undefined> =
-        (target) => Promise.resolve(target)
+    public readonly redirects: Redirect[] = [
+        (target) => Promise.resolve(target),
+    ]
 
     /**
      * Observable that emit the current page target.
@@ -221,7 +234,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             navigation: Navigation<TLayout, THeader>
             basePath?: string
             retryNavPeriod?: number
-            redirects?: (target: string) => Promise<string | undefined>
+            redirects?: Redirect[]
             browserClient?: (p: {
                 router: Router
                 basePath: string
@@ -339,16 +352,28 @@ export class Router<TLayout = unknown, THeader = unknown> {
     })
     async navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {
         ctx = this.ctx(ctx)
-        target = typeof target === 'string' ? parseUrl(target) : target
+        const originalTarget =
+            typeof target === 'string' ? parseUrl(target) : target
 
-        const path = await this.redirects(sanitizeNavPath(target.path))
-        if (!path) {
+        const redirectTarget = await this.redirects
+            .reverse()
+            .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {
+                const from = await acc
+                return from
+                    ? await redirect(from, ctx)
+                    : Promise.resolve(undefined)
+            }, Promise.resolve(originalTarget))
+
+        if (!redirectTarget) {
+            ctx.info('Redirect returned `undefined`: abord navigation')
             return
         }
+        target = redirectTarget
+        const path = target.path
         const sectionId = target.sectionId
 
-        ctx.info('Schedule async nav node retrieval')
-        const resolved = await this.getNav({ path }, ctx)
+        ctx.info('Schedule async nav node retrieval', target)
+        const resolved = await this.getNav(target, ctx)
         if (resolved === 'not-found') {
             this.target$.next({
                 path,
