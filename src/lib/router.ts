@@ -467,11 +467,21 @@ export class Router<TLayout = unknown, THeader = unknown> {
         })
         setTimeout(() => {
             ctx.info('Target found, scroll to it.')
+            const offset = div.offsetTop
             scrollableElement.scrollTo({
                 top: div.offsetTop - br.top - 1,
                 left: 0,
                 behavior: 'smooth',
             })
+            setTimeout(() => {
+                if (div.offsetTop - offset !== 0) {
+                    scrollableElement.scrollTo({
+                        top: div.offsetTop - br.top - 1,
+                        left: 0,
+                        behavior: 'smooth',
+                    })
+                }
+            }, this.scrollingDebounceTime)
         }, 0)
     }
 
