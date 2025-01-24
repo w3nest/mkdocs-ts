@@ -200,14 +200,16 @@ export type NavLayoutView = Resolvable<AnyView> | ChildLike
 
 /**
  * Defines the main content view of the page.
+ * If a `string` is provided, its is interpreted as a URL from which a GET request is issued to retrieve some markdown
+ * source that is then parsed using the {@link parseMd} function.
  *
  * @param params Parameters for generating the content view:
  * @param params.router The active Router instance.
  * @returns The content view.
  */
-export type ClientContentView = (params: {
-    router: Router<NavLayout>
-}) => NavLayoutView
+export type ClientContentView =
+    | ((params: { router: Router<NavLayout> }) => NavLayoutView)
+    | string
 
 /**
  * Defines the view for the table of contents (TOC) within the page.

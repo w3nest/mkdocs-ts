@@ -6,7 +6,7 @@ import {
     AnyVirtualDOM,
 } from 'rx-vdom'
 import { Target, isResolvedTarget, Router } from '../router'
-import { parseMd, replaceLinks } from '../markdown'
+import { parseMd, parseMdFromUrl, replaceLinks } from '../markdown'
 import {
     filter,
     from,
@@ -25,11 +25,13 @@ interface ContentTrait {
 }
 function hasContentViewTrait(node: unknown): node is ContentTrait {
     const layout = (node as ContentTrait).layout
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!layout) {
         return false
     }
     if (typeof layout === 'function') {
+        return true
+    }
+    if (typeof layout === 'string') {
         return true
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -84,12 +86,20 @@ export class PageView implements VirtualDOM<'div'> {
                     }),
                     switchMap((target: Target & { node: ContentTrait }) => {
                         const contentGetter =
-                            typeof target.node.layout === 'function'
+                            typeof target.node.layout === 'function' ||
+                            typeof target.node.layout === 'string'
                                 ? target.node.layout
                                 : target.node.layout.content
-                        const html = contentGetter({
-                            router: this.router,
-                        })
+
+                        const html =
+                            typeof contentGetter === 'string'
+                                ? parseMdFromUrl({
+                                      url: contentGetter,
+                                      router: this.router,
+                                  })
+                                : contentGetter({
+                                      router: this.router,
+                                  })
                         if (html instanceof Promise) {
                             return from(html).pipe(
                                 map((html) => ({ html, ...target })),

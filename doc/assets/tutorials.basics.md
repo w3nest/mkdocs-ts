@@ -163,6 +163,8 @@ for rendering. In the current case, showcasing the default layout, they are defi
 <api-link target="DefaultLayout.NavLayout"></api-link> and 
 <api-link target="DefaultLayout.NavHeader"></api-link> 
 respectively.
+In particular, it is possible to provide a `string` to the `layout` attribute: in this case it is interpreted as a 
+URL pointing to markdown source that is fetched and parsed.
 
 <note level="info" expandable="true" label="Asynchronous navigation">
 
