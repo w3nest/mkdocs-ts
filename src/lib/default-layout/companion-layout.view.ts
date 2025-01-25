@@ -1,4 +1,11 @@
-import { attr$, child$, ChildrenLike, VirtualDOM, RxHTMLElement } from 'rx-vdom'
+import {
+    attr$,
+    child$,
+    ChildrenLike,
+    VirtualDOM,
+    RxHTMLElement,
+    EmptyDiv,
+} from 'rx-vdom'
 import { Router, UrlTarget } from '../router'
 import {
     BehaviorSubject,
@@ -9,11 +16,19 @@ import {
     take,
     firstValueFrom,
 } from 'rxjs'
-import { Layout, DefaultLayoutParams } from './default-layout.view'
-import { PageView } from './page.view'
+import {
+    Layout,
+    DefaultLayoutParams,
+    NavLayout,
+    DisplayMode,
+} from './default-layout.view'
+import { PageView, WrapperPageView } from './page.view'
 import { MockBrowser } from '../browser.interface'
 import { NavActionView } from './nav-header.view'
 import { ContextTrait, NoContext } from '../context'
+import { NavHeader } from './navigation.view'
+import { TocWrapperView } from './toc.view'
+import { ExpandableTocColumn } from './small-screen.view'
 
 /**
  * Parameters for constructing {@link LayoutWithCompanion} layout.
@@ -61,8 +76,9 @@ export type LayoutWithCompanionParams = DefaultLayoutParams<{
  *
  */
 export class LayoutWithCompanion implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'mkdocs-LayoutWithCompanion'
     public readonly tag = 'div'
-    public readonly class = 'mkdocs-LayoutWithCompanion w-100 h-100 d-flex'
+    public readonly class = `${LayoutWithCompanion.CssSelector} w-100 h-100 d-flex`
     public readonly children: ChildrenLike
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
 
@@ -80,14 +96,6 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
         this.companionNodes$ = params.companionNodes$
         const context = this.ctx().start('new LayoutWithCompanion', ['View'])
 
-        const isCompanionPath = (path: string) => {
-            return (
-                this.companionNodes$.value.find((companionPath) =>
-                    path.startsWith(companionPath),
-                ) !== undefined
-            )
-        }
-
         const mainView = new Layout({
             ...params,
             page: ({ router }) =>
@@ -98,61 +106,14 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                     context,
                 ),
         })
-        context.info('Create Router')
-        const redirectMainToCompanion = async (
-            target: UrlTarget,
-            ctx: ContextTrait,
-        ): Promise<UrlTarget | undefined> => {
-            if (isCompanionPath(target.path)) {
-                return ctx.executeAsync(
-                    `RedirectToCompanion(${target.path})`,
-                    async (innerCtx) => {
-                        innerCtx.info(
-                            `Caught companion path, forward navigation to companion router at ${target.path}`,
-                        )
-                        await companionRouter.navigateTo(target, innerCtx)
-                        return Promise.resolve(undefined)
-                    },
-                    ['CompanionRouter'],
-                )
-            }
-            return Promise.resolve(target)
-        }
-        params.router.redirects.push(redirectMainToCompanion)
-
-        const redirectCompanionToMain = async (
-            target: UrlTarget,
-            ctx: ContextTrait,
-        ) => {
-            const prefixes = await firstValueFrom(this.companionNodes$)
-            if (prefixes.length === 0) {
-                ctx.info(
-                    'RedirectToMain: No companion nodes, cancel companion navigation',
-                )
-                return Promise.resolve(undefined)
-            }
-            if (!isCompanionPath(target.path)) {
-                return ctx.executeAsync(
-                    `RedirectToMain(${target.path})`,
-                    async (innerCtx) => {
-                        innerCtx.info(
-                            `Caught main app. path, forward navigation to main router at ${target.path}`,
-                        )
-                        await params.router.navigateTo(target, innerCtx)
-                        return Promise.resolve(undefined)
-                    },
-                    ['Router'],
-                )
-            }
-            return Promise.resolve(target)
-        }
-        const companionRouter = new Router(
-            {
-                navigation: params.router.navigation,
-                browserClient: (p) => new MockBrowser(p),
-                redirects: [redirectCompanionToMain],
-            },
-            context,
+        const companionRouter = context.execute('setupRouters', (ctx) =>
+            setupRouters(
+                {
+                    router: params.router,
+                    companionNodes$: this.companionNodes$,
+                },
+                ctx,
+            ),
         )
 
         const subs = [
@@ -187,21 +148,42 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                 source$: this.companionNodes$,
                 vdomMap: (target) => {
                     if (target.length === 0) {
-                        return { tag: 'div' }
+                        return EmptyDiv
                     }
+                    const pageView = new PageView(
+                        {
+                            router: companionRouter,
+                        },
+                        context,
+                    )
+                    const tocView = new TocWrapperView({
+                        router: companionRouter,
+                        displayMode$: new BehaviorSubject('hidden'),
+                        displayOptions: mainView.displayOptions,
+                        content$: pageView.content$,
+                    })
+                    const displayModeToc$ = new BehaviorSubject<DisplayMode>(
+                        'hidden',
+                    )
+                    const expandableRightSideNav = new ExpandableTocColumn({
+                        tocView,
+                        displayOptions: mainView.displayOptions,
+                        height$: mainView.height$,
+                        displayMode$: displayModeToc$,
+                    })
                     return {
                         tag: 'div',
-                        class: 'bg-light h-100 px-5 pt-5 overflow-auto',
+                        class: 'bg-light h-100 ps-5 pe-2 overflow-y-auto overflow-x-hidden d-flex',
                         style: {
                             width: `${String(companionWidth)}%`,
                         },
                         children: [
-                            new PageView(
-                                {
-                                    router: companionRouter,
-                                },
-                                context,
-                            ),
+                            new WrapperPageView({
+                                content: pageView,
+                                displayOptions: mainView.displayOptions,
+                                displayModeToc$,
+                            }),
+                            expandableRightSideNav,
                         ],
                         connectedCallback: (e) => {
                             companionRouter.setScrollableElement(e)
@@ -215,6 +197,87 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
     ctx() {
         return this.context ?? new NoContext()
     }
+}
+
+function setupRouters(
+    {
+        router,
+        companionNodes$,
+    }: {
+        router: Router<NavLayout, NavHeader>
+        companionNodes$: BehaviorSubject<string[]>
+    },
+    ctx: ContextTrait,
+) {
+    const isCompanionPath = (path: string) => {
+        return (
+            companionNodes$.value.find((companionPath) =>
+                path.startsWith(companionPath),
+            ) !== undefined
+        )
+    }
+    const redirectToCompanion =
+        (target: UrlTarget) => async (innerCtx: ContextTrait) => {
+            innerCtx.info(
+                `Caught companion path, forward navigation to companion router at ${target.path}`,
+            )
+            await companionRouter.navigateTo(target, innerCtx)
+            return Promise.resolve(undefined)
+        }
+    const redirectToMain =
+        (target: UrlTarget) => async (innerCtx: ContextTrait) => {
+            innerCtx.info(
+                `Caught main app. path, forward navigation to main router at ${target.path}`,
+            )
+            await router.navigateTo(target, innerCtx)
+            return Promise.resolve(undefined)
+        }
+
+    const redirectMainToCompanion = async (
+        target: UrlTarget,
+        ctx: ContextTrait,
+    ): Promise<UrlTarget | undefined> => {
+        if (isCompanionPath(target.path)) {
+            return ctx.executeAsync(
+                `RedirectToCompanion(${target.path})`,
+                redirectToCompanion(target),
+                ['CompanionRouter'],
+            )
+        }
+        return Promise.resolve(target)
+    }
+    router.redirects.push(redirectMainToCompanion)
+
+    const redirectCompanionToMain = async (
+        target: UrlTarget,
+        ctx: ContextTrait,
+    ) => {
+        const prefixes = await firstValueFrom(companionNodes$)
+        if (prefixes.length === 0) {
+            ctx.info(
+                'RedirectToMain: No companion nodes, cancel companion navigation',
+            )
+            return Promise.resolve(undefined)
+        }
+        if (!isCompanionPath(target.path)) {
+            return ctx.executeAsync(
+                `RedirectToMain(${target.path})`,
+                redirectToMain(target),
+                ['Router'],
+            )
+        }
+        return Promise.resolve(target)
+    }
+    const companionRouter = new Router(
+        {
+            navigation: router.navigation,
+            browserClient: (p) => new MockBrowser(p),
+            redirects: [redirectCompanionToMain],
+            userStore: router.userStore,
+        },
+        ctx,
+    )
+    return companionRouter
 }
 
 export function splitCompanionAction({
