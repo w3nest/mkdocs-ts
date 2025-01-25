@@ -4,10 +4,12 @@ import {
     RxHTMLElement,
     child$,
     AnyVirtualDOM,
+    CSSAttribute,
 } from 'rx-vdom'
 import { Target, isResolvedTarget, Router } from '../router'
 import { parseMd, parseMdFromUrl, replaceLinks } from '../markdown'
 import {
+    BehaviorSubject,
     distinctUntilChanged,
     filter,
     from,
@@ -20,8 +22,9 @@ import {
     tap,
 } from 'rxjs'
 import { setup } from '../../auto-generated'
-import { NavLayout } from './default-layout.view'
+import { DisplayMode, DisplayOptions, NavLayout } from './default-layout.view'
 import { ContextTrait, NoContext } from '../context'
+import { AnyView } from '../navigation.node'
 
 interface ContentTrait {
     layout: NavLayout
@@ -253,5 +256,50 @@ The page at location \`${path}\` does not exist. Please try navigating to other 
                 `,
             }),
         ]
+    }
+}
+
+export class WrapperPageView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly class = `flex-grow-1 px-3`
+    public readonly style: CSSAttribute
+    public readonly children: ChildrenLike
+
+    public readonly displayModeNav$?: BehaviorSubject<DisplayMode>
+    public readonly displayModeToc$?: BehaviorSubject<DisplayMode>
+
+    public readonly onclick: (ev: MouseEvent) => void
+
+    constructor(params: {
+        content: AnyView
+        displayOptions: DisplayOptions
+        displayModeNav$?: BehaviorSubject<DisplayMode>
+        displayModeToc$?: BehaviorSubject<DisplayMode>
+    }) {
+        this.displayModeNav$ = params.displayModeNav$
+        this.displayModeToc$ = params.displayModeToc$
+        this.style = {
+            width: params.displayOptions.pageWidth,
+            height: 'fit-content',
+            minWidth: '0px',
+            paddingTop: params.displayOptions.pageVertPadding,
+            paddingBottom: params.displayOptions.pageVertPadding,
+        }
+        this.children = [params.content]
+
+        this.onclick = () => {
+            if (
+                this.displayModeNav$ &&
+                this.displayModeNav$.value === 'expanded'
+            ) {
+                this.displayModeNav$.next('hidden')
+            }
+            if (
+                this.displayModeToc$ &&
+                this.displayModeToc$.value === 'expanded'
+            ) {
+                this.displayModeToc$.next('hidden')
+            }
+        }
     }
 }

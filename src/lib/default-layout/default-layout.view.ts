@@ -11,7 +11,7 @@ import {
 } from 'rx-vdom'
 import { NavHeader, NavigationWrapperView } from './navigation.view'
 import { Router } from '../router'
-import { FooterView, PageView } from './page.view'
+import { FooterView, PageView, WrapperPageView } from './page.view'
 import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -348,7 +348,9 @@ export class Layout implements VirtualDOM<'div'> {
             router.setScrollableElement(e)
             e.ownSubscriptions(
                 router.path$.subscribe(() => {
-                    this.closeExpandedPanels()
+                    if (this.displayModeNav$.value === 'expanded') {
+                        this.displayModeNav$.next('hidden')
+                    }
                 }),
             )
         }
@@ -364,18 +366,12 @@ export class Layout implements VirtualDOM<'div'> {
         const contentView = page
             ? page(viewInputs)
             : new PageView({ router: router }, context)
-        const pageView: AnyVirtualDOM = {
-            tag: 'div' as const,
-            class: `flex-grow-1 px-3`,
-            style: {
-                width: this.displayOptions.pageWidth,
-                height: 'fit-content',
-                minWidth: '0px',
-                paddingTop: this.displayOptions.pageVertPadding,
-                paddingBottom: this.displayOptions.pageVertPadding,
-            },
-            children: [contentView],
-        }
+        const pageView = new WrapperPageView({
+            content: contentView,
+            displayOptions: this.displayOptions,
+            displayModeNav$: this.displayModeNav$,
+            displayModeToc$: this.displayModeToc$,
+        })
 
         const favoritesView = favoritesColumn
             ? favoritesColumn(viewInputs)
@@ -478,9 +474,6 @@ export class Layout implements VirtualDOM<'div'> {
                         ],
                     },
                 ],
-                onclick: () => {
-                    this.closeExpandedPanels()
-                },
             },
         ]
         context.exit()
@@ -527,15 +520,6 @@ export class Layout implements VirtualDOM<'div'> {
         })
         if (thisElement.parentElement) {
             resizeObserver.observe(thisElement.parentElement)
-        }
-    }
-
-    private closeExpandedPanels() {
-        if (this.displayModeNav$.value === 'expanded') {
-            this.displayModeNav$.next('hidden')
-        }
-        if (this.displayModeToc$.value === 'expanded') {
-            this.displayModeToc$.next('hidden')
         }
     }
 }
