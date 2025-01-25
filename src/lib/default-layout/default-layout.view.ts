@@ -111,7 +111,7 @@ export type DisplayOptions<
  * Default values of {@link DisplayOptions}.
  */
 export const defaultDisplayOptions: DisplayOptions = {
-    toggleTocWidth: 1500,
+    toggleTocWidth: 1600,
     tocMinWidth: 250,
     tocMaxWidth: 400,
     toggleNavWidth: 1300,
