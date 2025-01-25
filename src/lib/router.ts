@@ -386,15 +386,14 @@ export class Router<TLayout = unknown, THeader = unknown> {
             }, Promise.resolve(originalTarget))
 
         if (!redirectTarget) {
-            ctx.info('Redirect returned `undefined`: abord navigation')
+            ctx.info('Redirect returned `undefined`: cancel navigation')
             return
         }
-        target = redirectTarget
-        const path = target.path
-        const sectionId = target.sectionId
+        const path = redirectTarget.path
+        const sectionId = redirectTarget.sectionId
 
         ctx.info('Schedule async nav node retrieval', target)
-        const resolved = await this.getNav(target, ctx)
+        const resolved = await this.getNav(redirectTarget, ctx)
         if (resolved === 'not-found') {
             this.target$.next({
                 path,
@@ -402,7 +401,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             })
             return
         }
-        this.browserClient.pushState({ target })
+        this.browserClient.pushState({ target: redirectTarget })
         this.path$.next(path)
 
         this.target$.next({
