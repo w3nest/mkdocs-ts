@@ -205,6 +205,11 @@ export class Router<TLayout = unknown, THeader = unknown> {
         Record<string, unknown[]>
     > = { Warning: {}, Error: {} }
 
+    /**
+     * Storage attribute for user data.
+     */
+    public readonly userStore?: unknown
+
     private navUpdates: Record<string, LazyRoutesCb<TLayout, THeader>> = {}
     private navResolved: Record<string, Navigation<TLayout, THeader>> = {}
 
@@ -228,6 +233,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param params.redirects See {@link Router.redirects}.
      * @param params.browserClient See {@link BrowserInterface}.
      * @param params.scrollingDebounceTime See {@link Router.scrollingDebounceTime}.
+     * @param params.userStore See {@link Router.userStore}.
      * @param ctx Execution context used for logging and tracing.
      */
     constructor(
@@ -241,6 +247,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
                 basePath: string
             }) => BrowserInterface
             scrollingDebounceTime?: number
+            userStore?: unknown
         },
         ctx?: ContextTrait,
     ) {
