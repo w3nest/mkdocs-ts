@@ -83,7 +83,7 @@ export class ToggleSidePanelButton implements VirtualDOM<'div'> {
                     return ''
                 },
                 wrapper: (c) => {
-                    return `btn btn-sm ${c}`
+                    return `btn btn-sm border ${c}`
                 },
             }),
             children: [
