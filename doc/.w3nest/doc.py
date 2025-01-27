@@ -3,22 +3,18 @@ from typing import cast
 
 from w3nest.utils import parse_json, write_json
 
-from mkdocs_py_griffe import generate_api, Configuration, std_links
+from mkapi_python import generate_api, Configuration, std_links
 import griffe
 
 
-print("Generate python API documentation of 'mkdocs_py_griffe'")
+print("Generate python API documentation of 'MkApiPython'")
 
-NAME = "mkdocs_py_griffe"
+NAME = "mkapi_python"
 GRIFFE_URL = "https://mkdocstrings.github.io/griffe/reference"
-path_backends = (
-    Path(__file__).parent.parent / "assets" / "api" / "mkdocs-ts" / "Backends.json"
-)
-
-DST = path_backends.parent / "Backends"
+DST = Path(__file__).parent.parent / "assets" / "api" / "mkdocs-ts" / "MkApiBackends"
 
 config = Configuration(
-    base_nav=f"/api/Backends/{NAME}",
+    base_nav=f"/api/MkApiBackends/mkapi_python",
     external_links={
         **std_links(),
         **{
@@ -31,19 +27,3 @@ config = Configuration(
 )
 global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
 generate_api(global_doc, config)
-
-# Patch 'Backends.json' to include python API of 'mkdocs_py_griffe'
-
-print("Patch 'Backends.json' to include python API of 'mkdocs_py_griffe'")
-
-backends = parse_json(path_backends)
-backends["children"].append(
-    {
-        "name": "mkdocs_py_griffe",
-        "path": "mkdocs-ts/Backends.mkdocs_py_griffe",
-        "navPath": "@nav/api/Backends/mkdocs_py_griffe",
-        "isLeaf": True,
-        "semantic": {"role": "module", "labels": [], "attributes": {}, "relations": {}},
-    }
-)
-write_json(backends, path_backends)

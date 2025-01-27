@@ -4,7 +4,7 @@ module.exports = {
         './src/index.ts',
         './src/lib/code-api/index.ts',
         './src/lib/notebook/index.ts',
-        './src/backends/index.ts',
+        './src/mkapi-backends/index.ts',
     ],
     readme: './assets/indexAPIdoc.md',
     exclude: ['src/tests'],

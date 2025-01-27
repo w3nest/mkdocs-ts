@@ -13,11 +13,7 @@ documentation rendering and processing.
 - {@link CodeApi} – Provides support for generating API documentation pages, making it easy to document
   your project's codebase.
 
-## **Backends**
+## **MkApiBackends**
 
-The library also includes multiple {@link Backends} implementations, which serve different purposes:
-
-- **Code API Documentation Backends** – Generate structured source data for API documentation.
-
-- **Notebook Execution Backends** – Interpret and execute code within notebook pages, enabling interactive coding
-  experiences.
+The  {@link MkApiBackends} module gathers backends to generate code API data for a project.
+These data are then consumed by the {@link CodeApi} plugin.

@@ -53,7 +53,7 @@ The '__init__.py' filename to recognize module.
 class Configuration(NamedTuple):
     """
     Represents the configuration to generate API files using
-    :func:`mkdocs_py_griffe.py_griffe.generate_api`.
+    :func:`mkapi_python.py_griffe.generate_api`.
     """
 
     base_nav: str
@@ -74,7 +74,7 @@ class Configuration(NamedTuple):
         "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
     }
     ```
-    The function :func:`mkdocs_py_griffe.std_links.std_links` is available, it includes common standard Python links.
+    The function :func:`mkapi_python.std_links.std_links` is available, it includes common standard Python links.
     """
     cross_linked_packages: dict[str, str] = {}
     """
@@ -123,7 +123,7 @@ Possible kinds for a symbol.
 class SymbolRef(NamedTuple):
     """
     Represents a reference of a symbol in the library.
-    Initialized from the function :func:`mkdocs_py_griffe.py_griffe.init_symbols`.
+    Initialized from the function :func:`mkapi_python.py_griffe.init_symbols`.
     """
 
     kind: SymbolKind
@@ -1128,7 +1128,7 @@ def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]:
         root_ast: Root module's AST.
 
     Returns:
-        A dictionary `canonical path` => :class:`mkdocs_py_griffe.py_griffe.SymbolRef`.
+        A dictionary `canonical path` => :class:`mkapi_python.py_griffe.SymbolRef`.
     """
 
     def get_canonical_path(p: str):
@@ -1293,9 +1293,9 @@ def generate_api(root_ast: AstModule, config: Configuration):
     """
     Create documentation API files from an AST parsed by the griffe library:
     * It generates the list of exported symbols (those documented).
-      See :func:`mkdocs_py_griffe.py_griffe.init_symbols`.
+      See :func:`mkapi_python.py_griffe.init_symbols`.
     * It generates the list of all aliases from the `__init__.py` files, and from the `import` statements in the files.
-      See :func:`mkdocs_py_griffe.py_griffe.init_aliases`.
+      See :func:`mkapi_python.py_griffe.init_aliases`.
     * It generates the documentation recursively for all exported modules (those documented).
 
     Parameters:

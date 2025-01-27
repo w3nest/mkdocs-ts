@@ -53,7 +53,8 @@
  *
  * For consumers that want to generate API data, a binary is available in the node module of `@youwol/mkdocs-ts`,
  * it is a simple script that call the {@link generateApiFiles} function.
- * @module TsTypedoc
+ *
+ * @module MkApiTypescript
  */
 export * from './generate-ts-inputs'
 export * from './generate-typedoc-inputs'
