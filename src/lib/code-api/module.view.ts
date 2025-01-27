@@ -12,14 +12,27 @@ import { SummaryView } from './summary.view'
 
 /**
  * View for a {@link Module}.
+ *
+ * It includes:
+ *
+ * *  {@link SummaryView},
+ * *  {@link DocumentationView} for module's documentation,
+ * *  {@link CallableView} for each module's callables,
+ * *  {@link AttributeView} for each module's attributes,
+ * *  {@link TypeView} for each module's types.
+ *
  */
 export class ModuleView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-ModuleView'
     public readonly module: Module
     public readonly router: Router
     public readonly configuration: Configuration
     public readonly project: Project
     public readonly tag = 'div'
-    public readonly class = 'mkapi-module'
+    public readonly class = `${ModuleView.CssSelector} mkapi-module`
     public readonly children: ChildrenLike
     public readonly context?: ContextTrait
 

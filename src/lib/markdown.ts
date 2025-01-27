@@ -221,7 +221,7 @@ export async function parseMdFromUrl(
     })
 }
 /**
- * Parse Markdown source to generate corresponding view.
+ * Parse Markdown source to generate corresponding view. See {@link MdParsingOptions} for examples.
  *
  * @param args  The {@link MdParsingOptions} completed by:
  * @param args.src Markdown source.

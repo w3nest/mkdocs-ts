@@ -6,12 +6,19 @@ import type { NotebookTypes } from '../plugins'
 import { from } from 'rxjs'
 import { Dependencies } from './index'
 
+/**
+ * View for a {@link Documentation}.
+ */
 export class DocumentationView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-DocumentationView'
     public readonly documentation: Documentation
     public readonly router: Router
     public readonly configuration: Configuration
     public readonly tag = 'div'
-    public readonly class = 'mkapi-doc'
+    public readonly class = `${DocumentationView.CssSelector} mkapi-doc`
     public readonly children: ChildrenLike
     constructor(params: {
         documentation: Documentation

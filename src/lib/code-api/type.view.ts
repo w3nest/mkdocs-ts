@@ -9,16 +9,21 @@ import { CallableView } from './callable.view'
 import { separatorView } from './utils'
 import { Module, Project, Type } from './models'
 import { SummaryView } from './summary.view'
-
+/**
+ * View for a {@link Type}.
+ */
 export class TypeView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-TypeView'
     public readonly fromModule: Module
     public readonly type: Type
     public readonly router: Router
     public readonly configuration: Configuration
     public readonly project: Project
     public readonly tag = 'div'
-    public readonly class =
-        'mkapi-type border-start border-bottom ps-2 mkapi-semantic-border-color'
+    public readonly class = `${TypeView.CssSelector} mkapi-type border-start border-bottom ps-2 mkapi-semantic-border-color`
     public readonly children: ChildrenLike
     constructor(params: {
         fromModule: Module

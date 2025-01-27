@@ -167,6 +167,14 @@ export function gatherTsFiles({
 /**
  * Entry point function to generate API files.
  *
+ * The general operations of the backend involve:
+ *
+ * - Gathering TypeScript information using {@link generateTsInputs}.
+ *
+ * - Gathering TypeDoc information using {@link generateTypedocInputs}.
+ *
+ * - Creating the output files.
+ *
  * @param _options The args
  * @param _options.projectFolder The folder of the project to document.
  * @param _options.outputFolder The output folder.

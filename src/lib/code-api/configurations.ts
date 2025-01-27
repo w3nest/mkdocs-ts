@@ -74,6 +74,10 @@ export interface Configuration<
         layout: DefaultLayout.NavLayout
     }) => NavNodeData<TLayout, THeader>
 }
+
+/**
+ * Default configuration.
+ */
 export const configurationDefault: Configuration = {
     codeUrl: ({
         project,

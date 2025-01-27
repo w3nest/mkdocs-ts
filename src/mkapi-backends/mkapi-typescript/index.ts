@@ -1,9 +1,69 @@
 /**
- * Backend for generating API data for TypeScript projects using TypeDoc as the primary documentation generator.
+ * The backend for generating API files for TypeScript projects uses the
+ * <a href="https://typedoc.org/" target="_blank">TypeDoc</a> &
+ * <a href="https://www.npmjs.com/package/typescript" target="_blank">TypeScript</a> package as the primary
+ * AST (Abstract Syntax Tree) generators.
+ *
+ * The entry point is the function {@link generateApiFiles}.
+ *
+ * **Usage Example**
+ *
+ * <note level="warning">
+ * For the backend to function correctly, the following prerequisites must be met in the project being documented:
+ *
+ * *  `typedoc` must be available in the node_modules folder.
+ * *  A `typedoc.js` configuration file must be present.
+ *
+ * The backend will not proceed if TypeDoc encounters errors while generating API documentation.
+ * Ensure TypeDoc runs successfully before using this backend.
+ * </note>
+ *
+ * The following example demonstrates how to generate API files for a TypeScript project using a TypeScript script
+ * (for instance named `gen-doc.ts`):
+ *
+ * <code-snippet language="javascript">
+ * import { generateApiFiles } from 'mkdocs-ts/src/mkapi-backends/mkapi-typescript'
+ *
+ * const appFolder = `${__dirname}/../`
+ *
+ * generateApiFiles({
+ *     // The project to document (expected here as the parent of the application folder).
+ *     projectFolder: `${appFolder}/../`,
+ *     // Output's folder.
+ *     outputFolder: `${appFolder}/assets/api`,
+ *     baseNav: '/api',
+ *     externals: {
+ *         // For instance
+ *         rxjs: ({ name }: { name: string }) => {
+ *             const urls = {
+ *                 Subject: 'https://www.learnrxjs.io/learn-rxjs/subjects/subject',
+ *                 BehaviorSubject:
+ *                     'https://www.learnrxjs.io/learn-rxjs/subjects/subject',
+ *                 ReplaySubject:
+ *                     'https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject',
+ *                 Observable: 'https://rxjs.dev/guide/observable',
+ *             }
+ *             if (!(name in urls)) {
+ *                 console.warn(`Can not find URL for rxjs ${name} symbol`)
+ *             }
+ *             return urls[name]
+ *         },
+ *     },
+ * })
+ * </code-snippet>
+ *
+ * To execute the script:
+ *
+ * `npx tsx gen-doc.ts`; `tsx` can be installed from <a href="https://www.npmjs.com/package/tsx" target="_blank">
+ * npm</a>.
+ *
+ * See also <a href="https://typedoc.org/" target="_blank">TypeDoc documentation</a> for available options.
+ *
+ * **Notes**
  *
  * This parser supports a subset of the tags available in TypeDoc. Many tags are omitted because their meaning is
- * implied by the entity declaration. For example, tags like `@interface`, `@public`, `@private`, `@property`,
- * `@readonly`, and `@virtual` are unnecessary as their semantics are inherent in the code structure.
+ * implied by the entity's declaration, *e.g.* `@interface`, `@public`, `@private`,
+ * `@property`, `@readonly`, `@virtual`.
  *
  * Some tags are related to grouping, such as `@group`, `@category`, `@categoryDescription`, and
  * `@groupDescription`. Currently, entities are grouped based on the files they belong to, with the possibility of
@@ -14,45 +74,29 @@
  * [`@typeParams`](https://typedoc.org/tags/typeParam/), [`@module`](https://typedoc.org/tags/module/),
  * [`@link`](https://typedoc.org/tags/link/).
  *
- * **Comparison**:
- *
- * Overall the documentation displayed by `@youwol/mkdocs-ts` is lighter than its typedoc counterpart,
- * but some resolution are (rarely) failing.
- *
- * See for instance the `parseCallable` function:
- * *  <a target="_blank" href="/api/assets-gateway/cdn-backend/resources/QHlvdXdvbC9ta2RvY3MtdHM=/0.3.3/dist/docs/functions/Backends.TsTypedoc.parseCallable.html">
- *     Within typedoc</a>
- * *  And here: {@link parseCallable}
- *
- * The missing type `SignaturesTrait` is an artifact due to loss of type information when using typedoc,
- * going further will likely imply to manage our-self the entire process of code parsing using typescript AST API.
- *
- * **Important Notes**:
+ * <note level="warning" title="Important">
  * - The parser does not handle namespaces. This functionality needs to be implemented separately
  * (namespaces can be treated as modules in all practical terms concerning documentation purposes).
  * - Only documented and exported symbols are included in the API documentation.
+ * </note>
  *
- * **Hints**:
- * When documenting a function with named parameters, you can document them as follows:
+ * <note level="hint" title="Hints" expandable="true">
+ *
+ * **Unnamed parameters**
  *
  * ```javascript
- * /* Foo documentation
+ *
+ * /** Foo documentation
  * @params _args0 Not relevant: parameters starting with `_` are not displayed
  * @params _args0.bar A bar property
  * @params _args1 Not relevant: parameters starting with `_` are not displayed
  * @params _args1.baz A baz property
- * *\/
+ * **\/
  * export function foo({bar}: { bar: number }, {baz}: { baz: string }) {}
  *
  * ```
  *
- * The general operations of the backend involve:
- * - Gathering TypeScript information using {@link generateTsInputs}.
- * - Gathering TypeDoc information using {@link generateTypedocInputs}.
- * - Creating the output files using {@link generateApiFiles}.
- *
- * For consumers that want to generate API data, a binary is available in the node module of `@youwol/mkdocs-ts`,
- * it is a simple script that call the {@link generateApiFiles} function.
+ * </note>
  *
  * @module MkApiTypescript
  */

@@ -7,13 +7,13 @@ import { DeclarationView } from './declaration.view'
 import { Dependencies } from './index'
 
 class CodeHeaderView implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'mkdocs-CodeHeaderView'
     public readonly code: Code
     public readonly configuration: Configuration
     public readonly project: Project
 
     public readonly tag = 'div'
-    public readonly class =
-        'mkapi-code mkapi-semantic-color d-flex align-items-center border rounded p-1 w-100'
+    public readonly class = `${CodeHeaderView.CssSelector} mkapi-code mkapi-semantic-color d-flex align-items-center border rounded p-1 w-100`
     public readonly style = {
         fontSize: '0.8em',
     }
@@ -73,14 +73,21 @@ class CodeHeaderView implements VirtualDOM<'div'> {
         ]
     }
 }
+/**
+ * View for a {@link Code}.
+ */
 export class CodeView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-CodeView'
     public readonly router: Router
     public readonly code: Code
     public readonly configuration: Configuration
     public readonly project: Project
 
     public readonly tag = 'div'
-    public readonly class = 'fv-border-primary rounded'
+    public readonly class = `${CodeView.CssSelector} fv-border-primary rounded`
     public readonly style = {
         fontSize: '0.9em',
     }

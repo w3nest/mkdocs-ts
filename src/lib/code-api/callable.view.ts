@@ -6,8 +6,14 @@ import { CodeView } from './code.view'
 import { HeaderView } from './header.view'
 import { separatorView } from './utils'
 import { Callable, Module, Project, Type } from './models'
-
+/**
+ * View for a {@link Callable}.
+ */
 export class CallableView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-CallableView'
     public readonly callable: Callable
     public readonly fromModule: Module
 
@@ -15,7 +21,7 @@ export class CallableView implements VirtualDOM<'div'> {
     public readonly configuration: Configuration
     public readonly project: Project
     public readonly tag = 'div'
-    public readonly class = 'mkapi-callable'
+    public readonly class = `${CallableView.CssSelector} mkapi-callable`
     public readonly children: ChildrenLike
 
     constructor(params: {

@@ -5,8 +5,14 @@ import { DocumentationView } from './documentation.view'
 import { HeaderView } from './header.view'
 import { Attribute, Module, Project, Type } from './models'
 import { CodeView } from './code.view'
-
+/**
+ * View for a {@link Attribute}.
+ */
 export class AttributeView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-AttributeView'
     public readonly attribute: Attribute
     public readonly fromModule: Module
 
@@ -15,7 +21,7 @@ export class AttributeView implements VirtualDOM<'div'> {
     public readonly configuration: Configuration
     public readonly project: Project
     public readonly tag = 'div'
-    public readonly class = 'mkapi-attr'
+    public readonly class = `${AttributeView.CssSelector} mkapi-attr`
     public readonly children: ChildrenLike
     constructor(params: {
         router: Router

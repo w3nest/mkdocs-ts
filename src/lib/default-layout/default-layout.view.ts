@@ -320,6 +320,7 @@ export class Layout implements VirtualDOM<'div'> {
      * Initializes a new instance.
      *
      * @param params See {@link DefaultLayoutParams}.
+     * @param ctx Execution context used for logging and tracing.
      */
     constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {
         this.context = ctx

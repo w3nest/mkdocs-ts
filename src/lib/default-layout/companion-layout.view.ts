@@ -63,7 +63,7 @@ export type LayoutWithCompanionParams = DefaultLayoutParams<{
  *
  * - Navigation in the companion screen uses a {@link MockBrowser} client: browser's URL is not updated.
  *
- * - The nodes selected for the companion screen (`companionNodes$`) are provided and managed by the consumer.
+ * - The `companionNodes$` are provided and managed by the consumer.
  *
  * **Integration Notes**
  *
@@ -71,7 +71,7 @@ export type LayoutWithCompanionParams = DefaultLayoutParams<{
  *   selected nodes, simplifying the management of `companionNodes$`.
  *
  * - To prevent updates to the browser URL when navigating companion nodes, adjust {@link WebBrowser.ignoredPaths$}
- *   to include `companionNodes$`. This ensures that navigation remains isolated when navigating to companion-screen
+ *   to include `companionNodes$` in your router. This ensures that navigation remains isolated when navigating to companion-screen
  *   from the main-screen.
  *
  */

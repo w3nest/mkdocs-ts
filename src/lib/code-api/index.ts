@@ -1,23 +1,26 @@
 /**
- * Auxiliary module to provide code api documentation.
+ * The Code API Plugin integrates API documentation into your application.
  *
+ * API documentation is structured based on the module hierarchy, where each page corresponds to a specific module.
  *
- * Once 'backend' data has been generated, customization of the output is using a layer running in the
- * browser. For now, the customization is essentially defined using css through the {@link Configuration.css} attribute.
- * Its purpose is to link {@link Semantic.role} attribute to display options.
+ * The root node of the API documentation is generated using {@link codeApiEntryNode}.
+ * By default, it utilizes a {@link HttpClient} to fetch module data from .json files,
+ * with each file representing a {@link Module}. The module is then displayed on the page using {@link ModuleView}.
  *
- * For instance,
- * <a target='_blank'
- * href="/api/assets-gateway/cdn-backend/resources/QHlvdXdvbC9ta2RvY3MtdHM=/latest/assets/ts-typedoc.css">this</a>
- *  is the default css file of the {@link configurationTsTypedoc}.
+ * <note level="warning">
+ * This module does **not** handle the generation of `.json` files. For details on generating these files,
+ * refer to {@link MkApiBackendsModule}.
+ *</note>
  *
  * @module CodeApi
  */
 
 export * from './attribute.view'
+export * from './callable.view'
 export * from './type.view'
 export * from './code.view'
 export * from './configurations'
+export * from './declaration.view'
 export * from './documentation.view'
 export * from './models'
 export * from './module.view'
@@ -49,15 +52,44 @@ export class Dependencies {
     public static headingId: (id: string) => string
 }
 
+/**
+ * Interface for the HTTP client fetching API data used in {@link codeApiEntryNode}.
+ */
 export interface HttpClientTrait {
+    /**
+     * Fetch {@link Module} data.
+     *
+     * @param modulePath path of the module relative to project's `docBasePath`.
+     */
     fetchModule(modulePath: string): Observable<Module>
+
+    /**
+     * Install required style sheets.
+     */
     installCss(): Promise<unknown>
 }
 
+/**
+ * Default HTTP client used in {@link codeApiEntryNode}.
+ */
 export class HttpClient implements HttpClientTrait {
     public readonly cache: Record<string, Module> = {}
+    /**
+     * The configuration, usually forwarded from {@link codeApiEntryNode}.
+     */
     public readonly configuration: Configuration<unknown, unknown>
+    /**
+     * The project, usually forwarded from {@link codeApiEntryNode}.
+     */
     public readonly project: Project
+
+    /**
+     * Initialize a new instance.
+     *
+     * @param params
+     * @param params.configuration See {@link HttpClient.configuration}.
+     * @param params.project See {@link HttpClient.project}.
+     */
     constructor(params: {
         configuration: Configuration<unknown, unknown>
         project: Project
@@ -99,7 +131,6 @@ const moduleView = <TLayout, THeader>(
     },
     ctx?: ContextTrait,
 ) => {
-    const href = path.replace(/\./g, '/')
     return combineLatest([
         httpClient.fetchModule(path.replace(/\./g, '/')),
         httpClient.installCss(),
@@ -203,6 +234,26 @@ export const docNavigation = <TLayout, THeader>(
     )
 }
 
+/**
+ *  Generates the root node for a project's API documentation, to be integrated within the {@link Navigation}.
+ *
+ * @param params Configuration options for the API documentation root node.
+ * @param params.name The name of the project (displayed in the navigation).
+ * @param params.header The navigation header associated with the root node.
+ * @param params.docBasePath The base URL or root directory containing the API data models (`.json` files).
+ *   These models are generated using the {@link MkApiBackendsModule}.
+ * @param params.entryModule The root module from which the documentation hierarchy starts. Its associated `json` data
+ * should be located at `${docBasePath}/${docBasePath}.json`.
+ * @param params.configuration Configuration settings for the navigation and layout.
+ * @param params.httpClient A custom HTTP client for retrieving API documentation resources.
+ *   If not provided, a default {@link HttpClient} instance is used.
+ * @param ctx Execution context used for logging and tracing.
+ *
+ * @returns A navigation node representing the entry point for the API documentation.
+ *
+ * @typeParam TLayout The type defining the navigation layout (*e.g.*, {@link DefaultLayout.NavLayout}).
+ * @typeParam THeader The type defining the navigation header (*e.g.*, {@link DefaultLayout.NavHeader}).
+ **/
 export function codeApiEntryNode<TLayout, THeader>(
     params: {
         name: string

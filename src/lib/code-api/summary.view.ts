@@ -23,7 +23,7 @@ export class SummaryView implements VirtualDOM<'div'> {
     /**
      * Component's class name for CSS query.
      */
-    static readonly CssSelector = 'SummaryView'
+    static readonly CssSelector = 'mkdocs-SummaryView'
     public readonly tag = 'div'
     public readonly class: string = `${SummaryView.CssSelector} border rounded mkdocs-border-info`
     public readonly children: ChildrenLike

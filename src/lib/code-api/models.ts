@@ -1,7 +1,29 @@
 /**
- *  This file gathers the models definition describing an API.
+ * This file defines the models used to describe an API.
  *
- *  This is the role of backend API generators to construct them and store them appropriately.
+ * To ensure broad compatibility across different programming languages, the schema is designed with minimal constraints.
+ * The goal is to support a wide range of source languages while maintaining a structured and lightweight representation.
+ *
+ * The API structure follows a hierarchical organization based on **modules**.
+ *
+ * - Each **module** can contain various {@link Entity}, categorized as:
+ *   - {@link Type} (data structures, classes, interfaces, *etc.*).
+ *   - {@link Callable} (functions, methods, constructors, *etc.*).
+ *   - {@link CodeApi.Attribute} (properties, fields, *etc.*).
+ *
+ * - For each entity, a corresponding {@link Code} attribute should be generated, capturing:
+ *   - Extracted **documentation** from the source code.
+ *   - Extracted **declaration** and, if available, **implementation** details.
+ *   - A list of **referenced types** inferred from the declaration (if applicable).
+ *
+ * - **Types** ({@link Type}) should also include their associated:
+ *   - {@link Attribute} list (properties, fields, etc.).
+ *   - {@link Callable} list (methods, functions, etc.).
+ *
+ * - All {@link Entity} include a **{@link Semantic} property**, providing language-specific metadata and context.
+ *
+ * - Every entity is associated with a **{@link Documentation} object**.
+ *
  */
 
 /**

@@ -82,11 +82,17 @@ export function processDeclaration(
     }, initial)
     return prepareBwd(rawProcessed)
 }
-
+/**
+ * View for a {@link Declaration}.
+ */
 export class DeclarationView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-DeclarationView'
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class = 'mkapi-declaration mkapi-semantic-color p-2 rounded'
+    public readonly class = `${DeclarationView.CssSelector} mkapi-declaration mkapi-semantic-color p-2 rounded`
     constructor({
         code,
         parent,

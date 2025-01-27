@@ -9,9 +9,8 @@
  *
  * ## Views
  *
- * In terms of views, this module provides a {@link CompositeLayout}, which can wrap multiple layout types
- * (the library includes a single layout: {@link DefaultLayout.Layout}, see the
- * {@link DefaultLayout} module).
+ * In terms of views, this module provides a {@link CompositeLayout}, which can wrap multiple layout types.
+ * The library also includes a default layout, defined in the {@link DefaultLayout} module.
  *
  * ## Markdown
  *
@@ -48,4 +47,5 @@ import type * as DefaultLayout from './lib/default-layout' // eslint-disable-lin
 import type * as CodeApiModule from './lib/code-api' // eslint-disable-line  @typescript-eslint/no-unused-vars
 // noinspection ES6UnusedImports Include for documentation
 import type * as NotebookModule from './lib/notebook' // eslint-disable-line  @typescript-eslint/no-unused-vars
+export type * as MkApiBackendsModule from './mkapi-backends'
 export * from './lib'
