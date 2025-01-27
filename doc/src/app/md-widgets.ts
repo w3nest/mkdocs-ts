@@ -10,6 +10,10 @@ export class ApiLink implements VirtualDOM<'a'> {
     constructor(elem: HTMLElement) {
         const target = elem.getAttribute('target')!
         const navs = {
+            CodeApi: '@nav/api/CodeApi',
+            HttpClientTrait: '@nav/api/CodeApi.HttpClientTrait',
+            codeApiEntryNode: '@nav/api/CodeApi.codeApiEntryNode',
+            installCodeApiModule: '@nav/api/MainModule.installCodeApiModule',
             Navigation: '@nav/api/MainModule.Navigation',
             DynamicRoutes: '@nav/api/MainModule.DynamicRoutes',
             LazyRoutes: '@nav/api/MainModule.LazyRoutes',
@@ -66,6 +70,10 @@ export class ApiLink implements VirtualDOM<'a'> {
         }
 
         const classes = {
+            CodeApi: 'mkapi-role-module',
+            HttpClientTrait: 'mkapi-role-interface',
+            codeApiEntryNode: 'mkapi-role-function',
+            installCodeApiModule: 'mkapi-role-function',
             Navigation: 'mkapi-role-type-alias',
             DynamicRoutes: 'mkapi-role-type-alias',
             LazyRoutes: 'mkapi-role-type-alias',
@@ -190,6 +198,7 @@ export class CrossLink implements VirtualDOM<'a'> {
                 '@nav/tutorials/basics/custom-layout/composite-layout',
             typescript: '@nav/tutorials/basics/typescript',
             'basics-utils': '@nav/tutorials/basics/code-utils',
+            'api-backend': '@nav/how-to/api-backend',
         }
         this.href = navs[target]
         this.children = [

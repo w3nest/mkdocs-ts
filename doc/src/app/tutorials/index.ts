@@ -20,16 +20,13 @@ export const navigation: AppNav = {
         '/basics': GettingStarted.navigation,
         '/markdown': {
             name: 'Markdown',
-            layout: {
-                content: ({ router }) =>
-                    notebookPage('tutorials.markdown.md', router),
-            },
+            layout: ({ router }) =>
+                notebookPage('tutorials.markdown.md', router),
         },
         '/code-api': {
             name: 'Code API',
-            layout: {
-                content: fromMd('tutorials.code-api.md'),
-            },
+            layout: ({ router }) =>
+                notebookPage('tutorials.code-api.md', router),
         },
         '/notebook': Notebook.navigation,
     },

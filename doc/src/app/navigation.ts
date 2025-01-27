@@ -12,6 +12,7 @@ import { fromMd, placeholders } from './config.markdown'
 
 import * as HowTo from './how-to'
 import * as Tutorials from './tutorials'
+import { createRootContext } from './config.context'
 
 await Promise.all([
     firstValueFrom(
@@ -45,40 +46,47 @@ export const navigation: AppNav = {
 
 async function apiNav(): Promise<AppNav> {
     const CodeApiModule = await installCodeApiModule()
+    const context = createRootContext({
+        threadName: `CodeAPI`,
+        labels: ['CodeApi'],
+    })
     // This is to preload for javascript snippets included in the API documentation, such that the `scrollTo` is
     // working well.
     await firstValueFrom(
         MdWidgets.CodeSnippetView.fetchCmDependencies$('javascript'),
     )
-    return CodeApiModule.codeApiEntryNode({
-        name: 'API',
-        header: {
-            icon: {
-                tag: 'i' as const,
-                class: `fas fa-code`,
+    return CodeApiModule.codeApiEntryNode(
+        {
+            name: 'API',
+            header: {
+                icon: {
+                    tag: 'i' as const,
+                    class: `fas fa-code`,
+                },
+                actions: [
+                    DefaultLayout.splitCompanionAction({
+                        path: '/api',
+                        companionNodes$,
+                    }),
+                ],
             },
-            actions: [
-                DefaultLayout.splitCompanionAction({
-                    path: '/api',
-                    companionNodes$,
-                }),
-            ],
-        },
-        entryModule: 'mkdocs-ts',
-        docBasePath: '../assets/api',
-        configuration: {
-            ...CodeApiModule.configurationTsTypedoc,
-            notebook: {
-                options: {
-                    runAtStart: true,
-                    markdown: {
-                        placeholders,
+            entryModule: 'mkdocs-ts',
+            docBasePath: '../assets/api',
+            configuration: {
+                ...CodeApiModule.configurationTsTypedoc,
+                notebook: {
+                    options: {
+                        runAtStart: true,
+                        markdown: {
+                            placeholders,
+                        },
                     },
                 },
-            },
-            mdParsingOptions: {
-                placeholders,
+                mdParsingOptions: {
+                    placeholders,
+                },
             },
         },
-    })
+        context,
+    )
 }
