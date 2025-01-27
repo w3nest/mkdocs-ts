@@ -697,19 +697,31 @@ export function parseCallable({
         projectGlobals,
     )
     const functionDoc = getSummaryDoc(documentation)
-    const parametersDoc = parseArgumentsDoc({
-        fromElement: typedocFct,
-        title: 'Arguments',
-        parentElement: typedocFct,
-        projectGlobals,
-    })
+    const parametersDoc = typedocFct.parameters
+        ? parseArgumentsDoc({
+              fromElement: typedocFct.parameters,
+              title: 'Arguments',
+              parentElement: typedocFct,
+              projectGlobals,
+          })
+        : undefined
+    const tParamDoc = typedocFct.typeParameters
+        ? parseArgumentsDoc({
+              fromElement: typedocFct.typeParameters,
+              title: 'Generics',
+              parentElement: typedocFct,
+              projectGlobals,
+          })
+        : undefined
     const returnsDoc = parseReturnsDoc({
         typedocNode: typedocFct,
         projectGlobals,
     })
 
     functionDoc.sections.push(
-        ...[parametersDoc, returnsDoc].filter((c) => c !== undefined),
+        ...[parametersDoc, tParamDoc, returnsDoc].filter(
+            (c) => c !== undefined,
+        ),
     )
     return {
         name: name,
