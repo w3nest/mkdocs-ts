@@ -6,6 +6,7 @@ module.exports = {
         './src/lib/notebook/index.ts',
         './src/backends/index.ts',
     ],
+    readme: './assets/indexAPIdoc.md',
     exclude: ['src/tests'],
     out: 'dist/docs',
     theme: 'default',

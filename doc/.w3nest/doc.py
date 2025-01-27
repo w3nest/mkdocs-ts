@@ -41,7 +41,9 @@ backends["children"].append(
     {
         "name": "mkdocs_py_griffe",
         "path": "mkdocs-ts/Backends.mkdocs_py_griffe",
+        "navPath": "@nav/api/Backends/mkdocs_py_griffe",
         "isLeaf": True,
+        "semantic": {"role": "module", "labels": [], "attributes": {}, "relations": {}},
     }
 )
 write_json(backends, path_backends)
