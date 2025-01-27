@@ -5,7 +5,7 @@ import { DocumentationView } from './documentation.view'
 import { CallableView } from './callable.view'
 import { HeaderView } from './header.view'
 import { AttributeView } from './attribute.view'
-import type { Router } from '../index'
+import { ContextTrait, NoContext, Router } from '../index'
 import { separatorView, ySeparatorView5 } from './utils'
 import { Entity, Module, Project } from './models'
 import { SummaryView } from './summary.view'
@@ -21,6 +21,7 @@ export class ModuleView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = 'mkapi-module'
     public readonly children: ChildrenLike
+    public readonly context?: ContextTrait
 
     /**
      * Create the VirtualDOM.
@@ -29,14 +30,21 @@ export class ModuleView implements VirtualDOM<'div'> {
      * @param params.module Model of the module.
      * @param params.router Router of the application.
      * @param params.configuration Rendering configuration.
+     * @param ctx Execution context used for logging and tracing.
      */
-    constructor(params: {
-        module: Module
-        router: Router
-        project: Project
-        configuration: Configuration<unknown, unknown>
-    }) {
+    constructor(
+        params: {
+            module: Module
+            router: Router
+            project: Project
+            configuration: Configuration<unknown, unknown>
+        },
+        ctx?: ContextTrait,
+    ) {
         Object.assign(this, params)
+        this.context = ctx
+        const context = this.ctx().start('new ModuleView', ['View', 'CodeApi'])
+        context.info('Display module', this.module)
         this.class += ` mkapi-role-${this.module.semantic.role}`
         const getFile = (entity: Entity) => {
             return entity.code.filePath
@@ -159,5 +167,13 @@ export class ModuleView implements VirtualDOM<'div'> {
                 }
             }),
         ]
+        context.exit()
+    }
+
+    ctx(ctx?: ContextTrait) {
+        if (ctx) {
+            return ctx
+        }
+        return this.context ?? new NoContext()
     }
 }

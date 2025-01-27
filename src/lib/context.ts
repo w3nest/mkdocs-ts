@@ -8,6 +8,7 @@ export type Label =
     | 'View'
     | 'PageView'
     | 'Notebook'
+    | 'CodeApi'
     | 'Exec'
 /**
  * Log levels indicating severity of an entry.
