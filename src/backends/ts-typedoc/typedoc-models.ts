@@ -205,4 +205,12 @@ export interface SymbolId {
 
 export interface ProjectTrait {
     symbolIdMap: Record<string, SymbolId>
+    readme: CommentSection
+}
+
+export function hasProjectTrait(n: unknown): n is ProjectTrait {
+    if (n === null || typeof n !== 'object') {
+        return false
+    }
+    return 'symbolIdMap' in n && 'readme' in n
 }

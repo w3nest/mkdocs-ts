@@ -22,6 +22,7 @@ import {
     Comment,
     hasBlockTagsTrait,
     hasSymbolTrait,
+    hasProjectTrait,
 } from './typedoc-models'
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -423,10 +424,15 @@ export function parseModule({
         )
         .filter((attr) => attr !== undefined)
 
-    const documentation = module.comment
+    const docSrc = module.comment
+        ? module.comment.summary
+        : hasProjectTrait(module)
+          ? module.readme
+          : undefined
+    const documentation = docSrc
         ? parseDocumentation({
               semantic: noSemantic,
-              typedocNode: module.comment.summary,
+              typedocNode: docSrc,
               parent: module,
               projectGlobals,
           })
