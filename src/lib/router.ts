@@ -389,7 +389,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             ctx.info('Redirect returned `undefined`: cancel navigation')
             return
         }
-        const path = redirectTarget.path
+        const path = sanitizeNavPath(redirectTarget.path)
         const sectionId = redirectTarget.sectionId
 
         ctx.info('Schedule async nav node retrieval', target)

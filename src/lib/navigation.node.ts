@@ -503,7 +503,12 @@ export type Navigation<TLayout, THeader> = NavNodeData<TLayout, THeader> & {
  */
 export function sanitizeNavPath(path: string) {
     return (
-        '/' + path.replace(/^\/+/, '').replace(/\/+/g, '/').replace('/.', '.')
+        '/' +
+        path
+            .replace(/^\/+/, '') // Remove leading slashes
+            .replace(/\/+/g, '/') // Collapse multiple slashes
+            .replace('/.', '.') // Fix misplaced dot
+            .replace(/\/+$/, '') // Remove trailing slashes
     )
 }
 
