@@ -119,9 +119,15 @@ export interface Entity {
      */
     semantic: Semantic
     /**
-     * The path (e.g. `ModuleFoo.TypeBar.attrBaz`)
+     * The path (e.g. `ModuleFoo.TypeBar.attrBaz`).
+     *
+     * It starts with the library name, each segment separated by `.`.
      */
     path: EntityPath
+    /**
+     * The navigation path, *e.g.* `@nav/api/submoduleA/Foo.bar`.
+     */
+    navPath: string
 }
 /**
  * Callable representation.
@@ -168,15 +174,7 @@ export interface File {
 /**
  * Child module representation.
  */
-export interface ChildModule {
-    /**
-     * Name.
-     */
-    name: string
-    /**
-     * Path (*e.g.* `ModuleFoo.ModuleBar`).
-     */
-    path: EntityPath
+export type ChildModule = Omit<Entity, 'code' | 'documentation'> & {
     /**
      * Whether it includes children modules.
      */

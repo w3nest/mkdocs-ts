@@ -8,6 +8,7 @@ import { AttributeView } from './attribute.view'
 import type { Router } from '../index'
 import { separatorView, ySeparatorView5 } from './utils'
 import { Entity, Module, Project } from './models'
+import { SummaryView } from './summary.view'
 
 /**
  * View for a {@link Module}.
@@ -57,6 +58,12 @@ export class ModuleView implements VirtualDOM<'div'> {
                 doc: this.module,
                 relativeToPath: '',
             }),
+            separatorView,
+            new SummaryView({
+                target: this.module,
+                router: this.router,
+            }),
+            separatorView,
             {
                 tag: 'div',
                 children: [

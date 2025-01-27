@@ -253,8 +253,10 @@ export function generateNavigationPathsInModule(
     basePath: string,
     module: string,
     elem: TypedocNode,
-) {
+): Record<string, string> {
     const toNav = (p: string) => `@nav${p.replace('//', '/')}`
+    paths[elem.id] = toNav(`${basePath}/${module}`)
+
     for (const child of elem.children ?? []) {
         if (zeroOrderLevelKinds.includes(child.kind)) {
             paths[child.id] = toNav(`${basePath}/${module}/${child.name}`)
@@ -439,13 +441,18 @@ export function parseModule({
     return {
         name: module.name,
         documentation,
-        path: '',
+        path: modulePath,
+        navPath: typedocNode.id in navMap ? navMap[typedocNode.id] : '',
         attributes: globals,
         types: types,
         callables: functions,
         files,
         children: subModules.map((child) =>
-            parseChildModule({ typedocNode: child, parentPath: path }),
+            parseChildModule({
+                typedocNode: child,
+                parentPath: path,
+                projectGlobals,
+            }),
         ),
         semantic: semantics[TYPEDOC_KINDS.MODULE],
     }
@@ -462,14 +469,18 @@ export function parseModule({
 export function parseChildModule({
     typedocNode,
     parentPath,
+    projectGlobals,
 }: {
     typedocNode: TypedocNode
     parentPath: string
+    projectGlobals: ProjectGlobals
 }): ChildModule {
     const children = typedocNode.children ?? []
     return {
         name: typedocNode.name,
+        semantic: semantics[TYPEDOC_KINDS.MODULE],
         path: `${parentPath}.${typedocNode.name}`,
+        navPath: projectGlobals.navigations[typedocNode.id],
         isLeaf: !children.some((c) =>
             [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         ),
@@ -698,6 +709,7 @@ export function parseCallable({
         name: name,
         documentation: functionDoc,
         path: parentElement ? `${parentElement.name}.${name}` : name, //`${typedocFct.sources[0].fileName}:${path}`,
+        navPath: projectGlobals.navigations[typedocNode.id],
         code: parseCode({
             typedocNode,
             projectGlobals,
@@ -847,6 +859,7 @@ export function parseType({
         name: typedocNode.name,
         documentation: doc,
         path: typedocNode.name,
+        navPath: projectGlobals.navigations[typedocNode.id],
         attributes: attributes
             .filter((attr) => attr.comment)
             .map((attr) => attr as unknown as TypedocNode & SymbolTrait)
@@ -928,6 +941,7 @@ export function parseAttribute({
         semantic: semantic,
         documentation: getSummaryDoc(documentation),
         path: parentElement ? `${parentElement.name}.${name}` : name,
+        navPath: projectGlobals.navigations[typedocNode.id],
         code: parseCode({
             typedocNode: typedocNode,
             projectGlobals,

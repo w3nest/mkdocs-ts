@@ -132,6 +132,12 @@ class Entity:
     path: EntityPath
     """
     The path (e.g. `ModuleFoo.TypeBar.attrBaz`).
+    
+    It starts with the library name, each segment separated by `.`.
+    """
+    navPath: EntityPath
+    """
+    The navigation path, *e.g.* `@nav/api/submoduleA/Foo.bar`.
     """
 
 

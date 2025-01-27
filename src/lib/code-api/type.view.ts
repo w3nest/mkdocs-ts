@@ -8,6 +8,7 @@ import { HeaderView } from './header.view'
 import { CallableView } from './callable.view'
 import { separatorView } from './utils'
 import { Module, Project, Type } from './models'
+import { SummaryView } from './summary.view'
 
 export class TypeView implements VirtualDOM<'div'> {
     public readonly fromModule: Module
@@ -42,6 +43,11 @@ export class TypeView implements VirtualDOM<'div'> {
                 configuration: this.configuration,
                 parent: this.type,
                 project: this.project,
+            }),
+            separatorView,
+            new SummaryView({
+                target: this.type,
+                router: this.router,
             }),
             { tag: 'div', class: 'mt-3' },
             new DocumentationView({

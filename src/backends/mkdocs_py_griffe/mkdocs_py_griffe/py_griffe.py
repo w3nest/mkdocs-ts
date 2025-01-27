@@ -585,6 +585,11 @@ def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Ca
             ]
         ),
         path=canonical_path(ast=ast, project=project),
+        navPath=navigation_path(
+            py_path=ast.canonical_path,
+            name=ast.name,
+            project=project,
+        ),
         code=parse_code(ast=ast, project=project),
         semantic=semantic,
     )
@@ -616,6 +621,11 @@ def parse_class(ast: AstClass, project: Project) -> Type:
             project=project,
         ),
         path=canonical_path(ast=ast, project=project),
+        navPath=navigation_path(
+            py_path=ast.canonical_path,
+            name=ast.name,
+            project=project,
+        ),
         semantic=semantic,
         attributes=[
             parse_attribute(ast=attr, semantic=ATTR_SEMANTIC, project=project)
@@ -938,6 +948,11 @@ def parse_attribute(
         semantic=semantic,
         documentation=documentation,
         path=canonical_path(ast=ast, project=project),
+        navPath=navigation_path(
+            py_path=ast.canonical_path,
+            name=ast.name,
+            project=project,
+        ),
         code=parse_code(ast=ast, project=project),
     )
 

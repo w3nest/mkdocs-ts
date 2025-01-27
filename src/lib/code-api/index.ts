@@ -21,6 +21,7 @@ export * from './configurations'
 export * from './documentation.view'
 export * from './models'
 export * from './module.view'
+export * from './summary.view'
 export * from './utils'
 
 import { combineLatest, map, Observable, of, tap } from 'rxjs'
