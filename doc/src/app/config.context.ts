@@ -6,8 +6,8 @@ import {
     ConsoleReporter,
     InMemoryReporter,
 } from 'mkdocs-ts'
+import { DebugMode } from './config.debug'
 
-const DebugMode = true
 Context.Enabled = DebugMode
 export const inMemReporter = new InMemoryReporter()
 const consoleReporter = new ConsoleReporter()

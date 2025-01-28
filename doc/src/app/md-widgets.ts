@@ -67,6 +67,8 @@ export class ApiLink implements VirtualDOM<'a'> {
             'DefaultLayout.FavoritesView.CssSelector':
                 '@nav/api/MainModule/DefaultLayout.FavoritesView.CssSelector',
             JsCellView: '@nav/api/Notebook.JsCellView',
+            MkApiTypescript: '@nav/api/MkApiBackends/MkApiTypescript',
+            mkapi_python: '@nav/api/MkApiBackends/mkapi_python',
         }
 
         const classes = {
@@ -113,6 +115,8 @@ export class ApiLink implements VirtualDOM<'a'> {
             'DefaultLayout.NavigationView.CssSelector': 'mkapi-role-attribute',
             'DefaultLayout.FavoritesView.CssSelector': 'mkapi-role-attribute',
             JsCellView: 'mkapi-role-class',
+            MkApiTypescript: 'mkapi-role-module',
+            mkapi_python: 'mkapi-role-module',
         }
         this.href = navs[target]
         this.children = [
@@ -198,6 +202,7 @@ export class CrossLink implements VirtualDOM<'a'> {
                 '@nav/tutorials/basics/custom-layout/composite-layout',
             typescript: '@nav/tutorials/basics/typescript',
             'basics-utils': '@nav/tutorials/basics/code-utils',
+            'code-api': '@nav/tutorials/code-api',
             'api-backend': '@nav/how-to/api-backend',
         }
         this.href = navs[target]

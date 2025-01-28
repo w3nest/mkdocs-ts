@@ -3,6 +3,8 @@ export {}
 import * as webpmClient from '@w3nest/webpm-client'
 
 import { setup } from '../auto-generated'
+import { DebugMode } from './config.debug'
+window['mkdocsConfig'] = { enableContextual: DebugMode }
 
 await setup.installMainModule({
     cdnClient: webpmClient,

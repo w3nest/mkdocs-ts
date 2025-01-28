@@ -140,7 +140,7 @@ const navBarView = (router) => {
         onchange: (ev) => router.fireNavigateTo({path:ev.target.value}),
         value: {
             source$: router.target$,
-            vdomMap: (target) => target.path
+            vdomMap: (target) => target.sectionId ? `${target.path}.${target.sectionId}`: target.path
         }
     })
     return {

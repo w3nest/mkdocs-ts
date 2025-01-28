@@ -24,20 +24,6 @@ export const navigation: AppNav = {
             layout: {
                 content: fromMd('how-to.api-backend.md'),
             },
-            routes: {
-                '/typescript': {
-                    name: 'Typescript',
-                    layout: {
-                        content: fromMd('how-to.api-backend.typescript.md'),
-                    },
-                },
-                '/python': {
-                    name: 'Python',
-                    layout: {
-                        content: fromMd('how-to.api-backend.python.md'),
-                    },
-                },
-            },
         },
     },
 }

@@ -1,81 +1,35 @@
+
 # API Documentation
 
-API documentation involves generating a set of files that expose the API of an external project.
-The generated data implements the structure defined in the module [CodeAPI](@nav/api/CodeApi.models.ts).
+This section explains how to include API documentation for one or more projects in your application.
 
-Two backends are available to generate the API files:
-*  **TS-Typedoc**: Backend to generate API files for TypeScript projects using
-   [TypeDoc](https://typedoc.org/).
-*  **mkdocs_py_griffe**: Backend to generate API files for Python projects using 
-   [griffe](https://mkdocstrings.github.io/griffe/).
+Integrating API documentation involves two key steps:
 
-Once API files are generated, refer to [this document](@nav/tutorials/code-api) to include them in your 
-navigation object.
+1. **Generate API data models** (`.json` files) for the project you want to document.
 
+2. **Integrate the generated data models** into your application's navigation.
 
-## TS-Typedoc Backend
+## Generating API Data Models
 
-The `ts-typedoc` backend API generator is still a work in progress, and the following instructions will
-simplify it in the near future.
+{{mkdocs-ts}} provides two built-in backends for generating API data models:
 
-### Requirements:
+- **<api-link target="MkApiTypescript"></api-link>** – Parses **TypeScript** projects.
 
-- **In the API project** (the project for which you want to generate API data):
-  - `typedoc` and `typescript` must be available in the `node_modules` folder.
-  - The `typedoc` configuration file is also expected in this folder.
-- **In the documentation project** (the project that defines the documentation application):
-  - `mkdocs-ts` must be available in the `node_modules` of the project.
+- **<api-link target="mkapi_python"></api-link>** – Parses **Python** projects.
 
-### Usage:
+Refer to their respective documentation for details on usage and configuration.
 
-You can use the following node script to generate API data:
+Once the backend has successfully processed the project, it generates a set of `.json` files in the specified output folder.
 
-```shell
-(cd $docAppPath/node_modules/@youwol/mkdocs-ts/ \
-&& node ./bin/index.js \
-    --project $apiPath \
-    --nav /api \
-    --out $docAppPath/assets/api)
-```
+<note level="hint" title="New Backends">  
+If you'd like to develop a backend for another programming language, feel free to open an issue and collaborate with us.  
 
-### Parameters:
+Once implemented, new backends will be referenced here.  
+</note>
 
-- **$docAppPath**: Path of the documenting application.
-- **$apiPath**: Path of the API project.
-- **--project**: Specifies the API project path.
-- **--nav**: Specifies the base path where the API is served in the documentation application.
-- **--out**: Specifies the output directory for the generated API data.
+## Integrating into Navigation
 
+To display API documentation in your application, use the **<api-link target="CodeApi"></api-link>** module to integrate
+the data models into your **<api-link target="Navigation"></api-link>**.
 
-## mkdocs_py_griffe
-
-### Requirements
-
-- **In the documentation project** (the project that defines the documentation application):
-    -  `mkdocs-ts` must be available in the `node_modules` of the project.
-    -  Navigate to `node_modules/@youwol/mkdocs/src/backends/mkdocs_py_griffe`
-    -  Run `pip install .`
-
-
-### Usage
-
-To generate the API files:
-*  Generate the documentation AST of your module using
-   <a href="https://mkdocstrings.github.io/griffe/loading/">griffe.load</a>.
-*  Call the function [generate_api](@nav/api/Backends/mkdocs_py_griffe.py_griffe.generate_api)
-
-A typical example:
-
-<code-snippet language="python">
-import griffe
-from mkdocs_py_griffe import generate_api, Configuration, std_links
-
-config = Configuration(
-    base_nav='base/path/url',
-    external_links=std_links(),
-    out='/output/folder'
-)
-
-doc_ast = griffe.load('mkdocs_py_griffe', submodules=True)
-generate_api(global_doc, config)
-</code-snippet>
+For a step-by-step guide, check out the interactive tutorial <cross-link target="code-api">here</cross-link>.

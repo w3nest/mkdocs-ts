@@ -16,8 +16,6 @@ console.log('In memory logs reporter', inMemReporter)
 export const router = new Router(
     {
         navigation,
-        browserClient: (p) =>
-            new WebBrowser({ ...p, ignoredPaths$: companionNodes$ }),
     },
     ctx,
 )
