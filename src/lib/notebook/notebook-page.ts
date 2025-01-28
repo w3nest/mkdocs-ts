@@ -182,9 +182,9 @@ export class NotebookSection implements VirtualDOM<'div'> {
                     const vdom = Dependencies.parseMd({
                         src,
                         router: this.router,
-                        ...(this.options.markdown ?? {}),
+                        ...(this.options?.markdown ?? {}),
                         views: {
-                            ...(this.options.markdown?.views ?? {}),
+                            ...(this.options?.markdown?.views ?? {}),
                             ...notebookViews({
                                 state: this.state,
                             }),

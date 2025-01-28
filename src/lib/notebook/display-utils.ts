@@ -60,15 +60,15 @@ export function display(
         }
         return pickView(element)
     })
-    if (views.length === 1) {
-        output$.next(views[0])
-        return
-    }
-    output$.next({
-        tag: 'div',
-        class: 'd-flex align-items-center',
-        children: views,
-    })
+    output$.next(
+        views.length === 1
+            ? views[0]
+            : {
+                  tag: 'div',
+                  class: 'd-flex align-items-center',
+                  children: views,
+              },
+    )
 }
 
 /**

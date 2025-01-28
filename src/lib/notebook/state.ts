@@ -583,7 +583,7 @@ export class State {
                     )
                 }),
                 switchMap((nbPage) => {
-                    const parsingOptions = nbPage.options.markdown ?? {}
+                    const parsingOptions = nbPage.options?.markdown ?? {}
                     return fromFetch(nbPage.url).pipe(
                         map((resp) => ({
                             resp,
