@@ -29,6 +29,9 @@ import { JsCellAttributes } from './js-cell-view'
 import { Dependencies } from '.'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 
+/**
+ * Accepted language.
+ */
 type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
 
 /**

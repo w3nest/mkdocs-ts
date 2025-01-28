@@ -9,7 +9,7 @@ import { parse } from 'marked'
  * <js-cell>
  * display(new Views.Text('**a simple example**'))
  * display(new Views.Text(String.raw`**including latex inlined**: \(ax^2 + bx + c = 0\)`))
- * display(new Views.Text(String.raw`**including latex**: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$`))
+ * display(new Views.Text(String.raw`**including latex block**: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$`))
  * </js-cell>
  *
  * Fine-tuning of element's class & style is also possible.

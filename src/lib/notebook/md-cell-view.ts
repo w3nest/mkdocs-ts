@@ -60,9 +60,9 @@ export class InlinedCode implements VirtualDOM<'div'> {
 }
 /**
  *
- * Represents a MarkDown cell within a {@link NotebookPage}.
+ * Represents a Markdown cell within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `md-cell` in MarkDown content,
+ * They are typically included from a DOM definition with tag name `md-cell` in Markdown content,
  * see {@link MdCellView.FromDom}.
  */
 export class MdCellView implements VirtualDOM<'div'>, CellTrait {
@@ -98,7 +98,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
     public readonly content$: BehaviorSubject<string>
 
     /**
-     * Options for parsing MarkDown code.
+     * Options for parsing Markdown code.
      */
     public readonly parserOptions: MdParsingOptions
     /**
@@ -108,7 +108,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
 
     /**
      * Defines the methods to retrieve constructor's arguments from the DOM element `md-cell` within
-     * MarkDown content.
+     * Markdown content.
      *
      * <note level='warning'>
      * Be mindful of the conversion from `camelCase` to `kebab-case`.
@@ -123,7 +123,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
             e.getAttribute('line-number') === 'true',
     }
     /**
-     * Initialize an instance of {@link MdCellView} from a DOM element `md-cell` in MarkDown content
+     * Initialize an instance of {@link MdCellView} from a DOM element `md-cell` in Markdown content
      *  (the parameter `state` & `parserOptions` are automatically provided).
      *
      * <note level="hint" label="Constructor's attributes mapping">
@@ -133,7 +133,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
      *
      * @param _p
      * @param _p.elem The DOM element.
-     * @param _p.parserOptions MarkDown parsing options.
+     * @param _p.parserOptions Markdown parsing options.
      * @param _p.state The page state.
      */
     static FromDom({
@@ -162,7 +162,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
      * @param params.cellId The cell's ID.
      * @param params.content The cell's content.
      * @param params.state The page's state.
-     * @param params.parserOptions MarkDown parsing options.
+     * @param params.parserOptions Markdown parsing options.
      * @param params.cellAttributes Cell's attributes.
      */
     constructor(params: {

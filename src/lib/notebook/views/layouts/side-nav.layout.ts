@@ -48,7 +48,7 @@ export function sideNav(params: SideNavArguments) {
  *   - When an element is expanded, it displays the associated content.
  *
  * <js-cell>
- * const sideNavClass = 'h-100 bg-light p-2 px-5'
+ * const sideNavClass = 'h-100 bg-dark text-light p-2 px-5'
  * const sideNavHome = {
  *     icon: 'fas fa-home',
  *     content: { tag: 'div', innerText: 'Home', class: sideNavClass },
@@ -68,7 +68,7 @@ export function sideNav(params: SideNavArguments) {
  * }
  * const sideNavLayout = Views.Layouts.sideNav({
  *     sideNavElements: sideNav,
- *     content: { tag: 'div', innerText: 'Main content', class:'p-2' },
+ *     content: { tag: 'div', innerText: 'Main content', class:'p-2 w-100 h-100 bg-light rounded border' },
  * })
  * display(sideNavLayout)
  * </js-cell>

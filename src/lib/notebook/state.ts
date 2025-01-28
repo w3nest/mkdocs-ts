@@ -195,7 +195,7 @@ export interface NotebookStateParameters {
     displayFactory?: DisplayFactory
 }
 /**
- * Represents the state of a {@link NotebookPage}.
+ * Represents the state of a {@link NotebookPage} or {@link NotebookSection}.
  */
 export class State {
     /**

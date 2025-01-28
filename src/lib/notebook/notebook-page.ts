@@ -124,7 +124,10 @@ export class NotebookSection implements VirtualDOM<'div'> {
      */
     public readonly state: State
 
-    public readonly options: NotebookOptions
+    /**
+     * Options provided to the `constructor`.
+     */
+    public readonly options?: NotebookOptions
 
     public readonly context?: ContextTrait
     /**

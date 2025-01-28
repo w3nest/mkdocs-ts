@@ -4,11 +4,36 @@ import { Observable, Subject } from 'rxjs'
 import { Output } from './state'
 
 /**
- * Implementation of the `display` function used in {@link JsCellView}.
+ * Renders and displays elements using registered view generators.
  *
- * @param output$ The Subject in which the associated rendered element is emitted.
- * @param elements The element to display.
- * @param factory Display factory.
+ * This function is primarily used in {@link JsCellView}. When invoked from a JavaScript cell,
+ * the `output$` and `factory` parameters are automatically provided, meaning only `elements`
+ * need to be passed explicitly.
+ *
+ * **Behavior**
+ *
+ * **If an element is not an Observable**
+ *
+ *   - Finds the first compatible view generator in `factory` (searching in reverse order).
+ *   - Generates the view using the selected generator.
+ *   - **The first view generator in `factory` is guaranteed to be compatible** and acts as a fallback,
+ *     providing a raw representation of the object if no other generator is found.
+ *
+ *
+ * **If an element is an Observable**:
+ *
+ *   - Subscribes to it and applies the same view generation logic dynamically.
+ *
+ *
+ * **If multiple elements** are provided, they are displayed in a horizontally flexible layout.
+ *
+ * Once rendered, the resulting view is emitted via the `output$` stream.
+ *
+ * See {@link DisplayFactory} for available view generators.
+ *
+ * @param output$ The Subject that emits the rendered elements.
+ * @param factory A collection of view generators used to render elements.
+ * @param elements The elements to display.
  */
 export function display(
     output$: Subject<Output>,
@@ -73,7 +98,17 @@ export interface DisplayComponent<T = unknown> {
  */
 export type DisplayFactory = DisplayComponent[]
 
-function rawView(element: unknown): AnyVirtualDOM {
+/**
+ * Fallback renderer referenced in {@link defaultDisplayFactory}.
+ *
+ * *  For primitive types, an `HTMLElement` is generated with `innerText` property set to the value.
+ *
+ * *  Otherwise an object explorer is displayed.
+ *
+ * @param element Displayed element.
+ * @returns The resulting `VirtualDOM`.
+ */
+export function rawView(element: unknown): AnyVirtualDOM {
     type PrimitiveType = 'string' | 'number' | 'boolean'
     if (['string', 'number', 'boolean'].includes(typeof element)) {
         return {
@@ -89,7 +124,13 @@ function rawView(element: unknown): AnyVirtualDOM {
     }
 }
 
-function htmlView(
+/**
+ * Renderer for `HTMLElement | AnyVirtualDOM | RxChild` referenced in {@link defaultDisplayFactory}.
+ *
+ * @param element Displayed element.
+ * @returns The resulting `VirtualDOM`.
+ */
+export function htmlView(
     element: HTMLElement | AnyVirtualDOM | RxChild,
 ): AnyVirtualDOM {
     if (element instanceof HTMLElement) {
@@ -113,11 +154,9 @@ function htmlView(
 /**
  * Defines default factory regarding elements passed to the `display` function.
  *
- * It creates the associated virtual DOM:
- * *  For `string`, `number` of `boolean` : returns a `div` element with `innerText` set as the value.
- * *  For virtual DOM : returns it.
- * *  For HTMLElement: returns a `div` element with the value a single child.
- * *  Otherwise (for `unknown`): returns an object explorer.
+ * The first item, acting as fallback, is implemented using {@link rawView}.
+ *
+ * The second item is specific for `VirtualDOM` or `HTMLElement`, see {@link htmlView}.
  *
  * @returns The default factory.
  */
