@@ -12,6 +12,7 @@ import {
     Dependencies,
     HttpClientTrait,
     Module,
+    ModuleView,
     Project,
 } from '../../lib/code-api'
 import fs from 'fs'
@@ -19,6 +20,7 @@ import { mockMissingUIComponents, navigateAndAssert } from '../lib/utils'
 import { render } from 'rx-vdom'
 import { HeaderView } from '../../lib/code-api/header.view'
 import { PageView, TOCView } from '../../lib/default-layout'
+import { MockClient } from './http-client'
 
 type TLayout = DefaultLayout.NavLayout
 type THeader = DefaultLayout.NavHeader
@@ -57,16 +59,16 @@ describe('Typescript/Typedoc documentation', () => {
                 content: () => ({ tag: 'h1', innerText: 'Code API' }),
             },
             routes: {
-                '/mkdocs': Promise.resolve().then(() => {
+                '/api': Promise.resolve().then(() => {
                     return codeApiEntryNode({
-                        name: 'mkdocs',
+                        name: 'Foo',
                         header: {
                             icon: { tag: 'div', class: 'fas fa-box-open' },
                         },
-                        entryModule: 'mkdocs-ts',
-                        docBasePath: `${__dirname}/api`,
-                        httpClient: ({ project }) =>
-                            new TestHttpClient({ project }),
+                        entryModule: 'Foo',
+                        docBasePath: 'assets/api',
+                        httpClient: ({ project, configuration }) =>
+                            new MockClient({ project, configuration }),
                         configuration: {
                             ...configurationTsTypedoc,
                             codeUrl: (params: {
@@ -93,17 +95,25 @@ describe('Typescript/Typedoc documentation', () => {
         expect(node.id).toBe('/')
     })
     it.each([
-        ['/mkdocs', 'mkdocs', 1, 1],
-        ['/mkdocs/MainModule', 'MainModule', 48, 27],
+        ['/api', 'Foo', 3, 3],
+        ['/api/Bar', 'Bar', 3, 3],
     ])(
         "Navigates to '%i'",
         async (path, name, expectedHeadingsCount, inTocHeadingsCount) => {
             await navigateAndAssert(router, path, name)
+            const t = await firstValueFrom(router.target$)
             const pageView = document.querySelector<HTMLElement>(
                 `.${PageView.CssSelector}`,
             )
             if (!pageView) {
                 throw Error('Page view not included in document')
+            }
+            const moduleView = document.querySelector<HTMLElement>(
+                `.${ModuleView.CssSelector}`,
+            )
+            expect(moduleView).toBeTruthy()
+            if (!moduleView) {
+                throw Error('Module view not included in document')
             }
             const headingsInPage = Array.from(
                 pageView.querySelectorAll('.mkapi-header'),
