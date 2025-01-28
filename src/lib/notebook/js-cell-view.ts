@@ -89,11 +89,15 @@ export class JsCellExecutor implements CellTrait {
  * see {@link JsCellView.FromDom}.
  */
 export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-JsCellView'
     public readonly tag = 'div'
     /**
      * Classes associated with the view.
      */
-    public readonly class = 'mknb-JsCellView'
+    public readonly class = JsCellView.CssSelector
     public readonly children: ChildrenLike
 
     /**

@@ -103,13 +103,17 @@ export type NotebookViewParameters = NotebookStateParameters & {
  * Cells run in the order of inclusion, and share their top level scope.
  */
 export class NotebookSection implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-NotebookSection'
     public readonly scrollToDelay = 200
 
     public readonly tag = 'div'
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-NotebookPage'
+    public readonly class = NotebookSection.CssSelector
     public readonly url: string
     public readonly views: Record<string, ViewGenerator>
     public readonly router: Router

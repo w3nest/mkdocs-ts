@@ -66,11 +66,15 @@ export class InlinedCode implements VirtualDOM<'div'> {
  * see {@link MdCellView.FromDom}.
  */
 export class MdCellView implements VirtualDOM<'div'>, CellTrait {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-MdCellView'
     public readonly tag = 'div'
     /**
      * Classes associated with the view.
      */
-    public readonly class = 'mknb-MdCellView'
+    public readonly class = MdCellView.CssSelector
     public readonly children: ChildrenLike
     /**
      * Cell's ID.

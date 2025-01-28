@@ -80,11 +80,15 @@ export class PyCellExecutor implements CellTrait {
  * see {@link PyCellView.FromDom}.
  */
 export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-PyCellView'
     public readonly tag = 'div'
     /**
      * Classes associated with the view.
      */
-    public readonly class = 'mknb-PyCellView'
+    public readonly class = PyCellView.CssSelector
     public readonly children: ChildrenLike
 
     /**

@@ -36,12 +36,16 @@ type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
  * Upon registration, this container includes one child of type {@link CellView}.
  */
 export class FutureCellView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-FutureCellView'
     public readonly tag = 'div'
 
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-FutureCellView'
+    public readonly class = FutureCellView.CssSelector
 
     public readonly children: ChildrenLike
 
@@ -86,12 +90,16 @@ export class FutureCellView implements VirtualDOM<'div'> {
  * *  The {@link OutputsView | outputs container}.
  */
 export class CellView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-CellView'
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-CellView border-start ps-1'
+    public readonly class = `${CellView.CssSelector} border-start ps-1`
 
     public readonly cellId: string
     public readonly state: State
@@ -234,11 +242,15 @@ export class SnippetEditorView extends CodeSnippetView {
  * Represents the view of a cell's header.
  */
 export class CellHeaderView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-CellHeaderView'
     public readonly tag = 'div'
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-CellHeaderView'
+    public readonly class = `${CellHeaderView.CssSelector} pb-1`
     public readonly children: ChildrenLike
     public readonly cellId: string
     public readonly state: State
@@ -275,12 +287,15 @@ export class CellHeaderView implements VirtualDOM<'div'> {
  * Represents the tag of a {@link CellView} (read-only or not, the language, *etc.*).
  */
 export class CellTagsView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-CellTagsView'
     public readonly tag = 'div'
     /**
      * Classes associated to the view.
      */
-    public readonly class =
-        'mknb-CellTagsView px-2 text-secondary d-flex align-items-center'
+    public readonly class = `${CellTagsView.CssSelector} px-2 text-secondary d-flex align-items-center`
 
     public readonly children: ChildrenLike
     /**
@@ -359,11 +374,15 @@ export type OutputMode = 'normal' | 'fullscreen'
  * Represents the output view of a cell (when using *e.g.* the `display` function).
  */
 export class OutputsView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-OutputsView'
     public readonly tag = 'div'
     /**
      * Classes associated to the view.
      */
-    public readonly class: string = 'mknb-OutputsView'
+    public readonly class: string = OutputsView.CssSelector
     public readonly children: ChildrenLike
     public readonly output$: Observable<Output>
 
@@ -402,11 +421,15 @@ export class OutputsView implements VirtualDOM<'div'> {
  * The view of an {@link ExecCellError}.
  */
 export class ErrorView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-ErrorView'
     public readonly tag = 'div'
     /**
      * Classes associated to the view.
      */
-    public readonly class: string = 'mknb-ErrorView'
+    public readonly class: string = ErrorView.CssSelector
     public readonly children: ChildrenLike
     public readonly error: ExecCellError
     /**

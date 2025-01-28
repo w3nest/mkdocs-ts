@@ -45,11 +45,15 @@ export type InterpreterCellAttributes = CellCommonAttributes & {
  * see {@link InterpreterCellView.FromDom}.
  */
 export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-InterpreterCellView'
     public readonly tag = 'div'
     /**
      * Classes associated with the view.
      */
-    public readonly class = 'mknb-InterpreterCellView'
+    public readonly class = InterpreterCellView.CssSelector
     public readonly children: ChildrenLike
     /**
      * Cell's ID.
@@ -304,9 +308,13 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
 }
 
 export class DropDownCaptureView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-DropDownCaptureView'
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class = 'dropdown d-flex flex-column justify-content-center'
+    public readonly class = `${DropDownCaptureView.CssSelector} dropdown d-flex flex-column justify-content-center`
     public readonly style = {
         fontSize: 'small',
     }

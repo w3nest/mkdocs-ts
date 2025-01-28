@@ -101,7 +101,7 @@ export class NoteView implements VirtualDOM<'div'> {
     /**
      * Component's class name for CSS query.
      */
-    static readonly CssSelector = 'mkdocs-CodeSnippetView'
+    static readonly CssSelector = 'mkdocs-NoteView'
 
     public readonly tag = 'div'
     public readonly class: string = `${NoteView.CssSelector} border rounded text-justify`

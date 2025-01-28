@@ -21,12 +21,16 @@ import { Dependencies } from '.'
  * see {@link DeportedOutputsView.FromDom}.
  */
 export class DeportedOutputsView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mknb-DeportedOutputsView'
     public readonly tag = 'div'
 
     /**
      * Classes associated to the view.
      */
-    public readonly class: string = 'mknb-DeportedOutputsView'
+    public readonly class: string = DeportedOutputsView.CssSelector
     public readonly children: ChildrenLike
 
     /**
