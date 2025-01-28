@@ -276,8 +276,8 @@ export class CellHeaderView implements VirtualDOM<'div'> {
                     const classList =
                         s === 'ready' ? 'fa-play' : 'fa-fast-forward'
                     return {
-                        tag: 'div',
-                        class: `fas  text-success fv-pointer ${classList}`,
+                        tag: 'button',
+                        class: `btn btn-sm btn-light fas text-success ${classList}`,
                         onclick: () => this.state.execute(this.cellId),
                     }
                 },
