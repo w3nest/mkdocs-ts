@@ -1,6 +1,12 @@
 import { setup } from '../auto-generated'
 import { fromMarkdown, GlobalMarkdownViews } from 'mkdocs-ts'
-import { ApiLink, CrossLink, ExtLink, SplitApiButton } from './md-widgets'
+import {
+    ApiLink,
+    CrossLink,
+    ExtLink,
+    SplitApiButton,
+    GitHubLink,
+} from './md-widgets'
 
 const project = {
     name: 'mkdocs-ts',
@@ -14,6 +20,7 @@ GlobalMarkdownViews.factory = {
     'api-link': (elem: HTMLElement) => new ApiLink(elem),
     'ext-link': (elem: HTMLElement) => new ExtLink(elem),
     'cross-link': (elem: HTMLElement) => new CrossLink(elem),
+    'github-link': (elem: HTMLElement) => new GitHubLink(elem),
     'split-api': () => new SplitApiButton(),
 }
 

@@ -12,7 +12,7 @@ Below is a preview of the final application in action:
 
 <note level="hint">
 This scenario is fully implemented in TypeScript as a test of {{mkdocs-ts}}, you can find it 
-<ext-link target="tests.custom-layout">here</ext-link>.
+<github-link target="tests.custom-layout">here</github-link>.
 </note>
 
 ## Requirements 

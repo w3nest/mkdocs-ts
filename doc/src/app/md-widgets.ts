@@ -10,6 +10,20 @@ export class ApiLink implements VirtualDOM<'a'> {
     constructor(elem: HTMLElement) {
         const target = elem.getAttribute('target')!
         const navs = {
+            Notebook: '@nav/api/Notebook',
+            'Notebook.Views': '@nav/api/Notebook/Views',
+            'Notebook.Views.Layouts': '@nav/api/Notebook/Views/Layouts',
+            installNotebookModule: '@nav/api/MainModule.installNotebookModule',
+            NotebookPage: '@nav/api/Notebook.NotebookPage',
+            NotebookViewParameters: '@nav/api/Notebook.NotebookViewParameters',
+            JsCellView: '@nav/api/Notebook.JsCellView',
+            MdCellView: '@nav/api/Notebook.MdCellView',
+            display: '@nav/api/Notebook.display',
+            DisplayFactory: '@nav/api/Notebook.DisplayFactory',
+            Scope: '@nav/api/Notebook.Scope',
+            'Notebook.Views.Range': '@nav/api/Notebook/Views.Range',
+            'DeportedOutputsView.FromDomAttributes':
+                '@nav/api/Notebook.DeportedOutputsView.FromDomAttributes',
             CodeApi: '@nav/api/CodeApi',
             HttpClientTrait: '@nav/api/CodeApi.HttpClientTrait',
             codeApiEntryNode: '@nav/api/CodeApi.codeApiEntryNode',
@@ -66,12 +80,24 @@ export class ApiLink implements VirtualDOM<'a'> {
                 '@nav/api/MainModule/DefaultLayout.NavigationView.CssSelector',
             'DefaultLayout.FavoritesView.CssSelector':
                 '@nav/api/MainModule/DefaultLayout.FavoritesView.CssSelector',
-            JsCellView: '@nav/api/Notebook.JsCellView',
             MkApiTypescript: '@nav/api/MkApiBackends/MkApiTypescript',
             mkapi_python: '@nav/api/MkApiBackends/mkapi_python',
         }
 
         const classes = {
+            Notebook: 'mkapi-role-module',
+            'Notebook.Views': 'mkapi-role-module',
+            'Notebook.Views.Layouts': 'mkapi-role-module',
+            installNotebookModule: 'mkapi-role-function',
+            NotebookPage: 'mkapi-role-class',
+            NotebookViewParameters: 'mkapi-role-type-alias',
+            JsCellView: 'mkapi-role-class',
+            MdCellView: 'mkapi-role-class',
+            display: 'mkapi-role-type-alias',
+            DisplayFactory: 'mkapi-role-type-alias',
+            Scope: 'mkapi-role-interface',
+            'Notebook.Views.Range': 'mkapi-role-class',
+            'DeportedOutputsView.FromDomAttributes': 'mkapi-role-attribute',
             CodeApi: 'mkapi-role-module',
             HttpClientTrait: 'mkapi-role-interface',
             codeApiEntryNode: 'mkapi-role-function',
@@ -114,7 +140,6 @@ export class ApiLink implements VirtualDOM<'a'> {
             'DefaultLayout.NavHeaderView.CssSelector': 'mkapi-role-attribute',
             'DefaultLayout.NavigationView.CssSelector': 'mkapi-role-attribute',
             'DefaultLayout.FavoritesView.CssSelector': 'mkapi-role-attribute',
-            JsCellView: 'mkapi-role-class',
             MkApiTypescript: 'mkapi-role-module',
             mkapi_python: 'mkapi-role-module',
         }
@@ -144,19 +169,53 @@ export class ExtLink implements VirtualDOM<'a'> {
     constructor(elem: HTMLElement) {
         const target = elem.getAttribute('target')!
         const navs = {
-            'tutorials.basics.md':
-                'https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.basics.md?raw=1',
+            'w3nest-gallery': '/apps/@w3nest/gallery/latest',
             tweakpane: 'https://tweakpane.github.io/docs/',
             fontawesome: 'https://fontawesome.com/v5/search',
             three: 'https://threejs.org/',
             'rx-vdom': '/apps/@rx-vdom/doc/latest',
             'virtual-dom': '/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM',
+            'bootstrap.d-flex':
+                'https://getbootstrap.com/docs/4.0/utilities/flex/',
             RxChild: '/apps/@rx-vdom/doc/latest?nav=/api.RxChild',
             webpm: '/apps/@webpm/doc/latest',
             'floating-ui': 'https://floating-ui.com/',
             BehaviorSubject:
                 'https://www.learnrxjs.io/learn-rxjs/subjects/behaviorsubject',
             Observable: 'https://rxjs.dev/guide/observable',
+            operators: 'https://rxjs.dev/guide/operators',
+            Promise:
+                'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+        }
+        this.href = navs[target]
+        this.children = [
+            {
+                tag: 'i',
+                innerText: elem.textContent,
+            },
+            {
+                tag: 'i',
+                class: 'fas fa-external-link-alt',
+                style: { transform: 'scale(0.6)' },
+            },
+        ]
+    }
+}
+
+export class GitHubLink implements VirtualDOM<'a'> {
+    public readonly tag = 'a'
+    public readonly children: ChildrenLike
+    public readonly innerText: string
+    public readonly href: string
+    public readonly target = '_blank'
+
+    constructor(elem: HTMLElement) {
+        const target = elem.getAttribute('target')!
+        const navs = {
+            'tutorials.notebook.md':
+                'https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.notebook.md?raw=1',
+            'tutorials.basics.md':
+                'https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.basics.md?raw=1',
             github: 'https://github.com/w3nest/mkdocs-ts',
             'github-static-tests':
                 'https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests',
@@ -175,8 +234,8 @@ export class ExtLink implements VirtualDOM<'a'> {
             },
             {
                 tag: 'i',
-                class: 'fas fa-external-link-alt',
-                style: { transform: 'scale(0.6)' },
+                class: 'fab fa-github',
+                style: { transform: 'scale(0.8)' },
             },
         ]
     }
@@ -192,6 +251,11 @@ export class CrossLink implements VirtualDOM<'a'> {
         const target = elem.getAttribute('target')!
         const navs = {
             notebook: '@nav/tutorials/notebook',
+            'notebook.python': '@nav/tutorials/notebook/python',
+            'notebook.import': '@nav/tutorials/notebook/import',
+            'notebook.scope': '@nav/tutorials/notebook/scope',
+            'notebook.workers': '@nav/tutorials/notebook/workers',
+            'notebook.interpreter': '@nav/tutorials/notebook/interpreter',
             'notebook.display': '@nav/tutorials/notebook.output',
             markdown: '@nav/tutorials/markdown',
             basics: '@nav/tutorials/basics',

@@ -17,7 +17,7 @@ This page provides guidance on:
    keeping code clean and maintainable.
 
 For practical examples, the {{mkdocs-ts}} GitHub repository contains several compile-time tests illustrating these 
-concepts. You can find them in this <ext-link target="github-static-tests">folder</ext-link>.
+concepts. You can find them in this <github-link target="github-static-tests">folder</github-link>.
 
 <note level="hint"> 
 A strict and well-defined type system may sometimes feel restrictive, but it plays a crucial role in 
@@ -155,9 +155,9 @@ export type NavHeader = { icon: AnyView }
 </code-snippet>
 
 The complete implementation of the example can be found in this 
-<ext-link target="tests.custom-layout">test suite</ext-link>.
+<github-link target="tests.custom-layout">test suite</github-link>.
 Some compile-time errors are discussed in this
-<ext-link target="static-tests.custom-layout">compile-time test</ext-link>.
+<github-link target="static-tests.custom-layout">compile-time test</github-link>.
 
 ## Composite Layout
 
@@ -166,7 +166,7 @@ into a unified structure. The class documentation explains how to relate them.
 
 **Example**
 
-Below is an example taken from a <ext-link target="static-tests.composite-layout">test</ext-link>:  
+Below is an example taken from a <github-link target="static-tests.composite-layout">test</github-link>:  
 
 <code-snippet language="javascript">
 import {
