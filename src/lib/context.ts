@@ -10,6 +10,7 @@ export type Label =
     | 'Notebook'
     | 'CodeApi'
     | 'Exec'
+    | 'Browser'
 /**
  * Log levels indicating severity of an entry.
  */

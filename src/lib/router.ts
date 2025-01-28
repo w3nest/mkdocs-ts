@@ -242,10 +242,13 @@ export class Router<TLayout = unknown, THeader = unknown> {
             basePath?: string
             retryNavPeriod?: number
             redirects?: Redirect[]
-            browserClient?: (p: {
-                router: Router
-                basePath: string
-            }) => BrowserInterface
+            browserClient?: (
+                p: {
+                    router: Router
+                    basePath: string
+                },
+                ctx?: ContextTrait,
+            ) => BrowserInterface
             scrollingDebounceTime?: number
             userStore?: unknown
         },
@@ -257,7 +260,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         this.basePath = this.basePath || document.location.pathname
         this.browserClient = params.browserClient
             ? params.browserClient({ router: this, basePath: this.basePath })
-            : new WebBrowser({ router: this, basePath: this.basePath })
+            : new WebBrowser({ router: this, basePath: this.basePath }, context)
 
         const { rootNode, reactiveNavs, promiseNavs } =
             this.navParser.createRootNode(
@@ -401,7 +404,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             })
             return
         }
-        this.browserClient.pushState({ target: redirectTarget })
+        this.browserClient.pushState({ target: redirectTarget }, ctx)
         this.path$.next(path)
 
         this.target$.next({
@@ -464,13 +467,16 @@ export class Router<TLayout = unknown, THeader = unknown> {
             ctx.warning(`Can not scroll to element`, target)
             return
         }
-        this.browserClient.pushState({
-            target: {
-                ...this.parseUrl(),
-                sectionId: div.id,
-                issuer: 'scroll',
+        this.browserClient.pushState(
+            {
+                target: {
+                    ...this.parseUrl(),
+                    sectionId: div.id,
+                    issuer: 'scroll',
+                },
             },
-        })
+            ctx,
+        )
         setTimeout(() => {
             ctx.info('Target found, scroll to it.')
             const offset = div.offsetTop

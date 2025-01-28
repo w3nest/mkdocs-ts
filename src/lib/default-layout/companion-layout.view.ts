@@ -70,10 +70,6 @@ export type LayoutWithCompanionParams = DefaultLayoutParams<{
  * - Use the helper function {@link splitCompanionAction} to integrate a toggle button into the navigation headers of
  *   selected nodes, simplifying the management of `companionNodes$`.
  *
- * - To prevent updates to the browser URL when navigating companion nodes, adjust {@link WebBrowser.ignoredPaths$}
- *   to include `companionNodes$` in your router. This ensures that navigation remains isolated when navigating to companion-screen
- *   from the main-screen.
- *
  */
 export class LayoutWithCompanion implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mkdocs-LayoutWithCompanion'

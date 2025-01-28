@@ -171,9 +171,12 @@ describe('Navigation dynamic', () => {
         expect(browser.hasPrev$.value).toBeFalsy()
         expect(browser.hasNext$.value).toBeFalsy()
         await router.navigateTo({ path: '/dynamic' })
-        await router.navigateTo({ path: '/dynamic/foo' })
+        await router.navigateTo({ path: '/dynamic/foo', sectionId: 'section1' })
         await router.navigateTo({ path: '/dynamic/bar' })
-        await router.navigateTo({ path: '/dynamic/bar/baz' })
+        await router.navigateTo({
+            path: '/dynamic/bar/baz',
+            sectionId: 'section2',
+        })
         expect(browser.history).toHaveLength(5)
         expect(browser.history.map((t) => t.path)).toEqual([
             '/',
@@ -181,6 +184,13 @@ describe('Navigation dynamic', () => {
             '/dynamic/foo',
             '/dynamic/bar',
             '/dynamic/bar/baz',
+        ])
+        expect(browser.history.map((t) => t.sectionId)).toEqual([
+            undefined,
+            undefined,
+            'section1',
+            undefined,
+            'section2',
         ])
         expect(browser.hasPrev$.value).toBeTruthy()
         expect(browser.hasNext$.value).toBeFalsy()
@@ -198,8 +208,12 @@ describe('Navigation dynamic', () => {
         expect(browser.hasNext$.value).toBeTruthy()
 
         await browser.next()
-        path = await firstValueFrom(router.path$)
-        expect(path).toBe('/dynamic/foo')
+        const target = await firstValueFrom(router.target$)
+        if (!isResolvedTarget(target)) {
+            throw Error('Target is not resolved')
+        }
+        expect(target.path).toBe('/dynamic/foo')
+        expect(target.sectionId).toBe('section1')
         expect(browser.history).toBe(histo0)
         expect(browser.currentIndex).toBe(2)
         expect(browser.hasPrev$.value).toBeTruthy()

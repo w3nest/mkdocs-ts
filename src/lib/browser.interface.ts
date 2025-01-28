@@ -1,6 +1,7 @@
 import { headingPrefixId, Router, UrlTarget } from './router'
 import { sanitizeNavPath } from './navigation.node'
 import { BehaviorSubject } from 'rxjs'
+import { Contextual, ContextTrait, NoContext } from './context'
 
 /**
  * Defines the interface for interacting with the browser's navigation system.
@@ -10,9 +11,9 @@ export interface BrowserInterface {
      * Pushes a new state to the browser's history stack.
      *
      * @param data - The state data to associate with the history entry, including the navigation path.
-     * @param url - The associated URL.
+     * @param ctx Execution context used for logging and tracing.
      */
-    pushState(data: { target: UrlTarget }): void
+    pushState(data: { target: UrlTarget }, ctx?: ContextTrait): void
     /**
      * Retrieves the target from the current URL.
      *
@@ -28,20 +29,24 @@ export interface BrowserInterface {
 export class WebBrowser implements BrowserInterface {
     public readonly router: Router
     public readonly basePath: string
-    public readonly ignoredPaths$: BehaviorSubject<string[]> =
-        new BehaviorSubject<string[]>([])
+    public readonly context: ContextTrait
 
-    constructor(params: {
-        router: Router
-        basePath: string
-        ignoredPaths$?: BehaviorSubject<string[]>
-    }) {
+    private lastState?: UrlTarget
+
+    constructor(
+        params: { router: Router; basePath: string },
+        ctx?: ContextTrait,
+    ) {
+        this.context = ctx ?? new NoContext()
+        const context = this.ctx().start('new WebBrowser', ['Browser'])
         Object.assign(this, params)
         window.onpopstate = (event: PopStateEvent) => {
             const state = event.state as unknown as
                 | { target: UrlTarget }
                 | undefined
             if (state) {
+                context.info(`Pop state`, state.target)
+                this.lastState = state.target
                 this.router.fireNavigateTo({
                     ...state.target,
                     issuer: 'browser',
@@ -52,27 +57,46 @@ export class WebBrowser implements BrowserInterface {
                 })
             }
         }
+        context.exit()
     }
-    pushState(data: { target: UrlTarget }): void {
-        if (data.target.issuer === 'browser') {
+
+    ctx(ctx?: ContextTrait) {
+        return ctx ?? this.context
+    }
+
+    @Contextual({
+        key: ({ target }: { target: UrlTarget }) =>
+            `${String(target.issuer)} : ${target.path}.${target.sectionId ?? ''}`,
+        labels: ['Browser'],
+    })
+    pushState(data: { target: UrlTarget }, ctx?: ContextTrait): void {
+        ctx = this.ctx(ctx)
+        if (['browser'].includes(data.target.issuer ?? '')) {
+            ctx.info('Push state disabled: browser', {
+                target: data.target,
+            })
             return
         }
-        const isIgnored = this.ignoredPaths$.value.find((ignored) =>
-            data.target.path.startsWith(ignored),
-        )
-        if (isIgnored) {
+        const newState = {
+            path: data.target.path,
+            sectionId: data.target.sectionId,
+            parameters: data.target.parameters,
+        }
+        if (JSON.stringify(this.lastState) === JSON.stringify(newState)) {
+            ctx.info('Push state disabled: no state change', {
+                target: data.target,
+            })
             return
         }
+        const url = `${this.basePath}?${formatUrl(data.target)}`
+        ctx.info('Push state', { target: newState, url })
+        this.lastState = newState
         history.pushState(
             {
-                target: {
-                    path: data.target.path,
-                    sectionId: data.target.sectionId,
-                    parameters: data.target.parameters,
-                },
+                target: this.lastState,
             },
             '',
-            `${this.basePath}?${formatUrl(data.target)}`,
+            url,
         )
     }
 
@@ -127,6 +151,11 @@ export function formatUrl(urlTarget: UrlTarget) {
 
 /**
  * Implements the {@link BrowserInterface} for managing browser navigation within a mocked browser.
+ *
+ * <note level="warning">
+ * Navigation events triggered by a 'scroll' to section ID are not persisted in history: only change in navigation path
+ * are.
+ * </note>
  */
 export class MockBrowser implements BrowserInterface {
     public readonly router: Router
@@ -140,8 +169,14 @@ export class MockBrowser implements BrowserInterface {
         this.history.push(this.parseUrl())
         this.currentIndex = 0
     }
+
+    @Contextual({
+        key: ({ target }: { target: UrlTarget }) =>
+            `${target.path}.${target.sectionId ?? ''}`,
+        labels: ['Browser'],
+    })
     pushState(data: { target: UrlTarget }): void {
-        if (data.target.issuer === 'browser') {
+        if (['browser', 'scroll'].includes(data.target.issuer ?? '')) {
             this.updateState()
             return
         }
