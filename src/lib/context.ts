@@ -1,3 +1,5 @@
+import { WindowWithStaticConfig } from './static-config'
+
 /**
  * Labels that categorize log entries.
  */
@@ -230,9 +232,11 @@ export class NoContext implements ContextTrait {
  */
 export class Context implements ContextTrait {
     /**
-     * If false, the decoration {@link Contextual} is disabled.
+     * To enable the decorator {@link Contextual} use {@link StaticConfig} with `enableContextual: true`.
      */
-    static Enabled = false
+    static Enabled =
+        (window as unknown as WindowWithStaticConfig).mkdocsConfig
+            ?.enableContextual ?? false
     public readonly reporters: ReporterTrait[]
     public readonly labels: Label[]
     public readonly threadName: string
@@ -329,7 +333,7 @@ export class Context implements ContextTrait {
  * and executes within it, handling both synchronous and asynchronous methods.
  *
  * <note level='warning' title='Important'>
- * To disable the decorator globally, set {@link Context.Enabled} to `false`.
+ * To disable the decorator globally, set {@link Context.Enabled} to `false` using {@link StaticConfig}.
  * </note>
  *
  * @param key Optional function to generate a dynamic name for the context based on arguments.
@@ -361,6 +365,9 @@ export function Contextual({
             return originalMethod
         }
         function replacementMethod(this, ...args) {
+            if (!Context.Enabled) {
+                return originalMethod.apply(this, [...args, undefined])
+            }
             const ctx = args[args.length - 1]
             if (!isContextTrait(ctx)) {
                 return originalMethod.apply(this, [...args, undefined])
