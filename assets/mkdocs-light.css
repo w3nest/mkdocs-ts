@@ -715,6 +715,25 @@
     scrollbar-width: thin;
 }
 
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+.mkdocs-pulse {
+    display: inline-block;
+    animation: pulse 1s infinite ease-in-out;
+}
+
 .CodeMirror {
     height: auto !important;
 }
@@ -778,6 +797,11 @@
 
 .mkdocs-NavigationView .mkdocs-ts-expand-nav-node {
     transition: transform 0.5s ease 0s;
+}
+
+.mkdocs-CodeSnippetView {
+    font-size: initial;
+    line-height: 1.2em;
 }
 
 .mkdocs-TopBannerView {

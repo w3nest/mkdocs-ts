@@ -33,6 +33,7 @@ import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
 import { Resolvable, resolve } from '../navigation.node'
 import { ContextTrait, Contextual, NoContext } from '../context'
+import { install } from './installer'
 
 export type CellStatus =
     | 'unready'
@@ -307,6 +308,7 @@ export class State {
             const: {
                 webpm,
                 Views,
+                install,
                 ...(params.initialScope?.const ?? {}),
             },
             python: params.initialScope?.python ?? {},
