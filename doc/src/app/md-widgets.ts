@@ -15,9 +15,13 @@ export class ApiLink implements VirtualDOM<'a'> {
             'Notebook.Views.Layouts': '@nav/api/Notebook/Views/Layouts',
             installNotebookModule: '@nav/api/MainModule.installNotebookModule',
             NotebookPage: '@nav/api/Notebook.NotebookPage',
+            install: '@nav/api/Notebook/Installer.install',
             NotebookViewParameters: '@nav/api/Notebook.NotebookViewParameters',
             JsCellView: '@nav/api/Notebook.JsCellView',
             MdCellView: '@nav/api/Notebook.MdCellView',
+            PyCellView: '@nav/api/Notebook.PyCellView',
+            InterpreterCellView: '@nav/api/Notebook.InterpreterCellView',
+            InterpreterApi: '@nav/api/Notebook.InterpreterApi',
             display: '@nav/api/Notebook.display',
             DisplayFactory: '@nav/api/Notebook.DisplayFactory',
             Scope: '@nav/api/Notebook.Scope',
@@ -91,8 +95,11 @@ export class ApiLink implements VirtualDOM<'a'> {
             installNotebookModule: 'mkapi-role-function',
             NotebookPage: 'mkapi-role-class',
             NotebookViewParameters: 'mkapi-role-type-alias',
+            install: 'mkapi-role-function',
             JsCellView: 'mkapi-role-class',
             MdCellView: 'mkapi-role-class',
+            InterpreterCellView: 'mkapi-role-class',
+            InterpreterApi: 'mkapi-role-interface',
             display: 'mkapi-role-type-alias',
             DisplayFactory: 'mkapi-role-type-alias',
             Scope: 'mkapi-role-interface',
@@ -169,10 +176,12 @@ export class ExtLink implements VirtualDOM<'a'> {
     constructor(elem: HTMLElement) {
         const target = elem.getAttribute('target')!
         const navs = {
+            w3nest: '/apps/@w3nest/doc/latest',
             'w3nest-gallery': '/apps/@w3nest/gallery/latest',
             tweakpane: 'https://tweakpane.github.io/docs/',
             fontawesome: 'https://fontawesome.com/v5/search',
             three: 'https://threejs.org/',
+            pyodide: 'https://pyodide.org/en/stable/',
             'rx-vdom': '/apps/@rx-vdom/doc/latest',
             'virtual-dom': '/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM',
             'bootstrap.d-flex':
@@ -257,6 +266,8 @@ export class CrossLink implements VirtualDOM<'a'> {
             'notebook.workers': '@nav/tutorials/notebook/workers',
             'notebook.interpreter': '@nav/tutorials/notebook/interpreter',
             'notebook.display': '@nav/tutorials/notebook.output',
+            'notebook.utils.2d-chart':
+                '@nav/tutorials/notebook/import-utils.a-2d-chart-helper',
             markdown: '@nav/tutorials/markdown',
             basics: '@nav/tutorials/basics',
             'dynamic-nav': '@nav/tutorials/basics/dynamic-nav',
