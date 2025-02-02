@@ -11,6 +11,7 @@ import {
 } from 'rxjs'
 import { shareReplay } from 'rxjs/operators'
 import { Output, Scope } from './state'
+import { InterpreterApi } from './interpreter-cell-view'
 
 /**
  * Represents the minimal required interface from a backend's client provided by py-youwol.
@@ -32,53 +33,9 @@ export interface BackendClient {
     fromFetchJson(url: string, options: unknown): Observable<unknown>
 }
 
-/**
- * Represents the body of the `/run` endpoint.
- */
-export interface RunBody {
-    /**
-     * ID of the cell run.
-     */
-    cellId: string
-    /**
-     * IDs of the previous cell running in the same interpreter, it allows recovering the proper scope.
-     */
-    previousCellIds: string[]
-    /**
-     * The code to run.
-     */
-    code: string
-    /**
-     * Input variables to capture:
-     * *  keys are variable's name
-     * *  values are their associated value, they must be serializable as JSON object.
-     */
-    capturedIn: Record<string, unknown>
-    /**
-     * Output variables to capture.
-     */
-    capturedOut: string[]
-}
+type RunBody = InterpreterApi['body']
 
-/**
- * Represents the response of the `/run` endpoint.
- */
-export interface RunResponse {
-    /**
-     * Output variables captured:
-     * *  keys are variable's name
-     * *  values are their associated value, they must be serializable as JSON object.
-     */
-    capturedOut: Record<string, unknown>
-    /**
-     * Error if any.
-     */
-    error: string
-    /**
-     * Standard output generated during the run.
-     */
-    output: string
-}
+type RunResponse = InterpreterApi['response']
 
 export async function executeInterpreter({
     body,

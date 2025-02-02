@@ -12,6 +12,59 @@ import {
 } from './interpreter-execution'
 
 /**
+ * Defines the request and response structure for the `/run` endpoint
+ * a backend should implement to be used as interpreter.
+ */
+export interface InterpreterApi {
+    /**
+     * API definition of the (single) `/run` endpoint to implement.
+     */
+    /**
+     * Request payload.
+     */
+    body: {
+        /**
+         * Unique identifier for the executing cell.
+         */
+        cellId: string
+        /**
+         * Code snippet to be executed.
+         */
+        code: string
+        /**
+         * Key-value map of variables captured from the executing cell.
+         *
+         * **All values must be serializable.**
+         */
+        capturedIn: Record<string, unknown>
+        /**
+         * List of variable names to extract as output after execution.
+         */
+        capturedOut: string[]
+    }
+
+    /**
+     * Expected response from the backend interpreter.
+     */
+    response: {
+        /**
+         * Standard output generated during execution.
+         */
+        output: string
+        /**
+         * Standard error output, if any.
+         */
+        error: string
+        /**
+         * Key-value map of captured output variables.
+         *
+         * **All values must be serializable.**
+         */
+        capturedOut: Record<string, unknown>
+    }
+}
+
+/**
  * All attributes available for a {@link InterpreterCellView}.
  */
 export type InterpreterCellAttributes = CellCommonAttributes & {
