@@ -202,15 +202,17 @@ export class TOCView implements VirtualDOM<'div'> {
                 },
             },
             {
-                tag: 'ul',
+                tag: 'div',
                 class: 'px-0 py-2 flex-grow-1 mkdocs-thin-v-scroller',
-                connectedCallback: (elem: RxHTMLElement<'ul'>) => {
+                connectedCallback: (elem: RxHTMLElement<'div'>) => {
                     elem.ownSubscriptions(
                         this.indexFirstVisibleHeading$
                             .pipe(debounceTime(debounceTimeToc))
                             .subscribe((index) => {
                                 const headings = [
-                                    ...elem.querySelectorAll('li'),
+                                    ...elem.querySelectorAll<HTMLElement>(
+                                        `.${TocItemView.CssSelector}`,
+                                    ),
                                 ]
                                 const br = elem.getBoundingClientRect()
                                 const offset = headings[index]?.offsetTop || 0
@@ -259,8 +261,12 @@ export class TOCView implements VirtualDOM<'div'> {
  * Represents the view of an item in the {@link TOCView}.
  * It can be customized by providing a `domConvertor` function to the constructor.
  */
-class TocItemView implements VirtualDOM<'li'> {
-    public readonly tag = 'li'
+class TocItemView implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-TocItemView'
+    public readonly tag = 'div'
     public readonly class: string
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
@@ -314,7 +320,7 @@ class TocItemView implements VirtualDOM<'li'> {
                       headingsPadding[heading.tagName as SupportedHeading],
               }
             : {}
-        this.class = `mkdocs-TocItemView ${heading.classList.value} pe-1`
+        this.class = `${TocItemView.CssSelector} ${heading.classList.value} pe-1`
         this.children = [
             {
                 tag: 'a' as const,

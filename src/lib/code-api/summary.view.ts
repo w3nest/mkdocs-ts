@@ -92,7 +92,7 @@ export class SummaryHeader implements VirtualDOM<'div'> {
     static readonly CssSelector = 'SummaryHeader'
 
     public readonly tag = 'div'
-    public readonly class = `${SummaryHeader.CssSelector} mkdocs-bg-info border d-flex align-items-center p-2`
+    public readonly class = `${SummaryHeader.CssSelector} mkdocs-bg-info border d-flex align-items-center p-1`
     public readonly style = {
         fontWeight: 'bolder' as const,
     }

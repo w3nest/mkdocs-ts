@@ -245,7 +245,7 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
      * The style of the associated HTML element.
      */
     public readonly style = {
-        fontSize: 'small',
+        fontSize: 'initial',
     }
     /**
      * The children of the associated HTML element.

@@ -252,7 +252,7 @@ export class NoteView implements VirtualDOM<'div'> {
 class NoteHeaderView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class: string =
-        'mkdocs-NoteHeaderView p-2 d-flex align-items-center'
+        'mkdocs-NoteHeaderView p-1 d-flex align-items-center'
     public readonly children: ChildrenLike
     public readonly style = {
         fontWeight: 'bolder' as const,
