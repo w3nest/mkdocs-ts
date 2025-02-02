@@ -14,13 +14,6 @@ export const navigation: AppNav = {
                     notebookPage('tutorials.notebook.import.md', router),
             },
         },
-        '/scope': {
-            name: 'Scope & Mutations',
-            layout: {
-                content: ({ router }) =>
-                    notebookPage('tutorials.notebook.scope.md', router),
-            },
-        },
         '/python': {
             name: 'Python',
             layout: {
