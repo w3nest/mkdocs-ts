@@ -1,0 +1,8 @@
+node_modules
+.venv
+dist/
+*.egg-info
+cdn.zip
+__pycache__
+*.iml
+.template
