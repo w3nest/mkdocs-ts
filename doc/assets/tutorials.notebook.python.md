@@ -1,27 +1,49 @@
 
 # Python
 
-This page provides a guide on integrating a Python interpreter into a notebook page, enabling the execution of Python cells directly within your browser.
+This page provides a guide on integrating a Python interpreter into a notebook page, enabling the execution of Python
+cells directly within your browser using <api-link target="PyCellView"></api-link>.
+These cells are referenced with the tag `py-cell` in the markdown source.
 
 <note level='warning' label='Important'>
 
 When executing Python code as outlined here, the runtime is included and executed within your web browser using the 
-<a target="_blank" href="https://pyodide.org/en/stable/index.html">Pyodide</a> 
-solution. Be aware of the following limitations:
+<ext-link target="pyodide">Pyodide</ext-link> solution. Be aware of the following limitations:
 
 - **Limited Package Availability:** Only pure Python wheels from PyPI are supported, along with a restricted set of 
     non-pure Python wheels compiled to WebAssembly. For more details, refer to the list of available packages
-    <a target="_blank" href="https://pyodide.org/en/stable/packages.html">here</a>.
-- **WebAssembly Constraints:** Pyodide's execution within WebAssembly has certain
-    <a target="_blank" href="https://pyodide.org/en/stable/usage/wasm-constraints.html">constraints</a>
-    that may affect performance and functionality.
-- **Initial Load Time:** The initial download of Python modules can be time-consuming. 
-    However, once downloaded, modules are cached in the browser for online use or stored in the PC filesystem when 
-    used through py-youwol. Note that warming up the runtime and Python modules impacts performance each time
-    the page is reloaded.
+   <ext-link target="pyodide-packages">here</ext-link>.
 
-This approach is suitable for relatively simple scenarios. For more complex cases, consider using Python backends.
+- **WebAssembly Constraints:** Pyodide's execution within WebAssembly has certain
+    <ext-link target="pyodide-limitations">constraints</ext-link> that may affect performance and functionality.
+
+- **Initial Load Time:** The initial download of Python modules can be time-consuming. 
+    However, once downloaded, modules are cached in the browser for online use, or stored in the PC filesystem when 
+    used through <ext-link target='w3nest'>W3Nest</ext-link>. 
+    Note that warming up the runtime and Python modules also impacts performance each time the page is reloaded.
+
+- **Only functions can be exported**: When importing python symbols from one page to another using `load`, only
+  python functions can be referenced.
+
+This approach is suitable for relatively simple scenarios. For more complex cases, consider using a Python backends
+interpreter as explained in the <cross-link target="notebook.interpreter">Interpreter Tutorial</cross-link>.
 </note>
+
+
+Let's start with installing {{mkdocs-ts}}:
+
+<js-cell>
+const version = "{{mkdocs-version}}"
+
+const { MkDocs } = await webpm.install({
+    esm:[ 
+         // Both are used to display a notification
+        `mkdocs-ts#${version} as MkDocs`, 
+        'rxjs#^7.5.6 as rxjs' 
+    ]
+})
+display(MkDocs)
+</js-cell>
 
 ## Example: Projectile Motion
 
@@ -30,24 +52,49 @@ motion. We will use Pyodide to execute Python code directly within the notebook,
 
 ### Setting Up Pyodide
 
-To enable Python execution, we first need to instantiate a Pyodide runtime and install necessary Python modules using
-the **webpm** client:
+To enable Python execution, we first need to instantiate a Pyodide runtime and install necessary Python modules:
 
 <js-cell>
-const { pyodide } = await webpm.install({
-    pyodide: {
-        version: '0.25.0',
-        modules: ["numpy"]
-    },
-    onEvent: (ev) => {
-        display(ev.text);
-    },
+const { installWithUI } = await webpm.installViewsModule()
+
+const notif = `
+This page proceed with installation of **Pyodide** in the main thread.
+
+Expect the UI to be non-responsive until done.
+
+<install-view></install-view>
+`
+const { pyodide } = await installWithUI({
+    pyodide: ["numpy"],
+    display: (view) => { 
+        display(view)
+        const done$ = view.eventsMgr.event$.pipe(
+            rxjs.filter( (ev) => ev.step === 'InstallDoneEvent')
+        )
+        const content = MkDocs.parseMd({
+            src: notif,
+            views: { 'install-view' : () => view }
+        })
+        Views.notify({
+            level: 'warning',
+            content,
+            done$
+        })
+    }
 })
 </js-cell>
 
+<note level="warning" title="Unresponsive UI">
+Since Pyodide is installed in the main thread, the UI will not respond until the installation is complete.
+
+To keep users informed, the example above displays a notification with real-time installation progress using
+<api-link target="notify"></api-link>.
+</note>
+
 ### Python Code for Projectile Motion
 
-Below is the Python function that calculates various parameters of a projectile's motion, such as time of flight, range, and maximum height, based on initial velocity and launch angle.
+Below is the Python function that calculates various parameters of a projectile's motion, such as time of flight, 
+range, and maximum height, based on initial velocity and launch angle.
 
 <py-cell>
 import numpy as np
@@ -104,15 +151,16 @@ display("Range (m):", Views.mx1, result$.range.toFixed(2))
 </js-cell>
 
 Notes:
+
 *  **Reactive Execution:** The cell is marked as reactive, meaning it automatically re-executes whenever the `params$`
    observable updates. This ensures that `params$` always contains the most recent projectile parameters,
    and `result$` emits the updated trajectory data accordingly.
+
 *  **Convertion to JavaScrip:** The `toJs` function converts the Python data structure to JavaScript. 
    The `dict_converter` parameter customizes this conversion by replacing the default behavior of converting a
    Python dictionary to a JavaScript `Map` with a conversion to a JavaScript `Object`. 
-   For more details, refer to the Pyodide
-   <a target="_blank" href="https://pyodide.org/en/stable/usage/type-conversions.html"> type conversions documentation
-   </a>
+   For more details, refer to the Pyodide 
+   <ext-link target="pyodide-type-convertion"> type conversions documentation</ext-link>
 
 
 
@@ -138,7 +186,8 @@ display(chartView)
 
 
 *  As observed, loading Python packages and executing computations on the main thread can cause the web browser to 
-become unresponsive. We are developing utilities to run code in a worker pool, which will enhance performance for 
-Python tasks, especially those involving intensive data processing.
-*  An example using <a target="_blank" href="https://matplotlib.org/">matplotlib</a> to draw plots is provided 
-   [here](@nav/tutorials/notebook/python/matplotlib).
+become unresponsive. The <cross-link target="notebook.workers">Web Workers Tutorial</cross-link> provides
+an alternative providing a non-blocking solution.
+
+*  The <cross-link target='notebook.python.matplotlib'>Matplotlib Tutorial</cross-link> illustrates the usage of 
+   `matplotlib` to draw plots within your notebook page.

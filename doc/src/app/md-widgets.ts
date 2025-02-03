@@ -12,6 +12,7 @@ export class ApiLink implements VirtualDOM<'a'> {
         const navs = {
             Notebook: '@nav/api/Notebook',
             'Notebook.Views': '@nav/api/Notebook/Views',
+            notify: '@nav/api/Notebook/Views.notify',
             'Notebook.Views.Layouts': '@nav/api/Notebook/Views/Layouts',
             installNotebookModule: '@nav/api/MainModule.installNotebookModule',
             NotebookPage: '@nav/api/Notebook.NotebookPage',
@@ -182,6 +183,13 @@ export class ExtLink implements VirtualDOM<'a'> {
             fontawesome: 'https://fontawesome.com/v5/search',
             three: 'https://threejs.org/',
             pyodide: 'https://pyodide.org/en/stable/',
+            'pyodide-packages':
+                'https://pyodide.org/en/stable/usage/packages-in-pyodide.html',
+            'pyodide-limitations':
+                'https://pyodide.org/en/stable/usage/wasm-constraints.html',
+            'pyodide-type-convertion':
+                'https://pyodide.org/en/stable/usage/type-conversions.html',
+            matplotlib: 'https://matplotlib.org/',
             'rx-vdom': '/apps/@rx-vdom/doc/latest',
             'virtual-dom': '/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM',
             'bootstrap.d-flex':
@@ -261,6 +269,8 @@ export class CrossLink implements VirtualDOM<'a'> {
         const navs = {
             notebook: '@nav/tutorials/notebook',
             'notebook.python': '@nav/tutorials/notebook/python',
+            'notebook.python.matplotlib':
+                '@nav/tutorials/notebook/python.matplotlib',
             'notebook.import': '@nav/tutorials/notebook/import',
             'notebook.scope': '@nav/tutorials/notebook/scope',
             'notebook.workers': '@nav/tutorials/notebook/workers',

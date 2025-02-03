@@ -1,6 +1,7 @@
 # MatplotLib Integration
 
-This page illustrates the use of Matplotlib for creating and managing graphics within the Pyodide environment.
+This page illustrates the use of <ext-link target="matplotlib">Matplotlib</ext-link> for creating and managing graphics 
+within the Pyodide environment.
 The approach, which can be extended to other scenarios involving Python libraries for graphics generation,
 involves producing HTML, SVG, or PNG content via Pyodide and rendering it using standard DOM elements.
 
@@ -9,22 +10,65 @@ For better separation of concerns, it's often more efficient to handle rendering
 using JavasScript libraries, while keeping only data processing logic in Python cells.
 </note>
 
+Let's start with installing {{mkdocs-ts}}:
+
+<js-cell>
+const version = "{{mkdocs-version}}"
+
+const { MkDocs } = await webpm.install({
+    esm:[ 
+         // Both are used to display a notification
+        `mkdocs-ts#${version} as MkDocs`, 
+        'rxjs#^7.5.6 as rxjs' 
+    ]
+})
+display(MkDocs)
+</js-cell>
+
+
 ## Setting Up Matplotlib
 
 To begin, we need to install the necessary packages, including numpy and matplotlib, within the Pyodide runtime:
 
 <js-cell>
+const { installWithUI } = await webpm.installViewsModule()
+const notif = `
+This page proceed with installation of **Pyodide** in the main thread.
 
-const { pyodide } = await webpm.install({
-    pyodide:{
-        version:'0.25.0',
-        modules:["numpy", "matplotlib"]
-    },
-    onEvent: (ev) => {
-        display(ev.text)
-    },
+Expect the UI to be non-responsive until done.
+
+<install-view></install-view>
+`
+
+const { pyodide } = await installWithUI({
+    pyodide: ["numpy", "matplotlib"],
+    display: (view) => {
+        display(view)
+        const done$ = view.eventsMgr.event$.pipe(
+            rxjs.filter( (ev) => ev.step === 'InstallDoneEvent'),
+            rxjs.delay(1000) 
+        )
+        const content = MkDocs.parseMd({
+            src: notif,
+            views: { 'install-view' : () => view }
+        })
+        Views.notify({
+            level: 'warning',
+            content,
+            done$
+        })
+    }
 })
 </js-cell>
+
+
+<note level="warning" title="Unresponsive UI">
+Since Pyodide is installed in the main thread, the UI will not respond until the installation is complete.
+Because `matplotlib` is installed, it takes a short while.
+
+To keep users informed, the example above displays a notification with real-time installation progress using
+<api-link target="notify"></api-link>.
+</note>
 
 ## Example Scenario: Projectile Motion
 
