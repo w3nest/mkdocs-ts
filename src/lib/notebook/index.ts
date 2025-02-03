@@ -88,7 +88,6 @@ export * from './worker-cell-view'
 export * from './worker-execution'
 export * as Views from './views'
 export * from './display-utils'
-export * as Installer from './installer'
 import type { parseMd } from '../markdown'
 import type { MdWidgets } from '..'
 

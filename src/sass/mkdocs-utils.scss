@@ -136,22 +136,3 @@ $filters: (
     scrollbar-color: interpolate($color-bg, $color-text, calc(0.3)) $color-bg;
     scrollbar-width: thin;
 }
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.7;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-.mkdocs-pulse {
-    display: inline-block;
-    animation: pulse 1s infinite ease-in-out;
-}
