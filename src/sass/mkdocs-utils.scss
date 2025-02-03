@@ -93,7 +93,7 @@ $filters: (
         background-color: #{$color}1a !important;
     }
     .mkdocs-bg-#{$nickName} {
-        background-color: #{$color}1a !important;
+        background-color: interpolate($color, $color-bg, 0.9) !important;
     }
     .mkdocs-text-#{$nickName} {
         color: $color !important;
