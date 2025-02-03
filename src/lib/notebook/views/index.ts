@@ -54,6 +54,26 @@
  * display(new Views.Text(String.raw`**including latex block**: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$`))
  * </js-cell>
  *
+ * ### {@link notify | Notification}
+ *
+ * The `notify` function enables notification:
+ *
+ * <js-cell>
+ * const notification = {
+ *     tag: 'div',
+ *     class: 'p-3',
+ *     innerText: 'A notification...'
+ * }
+ * display({
+ *     tag: 'button',
+ *     class: 'btn btn-sm btn-primary',
+ *     innerText: 'Notify',
+ *     onclick: ()=> {
+ *         Views.notify({content:notification, level:'info', duration:3000})
+ *     }
+ * })
+ * </js-cell>
+ *
  *
  * @module Views
  */
@@ -63,3 +83,4 @@ export * from './text'
 export * from './dropdown'
 export { CodeSnippetView as CodeSnippet } from '../../md-widgets/code-snippet.view'
 export * as Layouts from './layouts'
+export * from './notification.view'
