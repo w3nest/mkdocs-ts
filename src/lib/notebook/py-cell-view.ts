@@ -63,7 +63,13 @@ export class PyCellExecutor implements CellTrait {
      * @param args See {@link ExecArgs}.
      */
     async execute(args: ExecArgs): Promise<Scope> {
-        const pyodide = (window as unknown as { pyodide: Pyodide }).pyodide
+        const pyodide = (window as unknown as { pyodide?: Pyodide }).pyodide
+        if (!pyodide) {
+            throw Error(
+                'No `window.pyodide` available to run the python cell. You can use `install({pyodide:...})' +
+                    ' to provide a pyodide runtime.',
+            )
+        }
         return await executePy({
             ...args,
             invalidated$: this.invalidated$,
@@ -77,6 +83,11 @@ export class PyCellExecutor implements CellTrait {
  * Represents a Python cell (running in browser) within a {@link NotebookPage}.
  *
  * They are typically included from a DOM definition with tag name `py-cell` in MarkDown content,
+ *
+ * <note level='warning'>
+ * An instance of Pyodide runtime should be available through `window.pyodide` with expected python modules installed.
+ * </note>
+ *
  * see {@link PyCellView.FromDom}.
  */
 export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
