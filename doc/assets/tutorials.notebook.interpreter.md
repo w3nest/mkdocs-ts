@@ -1,69 +1,115 @@
 # Interpreter
 
-This notebook demonstrates the usage of interpreters, which are backend services designed to execute code in a
-controlled environment on the user's PC. Interpreters need to implement a `POST:/run` endpoint that accepts a specific
-[body](@nav/api/Notebook.RunBody) and returns a defined [response](@nav/api/Notebook.RunResponse).
 
 <note level='warning' label='Important'>
-Interpreters, being backends, require the encapsulating application to be run through py-youwol for installation and 
-functionality.
+This feature requires the application to be run through <ext-link target="w3nest">W3Nest</ext-link>. 
+Only this environment supports the automatic backend installation required for interpreters.
 </note>
 
-Although this example uses a particular Python interpreter, the principles apply to other types of interpreters as well.
+This tutorial demonstrates how to use the <api-link target="InterpreterCellView"></api-link> component, 
+which defines an executable cell interpreted by a backend. 
+These interpreter cells are referenced from the Markdown source code using a DOM element with the tag 
+`interpreter-cell`, e.g.:
 
+<code-snippet language="markdown">
+This exemplifies the usage of `interpreter-cell` within a notebook page:
+
+<interpreter-cell interpreter="pyrun" language="python">
+import numpy
+print(numpy)
+</interpreter-cell>
+</code-snippet>
+
+The available attributes for a `py-cell` are documented in <api-link target="PyCellView.FromDomAttributes"></api-link>.
+
+
+The backend used in this example is <api-link target="pyrun_backend"></api-link>, a built-in interpreter in
+{{mkdocs-ts}}. However, you can use other interpreters as long as they implement a `POST /run` endpoint that follows
+the <api-link target="InterpreterApi"></api-link> specification.
+
+Let's start with installing {{mkdocs-ts}}:
+
+<js-cell>
+const { MkDocs, rxjs } = await webpm.install({
+    esm:[ 
+         // Both are required only to display a notification
+        `mkdocs-ts#{{mkdocs-version}} as MkDocs`, 
+        'rxjs#^7.5.6 as rxjs' 
+    ]
+})
+display(MkDocs)
+</js-cell>
 
 ## Interpreter Installation
 
-Interpreters are installed using the `webpm` client, which provides flexibility in configuring their build environments.
-The python interpreter `pyrun_backend` is used in this page: 
+Interpreters are installed using the <ext-link target="webpm">WebPM client</ext-link>.
+This allows flexible configuration of build environments, as determined by the backend itself.
+
+For example, as documented in <api-link target="pyrun_backend"></api-link>, you can configure it using:
+
+*  `modules`: A list of Python modules to install.
+
+*  `apt`: A list of system packages required by the backend.
+
+The following code installs the pyrun_backend interpreter with the `numpy` module:
 
 <js-cell>
-const {pyrun} = await webpm.install({
+const { installWithUI } = await webpm.installViewsModule()
+
+const notif = `This page proceed with installation of **pyrun-backend**.
+
+<install-view></install-view>
+`
+
+const { pyrun } = await installWithUI({
     backends: { 
         modules:['pyrun_backend#^0.2.1 as pyrun'],
         configurations: {
             pyrun_backend: {
-                build: { modules:'numpy'}
+                build: { 
+                    modules:'numpy'
+                }
             }
         }
+    },
+    display: (view) => { 
+        display(view)
+        const done$ = view.eventsMgr.event$.pipe(
+            rxjs.filter( (ev) => ev.step === 'InstallDoneEvent')
+        )
+        const content = MkDocs.parseMd({
+            src: notif,
+            views: { 'install-view' : () => view }
+        })
+        Views.notify({
+            level: 'warning',
+            content,
+            done$
+        })
     }
 })
 </js-cell>
 
-In the cell above:
-*  The `pyrun_backend` interpreter is requested with a version compatible with `^0.1.0`, 
-   and the exported symbol `pyrun` refers to its JavaScript client.
-*  The backend is configured at the `build` stage to include the numpy module in its environment.
+**Checking Backend Status**
 
-<note level="hint">
-Interpreter installations are managed using a concept of partitioning: backends within a partition are isolated from 
-others. If no partition ID is specified in the `webpm.install` call, a unique ID is generated, ensuring that other 
-applications using `pyrun_backend#^0.1.0` are directed to separate instances, preventing state conflicts.
+You can monitor the status, logs, and running instances of an interpreter backend through
+the <ext-link target="w3lab">W3Lab</ext-link> application under **Environment > Backends**.
 
-You can view the running backends partitions in the 
-<a target="_blank" href="/co-lab?nav=/environment/backends">Colab</a> interface.
+<note level="hint" title="Partitioning">
+Interpreter installations use **partitioning**, isolating backends from each other.
+If no partition ID is specified, a unique one is generated per tab session, preventing conflicts.
 </note>
 
 
-## Basics
+## Basic Usage
 
-This section covers the fundamentals of using an interpreter. 
-It focuses on cells exclusively executed through the interpreter; the following section will address interactions
-with other types of cells (e.g., `js-cell`, `py-cell`) and the management of reactivity.
+Let's define a function compute to calculate a projectile's trajectory using **initial velocity** and **launch angle**:
 
-We'll analyze the motion of a projectile launched under specified initial conditions.
+The next cell is an `interpreter-cell` (notice the <i class="fas fa-network-wired"></i> icon), the corresponding
+DOM element in the Markdown feature the attributes: 
+*  **`interpreter="pyrun"`** → Binds the cell to the interpreter.
+*  **`language="python"`** → Controls syntax highlighting (not execution language, which is set by the interpreter).
 
-In a notebook, a cell bound to an interpreter is declared using an HTML element with the tag `interpreter-cell`. 
-The available attributes are documented [here](@nav/api/Notebook.InterpreterCellAttributes).
-Key attributes include:
-*  **interpreter**: A string pointing to the JavaScript client of the interpreter, such as `pyrun` here.
-*  **language**: Specifies the language for syntax highlighting in the editor view.
-
-Cells bounded to an interpreter feature the icon <i class="fas fa-network-wired"></i> at the top left of their
-editor view.
-
-Let’s begin by implementing a function `compute` that calculates the projectile’s trajectory based on the initial 
-velocity and launch angle:
 
 <interpreter-cell interpreter="pyrun" language="python">
 import numpy as np
@@ -95,7 +141,7 @@ def compute(v0: float, angle0: float):
     )
 </interpreter-cell>
 
-Let’s test the function by calculating the projectile’s trajectory for a given initial velocity and launch angle:
+Now, let's compute and display the results:
 
 <interpreter-cell interpreter="pyrun" language="python">
 import pprint
@@ -107,30 +153,26 @@ r = compute(initial_velocity, launch_angle_deg)
 pprint.pprint(r)
 </interpreter-cell>
 
-In this example:
-
-*  The `compute` function calculates key trajectory parameters: time of flight, maximum height, and range.
-*  It returns a `Result` object containing these values and the coordinates of the projectile over time.
-*  We use the `pprint` module to display the results in a readable format.
-
 
 ## Capturing Variables
 
-Capturing variables in an interpreter cell allows for seamless data exchange between the interpreter and other types 
-of cells, such as JavaScript cells.
+Captured variables allow data exchange between interpreter cells and other cells (e.g., JavaScript).
 
-When input and output captures are defined within an `interpreter-cell`, they are accessible in the editor view via
-dropdowns with the icons <i class='fas fa-sign-in-alt'></i> (input) and <i class='fas fa-sign-out-alt'></i> (output).
+Captured variables appear as dropdowns in the editor, marked with:
+
+*  <i class='fas fa-sign-in-alt'></i> for **inputs**
+
+*  <i class='fas fa-sign-out-alt'></i> for **outputs**
 
 <note level='warning' label='Important'>
-All data transferred between an interpreter and the frontend must be serializable in the body of an HTTP request.
-Typically, this includes simple data structures such as numbers, bytes, strings, lists, and dictionaries.
+All data exchanged **must be serializable** (numbers, strings, lists, dicts, etc.).
 </note>
 
 ### Output capture
 
-To capture output from an `interpreter-cell` for display or further use, define the `captured-out` attribute with 
+To capture output from an `interpreter-cell`, define the `captured-out` attribute with 
 the variable names to be captured (separated by whitespaces).
+
 For instance, the following cell captures the `result` variable:
 
 <interpreter-cell interpreter="pyrun" language="python" captured-out="result">
@@ -197,21 +239,14 @@ parameter change.
 We'll begin by creating sliders for initial velocity and angle, and a reactive variable `reactiveInput`:
 
 <js-cell>
-const ctrlView = (text, min, max) => {
-    const range = new Views.Range({min, max}) 
-    return {
-        tag: 'div',
-        class: 'd-flex align-items-center',
-        children:[
-            { tag: 'div', innerText: text, style:{width: '100px'}},
-            Views.mx2,
-            range
-        ],
-        value$: range.value$
-    }
-}
-const angleView = ctrlView(String.raw `Angle (°)`, 0, 90)
-const velocityView = ctrlView(String.raw `Velocity (m/s)`, 0, 50)
+const { LabelRange } = await load("/tutorials/notebook/import-utils");
+
+const angleView = LabelRange({
+    text: String.raw `\(\theta \ (^\circ) \)`, min: 0, max: 90
+});
+const velocityView = LabelRange({
+    text: String.raw `\(\mathbf{v} \ (m/s) \)`, min: 0, max: 50
+});
 display(angleView)
 display(velocityView)
 
@@ -221,11 +256,16 @@ const reactiveInput = rxjs.combineLatest([angleView.value$, velocityView.value$]
 )
 </js-cell>
 
+<note level='warning' title='Variable name compatibility'>
+A common convention is to suffix reactive variable with a `$` sign. 
+However, it has not been done for `reactiveInput` because this variable will be used in the next python cell, 
+which does not allow `$` in variable name.
+</note>
 
-To make an `interpreter-cell` reactive, you need to include one or more reactive variables (either Observable or 
-Promise) in the `captured-in` attribute. The following behavior then applies:
+To make an `interpreter-cell` reactive, you need to include one or more reactive variables (either `Observable` or 
+`Promise`) in the `captured-in` attribute. The following behavior then applies:
 *  The cell is re-executed each time the reactive variable(s) emits new objects.
-*  The captured outputs are wrapped within reactive variable as well (as `Observable`).
+*  The captured outputs are wrapped within reactive variable as well (*i.e.* as `Observable`).
 
 
 The next cell is reactive (notice the <i class="fas fa-bolt></i> icon) as it captures `reactiveInput`
