@@ -35,13 +35,18 @@ const { installWithUI } = await webpm.installViewsModule()
 const notif = `
 This page proceed with installation of **Pyodide** in the main thread.
 
-Expect the UI to be non-responsive until done.
+Expect the UI to be non-responsive until done. 
+
+An extra delay to warm-up matplotlib is expected after installation completes.
 
 <install-view></install-view>
 `
 
 const { pyodide } = await installWithUI({
-    pyodide: ["numpy", "matplotlib"],
+    pyodide: {
+        version: "{{pyodide-version}}",
+        modules: ["numpy", "matplotlib"]
+    },
     display: (view) => {
         display(view)
         const done$ = view.eventsMgr.event$.pipe(

@@ -443,7 +443,7 @@ display({
             source$: debounced$,
             vdomMap: (debounced) => ({
                 backgroundColor:'red',
-                width:size, height:size,
+                width:'25px', height:'25px',
                 left:`${50*debounced}%`,  
                 position: 'absolute'  
             })
@@ -451,10 +451,6 @@ display({
     }]
 })
 </js-cell>
-
-{{rx-vdom}} is a lightweight yet powerful library designed for efficient UI updates. 
-It fits seamlessly within the notebook plugin, making it an excellent choice for reactive interfaces without
-unnecessary overhead.
 
 We recommend that readers explore `Rx-vDOM` to leverage its capabilities for efficient, fine-grained reactivity in 
 their applications.

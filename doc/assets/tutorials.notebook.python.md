@@ -208,9 +208,9 @@ Details regarding the injected scope in a python cell are available in <api-link
 This section illustrates the most important concepts.
 
 Scope management obeys the same rule as for JavaScript cells:
-*  Only top level variables are available in following cells
-*  Primitive types are re-initialized at each run
-*  Other types keep their state
+*  Only **top-level** persist in subsequent cells.
+*  **Immutables types** (*e.g.* `string`, `float`, `int`) are re-initialized at each run
+*  **Mutable types** (*e.g.* `list`, `object`) retain their state across executions.
 
 As illustration, let's initialize some variables:
 
@@ -236,13 +236,16 @@ display("Non-primitive type:", Views.mx1, bar['value'])
 # display(baz) => name 'baz' is not defined
 </py-cell>
 
-Each time you run the above cell, the output remains the same (`84`) for `foo`, while `bar['value']` is doubled 
-each time. The variable `baz` is not exposed here.
+Each time the cell runs:
+
+*  `foo` resets to `42`, so the output remains `84`.
+*  `bar['value']` persists and doubles with each execution.
+*   `baz` is defined inside a function and does not persist outside its scope.
 
 **Shared Runtime**
 
 Python and JavaScript symbols are seamlessly shared between py-cell and js-cell, allowing 
-**bidirectional communication**.
+**bidirectional communication**. 
 
 JavaScript-defined variables are available in Python:
 
@@ -256,11 +259,24 @@ result = compute(v, theta)['range']
 display(result)
 </py-cell>
 
+<note level="warning" >
+Variable names that are valid in JavaScript may not be allowed in Python. 
+A **sanitization** process adjusts these names as described in <api-link target="fixScopeInvalidVar"></api-link>.
+</note>
+
 Similarly, Python-defined variables can be used in JavaScript:
 
 <js-cell>
 display(result)
 </js-cell>
+
+<note level="hint" >
+Most Python variables used in JavaScript are `PyProxy` objects (see 
+<ext-link target="pyodide-type-convertion">Pyodide documentation</ext-link>). 
+Their **lifecycle must be managed explicitly** using `.destroy()`. 
+Python cells **automatically call `.destroy()`** on exposed variables when invalidated.
+</note>
+
 
 Let’s take this a step further by integrating JavaScript UI elements with Python computation:
 
@@ -291,9 +307,24 @@ params_.pipe(
 
 </py-cell>
 
-The python cell display the (JavaScript) slider views, and plug `resultView` call for any changes in parameters.
+The python cell display the (JavaScript implemented) slider views, and plug `resultView` call for any changes in parameters.
 Note that `params_` is referring to the JavaScript `params$` variable, as `$` is not permitted in python for variable 
-names (see <api-link target="fixScopeInvalidVar"></api-link>).
+names.
+
+
+
+<note level="hint">
+While most type conversions happen automatically and feel intuitive, some challenges remain—particularly regarding 
+object lifecycle between Python and JavaScript. As a general guideline:
+
+*  Use Python for exposing computation as functions to JavaScript.
+*  Use JavaScript to orchestrate them an define related UI.
+
+For explanation regarding Python/JavaScript type translations, refer to the
+<ext-link target="pyodide-type-convertion">Pyodide documentation</ext-link>.
+</note>
+
+
 
 ## Going Further
 
@@ -303,7 +334,3 @@ names (see <api-link target="fixScopeInvalidVar"></api-link>).
 
 *  **Data Visualization**: The <cross-link target='notebook.python.matplotlib'>Matplotlib Tutorial</cross-link> 
    demonstrates how to use matplotlib to plot graphs directly in the notebook.
-
-*  **Best Practices**: Mixing JavaScript and Python is **powerful but requires careful handling** in some cases.
-   To avoid common pitfalls, refer to the 
-   

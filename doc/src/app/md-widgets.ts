@@ -21,6 +21,13 @@ export class ApiLink implements VirtualDOM<'a'> {
             JsCellView: '@nav/api/Notebook.JsCellView',
             MdCellView: '@nav/api/Notebook.MdCellView',
             PyCellView: '@nav/api/Notebook.PyCellView',
+            'PyCellView.FromDomAttributes':
+                '@nav/api/Notebook.PyCellView.FromDomAttributes',
+            WorkerCellView: '@nav/api/Notebook.WorkerCellView',
+            'WorkerCellView.FromDomAttributes':
+                '@nav/api/Notebook.WorkerCellView.FromDomAttributes',
+            executePy: '@nav/api/Notebook.executePy',
+            fixScopeInvalidVar: '@nav/api/Notebook.fixScopeInvalidVar',
             InterpreterCellView: '@nav/api/Notebook.InterpreterCellView',
             InterpreterApi: '@nav/api/Notebook.InterpreterApi',
             display: '@nav/api/Notebook.display',
@@ -87,6 +94,7 @@ export class ApiLink implements VirtualDOM<'a'> {
                 '@nav/api/MainModule/DefaultLayout.FavoritesView.CssSelector',
             MkApiTypescript: '@nav/api/MkApiBackends/MkApiTypescript',
             mkapi_python: '@nav/api/MkApiBackends/mkapi_python',
+            pyrun_backend: '@nav/api/Interpreters/pyrun_backend',
         }
 
         const classes = {
@@ -99,6 +107,12 @@ export class ApiLink implements VirtualDOM<'a'> {
             install: 'mkapi-role-function',
             JsCellView: 'mkapi-role-class',
             MdCellView: 'mkapi-role-class',
+            PyCellView: 'mkapi-role-class',
+            'PyCellView.FromDomAttributes': 'mkapi-role-attribute',
+            WorkerCellView: 'mkapi-role-class',
+            'WorkerCellView.FromDomAttributes': 'mkapi-role-attribute',
+            executePy: 'mkapi-role-function',
+            fixScopeInvalidVar: 'mkapi-role-function',
             InterpreterCellView: 'mkapi-role-class',
             InterpreterApi: 'mkapi-role-interface',
             display: 'mkapi-role-type-alias',
@@ -178,8 +192,11 @@ export class ExtLink implements VirtualDOM<'a'> {
         const target = elem.getAttribute('target')!
         const navs = {
             w3nest: '/apps/@w3nest/doc/latest',
+            w3lab: '/w3lab',
             'w3nest-gallery': '/apps/@w3nest/gallery/latest',
             tweakpane: 'https://tweakpane.github.io/docs/',
+            chartjs: 'https://www.chartjs.org/',
+            mathjs: 'https://mathjs.org/',
             fontawesome: 'https://fontawesome.com/v5/search',
             three: 'https://threejs.org/',
             pyodide: 'https://pyodide.org/en/stable/',
@@ -203,6 +220,10 @@ export class ExtLink implements VirtualDOM<'a'> {
             operators: 'https://rxjs.dev/guide/operators',
             Promise:
                 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+            'worker-transferable':
+                'https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API',
+            'shared-array':
+                'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer',
         }
         this.href = navs[target]
         this.children = [
@@ -278,6 +299,8 @@ export class CrossLink implements VirtualDOM<'a'> {
             'notebook.display': '@nav/tutorials/notebook.output',
             'notebook.utils.2d-chart':
                 '@nav/tutorials/notebook/import-utils.a-2d-chart-helper',
+            'notebook.utils.notifications':
+                '@nav/tutorials/notebook/import-utils.workers-pool-notification',
             markdown: '@nav/tutorials/markdown',
             basics: '@nav/tutorials/basics',
             'dynamic-nav': '@nav/tutorials/basics/dynamic-nav',

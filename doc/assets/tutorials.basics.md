@@ -5,15 +5,12 @@ a library designed for creating hierarchical, interactive, and dynamic documenta
 While the example used—a whimsical guide to *The Hitchhiker’s Guide to the Galaxy* quotes—might lean on humor, 
 the underlying purpose is to demonstrate practical techniques for building structured applications with {{mkdocs-ts}}.
 
+Through this step by step tutorial, you'll gain an understanding of how to use Markdown, the library's layout system,
+and its navigation features to create a modular and responsive application. 
 Below is a preview of the final application in action:
 
 <cell-output cell-id="app-start" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;"> </cell-output>
 
-Through this example, you'll gain an understanding of how to use Markdown, the library's layout system,
-and its navigation features to create modular and responsive applications. 
-By the end, you'll have both a fun example application and the knowledge to start building your own tailored projects.
-
-Let's get started!
 
 <note level=hint>
 Many links to the API documentation are embedded throughout this tutorial. 

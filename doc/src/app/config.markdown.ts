@@ -96,6 +96,7 @@ Please refer to the tutorial section to learn about the multiple features propos
 export const placeholders = {
     '{{project}}': project.name,
     '{{mkdocs-version}}': setup.version,
+    '{{pyodide-version}}': '0.27.2',
     '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
     '{{assetsBasePath}}': `../assets`,
     '{{mkdocs-ts}}': '**`mkdocs-ts`**',
