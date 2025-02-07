@@ -1,5 +1,5 @@
-import { AnyVirtualDOM, render } from 'rx-vdom'
-import { Observable, take } from 'rxjs'
+import { AnyVirtualDOM, attr$, render } from 'rx-vdom'
+import { Observable, of, take } from 'rxjs'
 import type { AnyView } from '../../navigation.node'
 import type { NoteLevel } from '../../md-widgets'
 
@@ -49,7 +49,6 @@ import type { NoteLevel } from '../../md-widgets'
  * @param _p.done$ Optional observable that, when emitting, removes the notification.
  * @param _p.duration Optional duration in milliseconds after which the notification will automatically disappear.
  */
-
 export function notify({
     content,
     done$,
@@ -57,11 +56,12 @@ export function notify({
     level,
 }: {
     content: AnyView
-    level: NoteLevel
+    level: NoteLevel | Observable<NoteLevel>
     done$?: Observable<unknown>
     duration?: number
 }) {
     let notif: HTMLElement
+    const level$ = level instanceof Observable ? level : of(level)
     const containerId = 'notification-container'
     let container = document.getElementById(containerId)
     if (!container) {
@@ -96,7 +96,12 @@ export function notify({
     }
     const wrapped: AnyVirtualDOM = {
         tag: 'div',
-        class: `mkdocs-bg-${level} border rounded p-3 my-1`,
+        class: attr$({
+            source$: level$,
+            vdomMap: (level) => {
+                return `mkdocs-bg-${level} border rounded p-3 my-1 w-100`
+            },
+        }),
         children: [content, closeBtn],
         connectedCallback: (elem) => (notif = elem),
     }
