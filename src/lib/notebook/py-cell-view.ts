@@ -5,6 +5,7 @@ import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { executePy, Pyodide } from './py-execution'
+import { ContextTrait, Contextual } from '../context'
 
 /**
  * All attributes available for a python cell are the common ones for now.
@@ -61,8 +62,10 @@ export class PyCellExecutor implements CellTrait {
      * Execute the cell. See {@link executePy}.
      *
      * @param args See {@link ExecArgs}.
+     * @param ctx Execution context used for logging and tracing.
      */
-    async execute(args: ExecArgs): Promise<Scope> {
+    @Contextual({ async: true, key: (args: ExecArgs) => args.cellId })
+    async execute(args: ExecArgs, ctx?: ContextTrait): Promise<Scope> {
         const pyodide = (window as unknown as { pyodide?: Pyodide }).pyodide
         if (!pyodide) {
             throw Error(
@@ -70,11 +73,14 @@ export class PyCellExecutor implements CellTrait {
                     ' to provide a pyodide runtime.',
             )
         }
-        return await executePy({
-            ...args,
-            invalidated$: this.invalidated$,
-            pyNamespace: this.state.getPyNamespace(pyodide),
-        })
+        return await executePy(
+            {
+                ...args,
+                invalidated$: this.invalidated$,
+                pyNamespace: this.state.getPyNamespace(pyodide),
+            },
+            ctx,
+        )
     }
 }
 
@@ -82,13 +88,15 @@ export class PyCellExecutor implements CellTrait {
  *
  * Represents a Python cell (running in browser) within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `py-cell` in MarkDown content,
+ * They are typically included from a DOM definition with tag name `py-cell` in Markdown content,
+ * see {@link PyCellView.FromDom}.
+ *
+ * Details regarding the execution are provided in the documentation of {@link executePy}.
  *
  * <note level='warning'>
  * An instance of Pyodide runtime should be available through `window.pyodide` with expected python modules installed.
  * </note>
  *
- * see {@link PyCellView.FromDom}.
  */
 export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
     /**
@@ -109,7 +117,7 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
 
     /**
      * Defines the methods to retrieve constructor's arguments from the DOM element `py-cell` within
-     * MarkDown content.
+     * Markdown content.
      *
      * <note level='warning'>
      * Be mindful of the conversion from `camelCase` to `kebab-case`.
@@ -125,7 +133,7 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
     }
 
     /**
-     * Initialize an instance of {@link PyCellView} from a DOM element `py-cell` in MarkDown content
+     * Initialize an instance of {@link PyCellView} from a DOM element `py-cell` in Markdown content
      *  (the parameter `state` is automatically provided).
      *
      * <note level="hint" label="Constructor's attributes mapping">
