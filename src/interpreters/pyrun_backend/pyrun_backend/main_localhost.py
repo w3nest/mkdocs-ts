@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("--port", help="Specify the port on which the service is running")
 parser.add_argument(
-    "--yw_port", help="Specify the port on which the youwol server is running"
+    "--host_port", help="Specify the port on which the host server is running"
 )
 
 
@@ -20,8 +20,8 @@ def main() -> None:
     """
     Starts the server on localhost.
 
-    The serving port and youwol's server port should be provided as command line arguments
-    (using `--port` and `--yw_port` respectively).
+    The serving port and host's server port should be provided as command line arguments
+    (using `--port` and `--host_port` respectively).
     """
 
     args = parser.parse_args()
@@ -30,8 +30,8 @@ def main() -> None:
         configuration=Configuration(
             host=localhost,
             port=int(args.port) if args.port else __default__port__,
-            yw_port=int(args.yw_port) if args.yw_port else 2000,
-            yw_host=localhost,
+            host_port=int(args.host_port) if args.host_port else 2000,
+            host_name=localhost,
             instance_name=localhost,
             log_level="debug",
         )

@@ -39,7 +39,7 @@ def start(configuration: Configuration) -> None:
 
 def create_app(configuration: Configuration) -> FastAPI:
     """
-    Creates the Fast API application.
+    Create and configure the FastAPI application.
 
     Parameters:
         configuration: Configuration.
@@ -63,8 +63,8 @@ def create_app(configuration: Configuration) -> FastAPI:
     root_base = "http://localhost"
     app: FastAPI = FastAPI(
         title="pyrun_backend",
-        # Root path is always served from localhost (using the py-youwol server).
-        root_path=f"{root_base}:{configuration.yw_port}/backends/pyrun_backend/{__version__}",
+        # Root path is always served from localhost (using the W3Nest server).
+        root_path=f"{root_base}:{configuration.host_port}/backends/pyrun_backend/{__version__}",
         lifespan=lifespan,
     )
     app.include_router(root_router)

@@ -5,8 +5,8 @@ Module gathering elements regarding the configuration of the server.
 from dataclasses import dataclass
 
 from starlette.requests import Request
-from yw_clients import Context, ContextFactory
-from yw_clients.context.models import ProxiedBackendCtxEnv
+from w3nest_client import Context, ContextFactory
+from w3nest_client.context.models import ProxiedBackendCtxEnv
 
 
 @dataclass(frozen=True)
@@ -23,17 +23,17 @@ class Configuration:
     """
     Server's port.
     """
-    yw_port: int
+    host_port: int
     """
-    Youwol server's port.
+    Host's port.
     """
-    yw_host: str
+    host_name: str
     """
-    Youwol server's host.
+    Host's name.
     """
     instance_name: str
     """
-    Instance name/
+    Instance name.
     """
     log_level: str | int | None
     """
@@ -42,12 +42,12 @@ class Configuration:
 
     def __str__(self):
         """
-        String representation of the configuration.
-        :return:
+        Returns a string representation of the configuration.
+
         """
         return (
             f"Serving instance '{self.instance_name}' at '{self.host}:{self.port}', "
-            f"connected to youwol server at '{self.yw_host}:{self.yw_port}'"
+            f"connected to W3Nest host at '{self.host_name}:{self.host_port}'"
         )
 
     def context(self, request: Request) -> Context[ProxiedBackendCtxEnv]:
@@ -55,7 +55,7 @@ class Configuration:
         Returns an instance of context given an incoming request.
         It provides:
         *  Access to logging methods (`info`, `warning`, etc.) along with trace management.
-        *  Access to YouWol's HTTP clients through its `.env` attribute.
+        *  Access to W3Nest HTTP clients through its `.env` attribute.
 
         Parameters:
             request: Incoming request.
@@ -64,7 +64,7 @@ class Configuration:
             The context.
         """
         return ContextFactory.proxied_backend_context(
-            request=request, yw_url=f"http://{self.yw_host}:{self.yw_port}"
+            request=request, host_url=f"http://{self.host_name}:{self.host_port}"
         )
 
 
