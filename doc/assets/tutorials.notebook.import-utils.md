@@ -3,8 +3,8 @@
 This page consolidates utility functions imported from various other pages.
 
 When these utilities are imported using the load function 
-(see [here](@nav/tutorials/notebook/import.from-another-notebook-page)), all cells are executed sequentially, 
-and the combined scope is returned. 
+(explained in the <cross-link target="notebook.import">Import Tutorial</cross-link>), 
+all cells are executed sequentially, and the combined scope is returned. 
 Currently, there are no tree shaking strategies implemented (although this is under consideration).
 
 To optimize your imports, consider the following hints:
@@ -19,10 +19,12 @@ The `webpm.install` function efficiently skips retrieval and installation of dep
 installed by WebPM.
 </note>
 
+---
+
 ## A 2D Chart Helper
 
-The following cell defines a function to render a scatter plot using the
-<a target='_blank' href="https://www.chartjs.org/">Chart.js</a> library.
+The following cell defines a function to render a scatter plot using the <ext-link target='chartjs'>Chart.js</ext-link>
+library.
 
 **Function overview**
 
@@ -88,6 +90,8 @@ const ChartView = async ({data, xScale, yScale}) => {
 }
 </js-cell>
 
+---
+
 ## Label Range Input
 
 This cell defines the `LabelRange` component, which creates a labeled range slider for user input.
@@ -113,4 +117,81 @@ const LabelRange = ({ text, min, max, labelWidth }) => {
         value$: range.value$
     };
 };
+</js-cell>
+
+---
+
+## Workers Pool Notification
+
+This function integrates **real-time notifications** for worker pools, providing updates during two key phases:
+
+1. **Installation Phase**
+    - Displays a notification when the worker pool starts installing.
+    - Updates the message based on the installation progress.
+    - Notifies when the installation is complete.
+
+2. **Task Execution Phase**
+    - Notifies when one or more tasks are running within the pool.
+    - Displays the number of active tasks.
+    - Automatically dismisses the notification once all tasks finish.
+
+These notifications help users **monitor the state of worker pools** while using 
+<api-link target="WorkerCellView"></api-link>.
+
+<js-cell>
+const plugWPoolNotifications = (name, workerPool, view) => {
+    // Handle installation notifications
+    workerPool.cdnEvent$.pipe(
+        rxjs.take(1)
+    ).subscribe(()=> {
+        const isInstallDone$ = workerPool.cdnEvent$.pipe( 
+            rxjs.filter( ev => ev.step !== 'ConsoleEvent'),
+            rxjs.map( (ev) => ev.step === 'InstallDoneEvent' ),
+            rxjs.takeWhile( (ev) => ev.step !== 'InstallDoneEvent')
+        )
+        Views.notify({
+            level: isInstallDone$.pipe( rxjs.map((done) => done ? 'success' : 'warning' )),
+            content: { 
+                tag: 'div',
+                children: [
+                    { 
+                        tag: 'div',
+                        innerText: { 
+                            source$: isInstallDone$, 
+                            vdomMap: (done) => done 
+                                ? `Workers Pool '${name}' ready` 
+                                : `Workers Pool '${name}' is initializing`
+                        }
+                    },
+                    view,
+                ]
+            },
+            done$: isInstallDone$.pipe( 
+                rxjs.filter( isDone => isDone),
+                rxjs.delay(2000)
+            )
+        })
+    })
+    // Handle running task notifications
+    workerPool.runningTasks$.subscribe( (tasks) => {
+        const hasTasks$ = workerPool.runningTasks$.pipe(
+            rxjs.map(tasks => tasks.length === 0),
+            rxjs.delay(1000)
+        );
+        if(tasks.length > 0){
+            Views.notify({
+                level: 'warning',
+                content: {
+                    tag: 'div', class: 'd-flex align-items-center',
+                    children: [
+                        { tag: 'i', class:'fas fa-cog fa-spin mx-1'},
+                        { tag: 'div', innerText:`There are ${tasks.length} tasks running in '${name}'.`},
+                    ]
+                },
+                done$: hasTasks$
+            })
+        }
+    })
+}
+
 </js-cell>
