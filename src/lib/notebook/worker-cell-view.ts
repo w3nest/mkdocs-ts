@@ -7,6 +7,7 @@ import { CellCommonAttributes } from './notebook-page'
 import { DropDownCaptureView } from './interpreter-cell-view'
 import { executeWorkersPool, executeWorkersPool$ } from './worker-execution'
 import type { WorkersPoolTypes } from '@w3nest/webpm-client'
+import { ContextTrait, Contextual } from '../context'
 
 /**
  * All attributes available for a 'worker' cell.
@@ -36,6 +37,10 @@ export type WorkerCellAttributes = CellCommonAttributes & {
  *
  * They are typically included from a DOM definition with tag name `worker-cell` in Markdown content,
  * see {@link WorkerCellView.FromDom}.
+ *
+ * Details regarding the execution are provided in the documentation of {@link executeWorkersPool} for
+ * non-reactive cells and {@link executeWorkersPool$} for reactive cells.
+ *
  */
 export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
     /**
@@ -197,9 +202,12 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
     /**
      * Execute the cell.
      *
-     * @param args See {@link ExecArgs}.
+     * @param execArgs See {@link ExecArgs}.
+     * @param ctx Execution context used for logging and tracing.
      */
-    async execute({ scope, src }: ExecArgs): Promise<Scope> {
+    @Contextual({ async: true, key: (args: ExecArgs) => args.cellId })
+    async execute(execArgs: ExecArgs, ctx?: ContextTrait): Promise<Scope> {
+        const { scope } = execArgs
         const capturedIn = this.cellAttributes.capturedIn.reduce(
             (acc, name) => {
                 return { ...acc, [name]: scope.const[name] || scope.let[name] }
@@ -215,25 +223,30 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
             this.cellAttributes.workersPool
         ] as WorkersPoolTypes.WorkersPool
         if (isReactive) {
-            return executeWorkersPool$({
-                src,
-                mode: this.cellAttributes.mode,
-                workersPool,
-                scope,
-                invalidated$: this.invalidated$,
-                capturedIn,
-                capturedOut: this.cellAttributes.capturedOut,
-            })
+            return executeWorkersPool$(
+                {
+                    ...execArgs,
+                    invalidated$: this.invalidated$,
+                    mode: this.cellAttributes.mode,
+                    workersPool,
+                    capturedIn,
+                    capturedOut: this.cellAttributes.capturedOut,
+                },
+                ctx,
+            )
         }
 
-        return executeWorkersPool({
-            src,
-            mode: this.cellAttributes.mode,
-            workersPool,
-            scope,
-            capturedIn,
-            capturedOut: this.cellAttributes.capturedOut,
-        })
+        return executeWorkersPool(
+            {
+                ...execArgs,
+                invalidated$: this.invalidated$,
+                mode: this.cellAttributes.mode,
+                workersPool,
+                capturedIn,
+                capturedOut: this.cellAttributes.capturedOut,
+            },
+            ctx,
+        )
     }
 
     private headerView(): AnyVirtualDOM {

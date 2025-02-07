@@ -1,7 +1,7 @@
 import {
     combineLatest,
+    filter,
     from,
-    last,
     lastValueFrom,
     map,
     Observable,
@@ -12,39 +12,59 @@ import {
 import { Scope } from './state'
 import { type WorkersPoolTypes } from '@w3nest/webpm-client'
 import { shareReplay } from 'rxjs/operators'
-import {
-    EntryPointArguments,
-    MessageExit,
-} from '@w3nest/webpm-client/src/lib/workers-pool/workers-factory'
+import { ExecInput } from './execution-common'
+import { ContextTrait, NoContext } from '../context'
 
 /**
- * Execute a given JavaScript or Python statement within a workers' pool.
- * This is only for non-reactive cells.
+ * Represents the inputs when executing a Workers Pool cell.
+ */
+export type ExecWorkerPoolInput = ExecInput & {
+    /**
+     * Captured inputs. Keys are variable name and values associated value.
+     */
+    capturedIn: Record<string, unknown>
+    /**
+     * Names of captured output variables.
+     */
+    capturedOut: string[]
+    /**
+     * The worker pool in which the execution is scheduled.
+     */
+    workersPool: WorkersPoolTypes.WorkersPool
+    /**
+     * If `javascript`, the script is interpreted directly, if `python` the script is interpreted through pyodide.
+     */
+    mode: 'javascript' | 'python'
+}
+
+/**
+ * Execute a given JavaScript or Python snippet within a workers pool.
  *
- * @param _args
- * @param _args.src The source to execute.
- * @param _args.mode The script's language.
- * @param _args.scope The entering scope.
- * @param _args.workersPool The workers' pool.
- * @param _args.capturedIn Variable's names captured from the main thread and forwarded to the worker.
- * @param _args.capturedOut Variable's names captured from the worker and forwarded to the main thread.
+ * This implementation is for non-reactive cells, see {@link executeWorkersPool$} for reactive cells.
+ *
+ * **Functionality**
+ *
+ *
+ * @param inputs  See {@link ExecWorkerPoolInput}.
+ * @param ctx Execution context used for logging and tracing.
  * @returns Promise over the scope at exit.
  */
-export async function executeWorkersPool({
-    src,
-    mode,
-    workersPool,
-    scope,
-    capturedIn,
-    capturedOut,
-}: {
-    src: string
-    mode: 'javascript' | 'python'
-    workersPool: WorkersPoolTypes.WorkersPool
-    scope: Scope
-    capturedIn: Record<string, unknown>
-    capturedOut: string[]
-}): Promise<Scope> {
+export async function executeWorkersPool(
+    inputs: ExecWorkerPoolInput,
+    ctx?: ContextTrait,
+): Promise<Scope> {
+    ctx = (ctx ?? new NoContext()).start('executeWorkersPool', ['Exec'])
+    const {
+        src,
+        cellId,
+        error$,
+        invalidated$,
+        mode,
+        workersPool,
+        scope,
+        capturedIn,
+        capturedOut,
+    } = inputs
     const srcPatched =
         mode === 'javascript'
             ? patchSrc({
@@ -54,20 +74,41 @@ export async function executeWorkersPool({
               })
             : patchPySrc({ src, capturedOut })
 
+    ctx.info('Inputs prepared', { srcPatched, capturedIn, capturedOut })
     // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
     const task = new Function(srcPatched)() as (
-        input: EntryPointArguments<Record<string, unknown>>,
+        input: WorkersPoolTypes.EntryPointArguments<Record<string, unknown>>,
     ) => void
 
-    const r$ = workersPool.schedule({
-        title: 'Test',
-        entryPoint: task,
-        args: capturedIn,
-    })
+    const r$ = workersPool
+        .schedule({
+            title: 'Test',
+            entryPoint: task,
+            args: capturedIn,
+        })
+        .pipe(takeUntil(invalidated$))
 
+    r$.pipe(
+        filter((message: WorkersPoolTypes.Message) => message.type === 'Log'),
+    ).subscribe((message) => {
+        ctx.info(message.data.text, message.data.json)
+    })
     const lastMessage = await lastValueFrom(r$)
-    const data = lastMessage.data as MessageExit
+    if (lastMessage.type === 'Exit' && lastMessage.data.error) {
+        error$.next({
+            cellId,
+            kind: 'Runtime',
+            message: lastMessage.data.result.message,
+            stackTrace: lastMessage.data.result.stack?.split('\n'),
+            src: src.split('\n'),
+            scopeIn: scope,
+        })
+        throw Error(lastMessage.data.result.message)
+    }
+    ctx.info('Task exited successfully')
+    const data = lastMessage.data as WorkersPoolTypes.MessageExit
     const results = typeof data.result === 'object' ? data.result : {}
+    ctx.exit()
     return {
         let: scope.let,
         const: { ...scope.const, ...results },
@@ -76,36 +117,22 @@ export async function executeWorkersPool({
 }
 
 /**
- * Execute a given JavaScript or Python statement within a workers' pool.
- * This is only for reactive cells.
+ * Executes a reactive JavaScript or Python cell within a worker pool.
  *
- * @param _args
- * @param _args.src The source to execute.
- * @param _args.mode The script's language.
- * @param _args.scope The entering scope.
- * @param _args.workersPool The workers' pool.
- * @param _args.capturedIn Variable's names captured from the main thread and forwarded to the worker.
- * @param _args.capturedOut Variable's names captured from the worker and forwarded to the main thread.
- * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
- * @returns Promise over the scope at exit.
+ * This function is a wrapper around {@link executeWorkersPool}, enabling the execution of computations
+ * in worker threads with automatic handling of reactive inputs and outputs.
+ *
+ * @param inputs See {@link ExecWorkerPoolInput}.
+ * @param ctx Execution context used for logging and tracing.
+ * @returns A `Promise` resolving to an updated execution scope, with `capturedOut` variables exposed as `const`
+ * properties.
  */
-export function executeWorkersPool$({
-    src,
-    mode,
-    workersPool,
-    scope,
-    capturedIn,
-    capturedOut,
-    invalidated$,
-}: {
-    src: string
-    mode: 'javascript' | 'python'
-    workersPool: WorkersPoolTypes.WorkersPool
-    scope: Scope
-    capturedIn: Record<string, unknown>
-    capturedOut: string[]
-    invalidated$: Observable<unknown>
-}): Promise<Scope> {
+export function executeWorkersPool$(
+    inputs: ExecWorkerPoolInput,
+    ctx?: ContextTrait,
+): Promise<Scope> {
+    ctx = (ctx ?? new NoContext()).start('executeWorkersPool$', ['Exec'])
+    const { scope, capturedIn, capturedOut, invalidated$ } = inputs
     const reactives: [string, Observable<unknown>][] = Object.entries(
         capturedIn,
     )
@@ -126,11 +153,11 @@ export function executeWorkersPool$({
             }),
             {},
         )
-    const inputs: Observable<unknown>[] = reactives.map(
+    const inputs$: Observable<unknown>[] = reactives.map(
         ([, v]) => v,
     ) as unknown as Observable<unknown>[]
 
-    combineLatest(inputs)
+    combineLatest(inputs$)
         .pipe(
             takeUntil(invalidated$),
             map((vs: unknown[]) => {
@@ -143,36 +170,15 @@ export function executeWorkersPool$({
                 ) as Record<string, unknown>
             }),
             switchMap((capturedIn) => {
-                const srcPatched =
-                    mode === 'javascript'
-                        ? patchSrc({
-                              src,
-                              capturedOut,
-                              capturedIn: Object.keys(capturedIn),
-                          })
-                        : patchPySrc({ src, capturedOut })
-                // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
-                const task = new Function(srcPatched)() as (
-                    input: EntryPointArguments<Record<string, unknown>>,
-                ) => void
-
-                return workersPool
-                    .schedule({
-                        title: 'Test',
-                        entryPoint: task,
-                        args: capturedIn,
-                    })
-                    .pipe(last())
+                return from(executeWorkersPool({ ...inputs, capturedIn }, ctx))
             }),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
-        .subscribe((resp) => {
-            const data = resp.data as MessageExit
-            if (data.result !== null && typeof data.result === 'object') {
-                Object.entries(data.result).forEach(([k, v]) => {
-                    capturedOut$[k].next(v)
-                })
-            }
+        .subscribe((scopeOut) => {
+            inputs.capturedOut.forEach((k) => {
+                capturedOut$[k].next(scopeOut.const[k])
+            })
+            ctx.exit()
         })
     return Promise.resolve({
         ...scope,
