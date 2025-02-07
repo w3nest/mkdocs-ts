@@ -511,6 +511,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      */
     @Contextual({
         key: ({ path }: { path: string }) => path,
+        async: true,
     })
     async getNav(
         target: UrlTarget,
