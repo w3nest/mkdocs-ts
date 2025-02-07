@@ -10,7 +10,7 @@ import {
     tap,
 } from 'rxjs'
 import { shareReplay } from 'rxjs/operators'
-import { Output, Scope } from './state'
+import { Output, ExecCellError, Scope } from './state'
 import { InterpreterApi } from './interpreter-cell-view'
 
 /**
@@ -42,11 +42,13 @@ export async function executeInterpreter({
     interpreter,
     scope,
     output$,
+    error$,
 }: {
     body: RunBody
     interpreter: BackendClient
     scope: Scope
     output$: Subject<Output>
+    error$: Subject<ExecCellError | undefined>
 }) {
     const resp: RunResponse = (await interpreter.fetchJson(`/run`, {
         method: 'post',
@@ -60,6 +62,18 @@ export async function executeInterpreter({
         class: 'overflow-auto',
         innerText: resp.output,
     })
+    if (resp.error) {
+        console.error('Run time exec failure', {
+            error: resp.error,
+        })
+        const error = {
+            ...resp.error,
+            src: body.code.split('\n'),
+            scopeIn: scope,
+        }
+        error$.next(error)
+        throw Error(error.message)
+    }
     return {
         ...scope,
         const: {
@@ -74,12 +88,14 @@ export function executeInterpreter$({
     interpreter,
     scope,
     output$,
+    error$,
     invalidated$,
 }: {
     body: RunBody
     interpreter: BackendClient
     scope: Scope
     output$: Subject<Output>
+    error$: Subject<ExecCellError | undefined>
     invalidated$: Observable<unknown>
 }) {
     const reactives: [string, Observable<unknown>][] = Object.entries(
@@ -138,13 +154,24 @@ export function executeInterpreter$({
                     class: 'overflow-auto',
                     innerText: resp.output,
                 })
+                if (resp.error) {
+                    const error = {
+                        ...resp.error,
+                        src: body.code.split('\n'),
+                        scopeIn: scope,
+                    }
+                    error$.next(error)
+                    throw Error(error.message)
+                }
             }),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
         .subscribe((resp) => {
-            Object.entries(resp.capturedOut).forEach(([k, v]) => {
-                capturedOut$[k].next(v)
-            })
+            if (!resp.error) {
+                Object.entries(resp.capturedOut).forEach(([k, v]) => {
+                    capturedOut$[k].next(v)
+                })
+            }
         })
 
     return {

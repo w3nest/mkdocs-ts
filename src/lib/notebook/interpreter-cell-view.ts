@@ -1,7 +1,14 @@
 import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
-import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
+import {
+    CellTrait,
+    ExecArgs,
+    ExecCellError,
+    getCellUid,
+    Scope,
+    State,
+} from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, from, Observable } from 'rxjs'
 import { install } from '@w3nest/webpm-client'
@@ -54,7 +61,7 @@ export interface InterpreterApi {
         /**
          * Standard error output, if any.
          */
-        error: string
+        error?: Omit<ExecCellError, 'scopeIn' | 'src'>
         /**
          * Key-value map of captured output variables.
          *
@@ -266,7 +273,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
      *
      * @param args See {@link ExecArgs}.
      */
-    async execute({ scope, src, output$ }: ExecArgs): Promise<Scope> {
+    async execute({ scope, src, output$, error$ }: ExecArgs): Promise<Scope> {
         const compatibleCells = this.state.cells
             .filter((cell) => cell instanceof InterpreterCellView)
             .filter(
@@ -305,6 +312,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
                 interpreter,
                 scope,
                 output$,
+                error$,
                 invalidated$: this.invalidated$,
             })
         }
@@ -313,6 +321,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             interpreter,
             scope,
             output$,
+            error$,
         })
     }
 
