@@ -14,14 +14,7 @@ import {
     EmptyDiv,
 } from 'rx-vdom'
 import { BehaviorSubject, filter, Observable, take } from 'rxjs'
-import {
-    AstParsingError,
-    CellStatus,
-    ExecCellError,
-    Output,
-    RunTimeError,
-    State,
-} from './state'
+import { CellStatus, ExecCellError, Output, State } from './state'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
@@ -193,8 +186,8 @@ export class CellView implements VirtualDOM<'div'> {
                 cellId: this.cellId,
             }),
             editorView,
-            errorsView,
             outputsView,
+            errorsView,
         ]
     }
 }
@@ -442,29 +435,28 @@ export class ErrorView implements VirtualDOM<'div'> {
      */
     constructor(params: { error: ExecCellError }) {
         Object.assign(this, params)
-        const line = this.error.line - 1 // highlightedLines first index is 0
-        const startLine = Math.max(0, line - 5)
-        const endLine = Math.min(this.error.src.length - 1, line + 5)
-        const lines = this.error.src
-            .slice(startLine, endLine)
-            .reduce((acc, e) => `${acc}${e}\n`, '')
+        let content = `**${this.error.message}**\n`
 
-        const content = `
-**${this.error.description}**
-
-<code-snippet highlightedLines="${String(line - startLine)}">
-${lines}
-</code-snippet>
-
-<scope-in></scope-in>
-
-**Refer to your browser's debug console for more information**. 
-        `
+        if (this.error.lineNumber) {
+            const line = this.error.lineNumber
+            const startLine = Math.max(0, line - 5)
+            const endLine = Math.min(this.error.src.length, line + 5)
+            const lines = this.error.src
+                .slice(startLine, endLine)
+                .reduce((acc, e) => `${acc}${e}\n`, '')
+            content += `<code-snippet highlightedLines="${String(line - startLine - 1)}">\n${lines}\n</code-snippet>\n`
+        }
+        if (this.error.stackTrace) {
+            const stack = this.error.stackTrace.reduce(
+                (acc, line) => `\n${acc}\n*  ${line.replace(/[<>]/g, '')}`,
+                '',
+            )
+            content += `<note level='hint' expandable='true' title='stack-trace'>\n${stack}\n</note>\n`
+        }
+        content +=
+            "<scope-in></scope-in>\n**Refer to your browser's debug console for more information**."
 
         const scopeIn = (): AnyVirtualDOM => {
-            if (!(this.error instanceof RunTimeError)) {
-                return EmptyDiv
-            }
             return {
                 tag: 'div',
                 class: 'cm-s-default',
@@ -493,10 +485,7 @@ ${lines}
                         'scope-in': scopeIn,
                     },
                 },
-                label:
-                    this.error instanceof AstParsingError
-                        ? 'AST parsing failed'
-                        : 'Execution error',
+                label: this.error.kind,
             }),
         ]
     }

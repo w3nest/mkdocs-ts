@@ -33,6 +33,7 @@ import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
 import { Resolvable, resolve } from '../navigation.node'
 import { ContextTrait, Contextual, NoContext } from '../context'
+import { ExecInput } from './execution-common'
 
 export type CellStatus =
     | 'unready'
@@ -73,16 +74,7 @@ export type Output = AnyVirtualDOM | undefined
 /**
  * Arguments used to execute a cell, see {@link CellTrait.execute}.
  */
-export interface ExecArgs {
-    /**
-     * Cell ID.
-     */
-    cellId: string
-    /**
-     * Source to execute.
-     */
-    src: string
-
+export type ExecArgs = Omit<ExecInput, 'invalidated$'> & {
     /**
      * The function used to load a submodule from a notebook page.
      *
@@ -93,23 +85,9 @@ export interface ExecArgs {
     load: (path: string, ctx: ContextTrait) => Promise<Record<string, unknown>>
 
     /**
-     * Subject in which output (*e.g.* when using  ̀display` in a {@link JsCellView}) are sent.
-     */
-    output$: Subject<Output>
-
-    /**
-     * The factory used to pick up the right mapping between variable and view when `display` is called.
-     */
-    displayFactory: DisplayFactory
-
-    /**
      * Owning state of the cell.
      */
     owningState: State
-    /**
-     * Entering scope of the cell.
-     */
-    scope: Scope
 }
 
 /**
@@ -145,36 +123,15 @@ function hasContentViewTrait(node: unknown): node is ContentTrait {
     return (node as ContentTrait)?.layout?.content !== undefined
 }
 
-export class ExecCellError extends Error {
-    description: string
-    line: number
-    column: number
+export interface ExecCellError {
+    cellId: string
+    kind: 'AST' | 'Runtime'
+    message: string
     src: string[]
-    constructor(params: {
-        description: string
-        line: number
-        column: number
-        src: string[]
-    }) {
-        super(params.description)
-        Object.assign(this, params)
-    }
-}
-
-export class AstParsingError extends ExecCellError {}
-
-export class RunTimeError extends ExecCellError {
-    public readonly scopeIn: Scope
-    constructor(params: {
-        description: string
-        line: number
-        column: number
-        src: string[]
-        scopeIn: Scope
-    }) {
-        super(params)
-        this.scopeIn = params.scopeIn
-    }
+    lineNumber?: number
+    column?: number
+    stackTrace?: string[]
+    scopeIn?: Scope
 }
 
 /**
@@ -454,47 +411,44 @@ export class State {
         this.cellsStatus$[id].next('executing')
         this.executing$[id].next(true)
         this.errors$[id].next(undefined)
-        try {
-            const scope = await this.cells[index].execute(
-                {
-                    src: this.src$[id].value,
-                    scope: inputScope,
-                    output$,
-                    displayFactory: this.displayFactory,
-                    load: this.loadModule(id),
-                    cellId: id,
-                    owningState: this,
-                },
-                ctx,
-            )
-            this.cellsStatus$[id].next('success')
-            const nextId = this.ids[index + 1]
-            const remainingIds = this.ids.slice(index + 2)
-            if (nextId) {
-                this.scopes$[nextId].next(scope)
-                this.cellsStatus$[nextId].next('ready')
-            }
-            if (nextId) {
-                this.scopes$[nextId].next(scope)
-            }
-            remainingIds.forEach((id) => {
-                if (rootExecution) {
-                    this.cellsStatus$[id].next('unready')
-                }
-                this.scopes$[id].next(undefined)
-                this.executing$[id].next(false)
-            })
-            return scope
-        } catch (e: unknown) {
-            this.errors$[id].next(e as ExecCellError)
-            throw e
+        this.unreadyCells({ afterCellId: id })
+        const scope = await this.cells[index].execute(
+            {
+                src: this.src$[id].value,
+                scope: inputScope,
+                output$,
+                error$: this.errors$[id],
+                displayFactory: this.displayFactory,
+                load: this.loadModule(id),
+                cellId: id,
+                owningState: this,
+            },
+            ctx,
+        )
+        this.cellsStatus$[id].next('success')
+        const nextId = this.ids[index + 1]
+        const remainingIds = this.ids.slice(index + 2)
+        if (nextId) {
+            this.scopes$[nextId].next(scope)
+            this.cellsStatus$[nextId].next('ready')
         }
+        if (nextId) {
+            this.scopes$[nextId].next(scope)
+        }
+        remainingIds.forEach((id) => {
+            if (rootExecution) {
+                this.cellsStatus$[id].next('unready')
+            }
+            this.scopes$[id].next(undefined)
+            this.executing$[id].next(false)
+        })
+        return scope
     }
     private invalidateCells(cellId: string) {
         this.invalidated$.next(cellId)
     }
 
-    private dispose() {
+    public dispose() {
         this.cells.forEach((cell) => {
             this.invalidateCells(cell.cellId)
         })

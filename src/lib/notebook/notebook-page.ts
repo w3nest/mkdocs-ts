@@ -215,13 +215,17 @@ export class NotebookSection implements VirtualDOM<'div'> {
                                             `Notebook execution time: ${String(end - start)} ms`,
                                         )
                                     },
-                                    () => {
-                                        throw Error(
-                                            `Failed to execute cell ${cellId}`,
+                                    (e: unknown) => {
+                                        console.error(
+                                            `Failed to run notebook.`,
+                                            e,
                                         )
                                     },
                                 )
                             }
+                        },
+                        disconnectedCallback: () => {
+                            this.state.dispose()
                         },
                     }
                 },
