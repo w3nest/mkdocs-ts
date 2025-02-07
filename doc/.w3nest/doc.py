@@ -27,3 +27,25 @@ config = Configuration(
 )
 global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
 generate_api(global_doc, config)
+
+
+print("Generate python API documentation of 'pyrun_backend'")
+
+NAME = "pyrun_backend"
+DST = Path(__file__).parent.parent / "assets" / "api" / "mkdocs-ts" / "Interpreters"
+
+config = Configuration(
+    base_nav=f"/api/Interpreters/pyrun_backend",
+    external_links={
+        **std_links(),
+        "fastapi.APIRouter": "https://fastapi.tiangolo.com/reference/apirouter/",
+        "fastapi.Depends": "https://fastapi.tiangolo.com/tutorial/dependencies/",
+        "fastapi.FastAPI": "https://fastapi.tiangolo.com/reference/fastapi/?h=fastapi",
+        "starlette.requests.Request": "https://www.starlette.io/requests/",
+        "starlette.responses.Response": "https://www.starlette.io/responses/#response",
+        "pydantic.BaseModel": "https://docs.pydantic.dev/latest/api/base_model/",
+    },
+    out=DST,
+)
+global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
+generate_api(global_doc, config)
