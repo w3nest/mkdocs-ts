@@ -1,45 +1,54 @@
 # Workers
 
-This notebook demonstrates the usage of workers' pools. 
-Workers' pools enable code execution in dedicated threads, 
-allowing parallel computations while keeping the UI & UX rendering thread responsive.
+This notebook demonstrates how to use **worker pools** via <api-link target="WorkerCellView"></api-link>. 
+Worker pools allow executing code in dedicated **threads**, enabling **parallel computation** while **keeping the 
+UI responsive**.
 
-This feature is a thin wrapper around the <a target="_blank" 
-href="/applications/@youwol/webpm-client-doc/latest?nav=/tutorials/workers">@youwol/webpm's workers module</a>. 
+The cells are referenced with the tag `worker-cell` in the markdown source, e.g.:
 
-To get started, make the following `WorkersPool` class available:
+
+<code-snippet language="markdown">
+This exemplifies the usage of `worker-cell` within a notebook page:
+
+<worker-cell workers-pool="jsPool" mode="javascript">
+/* cell content goes here */
+</worker-cell>
+</code-snippet>
+
+The available attributes for a `worker-cell` are documented in 
+<api-link target="WorkerCellView.FromDomAttributes"></api-link>. In particular, the content can be provided using
+**JavaScript** or **Python** - as explained in this page.
+
+To get started, **install the `WorkersPool` module**  from <ext-link target="webpm">WebPM</ext-link>:
 
 <js-cell>
 const { WorkersPool } = await webpm.installWorkersPoolModule()
 </js-cell>
 
-In addition to JavaScript code, the Workers' pool can also run Python code using <a target="_blank" 
-href="https://pyodide.org/en/stable/index.html">Pyodide</a>.
+The conceptual flow to execute computations in a worker pool:
 
-To execute cells within a worker pool, the general idea is to:
-*  Create a worker pool with the desired runtime and assign it to a const variable.
-*  Use `worker-cell` DOM elements to declare cells running within a worker pool and assign the attribute `workers-pool` 
-   to bind the execution to a particular pool. 
-   The provided code will be wrapped into a task and submitted to the pool.
+1.  Create a worker pool, defines its environment, and store it in a variable  (e.g., `jsPool`).
+2.  Define worker-cells that assigns a task to the pool using the attribute **workers-pool** 
+    (e.g. `workers-pool="jsPool"`).
 
 <note level='warning' label="Limitations">
 *  Web-worker code executes in a separate thread without access to the main thread's API. 
    In particular, it cannot access the DOM and has no `display` function.
-*  Data transferred between main and worker threads must be <a 
-   href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API" target="_blank">transferable</a>. 
+*  Data transferred between main and worker threads must be 
+   <ext-link target="worker-transferable">transferable</ext-link>.
    This usually involves cloning, which has overhead. 
-   Using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer" 
-   target="_blank">SharedArrayBuffer</a> removes this overhead as its associated memory block is shared between agents.
-*  Orchestrating multiple tasks is limited with `worker-cell`. You can use regular `js-cell` to manually create and 
-   orchestrate tasks, as explained <a target="_blank" 
-   href="/applications/@youwol/webpm-client-doc/latest?nav=/tutorials/workers">here</a>.
+   Using <ext-link target="shared-array">SharedArray</ext-link>  removes this overhead as its associated memory block
+   is shared between agents.
 </note>
 
 
-## Javascript
+## Javascript Execution
 
-The code executed in the worker calculates the trajectory of a projectile given initial velocity and launch angle. 
-The computation uses the [math.js](https://mathjs.org/) library (available through the `math` variable) and the following function:
+
+### Task Definition
+
+We’ll compute the trajectory of a projectile using <ext-link target="mathjs">MathJS</ext-link> (accessible via
+the `math` variable): 
 
 <js-cell>
 const computeTrajectory = (angle0, v0) => {
@@ -56,12 +65,30 @@ const computeTrajectory = (angle0, v0) => {
 }
 </js-cell>
 
-First, define a workers' pool with its runtime. 
-The next cell creates a pool with a minimum of one worker, able to stretch to 10 workers, each set up with:
+This is a standard JavaScript cell, it defines the function that will be:
+1.  Be transferred into the worker pool environment (when setting up the worker pool).
+2.  Invoked within `worker-cell`.
+
+<note level="hint">
+Although this function could have been defined directly inside the worker cell, defining it separately makes it 
+accessible also from both standard `js-cell` and `py-cell`. 
+</note>
+<note level="warning">
+The function will execute within the worker pool, meaning it can only access symbols that have been explicitly installed 
+in the worker environment (see the setup section below).
+</note>
+
+### Workers Pool Runtime Definition
+
+Let's define the workers' pool runtime. 
+The next cell creates a pool with a minimum of one worker, able to stretch to ten workers, each set up with:
 *  The `mathjs` module (available through the variable `math`)
-*  The global function `computeTrajectory`.
+*  The function `computeTrajectory` previously defined.
 
 <js-cell>
+// WorkersPoolView is used to display installation progress
+const { WorkersPoolView } = await webpm.installViewsModule()
+
 const jsPool = new WorkersPool({
     install:{
         esm: ["mathjs#^13.0.3 as math"]
@@ -71,10 +98,28 @@ const jsPool = new WorkersPool({
         computeTrajectory
     }
 })
-const jsPoolView = jsPool.view()
+</js-cell>
+
+The above specifies the workers pool environment:
+*  **`install`** is the usual definition of required `esm`, `pyodide` and `backends` components.
+*  **`pool`** specifies sizing policy.
+*  **`globals`** specifies which variables from the main thread are provided to the workers scope.
+
+Let's await for the pool readiness and provides visual feedbacks regarding installation & execution progresses (see
+<cross-link target="notebook.utils.notifications">plugNotifications</cross-link> helper):
+
+<js-cell>
+const { plugWPoolNotifications } = await load("/tutorials/notebook/import-utils")
+
+const jsPoolView = new WorkersPoolView({workersPool:jsPool})
 display(jsPoolView)
+plugWPoolNotifications('JS Pool', jsPool, jsPoolView)
+
 await jsPool.ready()
 </js-cell>
+
+
+**Schedule Task**
 
 Let's now define initial parameters for velocity (m/s) and launch angle (degree):
 
@@ -83,120 +128,140 @@ const v0 = 100
 const angle0 = 45
 </js-cell>
 
-The next cell is a `worker-cell`. In the Markdown source, it specifies a couple of available 
-[attributes](@nav/api/Notebook.WorkerCellAttributes):
-*  `workers-pool="jsPool"`: specifies the pool to use.
-*  `mode="javascript"`: language of the script.
-*  `captured-in="angle0 v0"`: the variables transferred from the main thread to the worker thread.
-*  `captured-out="trajectory"`: the variable transferred from the worker thread to the main thread.
+The following cell is a `worker-cell` (indicated by the <i class='fas fa-cog'></i> icon).  
+In the Markdown source, it includes several attributes documented in  
+<api-link target="WorkerCellView.FromDomAttributes"></api-link>:
 
-<worker-cell workers-pool="jsPool" mode="javascript"  captured-in="angle0 v0" captured-out="trajectory">
-const trajectory = computeTrajectory(angle0, v0)
-</worker-cell>
+* **`workers-pool="jsPool"`** – Specifies the worker pool responsible for executing the task.
+* **`mode="javascript"`** – Indicates that the script will be executed using the JavaScript interpreter  
+  (for Python execution via Pyodide, use `mode="python"` instead).
+* **`captured-in="angle0 v0"`** – Lists variables transferred from the main thread to the worker thread when the task
+  starts.
+* **`captured-out="trajectory"`** – Defines variables that will be sent back from the worker thread to the main thread
+  once the task completes successfully.
 
-Since the variable `trajectory` is captured as output, the next cell allows displaying the computed results:
+<worker-cell workers-pool="jsPool" mode="javascript" captured-in="angle0 v0" captured-out="trajectory">  
+const trajectory = computeTrajectory(angle0, v0)  
+</worker-cell>  
 
-<js-cell>
-display(`Max height is ${trajectory.maxHeight.toFixed(2)} m.`)
-display(`Time of flight is ${trajectory.timeOfFlight.toFixed(2)} s.`)
-</js-cell>
+When this cell executes, the provided code is submitted to the worker pool for processing:
 
+* If an available worker exists, it immediately picks up and executes the task.
+* If all workers are busy, the task is added to the queue and will be processed once a worker becomes available.
+* If the worker pool is not yet at its maximum capacity, a new worker may be created to handle the task.
+
+Once execution is complete, the results are transferred back to the main thread, where they can be displayed:
+
+<js-cell>  
+display(`Max height is ${trajectory.maxHeight.toFixed(2)} m.`)  
+display(`Time of flight is ${trajectory.timeOfFlight.toFixed(2)} s.`)  
+console.log("JSPool", jsPool)  
+</js-cell>  
 
 ## Reactivity
 
-To demonstrate how to make a `worker-cell` reactive, let first create two sliders to control the initial 
-velocity and launch angle:
+To illustrate how to make a `worker-cell` reactive, we'll first create two sliders to dynamically adjust the initial 
+velocity and launch angle.
 
-<js-cell>
-const { LabelRange } = await load("/tutorials/notebook/import-utils");
+<js-cell>  
+const { LabelRange } = await load("/tutorials/notebook/import-utils");  
 
-const angleView = LabelRange({
-    text: String.raw `\(\theta \ (^\circ) \)`, min: 0, max: 90
+const angleView = LabelRange({  
+    text: String.raw `\(\theta \ (^\circ) \)`, min: 0, max: 90  
+});  
+const velocityView = LabelRange({  
+    text: String.raw `\(\mathbf{v} \ (m/s) \)`, min: 0, max: 50  
 });
-const velocityView = LabelRange({
-    text: String.raw `\(\mathbf{v} \ (m/s) \)`, min: 0, max: 50
-});
 
-display(angleView);
+display(angleView);  
 display(velocityView);
 
-const params = rxjs.combineLatest([angleView.value$, velocityView.value$]).pipe(
-    rxjs.map(([angle0, v0]) => ({ v0, angle0 })),
-    rxjs.debounceTime(200)
-)
+const params = rxjs.combineLatest([angleView.value$, velocityView.value$]).pipe(  
+rxjs.map(([angle0, v0]) => ({ v0, angle0 })),  
+rxjs.debounceTime(200)  
+)  
 </js-cell>
 
-The `params` variable is reactive: it emits new values each time either the slider for initial velocity or 
-launch angle is dragged (with a 200ms debounce time). 
-To make a `worker-cell` reactive, as the next one (notice the <i class='fas fa-bolt'></i> icon), 
-it needs to capture as input a reactive variable - the `params` variable here -.
+The `params` variable is **reactive**, meaning it emits new values whenever the user adjusts the sliders.
+A **200ms debounce** ensures that computations are not triggered too frequently.
 
-<worker-cell workers-pool="jsPool" mode="javascript"  captured-in="params" captured-out="trajectory">
-const trajectory = computeTrajectory(params.angle0, params.v0)
-</worker-cell>
+To enable reactivity in a `worker-cell`, it must capture a reactive variable as input. 
+In the following example, the `params` variable is used, making the `worker-cell` reactive (as indicated by the 
+<i class='fas fa-bolt'></i> icon).
 
-<note level="hint">
-Since the cell is reactive, the `captured-out` variables (`trajectory` here) are reactive as well; 
-the updated trajectory can be displayed using:
+<worker-cell workers-pool="jsPool" mode="javascript" captured-in="params" captured-out="trajectory">  
+const trajectory = computeTrajectory(params.angle0, params.v0)  
+</worker-cell>  
 
-<js-cell>
-display(trajectory)
+<note level="hint">  
+Since this cell is reactive, the output variable (`trajectory`) is also reactive, meaning it updates automatically
+when input values change.  
+</note>  
+
+### Visualizing the Results
+
+Next, we’ll display the projectile's trajectory alongside a side navigation panel, which allows users to:
+* Adjust parameters interactively.
+* Monitor the state of the underlying worker pool.
+
+<js-cell>  
+const { ChartView } = await load("/tutorials/notebook/import-utils");  
+
+const chartView = await ChartView({  
+    data: trajectory,  
+    xScale: { title: { display: true, text: 'Distance (m)' }, min: 0, max: 300 },  
+    yScale: { title: { display: true, text: 'Height (m)' }, min: 0, max: 150 }  
+});
+
+const sideNavParameters = {  
+    icon: 'fas fa-tachometer-alt',  
+    content: {  
+        tag: 'div',  
+        class: 'p-1',  
+        children: [angleView, velocityView]  
+    }  
+};
+
+display(Views.Layouts.sideNav({  
+    sideNavElements: { params: sideNavParameters },  
+    content: chartView  
+}));  
 </js-cell>
 
-</note>
+This setup provides an interactive visualization where users can modify inputs and see the trajectory update in real-time.
 
+## Python Execution
 
-Finally, let's display a plot of the trajectory alongside a side-navigation panel allowing to:
-*  Controlling the parameters.
-*  Visualizing the state of the underlying workers' pool.
-
-<js-cell>
-const { ChartView } = await load("/tutorials/notebook/import-utils");
-
-const chartView = await ChartView({
-    data: trajectory,
-    xScale: { title:{ display: true, text: 'Distance (m)'}, min:0, max:300},
-    yScale: { title:{ display: true, text: 'Height (m)'}, min:0, max:150}
-})
-
-const sideNavParameters = {
-    icon: 'fas fa-tachometer-alt',
-    content: {
-        tag: 'div',
-        class: 'p-1',
-        children: [angleView, velocityView, jsPoolView]
-    }
-}
-display(Views.Layouts.sideNav({
-    sideNavElements: { params: sideNavParameters },
-    content: chartView
-}))
-</js-cell>
-
-## Python
-
-Running python code within a `worker-cell` essentially comes down to provide a `pyodide` interpreter within 
-the associated workers' pool runtime (along with the necessary Python modules):
+Running Python code within a `worker-cell` involves setting up a **Pyodide** interpreter inside the associated 
+worker pool runtime. This allows Python scripts to run efficiently in the background, alongside the
+necessary Python modules.
 
 <js-cell>
 const pyPool = new WorkersPool({
     install:{
         pyodide: {
-            version: "0.26.1",
+            version: "{{pyodide-version}}",
             modules: ["numpy"]
         }
     },
     pool: { startAt: 1, stretchTo: 10 }
 })
 
-const pyPoolView = pyPool.view()
+const pyPoolView = new WorkersPoolView({workersPool:pyPool})
 display(pyPoolView)
+plugWPoolNotifications('PY Pool', pyPool, pyPoolView)
+
 await pyPool.ready()
 
 </js-cell>
 
-The next cell is a `worker-cell`, providing `python` as `language`, `pyPool` as `workers-pool`, 
-capturing `params` as input (making the cell reactive) and `trajectory` as output.
+The following `worker-cell` defines the following attributes:
+
+* **`workers-pool="pyPool"`** –  Specifies the worker pool that executes the Python task.
+* **`mode="python"`** – Indicates that Pyodide is used as the interpreter.
+* **`captured-in="params"`** – Receives the input reactive parameter `params`, making the cell reactive. 
+* **`captured-out="trajectory"`** –  Sends back the computed trajectory after execution.
+
 
 <worker-cell workers-pool="pyPool" mode="python" captured-in="params" captured-out="trajectory">
 import numpy as np
@@ -216,17 +281,11 @@ trajectory = {
 }
 </worker-cell>
 
-It is then possible to display the updated results:
-
-<js-cell reactive="true">
-display(`Max height is ${trajectory.maxHeight.toFixed(2)} m.`)
-display(`Time of flight is ${trajectory.timeOfFlight.toFixed(2)} s.`)
-</js-cell>
-
-As well as plotting the trajectory in the same way as already done above:
+We can plot the projectile's trajectory using the same approach as before.
 
 <js-cell>
 const chartViewPy = await ChartView({
+    // `trajectory` is a reactive variable (Observable)
     data: trajectory,
     xScale: { title:{ display: true, text: 'Distance (m)'}, min:0, max:300},
     yScale: { title:{ display: true, text: 'Height (m)'}, min:0, max:150}
@@ -237,7 +296,7 @@ const sideNavParametersPy = {
     content: {
         tag: 'div',
         class: 'p-1',
-        children: [angleView, velocityView, pyPoolView]
+        children: [angleView, velocityView]
     }
 }
 
