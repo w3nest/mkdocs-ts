@@ -1,12 +1,12 @@
 # Youwol application
 from w3nest.app.environment import Environment
-from w3nest.app.routers.projects import IPipelineFactory, Pipeline
+from w3nest.app.projects import IPipelineFactory, Pipeline
 
 # Youwol utilities
 from w3nest_client.context import Context
 
 # Youwol pipelines
-from w3nest.pipelines.pipeline_python_backend import PipelineConfig, pipeline
+from w3nest.ci.py_backend import PipelineConfig, pipeline
 
 
 class PipelineFactory(IPipelineFactory):

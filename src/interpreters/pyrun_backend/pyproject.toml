@@ -11,10 +11,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "fastapi>=0.109.1,<0.110.0",
+    "fastapi>=0.115,<0.116.0",
     "uvicorn>=0.24,<0.25",
-    "cowsay>=6.1,<7.0.0",
-    "yw_clients"
+    "w3nest_client"
 ]
 
 [project.optional-dependencies]
@@ -57,5 +56,5 @@ max-line-length = 120
 [project.scripts]
 run_pyrun_backend = "pyrun_backend.main_docker:main"
 
-[youwol]
+[w3nest]
 default-port = 2010
