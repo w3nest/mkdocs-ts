@@ -3,7 +3,24 @@
 
 This page provides a guide on integrating a Python interpreter into a notebook page, enabling the execution of Python
 cells directly within your browser using <api-link target="PyCellView"></api-link>.
-These cells are referenced with the tag `py-cell` in the markdown source.
+These cells are referenced with the tag `py-cell` in the markdown source, e.g.
+
+<code-snippet language="markdown">
+This exemplifies the usage of `py-cell` within a notebook page:
+
+<py-cell>
+/* cell content goes here */
+</py-cell>
+</code-snippet>
+
+The available attributes for a `py-cell` are documented in <api-link target="PyCellView.FromDomAttributes"></api-link>.
+
+<note level="hint">
+At its core, the Python code executed here is compiled to WebAssembly, enabling seamless interaction with standard 
+JavaScript. As this page will demonstrate, it’s not about running Python and JavaScript in isolation—rather,
+they coexist in a tightly integrated runtime, allowing bidirectional data exchange and execution between the two 
+languages.
+</note>
 
 <note level='warning' label='Important'>
 
@@ -27,18 +44,17 @@ When executing Python code as outlined here, the runtime is included and execute
 
 This approach is suitable for relatively simple scenarios. For more complex cases, consider using a Python backends
 interpreter as explained in the <cross-link target="notebook.interpreter">Interpreter Tutorial</cross-link>.
+
 </note>
 
 
 Let's start with installing {{mkdocs-ts}}:
 
 <js-cell>
-const version = "{{mkdocs-version}}"
-
-const { MkDocs } = await webpm.install({
+const { MkDocs, rxjs } = await webpm.install({
     esm:[ 
-         // Both are used to display a notification
-        `mkdocs-ts#${version} as MkDocs`, 
+         // Both are used only to display a notification
+        `mkdocs-ts#{{mkdocs-version}} as MkDocs`, 
         'rxjs#^7.5.6 as rxjs' 
     ]
 })
@@ -65,7 +81,10 @@ Expect the UI to be non-responsive until done.
 <install-view></install-view>
 `
 const { pyodide } = await installWithUI({
-    pyodide: ["numpy"],
+    pyodide: {
+        version: "{{pyodide-version}}",
+        modules: ["numpy"]
+    },
     display: (view) => { 
         display(view)
         const done$ = view.eventsMgr.event$.pipe(
@@ -182,12 +201,109 @@ display(velocityView)
 display(chartView)
 </js-cell>
 
-## Side Notes
 
+## Scope
 
-*  As observed, loading Python packages and executing computations on the main thread can cause the web browser to 
-become unresponsive. The <cross-link target="notebook.workers">Web Workers Tutorial</cross-link> provides
-an alternative providing a non-blocking solution.
+Details regarding the injected scope in a python cell are available in <api-link target="executePy"></api-link>.
+This section illustrates the most important concepts.
 
-*  The <cross-link target='notebook.python.matplotlib'>Matplotlib Tutorial</cross-link> illustrates the usage of 
-   `matplotlib` to draw plots within your notebook page.
+Scope management obeys the same rule as for JavaScript cells:
+*  Only top level variables are available in following cells
+*  Primitive types are re-initialized at each run
+*  Other types keep their state
+
+As illustration, let's initialize some variables:
+
+<py-cell>
+foo = 42
+
+bar = { 'value': 42 }
+
+def innerScope():
+    baz = 42
+
+innerScope()
+</py-cell>
+
+And apply mutations:
+
+<py-cell>
+foo = 2 * foo
+display("Primitive type:", Views.mx1, foo)
+bar['value'] *= 2
+display("Non-primitive type:", Views.mx1, bar['value'])
+
+# display(baz) => name 'baz' is not defined
+</py-cell>
+
+Each time you run the above cell, the output remains the same (`84`) for `foo`, while `bar['value']` is doubled 
+each time. The variable `baz` is not exposed here.
+
+**Shared Runtime**
+
+Python and JavaScript symbols are seamlessly shared between py-cell and js-cell, allowing 
+**bidirectional communication**.
+
+JavaScript-defined variables are available in Python:
+
+<js-cell>
+const theta = 45
+const v = 50
+</js-cell>
+
+<py-cell>
+result = compute(v, theta)['range']
+display(result)
+</py-cell>
+
+Similarly, Python-defined variables can be used in JavaScript:
+
+<js-cell>
+display(result)
+</js-cell>
+
+Let’s take this a step further by integrating JavaScript UI elements with Python computation:
+
+<js-cell>
+
+const resultView = (params) => {
+   display({
+        tag: 'div',
+        class: 'd-flex',
+        children: [
+            { tag: 'div',  innerText: 'Range' },
+            Views.mx1,
+            { tag: 'div',  innerText: compute(params.v0, params.angle0).get('range') },
+        ]   
+    })
+}
+</js-cell>
+
+The cell defines a function that compute and display the `range` value of the projectile motion given initial parameters -
+computation being implemented within python. Note that `display` is bound to the output of this particular cell.
+
+<py-cell>
+display(angleView,  Views.mx2, velocityView)
+
+params_.pipe(
+    rxjs.takeUntil(invalidated_)
+).subscribe(resultView)
+
+</py-cell>
+
+The python cell display the (JavaScript) slider views, and plug `resultView` call for any changes in parameters.
+Note that `params_` is referring to the JavaScript `params$` variable, as `$` is not permitted in python for variable 
+names (see <api-link target="fixScopeInvalidVar"></api-link>).
+
+## Going Further
+
+*  **Blocking Execution**: Running Python computations or loading packages on the main thread may cause the web browser
+   to **become unresponsive**. Consider using **Web Workers** for non-blocking execution, as explained in the 
+   <cross-link target="notebook.workers">Web Workers Tutorial</cross-link>.
+
+*  **Data Visualization**: The <cross-link target='notebook.python.matplotlib'>Matplotlib Tutorial</cross-link> 
+   demonstrates how to use matplotlib to plot graphs directly in the notebook.
+
+*  **Best Practices**: Mixing JavaScript and Python is **powerful but requires careful handling** in some cases.
+   To avoid common pitfalls, refer to the 
+   
