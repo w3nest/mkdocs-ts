@@ -2,6 +2,8 @@ coverage
 junit.xml
 dist/docs
 src/tests
+src/interpreters
+src/mkapi-backends
 mkdocs-ts-doc
 cdn.zip
 doc/

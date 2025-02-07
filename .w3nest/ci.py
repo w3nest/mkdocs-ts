@@ -14,15 +14,22 @@ class PipelineFactory(IPipelineFactory):
             packagedFolders=["assets"],
             ignore=[
                 "mkdocs-ts-doc/*",
+                "src/interpreters/*",
+                "src/mkapi-backends/*",
                 "**/.mypy_cache/*",
                 "**/__pycache__/*",
                 "**/*.egg-info/*",
-                "**/mkdocs_py_griffe/build/*"
-            ]
+                "**/mkdocs_py_griffe/build/*",
+            ],
         )
-        config = PipelineConfig(target=JsBundle(links=[
-            Link(name="doc", url="dist/docs/index.html"),
-            Link(name="coverage", url="coverage/lcov-report/index.html"),
-            Link(name="bundle-analysis", url="dist/bundle-analysis.html")
-        ]),publishConfig=publish_conf)
+        config = PipelineConfig(
+            target=JsBundle(
+                links=[
+                    Link(name="doc", url="dist/docs/index.html"),
+                    Link(name="coverage", url="coverage/lcov-report/index.html"),
+                    Link(name="bundle-analysis", url="dist/bundle-analysis.html"),
+                ]
+            ),
+            publishConfig=publish_conf,
+        )
         return await pipeline(config, context)

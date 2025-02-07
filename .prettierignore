@@ -12,3 +12,5 @@ yarn-error.log
 /*.iml
 src/auto-generated.ts
 mkdocs-ts-doc
+**/.venv
+**/.mypy_cache

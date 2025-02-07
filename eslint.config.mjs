@@ -31,7 +31,7 @@ export default tseslint.config(
     },
     eslintPluginPrettier,
     {
-        ignores: ['src/tests/**'],
+        ignores: ['src/tests/**', '**/.venv'],
     },
     {
         rules: {
