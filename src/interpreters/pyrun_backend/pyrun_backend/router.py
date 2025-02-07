@@ -22,12 +22,12 @@ The router object.
 
 class ScopeStore:
     """
-    Store the current global scope.
+    Encapsulates the global scope used when running the scripts.
     """
 
     global_scope: dict[str, Any] = {}
     """
-    The value of the scope.
+    The scope.
     """
 
 
@@ -77,10 +77,10 @@ async def __exec():
 
 
 @router.get("/")
-async def home() -> Response:
+async def healthz() -> Response:
     """
-    When proxied through py-youwol, this end point is always triggered, when testing weather a backend
-    is listening. The line is `if not self.is_listening():` in `RedirectSwitch`
+    When proxied through W3Nest, this end point is triggered to ensure a backend
+    is listening.
     """
     return Response(status_code=200)
 

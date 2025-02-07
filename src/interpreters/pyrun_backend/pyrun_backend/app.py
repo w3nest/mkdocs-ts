@@ -1,5 +1,5 @@
 """
-Module gathering the definition and trigger of the FastAPI application.
+Implementation regarding application creation & start.
 """
 
 import logging
@@ -17,7 +17,9 @@ from pyrun_backend.router import router as root_router
 
 def start(configuration: Configuration) -> None:
     """
-    Starts the server using the given configuration.
+    Start the backend server using the specified configuration:
+    *  Create the application using :func:`pyrun_backend.app.create_app`.
+    *  Run the application using `uvicorn`.
 
     Parameters:
         configuration: Server's configuration.
