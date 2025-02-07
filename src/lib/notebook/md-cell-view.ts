@@ -1,13 +1,29 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes, notebookViews } from './notebook-page'
-import { CellTrait, ExecArgs, getCellUid, Output, Scope, State } from './state'
+import {
+    CellTrait,
+    ExecArgs,
+    ExecCellError,
+    getCellUid,
+    Output,
+    Scope,
+    State,
+} from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { BehaviorSubject, filter, Observable, of, ReplaySubject } from 'rxjs'
+import {
+    BehaviorSubject,
+    filter,
+    Observable,
+    of,
+    ReplaySubject,
+    Subject,
+} from 'rxjs'
 import type { MdParsingOptions } from '../markdown'
 import { executeJsStatement } from './js-execution'
 import { DisplayFactory } from './display-utils'
 import { Dependencies } from '.'
+import { ContextTrait } from '../context'
 
 /**
  * All attributes available for a Markdown cell are the common ones for now.
@@ -19,6 +35,7 @@ export class InlinedCode implements VirtualDOM<'div'> {
     public readonly style = {
         display: 'inline-block' as const,
     }
+    public readonly cellId: string
     public readonly src: string
     public readonly displayFactory: DisplayFactory
     public readonly scope: Scope
@@ -26,20 +43,29 @@ export class InlinedCode implements VirtualDOM<'div'> {
     public readonly invalidated$: Observable<unknown>
 
     constructor(params: {
+        cellId: string
         src: string
         scope: Scope
         displayFactory: DisplayFactory
         invalidated$: Observable<unknown>
+        error$: Subject<ExecCellError | undefined>
+        load: (
+            path: string,
+            ctx: ContextTrait,
+        ) => Promise<Record<string, unknown>>
     }) {
         Object.assign(this, params)
         const output$ = new ReplaySubject<Output>()
 
         executeJsStatement({
+            cellId: this.cellId,
             src: this.src,
             scope: this.scope,
             output$,
             displayFactory: this.displayFactory,
             invalidated$: this.invalidated$,
+            error$: params.error$,
+            load: params.load,
         }).then(
             () => {
                 /*No Op*/
@@ -219,6 +245,8 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
         src,
         displayFactory,
         output$,
+        error$,
+        load,
     }: ExecArgs): Promise<Scope> {
         const state = new State({
             initialScope: scope,
@@ -235,10 +263,13 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
             views: {
                 'js-inlined': (elem) => {
                     return new InlinedCode({
+                        cellId,
                         src: elem.textContent ?? '',
                         scope,
                         displayFactory,
                         invalidated$: this.invalidated$,
+                        error$,
+                        load,
                     })
                 },
                 ...notebookViews({
