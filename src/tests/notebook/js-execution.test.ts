@@ -4,9 +4,12 @@ import {
     extractGlobalDeclarations,
     parseProgram,
     Output,
+    ExecCellError,
 } from '../../lib/notebook'
 import { Subject } from 'rxjs'
 import { DisplayFactory } from '../../lib/notebook'
+
+const error$ = new Subject<ExecCellError | undefined>()
 
 test('extract global declarations 1', () => {
     const input = `
@@ -26,7 +29,7 @@ let { gamma: [a, b] } = { gamma: [3, 4] }
 y = 5
 `
 
-    const ast = parseProgram(input)
+    const ast = parseProgram(input, 'foo')
     const declarations = extractGlobalDeclarations(ast)
     expect(declarations).toEqual({
         const: ['x', 'bar', 'alpha', 'beta'],
@@ -41,7 +44,7 @@ const { MkDocs } = await webpm.install({
 })
 `
 
-    const ast = parseProgram(input)
+    const ast = parseProgram(input, 'foo')
     const declarations = extractGlobalDeclarations(ast)
     expect(declarations).toEqual({
         const: ['MkDocs'],
@@ -56,7 +59,7 @@ class Foo extends Bar{
     
 }
 `
-        const ast = parseProgram(input)
+        const ast = parseProgram(input, 'foo')
         const declarations = extractGlobalDeclarations(ast)
         expect(declarations).toEqual({
             const: ['Foo'],
@@ -72,7 +75,7 @@ class Foo extends Bar{
     }
 }
 `
-        const ast = parseProgram(input)
+        const ast = parseProgram(input, 'foo')
         const declarations = extractGlobalDeclarations(ast)
         expect(declarations).toEqual({
             const: [],
@@ -88,7 +91,7 @@ function foo(){
     console.log('foo')
 }
 `
-        const ast = parseProgram(input)
+        const ast = parseProgram(input, 'foo')
         const declarations = extractGlobalDeclarations(ast)
         expect(declarations).toEqual({
             const: ['foo'],
@@ -104,7 +107,7 @@ function foo(){
     }
 }
 `
-        const ast = parseProgram(input)
+        const ast = parseProgram(input, 'foo')
         const declarations = extractGlobalDeclarations(ast)
         expect(declarations).toEqual({
             const: [],
@@ -118,12 +121,14 @@ describe('esprima patches', () => {
         const displayFactory: DisplayFactory = []
         const invalidated$ = new Subject()
         const scope = await executeJs({
+            cellId: 'foo',
             src: `
 const x = { y: 2}
 let y = x?.y 
 `,
             scope: { const: {}, let: {}, python: {} },
             output$: new Subject<Output>(),
+            error$,
             displayFactory,
             load: () => Promise.resolve({}),
             invalidated$,
@@ -138,12 +143,14 @@ let y = x?.y
         const displayFactory: DisplayFactory = []
         const invalidated$ = new Subject()
         const scope = await executeJs({
+            cellId: 'foo',
             src: `
 const x = [1]
 let y = x?.[0] 
 `,
             scope: { const: {}, let: {}, python: {} },
             output$: new Subject<Output>(),
+            error$,
             displayFactory,
             load: () => Promise.resolve({}),
             invalidated$,
@@ -158,12 +165,14 @@ let y = x?.[0]
         const displayFactory: DisplayFactory = []
         const invalidated$ = new Subject()
         const scope = await executeJs({
+            cellId: 'foo',
             src: `
 const x = [1]
 let y = [...x]
 `,
             scope: { const: {}, let: {}, python: {} },
             output$: new Subject<Output>(),
+            error$,
             displayFactory,
             load: () => Promise.resolve({}),
             invalidated$,
@@ -178,12 +187,14 @@ let y = [...x]
         const displayFactory: DisplayFactory = []
         const invalidated$ = new Subject()
         const scope = await executeJs({
+            cellId: 'foo',
             src: `
 const x = { foo : 1 }
 let y = { ...x }
 `,
             scope: { const: {}, let: {}, python: {} },
             output$: new Subject<Output>(),
+            error$,
             displayFactory,
             load: () => Promise.resolve({}),
             invalidated$,
@@ -198,6 +209,7 @@ let y = { ...x }
         const displayFactory: DisplayFactory = []
         const invalidated$ = new Subject()
         const scope = await executeJs({
+            cellId: 'foo',
             src: `
 const x = [ 1, 2, 3]
 const fct = (v0, v1, v2) => [v0, v1, v2]
@@ -205,6 +217,7 @@ const z = fct(...x)
 `,
             scope: { const: {}, let: {}, python: {} },
             output$: new Subject<Output>(),
+            error$,
             displayFactory,
             load: () => Promise.resolve({}),
             invalidated$,
@@ -218,9 +231,11 @@ describe('Errors encountered (& fixed)', () => {
         const displayFactory: DisplayFactory = []
         const invalidated$ = new Subject()
         const scope = await executeJs({
+            cellId: 'foo',
             src: `const x = { y: 2}//let y = x?.y`,
             scope: { const: {}, let: {}, python: {} },
             output$: new Subject<Output>(),
+            error$,
             displayFactory,
             load: () => Promise.resolve({}),
             invalidated$,
@@ -238,12 +253,14 @@ test('execute', async () => {
     const displayFactory: DisplayFactory = []
     const invalidated$ = new Subject()
     scope = await executeJs({
+        cellId: 'foo',
         src: `
 const x = 2
 let y = 3
 `,
         scope,
         output$: new Subject<Output>(),
+        error$,
         displayFactory,
         load: () => Promise.resolve({}),
         invalidated$,
@@ -254,12 +271,14 @@ let y = 3
         python: {},
     })
     scope = await executeJs({
+        cellId: 'foo',
         src: `
 y = y + 1
 const foo = { z: x + y}
 `,
         scope,
         output$: new Subject<Output>(),
+        error$,
         displayFactory,
         load: () => Promise.resolve({}),
         invalidated$,
@@ -270,11 +289,13 @@ const foo = { z: x + y}
         python: {},
     })
     scope = await executeJs({
+        cellId: 'foo',
         src: `
 const bar = { a: x + foo.z + y }
 `,
         scope,
         output$: new Subject<Output>(),
+        error$,
         displayFactory,
         load: () => Promise.resolve({}),
         invalidated$,
@@ -309,7 +330,7 @@ function baz(i, j, {k, l}, [m,{n,o}]){
 }
 `
 
-    const body = parseProgram(input)
+    const body = parseProgram(input, 'foo')
     const ids = extractUndefinedReferences(body)
     expect(ids).toEqual(['var1', 'console', 'var2', 'var3', 'var4'])
 })

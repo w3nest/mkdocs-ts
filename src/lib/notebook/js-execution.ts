@@ -1,8 +1,18 @@
-import { Observable, Subject } from 'rxjs'
-import { display, DisplayFactory } from './display-utils'
+import {
+    combineLatest,
+    from,
+    map,
+    Observable,
+    Subject,
+    switchMap,
+    takeUntil,
+} from 'rxjs'
+import { display } from './display-utils'
 import { parseScript } from 'esprima'
-import { AstParsingError, Output, RunTimeError, Scope } from './state'
+import { ExecCellError, Scope } from './state'
 import { ContextTrait, NoContext } from '../context'
+import { shareReplay } from 'rxjs/operators'
+import { ExecInput } from './execution-common'
 /* eslint-disable */
 
 type AstType =
@@ -85,241 +95,234 @@ export function extractKeys(obj: { [k: string]: unknown } | string[]) {
     )
 }
 /**
+ * Represents the inputs when executing a JavaScript snippet.
+ */
+export type ExecJsInput = ExecInput & {
+    /**
+     * The function used to load a submodule from another notebook page.
+     * @param path Navigation path of the page.
+     * @param ctx Execution context used for logging and tracing.
+     */
+    load: (
+        path: string,
+        ctx: ContextTrait,
+    ) => Promise<{ [_k: string]: unknown }>
+}
+
+function formatError(params: {
+    cellId: string
+    e: Error
+    scopeIn: Scope
+    src: string
+    deltaLineInStack: number
+}): ExecCellError {
+    const { cellId, e, scopeIn, src, deltaLineInStack } = params
+    const linesSrc = src.split('\n')
+    const base = {
+        cellId,
+        kind: 'Runtime' as const,
+        message: e.message,
+        scopeIn,
+        src: linesSrc,
+    }
+    if (!e.stack) {
+        return base
+    }
+    const lines = e.stack.split('\n') ?? []
+    const rootIndex = lines.findIndex((l) => l.includes('execute_cell'))
+    if (rootIndex === -1) {
+        return {
+            ...base,
+            stackTrace: lines,
+        }
+    }
+    const extracted = lines.slice(0, rootIndex + 1)
+    const regex = /eval at (\w+) \(.*:(\d+):\d+\), <anonymous>:(\d+):\d+/
+    const match = lines[rootIndex].match(regex)
+    if (match) {
+        const fctName = match[1]
+        const firstLine =
+            lines.find((line) => {
+                const m = line.match(regex)
+                return m && m[1] === fctName
+            }) || lines[rootIndex]
+        const firstMatch = firstLine.match(regex) || match
+        return {
+            ...base,
+            lineNumber: parseInt(firstMatch[3]) - deltaLineInStack,
+            stackTrace: extracted,
+        }
+    }
+    return {
+        ...base,
+        stackTrace: extracted,
+    }
+}
+/**
  * Execute a given javascript statement. This execution is reactive by default.
  *
- * @param _args
- * @param _args.src The source to execute
- * @param _args.scope The entering scope.
- * @param _args.output$ Subject in which output views are sent (when using `display` function).
- * @param _args.displayFactory Factory to display HTML elements when `display` is called.
- * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
+ * @param inputs See {@link ExecJsInput}.
  * @returns Promise over the scope at exit
  */
-export async function executeJsStatement({
-    src,
-    scope,
-    output$,
-    displayFactory,
-    invalidated$,
-}: {
-    src: string
-    scope: Scope
-    output$: Subject<Output>
-    displayFactory: DisplayFactory
-    invalidated$: Observable<unknown>
-}) {
-    const displayInOutput = (...element: HTMLElement[]) =>
-        display(output$, displayFactory, ...element)
-    const ast = parseProgram(src)
-    const declarations = extractGlobalDeclarations(ast)
-    const patchedReactive = patchReactiveCell({
-        ast,
-        scope,
-        declarations,
-        src: `display(${src})`,
+export async function executeJsStatement(inputs: ExecJsInput) {
+    return await executeJs$({
+        ...inputs,
+        src: `display(${inputs.src})`,
     })
-
-    const srcPatched = `
-return async (scope, {display, invalidated$, output$}) => {
-    // header
-const {${extractKeys(scope.const)}} = scope.const
-let {${extractKeys(scope.let)}} = scope.let
-
-    // original src
-    
-${patchedReactive?.wrapped ?? ''}
-    
-}
-    `
-    const scopeOut = await new Function(srcPatched)()(scope, {
-        display: displayInOutput,
-        invalidated$,
-        output$,
-    })
-    console.log('JS statement execution done', { scopeIn: scope, scopeOut })
-    return scopeOut
 }
 
 /**
- * Execute a given javascript source content.
+ * Execute a given **non-reactive** javascript source content.
  *
- * @param _args
- * @param _args.src The source to execute
- * @param _args.scope The entering scope.
- * @param _args.output$ Subject in which output views are sent (when using `display` function).
- * @param _args.displayFactory Factory to display HTML elements when `display` is called.
- * @param _args.load The function used to load a submodule from another notebook page.
- * @param _args.invalidated$ Observable that emits when the associated cell is invalidated.
- * @param _args.reactive If true, observables & promises are resolved before cell execution using a `combineLatest`
- * policy.
+ * @param inputs  See {@link ExecJsInput}.
+ * @param inputs.declarations  Optional parsed declarations if available.
  * @param ctx Execution context used for logging and tracing.
  * @returns Promise over the scope at exit
  */
 export async function executeJs(
-    {
-        src,
-        scope,
-        output$,
-        displayFactory,
-        load,
-        reactive,
-        invalidated$,
-    }: {
-        src: string
-        scope: Scope
-        output$: Subject<Output>
-        displayFactory: DisplayFactory
-        load: (
-            path: string,
-            ctx: ContextTrait,
-        ) => Promise<{ [_k: string]: unknown }>
-        reactive?: boolean
-        invalidated$: Observable<unknown>
-    },
+    inputs: ExecJsInput & { declarations?: { const: string[]; let: string[] } },
     ctx?: ContextTrait,
 ): Promise<Scope> {
     ctx = (ctx || new NoContext()).start('executeJs', ['Exec'])
-    const ast = parseProgram(src)
-    const declarations = extractGlobalDeclarations(ast)
+    const { src, scope, output$, error$, displayFactory, load, invalidated$ } =
+        inputs
+
+    let declarations = inputs.declarations
+    if (!declarations) {
+        const ast = parseProgram(src, inputs.cellId, error$)
+        declarations = extractGlobalDeclarations(ast)
+    }
     const displayInOutput = (...element: HTMLElement[]) =>
         display(output$, displayFactory, ...element)
 
-    let footer = `
-return { 
-    const:{ ${extractKeys(scope.const)} ${extractKeys(declarations.const)} },
-    let:{ ${extractKeys(scope.let)} ${extractKeys(declarations.let)} },
-    python:{ ${extractKeys(scope.python)} },
-}
-    `
-    let wrapped = src
-    if (reactive) {
-        const patched = patchReactiveCell({ ast, scope, declarations, src })
-        footer = patched ? patched.footer : footer
-        wrapped = patched ? patched.wrapped : wrapped
-    }
     const srcPatched = `
-return async (scope, {display, output$, load, invalidated$}) => {
-    // header
-const {${extractKeys({ ...scope.const, ...scope.python })}} = {...scope.const, ...scope.python}
-let {${extractKeys(scope.let)}} = scope.let
+async function execute_cell(scope, {display, output$, error$, load, invalidated$, formatError, rawSrc}){
+    const {${extractKeys({ ...scope.const, ...scope.python })}} = {...scope.const, ...scope.python}
+    let {${extractKeys(scope.let)}} = scope.let
 
-    // original src
+    try{
     
-${wrapped}
-    
-    // footer
-${footer}
-}
-    `
-    try {
-        const scopeOut = await new Function(srcPatched)()(scope, {
-            display: displayInOutput,
-            load: (path: string) => load(path, ctx),
-            invalidated$,
-            output$,
-        })
-        ctx.info('JS cell execution done', { src, scopeIn: scope, scopeOut })
-        ctx.exit()
-        return scopeOut
-    } catch (e) {
-        const evalLoc = extractEvalLocation(e['stack'])
-        console.error('Run time exec failure', { e, srcPatched, evalLoc })
-        ctx.exit()
-        throw new RunTimeError({
-            description: e['message'],
-            line: evalLoc ? evalLoc.line - 10 : -1,
-            column: evalLoc ? evalLoc.column : -1,
-            src: src.split('\n'),
-            scopeIn: scope,
-        })
-    }
-}
-
-function extractEvalLocation(
-    errorMessage: string,
-): { line: number; column: number } | null {
-    const evalRegex = /eval\s\(eval\sat\s.+?,\s<anonymous>:(\d+):(\d+)\)/
-    const match = errorMessage.match(evalRegex)
-
-    if (match && match.length >= 3) {
-        return {
-            line: parseInt(match[1], 10),
-            column: parseInt(match[2], 10),
+${src}
+        
+        return { 
+            const:{ ${extractKeys(scope.const)} ${extractKeys(declarations.const)} },
+            let:{ ${extractKeys(scope.let)} ${extractKeys(declarations.let)} },
+            python:{ ${extractKeys(scope.python)} },
         }
     }
-
-    return null
+    catch(e) {
+        const error = formatError({cellId:'${inputs.cellId}',e, scopeIn: scope, src: rawSrc, deltaLineInStack:9})
+        error$.next(error)
+        throw e
+    }
+}
+return execute_cell
+`
+    const fctUser = new Function(srcPatched)
+    const scopeOut = await fctUser()(scope, {
+        display: displayInOutput,
+        load: (path: string) => load(path, ctx),
+        invalidated$,
+        output$,
+        error$,
+        formatError,
+        rawSrc: src,
+    })
+    ctx.info('JS cell execution done', { src, scopeIn: scope, scopeOut })
+    ctx.exit()
+    return scopeOut
 }
 
-function patchReactiveCell({
-    ast,
-    scope,
-    declarations,
-    src,
-}: {
-    ast: unknown
-    scope: Scope
-    declarations: { const: string[]; let: string[] }
-    src: string
-}) {
+/**
+ * Execute a given **reactive** javascript source content.
+ *
+ * @param inputs  See {@link ExecJsInput}.
+ * @param ctx Execution context used for logging and tracing.
+ * @returns Promise over the scope at exit
+ */
+export async function executeJs$(
+    inputs: ExecJsInput,
+    ctx?: ContextTrait,
+): Promise<Scope> {
+    ctx = (ctx || new NoContext()).start('executeJs$', ['Exec'])
+
+    const { src, error$, scope, invalidated$, output$ } = inputs
+    const ast = parseProgram(src, inputs.cellId, error$)
+    const declarations = extractGlobalDeclarations(ast)
     const undefs = extractUndefinedReferences(ast)
 
-    const observables = Object.entries({
-        ...scope.const,
-        ...scope.let,
-    }).filter(
-        ([k, v]) =>
-            undefs.includes(k) &&
-            (v instanceof Observable || v instanceof Promise),
-    ) as unknown as [string, Observable<unknown> | Promise<unknown>][]
-
-    if (observables.length === 0) {
-        return undefined
+    ctx.info('Found undefined references in script', undefs)
+    const select = (scopeConstLet: Record<string, unknown>) => {
+        return Object.entries(scopeConstLet)
+            .filter(
+                ([k, v]) =>
+                    undefs.includes(k) &&
+                    (v instanceof Observable || v instanceof Promise),
+            )
+            .map(([k, v]) => {
+                return [k, v instanceof Promise ? from(v) : v]
+            }) as unknown as [string, Observable<unknown> | Promise<unknown>][]
     }
-    const keys = observables.reduce((acc, [k, v]) => {
-        return v instanceof Observable
-            ? `${acc}${k},`
-            : `${acc}rxjs.from(${k}),`
-    }, '')
-    const footerInner = `
-return { 
-    const:{ ${extractKeys(declarations.const)} },
-    let:{ ${extractKeys(declarations.let)} }
-}
-    `
-    const extractKeysOutter = (
-        obj: { [k: string]: unknown } | string[],
-        type: 'const' | 'let',
-    ) =>
-        (Array.isArray(obj) ? obj : Object.keys(obj)).reduce(
-            (acc, e) =>
-                `${acc} ${e}: scope$.pipe( rxjs.map((scope) => scope.${type}.${e})),`,
-            '',
-        )
+    const reactivesConst = select(scope.const)
+    const reactivesLet = select(scope.let)
+    const reactives = [...reactivesLet, ...reactivesConst]
+    ctx.info('Undefined references bound to input scope observable retrieved', {
+        reactivesConst,
+        reactivesLet,
+    })
+    const values$ = reactives.map(([_, v]) => v)
 
-    const footer = `
-return { 
-    const:{ ${extractKeys(scope.const)} ${extractKeysOutter(declarations.const, 'const')} },
-    let:{ ${extractKeys(scope.let)} ${extractKeysOutter(declarations.let, 'let')} },
-    python:{ ${extractKeys(scope.python)} },
-}
-    `
+    const extractValues = (values: unknown[]) => {
+        return values.reduce((acc: Record<string, unknown>, e, i) => {
+            const key = reactives[i][0]
+            return {
+                ...acc,
+                [key]: e,
+            }
+        }, {}) as unknown as Record<string, unknown>
+    }
+    const scope$ = combineLatest(values$).pipe(
+        takeUntil(invalidated$),
+        map(async (values) => {
+            const reactScope = extractValues(values)
+            const patchedScope = {
+                ...scope,
+                const: { ...scope.const, ...reactScope },
+            }
+            output$.next(undefined)
+            return await executeJs(
+                { ...inputs, scope: patchedScope, declarations },
+                ctx,
+            )
+        }),
+        switchMap((d) => from(d)),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    )
+    scope$.subscribe()
 
-    const wrapped = `
-const scope$ = rxjs.combineLatest([${keys}]).pipe( 
-    rxjs.takeUntil(invalidated$),
-    rxjs.map( async ([${keys}]) => {
-        output$.next(undefined)
-        ${src}
-        // Footer
-        ${footerInner}
-    }), 
-    rxjs.switchMap((d) => rxjs.from(d)),
-    rxjs.shareReplay({bufferSize:1, refCount: true}))
-scope$.subscribe()
-            `
+    const reactScopeConstOut = declarations.const.reduce((acc, k) => {
+        return {
+            ...acc,
+            [k]: scope$.pipe(map((scopeOut) => scopeOut.const[k])),
+        }
+    }, {})
+    const reactScopeLetOut = declarations.let.reduce((acc, k) => {
+        return {
+            ...acc,
+            [k]: scope$.pipe(map((scopeOut) => scopeOut.let[k])),
+        }
+    }, {})
 
-    return { wrapped, footer }
+    ctx.info('Output scope observable created', {
+        reactScopeConstOut,
+        reactScopeLetOut,
+    })
+    ctx.exit()
+    return {
+        ...scope,
+        let: { ...scope.let, ...reactScopeLetOut },
+        const: { ...scope.const, ...reactScopeConstOut },
+    }
 }
 
 function find_children({
@@ -406,7 +409,11 @@ function patchSpreadOperators(jsCode: string) {
     return patchedCode
 }
 
-export function parseProgram(src: string): AstNode[] {
+export function parseProgram(
+    src: string,
+    cellId: string,
+    error$?: Subject<ExecCellError | undefined> | undefined,
+): AstNode[] {
     try {
         /*
         We should move to use `acornjs` as javascript AST parser
@@ -422,13 +429,16 @@ export function parseProgram(src: string): AstNode[] {
         )
         return ast.body[0].expression.callee.body.body
     } catch (e) {
-        console.error('AST parsing failed', e)
-        throw new AstParsingError({
-            description: e['description'],
-            line: e['lineNumber'],
+        const error = {
+            cellId,
+            kind: 'AST' as const,
+            message: e['description'],
+            lineNumber: e['lineNumber'],
             column: e['column'],
             src: src.split('\n'),
-        })
+        }
+        error$ && error$.next(error)
+        throw e
     }
 }
 

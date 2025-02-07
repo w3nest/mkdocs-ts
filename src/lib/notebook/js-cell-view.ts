@@ -4,7 +4,7 @@ import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
-import { executeJs } from './js-execution'
+import { executeJs, executeJs$ } from './js-execution'
 import { ContextTrait, Contextual } from '../context'
 
 /**
@@ -70,10 +70,18 @@ export class JsCellExecutor implements CellTrait {
      */
     @Contextual({ async: true, key: (args: ExecArgs) => args.cellId })
     async execute(args: ExecArgs, ctx?: ContextTrait): Promise<Scope> {
+        if (this.cellAttributes.reactive) {
+            return await executeJs$(
+                {
+                    ...args,
+                    invalidated$: this.invalidated$,
+                },
+                ctx,
+            )
+        }
         return await executeJs(
             {
                 ...args,
-                reactive: this.cellAttributes.reactive,
                 invalidated$: this.invalidated$,
             },
             ctx,
@@ -87,6 +95,10 @@ export class JsCellExecutor implements CellTrait {
  *
  * They are typically included from a DOM definition with tag name `js-cell` in MarkDown content,
  * see {@link JsCellView.FromDom}.
+ *
+ *
+ * Details regarding the execution are provided in the documentation of {@link executeJs} for
+ * non-reactive cells and {@link executeJs$} for reactive cells.
  */
 export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
     /**
@@ -174,8 +186,11 @@ export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
                     () => {
                         /*No OP*/
                     },
-                    () => {
-                        throw Error(`Failed to execute cell ${this.cellId}`)
+                    (e: unknown) => {
+                        console.error(
+                            `Failed to execute cell ${this.cellId}`,
+                            e,
+                        )
                     },
                 )
             },
