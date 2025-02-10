@@ -73,6 +73,7 @@ export function notify({
                 fontSize: 'medium',
                 position: 'fixed',
                 maxHeight: 'calc(100vh - 10px)',
+                maxWidth: '75vw',
                 top: '0px',
                 left: '50vw',
                 transform: 'translateX(-50%)',

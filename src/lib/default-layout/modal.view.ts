@@ -65,13 +65,13 @@ export function popupModal({
             width: '100vw',
             height: '100vh',
             zIndex: 10,
-            backdropFilter: 'blur(2px)',
+            backdropFilter: 'blur(3px)',
         },
         class: 'd-flex flex-column justify-content-center',
         children: [
             {
                 tag: 'div',
-                class: `p-2 border rounded mx-auto d-flex flex-column justify-content-center mkdocs-bg-0 overflow-auto`,
+                class: `p-2 border rounded mx-auto d-flex flex-column justify-content-center overflow-auto`,
                 children: [content],
                 style: {
                     maxHeight: maxHeight,

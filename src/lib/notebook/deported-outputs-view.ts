@@ -215,7 +215,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                           width: '100vw',
                           height: '100vh',
                           zIndex: 10,
-                          backdropFilter: 'blur(2px)',
+                          backdropFilter: 'blur(3px)',
                       }
             },
         })
@@ -223,7 +223,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             headerView,
             {
                 tag: 'div',
-                class: 'd-flex flex-column justify-content-center mkdocs-bg-info',
+                class: 'd-flex flex-column justify-content-center',
                 style: displayModeStyle$,
                 children: [defaultView, contentView],
                 onclick: () => {
