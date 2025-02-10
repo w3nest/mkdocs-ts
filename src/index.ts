@@ -48,4 +48,5 @@ import type * as CodeApiModule from './lib/code-api' // eslint-disable-line  @ty
 // noinspection ES6UnusedImports Include for documentation
 import type * as NotebookModule from './lib/notebook' // eslint-disable-line  @typescript-eslint/no-unused-vars
 export type * as MkApiBackendsModule from './mkapi-backends'
+export type * as Interpreters from './interpreters'
 export * from './lib'

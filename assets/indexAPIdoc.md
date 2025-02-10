@@ -15,5 +15,10 @@ documentation rendering and processing.
 
 ## **MkApiBackends**
 
-The  {@link MkApiBackends} module gathers backends to generate code API data for a project.
+The {@link MkApiBackends} module gathers backends to generate code API data for a project.
 These data are then consumed by the {@link CodeApi} plugin.
+
+## **Interpreters**
+
+The {@link Interpreters} module gathers backend interpreters that can be used in notebook pages to run cells
+of kind {@link Notebook.InterpreterCellView}.
