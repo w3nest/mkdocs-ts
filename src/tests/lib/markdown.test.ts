@@ -8,7 +8,7 @@ import {
 } from '../../lib'
 import { expectTruthy } from './utils'
 import { filter, firstValueFrom } from 'rxjs'
-import { render } from 'rx-vdom'
+import { ChildrenLike, render, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 
 test('patchSrc happy path', () => {
     const inner = `Some content\n<i>some HTML content</i>\nAnd special characters: > < &`
@@ -117,5 +117,75 @@ describe('render markdown', () => {
             ),
         )
         expect(target).toBeTruthy()
+    })
+})
+
+class CustomView implements VirtualDOM<'div'> {
+    static readonly CssSelector = 'CustomView'
+    public readonly tag = 'div'
+    public readonly class = `${CustomView.CssSelector}`
+    public readonly children: ChildrenLike
+
+    public readonly text: string
+
+    constructor(params: { text: string }) {
+        Object.assign(this, params)
+        this.children = [parseMd({ src: params.text })]
+    }
+
+    static fromDom(elem: HTMLElement) {
+        return new CustomView({ text: elem.textContent ?? '' })
+    }
+}
+
+describe('render view with MD content', () => {
+    beforeEach(() => {
+        document.body.innerHTML = ''
+    })
+
+    it('simple case', async () => {
+        const vdom = parseMd({
+            src: `
+This is an example:
+
+<customView language="javascript">
+const foo = 42
+</customView>
+`,
+            views: {
+                customView: CustomView.fromDom,
+            },
+        })
+        document.body.appendChild(render(vdom))
+        const view = expectTruthy(
+            document.querySelector<RxHTMLElement<'div'>>(
+                `.${CustomView.CssSelector}`,
+            ),
+        )
+        expect(view.vDom['text']).toBe('const foo = 42')
+    })
+    it('escaped characters', async () => {
+        const vdom = parseMd({
+            src: `
+This is an example:
+
+<customView language="javascript">
+\/**
+A comment
+**\/
+const foo = 42
+</customView>
+`,
+            views: {
+                customView: CustomView.fromDom,
+            },
+        })
+        document.body.appendChild(render(vdom))
+        const view = expectTruthy(
+            document.querySelector<RxHTMLElement<'div'>>(
+                `.${CustomView.CssSelector}`,
+            ),
+        )
+        expect(view.vDom['text']).toBe('/**\nA comment\n**/\nconst foo = 42')
     })
 })
