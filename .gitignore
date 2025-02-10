@@ -10,3 +10,4 @@ __pycache__
 .env
 /src/tests/**/result.zip
 build/
+*.egg-info
