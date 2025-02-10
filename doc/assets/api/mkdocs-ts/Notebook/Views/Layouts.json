@@ -1,0 +1,1750 @@
+{
+    "name": "Layouts",
+    "documentation": {
+        "sections": [
+            {
+                "content": "This module defines various layout components designed for structuring content within a notebook page.\n\n\n## Quick Overview\n\n###  [SideNavLayout](@nav/api/Notebook/Views/Layouts.SideNavLayout) \n\nThe  `SideNavLayout`  component creates a **navigation sidebar** alongside the main content area.\nBelow is an example with three navigation options: **Home**, **About**, and **Contact**.\n\n<js-cell>\nconst sideNavClass = 'h-100 bg-dark text-light p-2 px-5'\nconst sideNavHome = {\n    icon: 'fas fa-home',\n    content: { tag: 'div', innerText: 'Home', class: sideNavClass },\n}\nconst sideNavAbout = {\n    icon: 'fas fa-info',\n    content: { tag: 'div', innerText: 'About', class: sideNavClass },\n}\nconst sideNavContact = {\n    icon: 'fas fa-envelope',\n    content: { tag: 'div', innerText: 'Contact', class: sideNavClass },\n}\nconst sideNav = {\n    home: sideNavHome,\n    about: sideNavAbout,\n    contact: sideNavContact,\n}\nconst sideNavLayout = Views.Layouts.sideNav({\n    sideNavElements: sideNav,\n    content: { tag: 'div', innerText: 'Main content', class:'p-2 w-100 h-100 bg-light rounded border' },\n})\ndisplay(sideNavLayout)\n</js-cell>\n\n###  [SingleLayout](@nav/api/Notebook/Views/Layouts.SingleLayout) \n\nThe  `SingleLayout`  provides a simple **full-width container** for displaying content.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n    innerText: 'Main Content'\n}\nconst singleLayout = Views.Layouts.single({\n   content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content'\n    }\n})\ndisplay(singleLayout)\n</js-cell>\n\n###  [SuperposedLayout](@nav/api/Notebook/Views/Layouts.SuperposedLayout) \n\nThe  `SuperposedLayout`  allows **layered positioning** of content at the corners of the viewport.\nThis can be useful for **notifications**, **floating toolbars**, or **overlays**.\n\n<js-cell>\nconst classCorners = 'p-2 w-100 h-100 bg-dark text-light border rounded'\nconst topLeft = { tag:'div', class: classCorners, innerText: 'Top-Left' }\nconst topRight = { tag:'div', class: classCorners, innerText: 'Top-Right' }\nconst bottomLeft = { tag:'div', class: classCorners, innerText: 'Bottom-Left' }\nconst bottomRight = { tag:'div', class: classCorners, innerText: 'Bottom-Right' }\n\nconst superposedLayout = Views.Layouts.superposed({\n    content:{ tag:'div', class: 'p-2 w-100 h-100 bg-light border rounded'},\n    topLeft, topRight, bottomLeft, bottomRight\n})\ndisplay(superposedLayout)\n</js-cell>\n\n###  [ViewPortOnlyLayout](@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout) \n\nThe  `ViewPortOnlyLayout`  renders content **only when visible in the viewport**, making it ideal for dynamic loading.\nThis example **displays an alert when the layout is added or removed** to/from the viewport.\n\n<js-cell>\nconst viewPortOnlyLayout = Views.Layouts.viewPortOnly({\n    content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content',\n        connectedCallback: () => alert(\"viewPortOnly layout added\"),\n        disconnectedCallback: () => alert(\"viewPortOnly layout removed\"),\n    }\n})\ndisplay(viewPortOnlyLayout)\n</js-cell>",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "mkdocs-ts/Notebook/Views/Layouts",
+    "navPath": "@nav/api/",
+    "attributes": [],
+    "types": [
+        {
+            "name": "SideNavLayout",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Class representing a side navigation layout.\n\nIt features:\n- A main content area.\n- A side navigation bar on the right:\n  - When collapsed, it includes the icons of the multiple elements declared in the sidebar in a vertical layout.\n  - When an element is expanded, it displays the associated content.\n\n<js-cell>\nconst sideNavClass = 'h-100 bg-dark text-light p-2 px-5'\nconst sideNavHome = {\n    icon: 'fas fa-home',\n    content: { tag: 'div', innerText: 'Home', class: sideNavClass },\n}\nconst sideNavAbout = {\n    icon: 'fas fa-info',\n    content: { tag: 'div', innerText: 'About', class: sideNavClass },\n}\nconst sideNavContact = {\n    icon: 'fas fa-envelope',\n    content: { tag: 'div', innerText: 'Contact', class: sideNavClass },\n}\nconst sideNav = {\n    home: sideNavHome,\n    about: sideNavAbout,\n    contact: sideNavContact,\n}\nconst sideNavLayout = Views.Layouts.sideNav({\n    sideNavElements: sideNav,\n    content: { tag: 'div', innerText: 'Main content', class:'p-2 w-100 h-100 bg-light rounded border' },\n})\ndisplay(sideNavLayout)\n</js-cell>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SideNavLayout",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavLayout.children",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout.children",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 81,
+                        "endLine": 82,
+                        "references": {
+                            "children": "@nav/api/Notebook/Views/Layouts.SideNavLayout.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class associated with the element, equivalent to the  `className`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavLayout.class",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout.class",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "public readonly class = 'd-flex'",
+                        "implementation": "",
+                        "startLine": 79,
+                        "endLine": 80,
+                        "references": {
+                            "class": "@nav/api/Notebook/Views/Layouts.SideNavLayout.class"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavLayout.style",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout.style",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "public readonly style = layoutStyleBase",
+                        "implementation": "",
+                        "startLine": 80,
+                        "endLine": 81,
+                        "references": {
+                            "style": "@nav/api/Notebook/Views/Layouts.SideNavLayout.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavLayout.tag",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout.tag",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 78,
+                        "endLine": 79,
+                        "references": {
+                            "tag": "@nav/api/Notebook/Views/Layouts.SideNavLayout.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "SideNavLayout",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates an instance of SideNavLayout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **params**: Arguments",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavLayout.SideNavLayout",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout.constructor",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "constructor(params: SideNavArguments)",
+                        "implementation": "constructor(params: SideNavArguments) {\n    Object.assign(this, params)\n\n    this.children = [\n        this.menuBar(),\n        {\n            tag: 'div',\n            class: 'h-100 flex-grow-1 d-flex',\n            style: {\n                minWidth: '0px',\n                position: 'relative',\n            },\n            children: [\n                {\n                    tag: 'div',\n                    class: 'mkdocs-bg-0 h-100',\n                    style: {\n                        position: 'absolute',\n                        top: '0px',\n                        left: '0px',\n                        zIndex: 1,\n                        opacity: 0.9,\n                    },\n                    children: Object.entries(this.sideNavElements).map(\n                        ([k, elem]) => {\n                            return {\n                                tag: 'div',\n                                class: attr$({\n                                    source$: this.selected$,\n                                    vdomMap: (selected) =>\n                                        selected === k\n                                            ? 'd-block h-100 overflow-auto'\n                                            : 'd-none',\n                                }),\n                                children: [elem.content],\n                            }\n                        },\n                    ),\n                },\n                {\n                    tag: 'div',\n                    class: 'h-100 flex-grow-1',\n                    style: {\n                        minWidth: '0px',\n                    },\n                    children: [this.content],\n                },\n            ],\n        },\n    ]\n}",
+                        "startLine": 95,
+                        "endLine": 146,
+                        "references": {
+                            "SideNavLayout": "@nav/api/Notebook/Views/Layouts.SideNavLayout",
+                            "SideNavArguments": "@nav/api/Notebook/Views/Layouts.SideNavArguments"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                "declaration": "export class SideNavLayout implements VirtualDOM<'div'>",
+                "implementation": "export class SideNavLayout implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class = 'd-flex'\n    public readonly style = layoutStyleBase\n    public readonly children: ChildrenLike\n\n    public readonly sideNavElements: SideNavElement[]\n    public readonly content: AnyVirtualDOM\n\n    public readonly selected$ = new BehaviorSubject<string | undefined>(\n        undefined,\n    )\n\n    /**\n     * Creates an instance of SideNavLayout.\n     *\n     * @param params Arguments\n     */\n    constructor(params: SideNavArguments) {\n        Object.assign(this, params)\n\n        this.children = [\n            this.menuBar(),\n            {\n                tag: 'div',\n                class: 'h-100 flex-grow-1 d-flex',\n                style: {\n                    minWidth: '0px',\n                    position: 'relative',\n                },\n                children: [\n                    {\n                        tag: 'div',\n                        class: 'mkdocs-bg-0 h-100',\n                        style: {\n                            position: 'absolute',\n                            top: '0px',\n                            left: '0px',\n                            zIndex: 1,\n                            opacity: 0.9,\n                        },\n                        children: Object.entries(this.sideNavElements).map(\n                            ([k, elem]) => {\n                                return {\n                                    tag: 'div',\n                                    class: attr$({\n                                        source$: this.selected$,\n                                        vdomMap: (selected) =>\n                                            selected === k\n                                                ? 'd-block h-100 overflow-auto'\n                                                : 'd-none',\n                                    }),\n                                    children: [elem.content],\n                                }\n                            },\n                        ),\n                    },\n                    {\n                        tag: 'div',\n                        class: 'h-100 flex-grow-1',\n                        style: {\n                            minWidth: '0px',\n                        },\n                        children: [this.content],\n                    },\n                ],\n            },\n        ]\n    }\n\n    private menuBar(): VirtualDOM<'div'> {\n        return {\n            tag: 'div',\n            class: 'h-100 overflow-y-auto px-1 border-right d-flex flex-column',\n            children: Object.entries(this.sideNavElements).map(\n                ([key, elem]) => {\n                    return {\n                        tag: 'button',\n                        class: attr$({\n                            source$: this.selected$,\n                            vdomMap: (selected) =>\n                                selected === key\n                                    ? `btn btn-primary ${elem.icon} p-1 border rounded`\n                                    : `btn btn-light ${elem.icon} p-1 border rounded`,\n                        }),\n                        onclick: () => {\n                            if (this.selected$.value === key) {\n                                this.selected$.next('')\n                            } else {\n                                this.selected$.next(key)\n                            }\n                        },\n                    }\n                },\n            ),\n        }\n    }\n}",
+                "startLine": 77,
+                "endLine": 175,
+                "references": {
+                    "SideNavLayout": "@nav/api/Notebook/Views/Layouts.SideNavLayout",
+                    "SideNavArguments": "@nav/api/Notebook/Views/Layouts.SideNavArguments",
+                    "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SingleLayout",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Class representing a layout featuring a single content.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n    innerText: 'Main Content'\n}\ndisplay(Views.Layouts.single({content}))\n</js-cell>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SingleLayout",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SingleLayout",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SingleLayout.children",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SingleLayout.children",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 37,
+                        "endLine": 38,
+                        "references": {
+                            "children": "@nav/api/Notebook/Views/Layouts.SingleLayout.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SingleLayout.style",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SingleLayout.style",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                        "declaration": "public readonly style = layoutStyleBase",
+                        "implementation": "",
+                        "startLine": 36,
+                        "endLine": 37,
+                        "references": {
+                            "style": "@nav/api/Notebook/Views/Layouts.SingleLayout.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SingleLayout.tag",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SingleLayout.tag",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 35,
+                        "endLine": 36,
+                        "references": {
+                            "tag": "@nav/api/Notebook/Views/Layouts.SingleLayout.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "SingleLayout",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates an instance of SingleLayout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **params**: Arguments",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SingleLayout.SingleLayout",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SingleLayout.constructor",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                        "declaration": "constructor(params: SingleArguments)",
+                        "implementation": "constructor(params: SingleArguments) {\n    Object.assign(this, params)\n\n    this.children = [this.content]\n}",
+                        "startLine": 45,
+                        "endLine": 50,
+                        "references": {
+                            "SingleLayout": "@nav/api/Notebook/Views/Layouts.SingleLayout",
+                            "SingleArguments": "@nav/api/Notebook/Views/Layouts.SingleArguments"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                "declaration": "export class SingleLayout implements VirtualDOM<'div'>",
+                "implementation": "export class SingleLayout implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly style = layoutStyleBase\n    public readonly children: ChildrenLike\n    public readonly content: AnyVirtualDOM\n\n    /**\n     * Creates an instance of SingleLayout.\n     *\n     * @param params Arguments\n     */\n    constructor(params: SingleArguments) {\n        Object.assign(this, params)\n\n        this.children = [this.content]\n    }\n}",
+                "startLine": 34,
+                "endLine": 51,
+                "references": {
+                    "SingleLayout": "@nav/api/Notebook/Views/Layouts.SingleLayout",
+                    "SingleArguments": "@nav/api/Notebook/Views/Layouts.SingleArguments",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SuperposedLayout",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A layout component that allows for the positioning of content in a superposed manner, with optional overlays\nin the four corners.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n}\nconst classCorners = 'p-2 w-100 h-100 bg-dark text-light border rounded'\nconst topLeft = {\n    tag:'div',\n    class: classCorners,\n    innerText: 'Top-Left'\n}\nconst topRight = {\n    tag:'div',\n    class: classCorners,\n    innerText: 'Top-Right'\n}\nconst bottomLeft = {\n    tag:'div',\n    class: classCorners,\n    innerText: 'Bottom-Left'\n}\nconst bottomRight = {\n    tag:'div',\n    class: classCorners,\n    innerText: 'Bottom-Right'\n}\ndisplay(Views.Layouts.superposed({\n    content,\n    topLeft,\n    topRight,\n    bottomLeft,\n    bottomRight\n}))\n</js-cell>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SuperposedLayout",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedLayout",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedLayout.children",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.children",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 84,
+                        "endLine": 85,
+                        "references": {
+                            "children": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedLayout.style",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.style",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "public readonly style = {\n        position: 'relative' as const,\n        ...layoutStyleBase,\n    }",
+                        "implementation": "",
+                        "startLine": 80,
+                        "endLine": 81,
+                        "references": {
+                            "style": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.style"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedLayout.tag",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.tag",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 79,
+                        "endLine": 80,
+                        "references": {
+                            "tag": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "SuperposedLayout",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates an instance of SuperposedLayout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **params**: Arguments",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedLayout.SuperposedLayout",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.constructor",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "constructor(params: SuperposedArguments)",
+                        "implementation": "constructor(params: SuperposedArguments) {\n    Object.assign(this, params)\n    this.children = [\n        this.content,\n        this.topLeft && this.createOverlay(this.topLeft, 'top-left'),\n        this.topRight && this.createOverlay(this.topRight, 'top-right'),\n        this.bottomRight &&\n            this.createOverlay(this.bottomRight, 'bottom-right'),\n        this.bottomLeft &&\n            this.createOverlay(this.bottomLeft, 'bottom-left'),\n    ]\n}",
+                        "startLine": 96,
+                        "endLine": 108,
+                        "references": {
+                            "SuperposedLayout": "@nav/api/Notebook/Views/Layouts.SuperposedLayout",
+                            "SuperposedArguments": "@nav/api/Notebook/Views/Layouts.SuperposedArguments"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                "declaration": "export class SuperposedLayout implements VirtualDOM<'div'>",
+                "implementation": "export class SuperposedLayout implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly style = {\n        position: 'relative' as const,\n        ...layoutStyleBase,\n    }\n    public readonly children: ChildrenLike\n    public readonly content: AnyVirtualDOM\n    public readonly topLeft?: AnyVirtualDOM\n    public readonly topRight?: AnyVirtualDOM\n    public readonly bottomLeft?: AnyVirtualDOM\n    public readonly bottomRight?: AnyVirtualDOM\n\n    /**\n     * Creates an instance of SuperposedLayout.\n     *\n     * @param params Arguments\n     */\n    constructor(params: SuperposedArguments) {\n        Object.assign(this, params)\n        this.children = [\n            this.content,\n            this.topLeft && this.createOverlay(this.topLeft, 'top-left'),\n            this.topRight && this.createOverlay(this.topRight, 'top-right'),\n            this.bottomRight &&\n                this.createOverlay(this.bottomRight, 'bottom-right'),\n            this.bottomLeft &&\n                this.createOverlay(this.bottomLeft, 'bottom-left'),\n        ]\n    }\n\n    private createOverlay(\n        cornerView: AnyVirtualDOM,\n        position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right',\n    ) {\n        const style = {\n            position: 'absolute' as const,\n            [position.includes('top') ? 'top' : 'bottom']: '10px',\n            [position.includes('left') ? 'left' : 'right']: '10px',\n        }\n        return {\n            tag: 'div' as const,\n            style,\n            children: [cornerView],\n        }\n    }\n}",
+                "startLine": 78,
+                "endLine": 125,
+                "references": {
+                    "SuperposedLayout": "@nav/api/Notebook/Views/Layouts.SuperposedLayout",
+                    "SuperposedArguments": "@nav/api/Notebook/Views/Layouts.SuperposedArguments",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ViewPortOnlyLayout",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A layout that displays its content only when it is in the viewport.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n    innerText: 'Main Content',\n    connectedCallback: () => alert(\"viewPortOnly layout added\"),\n    disconnectedCallback: () => alert(\"viewPortOnly layout removed\"),\n}\ndisplay(Views.Layouts.viewPortOnly({content}))\n</js-cell>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ViewPortOnlyLayout",
+            "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ViewPortOnlyLayout.children",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.children",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                        "declaration": "public readonly children: ChildrenLike = []",
+                        "implementation": "",
+                        "startLine": 60,
+                        "endLine": 61,
+                        "references": {
+                            "children": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "connectedCallback",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Lifecycle hook called just after the element has been attached to the document's DOM.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ViewPortOnlyLayout.connectedCallback",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.connectedCallback",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                        "declaration": "public readonly connectedCallback: (element: HTMLElement) => void",
+                        "implementation": "",
+                        "startLine": 62,
+                        "endLine": 63,
+                        "references": {
+                            "connectedCallback": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.connectedCallback"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ViewPortOnlyLayout.style",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.style",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                        "declaration": "public readonly style = layoutStyleBase",
+                        "implementation": "",
+                        "startLine": 59,
+                        "endLine": 60,
+                        "references": {
+                            "style": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ViewPortOnlyLayout.tag",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.tag",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 58,
+                        "endLine": 59,
+                        "references": {
+                            "tag": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "ViewPortOnlyLayout",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates an instance of ViewPortOnlyLayout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **params**: Arguments",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ViewPortOnlyLayout.ViewPortOnlyLayout",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.constructor",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                        "declaration": "constructor(params: ViewPortOnlyArguments)",
+                        "implementation": "constructor(params: ViewPortOnlyArguments) {\n    Object.assign(this, params)\n\n    this.connectedCallback = (element: RxHTMLElement<'div'>) => {\n        const isInViewPort$ = new BehaviorSubject(false)\n        isElementInViewport(element, isInViewPort$)\n        element.ownSubscriptions(\n            isInViewPort$.subscribe((inVP) => {\n                if (!inVP) {\n                    element.innerHTML = ''\n                    return\n                }\n                element.appendChild(render(this.content))\n            }),\n        )\n    }\n}",
+                        "startLine": 69,
+                        "endLine": 86,
+                        "references": {
+                            "ViewPortOnlyLayout": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout",
+                            "ViewPortOnlyArguments": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                "declaration": "export class ViewPortOnlyLayout implements VirtualDOM<'div'>",
+                "implementation": "export class ViewPortOnlyLayout implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly style = layoutStyleBase\n    public readonly children: ChildrenLike = []\n    public readonly content: AnyVirtualDOM\n    public readonly connectedCallback: (element: HTMLElement) => void\n\n    /**\n     * Creates an instance of ViewPortOnlyLayout.\n     *\n     * @param params Arguments\n     */\n    constructor(params: ViewPortOnlyArguments) {\n        Object.assign(this, params)\n\n        this.connectedCallback = (element: RxHTMLElement<'div'>) => {\n            const isInViewPort$ = new BehaviorSubject(false)\n            isElementInViewport(element, isInViewPort$)\n            element.ownSubscriptions(\n                isInViewPort$.subscribe((inVP) => {\n                    if (!inVP) {\n                        element.innerHTML = ''\n                        return\n                    }\n                    element.appendChild(render(this.content))\n                }),\n            )\n        }\n    }\n}",
+                "startLine": 57,
+                "endLine": 87,
+                "references": {
+                    "ViewPortOnlyLayout": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout",
+                    "ViewPortOnlyArguments": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SideNavArguments",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type definition for the arguments to create a  [SideNavLayout](@nav/api/Notebook/Views/Layouts.SideNavLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SideNavArguments",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SideNavArguments",
+            "attributes": [
+                {
+                    "name": "content",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The main content of the layout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavArguments.content",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavArguments.content",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "content: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 30,
+                        "endLine": 31,
+                        "references": {
+                            "content": "@nav/api/Notebook/Views/Layouts.SideNavArguments.content",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "sideNavElements",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "An object mapping keys to side navigation elements.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavArguments.sideNavElements",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavArguments.sideNavElements",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "sideNavElements: Record<string, SideNavElement>",
+                        "implementation": "",
+                        "startLine": 26,
+                        "endLine": 27,
+                        "references": {
+                            "sideNavElements": "@nav/api/Notebook/Views/Layouts.SideNavArguments.sideNavElements",
+                            "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                "declaration": "export interface SideNavArguments",
+                "implementation": "export interface SideNavArguments {\n    /**\n     * An object mapping keys to side navigation elements.\n     */\n    sideNavElements: Record<string, SideNavElement>\n    /**\n     * The main content of the layout.\n     */\n    content: AnyVirtualDOM\n}",
+                "startLine": 22,
+                "endLine": 32,
+                "references": {
+                    "SideNavArguments": "@nav/api/Notebook/Views/Layouts.SideNavArguments",
+                    "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SideNavElement",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type definition for an element in the side navigation.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SideNavElement",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SideNavElement",
+            "attributes": [
+                {
+                    "name": "content",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Content when the sidebar is expanded.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavElement.content",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavElement.content",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "content: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 16,
+                        "endLine": 17,
+                        "references": {
+                            "content": "@nav/api/Notebook/Views/Layouts.SideNavElement.content",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "icon",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Icon in the sidebar.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SideNavElement.icon",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SideNavElement.icon",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                        "declaration": "icon: string",
+                        "implementation": "",
+                        "startLine": 12,
+                        "endLine": 13,
+                        "references": {
+                            "icon": "@nav/api/Notebook/Views/Layouts.SideNavElement.icon"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                "declaration": "export interface SideNavElement",
+                "implementation": "export interface SideNavElement {\n    /**\n     * Icon in the sidebar.\n     */\n    icon: string\n    /**\n     * Content when the sidebar is expanded.\n     */\n    content: AnyVirtualDOM\n}",
+                "startLine": 8,
+                "endLine": 18,
+                "references": {
+                    "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SingleArguments",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type definition for the arguments to create a  [SingleLayout](@nav/api/Notebook/Views/Layouts.SingleLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SingleArguments",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SingleArguments",
+            "attributes": [
+                {
+                    "name": "content",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Content of the layout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SingleArguments.content",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SingleArguments.content",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                        "declaration": "content: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 10,
+                        "endLine": 11,
+                        "references": {
+                            "content": "@nav/api/Notebook/Views/Layouts.SingleArguments.content",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                "declaration": "export interface SingleArguments",
+                "implementation": "export interface SingleArguments {\n    /**\n     * Content of the layout.\n     */\n    content: AnyVirtualDOM\n}",
+                "startLine": 6,
+                "endLine": 12,
+                "references": {
+                    "SingleArguments": "@nav/api/Notebook/Views/Layouts.SingleArguments",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "SuperposedArguments",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type definition for the arguments to create a  [SuperposedLayout](@nav/api/Notebook/Views/Layouts.SuperposedLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "SuperposedArguments",
+            "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedArguments",
+            "attributes": [
+                {
+                    "name": "bottomLeft",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "An optional overlay to be displayed in the bottom-left corner.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedArguments.bottomLeft",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.bottomLeft",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "bottomLeft?: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 23,
+                        "endLine": 24,
+                        "references": {
+                            "bottomLeft": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.bottomLeft",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "bottomRight",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "An optional overlay to be displayed in the bottom-right corner.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedArguments.bottomRight",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.bottomRight",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "bottomRight?: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 27,
+                        "endLine": 28,
+                        "references": {
+                            "bottomRight": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.bottomRight",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "content",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Main content of the layout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedArguments.content",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.content",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "content: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 11,
+                        "endLine": 12,
+                        "references": {
+                            "content": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.content",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "topLeft",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "An optional overlay to be displayed in the top-left corner.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedArguments.topLeft",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.topLeft",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "topLeft?: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 15,
+                        "endLine": 16,
+                        "references": {
+                            "topLeft": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.topLeft",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "topRight",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "An optional overlay to be displayed in the top-right corner.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "SuperposedArguments.topRight",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.topRight",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                        "declaration": "topRight?: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 19,
+                        "endLine": 20,
+                        "references": {
+                            "topRight": "@nav/api/Notebook/Views/Layouts.SuperposedArguments.topRight",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                "declaration": "export interface SuperposedArguments",
+                "implementation": "export interface SuperposedArguments {\n    /**\n     * Main content of the layout.\n     */\n    content: AnyVirtualDOM\n    /**\n     * An optional overlay to be displayed in the top-left corner.\n     */\n    topLeft?: AnyVirtualDOM\n    /**\n     * An optional overlay to be displayed in the top-right corner.\n     */\n    topRight?: AnyVirtualDOM\n    /**\n     * An optional overlay to be displayed in the bottom-left corner.\n     */\n    bottomLeft?: AnyVirtualDOM\n    /**\n     * An optional overlay to be displayed in the bottom-right corner.\n     */\n    bottomRight?: AnyVirtualDOM\n}",
+                "startLine": 7,
+                "endLine": 29,
+                "references": {
+                    "SuperposedArguments": "@nav/api/Notebook/Views/Layouts.SuperposedArguments",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ViewPortOnlyArguments",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type definition for the arguments to create a  [ViewPortOnlyLayout](@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ViewPortOnlyArguments",
+            "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments",
+            "attributes": [
+                {
+                    "name": "content",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Content of the layout.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ViewPortOnlyArguments.content",
+                    "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments.content",
+                    "code": {
+                        "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                        "declaration": "content: AnyVirtualDOM",
+                        "implementation": "",
+                        "startLine": 18,
+                        "endLine": 19,
+                        "references": {
+                            "content": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments.content",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                "declaration": "export interface ViewPortOnlyArguments",
+                "implementation": "export interface ViewPortOnlyArguments {\n    /**\n     * Content of the layout.\n     */\n    content: AnyVirtualDOM\n}",
+                "startLine": 14,
+                "endLine": 20,
+                "references": {
+                    "ViewPortOnlyArguments": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [
+        {
+            "name": "sideNav",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Function to create a  [SideNavLayout](@nav/api/Notebook/Views/Layouts.SideNavLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **params**: Arguments",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "sideNav",
+            "navPath": "@nav/api/Notebook/Views/Layouts.sideNav",
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+                "declaration": "export function sideNav(params: SideNavArguments)",
+                "implementation": "export function sideNav(params: SideNavArguments) {\n    return new SideNavLayout(params)\n}",
+                "startLine": 38,
+                "endLine": 41,
+                "references": {
+                    "sideNav": "@nav/api/Notebook/Views/Layouts.sideNav",
+                    "SideNavArguments": "@nav/api/Notebook/Views/Layouts.SideNavArguments",
+                    "SideNavLayout": "@nav/api/Notebook/Views/Layouts.SideNavLayout"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "single",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Function to create a  [SingleLayout](@nav/api/Notebook/Views/Layouts.SingleLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **params**: Arguments",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "single",
+            "navPath": "@nav/api/Notebook/Views/Layouts.single",
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
+                "declaration": "export function single(params: SingleArguments)",
+                "implementation": "export function single(params: SingleArguments) {\n    return new SingleLayout(params)\n}",
+                "startLine": 18,
+                "endLine": 21,
+                "references": {
+                    "single": "@nav/api/Notebook/Views/Layouts.single",
+                    "SingleArguments": "@nav/api/Notebook/Views/Layouts.SingleArguments",
+                    "SingleLayout": "@nav/api/Notebook/Views/Layouts.SingleLayout"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "superposed",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Function to create a  [SuperposedLayout](@nav/api/Notebook/Views/Layouts.SuperposedLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **params**: Arguments",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "superposed",
+            "navPath": "@nav/api/Notebook/Views/Layouts.superposed",
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
+                "declaration": "export function superposed(params: SuperposedArguments)",
+                "implementation": "export function superposed(params: SuperposedArguments) {\n    return new SuperposedLayout(params)\n}",
+                "startLine": 35,
+                "endLine": 38,
+                "references": {
+                    "superposed": "@nav/api/Notebook/Views/Layouts.superposed",
+                    "SuperposedArguments": "@nav/api/Notebook/Views/Layouts.SuperposedArguments",
+                    "SuperposedLayout": "@nav/api/Notebook/Views/Layouts.SuperposedLayout"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "viewPortOnly",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Function to create a  [ViewPortOnlyLayout](@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout) .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **params**: Arguments",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "viewPortOnly",
+            "navPath": "@nav/api/Notebook/Views/Layouts.viewPortOnly",
+            "code": {
+                "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+                "declaration": "export function viewPortOnly(params: ViewPortOnlyArguments)",
+                "implementation": "export function viewPortOnly(params: ViewPortOnlyArguments) {\n    return new ViewPortOnlyLayout(params)\n}",
+                "startLine": 26,
+                "endLine": 29,
+                "references": {
+                    "viewPortOnly": "@nav/api/Notebook/Views/Layouts.viewPortOnly",
+                    "ViewPortOnlyArguments": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments",
+                    "ViewPortOnlyLayout": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "files": [
+        {
+            "name": "side-nav.layout.ts",
+            "path": "src/lib/notebook/views/layouts/side-nav.layout.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "single.layout.ts",
+            "path": "src/lib/notebook/views/layouts/single.layout.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "superposed.layout.ts",
+            "path": "src/lib/notebook/views/layouts/superposed.layout.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "view-port-only.layout.ts",
+            "path": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

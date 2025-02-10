@@ -1,31 +1,25 @@
 {
     "name": "mkdocs-ts",
     "documentation": {
-        "sections": []
+        "sections": [
+            {
+                "content": "Welcome to the **mkdocs-ts** API documentation.\n\nThe primary entry point of the library is  [ MainModule](@nav/api/MainModule) , which serves as the core module for managing\ndocumentation rendering and processing.\n\n## **Plugins**\n\n**mkdocs-ts** includes two built-in plugins to enhance your documentation:\n\n-  [ Notebook](@nav/api/Notebook)  – Enables the integration of notebook-style pages into your application, allowing for interactive\n  and dynamic content.\n\n-  [ CodeApi](@nav/api/CodeApi)  – Provides support for generating API documentation pages, making it easy to document\n  your project's codebase.\n\n## **MkApiBackends**\n\nThe  [ MkApiBackends](@nav/api/MkApiBackends)  module gathers backends to generate code API data for a project.\nThese data are then consumed by the  [ CodeApi](@nav/api/CodeApi)  plugin.\n\n## **Interpreters**\n\nThe  [ Interpreters](@nav/api/Interpreters)  module gathers backend interpreters that can be used in notebook pages to run cells\nof kind  [ Notebook.InterpreterCellView](@nav/api/Notebook.InterpreterCellView) .",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
     },
-    "path": "",
+    "path": "mkdocs-ts",
+    "navPath": "@nav/api/",
     "attributes": [],
     "types": [],
     "callables": [],
     "files": [
-        {
-            "name": "index.ts",
-            "path": "src/backends/index.ts",
-            "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "Backends available to parse code API.\n\nBackend API generators are in charge to convert project's sources files into a set of 'API' files,\neach file representing one module of the project.\n\n**Conditions for Generation**:\n\n   - The language is organized hierarchically into modules.\n\n   - Modules can contain entities grouped as , ,\n     or .\n\n   - For each entity, it should be possible to construct a  attribute, which includes:\n     - Extracting documentation from the source code.\n\n     - Extracting declaration and optionally implementation from the source code.\n\n     - Extracting the list of known types involved from a declaration (if applicable).\n\n   - For , it should be possible to extract associated lists of  and\n   .\n\n   - All entities have a  property providing language-specific semantic information.\n\n   - All entities are associated with .",
-                        "contentType": "markdown"
-                    }
-                ]
-            }
-        },
         {
             "name": "index.ts",
             "path": "src/lib/code-api/index.ts",
@@ -38,7 +32,25 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "Auxiliary module to provide code api documentation.\n\n\nOnce 'backend' data has been generated, customization of the output is using a layer running in the\nbrowser. For now, the customization is essentially defined using css through the  attribute.\nIts purpose is to link  attribute to display options.\n\nFor instance,\n<a target='_blank'\nhref=\"/api/assets-gateway/cdn-backend/resources/QHlvdXdvbC9ta2RvY3MtdHM=/latest/assets/ts-typedoc.css\">this</a>\n is the default css file of the .",
+                        "content": "The Code API Plugin integrates API documentation into your application.\n\nAPI documentation is structured based on the module hierarchy, where each page corresponds to a specific module.\n\nThe root node of the API documentation is generated using .\nBy default, it utilizes a  to fetch module data from .json files,\nwith each file representing a . The module is then displayed on the page using .\n\n<note level=\"warning\">\nThis module does **not** handle the generation of `.json` files. For details on generating these files,\nrefer to .\n</note>",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/interpreters/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Builtin interpreters.",
                         "contentType": "markdown"
                     }
                 ]
@@ -56,7 +68,25 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "Main module of the library.",
+                        "content": "# Overview\n\nThis is the **main module** of the library.\n\n## Core\n\nThe module defines the  class, responsible for handling navigation between  nodes.\n\n## Views\n\nIn terms of views, this module provides a , which can wrap multiple layout types.\nThe library also includes a default layout, defined in the  module.\n\n## Markdown\n\nThe module includes Markdown processing utilities through the  and  functions.\n\nVarious options are available, including support for defining custom views.\n\n## Logging\n\nThe module provides utilities for  management, offering structured logging across the package.\nIt includes two built-in reporters, both implementing :\n\n-  (logs to the console).\n\n-  (stores logs in memory).\n\n## Plugins\n\nTwo plugins are included:\n\n- **Code API Module** ()\n  - Installed using .\n  - Enables automatic generation of pages from code API documentation.\n\n- **Notebook Module** ()\n  - Installed using .\n  - Supports pages with live code execution.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/mkapi-backends/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Backends for parsing and generating API documentation from source code.\n\nThese backends are responsible for converting a project's source files into structured API `.json` files.\nEach generated file represents a **module** in the project, following the schema defined in .\n\n## Available Backends:\n\n- : A TypeScript module, using [TypeDoc](https://typedoc.org/) as\nprimary AST parser, to extract API models for **TypeScript Projects**.\n\n- : Python module, using [griffe](https://mkdocstrings.github.io/griffe/guide/users/) as\nprimary AST parser, to extract API models for **Python Projects**.",
                         "contentType": "markdown"
                     }
                 ]
@@ -74,7 +104,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is , which serves as a wrapper for parsing markdown content.\nThe markdown source can contain a series of executable cells, including , ,\n,  and .\nThese cells are identified within the Markdown source using specific DOM elements (`js-cell`, `md-cell`, `py-cell`,\n`interpreter-cell` and `worker-cell`). Cells feature attributes provided with the DOM element,\nrefer to the associated , , ,\n and .\n\nMost of the implementation logic regarding synchronization are included in the  class.",
+                        "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is , which serves as a wrapper for parsing markdown content.\n\nThe markdown source can contain a series of executable cells, including:\n\n*  : Run JavaScript snippets.\n\n*  : Run Markdown snippets, eventually including references to JavScript variables.\n\n*  : Run python snippets in the browser using\n   <a target=\"_blank\" href=\"https://pyodide.org/en/stable/\">pyodide</a>.\n\n*  : Run code snippets using a given backend interpreter for a given language.\n\n*  : Run code snippets in\n   <a target=\"_blank\" href=\"https://developer.mozilla.org/fr/docs/Web/API/Web_Workers_API\">Web Workers</a>.\n\nCells are identified within the Markdown source using specific DOM elements, respectively `js-cell`, `md-cell`,\n`py-cell`, `interpreter-cell` and `worker-cell` for the above list.\n\nCells feature attributes provided with the DOM element,\nrefer to the associated , , ,\n and .\n\nThe entry point of the module is the ; most of the implementation logic regarding synchronization\nis included in the  class.\n\n**Example**\n\n<js-cell cell-id=\"example\">\nconst version = \"{{mkdocs-version}}\"\n\nconst { MkDocs } = await webpm.install({\n    esm:[ `mkdocs-ts#${version} as MkDocs`],\n    css: [\n        'bootstrap#5.3.3~bootstrap.min.css',\n        `mkdocs-ts#${version}~assets/mkdocs-light.css`,\n        'fontawesome#5.12.1~css/all.min.css',\n    ]\n})\nconst NotebookModule = await MkDocs.installNotebookModule()\nconst src =  `\n### Hello world\n\n<js-cell>\ndisplay('Hello World')\n</js-cell>\n`\nconst navigation = {\n    name: 'Notebook',\n    layout: ({router}) => new NotebookModule.NotebookPage({\n        src,\n        router,\n    }),\n}\nconst router = new MkDocs.Router({\n    navigation,\n    browserClient: (p) => new MkDocs.MockBrowser(p)\n})\n\nconst app = new MkDocs.DefaultLayout.Layout({\n    router,\n    name: 'Demo App',\n})\n\ndisplay(app)\n</js-cell>\n\n<cell-output cell-id=\"example\" full-screen=\"true\" style=\"aspect-ratio: 1 / 1; min-height: 0px;\">\n</cell-output>",
                         "contentType": "markdown"
                     }
                 ]
@@ -83,23 +113,63 @@
     ],
     "children": [
         {
-            "name": "Backends",
-            "path": "mkdocs-ts.Backends",
-            "isLeaf": false
-        },
-        {
             "name": "CodeApi",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
             "path": "mkdocs-ts.CodeApi",
+            "navPath": "@nav/api/CodeApi",
             "isLeaf": true
         },
         {
+            "name": "Interpreters",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "mkdocs-ts.Interpreters",
+            "navPath": "@nav/api/Interpreters",
+            "isLeaf": false
+        },
+        {
             "name": "MainModule",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
             "path": "mkdocs-ts.MainModule",
+            "navPath": "@nav/api/MainModule",
+            "isLeaf": false
+        },
+        {
+            "name": "MkApiBackends",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "mkdocs-ts.MkApiBackends",
+            "navPath": "@nav/api/MkApiBackends",
             "isLeaf": false
         },
         {
             "name": "Notebook",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
             "path": "mkdocs-ts.Notebook",
+            "navPath": "@nav/api/Notebook",
             "isLeaf": false
         }
     ],
