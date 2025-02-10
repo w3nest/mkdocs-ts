@@ -303,7 +303,7 @@ return async (scope, { pyNamespace }) => {
                 "kind": "Runtime", 
                 "message": str(e), 
                 "stackTrace": tb_list, 
-                "lineNumber": error_line - 11 - ${String(pyVarsCount)}
+                "lineNumber": error_line - 13 - ${String(pyVarsCount)}
             })
             raise HandledException("Handled error: " + str(e), original_exception=e)
             
