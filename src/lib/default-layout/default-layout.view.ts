@@ -554,6 +554,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
                     height: `${String(height)}px`,
                     position: 'sticky',
                     top: '0px',
+                    minWidth: 'fit-content',
                 }
             },
         })
