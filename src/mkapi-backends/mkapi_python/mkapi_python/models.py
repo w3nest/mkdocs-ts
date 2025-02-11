@@ -206,6 +206,14 @@ class ChildModule:
     """
     Whether it includes children modules.
     """
+    semantic: Semantic
+    """
+    Associated semantic.
+    """
+    navPath: EntityPath
+    """
+    The navigation path, *e.g.* `@nav/api/submoduleA/Foo.bar`.
+    """
 
 
 @dataclasses.dataclass(frozen=True)

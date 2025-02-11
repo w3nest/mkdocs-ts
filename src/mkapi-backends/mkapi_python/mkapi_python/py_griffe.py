@@ -10,7 +10,7 @@ import pprint
 import re
 from collections import defaultdict
 from pathlib import Path, PosixPath
-from typing import Any, Literal, NamedTuple, Sequence, cast
+from typing import Any, Literal, NamedTuple, Sequence, TypeVar, cast
 
 import griffe
 from griffe.dataclasses import Alias as AstAlias
@@ -19,6 +19,7 @@ from griffe.dataclasses import Class as AstClass
 from griffe.dataclasses import Docstring as AstDocstring
 from griffe.dataclasses import Function as AstFunction
 from griffe.dataclasses import Module as AstModule
+from griffe.dataclasses import Object as AstObject
 from griffe.docstrings.dataclasses import (
     DocstringSection,
     DocstringSectionAdmonition,
@@ -26,10 +27,12 @@ from griffe.docstrings.dataclasses import (
     DocstringSectionRaises,
     DocstringSectionReturns,
     DocstringSectionText,
+    DocstringParameter,
+    DocstringRaise,
 )
 from griffe.enumerations import Kind
 from griffe.exceptions import AliasResolutionError
-from griffe.expressions import ExprName
+from griffe.expressions import ExprName, Expr
 
 from .models import (
     Attribute,
@@ -293,6 +296,12 @@ class DocReporter:
         DocReporter.sphinx_links_unresolved = {}
 
 
+def ast_file_path(ast: AstObject) -> Path:
+    if isinstance(ast.filepath, list):
+        return ast.filepath[0]
+    return ast.filepath
+
+
 def canonical_path(
     ast: AstModule | AstAttribute | AstClass | AstFunction | ExprName,
     project: Project,
@@ -395,42 +404,38 @@ class ModuleElements(NamedTuple):
 
 def extract_module(ast: AstModule) -> ModuleElements:
 
-    no_alias = {
-        k: v
-        for k, v in ast.modules.items()
-        if not isinstance(v, griffe.dataclasses.Alias)
-    }
+    no_alias = {k: v for k, v in ast.modules.items() if not isinstance(v, AstAlias)}
 
     modules = [
         v
-        for k, v in no_alias.items()
+        for v in no_alias.values()
         if isinstance(v.filepath, PosixPath)
         and v.filepath.name == INIT_FILENAME
         and v.docstring
     ]
 
-    files = [v for k, v in no_alias.items() if k not in modules]
+    files = no_alias.values()
     classes = [
         c
         for v in files
         for c in v.classes.values()
-        if isinstance(c, AstClass) and c.docstring
+        if not isinstance(c, AstAlias) and c.docstring
     ]
     functions = [
         f
         for v in files
         for f in v.functions.values()
-        if isinstance(f, AstFunction) and f.docstring
+        if not isinstance(f, AstAlias) and f.docstring
     ]
     attributes = [
         a
         for v in files
         for a in v.attributes.values()
-        if isinstance(a, AstAttribute) and a.docstring
+        if not isinstance(a, AstAlias) and a.docstring
     ]
     return ModuleElements(
         modules=modules,
-        files=files,
+        files=list(files),
         classes=classes,
         functions=functions,
         attributes=attributes,
@@ -524,10 +529,22 @@ def parse_child_module(ast: AstModule, project: Project) -> ChildModule:
     Returns:
         The parsed model.
     """
+    nav_path = navigation_path(
+        py_path=ast.canonical_path,
+        name=ast.name,
+        project=project,
+    )
+    if not nav_path:
+        raise ValueError(
+            f"While generating doc for ${ast.canonical_path}: unable to retrieve navigation path."
+        )
+
     return ChildModule(
         name=ast.name,
         path=ast.canonical_path,
         isLeaf=is_leaf_module(path=ast.canonical_path, project=project),
+        semantic=MODULE_SEMANTIC,
+        navPath=nav_path,
     )
 
 
@@ -542,9 +559,10 @@ def format_file_doc(ast: AstModule, project: Project) -> File:
     Returns:
         The parsed model.
     """
+    root_path = ast_file_path(project.root_ast)
     return File(
         name=ast.name,
-        path=str(ast.filepath.relative_to(project.root_ast.filepath.parent)),
+        path=str(ast_file_path(ast).relative_to(root_path.parent)),
         documentation=format_detailed_docstring(
             get_docstring_sections(ast), parent=ast, project=project
         ),
@@ -575,21 +593,27 @@ def parse_function(ast: AstFunction, semantic: Semantic, project: Project) -> Ca
     returns_doc = parse_returns(ast=ast, parsed=parsed, project=project)
     raises_doc = parse_raises(ast=ast, parsed=parsed, project=project)
 
+    nav_path = navigation_path(
+        py_path=ast.canonical_path,
+        name=ast.name,
+        project=project,
+    )
+    if not nav_path:
+        raise ValueError(
+            f"While generating doc for ${ast.canonical_path}: unable to retrieve navigation path."
+        )
+
     return Callable(
         name=ast.name,
         documentation=Documentation(
             sections=[
                 s
-                for s in [*formatted.sections, returns_doc, params_doc, raises_doc]
+                for s in (*formatted.sections, returns_doc, params_doc, raises_doc)
                 if s
             ]
         ),
         path=canonical_path(ast=ast, project=project),
-        navPath=navigation_path(
-            py_path=ast.canonical_path,
-            name=ast.name,
-            project=project,
-        ),
+        navPath=nav_path,
         code=parse_code(ast=ast, project=project),
         semantic=semantic,
     )
@@ -606,13 +630,24 @@ def parse_class(ast: AstClass, project: Project) -> Type:
     Returns:
         The parsed model.
     """
-    bases = find_attributes_of_type(ast.bases, ExprName)
+    bases: list[ExprName] = find_attributes_of_type(ast.bases, ExprName)
     semantic = Semantic(
         role="class",
         labels=[],
         attributes={},
         relations={"inherits": [b.canonical_path for b in bases]},
     )
+
+    nav_path = navigation_path(
+        py_path=ast.canonical_path,
+        name=ast.name,
+        project=project,
+    )
+    if not nav_path:
+        raise ValueError(
+            f"While generating doc for ${ast.canonical_path}: unable to retrieve navigation path."
+        )
+
     return Type(
         name=ast.name,
         documentation=format_detailed_docstring(
@@ -621,11 +656,7 @@ def parse_class(ast: AstClass, project: Project) -> Type:
             project=project,
         ),
         path=canonical_path(ast=ast, project=project),
-        navPath=navigation_path(
-            py_path=ast.canonical_path,
-            name=ast.name,
-            project=project,
-        ),
+        navPath=nav_path,
         semantic=semantic,
         attributes=[
             parse_attribute(ast=attr, semantic=ATTR_SEMANTIC, project=project)
@@ -660,7 +691,7 @@ def parse_parameters(
         (p for p in parsed if isinstance(p, DocstringSectionParameters)), None
     )
 
-    def format_param(e):
+    def format_param(e: DocstringParameter):
         with_links = replace_links(
             e.description, parent=ast.canonical_path, project=project
         )
@@ -745,17 +776,18 @@ def parse_raises(
     if raises:
         try:
 
-            def format_raise(raise_ast):
+            def format_raise(raise_ast: DocstringRaise):
                 with_links = replace_links(
                     raise_ast.description, parent=ast.canonical_path, project=project
                 )
                 annotation = raise_ast.annotation
-                exception_nav = navigation_path(
-                    py_path=annotation.canonical_path,
-                    name=annotation.name,
-                    project=project,
-                )
-                return f"*  **<a target='_blank' href='{exception_nav}'>{annotation.name}</a>**: {with_links}"
+                if isinstance(annotation, Expr):
+                    exception_nav = navigation_path(
+                        py_path=annotation.canonical_path,
+                        name=annotation.canonical_name,
+                        project=project,
+                    )
+                    return f"*  **<a target='_blank' href='{exception_nav}'>{annotation.canonical_name}</a>**: {with_links}"
 
             content = functools.reduce(
                 lambda acc, e: f"{acc}\n{format_raise(e)}", raises.value, ""
@@ -782,7 +814,7 @@ def get_docstring_sections(
     ast: AstClass | AstFunction | AstAttribute | AstModule,
 ) -> list[DocstringSection]:
     if not ast.docstring and not (
-        isinstance(ast, AstModule) and ast.filepath.parts[-1] != "__init__.py"
+        isinstance(ast, AstModule) and ast_file_path(ast).parts[-1] != "__init__.py"
     ):
         # This should not normally happen because only symbols with docstring are reported.
         # Except for files for which it is tolerated.
@@ -797,7 +829,7 @@ def get_docstring_sections(
     return docstring.parse("google")
 
 
-def get_nav_path(tag: SUPPORTED_CROSS_LINK_TAGS, py_path: str):
+def get_nav_path(tag: SphinxCrossLinkTag, py_path: str):
     nav = ""
     if tag == "mod":
         nav = py_path.replace(".", "/")
@@ -831,7 +863,7 @@ def replace_links(text: str, parent: str, project: Project) -> str:
             else [s for s in all_symbols if s.endswith(parent_symbol)]
         )
 
-    def replace_function(match: re.Match):
+    def replace_function(match: re.Match[str]):
         tag = match.group(1)  # Capture the tag (e.g., func, class, etc.)
         # Capture the value between the backticks
         # (e.g., 'module.foo' or 'custom text <module.foo>')
@@ -896,7 +928,7 @@ def format_detailed_docstring(
                     "tag": (
                         v.value.annotation
                         if isinstance(v.value.annotation, str)
-                        else None
+                        else ""
                     )
                 },
                 relations={},
@@ -943,22 +975,29 @@ def parse_attribute(
     documentation = format_detailed_docstring(
         sections=sections, parent=ast, project=project
     )
+
+    nav_path = navigation_path(
+        py_path=ast.canonical_path,
+        name=ast.name,
+        project=project,
+    )
+    if not nav_path:
+        raise ValueError(
+            f"While generating doc for ${ast.canonical_path}: unable to retrieve navigation path."
+        )
+
     return Attribute(
         name=ast.name,
         semantic=semantic,
         documentation=documentation,
         path=canonical_path(ast=ast, project=project),
-        navPath=navigation_path(
-            py_path=ast.canonical_path,
-            name=ast.name,
-            project=project,
-        ),
+        navPath=nav_path,
         code=parse_code(ast=ast, project=project),
     )
 
 
 def extract_function_declaration(
-    function_str,
+    function_str: str,
 ):
     def_index = function_str.find("def")
     no_decorator = function_str[def_index:]
@@ -968,7 +1007,7 @@ def extract_function_declaration(
     return function_str[0 : def_index + close_parenthesis_index + end_index]
 
 
-def extract_class_declaration(class_str):
+def extract_class_declaration(class_str: str):
     index_doc_start = class_str.find('"""')
     return class_str[0:index_doc_start].rstrip()[0:-1]
 
@@ -989,20 +1028,30 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
         nav = navigation_path_ast(ast=e, project=project, report_error=False)
         if nav:
             return nav
-        if e.parent and e.parent.canonical_path == "self":
-            # When declaring a variable in '__init__'.
-            parent_class = e.parent.parent.parent.canonical_path
-            nav = navigation_path(
-                py_path=f"{parent_class}.{e.name}", name=e.name, project=project
-            )
-            return nav
 
-        if e.parent and e.parent.canonical_path.endswith(".__init__"):
-            # This is when a symbol is coming from the '__init__' parameters
-            nav = navigation_path(
-                py_path=e.parent.canonical_path, name=e.name, project=project
-            )
-            return nav
+        parent = e.parent
+        if not isinstance(parent, str):
+            if (
+                parent
+                and parent.canonical_path == "self"
+                and parent.parent
+                and not isinstance(parent.parent, str)
+                and parent.parent.parent
+                and not isinstance(parent.parent.parent, str)
+            ):
+                # When declaring a variable in '__init__'.
+                parent_class = parent.parent.parent.canonical_path
+                nav = navigation_path(
+                    py_path=f"{parent_class}.{e.name}", name=e.name, project=project
+                )
+                return nav
+
+            if parent and parent.canonical_path.endswith(".__init__"):
+                # This is when a symbol is coming from the '__init__' parameters
+                nav = navigation_path(
+                    py_path=parent.canonical_path, name=e.name, project=project
+                )
+                return nav
 
         # Let's try if a unique symbol with given name exists
         keys = [v for k, v in project.all_symbols.items() if k.endswith(f".{e.name}")]
@@ -1013,21 +1062,28 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
 
         return None
 
-    file_path = str(ast.filepath.relative_to(project.root_ast.filepath.parent))
+    root_path = ast_file_path(project.root_ast)
+    file_path = str(ast_file_path(ast).relative_to(root_path.parent))
     references = {}
     implementation = None
     declaration = ""
     if isinstance(ast, AstAttribute):
-        types_annotation = find_attributes_of_type(ast.annotation, ExprName)
-        types_value = find_attributes_of_type(ast.value, ExprName)
+        types_annotation: list[ExprName] = find_attributes_of_type(
+            ast.annotation, ExprName
+        )
+        types_value: list[ExprName] = find_attributes_of_type(ast.value, ExprName)
         declaration = functools.reduce(lambda acc, e: f"{acc}\n{e}", ast.lines)
         implementation = None
         references = {e.name: nav_path(e=e) for e in [*types_annotation, *types_value]}
 
     if isinstance(ast, AstFunction):
         types_annotation = find_attributes_of_type(ast.annotation, ExprName)
-        returns_annotation = find_attributes_of_type(ast.returns, ExprName)
-        parameters_annotation = find_attributes_of_type(ast.parameters, ExprName)
+        returns_annotation: list[ExprName] = find_attributes_of_type(
+            ast.returns, ExprName
+        )
+        parameters_annotation: list[ExprName] = find_attributes_of_type(
+            ast.parameters, ExprName
+        )
         all_annotations = [
             *types_annotation,
             *returns_annotation,
@@ -1041,8 +1097,10 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
         }
 
     if isinstance(ast, AstClass):
-        decorators_annotation = find_attributes_of_type(ast.decorators, ExprName)
-        bases_annotation = find_attributes_of_type(ast.bases, ExprName)
+        decorators_annotation: list[ExprName] = find_attributes_of_type(
+            ast.decorators, ExprName
+        )
+        bases_annotation: list[ExprName] = find_attributes_of_type(ast.bases, ExprName)
         all_annotations = [
             *decorators_annotation,
             *bases_annotation,
@@ -1056,20 +1114,23 @@ def parse_code(ast: AstClass | AstFunction | AstAttribute, project: Project) -> 
 
     return Code(
         filePath=file_path,
-        startLine=ast.lineno,
-        endLine=ast.endlineno,
+        startLine=ast.lineno or -1,
+        endLine=ast.endlineno or -1,
         declaration=declaration,
         implementation=implementation,
-        references=references,
+        references={k: v for k, v in references.items() if v},
     )
 
 
-def find_attributes_of_type(ast: Any, target_type):
-    results = []
-    primitive_types = (int, float, str, bool, bytes, complex)
-    visited = []
+T = TypeVar("T")  #
 
-    def get_attr_val(obj, attr_name) -> Any | None:
+
+def find_attributes_of_type(ast: Any, target_type: type[T]) -> list[T]:
+    results: list[Any] = []
+    primitive_types = (int, float, str, bool, bytes, complex)
+    visited: list[Any] = []
+
+    def get_attr_val(obj: Any, attr_name: str) -> Any | None:
         attr_value = getattr(obj, attr_name, None)
         invalid = any(
             [
@@ -1082,7 +1143,7 @@ def find_attributes_of_type(ast: Any, target_type):
         )
         return not invalid and attr_value
 
-    def parse_obj(obj):
+    def parse_obj(obj: Any):
         if obj in visited:
             return
         visited.append(obj)
@@ -1097,13 +1158,13 @@ def find_attributes_of_type(ast: Any, target_type):
                 continue
             recursive_search(attr_value)
 
-    def recursive_search(current):
+    def recursive_search(current: Any):
 
         if isinstance(current, target_type):
             results.append(current)
 
         if isinstance(current, list):
-            _ = [recursive_search(item) for item in current]
+            _ = [recursive_search(item) for item in cast(list[Any], current)]
         elif hasattr(current, "__dict__"):
             parse_obj(current)
 
@@ -1112,11 +1173,11 @@ def find_attributes_of_type(ast: Any, target_type):
 
 
 class DataclassJSONEncoder(json.JSONEncoder):
-    def default(self, o):
+    def default(self, o: Any) -> Any:
         if hasattr(o, "__dict__"):
             return dataclasses.asdict(o)
         if isinstance(o, (list, tuple)):
-            return [self.default(item) for item in o]
+            return [self.default(item) for item in cast(list[Any], o)]
         return json.JSONEncoder.default(self, o)
 
 
@@ -1138,27 +1199,33 @@ def init_symbols(root_ast: AstModule) -> dict[str, SymbolRef]:
         ast: AstClass | AstFunction | AstAttribute | AstModule, from_class: bool
     ):
         base = get_canonical_path(ast.canonical_path)
-        indexes = {
-            Kind.MODULE: 1,
-            Kind.ATTRIBUTE: 3 if from_class else 2,
-            Kind.FUNCTION: 3 if from_class else 2,
-            Kind.CLASS: 2,
+        indexes: dict[Kind, int] = {
+            Kind(Kind.MODULE): 1,
+            Kind(Kind.ATTRIBUTE): 3 if from_class else 2,
+            Kind(Kind.FUNCTION): 3 if from_class else 2,
+            Kind(Kind.CLASS): 2,
         }
-        kinds = {
-            Kind.MODULE: "module",
-            Kind.ATTRIBUTE: "property" if from_class else "attribute",
-            Kind.FUNCTION: "method" if from_class else "function",
-            Kind.CLASS: "class",
+        kinds: dict[Kind, str] = {
+            Kind(Kind.MODULE): "module",
+            Kind(Kind.ATTRIBUTE): "property" if from_class else "attribute",
+            Kind(Kind.FUNCTION): "method" if from_class else "function",
+            Kind(Kind.CLASS): "class",
         }
         index = indexes[ast.kind]
         module_path = "/".join(base.split(".")[0:-index])
         remaining = ".".join(base.split(".")[-index:])
         return SymbolRef(
-            navigation_path=f"{module_path}.{remaining}",
+            navigation_path=(
+                f"{module_path}/{remaining}"
+                if ast.kind == Kind(Kind.MODULE)
+                else f"{module_path}.{remaining}"
+            ),
             kind=cast(SymbolKind, kinds[ast.kind]),
         )
 
-    def init_symbols_rec(ast: AstModule, depth=0, max_depth=10) -> dict[str, SymbolRef]:
+    def init_symbols_rec(
+        ast: AstModule, depth: int = 0, max_depth: int = 10
+    ) -> dict[str, SymbolRef]:
         if depth > max_depth:
             raise RecursionError("Maximum recursion depth reached")
 
@@ -1217,20 +1284,20 @@ def init_aliases(root_ast: AstModule) -> dict[str, str]:
         A dictionary `alias canonical path` => `resolved canonical path`.
     """
 
-    aliases = {}
-    modules_seen = []
+    aliases: dict[str, str] = {}
+    modules_seen: list[str] = []
 
-    def is_leaf(ast):
-        return any(isinstance(ast, C) for C in [AstAttribute, AstClass, AstFunction])
+    def is_leaf(ast: AstObject | AstAlias):
+        return any(isinstance(ast, C) for C in (AstAttribute, AstClass, AstFunction))
 
     def process_entity(
-        ast: AstModule | AstAlias | AstAttribute | AstClass | AstFunction,
+        ast: AstObject | AstAlias,
         parent_module: str,
         parents_wild_card: list[str],
     ):
 
         def add_import(
-            entity: AstModule | AstAlias | AstAttribute | AstClass | AstFunction,
+            entity: AstObject | AstAlias,
         ):
             aliases[f"{parent_module}.{entity.name}"] = entity.canonical_path
             for parent_wild_card in parents_wild_card:
@@ -1240,7 +1307,7 @@ def init_aliases(root_ast: AstModule) -> dict[str, str]:
             add_import(ast)
             return
 
-        def is_in_lib(m):
+        def is_in_lib(m: AstObject | AstAlias):
             try:
                 m.canonical_path.startswith(root_ast.name)
                 return True
