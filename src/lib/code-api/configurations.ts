@@ -14,7 +14,24 @@ import type {
     NotebookPage,
 } from '../notebook'
 import { NavNodeData } from '../navigation.node'
-import { DefaultLayout, MdParsingOptions } from '../index'
+import type { DefaultLayout, MdParsingOptions, Router } from '../index'
+import type { ClientTocView, NavLayoutView } from '../default-layout'
+
+/**
+ * The navigation layout data-structure produced by the module.
+ *
+ */
+export interface NavLayout {
+    /**
+     * Defines the view for the table of contents (TOC) within the page.
+     */
+    toc?: ClientTocView
+
+    /**
+     * Defines the main content view of the page.
+     */
+    content: (params: { router: Router<NavLayout> }) => NavLayoutView
+}
 
 /**
  * Specification of the configuration interface.
@@ -71,7 +88,7 @@ export interface Configuration<
     }: {
         name: string
         header: DefaultLayout.NavHeader
-        layout: DefaultLayout.NavLayout
+        layout: NavLayout
     }) => NavNodeData<TLayout, THeader>
 }
 
