@@ -18,7 +18,7 @@ const {pyrun} = await webpm.install({
 **Build Configuration**
 
 The backend is deployed using a `Dockerfile` which specifies a container that can be configured to incorporate
-python modules as well as system dependencies.
+a given python interpreter, python modules as well as system dependencies.
 They are provided respectively using `modules` and `apt` attributes to the `Dockerfile`.
 
 Using `webpm`, they are defined using ̀configurations.${backend_name}.build`:
@@ -31,6 +31,7 @@ const {pyrun} = await webpm.install({
         configurations: {
             pyrun_backend: {
                 build: {
+                    python: '3.12',
                     modules: 'numpy pandas',
                     apt: 'libgomp1'
                 }
