@@ -51,8 +51,8 @@ import path from 'path'
  * See {@link ExternalsUrl}.
  */
 export type ExternalUrlGetter = (target: {
-    file: string
-    name: string
+    file?: string
+    name?: string
 }) => string | undefined
 
 /**
@@ -591,14 +591,65 @@ function parseDocumentationElements({
             }
             if (element.kind === DOC_KINDS.INLINE_TAG) {
                 if (!('target' in element)) {
-                    // TypeDoc recognize a link, but failed to get the target
+                    // TypeDoc recognizes a link, but failed to get the target
+                    // Try to match against an external link.
+                    const extLib = element.text.split('.')[0]
+                    if (
+                        projectGlobals.externals &&
+                        extLib in projectGlobals.externals
+                    ) {
+                        const name = element.text.split('.')[1]
+                        const href = projectGlobals.externals[extLib]({ name })
+                        if (!href) {
+                            console.warn(
+                                `[warning] Can not resolve @link ${element.text} in element ${parent.name} (reference to ${extLib})`,
+                            )
+                            return element.text
+                        }
+                        return `<mkapi-ext-link href="${href}">${element.text}</mkapi-ext-link>`
+                    }
                     console.warn(
                         `[warning] Can not resolve @link ${element.text} in element ${parent.name}`,
                     )
                     return element.text
                 }
-                const ref = projectGlobals.navigations[element.target]
-                return `[${element.text}](${ref})`
+                if (typeof element.target === 'number') {
+                    // 'Regular' scenario: a link to a symbol in the library
+                    const nav = projectGlobals.navigations[element.target]
+                    const target = projectGlobals.typedocIdMap[element.target]
+                    const semantic = target?.kind
+                        ? semantics[target.kind]
+                        : { role: 'undefined' }
+                    return `<mkapi-api-link nav="${nav}" semantic="${semantic.role}">${element.text}</mkapi-api-link>`
+                }
+                // This is a reference to something in node_modules, try to find matching external
+                const name = element.target.qualifiedName
+                const modulePath = element.target.sourceFileName.replace(
+                    'node_modules/',
+                    '',
+                )
+                const tokens = modulePath.split('/')
+                const extLib = modulePath.startsWith('@')
+                    ? `${tokens[0]}/${tokens[1]}`
+                    : tokens[0]
+                const file = modulePath.replace(extLib, '').slice(1)
+                if (
+                    !projectGlobals.externals ||
+                    !(extLib in projectGlobals.externals)
+                ) {
+                    return element.text
+                }
+                const href = projectGlobals.externals?.[extLib]({
+                    name,
+                    file,
+                })
+                if (!href) {
+                    console.warn(
+                        `[warning] Can not resolve @link ${element.text} in element ${parent.name} (reference to ${extLib})`,
+                    )
+                    return element.text
+                }
+                return `<mkapi-ext-link href="${href}">${element.text}</mkapi-ext-link>`
             }
             return ''
         })
