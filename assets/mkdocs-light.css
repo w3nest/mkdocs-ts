@@ -1,113 +1,225 @@
 .mkdocs-bg-0 {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-0 {
+    background-color: rgb(42.5, 42.5, 42.5) !important;
 }
 
 .mkdocs-text-5 {
-    color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255) !important;
+}
+
+.mkdocs-inv .mkdocs-text-5 {
+    color: rgb(42.5, 42.5, 42.5) !important;
 }
 
 .mkdocs-hover-bg-0:hover {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-0:hover {
+    background-color: rgb(42.5, 42.5, 42.5) !important;
 }
 
 .mkdocs-hover-text-5:hover {
-    color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text-5:hover {
+    color: rgb(42.5, 42.5, 42.5) !important;
 }
 
 .mkdocs-bg-1 {
-    background-color: rgb(212.5, 212.5, 212.5);
+    background-color: rgb(212.5, 212.5, 212.5) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-1 {
+    background-color: rgb(85, 85, 85) !important;
 }
 
 .mkdocs-text-4 {
-    color: rgb(212.5, 212.5, 212.5);
+    color: rgb(212.5, 212.5, 212.5) !important;
+}
+
+.mkdocs-inv .mkdocs-text-4 {
+    color: rgb(85, 85, 85) !important;
 }
 
 .mkdocs-hover-bg-1:hover {
-    background-color: rgb(212.5, 212.5, 212.5);
+    background-color: rgb(212.5, 212.5, 212.5) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-1:hover {
+    background-color: rgb(85, 85, 85) !important;
 }
 
 .mkdocs-hover-text-4:hover {
-    color: rgb(212.5, 212.5, 212.5);
+    color: rgb(212.5, 212.5, 212.5) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text-4:hover {
+    color: rgb(85, 85, 85) !important;
 }
 
 .mkdocs-bg-2 {
-    background-color: rgb(170, 170, 170);
+    background-color: rgb(170, 170, 170) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-2 {
+    background-color: rgb(127.5, 127.5, 127.5) !important;
 }
 
 .mkdocs-text-3 {
-    color: rgb(170, 170, 170);
+    color: rgb(170, 170, 170) !important;
+}
+
+.mkdocs-inv .mkdocs-text-3 {
+    color: rgb(127.5, 127.5, 127.5) !important;
 }
 
 .mkdocs-hover-bg-2:hover {
-    background-color: rgb(170, 170, 170);
+    background-color: rgb(170, 170, 170) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-2:hover {
+    background-color: rgb(127.5, 127.5, 127.5) !important;
 }
 
 .mkdocs-hover-text-3:hover {
-    color: rgb(170, 170, 170);
+    color: rgb(170, 170, 170) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text-3:hover {
+    color: rgb(127.5, 127.5, 127.5) !important;
 }
 
 .mkdocs-bg-3 {
-    background-color: rgb(127.5, 127.5, 127.5);
+    background-color: rgb(127.5, 127.5, 127.5) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-3 {
+    background-color: rgb(170, 170, 170) !important;
 }
 
 .mkdocs-text-2 {
-    color: rgb(127.5, 127.5, 127.5);
+    color: rgb(127.5, 127.5, 127.5) !important;
+}
+
+.mkdocs-inv .mkdocs-text-2 {
+    color: rgb(170, 170, 170) !important;
 }
 
 .mkdocs-hover-bg-3:hover {
-    background-color: rgb(127.5, 127.5, 127.5);
+    background-color: rgb(127.5, 127.5, 127.5) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-3:hover {
+    background-color: rgb(170, 170, 170) !important;
 }
 
 .mkdocs-hover-text-2:hover {
-    color: rgb(127.5, 127.5, 127.5);
+    color: rgb(127.5, 127.5, 127.5) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text-2:hover {
+    color: rgb(170, 170, 170) !important;
 }
 
 .mkdocs-bg-4 {
-    background-color: rgb(85, 85, 85);
+    background-color: rgb(85, 85, 85) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-4 {
+    background-color: rgb(212.5, 212.5, 212.5) !important;
 }
 
 .mkdocs-text-1 {
-    color: rgb(85, 85, 85);
+    color: rgb(85, 85, 85) !important;
+}
+
+.mkdocs-inv .mkdocs-text-1 {
+    color: rgb(212.5, 212.5, 212.5) !important;
 }
 
 .mkdocs-hover-bg-4:hover {
-    background-color: rgb(85, 85, 85);
+    background-color: rgb(85, 85, 85) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-4:hover {
+    background-color: rgb(212.5, 212.5, 212.5) !important;
 }
 
 .mkdocs-hover-text-1:hover {
-    color: rgb(85, 85, 85);
+    color: rgb(85, 85, 85) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text-1:hover {
+    color: rgb(212.5, 212.5, 212.5) !important;
 }
 
 .mkdocs-bg-5 {
-    background-color: rgb(42.5, 42.5, 42.5);
+    background-color: rgb(42.5, 42.5, 42.5) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-5 {
+    background-color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-text-0 {
-    color: rgb(42.5, 42.5, 42.5);
+    color: rgb(42.5, 42.5, 42.5) !important;
+}
+
+.mkdocs-inv .mkdocs-text-0 {
+    color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-hover-bg-5:hover {
-    background-color: rgb(42.5, 42.5, 42.5);
+    background-color: rgb(42.5, 42.5, 42.5) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-5:hover {
+    background-color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-hover-text-0:hover {
-    color: rgb(42.5, 42.5, 42.5);
+    color: rgb(42.5, 42.5, 42.5) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text-0:hover {
+    color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-bg-6 {
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0) !important;
+}
+
+.mkdocs-inv .mkdocs-bg-6 {
+    background-color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-text--1 {
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0) !important;
+}
+
+.mkdocs-inv .mkdocs-text--1 {
+    color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-hover-bg-6:hover {
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-bg-6:hover {
+    background-color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-hover-text--1:hover {
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0) !important;
+}
+
+.mkdocs-inv .mkdocs-hover-text--1:hover {
+    color: rgb(255, 255, 255) !important;
 }
 
 .mkdocs-disabled {
