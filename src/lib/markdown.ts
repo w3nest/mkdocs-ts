@@ -336,9 +336,15 @@ export function patchSrc({
     idGenerator?: () => string
 }) {
     let patchedSrc = ''
-    const lines = src.split('\n')
     const contents: Record<string, string> = {}
 
+    function addNewlineAfterTokens(input: string, tokens: string[]): string {
+        // Create a regex pattern matching any token inside </token>
+        const pattern = new RegExp(`</(${tokens.join('|')})>`, 'g')
+
+        // Replace each occurrence with '</token>\n'
+        return input.replace(pattern, '</$1>__FAKE_NEW_LINE__\n')
+    }
     function extractInlinedElem(line: string, tagName: string, id: string) {
         const regex = new RegExp(
             `<${tagName}\\s*([^>]*)>([\\s\\S]*?)<\\/${tagName}>`,
@@ -356,6 +362,10 @@ export function patchSrc({
         const content = match[2].trim()
         return { patchedLine, content }
     }
+
+    src = addNewlineAfterTokens(src, Object.keys(views))
+
+    const lines = src.split('\n')
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i]
@@ -407,14 +417,14 @@ export function patchSrc({
             if (restOfLine !== '') {
                 patchedSrc += restOfLine + `\n`
             }
-            contents[id] = acc
+            contents[id] = acc.replace(/__FAKE_NEW_LINE__\n/g, '')
             // noinspection BreakStatementJS
             break
         }
     }
     return {
         // remove the last '\n'
-        patchedInput: patchedSrc.slice(0, -1),
+        patchedInput: patchedSrc.replace(/__FAKE_NEW_LINE__\n/g, '').trim(),
         contents,
     }
 }

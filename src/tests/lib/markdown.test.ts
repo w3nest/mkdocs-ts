@@ -18,14 +18,12 @@ test('patchSrc happy path', () => {
 
 <test-view attr='test-attr'>
 ${inner}
-</test-view>    
+</test-view>
 `
 
-    const srcToBe = `
-# a simple example
+    const srcToBe = `# a simple example
 
-<test-view attr='test-attr' id="generatedId"></test-view>
-`
+<test-view attr='test-attr' id="generatedId"></test-view>`
 
     const r = patchSrc({
         src,
@@ -187,5 +185,27 @@ const foo = 42
             ),
         )
         expect(view.vDom['text']).toBe('/**\nA comment\n**/\nconst foo = 42')
+    })
+    it('Handle multiple custom views on a line', async () => {
+        const vdom = parseMd({
+            src: `
+This is an example:
+
+<customView language="javascript">const foo = 42</customView> and <customView language="javascript">const bar = 42</customView>.
+
+And some other text...
+`,
+            views: {
+                customView: CustomView.fromDom,
+            },
+        })
+        document.body.appendChild(render(vdom))
+        const views = Array.from(
+            document.querySelectorAll<RxHTMLElement<'div'>>(
+                `.${CustomView.CssSelector}`,
+            ),
+        )
+        expect(views).toHaveLength(2)
+        //expect(view.vDom['text']).toBe('/**\nA comment\n**/\nconst foo = 42')
     })
 })
