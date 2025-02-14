@@ -61,6 +61,14 @@ export type ExternalUrlGetter = (target: {
 export type ExternalsUrl = Record<string, ExternalUrlGetter>
 
 /**
+ * In some (rare) cases, TypeDoc inlined some type alias and the declaration of may loose some
+ * references. This allow to manually provide missing references.
+ *
+ * Keys are the path of the documented symbol, value a mapping `SymbolName` to its navigation path.
+ *
+ */
+export type ExtraDeclarationReferences = Record<string, Record<string, string>>
+/**
  * Global project information.
  */
 export interface ProjectGlobals {
@@ -87,6 +95,8 @@ export interface ProjectGlobals {
      * No link is generated for external packages not referenced here.
      */
     externals?: ExternalsUrl
+
+    extraDeclarationReferences?: ExtraDeclarationReferences
 }
 
 const noSemantic: Semantic = {
@@ -96,6 +106,10 @@ const noSemantic: Semantic = {
     relations: {},
 }
 const semantics = {
+    [TYPEDOC_KINDS.ENTRY_MODULE]: {
+        ...noSemantic,
+        role: 'module',
+    },
     [TYPEDOC_KINDS.MODULE]: {
         ...noSemantic,
         role: 'module',
@@ -186,11 +200,13 @@ export function generateApiFiles({
     outputFolder,
     baseNav,
     externals,
+    extraDeclarationReferences,
 }: {
     projectFolder: string
     outputFolder: string
     baseNav: string
     externals: ExternalsUrl
+    extraDeclarationReferences?: ExtraDeclarationReferences
 }) {
     projectFolder = path.resolve(projectFolder)
     outputFolder = path.resolve(outputFolder)
@@ -213,6 +229,7 @@ export function generateApiFiles({
             modulePath,
             tsInputs: tsInputs,
             externals,
+            extraDeclarationReferences,
         })
 
         const filePath = `${writeFolder}/${modulePath}.json`
@@ -312,12 +329,14 @@ export function parseModule({
     tsInputs,
     baseNav,
     externals,
+    extraDeclarationReferences,
 }: {
     typedocNode: TypedocNode
     modulePath: string
     tsInputs: TsSrcElements
     baseNav: string
     externals: ExternalsUrl
+    extraDeclarationReferences?: ExtraDeclarationReferences
 }): Module {
     const symbolIdMap: Record<number, TypedocNode> = {}
     const parentSymbolIdMap: Record<number, TypedocNode> = {}
@@ -342,6 +361,7 @@ export function parseModule({
         typedocIdMap: symbolIdMap,
         typedocParentIdMap: parentSymbolIdMap,
         externals,
+        extraDeclarationReferences,
     }
 
     function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {
@@ -727,6 +747,7 @@ export function parseCallable({
     typedocNode,
     semantic,
     projectGlobals,
+    parentPath,
     parentElement,
 }: {
     typedocNode: TypedocNode & SignaturesTrait
@@ -748,11 +769,13 @@ export function parseCallable({
         parent: typedocFct,
         projectGlobals,
     })
+    const path = `${parentPath}.${name}`
     const params_ref = typedocFct.parameters
-        ? gather_symbol_references(typedocFct.parameters, projectGlobals)
+        ? gather_symbol_references(typedocFct.parameters, path, projectGlobals)
         : {}
     const returns_ref = gather_symbol_references(
         typedocFct.type,
+        path,
         projectGlobals,
     )
     const functionDoc = getSummaryDoc(documentation)
@@ -783,7 +806,7 @@ export function parseCallable({
         ),
     )
     return {
-        name: name,
+        name,
         documentation: functionDoc,
         path: parentElement ? `${parentElement.name}.${name}` : name, //`${typedocFct.sources[0].fileName}:${path}`,
         navPath: projectGlobals.navigations[typedocNode.id],
@@ -919,7 +942,11 @@ export function parseType({
         // For now inherited methods are only documented in the class they belong.
         .filter((child: TypedocNode & MethodTrait) => !child.inheritedFrom)
 
-    const references = gather_symbol_references(typedocNode, projectGlobals)
+    const references = gather_symbol_references(
+        typedocNode,
+        path,
+        projectGlobals,
+    )
     const doc = getSummaryDoc(documentation)
     const tParamDoc =
         typedocNode.typeParameters &&
@@ -984,6 +1011,7 @@ export function parseAttribute({
     typedocNode,
     projectGlobals,
     parentElement,
+    parentPath,
 }: {
     typedocNode: TypedocNode & SymbolTrait
     projectGlobals: ProjectGlobals
@@ -997,13 +1025,18 @@ export function parseAttribute({
         return undefined
     }
     const name = typedocNode.name
+    const path = `${parentPath}.${name}`
     if (hasInheritedTrait(typedocNode)) {
         typedocNode = projectGlobals.typedocIdMap[
             typedocNode.inheritedFrom.target
         ] as TypedocNode & SymbolTrait
         parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]
     }
-    const references = gather_symbol_references(typedocNode, projectGlobals)
+    const references = gather_symbol_references(
+        typedocNode,
+        path,
+        projectGlobals,
+    )
     const documentation =
         typedocNode.comment && parentElement
             ? parseDocumentationElements({
@@ -1125,6 +1158,7 @@ function find_references(jsonObject: TypedocNode | TypedocNode[]): {
 
 function gather_symbol_references(
     element: TypedocNode | TypedocNode[],
+    path: string,
     projectGlobals: ProjectGlobals,
 ) {
     const { crossReferences, extReferences } = find_references(element)
@@ -1146,5 +1180,14 @@ function gather_symbol_references(
             }
         }
     })
+    if (!projectGlobals.extraDeclarationReferences) {
+        return result
+    }
+    const extra = projectGlobals.extraDeclarationReferences
+    if (path in extra) {
+        Object.entries(extra[path]).forEach(([k, v]) => {
+            result[k] = v
+        })
+    }
     return result
 }
