@@ -916,8 +916,8 @@ def replace_links(text: str, parent: str, project: Project) -> str:
 
         if project.all_symbols.get(py_path, None):
             nav_path = get_nav_path(tag=tag, py_path=py_path)
-            metadata_link = {"class": f"mkapi-semantic-flag {TAGS_TO_SEMANTIC[tag]}"}
-            return f"[{label}](@nav{project.config.base_nav}/{nav_path} '{json.dumps(metadata_link)}')"
+            semantic = TAGS_TO_SEMANTIC[tag].replace("mkapi-role-", "")
+            return f"<mkapi-api-link nav='@nav{project.config.base_nav}/{nav_path}' semantic='{semantic}'>{label}</mkapi-api-link>"
 
         package_name = py_path.split(".")[0]
         if project.config.cross_linked_packages.get(package_name, None):
