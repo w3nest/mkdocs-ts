@@ -671,7 +671,7 @@ function parseDocumentationElements({
                 ) {
                     return element.text
                 }
-                const href = projectGlobals.externals?.[extLib]({
+                const href = projectGlobals.externals[extLib]({
                     name,
                     file,
                 })
