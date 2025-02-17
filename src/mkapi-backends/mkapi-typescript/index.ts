@@ -4,7 +4,7 @@
  * <a href="https://www.npmjs.com/package/typescript" target="_blank">TypeScript</a> package as the primary
  * AST (Abstract Syntax Tree) generators.
  *
- * The entry point is the function {@link generateApiFiles}.
+ * The entry point is the function {@link generateApiFiles}, inputs are provided using {@link ApiInputs}.
  *
  * **Usage Example**
  *
@@ -80,9 +80,22 @@
  * - Only documented and exported symbols are included in the API documentation.
  * </note>
  *
- * <note level="hint" title="Hints" expandable="true">
+ * **Externals links**
+ *
+ * URL to externals links can be provided using  {@link ApiInputs.externals} if they are part of the project's
+ * `node_modules`.
+ *
+ * When external symbols are referenced:
+ *
+ * *  **In signatures**: The parser uses the  {@link ExternalsUrl} provider. The keys referenced the package name as
+ * included in the `node_modules`.
+ * *  **In documentation strings**: If `{@link ...}` have not been resolved by TypeDoc, the parser tries to interpret
+ * them as externals using {@link ExternalsUrl}. In this case the package name is provided explicitly using
+ * *e.g.* `{@link rxjs.Subject}` where `rxjs` is the package name.
  *
  * **Unnamed parameters**
+ *
+ * Regarding unnamed parameters:
  *
  * ```javascript
  *
@@ -95,8 +108,6 @@
  * export function foo({bar}: { bar: number }, {baz}: { baz: string }) {}
  *
  * ```
- *
- * </note>
  *
  * @module MkApiTypescript
  */

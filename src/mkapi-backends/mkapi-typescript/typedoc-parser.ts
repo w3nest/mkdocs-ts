@@ -61,8 +61,8 @@ export type ExternalUrlGetter = (target: {
 export type ExternalsUrl = Record<string, ExternalUrlGetter>
 
 /**
- * In some (rare) cases, TypeDoc inlined some type alias and the declaration of may loose some
- * references. This allow to manually provide missing references.
+ * In some (rare) cases, TypeDoc inlined some type alias and declarations referring them not be resolved.
+ * This allow to manually provide missing references.
  *
  * Keys are the path of the documented symbol, value a mapping `SymbolName` to its navigation path.
  *
@@ -178,6 +178,33 @@ export function gatherTsFiles({
         .flat()
     return new Set(files)
 }
+
+/**
+ * Inputs for {@link generateApiFiles}.
+ */
+export interface ApiInputs {
+    /**
+     * Path of the project's folder, it should include a `typedoc.js` config, and `typedoc` should be available in the
+     * `node_modules`.
+     */
+    projectFolder: string
+    /**
+     * The output folder where API files are generated.
+     */
+    outputFolder: string
+    /**
+     * The base path of the API node in the navigation (*e.g.* `/api`).
+     */
+    baseNav: string
+    /**
+     * URL to documentation for symbols referenced in external libraries (*i.e.* within `node_modules`).
+     */
+    externals: ExternalsUrl
+    /**
+     * This allows to manually provide missing references in symbols' declaration.
+     */
+    extraDeclarationReferences?: ExtraDeclarationReferences
+}
 /**
  * Entry point function to generate API files.
  *
@@ -189,27 +216,12 @@ export function gatherTsFiles({
  *
  * - Creating the output files.
  *
- * @param _options The args
- * @param _options.projectFolder The folder of the project to document.
- * @param _options.outputFolder The output folder.
- * @param _options.baseNav The base path of the API node in the navigation (*e.g.* `/api`).
- * @param _options.externals URL to documentation for symbols from external libraries (*i.e.* within `node_modules`).
+ * @param params Input parameters.
  */
-export function generateApiFiles({
-    projectFolder,
-    outputFolder,
-    baseNav,
-    externals,
-    extraDeclarationReferences,
-}: {
-    projectFolder: string
-    outputFolder: string
-    baseNav: string
-    externals: ExternalsUrl
-    extraDeclarationReferences?: ExtraDeclarationReferences
-}) {
-    projectFolder = path.resolve(projectFolder)
-    outputFolder = path.resolve(outputFolder)
+export function generateApiFiles(params: ApiInputs) {
+    const { baseNav, externals, extraDeclarationReferences } = params
+    const projectFolder = path.resolve(params.projectFolder)
+    const outputFolder = path.resolve(params.outputFolder)
     const projectPackageJson = fs.readFileSync(
         pathLib.resolve(projectFolder, 'package.json'),
         'utf8',
