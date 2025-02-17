@@ -111,6 +111,7 @@ export class WebBrowser implements BrowserInterface {
  * *  {@link UrlTarget.path} is extracted from the `nav` query parameter.
  * *  {@link UrlTarget.parameters} are other query parameters.
  * *  {@link UrlTarget.sectionId} is specified by the part after the first `.` in the `nav` query parameter.
+ * *  {@link UrlTarget.forceReload} is unset.
  *
  * @param url String to parse.
  * @returns The target

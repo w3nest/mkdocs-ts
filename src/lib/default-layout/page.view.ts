@@ -97,9 +97,12 @@ export class PageView implements VirtualDOM<'div'> {
                     filter((target) => {
                         return isResolvedTarget(target)
                     }),
-                    distinctUntilChanged(
-                        (prev, current) => prev.path === current.path,
-                    ),
+                    distinctUntilChanged((prev, current) => {
+                        return (
+                            current.forceReload !== true &&
+                            prev.path === current.path
+                        )
+                    }),
                     tap((t) => {
                         context.info(`PageUpdate: Distinct target ${t.path}`)
                     }),

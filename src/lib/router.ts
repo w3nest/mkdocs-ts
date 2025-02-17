@@ -29,32 +29,48 @@ import { BrowserInterface, parseUrl, WebBrowser } from './browser.interface'
 import { Contextual, ContextTrait, NoContext } from './context'
 
 /**
- * Navigation URL model.
+ * Represents a navigational URL model used for routing within the application.
  *
- * See {@link parseUrl} for construction from a `string`.
+ * This interface defines the structure of a navigation target, including the path,
+ * optional section identifiers, URL parameters, and metadata about the navigation action.
+ *
+ * See {@link parseUrl} for constructing an instance from a `string`.
  */
 export interface UrlTarget {
     /**
-     * Target destination path.
+     * The primary destination path for navigation.
      */
     path: string
     /**
-     * Section Id.
+     * The ID of a specific section within the target page.
+     * Useful for navigating directly to a subsection of the content.
      */
     sectionId?: string
     /**
-     * Additional URL parameters
+     * Additional URL query parameters
      */
     parameters?: Record<string, string>
 
     /**
-     * Issuer of the URL target.
+     * Indicates the source of the navigation event.
      *
-     * *  `browser` : when using `next` or `prev` in browser's navigation bar.
-     * *  `navigation` : when using the navigation panel.
-     * *  `link` : when clicking on a link.
+     * Possible values:
+     * - `'browser'` – Triggered by the browser's forward/backward navigation.
+     * - `'navigation'` – Initiated from the application's built-in navigation panel.
+     * - `'link'` – Resulting from a user clicking on a hyperlink.
+     * - `'scroll'` – Triggered by scrolling.
      */
     issuer?: 'browser' | 'navigation' | 'link' | 'scroll'
+
+    /**
+     * Indicates that a reload of the target content is required, even if the path remains unchanged.
+     * (*i.e.* the content targeted may have changed).
+     *
+     * For instance, the {@link DefaultLayout.PageView} component ignores navigation attempts to
+     * the same path as the currently displayed content. When `forceReload` is `true`,
+     * the navigation request is processed regardless, ensuring fresh content is loaded.
+     */
+    forceReload?: boolean
 }
 
 /**
@@ -309,7 +325,11 @@ export class Router<TLayout = unknown, THeader = unknown> {
             )
             .subscribe(([, target]) => {
                 context.info('Node parent of current path removed')
-                this.fireNavigateTo(target, undefined, context)
+                this.fireNavigateTo(
+                    { ...target, forceReload: true },
+                    undefined,
+                    context,
+                )
             })
         const scroll$ =
             this.scrollingDebounceTime > 0
@@ -411,6 +431,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             node: resolved,
             path,
             sectionId: sectionId === '' ? undefined : sectionId,
+            forceReload: originalTarget.forceReload ? true : false,
         })
         await this.expandNavigationTree(path)
     }
