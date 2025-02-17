@@ -78,6 +78,8 @@ class Configuration(NamedTuple):
     }
     ```
     The function :func:`mkapi_python.std_links.std_links` is available, it includes common standard Python links.
+
+    External links can also be referenced in docstrings, see :glob:`mkapi_python.py_griffe.SUPPORTED_CROSS_LINK_TAGS`.
     """
     cross_linked_packages: dict[str, str] = {}
     """
@@ -218,7 +220,7 @@ METHOD_SEMANTIC = Semantic(role="method", labels=[], attributes={}, relations={}
 Semantic for class's method.
 """
 
-SphinxCrossLinkTag = Literal["mod", "class", "func", "attr", "meth", "glob"]
+SphinxCrossLinkTag = Literal["mod", "class", "func", "attr", "meth", "glob", "ext"]
 """
 Type of supported tags for sphinx like cross links.
 """
@@ -230,16 +232,23 @@ SUPPORTED_CROSS_LINK_TAGS: set[SphinxCrossLinkTag] = {
     "attr",
     "meth",
     "glob",
+    "ext",
 }
 """
 The supported tags for sphinx like cross links.
+The `ext` item is to reference external links (defined using 
+:attr:`mkapi_python.py_griffe.Configuration.external_links`).
 
-*E.g.*:
+**Examples:**
 ```
-*  :tag:`symbol`
-*  :tag:`a custom text <symbol>`
-*  :tag:`a custom text <foo.bar.symbol>`
+:mod:`mkapi_python`
+The :mod:`root module<mkapi_python>`
+An :attr:`attribute<mkapi_python.py_griffe.Configuration.external_links>`
 ```
+
+<note level="warning">
+The replacement applies anywhere except when in Markdown code blocks (between \`\`\` and \`\`\` ).
+</note>
 """
 TAGS_TO_SEMANTIC: dict[str, str] = {
     "mod": "mkapi-role-module",
@@ -248,6 +257,7 @@ TAGS_TO_SEMANTIC: dict[str, str] = {
     "attr": "mkapi-role-attribute",
     "meth": "mkapi-role-method",
     "glob": "mkapi-role-global",
+    "ext": "",
 }
 """
 Tags to semantic convertor.
@@ -901,6 +911,9 @@ def replace_links(text: str, parent: str, project: Project) -> str:
             py_path = matches[0]
 
         py_path = sanitize_py_path(py_path)
+        if tag == "ext":
+            return f"<mkapi-ext-link href='{project.config.external_links[py_path]}' >{label}</mkapi-ext-link>"
+
         if project.all_symbols.get(py_path, None):
             nav_path = get_nav_path(tag=tag, py_path=py_path)
             metadata_link = {"class": f"mkapi-semantic-flag {TAGS_TO_SEMANTIC[tag]}"}

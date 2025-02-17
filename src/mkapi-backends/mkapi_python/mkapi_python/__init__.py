@@ -1,6 +1,5 @@
 """
-The backend for generating API files for Python projects uses the
-<a href="https://mkdocstrings.github.io/griffe/" target="_blank">Griffe</a> module as the primary
+The backend for generating API files for Python projects uses the :ext:`griffe` module as the primary
 AST (Abstract Syntax Tree) generator.
 
 The entry point is the function :func:`mkapi_python.py_griffe.generate_api`,
@@ -51,10 +50,16 @@ To install `mkapi_python`:
 **Supported style**
 
 We encourage to use Google-style synthax for docstrings, as documented
-<a href="https://mkdocstrings.github.io/griffe/docstrings/#google-style" target="_blank">here</a>.
+:ext:`here<griffe.google-style>`.
 
 Regarding symbols cross-linking, the sphinx syntax is supported,
 see :glob:`mkapi_python.py_griffe.SUPPORTED_CROSS_LINK_TAGS`.
+
+<note level="hint">
+A pseudo sphinx tag `ext` has been added to link against external URLs (in addition to `mod`, `class`, `func`, *etc.*).
+</note>
+
+
 """
 
 from .models import *
