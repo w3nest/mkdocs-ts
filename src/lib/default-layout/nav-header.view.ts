@@ -19,7 +19,7 @@ export class NavActionView implements VirtualDOM<'button'> {
     static readonly CssSelector = 'mkdocs-NavActionView'
 
     public readonly tag = 'button'
-    public readonly class = `${NavActionView.CssSelector} btn btn-sm mkdocs-hover-bg-4 mkdocs-text-5`
+    public readonly class = `${NavActionView.CssSelector} btn btn-sm mkdocs-hover-bg-4 mkdocs-text-5 border`
     public readonly style = {
         transform: 'scale(0.75)',
     }
