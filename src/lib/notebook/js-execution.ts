@@ -15,7 +15,10 @@ import { shareReplay } from 'rxjs/operators'
 import { ExecInput } from './execution-common'
 /* eslint-disable */
 
-type AstType =
+/**
+ * The different kind of nodes in AST structures.
+ */
+export type AstType =
     | 'Identifier'
     | 'VariableDeclaration'
     | 'BlockStatement'

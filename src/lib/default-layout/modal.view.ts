@@ -40,9 +40,10 @@ function isSizeRelativeToParent(
 /**
  * Popup a modal on screen with a blury background.
  *
- * @param content The content.
- * @param maxWidth Maximum width of the modal's display area.
- * @param maxHeight Maximum height of the modal's display area.
+ * @param _p
+ * @param _p.content The content.
+ * @param _p.maxWidth Maximum width of the modal's display area.
+ * @param _p.maxHeight Maximum height of the modal's display area.
  */
 export function popupModal({
     content,

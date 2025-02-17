@@ -25,7 +25,7 @@ import { ObjectJs } from '@w3nest/rx-tree-views'
 /**
  * Accepted language.
  */
-type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
+export type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
 
 /**
  * Represents the view of a cell that will render once the associated cell is registered in the {@link State}.
@@ -52,7 +52,7 @@ export class FutureCellView implements VirtualDOM<'div'> {
      * @param params.cellId The cell unique ID.
      * @param params.language The language of the cell.
      * @param params.state The state managing the cell.
-     * @param params.attributes The cell's attributes.
+     * @param params.cellAttributes The cell's attributes.
      * @param params.reactive$ Whether the cell is reactive (in some circumstances it is only known when running
      * the cell).
      */
@@ -107,7 +107,7 @@ export class CellView implements VirtualDOM<'div'> {
      * @param params.cellId The cell unique ID.
      * @param params.language The language of the cell.
      * @param params.state The state managing the cell.
-     * @param params.attributes The cell's attributes.
+     * @param params.cellAttributes The cell's attributes.
      */
     constructor(params: {
         cellId: string
@@ -309,7 +309,7 @@ export class CellTagsView implements VirtualDOM<'div'> {
      * @param params.cellStatus$ Current cell status.
      * @param params.reactive$ Whether the cell is reactive.
      * @param params.language Cell's owning state.
-     * @param params.attributes Cell attributes.
+     * @param params.cellAttributes Cell attributes.
      */
     constructor(params: {
         cellStatus$: Observable<CellStatus>

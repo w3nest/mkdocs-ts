@@ -261,7 +261,7 @@ export class TOCView implements VirtualDOM<'div'> {
  * Represents the view of an item in the {@link TOCView}.
  * It can be customized by providing a `domConvertor` function to the constructor.
  */
-class TocItemView implements VirtualDOM<'div'> {
+export class TocItemView implements VirtualDOM<'div'> {
     /**
      * Component's class name for CSS query.
      */
@@ -360,8 +360,7 @@ function hasTocViewTrait(node: unknown): node is TocTrait {
  * *  {@link TOCView} for {@link NavLayout} with no custom `toc` .
  * *  A custom view otherwise.
  *
- * It can be configured using the attribute {@link DisplayOptions.pageVertPadding} and
- * {@link DisplayOptions.tocMinWidth}.
+ * It can be configured using the attributes `pageVertPadding` and `tocMinWidth` of {@link DisplayOptions}.
  */
 export class TocWrapperView implements VirtualDOM<'div'> {
     /**
@@ -383,8 +382,8 @@ export class TocWrapperView implements VirtualDOM<'div'> {
      * @param params
      * @param params.router The application's router instance.
      * @param params.displayMode$ The display mode for the TOC, depending on screen size.
-     * @param params.displayOptions The display options, see {@link DisplayOptions.pageVertPadding} and
-     * {@link DisplayOptions.tocMinWidth}
+     * @param params.displayOptions The display options, see `pageVertPadding` and `tocMinWidth` of
+     * {@link DisplayOptions}.
      * @param params.content$ The page content, emitting each time a new path of the navigation is hit.
      */
     constructor(params: {

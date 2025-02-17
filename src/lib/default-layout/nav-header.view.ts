@@ -170,9 +170,10 @@ export class NavHeaderView implements VirtualDOM<'a'> {
     /**
      * Initializes a new instance.
      *
-     * @param node  The node.
-     * @param router The application router.
-     * @param bookmarks$ State of bookmarked URLs.
+     * @param _p
+     * @param _p.node  The node.
+     * @param _p.router The application router.
+     * @param _p.bookmarks$ State of bookmarked URLs.
      */
     constructor({
         node,

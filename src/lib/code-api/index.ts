@@ -3,13 +3,14 @@
  *
  * API documentation is structured based on the module hierarchy, where each page corresponds to a specific module.
  *
- * The root node of the API documentation is generated using {@link codeApiEntryNode}.
- * By default, it utilizes a {@link HttpClient} to fetch module data from .json files,
- * with each file representing a {@link Module}. The module is then displayed on the page using {@link ModuleView}.
+ * The root node of the API documentation is generated using {@link CodeApi.codeApiEntryNode}.
+ * By default, it utilizes a {@link CodeApi.HttpClient} to fetch module data from .json files,
+ * with each file representing a {@link CodeApi.Module}. The module is then displayed on the page using
+ * {@link CodeApi.ModuleView}.
  *
  * <note level="warning">
  * This module does **not** handle the generation of `.json` files. For details on generating these files,
- * refer to {@link MkApiBackendsModule}.
+ * refer to {@link MkApiBackends}.
  *</note>
  *
  * @module CodeApi
@@ -241,7 +242,7 @@ export const docNavigation = <TLayout, THeader>(
  * @param params.name The name of the project (displayed in the navigation).
  * @param params.header The navigation header associated with the root node.
  * @param params.docBasePath The base URL or root directory containing the API data models (`.json` files).
- *   These models are generated using the {@link MkApiBackendsModule}.
+ *   These models are generated using the {@link MkApiBackends}.
  * @param params.entryModule The root module from which the documentation hierarchy starts. Its associated `json` data
  * should be located at `${docBasePath}/${docBasePath}.json`.
  * @param params.configuration Configuration settings for the navigation and layout.

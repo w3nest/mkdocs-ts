@@ -103,7 +103,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
      * @param params.output$ Observable over the outputs to display.
      * @param params.fullScreen Whether to add a menu to allow expanding the output.
      * @param params.style Style to apply to this element. It does not apply to the `defaultContent` view.
-     * @param params.classList Classes added to this element. It does not apply to the `defaultContent` view.
+     * @param params.class Classes added to this element. It does not apply to the `defaultContent` view.
      * @param params.inlined If `true`, adjust the display mode to fit as an inlined element within a text.
      * When inlined, the option `fullScreen` is not enabled.
      */

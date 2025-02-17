@@ -83,7 +83,7 @@ export function processDeclaration(
     return prepareBwd(rawProcessed)
 }
 /**
- * View for a {@link Declaration}.
+ * View for a declaration.
  */
 export class DeclarationView implements VirtualDOM<'div'> {
     /**

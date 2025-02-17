@@ -14,7 +14,7 @@ import { Router } from '../router'
  * Interface for entities included in {@link SummaryView}.
  *
  */
-type EntityForSummary = Entity | ChildModule
+export type EntityForSummary = Entity | ChildModule
 
 /**
  * Summary view for {@link Module} and {@link Type}.
@@ -33,7 +33,6 @@ export class SummaryView implements VirtualDOM<'div'> {
      *
      * @param params
      * @param params.target The target {@link Module} or {@link Type}.
-     * @param params.navBase The navigation path of the associated module (*i.e* {@link Module.navPath} for module).
      * @param params.router The router instance.
      */
     constructor(params: { target: Module | Type; router: Router }) {

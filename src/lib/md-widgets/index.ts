@@ -113,3 +113,4 @@
 export * from './code-snippet.view'
 export * from './note.view'
 export * from './code-badges'
+export * from './traits'

@@ -13,12 +13,11 @@ import {
 /**
  * Defines a trait for a layout generator function that can be registered in {@link CompositeLayout.layoutsFactory}.
  *
- * @param router The application's router instance.
+ * @param p parameters
+ * @param p.router The application's router instance.
  * @returns The layout view.
  */
-export type LayoutGeneratorTrait<TLayout, THeader> = ({
-    router,
-}: {
+export type LayoutGeneratorTrait<TLayout, THeader> = (p: {
     router: Router<TLayout, THeader>
 }) => AnyView
 
@@ -104,8 +103,8 @@ export type LayoutKindUnion<LayoutOptionsMap> =
 /**
  * This component dynamically selects and renders layouts based on navigation data.
  *
- * -  Each {@link Navigation} node specifies a `kind` attribute within its layout definition
- *    ({@link NavNodeData.layout}).
+ * -  Each {@link Navigation} node specifies a `kind` attribute within its `layout` definition of
+ *    ({@link NavNodeData}).
  *
  * -  The constructor expects a layout factory, mapping `kind` values to their respective layout implementations
  *    (which follow {@link LayoutGeneratorTrait}).

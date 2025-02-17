@@ -524,8 +524,10 @@ export class Layout implements VirtualDOM<'div'> {
         }
     }
 }
-
-type Container = 'favorites' | 'nav' | 'toc'
+/**
+ * The supported kinds wrapped by {@link StickyColumnContainer}.
+ */
+export type Container = 'favorites' | 'nav' | 'toc'
 
 export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly tag = 'div'

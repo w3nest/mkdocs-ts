@@ -4,6 +4,9 @@ import { shareReplay } from 'rxjs/operators'
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { ResizeObserverTrait } from './traits'
 
+/**
+ * Languages supported.
+ */
 export type CodeLanguage =
     | 'python'
     | 'javascript'
@@ -13,13 +16,19 @@ export type CodeLanguage =
     | 'yaml'
     | 'unknown'
 
-interface CodeMirrorEditor {
+/**
+ * Interface specification of CodeMirror editor.
+ */
+export interface CodeMirrorEditor {
     on: (event: string, cb: (args: { getValue: () => string }) => void) => void
     refresh: () => void
     addLineClass: (line: number, kind: string, classes: string) => void
 }
 
-type CodeMirror = (
+/**
+ * Interface specification of CodeMirror module.
+ */
+export type CodeMirror = (
     element: HTMLElement,
     config: Record<string, unknown>,
 ) => CodeMirrorEditor

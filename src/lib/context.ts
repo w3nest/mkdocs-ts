@@ -96,7 +96,7 @@ export class ConsoleReporter implements ReporterTrait {
 /**
  * Represents an entry in an in-memory log structure.
  */
-type InMemoryEntry = string | { name: string; entries: InMemoryEntry[] }
+export type InMemoryEntry = string | { name: string; entries: InMemoryEntry[] }
 /**
  * In-memory log storage for structured logging.
  */
@@ -336,9 +336,10 @@ export class Context implements ContextTrait {
  * To disable the decorator globally, set {@link Context.Enabled} to `false` using {@link StaticConfig}.
  * </note>
  *
- * @param key Optional function to generate a dynamic name for the context based on arguments.
- * @param labels Optional labels associated with the execution context.
- * @param async Specifies whether the method should be executed asynchronously.
+ * @param _p
+ * @param _p.key Optional function to generate a dynamic name for the context based on arguments.
+ * @param _p.labels Optional labels associated with the execution context.
+ * @param _p.async Specifies whether the method should be executed asynchronously.
  * @returns A method decorator that wraps the original method with contextual execution.
  */
 export function Contextual({
