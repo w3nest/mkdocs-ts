@@ -843,6 +843,24 @@ def get_nav_path(tag: SphinxCrossLinkTag, py_path: str):
 
 def replace_links(text: str, parent: str, project: Project) -> str:
 
+    def extract_code_blocks(md_text: str) -> tuple[str, dict[str, str]]:
+        placeholders: dict[str, str] = {}
+
+        def replacer(match):
+            code_content = match.group(0)
+            placeholder = f"md_placeholder_{len(placeholders)}"
+            placeholders[placeholder] = code_content
+            return placeholder
+
+        # Match both inline block code (```code```) code
+        md_text = re.sub(r"```.*?```", replacer, md_text, flags=re.DOTALL)
+        return md_text, placeholders
+
+    def restore_code_blocks(md_text: str, placeholders: dict[str, str]) -> str:
+        for placeholder, code in placeholders.items():
+            md_text = md_text.replace(placeholder, code)
+        return md_text
+
     cross_ref_pattern = r":(\w+):`([^`]+)`"
     project_prefix = f"{project.root_ast.name}."
 
@@ -907,7 +925,9 @@ def replace_links(text: str, parent: str, project: Project) -> str:
         DocReporter.add_sphinx_link_unresolved(parent, match.group(0), candidates)
         return label
 
-    return re.sub(cross_ref_pattern, replace_function, text)
+    no_code, code_dict = extract_code_blocks(text)
+    processed = re.sub(cross_ref_pattern, replace_function, no_code)
+    return restore_code_blocks(processed, code_dict)
 
 
 def format_detailed_docstring(
