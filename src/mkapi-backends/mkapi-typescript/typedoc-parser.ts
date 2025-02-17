@@ -763,7 +763,10 @@ export function parseCallable({
         return undefined
     }
     const typedocFct = typedocNode.signatures[0]
-    const name = typedocFct.name
+
+    const name =
+        semantic.role === 'constructor' ? 'constructor' : typedocFct.name
+
     const documentation = parseDocumentationElements({
         typedocNodes: typedocFct.comment.summary,
         parent: typedocFct,
