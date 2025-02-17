@@ -5,6 +5,8 @@ import { Documentation, DocumentationSection } from './models'
 import type { NotebookTypes } from '../plugins'
 import { from } from 'rxjs'
 import { Dependencies } from './index'
+import { MkApiApiLink, MkApiExtLink } from './md-widgets'
+import { NotebookViewParameters } from '../notebook'
 
 /**
  * View for a {@link Documentation}.
@@ -51,26 +53,46 @@ export class SectionView implements VirtualDOM<'div'> {
         router: Router
         configuration: Configuration
     }) {
-        const nbConfig: object = configuration.notebook as object
-
+        const views = {
+            ...(configuration.mdParsingOptions?.views ?? {}),
+            'mkapi-ext-link': (elem: HTMLElement) => {
+                return new MkApiExtLink(elem)
+            },
+            'mkapi-api-link': (elem: HTMLElement) => {
+                return new MkApiApiLink(elem)
+            },
+        }
         this.children = [
             section.title ? new SectionHeader(section) : undefined,
             configuration.notebook
                 ? child$({
                       source$: from(Dependencies.installNotebookModule()),
                       vdomMap: (mdle: typeof NotebookTypes) => {
-                          return new mdle.NotebookSection({
-                              src: section.content,
-                              router,
-                              options: { runAtStart: true },
-                              ...nbConfig,
-                          })
+                          const nbConfig =
+                              typeof configuration.notebook === 'object'
+                                  ? configuration.notebook
+                                  : {}
+                          const params = mergeDeep(
+                              {
+                                  src: section.content,
+                                  router,
+                                  options: {
+                                      runAtStart: true,
+                                      markdown: { views },
+                                  },
+                              },
+                              nbConfig,
+                          )
+                          return new mdle.NotebookSection(
+                              params as NotebookViewParameters,
+                          )
                       },
                   })
                 : Dependencies.parseMd({
                       ...(configuration.mdParsingOptions ?? {}),
                       src: section.content,
                       router: router,
+                      views,
                   }),
         ]
     }
@@ -102,4 +124,32 @@ export class SectionHeader implements VirtualDOM<'div'> {
             },
         ]
     }
+}
+
+function mergeDeep(obj1: object, obj2: object): object {
+    const result = { ...obj1 }
+
+    for (const key in obj2) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (obj2.hasOwnProperty(key)) {
+            if (
+                obj1[key] &&
+                obj2[key] &&
+                typeof obj1[key] === 'object' &&
+                typeof obj2[key] === 'object' &&
+                !Array.isArray(obj1[key]) &&
+                !Array.isArray(obj2[key])
+            ) {
+                result[key] = mergeDeep(
+                    obj1[key] as object,
+                    obj2[key] as object,
+                )
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                result[key] = obj2[key]
+            }
+        }
+    }
+
+    return result
 }
