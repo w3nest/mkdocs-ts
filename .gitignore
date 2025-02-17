@@ -11,3 +11,5 @@ __pycache__
 /src/tests/**/result.zip
 build/
 *.egg-info
+.local-dependencies
+.vscode
