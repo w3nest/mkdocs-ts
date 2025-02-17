@@ -1,11 +1,10 @@
 from pathlib import Path
 from typing import cast
 
-from w3nest.utils import parse_json, write_json
-
 from mkapi_python import generate_api, Configuration, std_links
 import griffe
 
+PROJECT = Path(__file__).parent.parent.parent
 
 print("Generate python API documentation of 'MkApiPython'")
 
@@ -17,6 +16,8 @@ config = Configuration(
     base_nav=f"/api/MkApiBackends/mkapi_python",
     external_links={
         **std_links(),
+        "griffe": "https://mkdocstrings.github.io/griffe/",
+        "griffe.google-style": "https://mkdocstrings.github.io/griffe/docstrings/#google-style",
         **{
             f"griffe.dataclasses.{name}": f"{GRIFFE_URL}/griffe/#griffe.{name}"
             for name in ["Module", "Class", "Function", "Attribute"]
@@ -25,7 +26,13 @@ config = Configuration(
     },
     out=DST,
 )
-global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
+global_doc = cast(
+    griffe.Module,
+    griffe.load(
+        PROJECT / "src" / "mkapi-backends" / "mkapi_python" / "mkapi_python",
+        submodules=True,
+    ),
+)
 generate_api(global_doc, config)
 
 
@@ -47,5 +54,11 @@ config = Configuration(
     },
     out=DST,
 )
-global_doc = cast(griffe.Module, griffe.load(NAME, submodules=True))
+global_doc = cast(
+    griffe.Module,
+    griffe.load(
+        PROJECT / "src" / "interpreters" / "pyrun_backend" / "pyrun_backend",
+        submodules=True,
+    ),
+)
 generate_api(global_doc, config)
