@@ -8,6 +8,6 @@ const jestConfig: Config = {
     testEnvironment: 'jsdom',
     reporters,
     modulePathIgnorePatterns: ['<rootDir>/.w3nest', '<rootDir>/dist'],
-    testPathIgnorePatterns: ['mkdocs-ts-doc', 'src/backends'],
+    testPathIgnorePatterns: ['mkdocs-ts-doc', 'src/mkapi-backends'],
 }
 export default jestConfig
