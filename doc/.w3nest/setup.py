@@ -12,12 +12,7 @@ from w3nest.ci.ts_frontend import (
     MainModule,
 )
 from w3nest.ci.ts_frontend.regular import generate_template
-from w3nest.utils import parse_json, write_json
-from typing import cast
-
-import griffe
-
-from mkdocs_py_griffe import generate_api, Configuration, std_links
+from w3nest.utils import parse_json
 
 
 project_folder = Path(__file__).parent.parent

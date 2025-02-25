@@ -3,7 +3,7 @@ node_modules
 dist/
 coverage/
 junit.xml
-cdn.zip
+webpm.zip
 __pycache__
 *.iml
 .template
@@ -13,3 +13,4 @@ build/
 *.egg-info
 .local-dependencies
 .vscode
+.mypy_cache

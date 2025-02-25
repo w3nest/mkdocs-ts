@@ -1,0 +1,32 @@
+from pathlib import Path
+from w3nest.utils import parse_json
+from w3nest_client.http.webpm import (
+    Package,
+    ESM,
+    Distribution,
+    FileListing,
+    Metadata,
+)
+
+project_folder = Path(__file__).parent.parent
+pkg_json = parse_json(project_folder / "package.json")
+
+Package(
+    name=pkg_json["name"],
+    version=pkg_json["version"],
+    specification=ESM(
+        entryPoint=pkg_json["main"],
+        entryDependencies=pkg_json["webpm"]["entryDependencies"],
+        extraDependencies=pkg_json["webpm"]["extraDependencies"],
+    ),
+    distribution=Distribution(
+        files=FileListing(include=["assets/*", "README.md"], ignore=[]),
+        artifacts=["dist"],
+    ),
+    metadata=Metadata(
+        icon="/assets/logo-TS.svg",
+        description=pkg_json["description"],
+        readme="/README.md",
+        license=pkg_json.get("license", None),
+    ),
+)

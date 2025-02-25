@@ -3,7 +3,7 @@ node_modules
 dist/
 coverage/
 junit.xml
-cdn.zip
+webpm.zip
 __pycache__
 *.iml
 .w3nest/.template
