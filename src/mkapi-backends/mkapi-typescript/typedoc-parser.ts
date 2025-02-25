@@ -199,7 +199,7 @@ export interface ApiInputs {
     /**
      * URL to documentation for symbols referenced in external libraries (*i.e.* within `node_modules`).
      */
-    externals: ExternalsUrl
+    externals?: ExternalsUrl
     /**
      * This allows to manually provide missing references in symbols' declaration.
      */
@@ -347,7 +347,7 @@ export function parseModule({
     modulePath: string
     tsInputs: TsSrcElements
     baseNav: string
-    externals: ExternalsUrl
+    externals?: ExternalsUrl
     extraDeclarationReferences?: ExtraDeclarationReferences
 }): Module {
     const symbolIdMap: Record<number, TypedocNode> = {}
