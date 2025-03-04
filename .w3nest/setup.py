@@ -51,7 +51,7 @@ config = ProjectConfig(
             entryFile="./index.ts",
             loadDependencies=[
                 "rx-vdom",
-                "w3nest/webpm-client",
+                "@w3nest/webpm-client",
                 "rxjs",
                 "marked",
                 "highlight.js",

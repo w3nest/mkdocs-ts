@@ -2,7 +2,7 @@ from pathlib import Path
 from w3nest.utils import parse_json
 from w3nest_client.http.webpm import (
     Package,
-    ESM,
+    WebApp,
     Distribution,
     FileListing,
     Metadata,
@@ -14,11 +14,7 @@ pkg_json = parse_json(project_folder / "package.json")
 Package(
     name=pkg_json["name"],
     version=pkg_json["version"],
-    specification=ESM(
-        entryPoint=pkg_json["main"],
-        entryDependencies=pkg_json["webpm"]["entryDependencies"],
-        extraDependencies=pkg_json["webpm"]["extraDependencies"],
-    ),
+    specification=WebApp.from_pkg_json(pkg_json),
     distribution=Distribution(
         files=FileListing(include=["assets/*", "README.md"], ignore=[]),
         artifacts=["dist"],
