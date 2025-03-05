@@ -49,7 +49,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "A column gathering the list of bookmarked pages.\nEach bookmark is rendered using  [BookmarkView](@nav/api/MainModule/DefaultLayout.BookmarkView) .",
+                        "content": "A column gathering the list of bookmarked pages.\nEach bookmark is rendered using  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.BookmarkView\" semantic=\"class\">BookmarkView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -207,7 +207,7 @@
             ],
             "callables": [
                 {
-                    "name": "BookmarksView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -233,7 +233,7 @@
                             }
                         ]
                     },
-                    "path": "BookmarksView.BookmarksView",
+                    "path": "BookmarksView.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.BookmarksView.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/favorites.view.ts",
@@ -441,7 +441,7 @@
             ],
             "callables": [
                 {
-                    "name": "BookmarkView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -467,7 +467,7 @@
                             }
                         ]
                     },
-                    "path": "BookmarkView.BookmarkView",
+                    "path": "BookmarkView.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.BookmarkView.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/favorites.view.ts",
@@ -517,7 +517,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Column gathering favorites (at the very left, always visible whatever device's screen size).\nThis implementation only includes the  [BookmarksView](@nav/api/MainModule/DefaultLayout.BookmarksView) .",
+                        "content": "Column gathering favorites (at the very left, always visible whatever device's screen size).\nThis implementation only includes the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.BookmarksView\" semantic=\"class\">BookmarksView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -649,7 +649,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -822,8 +822,8 @@
                         "filePath": "src/lib/default-layout/page.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 178,
-                        "endLine": 179,
+                        "startLine": 181,
+                        "endLine": 182,
                         "references": {
                             "children": "@nav/api/MainModule/DefaultLayout.FooterView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -858,8 +858,8 @@
                         "filePath": "src/lib/default-layout/page.view.ts",
                         "declaration": "public readonly class =\n        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center flex-wrap justify-content-center border-top py-1'",
                         "implementation": "",
-                        "startLine": 176,
-                        "endLine": 177,
+                        "startLine": 179,
+                        "endLine": 180,
                         "references": {
                             "class": "@nav/api/MainModule/DefaultLayout.FooterView.class"
                         }
@@ -893,8 +893,8 @@
                         "filePath": "src/lib/default-layout/page.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 175,
-                        "endLine": 176,
+                        "startLine": 178,
+                        "endLine": 179,
                         "references": {
                             "tag": "@nav/api/MainModule/DefaultLayout.FooterView.tag"
                         }
@@ -906,8 +906,8 @@
                 "filePath": "src/lib/default-layout/page.view.ts",
                 "declaration": "export class FooterView implements VirtualDOM<'div'>",
                 "implementation": "export class FooterView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class =\n        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center flex-wrap justify-content-center border-top py-1'\n    public readonly children: ChildrenLike\n\n    constructor(params?: { sourceName: string; sourceUrl: string }) {\n        const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`\n        const mkdocs: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center',\n            children: [\n                {\n                    tag: 'div',\n                    innerText: 'Made with',\n                },\n                {\n                    tag: 'div',\n                    class: 'mx-2',\n                },\n                {\n                    tag: 'img',\n                    src: `${baseIconPath}/mkdocs-ts.svg`,\n                    width: 25,\n                },\n                {\n                    tag: 'a',\n                    class: 'mx-1',\n                    innerText: 'mkdocs-ts',\n                    target: '_blank',\n                    href: '/apps/@mkdocs-ts/doc',\n                },\n            ],\n        }\n        const sources = () => ({\n            tag: 'div' as const,\n            class: 'd-flex align-items-center px-1 border rounded mx-2 my-1',\n            children: [\n                {\n                    tag: 'i' as const,\n                    class: 'fas fa-code-branch',\n                },\n                {\n                    tag: 'a' as const,\n                    class: 'mx-1',\n                    innerText: params?.sourceName,\n                    target: '_blank',\n                    href: params?.sourceUrl,\n                },\n            ],\n        })\n        this.children = [params ? sources() : undefined, mkdocs]\n    }\n}",
-                "startLine": 174,
-                "endLine": 228,
+                "startLine": 177,
+                "endLine": 231,
                 "references": {
                     "FooterView": "@nav/api/MainModule/DefaultLayout.FooterView",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
@@ -926,7 +926,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the default layout of the library.\n\n**Structure**\n\nThis layout is organized into a column-based structure, proceeding from left to right:\n\n- **Favorites Column**:\n  An optional, slim column dedicated to favorites, always visible regardless of screen size (if present).\n  By default, it uses  [FavoritesView](@nav/api/MainModule/DefaultLayout.FavoritesView) , which include the  [BookmarksView](@nav/api/MainModule/DefaultLayout.BookmarksView) .\n  if no  [DefaultLayoutParams.bookmarks$](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.bookmarks$)  parameters is provided, the column is not display.\n  A custom favorites view can be provided using the  [DefaultLayoutParams.favoritesColumn](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.favoritesColumn)  parameter.\n\n- **Navigation Column**:\n  The navigation panel provides access to the various   [Navigation](@nav/api/MainModule.Navigation)  nodes.\n  It supports custom header content through  [DefaultLayoutParams.sideNavHeader](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.sideNavHeader) \n  and footer content through  [DefaultLayoutParams.sideNavFooter](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.sideNavFooter) .\n  It is implemented by  [NavigationWrapperView](@nav/api/MainModule/DefaultLayout.NavigationWrapperView) .\n\n- **Page Column**:\n  Displays the content of the selected navigation node, by default using  [PageView](@nav/api/MainModule/DefaultLayout.PageView) .\n  This column is customizable via  [DefaultLayoutParams.page](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.page) .\n\n- **Table Of Content Column**:\n  Provides quick access to structured content, by default using  [TOCView](@nav/api/MainModule/DefaultLayout.TOCView) .\n  Customization options are available through the  `toc`  attribute of  [NavLayout](@nav/api/MainModule/DefaultLayout.NavLayout) ,\n  applicable to navigation nodes.\n\n**Responsive Behavior**\n\nOn smaller screens, the navigation and TOC columns collapse into an expandable menu for better usability.\n\n**Configuration**\n\n For detailed configuration options, see  [DefaultLayoutParams](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams) .",
+                        "content": "Represents the default layout of the library.\n\n**Structure**\n\nThis layout is organized into a column-based structure, proceeding from left to right:\n\n- **Favorites Column**:\n  An optional, slim column dedicated to favorites, always visible regardless of screen size (if present).\n  By default, it uses  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.FavoritesView\" semantic=\"class\">FavoritesView</mkapi-api-link> , which include the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.BookmarksView\" semantic=\"class\">BookmarksView</mkapi-api-link> .\n  if no  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.bookmarks$\" semantic=\"attribute\">DefaultLayoutParams.bookmarks$</mkapi-api-link>  parameters is provided, the column is not display.\n  A custom favorites view can be provided using the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.favoritesColumn\" semantic=\"attribute\">DefaultLayoutParams.favoritesColumn</mkapi-api-link>  parameter.\n\n- **Navigation Column**:\n  The navigation panel provides access to the various   <mkapi-api-link nav=\"@nav/api/MainModule.Navigation\" semantic=\"type-alias\">Navigation</mkapi-api-link>  nodes.\n  It supports custom header content through  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.sideNavHeader\" semantic=\"attribute\">DefaultLayoutParams.sideNavHeader</mkapi-api-link> \n  and footer content through  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.sideNavFooter\" semantic=\"attribute\">DefaultLayoutParams.sideNavFooter</mkapi-api-link> .\n  It is implemented by  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavigationWrapperView\" semantic=\"class\">NavigationWrapperView</mkapi-api-link> .\n\n- **Page Column**:\n  Displays the content of the selected navigation node, by default using  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.PageView\" semantic=\"class\">PageView</mkapi-api-link> .\n  This column is customizable via  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.page\" semantic=\"attribute\">DefaultLayoutParams.page</mkapi-api-link> .\n\n- **Table Of Content Column**:\n  Provides quick access to structured content, by default using  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TOCView\" semantic=\"class\">TOCView</mkapi-api-link> .\n  Customization options are available through the  `toc`  attribute of  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavLayout\" semantic=\"type-alias\">NavLayout</mkapi-api-link> ,\n  applicable to navigation nodes.\n\n**Responsive Behavior**\n\nOn smaller screens, the navigation and TOC columns collapse into an expandable menu for better usability.\n\n**Configuration**\n\n For detailed configuration options, see  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams\" semantic=\"interface\">DefaultLayoutParams</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1193,7 +1193,7 @@
             ],
             "callables": [
                 {
-                    "name": "Layout",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -1208,7 +1208,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **params**: See  [DefaultLayoutParams](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams) .\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **params**: See  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams\" semantic=\"interface\">DefaultLayoutParams</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -1219,7 +1219,7 @@
                             }
                         ]
                     },
-                    "path": "Layout.Layout",
+                    "path": "Layout.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.Layout.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/default-layout.view.ts",
@@ -1270,7 +1270,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a layout based on  [Layout](@nav/api/MainModule/DefaultLayout.Layout) , with an additional split view feature allowing\ntwo pages to be displayed side-by-side.\n\n**Structure**\n\n- The **main-screen** (on the left) displays the default layout using the provided router.\n\n- The **companion-screen** (on the right) displays views for the navigation nodes specified in  `companionNodes$` .\n\n**Companion Screen**\n\n- Navigation in the companion screen uses a  [MockBrowser](@nav/api/MainModule.MockBrowser)  client: browser's URL is not updated.\n\n- The  `companionNodes$`  are provided and managed by the consumer.\n\n**Integration Notes**\n\n- Use the helper function  [splitCompanionAction](@nav/api/MainModule/DefaultLayout.splitCompanionAction)  to integrate a toggle button into the navigation headers of\n  selected nodes, simplifying the management of  `companionNodes$` .",
+                        "content": "Represents a layout based on  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.Layout\" semantic=\"class\">Layout</mkapi-api-link> , with an additional split view feature allowing\ntwo pages to be displayed side-by-side.\n\n**Structure**\n\n- The **main-screen** (on the left) displays the default layout using the provided router.\n\n- The **companion-screen** (on the right) displays views for the navigation nodes specified in  `companionNodes$` .\n\n**Companion Screen**\n\n- Navigation in the companion screen uses a  <mkapi-api-link nav=\"@nav/api/MainModule.MockBrowser\" semantic=\"class\">MockBrowser</mkapi-api-link>  client: browser's URL is not updated.\n\n- The  `companionNodes$`  are provided and managed by the consumer.\n\n**Integration Notes**\n\n- Use the helper function  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.splitCompanionAction\" semantic=\"function\">splitCompanionAction</mkapi-api-link>  to integrate a toggle button into the navigation headers of\n  selected nodes, simplifying the management of  `companionNodes$` .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1429,7 +1429,7 @@
             ],
             "callables": [
                 {
-                    "name": "LayoutWithCompanion",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -1444,7 +1444,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **params**: See  [LayoutWithCompanionParams](@nav/api/MainModule/DefaultLayout.LayoutWithCompanionParams)\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **params**: See  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.LayoutWithCompanionParams\" semantic=\"type-alias\">LayoutWithCompanionParams</mkapi-api-link>\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -1455,7 +1455,7 @@
                             }
                         ]
                     },
-                    "path": "LayoutWithCompanion.LayoutWithCompanion",
+                    "path": "LayoutWithCompanion.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.LayoutWithCompanion.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/companion-layout.view.ts",
@@ -1505,7 +1505,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the header view for a navigation node.\nIt is responsible for rendering individual navigation node headers within the navigation tree.\nIt provides dynamic styling, interactivity, and integration with features like bookmarks and navigation state\nmanagement. Customization options are gathered by  [NavHeader](@nav/api/MainModule/DefaultLayout.NavHeader)  structure\n(defined by the attribute  `header`  of  [Navigation](@nav/api/MainModule.Navigation)  node).\n\n\n**Structure**\n\nThe  `NavHeaderView`  is structured as a flexible, responsive layout:\n\n- **Icon**: Displays a custom icon, if provided by the node's header configuration.\n\n- **Title**: The name of the node, dynamically styled based on the node's selected state.\n\n- **Bookmark**: Displays a bookmark indicator or action, if  `bookmarks$`  is provided.\n\n- **Actions**: Additional user-defined actions can be added to the header.\n\n- **Expand/Collapse Control**: For nodes with children, a toggle is rendered to expand or collapse the node's\nsubtree.",
+                        "content": "Represents the header view for a navigation node.\nIt is responsible for rendering individual navigation node headers within the navigation tree.\nIt provides dynamic styling, interactivity, and integration with features like bookmarks and navigation state\nmanagement. Customization options are gathered by  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavHeader\" semantic=\"type-alias\">NavHeader</mkapi-api-link>  structure\n(defined by the attribute  `header`  of  <mkapi-api-link nav=\"@nav/api/MainModule.Navigation\" semantic=\"type-alias\">Navigation</mkapi-api-link>  node).\n\n\n**Structure**\n\nThe  `NavHeaderView`  is structured as a flexible, responsive layout:\n\n- **Icon**: Displays a custom icon, if provided by the node's header configuration.\n\n- **Title**: The name of the node, dynamically styled based on the node's selected state.\n\n- **Bookmark**: Displays a bookmark indicator or action, if  `bookmarks$`  is provided.\n\n- **Actions**: Additional user-defined actions can be added to the header.\n\n- **Expand/Collapse Control**: For nodes with children, a toggle is rendered to expand or collapse the node's\nsubtree.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1672,7 +1672,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1770,7 +1770,7 @@
             ],
             "callables": [
                 {
-                    "name": "NavHeaderView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -1782,17 +1782,28 @@
                                     "attributes": {},
                                     "relations": {}
                                 }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **bookmarks$**: State of bookmarked URLs.\n*  **node**: The node.\n*  **router**: The application router.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
                             }
                         ]
                     },
-                    "path": "NavHeaderView.NavHeaderView",
+                    "path": "NavHeaderView.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.NavHeaderView.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/nav-header.view.ts",
                         "declaration": "constructor({\n    node,\n    router,\n    bookmarks$,\n}: {\n    node: NavNodeResolved<unknown, NavHeader>\n    router: Router\n    bookmarks$?: BehaviorSubject<string[]>\n})",
                         "implementation": "constructor({\n    node,\n    router,\n    bookmarks$,\n}: {\n    node: NavNodeResolved<unknown, NavHeader>\n    router: Router\n    bookmarks$?: BehaviorSubject<string[]>\n}) {\n    const header =\n        typeof node.header === 'function'\n            ? node.header({ router })\n            : node.header\n    this.class = header?.wrapperClass ?? NavHeaderView.DefaultWrapperClass\n\n    this.style =\n        node.id === '/'\n            ? {\n                  textDecoration: 'none',\n                  color: 'inherit',\n                  fontWeight: 'bolder' as const,\n              }\n            : {\n                  textDecoration: 'none',\n                  color: 'inherit',\n              }\n    const bookmark = bookmarks$\n        ? bookmarkView({ node, bookmarks$ })\n        : undefined\n\n    const sep: (i: number) => AnyVirtualDOM = (i) => ({\n        tag: 'div',\n        class: `mx-${String(i)}`,\n    })\n    const hExpand: AnyVirtualDOM = {\n        tag: 'div',\n        class: 'flex-grow-1',\n    }\n    this.children = [\n        header?.icon ?? undefined,\n        sep(2),\n        {\n            tag: 'div',\n            class: attr$({\n                source$: router.explorerState.selectedNode$,\n                vdomMap: (selected): string =>\n                    selected.id === node.id ? 'font-weight-bold' : '',\n                wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,\n            }),\n            innerText: node.name,\n        },\n        sep(1),\n        bookmark\n            ? child$({\n                  source$: router.explorerState.selectedNode$,\n                  vdomMap: (selected) =>\n                      selected.id === node.id ? bookmark : { tag: 'div' },\n              })\n            : undefined,\n        hExpand,\n        {\n            tag: 'div',\n            class: 'mkdocs-NavigationHeader-actions',\n            children: header?.actions ?? [],\n        },\n        node.children\n            ? new HandlerView({\n                  node: node,\n                  expandedNodes$: router.explorerState.expandedNodes$,\n              })\n            : undefined,\n    ]\n    this.href = `${router.basePath}?nav=` + node.href\n    this.onclick = (e) => {\n        e.preventDefault()\n        router.fireNavigateTo({ path: node.href, issuer: 'navigation' })\n    }\n}",
-                        "startLine": 177,
-                        "endLine": 255,
+                        "startLine": 178,
+                        "endLine": 256,
                         "references": {
                             "NavHeaderView": "@nav/api/MainModule/DefaultLayout.NavHeaderView",
                             "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved",
@@ -1812,9 +1823,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/nav-header.view.ts",
                 "declaration": "export class NavHeaderView implements VirtualDOM<'a'>",
-                "implementation": "export class NavHeaderView implements VirtualDOM<'a'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NavHeaderView'\n\n    static readonly DefaultWrapperClass = `${NavHeaderView.CssSelector} w-100 d-flex align-items-center fv-pointer pe-2`\n    public readonly tag = 'a'\n    public readonly href: string\n    public readonly class: AttributeLike<string>\n\n    public readonly children: ChildrenLike\n    public readonly style: CSSAttribute\n    public readonly onclick: (e: MouseEvent) => void\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param node  The node.\n     * @param router The application router.\n     * @param bookmarks$ State of bookmarked URLs.\n     */\n    constructor({\n        node,\n        router,\n        bookmarks$,\n    }: {\n        node: NavNodeResolved<unknown, NavHeader>\n        router: Router\n        bookmarks$?: BehaviorSubject<string[]>\n    }) {\n        const header =\n            typeof node.header === 'function'\n                ? node.header({ router })\n                : node.header\n        this.class = header?.wrapperClass ?? NavHeaderView.DefaultWrapperClass\n\n        this.style =\n            node.id === '/'\n                ? {\n                      textDecoration: 'none',\n                      color: 'inherit',\n                      fontWeight: 'bolder' as const,\n                  }\n                : {\n                      textDecoration: 'none',\n                      color: 'inherit',\n                  }\n        const bookmark = bookmarks$\n            ? bookmarkView({ node, bookmarks$ })\n            : undefined\n\n        const sep: (i: number) => AnyVirtualDOM = (i) => ({\n            tag: 'div',\n            class: `mx-${String(i)}`,\n        })\n        const hExpand: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'flex-grow-1',\n        }\n        this.children = [\n            header?.icon ?? undefined,\n            sep(2),\n            {\n                tag: 'div',\n                class: attr$({\n                    source$: router.explorerState.selectedNode$,\n                    vdomMap: (selected): string =>\n                        selected.id === node.id ? 'font-weight-bold' : '',\n                    wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,\n                }),\n                innerText: node.name,\n            },\n            sep(1),\n            bookmark\n                ? child$({\n                      source$: router.explorerState.selectedNode$,\n                      vdomMap: (selected) =>\n                          selected.id === node.id ? bookmark : { tag: 'div' },\n                  })\n                : undefined,\n            hExpand,\n            {\n                tag: 'div',\n                class: 'mkdocs-NavigationHeader-actions',\n                children: header?.actions ?? [],\n            },\n            node.children\n                ? new HandlerView({\n                      node: node,\n                      expandedNodes$: router.explorerState.expandedNodes$,\n                  })\n                : undefined,\n        ]\n        this.href = `${router.basePath}?nav=` + node.href\n        this.onclick = (e) => {\n            e.preventDefault()\n            router.fireNavigateTo({ path: node.href, issuer: 'navigation' })\n        }\n    }\n}",
+                "implementation": "export class NavHeaderView implements VirtualDOM<'a'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NavHeaderView'\n\n    static readonly DefaultWrapperClass = `${NavHeaderView.CssSelector} w-100 d-flex align-items-center fv-pointer pe-2`\n    public readonly tag = 'a'\n    public readonly href: string\n    public readonly class: AttributeLike<string>\n\n    public readonly children: ChildrenLike\n    public readonly style: CSSAttribute\n    public readonly onclick: (e: MouseEvent) => void\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param _p\n     * @param _p.node  The node.\n     * @param _p.router The application router.\n     * @param _p.bookmarks$ State of bookmarked URLs.\n     */\n    constructor({\n        node,\n        router,\n        bookmarks$,\n    }: {\n        node: NavNodeResolved<unknown, NavHeader>\n        router: Router\n        bookmarks$?: BehaviorSubject<string[]>\n    }) {\n        const header =\n            typeof node.header === 'function'\n                ? node.header({ router })\n                : node.header\n        this.class = header?.wrapperClass ?? NavHeaderView.DefaultWrapperClass\n\n        this.style =\n            node.id === '/'\n                ? {\n                      textDecoration: 'none',\n                      color: 'inherit',\n                      fontWeight: 'bolder' as const,\n                  }\n                : {\n                      textDecoration: 'none',\n                      color: 'inherit',\n                  }\n        const bookmark = bookmarks$\n            ? bookmarkView({ node, bookmarks$ })\n            : undefined\n\n        const sep: (i: number) => AnyVirtualDOM = (i) => ({\n            tag: 'div',\n            class: `mx-${String(i)}`,\n        })\n        const hExpand: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'flex-grow-1',\n        }\n        this.children = [\n            header?.icon ?? undefined,\n            sep(2),\n            {\n                tag: 'div',\n                class: attr$({\n                    source$: router.explorerState.selectedNode$,\n                    vdomMap: (selected): string =>\n                        selected.id === node.id ? 'font-weight-bold' : '',\n                    wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,\n                }),\n                innerText: node.name,\n            },\n            sep(1),\n            bookmark\n                ? child$({\n                      source$: router.explorerState.selectedNode$,\n                      vdomMap: (selected) =>\n                          selected.id === node.id ? bookmark : { tag: 'div' },\n                  })\n                : undefined,\n            hExpand,\n            {\n                tag: 'div',\n                class: 'mkdocs-NavigationHeader-actions',\n                children: header?.actions ?? [],\n            },\n            node.children\n                ? new HandlerView({\n                      node: node,\n                      expandedNodes$: router.explorerState.expandedNodes$,\n                  })\n                : undefined,\n        ]\n        this.href = `${router.basePath}?nav=` + node.href\n        this.onclick = (e) => {\n            e.preventDefault()\n            router.fireNavigateTo({ path: node.href, issuer: 'navigation' })\n        }\n    }\n}",
                 "startLine": 155,
-                "endLine": 256,
+                "endLine": 257,
                 "references": {
                     "NavHeaderView": "@nav/api/MainModule/DefaultLayout.NavHeaderView",
                     "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved",
@@ -1839,7 +1850,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the navigation view of the application, displaying a hierarchical structure of navigation nodes.\n\nIt is the primary component for presenting and interacting with the application's navigation tree.\nIt integrates seamlessly with the router to reflect the current navigation state and enables user interaction with\nnavigation nodes.\n\nEach node in the tree includes a customizable header generated from the attribute  `header`  of  [Navigation](@nav/api/MainModule.Navigation) \n(see  [NavHeaderView](@nav/api/MainModule/DefaultLayout.NavHeaderView) ).\nIf a navigation node is not yet resolved, a spinner is displayed in place of the node's header.",
+                        "content": "Represents the navigation view of the application, displaying a hierarchical structure of navigation nodes.\n\nIt is the primary component for presenting and interacting with the application's navigation tree.\nIt integrates seamlessly with the router to reflect the current navigation state and enables user interaction with\nnavigation nodes.\n\nEach node in the tree includes a customizable header generated from the attribute  `header`  of  <mkapi-api-link nav=\"@nav/api/MainModule.Navigation\" semantic=\"type-alias\">Navigation</mkapi-api-link> \n(see  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavHeaderView\" semantic=\"class\">NavHeaderView</mkapi-api-link> ).\nIf a navigation node is not yet resolved, a spinner is displayed in place of the node's header.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1935,7 +1946,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2033,7 +2044,7 @@
             ],
             "callables": [
                 {
-                    "name": "NavigationView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -2059,7 +2070,7 @@
                             }
                         ]
                     },
-                    "path": "NavigationView.NavigationView",
+                    "path": "NavigationView.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.NavigationView.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/navigation.view.ts",
@@ -2112,7 +2123,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "A columnar layout wrapper around  [NavigationView](@nav/api/MainModule/DefaultLayout.NavigationView) , providing optional header and footer views.\n\n**Structure**\n\nThis wrapper organizes the navigation view into a vertically-stacked column layout:\n\n- **Header**: An optional view displayed at the top of the column. It can be used for branding, titles,\nor custom controls.\n- **NavigationView**: The main navigation panel that manages access to navigation nodes.\n- **Footer**: An optional view displayed at the bottom of the column. It can be used for additional controls or\ncontextual information.",
+                        "content": "A columnar layout wrapper around  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavigationView\" semantic=\"class\">NavigationView</mkapi-api-link> , providing optional header and footer views.\n\n**Structure**\n\nThis wrapper organizes the navigation view into a vertically-stacked column layout:\n\n- **Header**: An optional view displayed at the top of the column. It can be used for branding, titles,\nor custom controls.\n- **NavigationView**: The main navigation panel that manages access to navigation nodes.\n- **Footer**: An optional view displayed at the bottom of the column. It can be used for additional controls or\ncontextual information.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2208,7 +2219,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2305,7 +2316,7 @@
             ],
             "callables": [
                 {
-                    "name": "NavigationWrapperView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -2331,7 +2342,7 @@
                             }
                         ]
                     },
-                    "path": "NavigationWrapperView.NavigationWrapperView",
+                    "path": "NavigationWrapperView.constructor",
                     "navPath": "@nav/api/MainModule/DefaultLayout.NavigationWrapperView.constructor",
                     "code": {
                         "filePath": "src/lib/default-layout/navigation.view.ts",
@@ -2581,9 +2592,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/page.view.ts",
                 "declaration": "export class PageView implements VirtualDOM<'div'>",
-                "implementation": "export class PageView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-PageView'\n    public readonly router: Router<NavLayout>\n    public readonly tag = 'div'\n    public readonly class = `${PageView.CssSelector} w-100 mkdocs-ts-page text-justify`\n    public readonly children: ChildrenLike\n\n    public readonly content$ = new ReplaySubject<HTMLElement>(1)\n    public readonly filter?: (target: Target) => boolean\n    public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void\n\n    constructor(\n        params: {\n            router: Router<NavLayout>\n            filter?: (target: Target) => boolean\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        ctx = ctx ?? new NoContext()\n        const context = ctx.start('new PageView', ['PageView'])\n        const filterFct = this.filter ?? (() => true)\n        const maybeError$ = child$({\n            source$: this.router.target$,\n            vdomMap: (target) => {\n                if (isResolvedTarget(target)) {\n                    return { tag: 'div' }\n                }\n                if (target.reason === 'NotFound') {\n                    return new UnresolvedPageView({ path: target.path })\n                }\n                return new FuturePageView()\n            },\n        })\n        this.children = [\n            maybeError$,\n            child$({\n                source$: this.router.target$.pipe(\n                    tap((t) => {\n                        context.info(`PageUpdate: Received target ${t.path}`, t)\n                        if ('reason' in t) {\n                            context.info(`PageUpdate: target is ${t.reason}`)\n                        }\n                    }),\n                    filter((target) => {\n                        return isResolvedTarget(target)\n                    }),\n                    distinctUntilChanged(\n                        (prev, current) => prev.path === current.path,\n                    ),\n                    tap((t) => {\n                        context.info(`PageUpdate: Distinct target ${t.path}`)\n                    }),\n                    filter(filterFct),\n                    filter((target) => {\n                        return hasContentViewTrait(target.node)\n                    }),\n                    switchMap((target: Target & { node: ContentTrait }) => {\n                        context.info('PageUpdate: New target to display')\n                        const contentGetter =\n                            typeof target.node.layout === 'function' ||\n                            typeof target.node.layout === 'string'\n                                ? target.node.layout\n                                : target.node.layout.content\n\n                        const html =\n                            typeof contentGetter === 'string'\n                                ? parseMdFromUrl({\n                                      url: contentGetter,\n                                      router: this.router,\n                                  })\n                                : contentGetter({\n                                      router: this.router,\n                                  })\n                        if (html instanceof Promise) {\n                            return from(html).pipe(\n                                map((html) => ({ html, ...target })),\n                            )\n                        }\n                        if (html instanceof Observable) {\n                            return html.pipe(take(1)).pipe(\n                                map((html) => ({\n                                    html,\n                                    ...target,\n                                })),\n                            )\n                        }\n                        return of(html).pipe(\n                            map((html) => ({ html, ...target })),\n                        )\n                    }),\n                ),\n                vdomMap: (destination) => {\n                    return {\n                        tag: 'div',\n                        children: [destination.html],\n                        connectedCallback: (page) => {\n                            if (destination.sectionId) {\n                                this.router.scrollTo(destination.sectionId)\n                            }\n                            this.content$.next(\n                                // This is the `html` content returned by `destination.html`\n                                page.firstElementChild as HTMLElement,\n                            )\n                            replaceLinks({\n                                router: this.router,\n                                elem: page,\n                                fromMarkdown: false,\n                            })\n                        },\n                    }\n                },\n            }),\n        ]\n        context.exit()\n    }\n}",
+                "implementation": "export class PageView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-PageView'\n    public readonly router: Router<NavLayout>\n    public readonly tag = 'div'\n    public readonly class = `${PageView.CssSelector} w-100 mkdocs-ts-page text-justify`\n    public readonly children: ChildrenLike\n\n    public readonly content$ = new ReplaySubject<HTMLElement>(1)\n    public readonly filter?: (target: Target) => boolean\n    public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void\n\n    constructor(\n        params: {\n            router: Router<NavLayout>\n            filter?: (target: Target) => boolean\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        ctx = ctx ?? new NoContext()\n        const context = ctx.start('new PageView', ['PageView'])\n        const filterFct = this.filter ?? (() => true)\n        const maybeError$ = child$({\n            source$: this.router.target$,\n            vdomMap: (target) => {\n                if (isResolvedTarget(target)) {\n                    return { tag: 'div' }\n                }\n                if (target.reason === 'NotFound') {\n                    return new UnresolvedPageView({ path: target.path })\n                }\n                return new FuturePageView()\n            },\n        })\n        this.children = [\n            maybeError$,\n            child$({\n                source$: this.router.target$.pipe(\n                    tap((t) => {\n                        context.info(`PageUpdate: Received target ${t.path}`, t)\n                        if ('reason' in t) {\n                            context.info(`PageUpdate: target is ${t.reason}`)\n                        }\n                    }),\n                    filter((target) => {\n                        return isResolvedTarget(target)\n                    }),\n                    distinctUntilChanged((prev, current) => {\n                        return (\n                            current.forceReload !== true &&\n                            prev.path === current.path\n                        )\n                    }),\n                    tap((t) => {\n                        context.info(`PageUpdate: Distinct target ${t.path}`)\n                    }),\n                    filter(filterFct),\n                    filter((target) => {\n                        return hasContentViewTrait(target.node)\n                    }),\n                    switchMap((target: Target & { node: ContentTrait }) => {\n                        context.info('PageUpdate: New target to display')\n                        const contentGetter =\n                            typeof target.node.layout === 'function' ||\n                            typeof target.node.layout === 'string'\n                                ? target.node.layout\n                                : target.node.layout.content\n\n                        const html =\n                            typeof contentGetter === 'string'\n                                ? parseMdFromUrl({\n                                      url: contentGetter,\n                                      router: this.router,\n                                  })\n                                : contentGetter({\n                                      router: this.router,\n                                  })\n                        if (html instanceof Promise) {\n                            return from(html).pipe(\n                                map((html) => ({ html, ...target })),\n                            )\n                        }\n                        if (html instanceof Observable) {\n                            return html.pipe(take(1)).pipe(\n                                map((html) => ({\n                                    html,\n                                    ...target,\n                                })),\n                            )\n                        }\n                        return of(html).pipe(\n                            map((html) => ({ html, ...target })),\n                        )\n                    }),\n                ),\n                vdomMap: (destination) => {\n                    return {\n                        tag: 'div',\n                        children: [destination.html],\n                        connectedCallback: (page) => {\n                            if (destination.sectionId) {\n                                this.router.scrollTo(destination.sectionId)\n                            }\n                            this.content$.next(\n                                // This is the `html` content returned by `destination.html`\n                                page.firstElementChild as HTMLElement,\n                            )\n                            replaceLinks({\n                                router: this.router,\n                                elem: page,\n                                fromMarkdown: false,\n                            })\n                        },\n                    }\n                },\n            }),\n        ]\n        context.exit()\n    }\n}",
                 "startLine": 50,
-                "endLine": 170,
+                "endLine": 173,
                 "references": {
                     "PageView": "@nav/api/MainModule/DefaultLayout.PageView",
                     "Target": "@nav/api/MainModule.Target",
@@ -2604,11 +2615,232 @@
             }
         },
         {
+            "name": "TocItemView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents the view of an item in the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TOCView\" semantic=\"class\">TOCView</mkapi-api-link> .\nIt can be customized by providing a  `domConvertor`  function to the constructor.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "TocItemView",
+            "navPath": "@nav/api/MainModule/DefaultLayout.TocItemView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TocItemView.children",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.TocItemView.children",
+                    "code": {
+                        "filePath": "src/lib/default-layout/toc.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 272,
+                        "endLine": 273,
+                        "references": {
+                            "children": "@nav/api/MainModule/DefaultLayout.TocItemView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class associated with the element, equivalent to the  `className`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TocItemView.class",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.TocItemView.class",
+                    "code": {
+                        "filePath": "src/lib/default-layout/toc.view.ts",
+                        "declaration": "public readonly class: string",
+                        "implementation": "",
+                        "startLine": 270,
+                        "endLine": 271,
+                        "references": {
+                            "class": "@nav/api/MainModule/DefaultLayout.TocItemView.class"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TocItemView.style",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.TocItemView.style",
+                    "code": {
+                        "filePath": "src/lib/default-layout/toc.view.ts",
+                        "declaration": "public readonly style: CSSAttribute",
+                        "implementation": "",
+                        "startLine": 271,
+                        "endLine": 272,
+                        "references": {
+                            "style": "@nav/api/MainModule/DefaultLayout.TocItemView.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TocItemView.tag",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.TocItemView.tag",
+                    "code": {
+                        "filePath": "src/lib/default-layout/toc.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 269,
+                        "endLine": 270,
+                        "references": {
+                            "tag": "@nav/api/MainModule/DefaultLayout.TocItemView.tag"
+                        }
+                    }
+                },
+                {
+                    "name": "CssSelector",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Component's class name for CSS query.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TocItemView.CssSelector",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.TocItemView.CssSelector",
+                    "code": {
+                        "filePath": "src/lib/default-layout/toc.view.ts",
+                        "declaration": "static readonly CssSelector = 'mkdocs-TocItemView'",
+                        "implementation": "",
+                        "startLine": 268,
+                        "endLine": 269,
+                        "references": {
+                            "CssSelector": "@nav/api/MainModule/DefaultLayout.TocItemView.CssSelector"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/default-layout/toc.view.ts",
+                "declaration": "export class TocItemView implements VirtualDOM<'div'>",
+                "implementation": "export class TocItemView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-TocItemView'\n    public readonly tag = 'div'\n    public readonly class: string\n    public readonly style: CSSAttribute\n    public readonly children: ChildrenLike\n\n    /**\n     *\n     * @param _p\n     * @param _p.heading The heading.\n     * @param _p.index Heading's index in the page.\n     * @param _p.indexFirstVisibleHeading$ An observable tracking the index of the first visible heading on the page.\n     * This is updated dynamically as the user scrolls.\n     * @param _p.router The application's router instance.\n     * @param _p.domConvertor (Optional) A function to convert heading elements into TOC items.\n     */\n    constructor({\n        heading,\n        index,\n        indexFirstVisibleHeading$,\n        router,\n        domConvertor,\n    }: {\n        heading: HTMLHeadingElement\n        index: number\n        indexFirstVisibleHeading$: Observable<number>\n        router: Router\n        domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM\n    }) {\n        const getText = (heading: HTMLElement) => {\n            if (heading.innerText) {\n                return heading.innerText\n            }\n            const firstTextElement = [...heading.children]\n                .filter((c) => c instanceof HTMLElement)\n                .find((c) => c.innerText !== '')\n            return firstTextElement?.innerText ?? ''\n        }\n        const defaultConv = (heading: HTMLElement) => ({\n            tag: 'div' as const,\n            class: '',\n            innerText: getText(heading),\n        })\n        const getItemClass = (firstIndex: number): string => {\n            if (index === firstIndex) {\n                return 'fw-bolder'\n            }\n            return index < firstIndex ? 'text-dark' : 'mkdocs-text-1'\n        }\n        this.style = ['H1', 'H2', 'H3', 'H4', 'H5'].includes(heading.tagName)\n            ? {\n                  paddingLeft:\n                      headingsPadding[heading.tagName as SupportedHeading],\n              }\n            : {}\n        this.class = `${TocItemView.CssSelector} ${heading.classList.value} pe-1`\n        this.children = [\n            {\n                tag: 'a' as const,\n                style: {\n                    textDecoration: 'none',\n                },\n                class: attr$({\n                    source$: indexFirstVisibleHeading$,\n                    vdomMap: getItemClass,\n                    wrapper: (d) => `${d} `,\n                }),\n                href: `${\n                    router.basePath\n                }?nav=${router.parseUrl().path}.${heading.id}`,\n                children: [(domConvertor ?? defaultConv)(heading)],\n                onclick: (ev) => {\n                    ev.preventDefault()\n                    router.scrollTo(heading)\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 264,
+                "endLine": 347,
+                "references": {
+                    "TocItemView": "@nav/api/MainModule/DefaultLayout.TocItemView",
+                    "Router": "@nav/api/MainModule.Router",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "TOCView",
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the default Table of Contents (TOC) view for a documentation page, presenting the headings list.\nIt dynamically observes the document structure and updates itself in response to content changes w/ headings.\n\nTo customize the  [TocItemView](undefined)  displayed, the function  [tocView](@nav/api/MainModule/DefaultLayout.tocView)  can be used to provide\n [NavLayout](@nav/api/MainModule/DefaultLayout.NavLayout) 's  `toc`  view generator.\nWithin the default  [Layout](@nav/api/MainModule/DefaultLayout.Layout) , this view is embedded within  [TocWrapperView](@nav/api/MainModule/DefaultLayout.TocWrapperView) .",
+                        "content": "Represents the default Table of Contents (TOC) view for a documentation page, presenting the headings list.\nIt dynamically observes the document structure and updates itself in response to content changes w/ headings.\n\nTo customize the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TocItemView\" semantic=\"class\">TocItemView</mkapi-api-link>  displayed, the function  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.tocView\" semantic=\"function\">tocView</mkapi-api-link>  can be used to provide\n <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavLayout\" semantic=\"type-alias\">NavLayout</mkapi-api-link> 's  `toc`  view generator.\nWithin the default  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.Layout\" semantic=\"class\">Layout</mkapi-api-link> , this view is embedded within  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TocWrapperView\" semantic=\"class\">TocWrapperView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2847,7 +3079,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2973,7 +3205,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Wrapper of TOC view within the default  [Layout](@nav/api/MainModule/DefaultLayout.Layout)  , embedding either:\n*   [TOCView](@nav/api/MainModule/DefaultLayout.TOCView)  for  [NavLayout](@nav/api/MainModule/DefaultLayout.NavLayout)  with no custom  `toc`  .\n*  A custom view otherwise.\n\nIt can be configured using the attribute  [DisplayOptions.pageVertPadding](@nav/api/MainModule/DefaultLayout.DisplayOptions.pageVertPadding)  and\n [DisplayOptions.tocMinWidth](@nav/api/MainModule/DefaultLayout.DisplayOptions.tocMinWidth) .",
+                        "content": "Wrapper of TOC view within the default  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.Layout\" semantic=\"class\">Layout</mkapi-api-link>  , embedding either:\n*   <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TOCView\" semantic=\"class\">TOCView</mkapi-api-link>  for  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavLayout\" semantic=\"type-alias\">NavLayout</mkapi-api-link>  with no custom  `toc`  .\n*  A custom view otherwise.\n\nIt can be configured using the attributes  `pageVertPadding`  and  `tocMinWidth`  of  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DisplayOptions\" semantic=\"type-alias\">DisplayOptions</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3015,8 +3247,8 @@
                         "filePath": "src/lib/default-layout/toc.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 374,
-                        "endLine": 375,
+                        "startLine": 373,
+                        "endLine": 374,
                         "references": {
                             "children": "@nav/api/MainModule/DefaultLayout.TocWrapperView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -3051,8 +3283,8 @@
                         "filePath": "src/lib/default-layout/toc.view.ts",
                         "declaration": "public readonly class = `${TocWrapperView.CssSelector} w-100 h-100 d-flex flex-grow-1 py-1`",
                         "implementation": "",
-                        "startLine": 372,
-                        "endLine": 373,
+                        "startLine": 371,
+                        "endLine": 372,
                         "references": {
                             "class": "@nav/api/MainModule/DefaultLayout.TocWrapperView.class"
                         }
@@ -3086,8 +3318,8 @@
                         "filePath": "src/lib/default-layout/toc.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 371,
-                        "endLine": 372,
+                        "startLine": 370,
+                        "endLine": 371,
                         "references": {
                             "tag": "@nav/api/MainModule/DefaultLayout.TocWrapperView.tag"
                         }
@@ -3121,8 +3353,8 @@
                         "filePath": "src/lib/default-layout/toc.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-TocWrapperView'",
                         "implementation": "",
-                        "startLine": 370,
-                        "endLine": 371,
+                        "startLine": 369,
+                        "endLine": 370,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/DefaultLayout.TocWrapperView.CssSelector"
                         }
@@ -3133,9 +3365,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/toc.view.ts",
                 "declaration": "export class TocWrapperView implements VirtualDOM<'div'>",
-                "implementation": "export class TocWrapperView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-TocWrapperView'\n    public readonly tag = 'div'\n    public readonly class = `${TocWrapperView.CssSelector} w-100 h-100 d-flex flex-grow-1 py-1`\n\n    public readonly children: ChildrenLike\n\n    public readonly displayMode$: BehaviorSubject<DisplayMode>\n    public readonly router: Router\n    public readonly displayOptions: DisplayOptions\n    public readonly content$: Observable<HTMLElement>\n    public readonly tocEnabled$: Observable<boolean>\n    /**\n     *\n     * @param params\n     * @param params.router The application's router instance.\n     * @param params.displayMode$ The display mode for the TOC, depending on screen size.\n     * @param params.displayOptions The display options, see {@link DisplayOptions.pageVertPadding} and\n     * {@link DisplayOptions.tocMinWidth}\n     * @param params.content$ The page content, emitting each time a new path of the navigation is hit.\n     */\n    constructor(params: {\n        router: Router\n        displayMode$: BehaviorSubject<DisplayMode>\n        displayOptions: DisplayOptions\n        content$: Observable<HTMLElement>\n    }) {\n        Object.assign(this, params)\n        const target$ = this.router.target$.pipe(\n            filter((t) => isResolvedTarget(t)),\n        )\n        this.tocEnabled$ = target$.pipe(\n            map((target) => {\n                if (\n                    !target.node.layout ||\n                    typeof target.node.layout !== 'object'\n                ) {\n                    return true\n                }\n                if (!('toc' in target.node.layout)) {\n                    return true\n                }\n                return target.node.layout.toc !== 'disabled'\n            }),\n        )\n        const toc: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'h-100',\n            style: attr$({\n                source$: this.displayMode$,\n                vdomMap: (mode) => {\n                    const padding =\n                        mode === 'pined'\n                            ? this.displayOptions.pageVertPadding\n                            : '0px'\n                    return {\n                        minWidth: `${String(this.displayOptions.tocMinWidth)}px`,\n                        paddingTop: padding,\n                        paddingBottom: padding,\n                    }\n                },\n            }),\n            children: [\n                child$({\n                    source$: combineLatest([target$, this.content$]).pipe(\n                        mergeMap(([target, elem]) => {\n                            if (!hasTocViewTrait(target.node)) {\n                                return from(\n                                    tocView({\n                                        html: elem,\n                                        router: this.router,\n                                    }),\n                                )\n                            }\n                            if (target.node.layout.toc === 'disabled') {\n                                return of(undefined)\n                            }\n                            const toc = target.node.layout.toc({\n                                html: elem,\n                                router: this.router,\n                            })\n                            if (!toc) {\n                                return of(undefined)\n                            }\n                            if (toc instanceof Promise) {\n                                return from(toc)\n                            }\n                            if (toc instanceof Observable) {\n                                return toc.pipe(take(1))\n                            }\n                            if (toc instanceof HTMLElement) {\n                                return of(toc)\n                            }\n                            if ('source$' in toc) {\n                                return of(toc)\n                            }\n                            return of(toc)\n                        }),\n                    ),\n                    vdomMap: (toc?): AnyVirtualDOM => {\n                        if (!toc) {\n                            return { tag: 'div' }\n                        }\n                        if (toc instanceof HTMLElement) {\n                            return { tag: 'div', children: [toc] }\n                        }\n                        if ('source$' in toc) {\n                            return { tag: 'div', children: [toc] }\n                        }\n                        return toc\n                    },\n                }),\n            ],\n        }\n        this.children = [\n            {\n                tag: 'div',\n                class: 'h-100',\n                children: [toc],\n            },\n        ]\n    }\n}",
-                "startLine": 366,
-                "endLine": 492,
+                "implementation": "export class TocWrapperView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-TocWrapperView'\n    public readonly tag = 'div'\n    public readonly class = `${TocWrapperView.CssSelector} w-100 h-100 d-flex flex-grow-1 py-1`\n\n    public readonly children: ChildrenLike\n\n    public readonly displayMode$: BehaviorSubject<DisplayMode>\n    public readonly router: Router\n    public readonly displayOptions: DisplayOptions\n    public readonly content$: Observable<HTMLElement>\n    public readonly tocEnabled$: Observable<boolean>\n    /**\n     *\n     * @param params\n     * @param params.router The application's router instance.\n     * @param params.displayMode$ The display mode for the TOC, depending on screen size.\n     * @param params.displayOptions The display options, see `pageVertPadding` and `tocMinWidth` of\n     * {@link DisplayOptions}.\n     * @param params.content$ The page content, emitting each time a new path of the navigation is hit.\n     */\n    constructor(params: {\n        router: Router\n        displayMode$: BehaviorSubject<DisplayMode>\n        displayOptions: DisplayOptions\n        content$: Observable<HTMLElement>\n    }) {\n        Object.assign(this, params)\n        const target$ = this.router.target$.pipe(\n            filter((t) => isResolvedTarget(t)),\n        )\n        this.tocEnabled$ = target$.pipe(\n            map((target) => {\n                if (\n                    !target.node.layout ||\n                    typeof target.node.layout !== 'object'\n                ) {\n                    return true\n                }\n                if (!('toc' in target.node.layout)) {\n                    return true\n                }\n                return target.node.layout.toc !== 'disabled'\n            }),\n        )\n        const toc: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'h-100',\n            style: attr$({\n                source$: this.displayMode$,\n                vdomMap: (mode) => {\n                    const padding =\n                        mode === 'pined'\n                            ? this.displayOptions.pageVertPadding\n                            : '0px'\n                    return {\n                        minWidth: `${String(this.displayOptions.tocMinWidth)}px`,\n                        paddingTop: padding,\n                        paddingBottom: padding,\n                    }\n                },\n            }),\n            children: [\n                child$({\n                    source$: combineLatest([target$, this.content$]).pipe(\n                        mergeMap(([target, elem]) => {\n                            if (!hasTocViewTrait(target.node)) {\n                                return from(\n                                    tocView({\n                                        html: elem,\n                                        router: this.router,\n                                    }),\n                                )\n                            }\n                            if (target.node.layout.toc === 'disabled') {\n                                return of(undefined)\n                            }\n                            const toc = target.node.layout.toc({\n                                html: elem,\n                                router: this.router,\n                            })\n                            if (!toc) {\n                                return of(undefined)\n                            }\n                            if (toc instanceof Promise) {\n                                return from(toc)\n                            }\n                            if (toc instanceof Observable) {\n                                return toc.pipe(take(1))\n                            }\n                            if (toc instanceof HTMLElement) {\n                                return of(toc)\n                            }\n                            if ('source$' in toc) {\n                                return of(toc)\n                            }\n                            return of(toc)\n                        }),\n                    ),\n                    vdomMap: (toc?): AnyVirtualDOM => {\n                        if (!toc) {\n                            return { tag: 'div' }\n                        }\n                        if (toc instanceof HTMLElement) {\n                            return { tag: 'div', children: [toc] }\n                        }\n                        if ('source$' in toc) {\n                            return { tag: 'div', children: [toc] }\n                        }\n                        return toc\n                    },\n                }),\n            ],\n        }\n        this.children = [\n            {\n                tag: 'div',\n                class: 'h-100',\n                children: [toc],\n            },\n        ]\n    }\n}",
+                "startLine": 365,
+                "endLine": 491,
                 "references": {
                     "TocWrapperView": "@nav/api/MainModule/DefaultLayout.TocWrapperView",
                     "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
@@ -3158,7 +3390,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Parameters to construct a new default layout  [Layout](@nav/api/MainModule/DefaultLayout.Layout)  (also used by the layout  [LayoutWithCompanion](@nav/api/MainModule/DefaultLayout.LayoutWithCompanion) ).",
+                        "content": "Parameters to construct a new default layout  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.Layout\" semantic=\"class\">Layout</mkapi-api-link>  (also used by the layout  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.LayoutWithCompanion\" semantic=\"class\">LayoutWithCompanion</mkapi-api-link> ).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3183,7 +3415,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "If provided, include a  [BookmarksView](@nav/api/MainModule/DefaultLayout.BookmarksView)  column at the very left, as well as a\n<button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button in the navigation node's header.\nThe consumer should provide this variable initialized with the URL for initial bookmarked pages.",
+                                "content": "If provided, include a  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.BookmarksView\" semantic=\"class\">BookmarksView</mkapi-api-link>  column at the very left, as well as a\n<button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button in the navigation node's header.\nThe consumer should provide this variable initialized with the URL for initial bookmarked pages.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3219,7 +3451,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Display options, mostly regarding sizing of the main elements in the page. Values provided - if any -\nare merged with  [defaultDisplayOptions](@nav/api/MainModule/DefaultLayout.defaultDisplayOptions) .",
+                                "content": "Display options, mostly regarding sizing of the main elements in the page. Values provided - if any -\nare merged with  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.defaultDisplayOptions\" semantic=\"global\">defaultDisplayOptions</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3255,7 +3487,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "An optional favorites column, replacing the default  [FavoritesView](@nav/api/MainModule/DefaultLayout.FavoritesView) .",
+                                "content": "An optional favorites column, replacing the default  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.FavoritesView\" semantic=\"class\">FavoritesView</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3292,7 +3524,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "An optional content generator for the page, replacing the default  [PageView](@nav/api/MainModule/DefaultLayout.PageView) .\n\nThe provided type must emit itself as an  `HTMLElement`  through the  `content$`  observable\nwhenever it completes an update triggered by a change in the navigation path.",
+                                "content": "An optional content generator for the page, replacing the default  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.PageView\" semantic=\"class\">PageView</mkapi-api-link> .\n\nThe provided type must emit itself as an  `HTMLElement`  through the  `content$`  observable\nwhenever it completes an update triggered by a change in the navigation path.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3612,7 +3844,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Defines the main content view of the page.\nIf a  `string`  is provided, its is interpreted as a URL from which a GET request is issued to retrieve some markdown\nsource that is then parsed using the  [parseMd](@nav/api/MainModule.parseMd)  function.",
+                        "content": "Defines the main content view of the page.\nIf a  `string`  is provided, its is interpreted as a URL from which a GET request is issued to retrieve some markdown\nsource that is then parsed using the  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link>  function.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3677,6 +3909,43 @@
                     "ClientTocView": "@nav/api/MainModule/DefaultLayout.ClientTocView",
                     "Router": "@nav/api/MainModule.Router",
                     "NavLayoutView": "@nav/api/MainModule/DefaultLayout.NavLayoutView"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Container",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The supported kinds wrapped by  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.StickyColumnContainer\" semantic=\"class\">StickyColumnContainer</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Container",
+            "navPath": "@nav/api/MainModule/DefaultLayout.Container",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/default-layout/default-layout.view.ts",
+                "declaration": "export type Container = 'favorites' | 'nav' | 'toc'",
+                "implementation": "",
+                "startLine": 530,
+                "endLine": 531,
+                "references": {
+                    "Container": "@nav/api/MainModule/DefaultLayout.Container"
                 }
             },
             "semantic": {
@@ -3765,7 +4034,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Hints regarding sizing of the main elements on the page.\n\nThe 'page' element refers to the text-content area.\n\nSee  [defaultDisplayOptions](@nav/api/MainModule/DefaultLayout.defaultDisplayOptions) .",
+                        "content": "Hints regarding sizing of the main elements on the page.\n\nThe 'page' element refers to the text-content area.\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.defaultDisplayOptions\" semantic=\"global\">defaultDisplayOptions</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3859,7 +4128,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Parameters for constructing  [LayoutWithCompanion](@nav/api/MainModule/DefaultLayout.LayoutWithCompanion)  layout.\n\nMostly the  [DefaultLayoutParams](@nav/api/MainModule/DefaultLayout.DefaultLayoutParams) , to which is added:\n*   `companionNodes$`  provide handle regarding companion nodes selection.\n*   `companionWidth`  (included within display options), to control the width of the companion screen in percent.",
+                        "content": "Parameters for constructing  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.LayoutWithCompanion\" semantic=\"class\">LayoutWithCompanion</mkapi-api-link>  layout.\n\nMostly the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams\" semantic=\"interface\">DefaultLayoutParams</mkapi-api-link> , to which is added:\n*   `companionNodes$`  provide handle regarding companion nodes selection.\n*   `companionWidth`  (included within display options), to control the width of the companion screen in percent.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3898,7 +4167,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Defines the  `layout`  structure for  [Navigation](@nav/api/MainModule.Navigation)  nodes, which determines how a page's content is rendered.\n\nThese options apply to individual navigation nodes.\nFor global layout customizations, refer to the  [Layout](@nav/api/MainModule/DefaultLayout.Layout)  constructor.",
+                        "content": "Defines the  `layout`  structure for  <mkapi-api-link nav=\"@nav/api/MainModule.Navigation\" semantic=\"type-alias\">Navigation</mkapi-api-link>  nodes, which determines how a page's content is rendered.\n\nThese options apply to individual navigation nodes.\nFor global layout customizations, refer to the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.Layout\" semantic=\"class\">Layout</mkapi-api-link>  constructor.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3938,7 +4207,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Types that can be used to define views in  [NavLayout](@nav/api/MainModule/DefaultLayout.NavLayout) .\n\n<note level=\"hint\">\nFor scenario requiring reactivity of the view, an option is to use the  `RxChild`  type from  `ChildLike` .\n</note>",
+                        "content": "Types that can be used to define views in  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavLayout\" semantic=\"type-alias\">NavLayout</mkapi-api-link> .\n\n<note level=\"hint\">\nFor scenario requiring reactivity of the view, an option is to use the  `RxChild`  type from  `ChildLike` .\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3988,6 +4257,17 @@
                             "attributes": {},
                             "relations": {}
                         }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **content**: The content.\n*  **maxHeight**: Maximum height of the modal's display area.\n*  **maxWidth**: Maximum width of the modal's display area.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
                     }
                 ]
             },
@@ -3997,8 +4277,8 @@
                 "filePath": "src/lib/default-layout/modal.view.ts",
                 "declaration": "export function popupModal({\n    content,\n    maxWidth,\n    maxHeight,\n}: {\n    content: AnyView\n    maxWidth?: string\n    maxHeight?: string\n})",
                 "implementation": "export function popupModal({\n    content,\n    maxWidth,\n    maxHeight,\n}: {\n    content: AnyView\n    maxWidth?: string\n    maxHeight?: string\n}) {\n    let element: HTMLElement | undefined = undefined\n    maxWidth ??= '75%'\n    maxHeight ??= '75%'\n    const vdom: AnyVirtualDOM = {\n        tag: 'div',\n        style: {\n            position: 'absolute',\n            top: '0vh',\n            left: '0vw',\n            width: '100vw',\n            height: '100vh',\n            zIndex: 10,\n            backdropFilter: 'blur(3px)',\n        },\n        class: 'd-flex flex-column justify-content-center',\n        children: [\n            {\n                tag: 'div',\n                class: `p-2 border rounded mx-auto d-flex flex-column justify-content-center overflow-auto`,\n                children: [content],\n                style: {\n                    maxHeight: maxHeight,\n                    maxWidth: maxWidth,\n                },\n                connectedCallback: (elem: HTMLElement) => {\n                    const firstChild = elem.firstChild as HTMLElement\n                    if (isSizeRelativeToParent(firstChild, 'width')) {\n                        elem.style.width = maxWidth\n                    }\n                    if (isSizeRelativeToParent(firstChild, 'height')) {\n                        elem.style.height = maxHeight\n                    }\n                },\n                onclick: (ev) => {\n                    ev.stopPropagation()\n                },\n            },\n        ],\n        connectedCallback: (elem: HTMLElement) => {\n            // noinspection ReuseOfLocalVariableJS\n            element = elem\n        },\n        onclick: () => {\n            if (element) {\n                element.remove()\n            }\n        },\n    }\n    document.body.appendChild(render(vdom))\n}",
-                "startLine": 47,
-                "endLine": 106,
+                "startLine": 48,
+                "endLine": 107,
                 "references": {
                     "popupModal": "@nav/api/MainModule/DefaultLayout.popupModal",
                     "AnyView": "@nav/api/MainModule.AnyView"
@@ -4016,7 +4296,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Helper to specify a  `toc`  view in  [NavLayout](@nav/api/MainModule/DefaultLayout.NavLayout)  using the default  [TOCView](@nav/api/MainModule/DefaultLayout.TOCView)  with a custom  `domConverter` \nfor rendering the  [TocItemView](undefined) .\n\n<note level='example'>\n<code-snippet language='javascript'>\n\nconst domConvertor = (heading: HTMLHeadingElement) => ({\n    tag: 'div',\n    class:'custom-class',\n    innerText: heading.innerText\n})\nconst layout: NavLayout = {\n    content: () => ({ tag:'h1', innerText: 'Title' }),\n    toc: ({router, html}) => tocView({html, router,domConvertor})\n}\n</code-snippet>\n</note>",
+                        "content": "Helper to specify a  `toc`  view in  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavLayout\" semantic=\"type-alias\">NavLayout</mkapi-api-link>  using the default  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TOCView\" semantic=\"class\">TOCView</mkapi-api-link>  with a custom  `domConverter` \nfor rendering the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.TocItemView\" semantic=\"class\">TocItemView</mkapi-api-link> .\n\n<note level='example'>\n<code-snippet language='javascript'>\n\nconst domConvertor = (heading: HTMLHeadingElement) => ({\n    tag: 'div',\n    class:'custom-class',\n    innerText: heading.innerText\n})\nconst layout: NavLayout = {\n    content: () => ({ tag:'h1', innerText: 'Title' }),\n    toc: ({router, html}) => tocView({html, router,domConvertor})\n}\n</code-snippet>\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -4033,8 +4313,8 @@
                 "filePath": "src/lib/default-layout/toc.view.ts",
                 "declaration": "export function tocView({\n    html,\n    router,\n    domConvertor,\n}: {\n    html: HTMLElement\n    router: Router\n    domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM\n}): Promise<TOCView>",
                 "implementation": "export function tocView({\n    html,\n    router,\n    domConvertor,\n}: {\n    html: HTMLElement\n    router: Router\n    domConvertor?: (e: HTMLHeadingElement) => AnyVirtualDOM\n}): Promise<TOCView> {\n    return Promise.resolve(new TOCView({ router: router, html, domConvertor }))\n}",
-                "startLine": 517,
-                "endLine": 528,
+                "startLine": 516,
+                "endLine": 527,
                 "references": {
                     "tocView": "@nav/api/MainModule/DefaultLayout.tocView",
                     "Router": "@nav/api/MainModule.Router",

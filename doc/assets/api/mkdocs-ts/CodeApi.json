@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "The Code API Plugin integrates API documentation into your application.\n\nAPI documentation is structured based on the module hierarchy, where each page corresponds to a specific module.\n\nThe root node of the API documentation is generated using  [codeApiEntryNode](@nav/api/CodeApi.codeApiEntryNode) .\nBy default, it utilizes a  [HttpClient](@nav/api/CodeApi.HttpClient)  to fetch module data from .json files,\nwith each file representing a  [Module](@nav/api/CodeApi.Module) . The module is then displayed on the page using  [ModuleView](@nav/api/CodeApi.ModuleView) .\n\n<note level=\"warning\">\nThis module does **not** handle the generation of  `.json`  files. For details on generating these files,\nrefer to  MkApiBackendsModule .\n</note>",
+                "content": "The Code API Plugin integrates API documentation into your application.\n\nAPI documentation is structured based on the module hierarchy, where each page corresponds to a specific module.\n\nThe root node of the API documentation is generated using  <mkapi-api-link nav=\"@nav/api/CodeApi.codeApiEntryNode\" semantic=\"function\">CodeApi.codeApiEntryNode</mkapi-api-link> .\nBy default, it utilizes a  <mkapi-api-link nav=\"@nav/api/CodeApi.HttpClient\" semantic=\"class\">CodeApi.HttpClient</mkapi-api-link>  to fetch module data from .json files,\nwith each file representing a  <mkapi-api-link nav=\"@nav/api/CodeApi.Module\" semantic=\"type-alias\">CodeApi.Module</mkapi-api-link> . The module is then displayed on the page using\n <mkapi-api-link nav=\"@nav/api/CodeApi.ModuleView\" semantic=\"class\">CodeApi.ModuleView</mkapi-api-link> .\n\n<note level=\"warning\">\nThis module does **not** handle the generation of  `.json`  files. For details on generating these files,\nrefer to  <mkapi-api-link nav=\"@nav/api/MkApiBackends\" semantic=\"module\">MkApiBackends</mkapi-api-link> .\n</note>",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -45,8 +45,8 @@
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "configurationDefault: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`\n    },\n    externalTypes: {},\n    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,\n    notebook: undefined,\n    navNode: ({ name, header, layout }) => ({\n        name,\n        header,\n        layout,\n    }),\n}",
                 "implementation": "",
-                "startLine": 81,
-                "endLine": 82,
+                "startLine": 98,
+                "endLine": 99,
                 "references": {
                     "configurationDefault": "@nav/api/CodeApi.configurationDefault",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -81,8 +81,8 @@
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "configurationPython: Configuration = configurationDefault",
                 "implementation": "",
-                "startLine": 111,
-                "endLine": 112,
+                "startLine": 128,
+                "endLine": 129,
                 "references": {
                     "configurationPython": "@nav/api/CodeApi.configurationPython",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -117,8 +117,8 @@
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "configurationTsTypedoc: Configuration = configurationDefault",
                 "implementation": "",
-                "startLine": 106,
-                "endLine": 107,
+                "startLine": 123,
+                "endLine": 124,
                 "references": {
                     "configurationTsTypedoc": "@nav/api/CodeApi.configurationTsTypedoc",
                     "Configuration": "@nav/api/CodeApi.Configuration"
@@ -132,7 +132,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  [Attribute](@nav/api/CodeApi.Attribute) .",
+                        "content": "View for a  <mkapi-api-link nav=\"@nav/api/CodeApi.Attribute\" semantic=\"type-alias\">Attribute</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -319,7 +319,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  [Callable](@nav/api/CodeApi.Callable) .",
+                        "content": "View for a  <mkapi-api-link nav=\"@nav/api/CodeApi.Callable\" semantic=\"type-alias\">Callable</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -506,7 +506,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  [Code](@nav/api/CodeApi.Code) .",
+                        "content": "View for a  <mkapi-api-link nav=\"@nav/api/CodeApi.Code\" semantic=\"interface\">Code</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -602,7 +602,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -728,7 +728,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  Declaration .",
+                        "content": "View for a declaration.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -911,7 +911,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  [Documentation](@nav/api/CodeApi.Documentation) .",
+                        "content": "View for a  <mkapi-api-link nav=\"@nav/api/CodeApi.Documentation\" semantic=\"interface\">Documentation</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -953,8 +953,8 @@
                         "filePath": "src/lib/code-api/documentation.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 22,
-                        "endLine": 23,
+                        "startLine": 24,
+                        "endLine": 25,
                         "references": {
                             "children": "@nav/api/CodeApi.DocumentationView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -989,8 +989,8 @@
                         "filePath": "src/lib/code-api/documentation.view.ts",
                         "declaration": "public readonly class = `${DocumentationView.CssSelector} mkapi-doc`",
                         "implementation": "",
-                        "startLine": 21,
-                        "endLine": 22,
+                        "startLine": 23,
+                        "endLine": 24,
                         "references": {
                             "class": "@nav/api/CodeApi.DocumentationView.class"
                         }
@@ -1024,8 +1024,8 @@
                         "filePath": "src/lib/code-api/documentation.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 20,
-                        "endLine": 21,
+                        "startLine": 22,
+                        "endLine": 23,
                         "references": {
                             "tag": "@nav/api/CodeApi.DocumentationView.tag"
                         }
@@ -1059,8 +1059,8 @@
                         "filePath": "src/lib/code-api/documentation.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-DocumentationView'",
                         "implementation": "",
-                        "startLine": 16,
-                        "endLine": 17,
+                        "startLine": 18,
+                        "endLine": 19,
                         "references": {
                             "CssSelector": "@nav/api/CodeApi.DocumentationView.CssSelector"
                         }
@@ -1072,8 +1072,8 @@
                 "filePath": "src/lib/code-api/documentation.view.ts",
                 "declaration": "export class DocumentationView implements VirtualDOM<'div'>",
                 "implementation": "export class DocumentationView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-DocumentationView'\n    public readonly documentation: Documentation\n    public readonly router: Router\n    public readonly configuration: Configuration\n    public readonly tag = 'div'\n    public readonly class = `${DocumentationView.CssSelector} mkapi-doc`\n    public readonly children: ChildrenLike\n    constructor(params: {\n        documentation: Documentation\n        router: Router\n        configuration: Configuration\n    }) {\n        Object.assign(this, params)\n\n        this.children = this.documentation.sections.map((section) => {\n            return new SectionView({\n                section,\n                router: this.router,\n                configuration: this.configuration,\n            })\n        })\n    }\n}",
-                "startLine": 12,
-                "endLine": 39,
+                "startLine": 14,
+                "endLine": 41,
                 "references": {
                     "DocumentationView": "@nav/api/CodeApi.DocumentationView",
                     "Configuration": "@nav/api/CodeApi.Configuration",
@@ -1095,7 +1095,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Default HTTP client used in  [codeApiEntryNode](@nav/api/CodeApi.codeApiEntryNode) .",
+                        "content": "Default HTTP client used in  <mkapi-api-link nav=\"@nav/api/CodeApi.codeApiEntryNode\" semantic=\"function\">codeApiEntryNode</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1120,7 +1120,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The configuration, usually forwarded from  [codeApiEntryNode](@nav/api/CodeApi.codeApiEntryNode) .",
+                                "content": "The configuration, usually forwarded from  <mkapi-api-link nav=\"@nav/api/CodeApi.codeApiEntryNode\" semantic=\"function\">codeApiEntryNode</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1137,8 +1137,8 @@
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "public readonly configuration: Configuration<unknown, unknown>",
                         "implementation": "",
-                        "startLine": 80,
-                        "endLine": 81,
+                        "startLine": 81,
+                        "endLine": 82,
                         "references": {
                             "configuration": "@nav/api/CodeApi.HttpClient.configuration",
                             "Configuration": "@nav/api/CodeApi.Configuration"
@@ -1156,7 +1156,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The project, usually forwarded from  [codeApiEntryNode](@nav/api/CodeApi.codeApiEntryNode) .",
+                                "content": "The project, usually forwarded from  <mkapi-api-link nav=\"@nav/api/CodeApi.codeApiEntryNode\" semantic=\"function\">codeApiEntryNode</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1173,8 +1173,8 @@
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "public readonly project: Project",
                         "implementation": "",
-                        "startLine": 84,
-                        "endLine": 85,
+                        "startLine": 85,
+                        "endLine": 86,
                         "references": {
                             "project": "@nav/api/CodeApi.HttpClient.project",
                             "Project": "@nav/api/CodeApi.Project"
@@ -1184,7 +1184,7 @@
             ],
             "callables": [
                 {
-                    "name": "HttpClient",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -1199,7 +1199,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **configuration**: See  [HttpClient.configuration](@nav/api/CodeApi.HttpClient.configuration) .\n*  **project**: See  [HttpClient.project](@nav/api/CodeApi.HttpClient.project) .",
+                                "content": "\n*  **configuration**: See  <mkapi-api-link nav=\"@nav/api/CodeApi.HttpClient.configuration\" semantic=\"attribute\">HttpClient.configuration</mkapi-api-link> .\n*  **project**: See  <mkapi-api-link nav=\"@nav/api/CodeApi.HttpClient.project\" semantic=\"attribute\">HttpClient.project</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -1210,14 +1210,14 @@
                             }
                         ]
                     },
-                    "path": "HttpClient.HttpClient",
+                    "path": "HttpClient.constructor",
                     "navPath": "@nav/api/CodeApi.HttpClient.constructor",
                     "code": {
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "constructor(params: {\n    configuration: Configuration<unknown, unknown>\n    project: Project\n})",
                         "implementation": "constructor(params: {\n    configuration: Configuration<unknown, unknown>\n    project: Project\n}) {\n    Object.assign(this, params)\n}",
-                        "startLine": 93,
-                        "endLine": 99,
+                        "startLine": 94,
+                        "endLine": 100,
                         "references": {
                             "HttpClient": "@nav/api/CodeApi.HttpClient",
                             "Configuration": "@nav/api/CodeApi.Configuration",
@@ -1236,7 +1236,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Fetch  [Module](@nav/api/CodeApi.Module)  data.",
+                                "content": "Fetch  <mkapi-api-link nav=\"@nav/api/CodeApi.Module\" semantic=\"type-alias\">Module</mkapi-api-link>  data.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1264,8 +1264,8 @@
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "fetchModule(modulePath: string): Observable<Module>",
                         "implementation": "fetchModule(modulePath: string): Observable<Module> {\n    const assetPath = `${this.project.docBasePath}/${modulePath}.json`\n    if (assetPath in this.cache) {\n        return of(this.cache[assetPath])\n    }\n    return request$<Module>(new Request(assetPath)).pipe(\n        raiseHTTPErrors(),\n        tap((m) => (this.cache[assetPath] = m)),\n    )\n}",
-                        "startLine": 100,
-                        "endLine": 110,
+                        "startLine": 101,
+                        "endLine": 111,
                         "references": {
                             "fetchModule": "@nav/api/CodeApi.HttpClient.fetchModule",
                             "Module": "@nav/api/CodeApi.Module",
@@ -1301,8 +1301,8 @@
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "installCss(): Promise<unknown>",
                         "implementation": "installCss(): Promise<unknown> {\n    return install({\n        css: [this.configuration.css(this.project)],\n    })\n}",
-                        "startLine": 111,
-                        "endLine": 116,
+                        "startLine": 112,
+                        "endLine": 117,
                         "references": {
                             "installCss": "@nav/api/CodeApi.HttpClient.installCss"
                         }
@@ -1319,8 +1319,8 @@
                 "filePath": "src/lib/code-api/index.ts",
                 "declaration": "export class HttpClient implements HttpClientTrait",
                 "implementation": "export class HttpClient implements HttpClientTrait {\n    public readonly cache: Record<string, Module> = {}\n    /**\n     * The configuration, usually forwarded from {@link codeApiEntryNode}.\n     */\n    public readonly configuration: Configuration<unknown, unknown>\n    /**\n     * The project, usually forwarded from {@link codeApiEntryNode}.\n     */\n    public readonly project: Project\n\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.configuration See {@link HttpClient.configuration}.\n     * @param params.project See {@link HttpClient.project}.\n     */\n    constructor(params: {\n        configuration: Configuration<unknown, unknown>\n        project: Project\n    }) {\n        Object.assign(this, params)\n    }\n\n    fetchModule(modulePath: string): Observable<Module> {\n        const assetPath = `${this.project.docBasePath}/${modulePath}.json`\n        if (assetPath in this.cache) {\n            return of(this.cache[assetPath])\n        }\n        return request$<Module>(new Request(assetPath)).pipe(\n            raiseHTTPErrors(),\n            tap((m) => (this.cache[assetPath] = m)),\n        )\n    }\n\n    installCss(): Promise<unknown> {\n        return install({\n            css: [this.configuration.css(this.project)],\n        })\n    }\n}",
-                "startLine": 75,
-                "endLine": 117,
+                "startLine": 76,
+                "endLine": 118,
                 "references": {
                     "HttpClient": "@nav/api/CodeApi.HttpClient",
                     "Configuration": "@nav/api/CodeApi.Configuration",
@@ -1344,7 +1344,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  [Module](@nav/api/CodeApi.Module) .\n\nIt includes:\n\n*   [SummaryView](@nav/api/CodeApi.SummaryView) ,\n*   [DocumentationView](@nav/api/CodeApi.DocumentationView)  for module's documentation,\n*   [CallableView](@nav/api/CodeApi.CallableView)  for each module's callables,\n*   [AttributeView](@nav/api/CodeApi.AttributeView)  for each module's attributes,\n*   [TypeView](@nav/api/CodeApi.TypeView)  for each module's types.",
+                        "content": "View for a  <mkapi-api-link nav=\"@nav/api/CodeApi.Module\" semantic=\"type-alias\">Module</mkapi-api-link> .\n\nIt includes:\n\n*   <mkapi-api-link nav=\"@nav/api/CodeApi.SummaryView\" semantic=\"class\">SummaryView</mkapi-api-link> ,\n*   <mkapi-api-link nav=\"@nav/api/CodeApi.DocumentationView\" semantic=\"class\">DocumentationView</mkapi-api-link>  for module's documentation,\n*   <mkapi-api-link nav=\"@nav/api/CodeApi.CallableView\" semantic=\"class\">CallableView</mkapi-api-link>  for each module's callables,\n*   <mkapi-api-link nav=\"@nav/api/CodeApi.AttributeView\" semantic=\"class\">AttributeView</mkapi-api-link>  for each module's attributes,\n*   <mkapi-api-link nav=\"@nav/api/CodeApi.TypeView\" semantic=\"class\">TypeView</mkapi-api-link>  for each module's types.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1502,7 +1502,7 @@
             ],
             "callables": [
                 {
-                    "name": "ModuleView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -1528,7 +1528,7 @@
                             }
                         ]
                     },
-                    "path": "ModuleView.ModuleView",
+                    "path": "ModuleView.constructor",
                     "navPath": "@nav/api/CodeApi.ModuleView.constructor",
                     "code": {
                         "filePath": "src/lib/code-api/module.view.ts",
@@ -1582,7 +1582,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Header view of  [SummaryView](@nav/api/CodeApi.SummaryView) .",
+                        "content": "Header view of  <mkapi-api-link nav=\"@nav/api/CodeApi.SummaryView\" semantic=\"class\">SummaryView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1624,8 +1624,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 99,
-                        "endLine": 100,
+                        "startLine": 98,
+                        "endLine": 99,
                         "references": {
                             "children": "@nav/api/CodeApi.SummaryHeader.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -1660,8 +1660,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly class = `${SummaryHeader.CssSelector} mkdocs-bg-info border d-flex align-items-center p-1`",
                         "implementation": "",
-                        "startLine": 95,
-                        "endLine": 96,
+                        "startLine": 94,
+                        "endLine": 95,
                         "references": {
                             "class": "@nav/api/CodeApi.SummaryHeader.class"
                         }
@@ -1678,7 +1678,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1695,8 +1695,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly style = {\n        fontWeight: 'bolder' as const,\n    }",
                         "implementation": "",
-                        "startLine": 96,
-                        "endLine": 97,
+                        "startLine": 95,
+                        "endLine": 96,
                         "references": {
                             "style": "@nav/api/CodeApi.SummaryHeader.style"
                         }
@@ -1730,8 +1730,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 94,
-                        "endLine": 95,
+                        "startLine": 93,
+                        "endLine": 94,
                         "references": {
                             "tag": "@nav/api/CodeApi.SummaryHeader.tag"
                         }
@@ -1765,8 +1765,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "static readonly CssSelector = 'SummaryHeader'",
                         "implementation": "",
-                        "startLine": 92,
-                        "endLine": 93,
+                        "startLine": 91,
+                        "endLine": 92,
                         "references": {
                             "CssSelector": "@nav/api/CodeApi.SummaryHeader.CssSelector"
                         }
@@ -1778,8 +1778,8 @@
                 "filePath": "src/lib/code-api/summary.view.ts",
                 "declaration": "export class SummaryHeader implements VirtualDOM<'div'>",
                 "implementation": "export class SummaryHeader implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'SummaryHeader'\n\n    public readonly tag = 'div'\n    public readonly class = `${SummaryHeader.CssSelector} mkdocs-bg-info border d-flex align-items-center p-1`\n    public readonly style = {\n        fontWeight: 'bolder' as const,\n    }\n    public readonly children: ChildrenLike\n\n    constructor({ expanded$ }: { expanded$: BehaviorSubject<boolean> }) {\n        this.children = [\n            {\n                tag: 'i',\n                class: 'fas fa-eye',\n            },\n            { tag: 'div', class: 'mx-2' },\n            { tag: 'div', innerText: 'Symbols' },\n            { tag: 'div', class: 'flex-grow-1' },\n            {\n                tag: 'button',\n                class: {\n                    source$: expanded$,\n                    vdomMap: (expanded) =>\n                        expanded ? 'fa-chevron-down' : 'fa-chevron-right',\n                    wrapper: (d) => `btn btn-sm btn-light fas ${d}`,\n                },\n                onclick: () => {\n                    expanded$.next(!expanded$.value)\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 88,
-                "endLine": 125,
+                "startLine": 87,
+                "endLine": 124,
                 "references": {
                     "SummaryHeader": "@nav/api/CodeApi.SummaryHeader",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
@@ -1799,7 +1799,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "A link (to a  [ChildModule](@nav/api/CodeApi.ChildModule) ,  [Type](@nav/api/CodeApi.Type) ,  [Attribute](@nav/api/CodeApi.Attribute)  or  [Callable](@nav/api/CodeApi.Callable) ) in  [SummaryView](@nav/api/CodeApi.SummaryView) .",
+                        "content": "A link (to a  <mkapi-api-link nav=\"@nav/api/CodeApi.ChildModule\" semantic=\"type-alias\">ChildModule</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/CodeApi.Type\" semantic=\"interface\">Type</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/CodeApi.Attribute\" semantic=\"type-alias\">Attribute</mkapi-api-link>  or  <mkapi-api-link nav=\"@nav/api/CodeApi.Callable\" semantic=\"type-alias\">Callable</mkapi-api-link> ) in  <mkapi-api-link nav=\"@nav/api/CodeApi.SummaryView\" semantic=\"class\">SummaryView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1841,8 +1841,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 183,
-                        "endLine": 184,
+                        "startLine": 182,
+                        "endLine": 183,
                         "references": {
                             "children": "@nav/api/CodeApi.SummaryLink.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -1877,8 +1877,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly class = `${SummaryLink.CssSelector} m-1`",
                         "implementation": "",
-                        "startLine": 178,
-                        "endLine": 179,
+                        "startLine": 177,
+                        "endLine": 178,
                         "references": {
                             "class": "@nav/api/CodeApi.SummaryLink.class"
                         }
@@ -1912,8 +1912,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly href: string",
                         "implementation": "",
-                        "startLine": 184,
-                        "endLine": 185,
+                        "startLine": 183,
+                        "endLine": 184,
                         "references": {
                             "href": "@nav/api/CodeApi.SummaryLink.href"
                         }
@@ -1947,8 +1947,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly innerText: string",
                         "implementation": "",
-                        "startLine": 182,
-                        "endLine": 183,
+                        "startLine": 181,
+                        "endLine": 182,
                         "references": {
                             "innerText": "@nav/api/CodeApi.SummaryLink.innerText"
                         }
@@ -1982,8 +1982,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly onclick: (ev: MouseEvent) => void",
                         "implementation": "",
-                        "startLine": 185,
-                        "endLine": 186,
+                        "startLine": 184,
+                        "endLine": 185,
                         "references": {
                             "onclick": "@nav/api/CodeApi.SummaryLink.onclick"
                         }
@@ -2000,7 +2000,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2017,8 +2017,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly style = {\n        width: 'fit-content',\n    }",
                         "implementation": "",
-                        "startLine": 179,
-                        "endLine": 180,
+                        "startLine": 178,
+                        "endLine": 179,
                         "references": {
                             "style": "@nav/api/CodeApi.SummaryLink.style"
                         }
@@ -2052,8 +2052,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly tag = 'a'",
                         "implementation": "",
-                        "startLine": 177,
-                        "endLine": 178,
+                        "startLine": 176,
+                        "endLine": 177,
                         "references": {
                             "tag": "@nav/api/CodeApi.SummaryLink.tag"
                         }
@@ -2087,8 +2087,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "static readonly CssSelector = 'SummaryLink'",
                         "implementation": "",
-                        "startLine": 176,
-                        "endLine": 177,
+                        "startLine": 175,
+                        "endLine": 176,
                         "references": {
                             "CssSelector": "@nav/api/CodeApi.SummaryLink.CssSelector"
                         }
@@ -2100,11 +2100,12 @@
                 "filePath": "src/lib/code-api/summary.view.ts",
                 "declaration": "export class SummaryLink implements VirtualDOM<'a'>",
                 "implementation": "export class SummaryLink implements VirtualDOM<'a'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'SummaryLink'\n    public readonly tag = 'a'\n    public readonly class = `${SummaryLink.CssSelector} m-1`\n    public readonly style = {\n        width: 'fit-content',\n    }\n    public readonly innerText: string\n    public readonly children: ChildrenLike\n    public readonly href: string\n    public readonly onclick: (ev: MouseEvent) => void\n\n    constructor(params: { target: EntityForSummary; router: Router }) {\n        this.href = params.target.navPath.replace('@nav', '')\n        const path = this.href.split('.')[0]\n        const sectionId = this.href.split('.').slice(1).join('.')\n        this.innerText = params.target.name\n        this.onclick = (ev: MouseEvent) => {\n            ev.preventDefault()\n            params.router.fireNavigateTo({\n                path,\n                sectionId,\n                issuer: 'link',\n            })\n        }\n    }\n}",
-                "startLine": 172,
-                "endLine": 202,
+                "startLine": 171,
+                "endLine": 201,
                 "references": {
                     "SummaryLink": "@nav/api/CodeApi.SummaryLink",
                     "Router": "@nav/api/MainModule.Router",
+                    "EntityForSummary": "@nav/api/CodeApi.EntityForSummary",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
@@ -2121,7 +2122,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "A cards' section of  [SummaryView](@nav/api/CodeApi.SummaryView)  regrouping items with same semantic.",
+                        "content": "A cards' section of  <mkapi-api-link nav=\"@nav/api/CodeApi.SummaryView\" semantic=\"class\">SummaryView</mkapi-api-link>  regrouping items with same semantic.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2163,8 +2164,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 135,
-                        "endLine": 136,
+                        "startLine": 134,
+                        "endLine": 135,
                         "references": {
                             "children": "@nav/api/CodeApi.SummaryLinksSection.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -2199,8 +2200,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly class = `${SummaryLinksSection.CssSelector} my-2`",
                         "implementation": "",
-                        "startLine": 134,
-                        "endLine": 135,
+                        "startLine": 133,
+                        "endLine": 134,
                         "references": {
                             "class": "@nav/api/CodeApi.SummaryLinksSection.class"
                         }
@@ -2234,8 +2235,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 133,
-                        "endLine": 134,
+                        "startLine": 132,
+                        "endLine": 133,
                         "references": {
                             "tag": "@nav/api/CodeApi.SummaryLinksSection.tag"
                         }
@@ -2269,8 +2270,8 @@
                         "filePath": "src/lib/code-api/summary.view.ts",
                         "declaration": "static readonly CssSelector = 'SummaryLinksSection'",
                         "implementation": "",
-                        "startLine": 132,
-                        "endLine": 133,
+                        "startLine": 131,
+                        "endLine": 132,
                         "references": {
                             "CssSelector": "@nav/api/CodeApi.SummaryLinksSection.CssSelector"
                         }
@@ -2282,11 +2283,12 @@
                 "filePath": "src/lib/code-api/summary.view.ts",
                 "declaration": "export class SummaryLinksSection implements VirtualDOM<'div'>",
                 "implementation": "export class SummaryLinksSection implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'SummaryLinksSection'\n    public readonly tag = 'div'\n    public readonly class = `${SummaryLinksSection.CssSelector} my-2`\n    public readonly children: ChildrenLike\n\n    constructor(params: {\n        title: string\n        targets: EntityForSummary[]\n        router: Router\n    }) {\n        if (params.targets.length === 0) {\n            return\n        }\n        this.children = [\n            {\n                tag: 'div',\n                class: `mkapi-semantic-flag mkapi-role-${params.targets[0].semantic.role} mt-2`,\n                innerText: params.title,\n                style: {\n                    fontWeight: 'bolder',\n                },\n            },\n            {\n                tag: 'div',\n                class: 'd-flex flex-wrap ps-2',\n                children: params.targets.map(\n                    (target) =>\n                        new SummaryLink({\n                            target,\n                            router: params.router,\n                        }),\n                ),\n            },\n        ]\n    }\n}",
-                "startLine": 128,
-                "endLine": 168,
+                "startLine": 127,
+                "endLine": 167,
                 "references": {
                     "SummaryLinksSection": "@nav/api/CodeApi.SummaryLinksSection",
                     "Router": "@nav/api/MainModule.Router",
+                    "EntityForSummary": "@nav/api/CodeApi.EntityForSummary",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
@@ -2303,7 +2305,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Summary view for  [Module](@nav/api/CodeApi.Module)  and  [Type](@nav/api/CodeApi.Type) .",
+                        "content": "Summary view for  <mkapi-api-link nav=\"@nav/api/CodeApi.Module\" semantic=\"type-alias\">Module</mkapi-api-link>  and  <mkapi-api-link nav=\"@nav/api/CodeApi.Type\" semantic=\"interface\">Type</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2463,9 +2465,9 @@
             "code": {
                 "filePath": "src/lib/code-api/summary.view.ts",
                 "declaration": "export class SummaryView implements VirtualDOM<'div'>",
-                "implementation": "export class SummaryView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-SummaryView'\n    public readonly tag = 'div'\n    public readonly class: string = `${SummaryView.CssSelector} border rounded mkdocs-border-info`\n    public readonly children: ChildrenLike\n    public readonly expanded$ = new BehaviorSubject(false)\n\n    /**\n     *\n     * @param params\n     * @param params.target The target {@link Module} or {@link Type}.\n     * @param params.navBase The navigation path of the associated module (*i.e* {@link Module.navPath} for module).\n     * @param params.router The router instance.\n     */\n    constructor(params: { target: Module | Type; router: Router }) {\n        const attributes = params.target.attributes\n        const callables = params.target.callables\n        const modules = 'types' in params.target ? params.target.children : []\n        const types = 'types' in params.target ? params.target.types : []\n        const targets = [...modules, ...attributes, ...callables, ...types]\n        if (targets.length === 0) {\n            this.class = ''\n            return\n        }\n        const sections = targets.reduce(\n            (acc: Record<string, EntityForSummary[]>, e) => {\n                const sem = e.semantic.role\n                if (!(sem in acc) || !('push' in acc[sem])) {\n                    acc[sem] = []\n                }\n                acc[sem].push(e)\n                return acc\n            },\n            {},\n        )\n\n        this.children = [\n            new SummaryHeader({ expanded$: this.expanded$ }),\n            {\n                tag: 'div',\n                class: 'border-start ps-2',\n                children: {\n                    policy: 'replace',\n                    source$: this.expanded$,\n                    vdomMap: (expanded) =>\n                        expanded\n                            ? Object.entries(sections).map(([k, v]) => {\n                                  return new SummaryLinksSection({\n                                      title: k,\n                                      targets: v,\n                                      router: params.router,\n                                  })\n                              })\n                            : [],\n                },\n            },\n        ]\n    }\n}",
+                "implementation": "export class SummaryView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-SummaryView'\n    public readonly tag = 'div'\n    public readonly class: string = `${SummaryView.CssSelector} border rounded mkdocs-border-info`\n    public readonly children: ChildrenLike\n    public readonly expanded$ = new BehaviorSubject(false)\n\n    /**\n     *\n     * @param params\n     * @param params.target The target {@link Module} or {@link Type}.\n     * @param params.router The router instance.\n     */\n    constructor(params: { target: Module | Type; router: Router }) {\n        const attributes = params.target.attributes\n        const callables = params.target.callables\n        const modules = 'types' in params.target ? params.target.children : []\n        const types = 'types' in params.target ? params.target.types : []\n        const targets = [...modules, ...attributes, ...callables, ...types]\n        if (targets.length === 0) {\n            this.class = ''\n            return\n        }\n        const sections = targets.reduce(\n            (acc: Record<string, EntityForSummary[]>, e) => {\n                const sem = e.semantic.role\n                if (!(sem in acc) || !('push' in acc[sem])) {\n                    acc[sem] = []\n                }\n                acc[sem].push(e)\n                return acc\n            },\n            {},\n        )\n\n        this.children = [\n            new SummaryHeader({ expanded$: this.expanded$ }),\n            {\n                tag: 'div',\n                class: 'border-start ps-2',\n                children: {\n                    policy: 'replace',\n                    source$: this.expanded$,\n                    vdomMap: (expanded) =>\n                        expanded\n                            ? Object.entries(sections).map(([k, v]) => {\n                                  return new SummaryLinksSection({\n                                      title: k,\n                                      targets: v,\n                                      router: params.router,\n                                  })\n                              })\n                            : [],\n                },\n            },\n        ]\n    }\n}",
                 "startLine": 22,
-                "endLine": 84,
+                "endLine": 83,
                 "references": {
                     "SummaryView": "@nav/api/CodeApi.SummaryView",
                     "Router": "@nav/api/MainModule.Router",
@@ -2488,7 +2490,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "View for a  [Type](@nav/api/CodeApi.Type) .",
+                        "content": "View for a  <mkapi-api-link nav=\"@nav/api/CodeApi.Type\" semantic=\"interface\">Type</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2964,8 +2966,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string",
                         "implementation": "",
-                        "startLine": 45,
-                        "endLine": 46,
+                        "startLine": 62,
+                        "endLine": 63,
                         "references": {
                             "codeUrl": "@nav/api/CodeApi.Configuration.codeUrl",
                             "Project": "@nav/api/CodeApi.Project"
@@ -3000,8 +3002,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "css: (project: Project) => string",
                         "implementation": "",
-                        "startLine": 37,
-                        "endLine": 38,
+                        "startLine": 54,
+                        "endLine": 55,
                         "references": {
                             "css": "@nav/api/CodeApi.Configuration.css",
                             "Project": "@nav/api/CodeApi.Project"
@@ -3036,8 +3038,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "externalTypes: Record<string, string>",
                         "implementation": "",
-                        "startLine": 41,
-                        "endLine": 42,
+                        "startLine": 58,
+                        "endLine": 59,
                         "references": {
                             "externalTypes": "@nav/api/CodeApi.Configuration.externalTypes"
                         }
@@ -3071,8 +3073,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "mdParsingOptions?: MdParsingOptions",
                         "implementation": "",
-                        "startLine": 29,
-                        "endLine": 30,
+                        "startLine": 46,
+                        "endLine": 47,
                         "references": {
                             "mdParsingOptions": "@nav/api/CodeApi.Configuration.mdParsingOptions",
                             "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions"
@@ -3090,7 +3092,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "If  `true`  or an object, use the  [Notebook](@nav/api/Notebook)  module to parse the code documentation included in the API\nfiles, eventually forwarding the parameters provided to the  [NotebookPage](@nav/api/Notebook.NotebookPage)  constructor.",
+                                "content": "If  `true`  or an object, use the  <mkapi-api-link nav=\"@nav/api/Notebook\" semantic=\"module\">Notebook</mkapi-api-link>  module to parse the code documentation included in the API\nfiles, eventually forwarding the parameters provided to the  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link>  constructor.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3107,8 +3109,8 @@
                         "filePath": "src/lib/code-api/configurations.ts",
                         "declaration": "notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }",
                         "implementation": "",
-                        "startLine": 59,
-                        "endLine": 60,
+                        "startLine": 76,
+                        "endLine": 77,
                         "references": {
                             "notebook": "@nav/api/CodeApi.Configuration.notebook",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
@@ -3122,15 +3124,15 @@
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
                 "declaration": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n>",
-                "implementation": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n> {\n    /**\n     * Parsing options for Markdown.\n     */\n    mdParsingOptions?: MdParsingOptions\n\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: Record<string, string>\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API\n     * files, eventually forwarding the parameters provided to the {@link NotebookPage} constructor.\n     */\n    notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }\n\n    navNode: ({\n        name,\n        header,\n        layout,\n    }: {\n        name: string\n        header: DefaultLayout.NavHeader\n        layout: DefaultLayout.NavLayout\n    }) => NavNodeData<TLayout, THeader>\n}",
-                "startLine": 22,
-                "endLine": 77,
+                "implementation": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n> {\n    /**\n     * Parsing options for Markdown.\n     */\n    mdParsingOptions?: MdParsingOptions\n\n    /**\n     * Defines the stylesheet to install.\n     *\n     * @param project\n     * @returns Stylesheet full URL.\n     */\n    css: (project: Project) => string\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: Record<string, string>\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API\n     * files, eventually forwarding the parameters provided to the {@link NotebookPage} constructor.\n     */\n    notebook?:\n        | boolean\n        | {\n              initialScope?: Partial<Scope>\n              displayFactory?: DisplayFactory\n              options?: NotebookOptions\n          }\n\n    navNode: ({\n        name,\n        header,\n        layout,\n    }: {\n        name: string\n        header: DefaultLayout.NavHeader\n        layout: NavLayout\n    }) => NavNodeData<TLayout, THeader>\n}",
+                "startLine": 39,
+                "endLine": 94,
                 "references": {
                     "Configuration": "@nav/api/CodeApi.Configuration",
                     "Project": "@nav/api/CodeApi.Project",
                     "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
                     "NavHeader": "@nav/api/MainModule/DefaultLayout.NavHeader",
-                    "NavLayout": "@nav/api/MainModule/DefaultLayout.NavLayout",
+                    "NavLayout": "@nav/api/CodeApi.NavLayout",
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
                     "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
                     "Scope": "@nav/api/Notebook.Scope",
@@ -3806,7 +3808,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Interface for the HTTP client fetching API data used in  [codeApiEntryNode](@nav/api/CodeApi.codeApiEntryNode) .",
+                        "content": "Interface for the HTTP client fetching API data used in  <mkapi-api-link nav=\"@nav/api/CodeApi.codeApiEntryNode\" semantic=\"function\">codeApiEntryNode</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3826,7 +3828,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Fetch  [Module](@nav/api/CodeApi.Module)  data.",
+                                "content": "Fetch  <mkapi-api-link nav=\"@nav/api/CodeApi.Module\" semantic=\"type-alias\">Module</mkapi-api-link>  data.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3854,8 +3856,8 @@
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "fetchModule(modulePath: string): Observable<Module>",
                         "implementation": "",
-                        "startLine": 64,
-                        "endLine": 65,
+                        "startLine": 65,
+                        "endLine": 66,
                         "references": {
                             "fetchModule": "@nav/api/CodeApi.HttpClientTrait.fetchModule",
                             "Module": "@nav/api/CodeApi.Module",
@@ -3891,8 +3893,8 @@
                         "filePath": "src/lib/code-api/index.ts",
                         "declaration": "installCss(): Promise<unknown>",
                         "implementation": "",
-                        "startLine": 69,
-                        "endLine": 70,
+                        "startLine": 70,
+                        "endLine": 71,
                         "references": {
                             "installCss": "@nav/api/CodeApi.HttpClientTrait.installCss"
                         }
@@ -3909,13 +3911,128 @@
                 "filePath": "src/lib/code-api/index.ts",
                 "declaration": "export interface HttpClientTrait",
                 "implementation": "export interface HttpClientTrait {\n    /**\n     * Fetch {@link Module} data.\n     *\n     * @param modulePath path of the module relative to project's `docBasePath`.\n     */\n    fetchModule(modulePath: string): Observable<Module>\n\n    /**\n     * Install required style sheets.\n     */\n    installCss(): Promise<unknown>\n}",
-                "startLine": 58,
-                "endLine": 71,
+                "startLine": 59,
+                "endLine": 72,
                 "references": {
                     "HttpClientTrait": "@nav/api/CodeApi.HttpClientTrait",
                     "Module": "@nav/api/CodeApi.Module",
                     "HttpClient": "@nav/api/CodeApi.HttpClient",
                     "Observable": "https://rxjs.dev/guide/observable"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "NavLayout",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The navigation layout data-structure produced by the module.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "NavLayout",
+            "navPath": "@nav/api/CodeApi.NavLayout",
+            "attributes": [
+                {
+                    "name": "content",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Defines the main content view of the page.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "NavLayout.content",
+                    "navPath": "@nav/api/CodeApi.NavLayout.content",
+                    "code": {
+                        "filePath": "src/lib/code-api/configurations.ts",
+                        "declaration": "content: (params: { router: Router<NavLayout> }) => NavLayoutView",
+                        "implementation": "",
+                        "startLine": 33,
+                        "endLine": 34,
+                        "references": {
+                            "content": "@nav/api/CodeApi.NavLayout.content",
+                            "Router": "@nav/api/MainModule.Router",
+                            "NavLayout": "@nav/api/CodeApi.NavLayout",
+                            "NavLayoutView": "@nav/api/MainModule/DefaultLayout.NavLayoutView"
+                        }
+                    }
+                },
+                {
+                    "name": "toc",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Defines the view for the table of contents (TOC) within the page.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "NavLayout.toc",
+                    "navPath": "@nav/api/CodeApi.NavLayout.toc",
+                    "code": {
+                        "filePath": "src/lib/code-api/configurations.ts",
+                        "declaration": "toc?: ClientTocView",
+                        "implementation": "",
+                        "startLine": 28,
+                        "endLine": 29,
+                        "references": {
+                            "toc": "@nav/api/CodeApi.NavLayout.toc",
+                            "ClientTocView": "@nav/api/MainModule/DefaultLayout.ClientTocView"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/code-api/configurations.ts",
+                "declaration": "export interface NavLayout",
+                "implementation": "export interface NavLayout {\n    /**\n     * Defines the view for the table of contents (TOC) within the page.\n     */\n    toc?: ClientTocView\n\n    /**\n     * Defines the main content view of the page.\n     */\n    content: (params: { router: Router<NavLayout> }) => NavLayoutView\n}",
+                "startLine": 24,
+                "endLine": 35,
+                "references": {
+                    "NavLayout": "@nav/api/CodeApi.NavLayout",
+                    "Router": "@nav/api/MainModule.Router",
+                    "NavLayoutView": "@nav/api/MainModule/DefaultLayout.NavLayoutView",
+                    "ClientTocView": "@nav/api/MainModule/DefaultLayout.ClientTocView"
                 }
             },
             "semantic": {
@@ -4659,6 +4776,45 @@
             }
         },
         {
+            "name": "EntityForSummary",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Interface for entities included in  <mkapi-api-link nav=\"@nav/api/CodeApi.SummaryView\" semantic=\"class\">SummaryView</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "EntityForSummary",
+            "navPath": "@nav/api/CodeApi.EntityForSummary",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/code-api/summary.view.ts",
+                "declaration": "export type EntityForSummary = Entity | ChildModule",
+                "implementation": "",
+                "startLine": 17,
+                "endLine": 18,
+                "references": {
+                    "EntityForSummary": "@nav/api/CodeApi.EntityForSummary",
+                    "Entity": "@nav/api/CodeApi.Entity",
+                    "ChildModule": "@nav/api/CodeApi.ChildModule"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "EntityPath",
             "documentation": {
                 "sections": [
@@ -4745,7 +4901,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Generates the root node for a project's API documentation, to be integrated within the  [Navigation](@nav/api/MainModule.Navigation) .",
+                        "content": "Generates the root node for a project's API documentation, to be integrated within the  <mkapi-api-link nav=\"@nav/api/MainModule.Navigation\" semantic=\"type-alias\">Navigation</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -4756,7 +4912,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **params**: Configuration options for the API documentation root node.\n*  **configuration**: Configuration settings for the navigation and layout.\n*  **docBasePath**: The base URL or root directory containing the API data models ( `.json`  files).\n  These models are generated using the  MkApiBackendsModule .\n*  **entryModule**: The root module from which the documentation hierarchy starts. Its associated  `json`  data\nshould be located at  `${docBasePath}/${docBasePath}.json` .\n*  **header**: The navigation header associated with the root node.\n*  **httpClient**: A custom HTTP client for retrieving API documentation resources.\n  If not provided, a default  [HttpClient](@nav/api/CodeApi.HttpClient)  instance is used.\n*  **name**: The name of the project (displayed in the navigation).\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **params**: Configuration options for the API documentation root node.\n*  **configuration**: Configuration settings for the navigation and layout.\n*  **docBasePath**: The base URL or root directory containing the API data models ( `.json`  files).\n  These models are generated using the  <mkapi-api-link nav=\"@nav/api/MkApiBackends\" semantic=\"module\">MkApiBackends</mkapi-api-link> .\n*  **entryModule**: The root module from which the documentation hierarchy starts. Its associated  `json`  data\nshould be located at  `${docBasePath}/${docBasePath}.json` .\n*  **header**: The navigation header associated with the root node.\n*  **httpClient**: A custom HTTP client for retrieving API documentation resources.\n  If not provided, a default  <mkapi-api-link nav=\"@nav/api/CodeApi.HttpClient\" semantic=\"class\">HttpClient</mkapi-api-link>  instance is used.\n*  **name**: The name of the project (displayed in the navigation).\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -4767,7 +4923,7 @@
                     },
                     {
                         "title": "Generics",
-                        "content": "\n*  **TLayout**: The type defining the navigation layout (*e.g.*,  [DefaultLayout.NavLayout](@nav/api/MainModule/DefaultLayout.NavLayout) ).\n*  **THeader**: The type defining the navigation header (*e.g.*,  [DefaultLayout.NavHeader](@nav/api/MainModule/DefaultLayout.NavHeader) ).",
+                        "content": "\n*  **TLayout**: The type defining the navigation layout (*e.g.*,  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavLayout\" semantic=\"type-alias\">DefaultLayout.NavLayout</mkapi-api-link> ).\n*  **THeader**: The type defining the navigation header (*e.g.*,  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavHeader\" semantic=\"type-alias\">DefaultLayout.NavHeader</mkapi-api-link> ).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -4795,8 +4951,8 @@
                 "filePath": "src/lib/code-api/index.ts",
                 "declaration": "export function codeApiEntryNode<TLayout, THeader>(\n    params: {\n        name: string\n        header: DefaultLayout.NavHeader\n        docBasePath: string\n        entryModule: string\n        configuration: Configuration<TLayout, THeader>\n        httpClient?: ({\n            project,\n            configuration,\n        }: {\n            project: Project\n            configuration: Configuration<TLayout, THeader>\n        }) => HttpClientTrait\n    },\n    ctx?: ContextTrait,\n): Navigation<TLayout, THeader>",
                 "implementation": "export function codeApiEntryNode<TLayout, THeader>(\n    params: {\n        name: string\n        header: DefaultLayout.NavHeader\n        docBasePath: string\n        entryModule: string\n        configuration: Configuration<TLayout, THeader>\n        httpClient?: ({\n            project,\n            configuration,\n        }: {\n            project: Project\n            configuration: Configuration<TLayout, THeader>\n        }) => HttpClientTrait\n    },\n    ctx?: ContextTrait,\n): Navigation<TLayout, THeader> {\n    const project = {\n        name: params.entryModule,\n        docBasePath: params.docBasePath,\n    }\n    const configuration = params.configuration\n    const httpClient =\n        params.httpClient?.({ configuration, project }) ??\n        new HttpClient({\n            project,\n            configuration,\n        })\n    return {\n        ...configuration.navNode({\n            name: params.name,\n            header: params.header,\n            layout: {\n                toc,\n                content: ({ router }: { router: Router }) => {\n                    return moduleView(\n                        {\n                            path: project.name,\n                            router,\n                            configuration,\n                            project,\n                            httpClient,\n                        },\n                        ctx,\n                    )\n                },\n            },\n        }),\n        routes: ({ router, path }: { router: Router; path: string }) =>\n            docNavigation(\n                {\n                    modulePath: path,\n                    router,\n                    project,\n                    configuration,\n                    httpClient,\n                },\n                ctx,\n            ),\n    }\n}",
-                "startLine": 257,
-                "endLine": 318,
+                "startLine": 258,
+                "endLine": 319,
                 "references": {
                     "codeApiEntryNode": "@nav/api/CodeApi.codeApiEntryNode",
                     "Configuration": "@nav/api/CodeApi.Configuration",
@@ -4900,7 +5056,7 @@
                             "attributes": {},
                             "relations": {}
                         },
-                        "content": "The Code API Plugin integrates API documentation into your application.\n\nAPI documentation is structured based on the module hierarchy, where each page corresponds to a specific module.\n\nThe root node of the API documentation is generated using .\nBy default, it utilizes a  to fetch module data from .json files,\nwith each file representing a . The module is then displayed on the page using .\n\n<note level=\"warning\">\nThis module does **not** handle the generation of `.json` files. For details on generating these files,\nrefer to .\n</note>",
+                        "content": "The Code API Plugin integrates API documentation into your application.\n\nAPI documentation is structured based on the module hierarchy, where each page corresponds to a specific module.\n\nThe root node of the API documentation is generated using .\nBy default, it utilizes a  to fetch module data from .json files,\nwith each file representing a . The module is then displayed on the page using\n.\n\n<note level=\"warning\">\nThis module does **not** handle the generation of `.json` files. For details on generating these files,\nrefer to .\n</note>",
                         "contentType": "markdown"
                     }
                 ]

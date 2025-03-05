@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "This module defines various layout components designed for structuring content within a notebook page.\n\n\n## Quick Overview\n\n###  [SideNavLayout](@nav/api/Notebook/Views/Layouts.SideNavLayout) \n\nThe  `SideNavLayout`  component creates a **navigation sidebar** alongside the main content area.\nBelow is an example with three navigation options: **Home**, **About**, and **Contact**.\n\n<js-cell>\nconst sideNavClass = 'h-100 bg-dark text-light p-2 px-5'\nconst sideNavHome = {\n    icon: 'fas fa-home',\n    content: { tag: 'div', innerText: 'Home', class: sideNavClass },\n}\nconst sideNavAbout = {\n    icon: 'fas fa-info',\n    content: { tag: 'div', innerText: 'About', class: sideNavClass },\n}\nconst sideNavContact = {\n    icon: 'fas fa-envelope',\n    content: { tag: 'div', innerText: 'Contact', class: sideNavClass },\n}\nconst sideNav = {\n    home: sideNavHome,\n    about: sideNavAbout,\n    contact: sideNavContact,\n}\nconst sideNavLayout = Views.Layouts.sideNav({\n    sideNavElements: sideNav,\n    content: { tag: 'div', innerText: 'Main content', class:'p-2 w-100 h-100 bg-light rounded border' },\n})\ndisplay(sideNavLayout)\n</js-cell>\n\n###  [SingleLayout](@nav/api/Notebook/Views/Layouts.SingleLayout) \n\nThe  `SingleLayout`  provides a simple **full-width container** for displaying content.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n    innerText: 'Main Content'\n}\nconst singleLayout = Views.Layouts.single({\n   content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content'\n    }\n})\ndisplay(singleLayout)\n</js-cell>\n\n###  [SuperposedLayout](@nav/api/Notebook/Views/Layouts.SuperposedLayout) \n\nThe  `SuperposedLayout`  allows **layered positioning** of content at the corners of the viewport.\nThis can be useful for **notifications**, **floating toolbars**, or **overlays**.\n\n<js-cell>\nconst classCorners = 'p-2 w-100 h-100 bg-dark text-light border rounded'\nconst topLeft = { tag:'div', class: classCorners, innerText: 'Top-Left' }\nconst topRight = { tag:'div', class: classCorners, innerText: 'Top-Right' }\nconst bottomLeft = { tag:'div', class: classCorners, innerText: 'Bottom-Left' }\nconst bottomRight = { tag:'div', class: classCorners, innerText: 'Bottom-Right' }\n\nconst superposedLayout = Views.Layouts.superposed({\n    content:{ tag:'div', class: 'p-2 w-100 h-100 bg-light border rounded'},\n    topLeft, topRight, bottomLeft, bottomRight\n})\ndisplay(superposedLayout)\n</js-cell>\n\n###  [ViewPortOnlyLayout](@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout) \n\nThe  `ViewPortOnlyLayout`  renders content **only when visible in the viewport**, making it ideal for dynamic loading.\nThis example **displays an alert when the layout is added or removed** to/from the viewport.\n\n<js-cell>\nconst viewPortOnlyLayout = Views.Layouts.viewPortOnly({\n    content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content',\n        connectedCallback: () => alert(\"viewPortOnly layout added\"),\n        disconnectedCallback: () => alert(\"viewPortOnly layout removed\"),\n    }\n})\ndisplay(viewPortOnlyLayout)\n</js-cell>",
+                "content": "This module defines various layout components designed for structuring content within a notebook page.\n\n\n## Quick Overview\n\n###  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SideNavLayout\" semantic=\"class\">SideNavLayout</mkapi-api-link> \n\nThe  `SideNavLayout`  component creates a **navigation sidebar** alongside the main content area.\nBelow is an example with three navigation options: **Home**, **About**, and **Contact**.\n\n<js-cell>\nconst sideNavClass = 'h-100 bg-dark text-light p-2 px-5'\nconst sideNavHome = {\n    icon: 'fas fa-home',\n    content: { tag: 'div', innerText: 'Home', class: sideNavClass },\n}\nconst sideNavAbout = {\n    icon: 'fas fa-info',\n    content: { tag: 'div', innerText: 'About', class: sideNavClass },\n}\nconst sideNavContact = {\n    icon: 'fas fa-envelope',\n    content: { tag: 'div', innerText: 'Contact', class: sideNavClass },\n}\nconst sideNav = {\n    home: sideNavHome,\n    about: sideNavAbout,\n    contact: sideNavContact,\n}\nconst sideNavLayout = Views.Layouts.sideNav({\n    sideNavElements: sideNav,\n    content: { tag: 'div', innerText: 'Main content', class:'p-2 w-100 h-100 bg-light rounded border' },\n})\ndisplay(sideNavLayout)\n</js-cell>\n\n###  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SingleLayout\" semantic=\"class\">SingleLayout</mkapi-api-link> \n\nThe  `SingleLayout`  provides a simple **full-width container** for displaying content.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n    innerText: 'Main Content'\n}\nconst singleLayout = Views.Layouts.single({\n   content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content'\n    }\n})\ndisplay(singleLayout)\n</js-cell>\n\n###  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SuperposedLayout\" semantic=\"class\">SuperposedLayout</mkapi-api-link> \n\nThe  `SuperposedLayout`  allows **layered positioning** of content at the corners of the viewport.\nThis can be useful for **notifications**, **floating toolbars**, or **overlays**.\n\n<js-cell>\nconst classCorners = 'p-2 w-100 h-100 bg-dark text-light border rounded'\nconst topLeft = { tag:'div', class: classCorners, innerText: 'Top-Left' }\nconst topRight = { tag:'div', class: classCorners, innerText: 'Top-Right' }\nconst bottomLeft = { tag:'div', class: classCorners, innerText: 'Bottom-Left' }\nconst bottomRight = { tag:'div', class: classCorners, innerText: 'Bottom-Right' }\n\nconst superposedLayout = Views.Layouts.superposed({\n    content:{ tag:'div', class: 'p-2 w-100 h-100 bg-light border rounded'},\n    topLeft, topRight, bottomLeft, bottomRight\n})\ndisplay(superposedLayout)\n</js-cell>\n\n###  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout\" semantic=\"class\">ViewPortOnlyLayout</mkapi-api-link> \n\nThe  `ViewPortOnlyLayout`  renders content **only when visible in the viewport**, making it ideal for dynamic loading.\nThis example **displays an alert when the layout is added or removed** to/from the viewport.\n\n<js-cell>\nconst viewPortOnlyLayout = Views.Layouts.viewPortOnly({\n    content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content',\n        connectedCallback: () => alert(\"viewPortOnly layout added\"),\n        disconnectedCallback: () => alert(\"viewPortOnly layout removed\"),\n    }\n})\ndisplay(viewPortOnlyLayout)\n</js-cell>",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -119,7 +119,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -182,7 +182,7 @@
             ],
             "callables": [
                 {
-                    "name": "SideNavLayout",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -208,7 +208,7 @@
                             }
                         ]
                     },
-                    "path": "SideNavLayout.SideNavLayout",
+                    "path": "SideNavLayout.constructor",
                     "navPath": "@nav/api/Notebook/Views/Layouts.SideNavLayout.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/views/layouts/side-nav.layout.ts",
@@ -319,7 +319,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -382,7 +382,7 @@
             ],
             "callables": [
                 {
-                    "name": "SingleLayout",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -408,7 +408,7 @@
                             }
                         ]
                     },
-                    "path": "SingleLayout.SingleLayout",
+                    "path": "SingleLayout.constructor",
                     "navPath": "@nav/api/Notebook/Views/Layouts.SingleLayout.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/views/layouts/single.layout.ts",
@@ -517,7 +517,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -579,7 +579,7 @@
             ],
             "callables": [
                 {
-                    "name": "SuperposedLayout",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -605,7 +605,7 @@
                             }
                         ]
                     },
-                    "path": "SuperposedLayout.SuperposedLayout",
+                    "path": "SuperposedLayout.constructor",
                     "navPath": "@nav/api/Notebook/Views/Layouts.SuperposedLayout.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/views/layouts/superposed.layout.ts",
@@ -748,7 +748,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -811,7 +811,7 @@
             ],
             "callables": [
                 {
-                    "name": "ViewPortOnlyLayout",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -837,7 +837,7 @@
                             }
                         ]
                     },
-                    "path": "ViewPortOnlyLayout.ViewPortOnlyLayout",
+                    "path": "ViewPortOnlyLayout.constructor",
                     "navPath": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/views/layouts/view-port-only.layout.ts",
@@ -885,7 +885,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Type definition for the arguments to create a  [SideNavLayout](@nav/api/Notebook/Views/Layouts.SideNavLayout) .",
+                        "content": "Type definition for the arguments to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SideNavLayout\" semantic=\"class\">SideNavLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1107,7 +1107,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Type definition for the arguments to create a  [SingleLayout](@nav/api/Notebook/Views/Layouts.SingleLayout) .",
+                        "content": "Type definition for the arguments to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SingleLayout\" semantic=\"class\">SingleLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1182,7 +1182,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Type definition for the arguments to create a  [SuperposedLayout](@nav/api/Notebook/Views/Layouts.SuperposedLayout) .",
+                        "content": "Type definition for the arguments to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SuperposedLayout\" semantic=\"class\">SuperposedLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1401,7 +1401,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Type definition for the arguments to create a  [ViewPortOnlyLayout](@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout) .",
+                        "content": "Type definition for the arguments to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout\" semantic=\"class\">ViewPortOnlyLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1478,7 +1478,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Function to create a  [SideNavLayout](@nav/api/Notebook/Views/Layouts.SideNavLayout) .",
+                        "content": "Function to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SideNavLayout\" semantic=\"class\">SideNavLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1526,7 +1526,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Function to create a  [SingleLayout](@nav/api/Notebook/Views/Layouts.SingleLayout) .",
+                        "content": "Function to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SingleLayout\" semantic=\"class\">SingleLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1574,7 +1574,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Function to create a  [SuperposedLayout](@nav/api/Notebook/Views/Layouts.SuperposedLayout) .",
+                        "content": "Function to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.SuperposedLayout\" semantic=\"class\">SuperposedLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1622,7 +1622,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Function to create a  [ViewPortOnlyLayout](@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout) .",
+                        "content": "Function to create a  <mkapi-api-link nav=\"@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout\" semantic=\"class\">ViewPortOnlyLayout</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",

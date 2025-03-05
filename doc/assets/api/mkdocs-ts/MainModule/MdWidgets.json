@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  [parseMd](@nav/api/MainModule.parseMd)  function. Widgets are referenced within  [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews) ,\nwhich maps  `tag-name -> implementation`  to enable seamless integration into Markdown content.\n\nEach widget provides a static  `fromHTMLElement`  method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n###  [NoteView](@nav/api/MainModule/MdWidgets.NoteView) \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n###  [CodeSnippetView](@nav/api/MainModule/MdWidgets.CodeSnippetView) \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n###  [CodeBadgesView](@nav/api/MainModule/MdWidgets.CodeBadgesView) \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n## New Widgets\nTo extend the functionality of  [parseMd](@nav/api/MainModule.parseMd) , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews)  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view  `custom-view-example`  instantiated with  `improbabilityFactor=5` :\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
+                "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link>  function. Widgets are referenced within  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> ,\nwhich maps  `tag-name -> implementation`  to enable seamless integration into Markdown content.\n\nEach widget provides a static  `fromHTMLElement`  method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeSnippetView\" semantic=\"class\">CodeSnippetView</mkapi-api-link> \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeBadgesView\" semantic=\"class\">CodeBadgesView</mkapi-api-link> \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n## New Widgets\nTo extend the functionality of  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link> , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link>  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view  `custom-view-example`  instantiated with  `improbabilityFactor=5` :\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -59,7 +59,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents usual code badges view (NPM, PyPI, GitHub, ...).\n\nThis view is registered in  [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews) : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-badge` , see  [CodeBadgesView.fromHTMLElement](@nav/api/MainModule/MdWidgets.CodeBadgesView.fromHTMLElement) .\n\n## Examples\n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>",
+                        "content": "Represents usual code badges view (NPM, PyPI, GitHub, ...).\n\nThis view is registered in  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-badge` , see  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeBadgesView.fromHTMLElement\" semantic=\"method\">CodeBadgesView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -217,7 +217,7 @@
             ],
             "callables": [
                 {
-                    "name": "CodeBadgesView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -243,7 +243,7 @@
                             }
                         ]
                     },
-                    "path": "CodeBadgesView.CodeBadgesView",
+                    "path": "CodeBadgesView.constructor",
                     "navPath": "@nav/api/MainModule/MdWidgets.CodeBadgesView.constructor",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
@@ -313,7 +313,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  [CodeBadgesView.attributeMapper](@nav/api/MainModule/MdWidgets.CodeBadgesView.attributeMapper)  for details on the attributes conversion from the  `HTMLElement` .",
+                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeBadgesView.attributeMapper\" semantic=\"method\">CodeBadgesView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -380,7 +380,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a code snippet view.\n\nThis view is registered in  [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews) : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-snippet` , see  [CodeSnippetView.fromHTMLElement](@nav/api/MainModule/MdWidgets.CodeSnippetView.fromHTMLElement) .\n\n## Examples\n\n<note level=\"example\" expandable=\"true\" title=\"Javascript\">\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n</note>\n\n\n<note level=\"example\" expandable=\"true\" title=\"Python\">\n<md-cell>\n<code-snippet language=\"python\" highlightedLines=\"8\">\n\ndef compute(improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency ):\n    print(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"HTML\">\n<md-cell>\n<code-snippet language=\"htmlmixed\" highlightedLines=\"11-25\">\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Computation</title>\n</head>\n<body>\n    <h1>Ultimate Computation Example</h1>\n    <p>Provide your parameters and compute the result!</p>\n\n    <form id=\"computation-form\">\n        <label for=\"improbabilityFactor\">Improbability Factor:</label>\n        <input type=\"number\" id=\"improbabilityFactor\" value=\"3\"><br>\n\n        <label for=\"babelFishCount\">Babel Fish Count:</label>\n        <input type=\"number\" id=\"babelFishCount\" value=\"1\"><br>\n\n        <label for=\"vogonPoetryExposure\">Vogon Poetry Exposure:</label>\n        <input type=\"number\" id=\"vogonPoetryExposure\" value=\"250\"><br>\n\n        <label for=\"towelAbsorbency\">Towel Absorbency:</label>\n        <input type=\"number\" id=\"towelAbsorbency\" value=\"2\"><br>\n\n        <button type=\"button\" id=\"compute-button\">Compute</button>\n    </form>\n</body>\n</html>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"XML\">\n<md-cell>\n<code-snippet language=\"xml\">\n<Computation>\n    <Parameters>\n        <ImprobabilityFactor>3</ImprobabilityFactor>\n        <BabelFishCount>1</BabelFishCount>\n        <VogonPoetryExposure>250</VogonPoetryExposure>\n        <TowelAbsorbency>2</TowelAbsorbency>\n    </Parameters>\n    <Result>42</Result>\n    <Log>Computation complete! The result is always 42, but you knew that already.</Log>\n</Computation>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"CSS\">\n<md-cell>\n<code-snippet language=\"css\">\n.computation-container {\n   display: flex;\n   flex-direction: column;\n    align-items: center;\n  justify-content: center;\n  font-family: 'Courier New', Courier, monospace;\n  background-color: #f0f8ff;\n  border: 2px dashed #42a5f5;\n  padding: 20px;\n  margin: 20px;\n  border-radius: 8px;\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n}\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"YAML\">\n<md-cell>\n<code-snippet language=\"yaml\">\ncomputation:\n  improbabilityFactor: 3       # A number too high might summon a whale and a bowl of petunias.\n  babelFishCount: 1            # Keep it to one, unless you enjoy linguistic chaos.\n  vogonPoetryExposure: 250     # Measured in verses endured. 1000+ is not recommended.\n  towelAbsorbency: 2           # Towel quality. Higher is better for intergalactic travel.\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"Markdown\">\n<md-cell>\n<code-snippet language=\"markdown\">\n## Computation\n\nHere is a summary of the parameters:\n\n-  improbabilityFactor: 3\n-  babelFishCount: 1\n-  vogonPoetryExposure: 250\n-  towelAbsorbency: 2\n</code-snippet>\n</md-cell>\n</note>",
+                        "content": "Represents a code snippet view.\n\nThis view is registered in  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-snippet` , see  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeSnippetView.fromHTMLElement\" semantic=\"method\">CodeSnippetView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n<note level=\"example\" expandable=\"true\" title=\"Javascript\">\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n</note>\n\n\n<note level=\"example\" expandable=\"true\" title=\"Python\">\n<md-cell>\n<code-snippet language=\"python\" highlightedLines=\"8\">\n\ndef compute(improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency ):\n    print(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"HTML\">\n<md-cell>\n<code-snippet language=\"htmlmixed\" highlightedLines=\"11-25\">\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Computation</title>\n</head>\n<body>\n    <h1>Ultimate Computation Example</h1>\n    <p>Provide your parameters and compute the result!</p>\n\n    <form id=\"computation-form\">\n        <label for=\"improbabilityFactor\">Improbability Factor:</label>\n        <input type=\"number\" id=\"improbabilityFactor\" value=\"3\"><br>\n\n        <label for=\"babelFishCount\">Babel Fish Count:</label>\n        <input type=\"number\" id=\"babelFishCount\" value=\"1\"><br>\n\n        <label for=\"vogonPoetryExposure\">Vogon Poetry Exposure:</label>\n        <input type=\"number\" id=\"vogonPoetryExposure\" value=\"250\"><br>\n\n        <label for=\"towelAbsorbency\">Towel Absorbency:</label>\n        <input type=\"number\" id=\"towelAbsorbency\" value=\"2\"><br>\n\n        <button type=\"button\" id=\"compute-button\">Compute</button>\n    </form>\n</body>\n</html>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"XML\">\n<md-cell>\n<code-snippet language=\"xml\">\n<Computation>\n    <Parameters>\n        <ImprobabilityFactor>3</ImprobabilityFactor>\n        <BabelFishCount>1</BabelFishCount>\n        <VogonPoetryExposure>250</VogonPoetryExposure>\n        <TowelAbsorbency>2</TowelAbsorbency>\n    </Parameters>\n    <Result>42</Result>\n    <Log>Computation complete! The result is always 42, but you knew that already.</Log>\n</Computation>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"CSS\">\n<md-cell>\n<code-snippet language=\"css\">\n.computation-container {\n   display: flex;\n   flex-direction: column;\n    align-items: center;\n  justify-content: center;\n  font-family: 'Courier New', Courier, monospace;\n  background-color: #f0f8ff;\n  border: 2px dashed #42a5f5;\n  padding: 20px;\n  margin: 20px;\n  border-radius: 8px;\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n}\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"YAML\">\n<md-cell>\n<code-snippet language=\"yaml\">\ncomputation:\n  improbabilityFactor: 3       # A number too high might summon a whale and a bowl of petunias.\n  babelFishCount: 1            # Keep it to one, unless you enjoy linguistic chaos.\n  vogonPoetryExposure: 250     # Measured in verses endured. 1000+ is not recommended.\n  towelAbsorbency: 2           # Towel quality. Higher is better for intergalactic travel.\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"Markdown\">\n<md-cell>\n<code-snippet language=\"markdown\">\n## Computation\n\nHere is a summary of the parameters:\n\n-  improbabilityFactor: 3\n-  babelFishCount: 1\n-  vogonPoetryExposure: 250\n-  towelAbsorbency: 2\n</code-snippet>\n</md-cell>\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -422,8 +422,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 253,
-                        "endLine": 254,
+                        "startLine": 262,
+                        "endLine": 263,
                         "references": {
                             "children": "@nav/api/MainModule/MdWidgets.CodeSnippetView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -458,8 +458,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`",
                         "implementation": "",
-                        "startLine": 243,
-                        "endLine": 244,
+                        "startLine": 252,
+                        "endLine": 253,
                         "references": {
                             "class": "@nav/api/MainModule/MdWidgets.CodeSnippetView.class"
                         }
@@ -493,8 +493,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }",
                         "implementation": "",
-                        "startLine": 233,
-                        "endLine": 234,
+                        "startLine": 242,
+                        "endLine": 243,
                         "references": {
                             "codeMirrorConfiguration": "@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration"
                         }
@@ -528,8 +528,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly style = {\n        fontSize: 'initial',\n    }",
                         "implementation": "",
-                        "startLine": 247,
-                        "endLine": 248,
+                        "startLine": 256,
+                        "endLine": 257,
                         "references": {
                             "style": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style"
                         }
@@ -563,8 +563,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 229,
-                        "endLine": 230,
+                        "startLine": 238,
+                        "endLine": 239,
                         "references": {
                             "tag": "@nav/api/MainModule/MdWidgets.CodeSnippetView.tag"
                         }
@@ -598,8 +598,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeSnippetView'",
                         "implementation": "",
-                        "startLine": 173,
-                        "endLine": 174,
+                        "startLine": 182,
+                        "endLine": 183,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/MdWidgets.CodeSnippetView.CssSelector"
                         }
@@ -633,8 +633,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly hlLineClass = 'mkdocs-ts-bg-highlight'",
                         "implementation": "",
-                        "startLine": 224,
-                        "endLine": 225,
+                        "startLine": 233,
+                        "endLine": 234,
                         "references": {
                             "hlLineClass": "@nav/api/MainModule/MdWidgets.CodeSnippetView.hlLineClass"
                         }
@@ -643,7 +643,7 @@
             ],
             "callables": [
                 {
-                    "name": "CodeSnippetView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -658,7 +658,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **cmConfig**: The code mirror editor configuration, it is merged with the\n     [default configuration](@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration)  (eventually overriding attributes).\n*  **content**: The snippet's content.\n*  **highlightedLines**: Highlighted lines, *e.g.*  `[5 10 20-25  28 30]`\n*  **language**: The target language. Supported languages are:\n     *  python\n     *  javascript\n     *  markdown\n     *  html\n     *  yaml\n     *  css\n     *  xml",
+                                "content": "\n*  **cmConfig**: The code mirror editor configuration, it is merged with the\n     <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration\" semantic=\"attribute\">default configuration</mkapi-api-link>  (eventually overriding attributes).\n*  **content**: The snippet's content.\n*  **highlightedLines**: Highlighted lines, *e.g.*  `[5 10 20-25  28 30]`\n*  **language**: The target language. Supported languages are:\n     *  python\n     *  javascript\n     *  markdown\n     *  html\n     *  yaml\n     *  css\n     *  xml",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -669,14 +669,14 @@
                             }
                         ]
                     },
-                    "path": "CodeSnippetView.CodeSnippetView",
+                    "path": "CodeSnippetView.constructor",
                     "navPath": "@nav/api/MainModule/MdWidgets.CodeSnippetView.constructor",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "constructor({\n    language,\n    content,\n    highlightedLines,\n    cmConfig,\n}: {\n    language: CodeLanguage\n    highlightedLines?: string\n    content: string //| Observable<string>\n    cmConfig?: Record<string, unknown>\n})",
                         "implementation": "constructor({\n    language,\n    content,\n    highlightedLines,\n    cmConfig,\n}: {\n    language: CodeLanguage\n    highlightedLines?: string\n    content: string //| Observable<string>\n    cmConfig?: Record<string, unknown>\n}) {\n    const content$ = of(content)\n    const linesToHighlight = parseLineIndices(highlightedLines)\n    this.content$ = new BehaviorSubject<string>(content)\n    this.children = [\n        child$({\n            source$: combineLatest([\n                content$,\n                CodeSnippetView.fetchCmDependencies$(language),\n            ]),\n            vdomMap: ([content, { CodeMirror }]) => {\n                return {\n                    tag: 'div',\n                    class: 'h-100 w-100',\n                    connectedCallback: (\n                        htmlElement: RxHTMLElement<'div'>,\n                    ) => {\n                        const config = {\n                            mode: language,\n                            ...this.codeMirrorConfiguration,\n                            value: content,\n                            ...cmConfig,\n                        }\n                        const editor = CodeMirror(htmlElement, config)\n                        editor.on('change', (args) => {\n                            this.content$.next(args.getValue())\n                        })\n                        linesToHighlight.forEach(function (lineNumber) {\n                            editor.addLineClass(\n                                lineNumber,\n                                'background',\n                                CodeSnippetView.hlLineClass,\n                            )\n                        })\n                        editor.refresh()\n                        this.editor$.next(editor)\n                    },\n                }\n            },\n        }),\n    ]\n}",
-                        "startLine": 301,
-                        "endLine": 353,
+                        "startLine": 310,
+                        "endLine": 362,
                         "references": {
                             "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
                             "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage"
@@ -722,8 +722,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })",
                         "implementation": "",
-                        "startLine": 266,
-                        "endLine": 267,
+                        "startLine": 275,
+                        "endLine": 276,
                         "references": {
                             "attributeMapper": "@nav/api/MainModule/MdWidgets.CodeSnippetView.attributeMapper",
                             "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage"
@@ -741,7 +741,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Construct an instance of CodeSnippetView from an  `HTMLElement` .\n\nSee  [CodeSnippetView.attributeMapper](@nav/api/MainModule/MdWidgets.CodeSnippetView.attributeMapper)  for details on the attributes conversion from the  `HTMLElement` .",
+                                "content": "Construct an instance of CodeSnippetView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeSnippetView.attributeMapper\" semantic=\"method\">CodeSnippetView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -769,8 +769,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static fromHTMLElement(element: HTMLElement)",
                         "implementation": "static fromHTMLElement(element: HTMLElement) {\n    return new CodeSnippetView({\n        ...CodeSnippetView.attributeMapper(element),\n    })\n}",
-                        "startLine": 278,
-                        "endLine": 283,
+                        "startLine": 287,
+                        "endLine": 292,
                         "references": {
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.CodeSnippetView.fromHTMLElement",
                             "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView"
@@ -788,12 +788,15 @@
                 "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                 "declaration": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait",
                 "implementation": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeSnippetView'\n\n    static readonly cmDependencies$: Record<\n        CodeLanguage,\n        Observable<{ CodeMirror: CodeMirror }> | undefined\n    > = {\n        python: undefined,\n        javascript: undefined,\n        markdown: undefined,\n        html: undefined,\n        yaml: undefined,\n        css: undefined,\n        unknown: undefined,\n    }\n    static fetchCmDependencies$(\n        language: CodeLanguage,\n    ): Observable<{ CodeMirror: CodeMirror }> {\n        if (CodeSnippetView.cmDependencies$[language]) {\n            return CodeSnippetView.cmDependencies$[language]\n        }\n        const scripts = {\n            python: ['codemirror#5.52.0~mode/python.min.js'],\n            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],\n            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],\n            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],\n            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],\n            css: ['codemirror#5.52.0~mode/css.min.js'],\n            xml: ['codemirror#5.52.0~mode/xml.min.js'],\n            htmlmixed: [\n                'codemirror#5.52.0~mode/htmlmixed.min.js',\n                'codemirror#5.52.0~mode/css.min.js',\n                'codemirror#5.52.0~mode/xml.min.js',\n                'codemirror#5.52.0~mode/javascript.min.js',\n            ],\n            unknown: [],\n        }\n        CodeSnippetView.cmDependencies$[language] = from(\n            install({\n                modules: ['codemirror'],\n                scripts: scripts[language],\n                css: ['codemirror#5.52.0~codemirror.min.css'],\n            }),\n        ).pipe(shareReplay(1)) as unknown as Observable<{\n            CodeMirror: CodeMirror\n        }>\n        return CodeSnippetView.cmDependencies$[language]\n    }\n\n    /**\n     * Class appended to the line DOM for highlighted lines.\n     */\n    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'\n\n    /**\n     * The tag of the associated HTML element.\n     */\n    public readonly tag = 'div'\n    /**\n     * The code mirror configuration.\n     */\n    public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }\n\n    /**\n     * The class list of the associated HTML element.\n     */\n    public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`\n    /**\n     * The style of the associated HTML element.\n     */\n    public readonly style = {\n        fontSize: 'initial',\n    }\n    /**\n     * The children of the associated HTML element.\n     */\n    public readonly children: ChildrenLike\n\n    public readonly content$: BehaviorSubject<string>\n\n    public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(\n        undefined,\n    )\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })\n    /**\n     * Construct an instance of CodeSnippetView from an `HTMLElement`.\n     *\n     * See {@link CodeSnippetView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static fromHTMLElement(element: HTMLElement) {\n        return new CodeSnippetView({\n            ...CodeSnippetView.attributeMapper(element),\n        })\n    }\n\n    /**\n     * Initialize the widget.\n     *\n     * @param _args arguments\n     * @param _args.language The target language. Supported languages are:\n     *      *  python\n     *      *  javascript\n     *      *  markdown\n     *      *  html\n     *      *  yaml\n     *      *  css\n     *      *  xml\n     * @param _args.content The snippet's content.\n     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`\n     * @param _args.cmConfig The code mirror editor configuration, it is merged with the\n     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).\n     */\n    constructor({\n        language,\n        content,\n        highlightedLines,\n        cmConfig,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string //| Observable<string>\n        cmConfig?: Record<string, unknown>\n    }) {\n        const content$ = of(content)\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.content$ = new BehaviorSubject<string>(content)\n        this.children = [\n            child$({\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, { CodeMirror }]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                                ...cmConfig,\n                            }\n                            const editor = CodeMirror(htmlElement, config)\n                            editor.on('change', (args) => {\n                                this.content$.next(args.getValue())\n                            })\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n                            editor.refresh()\n                            this.editor$.next(editor)\n                        },\n                    }\n                },\n            }),\n        ]\n    }\n\n    refreshView() {\n        this.editor$.value?.refresh()\n    }\n}",
-                "startLine": 169,
-                "endLine": 358,
+                "startLine": 178,
+                "endLine": 367,
                 "references": {
                     "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
                     "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
+                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor",
+                    "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
                     "SnippetEditorView": "@nav/api/Notebook.SnippetEditorView",
+                    "ResizeObserverTrait": "@nav/api/MainModule/MdWidgets.ResizeObserverTrait",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "Observable": "https://rxjs.dev/guide/observable",
@@ -812,7 +815,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a note.\n\nThis view is registered in  [GlobalMarkdownViews](@nav/api/MainModule.GlobalMarkdownViews) : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `note` , see  [NoteView.fromHTMLElement](@nav/api/MainModule/MdWidgets.NoteView.fromHTMLElement) .\n\n## Examples\n\n### Basics\n\nA note is defined providing a  `level`  attribute and a text content:\n\n<md-cell>\n<note level='info'>\nThis is a note with no option beside  `level` .\n</note>\n</md-cell>\n\nAvailable levels are defined by  [NoteLevel](@nav/api/MainModule/MdWidgets.NoteLevel)  and illustrated in section **Available Levels**.\n\nThere are multiple options that can be provided, *e.g.*\n\n<md-cell>\n<note level='info' icon='fas fa-star' title='Custom label' expandable='true'>\nThis is a note with multiple options defined:\n*   `icon` : Overrides the default icon for the level.\n*   `title` : Overrides the default title for the level.\n*   `expandable` : Makes the note expandable.\n\n<note level=\"hint\">\nThe additional option  `mode`  is available for expandable notes.\n</note>\n</note>\n</md-cell>\n\nSee  [NoteView.attributeMapper](@nav/api/MainModule/MdWidgets.NoteView.attributeMapper)  for the list of available options.\n\n### Available Levels\n\n<js-cell>\nconst { MkDocs } = await webpm.install({\n    esm:['mkdocs-ts#{{mkdocs-version}} as MkDocs']\n})\nconst src =  `\n<note level=\"{{level}}\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note> ` \n\nconst levels = ['note', 'abstract', 'info', 'hint', 'success', 'question',\n                'warning', 'failure', 'danger', 'bug', 'example', 'quote']\n\nlevels.forEach((level)=> {\n    display(MkDocs.parseMd({src:src.replace('{{level}}', level)}))\n})\n</js-cell>",
+                        "content": "Represents a note.\n\nThis view is registered in  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `note` , see  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView.fromHTMLElement\" semantic=\"method\">NoteView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n### Basics\n\nA note is defined providing a  `level`  attribute and a text content:\n\n<md-cell>\n<note level='info'>\nThis is a note with no option beside  `level` .\n</note>\n</md-cell>\n\nAvailable levels are defined by  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteLevel\" semantic=\"type-alias\">NoteLevel</mkapi-api-link>  and illustrated in section **Available Levels**.\n\nThere are multiple options that can be provided, *e.g.*\n\n<md-cell>\n<note level='info' icon='fas fa-star' title='Custom label' expandable='true'>\nThis is a note with multiple options defined:\n*   `icon` : Overrides the default icon for the level.\n*   `title` : Overrides the default title for the level.\n*   `expandable` : Makes the note expandable.\n\n<note level=\"hint\">\nThe additional option  `mode`  is available for expandable notes.\n</note>\n</note>\n</md-cell>\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView.attributeMapper\" semantic=\"method\">NoteView.attributeMapper</mkapi-api-link>  for the list of available options.\n\n### Available Levels\n\n<js-cell>\nconst { MkDocs } = await webpm.install({\n    esm:['mkdocs-ts#{{mkdocs-version}} as MkDocs']\n})\nconst src =  `\n<note level=\"{{level}}\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note> ` \n\nconst levels = ['note', 'abstract', 'info', 'hint', 'success', 'question',\n                'warning', 'failure', 'danger', 'bug', 'example', 'quote']\n\nlevels.forEach((level)=> {\n    display(MkDocs.parseMd({src:src.replace('{{level}}', level)}))\n})\n</js-cell>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1057,7 +1060,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  [NoteView.attributeMapper](@nav/api/MainModule/MdWidgets.NoteView.attributeMapper)  for details on the attributes conversion from the  `HTMLElement` .",
+                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView.attributeMapper\" semantic=\"method\">NoteView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1128,6 +1131,166 @@
             }
         },
         {
+            "name": "CodeMirrorEditor",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Interface specification of CodeMirror editor.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CodeMirrorEditor",
+            "navPath": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                "declaration": "export interface CodeMirrorEditor",
+                "implementation": "export interface CodeMirrorEditor {\n    on: (event: string, cb: (args: { getValue: () => string }) => void) => void\n    refresh: () => void\n    addLineClass: (line: number, kind: string, classes: string) => void\n}",
+                "startLine": 22,
+                "endLine": 27,
+                "references": {
+                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DOMTrait",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a DOM trait where a specific class name must be included within the class attribute.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Generics",
+                        "content": "\n*  **T**: A string type representing the required class name.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DOMTrait",
+            "navPath": "@nav/api/MainModule/MdWidgets.DOMTrait",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/traits.ts",
+                "declaration": "export interface DOMTrait<T extends string>",
+                "implementation": "export interface DOMTrait<T extends string> {\n    class: `${string} ${T} ${string}` | `${T} ${string}` | `${string} ${T}`\n}",
+                "startLine": 6,
+                "endLine": 9,
+                "references": {
+                    "DOMTrait": "@nav/api/MainModule/MdWidgets.DOMTrait"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "CodeLanguage",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Languages supported.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CodeLanguage",
+            "navPath": "@nav/api/MainModule/MdWidgets.CodeLanguage",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                "declaration": "export type CodeLanguage =\n    | 'python'\n    | 'javascript'\n    | 'markdown'\n    | 'html'\n    | 'css'\n    | 'yaml'\n    | 'unknown'",
+                "implementation": "",
+                "startLine": 10,
+                "endLine": 11,
+                "references": {
+                    "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "CodeMirror",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Interface specification of CodeMirror module.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CodeMirror",
+            "navPath": "@nav/api/MainModule/MdWidgets.CodeMirror",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                "declaration": "export type CodeMirror = (\n    element: HTMLElement,\n    config: Record<string, unknown>,\n) => CodeMirrorEditor",
+                "implementation": "",
+                "startLine": 31,
+                "endLine": 32,
+                "references": {
+                    "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
+                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "ExpandableMode",
             "documentation": {
                 "sections": [
@@ -1169,7 +1332,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Note level in  [NoteView](@nav/api/MainModule/MdWidgets.NoteView) .",
+                        "content": "Note level in  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1201,9 +1364,95 @@
                 "attributes": {},
                 "relations": {}
             }
+        },
+        {
+            "name": "ResizeObserverTrait",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a trait for elements using the 'mkdocs-resize-observer' class.\nExtends  `DOMTrait`  to ensure the class name is present and includes a method to refresh the view.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ResizeObserverTrait",
+            "navPath": "@nav/api/MainModule/MdWidgets.ResizeObserverTrait",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/traits.ts",
+                "declaration": "export type ResizeObserverTrait = DOMTrait<'mkdocs-resize-observer'> & {\n    refreshView: () => void\n}",
+                "implementation": "",
+                "startLine": 13,
+                "endLine": 14,
+                "references": {
+                    "ResizeObserverTrait": "@nav/api/MainModule/MdWidgets.ResizeObserverTrait",
+                    "DOMTrait": "@nav/api/MainModule/MdWidgets.DOMTrait",
+                    "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
         }
     ],
-    "callables": [],
+    "callables": [
+        {
+            "name": "refreshResizeObservers",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Refreshes all element annotated with  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.ResizeObserverTrait\" semantic=\"type-alias\">ResizeObserverTrait</mkapi-api-link>  within a given HTML element.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **elem**: The parent HTML element to search for resize observers.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "refreshResizeObservers",
+            "navPath": "@nav/api/MainModule/MdWidgets.refreshResizeObservers",
+            "code": {
+                "filePath": "src/lib/md-widgets/traits.ts",
+                "declaration": "export function refreshResizeObservers(elem: HTMLElement)",
+                "implementation": "export function refreshResizeObservers(elem: HTMLElement) {\n    Array.from(elem.querySelectorAll('.mkdocs-resize-observer')).forEach(\n        (elem) => {\n            const vdom = (elem as unknown as { vDom: ResizeObserverTrait }).vDom\n            vdom.refreshView()\n        },\n    )\n}",
+                "startLine": 21,
+                "endLine": 29,
+                "references": {
+                    "refreshResizeObservers": "@nav/api/MainModule/MdWidgets.refreshResizeObservers"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
     "files": [
         {
             "name": "code-badges.ts",
@@ -1254,6 +1503,24 @@
                             "relations": {}
                         },
                         "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "traits.ts",
+            "path": "src/lib/md-widgets/traits.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Represents a DOM trait where a specific class name must be included within the class attribute.",
                         "contentType": "markdown"
                     }
                 ]

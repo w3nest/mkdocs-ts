@@ -12,14 +12,39 @@ import 'webpack-dev-server'
 const ROOT = path.resolve(__dirname, 'src/app')
 const DESTINATION = path.resolve(__dirname, 'dist')
 
-const webpackConfig: webpack.Configuration = {
+const base = {
     context: ROOT,
-    mode: 'development',
+    mode: 'production' as const,
+    output: {
+        path: DESTINATION,
+        publicPath: `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/dist/`,
+        libraryTarget: 'umd',
+        umdNamedDefine: true,
+        devtoolNamespace: `${setup.name}_APIv${setup.apiVersion}`,
+        filename: '[name].js',
+        globalObject: `(typeof self !== 'undefined' ? self : this)`,
+    },
+    resolve: {
+        extensions: ['.ts', 'tsx', '.js'],
+        modules: [ROOT, 'node_modules'],
+    },
+    externals: setup.externals,
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                use: [{ loader: 'ts-loader' }],
+                exclude: /node_modules/,
+            },
+        ],
+    },
+    devtool: 'source-map',
+}
+
+const webpackConfigApp: webpack.Configuration = {
+    ...base,
     entry: {
         main: './main.ts',
-    },
-    experiments: {
-        topLevelAwait: true,
     },
     plugins: [
         new MiniCssExtractPlugin({
@@ -41,28 +66,14 @@ const webpackConfig: webpack.Configuration = {
         filename: '[name].[contenthash].js',
         path: DESTINATION,
     },
-    resolve: {
-        extensions: ['.ts', '.js'],
-        modules: [ROOT, 'node_modules'],
-    },
     externals: setup.externals,
     module: {
         rules: [
-            /****************
-             * PRE-LOADERS
-             *****************/
+            ...base.module.rules,
             {
                 enforce: 'pre',
                 test: /\.js$/,
                 use: 'source-map-loader',
-            },
-            /****************
-             * LOADERS
-             *****************/
-            {
-                test: /\.ts$/,
-                exclude: [/node_modules/],
-                use: 'ts-loader',
             },
             {
                 test: /\.css$/i,
@@ -70,13 +81,35 @@ const webpackConfig: webpack.Configuration = {
             },
         ],
     },
-    devtool: 'source-map',
     devServer: {
         static: {
             directory: path.join(__dirname, './'),
         },
         compress: true,
-        port: 3025,
+        port: '{{devServer.port}}',
     },
 }
-export default webpackConfig
+
+const webpackConfigSubModules: webpack.Configuration[] = Object.values(
+    setup.secondaryEntries,
+).map((e) => ({
+    ...base,
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: `./bundle-analysis-${e.name}.html`,
+            openAnalyzer: false,
+        }),
+    ],
+    entry: { [e.name]: e.entryFile },
+    output: {
+        ...base.output,
+        library: {
+            root: [`${setup.name}_APIv${setup.apiVersion}`, '[name]'],
+            amd: '[name]',
+            commonjs: '[name]',
+        },
+    },
+}))
+
+export default [webpackConfigApp, ...webpackConfigSubModules]

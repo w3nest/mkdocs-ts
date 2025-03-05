@@ -69,7 +69,7 @@ the Py-YouWol configuration needs to be updated to include a `WebpackDevServerSw
 
 ```python
 from w3nest.app.environment import *
-from w3nest.ci.pipeline_typescript_weback_npm import WebpackDevServerSwitch
+from w3nest.ci.ts_frontend import WebpackDevServerSwitch
 
 Configuration(
     customization = Customization(

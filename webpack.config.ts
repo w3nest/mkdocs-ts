@@ -7,9 +7,9 @@ import { setup } from './src/auto-generated'
 const ROOT = path.resolve(__dirname, 'src')
 const DESTINATION = path.resolve(__dirname, 'dist')
 
-const webpackConfig: webpack.Configuration = {
+const base = {
     context: ROOT,
-    entry: setup.entries,
+    mode: 'production' as const,
     plugins: [
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
@@ -19,10 +19,9 @@ const webpackConfig: webpack.Configuration = {
     ],
     output: {
         path: DESTINATION,
-        publicPath: `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/dist/`,
+        publicPath: `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/dist/`,
         libraryTarget: 'umd',
         umdNamedDefine: true,
-        library: `[name]_APIv${setup.apiVersion}`,
         devtoolNamespace: `${setup.name}_APIv${setup.apiVersion}`,
         filename: '[name].js',
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
@@ -43,4 +42,38 @@ const webpackConfig: webpack.Configuration = {
     },
     devtool: 'source-map',
 }
-export default webpackConfig
+
+const webpackConfigRoot: webpack.Configuration = {
+    ...base,
+    entry: {
+        [setup.name]: './index.ts',
+    },
+    output: {
+        ...base.output,
+        library: `[name]_APIv${setup.apiVersion}`,
+    },
+}
+
+const webpackConfigSubModules: webpack.Configuration[] = Object.values(
+    setup.secondaryEntries,
+).map((e) => ({
+    ...base,
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: `./bundle-analysis-${e.name}.html`,
+            openAnalyzer: false,
+        }),
+    ],
+    entry: { [e.name]: e.entryFile },
+    output: {
+        ...base.output,
+        library: {
+            root: [`${setup.name}_APIv${setup.apiVersion}`, '[name]'],
+            amd: '[name]',
+            commonjs: '[name]',
+        },
+    },
+}))
+
+export default [webpackConfigRoot, ...webpackConfigSubModules]

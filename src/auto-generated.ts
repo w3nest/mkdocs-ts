@@ -1,14 +1,14 @@
 /* eslint-disable */
 const runTimeDependencies = {
     "externals": {
-        "@w3nest/http-clients": "^0.1.2",
+        "@w3nest/http-clients": "^0.1.5",
         "@w3nest/rx-tree-views": "^0.2.0",
-        "@w3nest/webpm-client": "^0.1.1",
+        "@w3nest/webpm-client": "^0.1.4",
         "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
         "highlight.js": "11.2.0",
         "marked": "^4.2.3",
-        "rx-vdom": "^0.1.1",
+        "rx-vdom": "^0.1.3",
         "rxjs": "^7.5.6"
     },
     "includedInBundle": {}
@@ -28,17 +28,6 @@ const externals = {
         "commonjs": "@w3nest/webpm-client",
         "commonjs2": "@w3nest/webpm-client",
         "root": "@w3nest/webpm-client_APIv01"
-    },
-    "@w3nest/webpm-client/src/lib/workers-pool/workers-factory": {
-        "commonjs": "@w3nest/webpm-client/src/lib/workers-pool/workers-factory",
-        "commonjs2": "@w3nest/webpm-client/src/lib/workers-pool/workers-factory",
-        "root": [
-            "@w3nest/webpm-client_APIv01",
-            "src",
-            "lib",
-            "workers-pool",
-            "workers-factory"
-        ]
     },
     "codemirror": {
         "commonjs": "codemirror",
@@ -126,11 +115,12 @@ const exportedSymbols = {
     }
 }
 
-const mainEntry : {entryFile: string,loadDependencies:string[]} = {
+const mainEntry: { entryFile: string; loadDependencies: string[] } =
+    {
     "entryFile": "./index.ts",
     "loadDependencies": [
         "rx-vdom",
-        "w3nest/webpm-client",
+        "@w3nest/webpm-client",
         "rxjs",
         "marked",
         "highlight.js",
@@ -138,7 +128,9 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     ]
 }
 
-const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDependencies:string[]}}= {
+const secondaryEntries: {
+    [k: string]: { entryFile: string; name: string; loadDependencies: string[] }
+} = {
     "CodeApi": {
         "entryFile": "./lib/code-api/index.ts",
         "loadDependencies": [
@@ -160,78 +152,102 @@ const secondaryEntries : {[k:string]:{entryFile: string, name: string, loadDepen
 }
 
 const entries = {
-     'mkdocs-ts': './index.ts',
-    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`mkdocs-ts/${e.name}`]:e.entryFile}), {})
+    'mkdocs-ts': './index.ts',
+    ...Object.values(secondaryEntries).reduce(
+        (acc, e) => ({ ...acc, [e.name]: e.entryFile }),
+        {},
+    ),
 }
 export const setup = {
-    name:'mkdocs-ts',
-        assetId:'bWtkb2NzLXRz',
-    version:'0.3.0-wip',
-    shortDescription:"Typescript based mkdocs like solution",
-    developerDocumentation:'https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=mkdocs-ts&tab=doc',
-    npmPackage:'https://www.npmjs.com/package/mkdocs-ts',
-    sourceGithub:'https://github.com/mkdocs-ts',
-    userGuide:'',
-    apiVersion:'03',
+    name: 'mkdocs-ts',
+    assetId: 'bWtkb2NzLXRz',
+    version: '0.3.1',
+    webpmPath: '/api/assets-gateway/webpm/resources/bWtkb2NzLXRz/0.3.1',
+    apiVersion: '03',
     runTimeDependencies,
     externals,
     exportedSymbols,
     entries,
     secondaryEntries,
-    getDependencySymbolExported: (module:string) => {
+    getDependencySymbolExported: (module: string) => {
         return `${exportedSymbols[module].exportedSymbol}_APIv${exportedSymbols[module].apiKey}`
     },
 
-    installMainModule: ({cdnClient, installParameters}:{
-        cdnClient:{install:(_:unknown) => Promise<WindowOrWorkerGlobalScope>},
+    installMainModule: ({
+        cdnClient,
+        installParameters,
+    }: {
+        cdnClient: {
+            install: (_: unknown) => Promise<WindowOrWorkerGlobalScope>
+        }
         installParameters?
     }) => {
         const parameters = installParameters || {}
         const scripts = parameters.scripts || []
         const modules = [
             ...(parameters.modules || []),
-            ...mainEntry.loadDependencies.map( d => `${d}#${runTimeDependencies.externals[d]}`)
+            ...mainEntry.loadDependencies.map(
+                (d) => `${d}#${runTimeDependencies.externals[d]}`,
+            ),
         ]
-        return cdnClient.install({
-            ...parameters,
-            modules,
-            scripts,
-        }).then(() => {
-            return window[`mkdocs-ts_APIv03`]
-        })
+        return cdnClient
+            .install({
+                ...parameters,
+                modules,
+                scripts,
+            })
+            .then(() => {
+                return window[`mkdocs-ts_APIv03`]
+            })
     },
-    installAuxiliaryModule: ({name, cdnClient, installParameters}:{
-        name: string,
-        cdnClient:{install:(_:unknown) => Promise<WindowOrWorkerGlobalScope>},
+    installAuxiliaryModule: ({
+        name,
+        cdnClient,
+        installParameters,
+    }: {
+        name: string
+        cdnClient: {
+            install: (_: unknown) => Promise<WindowOrWorkerGlobalScope>
+        }
         installParameters?
     }) => {
         const entry = secondaryEntries[name]
-        if(!entry){
-            throw Error(`Can not find the secondary entry '${name}'. Referenced in template.py?`)
+        if (!entry) {
+            throw Error(
+                `Can not find the secondary entry '${name}'. Referenced in template.py?`,
+            )
         }
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `mkdocs-ts#0.3.0-wip~dist/mkdocs-ts/${entry.name}.js`
+            `mkdocs-ts#0.3.1~dist/${entry.name}.js`,
         ]
         const modules = [
             ...(parameters.modules || []),
-            ...entry.loadDependencies.map( d => `${d}#${runTimeDependencies.externals[d]}`)
+            ...entry.loadDependencies.map(
+                (d) => `${d}#${runTimeDependencies.externals[d]}`,
+            ),
         ]
-        return cdnClient.install({
-            ...parameters,
-            modules,
-            scripts,
-        }).then(() => {
-            return window[`mkdocs-ts/${entry.name}_APIv03`]
-        })
+        return cdnClient
+            .install({
+                ...parameters,
+                modules,
+                scripts,
+            })
+            .then(() => {
+                return window[`mkdocs-ts_APIv03`][`${entry.name}`]
+            })
     },
-    getCdnDependencies(name?: string){
-        if(name && !secondaryEntries[name]){
-            throw Error(`Can not find the secondary entry '${name}'. Referenced in template.py?`)
+    getCdnDependencies(name?: string) {
+        if (name && !secondaryEntries[name]) {
+            throw Error(
+                `Can not find the secondary entry '${name}'. Referenced in template.py?`,
+            )
         }
-        const deps = name ? secondaryEntries[name].loadDependencies : mainEntry.loadDependencies
+        const deps = name
+            ? secondaryEntries[name].loadDependencies
+            : mainEntry.loadDependencies
 
-        return deps.map( d => `${d}#${runTimeDependencies.externals[d]}`)
-    }
+        return deps.map((d) => `${d}#${runTimeDependencies.externals[d]}`)
+    },
 }

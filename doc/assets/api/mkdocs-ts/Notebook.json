@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is  [NotebookPage](@nav/api/Notebook.NotebookPage) , which serves as a wrapper for parsing markdown content.\n\nThe markdown source can contain a series of executable cells, including:\n\n*   [JsCellView](@nav/api/Notebook.JsCellView) : Run JavaScript snippets.\n\n*   [MdCellView](@nav/api/Notebook.MdCellView) : Run Markdown snippets, eventually including references to JavScript variables.\n\n*   [PyCellView](@nav/api/Notebook.PyCellView) : Run python snippets in the browser using\n   <a target=\"_blank\" href=\"https://pyodide.org/en/stable/\">pyodide</a>.\n\n*   [InterpreterCellView](@nav/api/Notebook.InterpreterCellView) : Run code snippets using a given backend interpreter for a given language.\n\n*   [WorkerCellView](@nav/api/Notebook.WorkerCellView) : Run code snippets in\n   <a target=\"_blank\" href=\"https://developer.mozilla.org/fr/docs/Web/API/Web_Workers_API\">Web Workers</a>.\n\nCells are identified within the Markdown source using specific DOM elements, respectively  `js-cell` ,  `md-cell` ,\n `py-cell` ,  `interpreter-cell`  and  `worker-cell`  for the above list.\n\nCells feature attributes provided with the DOM element,\nrefer to the associated  [JsCellAttributes](@nav/api/Notebook.JsCellAttributes) ,  [MdCellAttributes](@nav/api/Notebook.MdCellAttributes) ,  [PyCellAttributes](@nav/api/Notebook.PyCellAttributes) ,\n [InterpreterCellAttributes](@nav/api/Notebook.InterpreterCellAttributes)  and  [WorkerCellAttributes](@nav/api/Notebook.WorkerCellAttributes) .\n\nThe entry point of the module is the  [NotebookPage](@nav/api/Notebook.NotebookPage) ; most of the implementation logic regarding synchronization\nis included in the  [State](@nav/api/Notebook.State)  class.\n\n**Example**\n\n<js-cell cell-id=\"example\">\nconst version = \"{{mkdocs-version}}\"\n\nconst { MkDocs } = await webpm.install({\n    esm:[  `mkdocs-ts#${version} as MkDocs` ],\n    css: [\n        'bootstrap#5.3.3~bootstrap.min.css',\n         `mkdocs-ts#${version}~assets/mkdocs-light.css` ,\n        'fontawesome#5.12.1~css/all.min.css',\n    ]\n})\nconst NotebookModule = await MkDocs.installNotebookModule()\nconst src =  `\n### Hello world\n\n<js-cell>\ndisplay('Hello World')\n</js-cell>\n`\nconst navigation = {\n    name: 'Notebook',\n    layout: ({router}) => new NotebookModule.NotebookPage({\n        src,\n        router,\n    }),\n}\nconst router = new MkDocs.Router({\n    navigation,\n    browserClient: (p) => new MkDocs.MockBrowser(p)\n})\n\nconst app = new MkDocs.DefaultLayout.Layout({\n    router,\n    name: 'Demo App',\n})\n\ndisplay(app)\n</js-cell>\n\n<cell-output cell-id=\"example\" full-screen=\"true\" style=\"aspect-ratio: 1 / 1; min-height: 0px;\">\n</cell-output>",
+                "content": "This module offers functionalities akin to a notebook page.\n\nThe primary entry point is  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> , which serves as a wrapper for parsing markdown content.\n\nThe markdown source can contain a series of executable cells, including:\n\n*   <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView\" semantic=\"class\">JsCellView</mkapi-api-link> : Run JavaScript snippets.\n\n*   <mkapi-api-link nav=\"@nav/api/Notebook.MdCellView\" semantic=\"class\">MdCellView</mkapi-api-link> : Run Markdown snippets, eventually including references to JavScript variables.\n\n*   <mkapi-api-link nav=\"@nav/api/Notebook.PyCellView\" semantic=\"class\">PyCellView</mkapi-api-link> : Run python snippets in the browser using\n   <a target=\"_blank\" href=\"https://pyodide.org/en/stable/\">pyodide</a>.\n\n*   <mkapi-api-link nav=\"@nav/api/Notebook.InterpreterCellView\" semantic=\"class\">InterpreterCellView</mkapi-api-link> : Run code snippets using a given backend interpreter for a given language.\n\n*   <mkapi-api-link nav=\"@nav/api/Notebook.WorkerCellView\" semantic=\"class\">WorkerCellView</mkapi-api-link> : Run code snippets in\n   <a target=\"_blank\" href=\"https://developer.mozilla.org/fr/docs/Web/API/Web_Workers_API\">Web Workers</a>.\n\nCells are identified within the Markdown source using specific DOM elements, respectively  `js-cell` ,  `md-cell` ,\n `py-cell` ,  `interpreter-cell`  and  `worker-cell`  for the above list.\n\nCells feature attributes provided with the DOM element,\nrefer to the associated  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellAttributes\" semantic=\"type-alias\">JsCellAttributes</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/Notebook.MdCellAttributes\" semantic=\"type-alias\">MdCellAttributes</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/Notebook.PyCellAttributes\" semantic=\"type-alias\">PyCellAttributes</mkapi-api-link> ,\n <mkapi-api-link nav=\"@nav/api/Notebook.InterpreterCellAttributes\" semantic=\"type-alias\">InterpreterCellAttributes</mkapi-api-link>  and  <mkapi-api-link nav=\"@nav/api/Notebook.WorkerCellAttributes\" semantic=\"type-alias\">WorkerCellAttributes</mkapi-api-link> .\n\nThe entry point of the module is the  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> ; most of the implementation logic regarding synchronization\nis included in the  <mkapi-api-link nav=\"@nav/api/Notebook.State\" semantic=\"class\">State</mkapi-api-link>  class.\n\n**Example**\n\n<js-cell cell-id=\"example\">\nconst version = \"{{mkdocs-version}}\"\n\nconst { MkDocs } = await webpm.install({\n    esm:[  `mkdocs-ts#${version} as MkDocs` ],\n    css: [\n        'bootstrap#5.3.3~bootstrap.min.css',\n         `mkdocs-ts#${version}~assets/mkdocs-light.css` ,\n        'fontawesome#5.12.1~css/all.min.css',\n    ]\n})\nconst NotebookModule = await MkDocs.installNotebookModule()\nconst src =  `\n### Hello world\n\n<js-cell>\ndisplay('Hello World')\n</js-cell>\n`\nconst navigation = {\n    name: 'Notebook',\n    layout: ({router}) => new NotebookModule.NotebookPage({\n        src,\n        router,\n    }),\n}\nconst router = new MkDocs.Router({\n    navigation,\n    browserClient: (p) => new MkDocs.MockBrowser(p)\n})\n\nconst app = new MkDocs.DefaultLayout.Layout({\n    router,\n    name: 'Demo App',\n})\n\ndisplay(app)\n</js-cell>\n\n<cell-output cell-id=\"example\" full-screen=\"true\" style=\"aspect-ratio: 1 / 1; min-height: 0px;\">\n</cell-output>",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -242,7 +242,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the tag of a  [CellView](@nav/api/Notebook.CellView)  (read-only or not, the language, *etc.*).",
+                        "content": "Represents the tag of a  <mkapi-api-link nav=\"@nav/api/Notebook.CellView\" semantic=\"class\">CellView</mkapi-api-link>  (read-only or not, the language, *etc.*).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -437,13 +437,14 @@
             "code": {
                 "filePath": "src/lib/notebook/cell-views.ts",
                 "declaration": "export class CellTagsView implements VirtualDOM<'div'>",
-                "implementation": "export class CellTagsView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-CellTagsView'\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = `${CellTagsView.CssSelector} px-2 text-secondary d-flex align-items-center`\n\n    public readonly children: ChildrenLike\n    /**\n     * Style associated to the view.\n     */\n    public readonly style = {\n        position: 'absolute' as const,\n        top: '0px',\n        right: '0px',\n    }\n\n    /**\n     *\n     * @param params\n     * @param params.cellStatus$ Current cell status.\n     * @param params.reactive$ Whether the cell is reactive.\n     * @param params.language Cell's owning state.\n     * @param params.attributes Cell attributes.\n     */\n    constructor(params: {\n        cellStatus$: Observable<CellStatus>\n        reactive$: Observable<boolean>\n        language: Language\n        cellAttributes: CellCommonAttributes\n    }) {\n        const lang: Record<Language, string> = {\n            javascript: 'js',\n            markdown: 'md',\n            python: 'py',\n            unknown: '?',\n        }\n        this.children = [\n            {\n                tag: 'i',\n                class: attr$({\n                    source$: params.cellStatus$,\n                    vdomMap: (status) => {\n                        switch (status) {\n                            case 'pending':\n                                return 'fas fa-clock me-1'\n                            case 'executing':\n                                return 'fas fa-cog fa-spin me-1'\n                            default:\n                                return ''\n                        }\n                    },\n                }),\n            },\n            {\n                tag: 'div',\n                class: params.cellAttributes.readOnly\n                    ? 'fas fa-lock me-1'\n                    : 'fas fa-pen me-1',\n            },\n            {\n                tag: 'div',\n                class: attr$({\n                    source$: params.reactive$,\n                    vdomMap: (reactive) => (reactive ? 'fas fa-bolt me-1' : ''),\n                }),\n            },\n            {\n                tag: 'div',\n                class: 'text-secondary',\n                innerText: lang[params.language],\n            },\n        ]\n    }\n}",
+                "implementation": "export class CellTagsView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-CellTagsView'\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = `${CellTagsView.CssSelector} px-2 text-secondary d-flex align-items-center`\n\n    public readonly children: ChildrenLike\n    /**\n     * Style associated to the view.\n     */\n    public readonly style = {\n        position: 'absolute' as const,\n        top: '0px',\n        right: '0px',\n    }\n\n    /**\n     *\n     * @param params\n     * @param params.cellStatus$ Current cell status.\n     * @param params.reactive$ Whether the cell is reactive.\n     * @param params.language Cell's owning state.\n     * @param params.cellAttributes Cell attributes.\n     */\n    constructor(params: {\n        cellStatus$: Observable<CellStatus>\n        reactive$: Observable<boolean>\n        language: Language\n        cellAttributes: CellCommonAttributes\n    }) {\n        const lang: Record<Language, string> = {\n            javascript: 'js',\n            markdown: 'md',\n            python: 'py',\n            unknown: '?',\n        }\n        this.children = [\n            {\n                tag: 'i',\n                class: attr$({\n                    source$: params.cellStatus$,\n                    vdomMap: (status) => {\n                        switch (status) {\n                            case 'pending':\n                                return 'fas fa-clock me-1'\n                            case 'executing':\n                                return 'fas fa-cog fa-spin me-1'\n                            default:\n                                return ''\n                        }\n                    },\n                }),\n            },\n            {\n                tag: 'div',\n                class: params.cellAttributes.readOnly\n                    ? 'fas fa-lock me-1'\n                    : 'fas fa-pen me-1',\n            },\n            {\n                tag: 'div',\n                class: attr$({\n                    source$: params.reactive$,\n                    vdomMap: (reactive) => (reactive ? 'fas fa-bolt me-1' : ''),\n                }),\n            },\n            {\n                tag: 'div',\n                class: 'text-secondary',\n                innerText: lang[params.language],\n            },\n        ]\n    }\n}",
                 "startLine": 285,
                 "endLine": 364,
                 "references": {
                     "CellTagsView": "@nav/api/Notebook.CellTagsView",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes",
                     "CellStatus": "@nav/api/Notebook.CellStatus",
+                    "Language": "@nav/api/Notebook.Language",
                     "Observable": "https://rxjs.dev/guide/observable",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
@@ -461,7 +462,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the view of a cell.\nIt includes:\n*  An  [header](@nav/api/Notebook.CellHeaderView) .\n*  The  [code editor](@nav/api/Notebook.SnippetEditorView) .\n*  The  [outputs container](@nav/api/Notebook.OutputsView) .",
+                        "content": "Represents the view of a cell.\nIt includes:\n*  An  <mkapi-api-link nav=\"@nav/api/Notebook.CellHeaderView\" semantic=\"class\">header</mkapi-api-link> .\n*  The  <mkapi-api-link nav=\"@nav/api/Notebook.SnippetEditorView\" semantic=\"class\">code editor</mkapi-api-link> .\n*  The  <mkapi-api-link nav=\"@nav/api/Notebook.OutputsView\" semantic=\"class\">outputs container</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -621,13 +622,14 @@
             "code": {
                 "filePath": "src/lib/notebook/cell-views.ts",
                 "declaration": "export class CellView implements VirtualDOM<'div'>",
-                "implementation": "export class CellView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-CellView'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = `${CellView.CssSelector} border-start ps-1`\n\n    public readonly cellId: string\n    public readonly state: State\n    public readonly options: MdCellAttributes | JsCellAttributes\n    /**\n     *\n     * @param params\n     * @param params.editorView The code editor view to encapsulate.\n     * @param params.cellId The cell unique ID.\n     * @param params.language The language of the cell.\n     * @param params.state The state managing the cell.\n     * @param params.attributes The cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        language: Language\n        editorView: AnyVirtualDOM\n        cellAttributes: MdCellAttributes | JsCellAttributes\n        reactive$: Observable<boolean>\n        state: State\n    }) {\n        Object.assign(this, params)\n        const backgrounds: Record<CellStatus, string> = {\n            ready: 'mkdocs-bg-info',\n            pending: 'mkdocs-bg-info',\n            executing: 'mkdocs-bg-info',\n            success: 'mkdocs-bg-success',\n            error: 'mkdocs-bg-danger',\n            unready: '',\n        }\n\n        const class$ = attr$({\n            source$: this.state.cellsStatus$[this.cellId],\n            vdomMap: (status) => backgrounds[status],\n            wrapper: (d) => `ps-1 ${d}`,\n        })\n        const style$ = attr$({\n            source$: this.state.cellsStatus$[this.cellId],\n            vdomMap: (status) => {\n                return ['unready', 'pending'].includes(status)\n                    ? { opacity: 0.4 }\n                    : { opacity: 1 }\n            },\n            wrapper: (d) => ({\n                ...d,\n                position: 'relative',\n            }),\n        })\n        const editorView = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: [\n                params.editorView,\n                new CellTagsView({\n                    cellStatus$: this.state.cellsStatus$[this.cellId],\n                    reactive$: params.reactive$,\n                    language: params.language,\n                    cellAttributes: params.cellAttributes,\n                }),\n            ],\n        }\n        const outputsView = child$({\n            source$: this.state.executing$[this.cellId].pipe(\n                filter(\n                    (executing) =>\n                        !this.state.deportedOutputsViews.includes(\n                            this.cellId,\n                        ) && executing,\n                ),\n            ),\n            vdomMap: () => {\n                return new OutputsView({\n                    output$: this.state.outputs$[this.cellId],\n                })\n            },\n        })\n        const errorsView = child$({\n            source$: this.state.errors$[this.cellId],\n            vdomMap: (error) => {\n                return error ? new ErrorView({ error }) : EmptyDiv\n            },\n        })\n\n        this.children = [\n            new CellHeaderView({\n                state: this.state,\n                cellId: this.cellId,\n            }),\n            editorView,\n            outputsView,\n            errorsView,\n        ]\n    }\n}",
+                "implementation": "export class CellView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-CellView'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = `${CellView.CssSelector} border-start ps-1`\n\n    public readonly cellId: string\n    public readonly state: State\n    public readonly options: MdCellAttributes | JsCellAttributes\n    /**\n     *\n     * @param params\n     * @param params.editorView The code editor view to encapsulate.\n     * @param params.cellId The cell unique ID.\n     * @param params.language The language of the cell.\n     * @param params.state The state managing the cell.\n     * @param params.cellAttributes The cell's attributes.\n     */\n    constructor(params: {\n        cellId: string\n        language: Language\n        editorView: AnyVirtualDOM\n        cellAttributes: MdCellAttributes | JsCellAttributes\n        reactive$: Observable<boolean>\n        state: State\n    }) {\n        Object.assign(this, params)\n        const backgrounds: Record<CellStatus, string> = {\n            ready: 'mkdocs-bg-info',\n            pending: 'mkdocs-bg-info',\n            executing: 'mkdocs-bg-info',\n            success: 'mkdocs-bg-success',\n            error: 'mkdocs-bg-danger',\n            unready: '',\n        }\n\n        const class$ = attr$({\n            source$: this.state.cellsStatus$[this.cellId],\n            vdomMap: (status) => backgrounds[status],\n            wrapper: (d) => `ps-1 ${d}`,\n        })\n        const style$ = attr$({\n            source$: this.state.cellsStatus$[this.cellId],\n            vdomMap: (status) => {\n                return ['unready', 'pending'].includes(status)\n                    ? { opacity: 0.4 }\n                    : { opacity: 1 }\n            },\n            wrapper: (d) => ({\n                ...d,\n                position: 'relative',\n            }),\n        })\n        const editorView = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: [\n                params.editorView,\n                new CellTagsView({\n                    cellStatus$: this.state.cellsStatus$[this.cellId],\n                    reactive$: params.reactive$,\n                    language: params.language,\n                    cellAttributes: params.cellAttributes,\n                }),\n            ],\n        }\n        const outputsView = child$({\n            source$: this.state.executing$[this.cellId].pipe(\n                filter(\n                    (executing) =>\n                        !this.state.deportedOutputsViews.includes(\n                            this.cellId,\n                        ) && executing,\n                ),\n            ),\n            vdomMap: () => {\n                return new OutputsView({\n                    output$: this.state.outputs$[this.cellId],\n                })\n            },\n        })\n        const errorsView = child$({\n            source$: this.state.errors$[this.cellId],\n            vdomMap: (error) => {\n                return error ? new ErrorView({ error }) : EmptyDiv\n            },\n        })\n\n        this.children = [\n            new CellHeaderView({\n                state: this.state,\n                cellId: this.cellId,\n            }),\n            editorView,\n            outputsView,\n            errorsView,\n        ]\n    }\n}",
                 "startLine": 88,
                 "endLine": 194,
                 "references": {
                     "CellView": "@nav/api/Notebook.CellView",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes",
                     "JsCellAttributes": "@nav/api/Notebook.JsCellAttributes",
+                    "Language": "@nav/api/Notebook.Language",
                     "State": "@nav/api/Notebook.State",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "Observable": "https://rxjs.dev/guide/observable",
@@ -647,7 +649,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents deported outputs view.\n\nThey are typically included from a DOM definition with tag name  `cell-output`  in MarkDown content,\nsee  [DeportedOutputsView.FromDom](@nav/api/Notebook.DeportedOutputsView.FromDom) .",
+                        "content": "Represents deported outputs view.\n\nThey are typically included from a DOM definition with tag name  `cell-output`  in MarkDown content,\nsee  <mkapi-api-link nav=\"@nav/api/Notebook.DeportedOutputsView.FromDom\" semantic=\"method\">DeportedOutputsView.FromDom</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -817,7 +819,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -951,7 +953,7 @@
             ],
             "callables": [
                 {
-                    "name": "DeportedOutputsView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -966,7 +968,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **defaultContent**: The default content (as Markdown) displayed before an output is emitted from\n `output$` .\n*  **fullScreen**: Whether to add a menu to allow expanding the output.\n*  **inlined**: If  `true` , adjust the display mode to fit as an inlined element within a text.\nWhen inlined, the option  `fullScreen`  is not enabled.\n*  **output$**: Observable over the outputs to display.\n*  **style**: Style to apply to this element. It does not apply to the  `defaultContent`  view.",
+                                "content": "\n*  **class**: Classes added to this element. It does not apply to the  `defaultContent`  view.\n*  **defaultContent**: The default content (as Markdown) displayed before an output is emitted from\n `output$` .\n*  **fullScreen**: Whether to add a menu to allow expanding the output.\n*  **inlined**: If  `true` , adjust the display mode to fit as an inlined element within a text.\nWhen inlined, the option  `fullScreen`  is not enabled.\n*  **output$**: Observable over the outputs to display.\n*  **style**: Style to apply to this element. It does not apply to the  `defaultContent`  view.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -977,7 +979,7 @@
                             }
                         ]
                     },
-                    "path": "DeportedOutputsView.DeportedOutputsView",
+                    "path": "DeportedOutputsView.constructor",
                     "navPath": "@nav/api/Notebook.DeportedOutputsView.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/deported-outputs-view.ts",
@@ -1004,7 +1006,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Initialize an instance of  [DeportedOutputsView](@nav/api/Notebook.DeportedOutputsView)  from a DOM element  `cell-output`  in MarkDown content\n(the parameter  `output$`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.DeportedOutputsView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "content": "Initialize an instance of  <mkapi-api-link nav=\"@nav/api/Notebook.DeportedOutputsView\" semantic=\"class\">DeportedOutputsView</mkapi-api-link>  from a DOM element  `cell-output`  in MarkDown content\n(the parameter  `output$`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  <mkapi-api-link nav=\"@nav/api/Notebook.DeportedOutputsView.FromDomAttributes\" semantic=\"attribute\">FromDomAttributes</mkapi-api-link> \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1052,7 +1054,7 @@
             "code": {
                 "filePath": "src/lib/notebook/deported-outputs-view.ts",
                 "declaration": "export class DeportedOutputsView implements VirtualDOM<'div'>",
-                "implementation": "export class DeportedOutputsView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-DeportedOutputsView'\n    public readonly tag = 'div'\n\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class: string = DeportedOutputsView.CssSelector\n    public readonly children: ChildrenLike\n\n    /**\n     * The channel in which views are emitted when running the associated cell.\n     */\n    public readonly output$: Observable<Output>\n\n    public readonly style: CSSAttribute\n\n    /**\n     * The current display mode.\n     */\n    public readonly mode$ = new BehaviorSubject<OutputMode>('normal')\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `cell-output` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) => e.getAttribute('cell-id'),\n        defaultContent: (e: HTMLElement) => e.textContent ?? '',\n        fullScreen: (e: HTMLElement) =>\n            e.getAttribute('full-screen') === 'true',\n        style: (e: HTMLElement) => parseStyle(e.getAttribute('style') ?? ''),\n        class: (e: HTMLElement) => e.getAttribute('class') ?? '',\n        inlined: (e: HTMLElement) => e.getAttribute('inlined') === 'true',\n    }\n\n    /**\n     * Initialize an instance of {@link DeportedOutputsView} from a DOM element `cell-output` in MarkDown content\n     * (the parameter `output$` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link DeportedOutputsView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.output$ The output views channel, automatically provided.\n     */\n    static FromDom({\n        elem,\n        output$,\n    }: {\n        elem: HTMLElement\n        output$: Observable<Output>\n    }) {\n        const params = {\n            cellId: DeportedOutputsView.FromDomAttributes.cellId(elem),\n            defaultContent:\n                DeportedOutputsView.FromDomAttributes.defaultContent(elem),\n            style: DeportedOutputsView.FromDomAttributes.style(elem),\n            class: DeportedOutputsView.FromDomAttributes.class(elem),\n            inlined: DeportedOutputsView.FromDomAttributes.inlined(elem),\n            fullScreen: DeportedOutputsView.FromDomAttributes.fullScreen(elem),\n        }\n        return new DeportedOutputsView({ ...params, output$ })\n    }\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from\n     * `output$`.\n     * @param params.output$ Observable over the outputs to display.\n     * @param params.fullScreen Whether to add a menu to allow expanding the output.\n     * @param params.style Style to apply to this element. It does not apply to the `defaultContent` view.\n     * @param params.classList Classes added to this element. It does not apply to the `defaultContent` view.\n     * @param params.inlined If `true`, adjust the display mode to fit as an inlined element within a text.\n     * When inlined, the option `fullScreen` is not enabled.\n     */\n    constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    }) {\n        this.output$ = params.output$\n        if (params.inlined) {\n            this.style = { display: 'inline-block' }\n        }\n        const outputs$ = new BehaviorSubject<Output[]>([])\n        this.output$.subscribe((out: Output) => {\n            if (out === undefined) {\n                outputs$.next([])\n                return\n            }\n            outputs$.next([...outputs$.value, out])\n        })\n        const style$: AttributeLike<CSSAttribute> = attr$({\n            source$: outputs$,\n            vdomMap: (outputs): CSSAttribute => ({\n                backgroundColor: 'rgb(255,255,255)',\n                ...(outputs.length === 0 ? {} : params.style),\n            }),\n        })\n        const class$: AttributeLike<string> = attr$({\n            source$: combineLatest([this.mode$, outputs$]),\n            vdomMap: ([mode, outputs]) => {\n                if (outputs.length === 0) {\n                    return ''\n                }\n                const fwdClass = params.class ?? ''\n                return mode === 'normal'\n                    ? fwdClass\n                    : `p-2 border rounded h-75 w-75 mx-auto ${fwdClass} overflow-auto`\n            },\n        })\n        const contentView: VirtualDOM<'div'> = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: sync$({\n                source$: outputs$.pipe(\n                    map((outputs) =>\n                        outputs.filter((out) => out !== undefined),\n                    ),\n                ),\n                policy: 'sync',\n                vdomMap: (output) => output,\n            }),\n            onclick: (ev) => {\n                ev.stopPropagation()\n            },\n        }\n        if (params.inlined) {\n            this.children = [contentView]\n            return\n        }\n\n        const headerView: ChildLike = child$({\n            source$: outputs$,\n            vdomMap: (outputs) => {\n                if (!params.fullScreen || outputs.length === 0) {\n                    return { tag: 'div' }\n                }\n                return {\n                    tag: 'div',\n                    class: 'w-100 d-flex pb-1',\n                    children: [\n                        { tag: 'div', class: 'flex-grow-1' },\n                        {\n                            tag: 'button',\n                            class: 'btn btn-sm btn-light fas fa-expand fv-pointer',\n                            onclick: () => {\n                                this.mode$.next('fullscreen')\n                            },\n                        },\n                    ],\n                }\n            },\n        })\n        const defaultView: ChildLike = child$({\n            source$: outputs$,\n            vdomMap: (outputs) =>\n                outputs.length === 0\n                    ? Dependencies.parseMd({ src: params.defaultContent })\n                    : { tag: 'div' },\n        })\n\n        const displayModeStyle$: AttributeLike<CSSAttribute> = attr$({\n            source$: this.mode$,\n            vdomMap: (mode) => {\n                return mode === 'normal'\n                    ? {\n                          position: 'initial',\n                          width: '100%',\n                          height: 'auto',\n                          backdropFilter: 'none',\n                      }\n                    : {\n                          position: 'absolute',\n                          top: '0vh',\n                          left: '0vw',\n                          width: '100vw',\n                          height: '100vh',\n                          zIndex: 10,\n                          backdropFilter: 'blur(3px)',\n                      }\n            },\n        })\n        this.children = [\n            headerView,\n            {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center',\n                style: displayModeStyle$,\n                children: [defaultView, contentView],\n                onclick: () => {\n                    this.mode$.next('normal')\n                },\n            },\n        ]\n    }\n}",
+                "implementation": "export class DeportedOutputsView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-DeportedOutputsView'\n    public readonly tag = 'div'\n\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class: string = DeportedOutputsView.CssSelector\n    public readonly children: ChildrenLike\n\n    /**\n     * The channel in which views are emitted when running the associated cell.\n     */\n    public readonly output$: Observable<Output>\n\n    public readonly style: CSSAttribute\n\n    /**\n     * The current display mode.\n     */\n    public readonly mode$ = new BehaviorSubject<OutputMode>('normal')\n\n    /**\n     * Defines the methods to retrieve constructor's arguments from the DOM element `cell-output` within\n     * MarkDown content.\n     *\n     * <note level='warning'>\n     * Be mindful of the conversion from `camelCase` to `kebab-case`.\n     * </note>\n     */\n    static readonly FromDomAttributes = {\n        cellId: (e: HTMLElement) => e.getAttribute('cell-id'),\n        defaultContent: (e: HTMLElement) => e.textContent ?? '',\n        fullScreen: (e: HTMLElement) =>\n            e.getAttribute('full-screen') === 'true',\n        style: (e: HTMLElement) => parseStyle(e.getAttribute('style') ?? ''),\n        class: (e: HTMLElement) => e.getAttribute('class') ?? '',\n        inlined: (e: HTMLElement) => e.getAttribute('inlined') === 'true',\n    }\n\n    /**\n     * Initialize an instance of {@link DeportedOutputsView} from a DOM element `cell-output` in MarkDown content\n     * (the parameter `output$` is automatically provided).\n     *\n     * <note level=\"hint\" label=\"Constructor's attributes mapping\">\n     *  The static property {@link DeportedOutputsView.FromDomAttributes | FromDomAttributes}\n     *  defines the mapping between the DOM element and the constructor's attributes.\n     * </note>\n     *\n     * @param _p\n     * @param _p.elem The DOM element.\n     * @param _p.output$ The output views channel, automatically provided.\n     */\n    static FromDom({\n        elem,\n        output$,\n    }: {\n        elem: HTMLElement\n        output$: Observable<Output>\n    }) {\n        const params = {\n            cellId: DeportedOutputsView.FromDomAttributes.cellId(elem),\n            defaultContent:\n                DeportedOutputsView.FromDomAttributes.defaultContent(elem),\n            style: DeportedOutputsView.FromDomAttributes.style(elem),\n            class: DeportedOutputsView.FromDomAttributes.class(elem),\n            inlined: DeportedOutputsView.FromDomAttributes.inlined(elem),\n            fullScreen: DeportedOutputsView.FromDomAttributes.fullScreen(elem),\n        }\n        return new DeportedOutputsView({ ...params, output$ })\n    }\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from\n     * `output$`.\n     * @param params.output$ Observable over the outputs to display.\n     * @param params.fullScreen Whether to add a menu to allow expanding the output.\n     * @param params.style Style to apply to this element. It does not apply to the `defaultContent` view.\n     * @param params.class Classes added to this element. It does not apply to the `defaultContent` view.\n     * @param params.inlined If `true`, adjust the display mode to fit as an inlined element within a text.\n     * When inlined, the option `fullScreen` is not enabled.\n     */\n    constructor(params: {\n        defaultContent: string\n        output$: Observable<Output>\n        fullScreen?: boolean\n        style?: CSSAttribute\n        class?: string\n        inlined?: boolean\n    }) {\n        this.output$ = params.output$\n        if (params.inlined) {\n            this.style = { display: 'inline-block' }\n        }\n        const outputs$ = new BehaviorSubject<Output[]>([])\n        this.output$.subscribe((out: Output) => {\n            if (out === undefined) {\n                outputs$.next([])\n                return\n            }\n            outputs$.next([...outputs$.value, out])\n        })\n        const style$: AttributeLike<CSSAttribute> = attr$({\n            source$: outputs$,\n            vdomMap: (outputs): CSSAttribute => ({\n                backgroundColor: 'rgb(255,255,255)',\n                ...(outputs.length === 0 ? {} : params.style),\n            }),\n        })\n        const class$: AttributeLike<string> = attr$({\n            source$: combineLatest([this.mode$, outputs$]),\n            vdomMap: ([mode, outputs]) => {\n                if (outputs.length === 0) {\n                    return ''\n                }\n                const fwdClass = params.class ?? ''\n                return mode === 'normal'\n                    ? fwdClass\n                    : `p-2 border rounded h-75 w-75 mx-auto ${fwdClass} overflow-auto`\n            },\n        })\n        const contentView: VirtualDOM<'div'> = {\n            tag: 'div' as const,\n            style: style$,\n            class: class$,\n            children: sync$({\n                source$: outputs$.pipe(\n                    map((outputs) =>\n                        outputs.filter((out) => out !== undefined),\n                    ),\n                ),\n                policy: 'sync',\n                vdomMap: (output) => output,\n            }),\n            onclick: (ev) => {\n                ev.stopPropagation()\n            },\n        }\n        if (params.inlined) {\n            this.children = [contentView]\n            return\n        }\n\n        const headerView: ChildLike = child$({\n            source$: outputs$,\n            vdomMap: (outputs) => {\n                if (!params.fullScreen || outputs.length === 0) {\n                    return { tag: 'div' }\n                }\n                return {\n                    tag: 'div',\n                    class: 'w-100 d-flex pb-1',\n                    children: [\n                        { tag: 'div', class: 'flex-grow-1' },\n                        {\n                            tag: 'button',\n                            class: 'btn btn-sm btn-light fas fa-expand fv-pointer',\n                            onclick: () => {\n                                this.mode$.next('fullscreen')\n                            },\n                        },\n                    ],\n                }\n            },\n        })\n        const defaultView: ChildLike = child$({\n            source$: outputs$,\n            vdomMap: (outputs) =>\n                outputs.length === 0\n                    ? Dependencies.parseMd({ src: params.defaultContent })\n                    : { tag: 'div' },\n        })\n\n        const displayModeStyle$: AttributeLike<CSSAttribute> = attr$({\n            source$: this.mode$,\n            vdomMap: (mode) => {\n                return mode === 'normal'\n                    ? {\n                          position: 'initial',\n                          width: '100%',\n                          height: 'auto',\n                          backdropFilter: 'none',\n                      }\n                    : {\n                          position: 'absolute',\n                          top: '0vh',\n                          left: '0vw',\n                          width: '100vw',\n                          height: '100vh',\n                          zIndex: 10,\n                          backdropFilter: 'blur(3px)',\n                      }\n            },\n        })\n        this.children = [\n            headerView,\n            {\n                tag: 'div',\n                class: 'd-flex flex-column justify-content-center',\n                style: displayModeStyle$,\n                children: [defaultView, contentView],\n                onclick: () => {\n                    this.mode$.next('normal')\n                },\n            },\n        ]\n    }\n}",
                 "startLine": 23,
                 "endLine": 236,
                 "references": {
@@ -1078,7 +1080,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "The view of an  [ExecCellError](@nav/api/Notebook.ExecCellError) .",
+                        "content": "The view of an  <mkapi-api-link nav=\"@nav/api/Notebook.ExecCellError\" semantic=\"interface\">ExecCellError</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1260,7 +1262,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the view of a cell that will render once the associated cell is registered in the  [State](@nav/api/Notebook.State) .\nUpon registration, this container includes one child of type  [CellView](@nav/api/Notebook.CellView) .",
+                        "content": "Represents the view of a cell that will render once the associated cell is registered in the  <mkapi-api-link nav=\"@nav/api/Notebook.State\" semantic=\"class\">State</mkapi-api-link> .\nUpon registration, this container includes one child of type  <mkapi-api-link nav=\"@nav/api/Notebook.CellView\" semantic=\"class\">CellView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1420,13 +1422,14 @@
             "code": {
                 "filePath": "src/lib/notebook/cell-views.ts",
                 "declaration": "export class FutureCellView implements VirtualDOM<'div'>",
-                "implementation": "export class FutureCellView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-FutureCellView'\n    public readonly tag = 'div'\n\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = FutureCellView.CssSelector\n\n    public readonly children: ChildrenLike\n\n    /**\n     *\n     * @param params\n     * @param params.editorView The code editor view to encapsulate.\n     * @param params.cellId The cell unique ID.\n     * @param params.language The language of the cell.\n     * @param params.state The state managing the cell.\n     * @param params.attributes The cell's attributes.\n     * @param params.reactive$ Whether the cell is reactive (in some circumstances it is only known when running\n     * the cell).\n     */\n    constructor(params: {\n        editorView: AnyVirtualDOM\n        cellId: string\n        language: Language\n        state: State\n        cellAttributes: MdCellAttributes | JsCellAttributes\n        reactive$: Observable<boolean>\n    }) {\n        this.children = [\n            child$({\n                source$: params.state.cellIds$.pipe(\n                    filter((cellIds) => cellIds.includes(params.cellId)),\n                    take(1),\n                ),\n                vdomMap: (): AnyVirtualDOM => {\n                    return new CellView(params)\n                },\n            }),\n        ]\n    }\n}",
+                "implementation": "export class FutureCellView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mknb-FutureCellView'\n    public readonly tag = 'div'\n\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = FutureCellView.CssSelector\n\n    public readonly children: ChildrenLike\n\n    /**\n     *\n     * @param params\n     * @param params.editorView The code editor view to encapsulate.\n     * @param params.cellId The cell unique ID.\n     * @param params.language The language of the cell.\n     * @param params.state The state managing the cell.\n     * @param params.cellAttributes The cell's attributes.\n     * @param params.reactive$ Whether the cell is reactive (in some circumstances it is only known when running\n     * the cell).\n     */\n    constructor(params: {\n        editorView: AnyVirtualDOM\n        cellId: string\n        language: Language\n        state: State\n        cellAttributes: MdCellAttributes | JsCellAttributes\n        reactive$: Observable<boolean>\n    }) {\n        this.children = [\n            child$({\n                source$: params.state.cellIds$.pipe(\n                    filter((cellIds) => cellIds.includes(params.cellId)),\n                    take(1),\n                ),\n                vdomMap: (): AnyVirtualDOM => {\n                    return new CellView(params)\n                },\n            }),\n        ]\n    }\n}",
                 "startLine": 34,
                 "endLine": 80,
                 "references": {
                     "FutureCellView": "@nav/api/Notebook.FutureCellView",
                     "CellCommonAttributes": "@nav/api/Notebook.CellCommonAttributes",
                     "JsCellAttributes": "@nav/api/Notebook.JsCellAttributes",
+                    "Language": "@nav/api/Notebook.Language",
                     "State": "@nav/api/Notebook.State",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "Observable": "https://rxjs.dev/guide/observable",
@@ -1446,7 +1449,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a cell that runs using a dedicated backend interpreter within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThey are typically included from a DOM definition with tag name  `interpreter-cell`  in MarkDown content,\nsee  [InterpreterCellView.FromDom](@nav/api/Notebook.InterpreterCellView.FromDom) .",
+                        "content": "Represents a cell that runs using a dedicated backend interpreter within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThey are typically included from a DOM definition with tag name  `interpreter-cell`  in MarkDown content,\nsee  <mkapi-api-link nav=\"@nav/api/Notebook.InterpreterCellView.FromDom\" semantic=\"method\">InterpreterCellView.FromDom</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1723,7 +1726,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1856,7 +1859,7 @@
             ],
             "callables": [
                 {
-                    "name": "InterpreterCellView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -1882,7 +1885,7 @@
                             }
                         ]
                     },
-                    "path": "InterpreterCellView.InterpreterCellView",
+                    "path": "InterpreterCellView.constructor",
                     "navPath": "@nav/api/Notebook.InterpreterCellView.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/interpreter-cell-view.ts",
@@ -1919,7 +1922,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .",
+                                "content": "\n*  **args**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecArgs\" semantic=\"type-alias\">ExecArgs</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -1956,7 +1959,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Initialize an instance of  [InterpreterCellView](@nav/api/Notebook.InterpreterCellView)  from a DOM element  `interpreter-cell`  in MarkDown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.InterpreterCellView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "content": "Initialize an instance of  <mkapi-api-link nav=\"@nav/api/Notebook.InterpreterCellView\" semantic=\"class\">InterpreterCellView</mkapi-api-link>  from a DOM element  `interpreter-cell`  in MarkDown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  <mkapi-api-link nav=\"@nav/api/Notebook.InterpreterCellView.FromDomAttributes\" semantic=\"attribute\">FromDomAttributes</mkapi-api-link> \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2035,7 +2038,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the execution side of a Javascript cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThis implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook\npages to retrieve exported symbols.\nHowever, this implementation is typically inherited from  [JsCellView](@nav/api/Notebook.JsCellView)  to provide the regular views of\na javascript cell.",
+                        "content": "Represents the execution side of a Javascript cell within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThis implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook\npages to retrieve exported symbols.\nHowever, this implementation is typically inherited from  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView\" semantic=\"class\">JsCellView</mkapi-api-link>  to provide the regular views of\na javascript cell.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2204,7 +2207,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2236,7 +2239,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Execute the cell. See  [execute](@nav/api/Notebook.JsCellExecutor.execute) .",
+                                "content": "Execute the cell. See  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellExecutor.execute\" semantic=\"method\">execute</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2247,7 +2250,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **args**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecArgs\" semantic=\"type-alias\">ExecArgs</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -2315,7 +2318,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a Javascript cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThey are typically included from a DOM definition with tag name  `js-cell`  in MarkDown content,\nsee  [JsCellView.FromDom](@nav/api/Notebook.JsCellView.FromDom) .\n\n\nDetails regarding the execution are provided in the documentation of  [executeJs](@nav/api/Notebook.executeJs)  for\nnon-reactive cells and  [executeJs$](@nav/api/Notebook.executeJs$)  for reactive cells.",
+                        "content": "Represents a Javascript cell within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThey are typically included from a DOM definition with tag name  `js-cell`  in MarkDown content,\nsee  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView.FromDom\" semantic=\"method\">JsCellView.FromDom</mkapi-api-link> .\n\n\nDetails regarding the execution are provided in the documentation of  <mkapi-api-link nav=\"@nav/api/Notebook.executeJs\" semantic=\"function\">executeJs</mkapi-api-link>  for\nnon-reactive cells and  <mkapi-api-link nav=\"@nav/api/Notebook.executeJs$\" semantic=\"function\">executeJs$</mkapi-api-link>  for reactive cells.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2591,7 +2594,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2724,7 +2727,7 @@
             ],
             "callables": [
                 {
-                    "name": "JsCellView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -2750,7 +2753,7 @@
                             }
                         ]
                     },
-                    "path": "JsCellView.JsCellView",
+                    "path": "JsCellView.constructor",
                     "navPath": "@nav/api/Notebook.JsCellView.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/js-cell-view.ts",
@@ -2776,7 +2779,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Initialize an instance of  [JsCellView](@nav/api/Notebook.JsCellView)  from a DOM element  `js-cell`  in MarkDown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.JsCellView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "content": "Initialize an instance of  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView\" semantic=\"class\">JsCellView</mkapi-api-link>  from a DOM element  `js-cell`  in MarkDown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView.FromDomAttributes\" semantic=\"attribute\">FromDomAttributes</mkapi-api-link> \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -2861,7 +2864,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a Markdown cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThey are typically included from a DOM definition with tag name  `md-cell`  in Markdown content,\nsee  [MdCellView.FromDom](@nav/api/Notebook.MdCellView.FromDom) .",
+                        "content": "Represents a Markdown cell within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThey are typically included from a DOM definition with tag name  `md-cell`  in Markdown content,\nsee  <mkapi-api-link nav=\"@nav/api/Notebook.MdCellView.FromDom\" semantic=\"method\">MdCellView.FromDom</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3174,7 +3177,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3307,7 +3310,7 @@
             ],
             "callables": [
                 {
-                    "name": "MdCellView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -3333,7 +3336,7 @@
                             }
                         ]
                     },
-                    "path": "MdCellView.MdCellView",
+                    "path": "MdCellView.constructor",
                     "navPath": "@nav/api/Notebook.MdCellView.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/md-cell-view.ts",
@@ -3360,7 +3363,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Execute the cell. Because markdown cell can include other cells, this function own a dedicated  [State](@nav/api/Notebook.State) .",
+                                "content": "Execute the cell. Because markdown cell can include other cells, this function own a dedicated  <mkapi-api-link nav=\"@nav/api/Notebook.State\" semantic=\"class\">State</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3371,7 +3374,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .",
+                                "content": "\n*  **args**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecArgs\" semantic=\"type-alias\">ExecArgs</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -3408,7 +3411,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Initialize an instance of  [MdCellView](@nav/api/Notebook.MdCellView)  from a DOM element  `md-cell`  in Markdown content\n (the parameter  `state`  &  `parserOptions`  are automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.MdCellView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "content": "Initialize an instance of  <mkapi-api-link nav=\"@nav/api/Notebook.MdCellView\" semantic=\"class\">MdCellView</mkapi-api-link>  from a DOM element  `md-cell`  in Markdown content\n (the parameter  `state`  &  `parserOptions`  are automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  <mkapi-api-link nav=\"@nav/api/Notebook.MdCellView.FromDomAttributes\" semantic=\"attribute\">FromDomAttributes</mkapi-api-link> \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3489,7 +3492,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a  [NotebookSection](@nav/api/Notebook.NotebookSection)  that actually defines the whole page content of a document.",
+                        "content": "Represents a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookSection\" semantic=\"class\">NotebookSection</mkapi-api-link>  that actually defines the whole page content of a document.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -3719,7 +3722,7 @@
             ],
             "callables": [
                 {
-                    "name": "NotebookPage",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -3734,7 +3737,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **params**: The parameters, see  [NotebookViewParameters](@nav/api/Notebook.NotebookViewParameters) .\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **params**: The parameters, see  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookViewParameters\" semantic=\"type-alias\">NotebookViewParameters</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -3745,7 +3748,7 @@
                             }
                         ]
                     },
-                    "path": "NotebookPage.NotebookPage",
+                    "path": "NotebookPage.constructor",
                     "navPath": "@nav/api/Notebook.NotebookPage.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/notebook-page.ts",
@@ -3809,7 +3812,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a section of a page included notebook cells.\n\nA notebook page is a markdown content including definition of executable cells\n(*e.g.*  [JsCellView](@nav/api/Notebook.JsCellView) ,  [MdCellView](@nav/api/Notebook.MdCellView) ) as well as other related components.\n\nCells run in the order of inclusion, and share their top level scope.",
+                        "content": "Represents a section of a page included notebook cells.\n\nA notebook page is a markdown content including definition of executable cells\n(*e.g.*  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView\" semantic=\"class\">JsCellView</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/Notebook.MdCellView\" semantic=\"class\">MdCellView</mkapi-api-link> ) as well as other related components.\n\nCells run in the order of inclusion, and share their top level scope.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -4039,7 +4042,7 @@
             ],
             "callables": [
                 {
-                    "name": "NotebookSection",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -4054,7 +4057,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **params**: The parameters, see  [NotebookViewParameters](@nav/api/Notebook.NotebookViewParameters) .\n*  **options**: Global options for the page, in particular defined the default attribute for the various\n*  **src**: Markdown source content. To fetch from a URL leave it empty & provide instead\nthe  `url`  attribute.\n*  **url**: Url pointing to the markdown content, only used if the  `src`  attribute is not provided.\n*  **onDisplayed**: Callback triggered when the view has been displayed\ncells.\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **params**: The parameters, see  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookViewParameters\" semantic=\"type-alias\">NotebookViewParameters</mkapi-api-link> .\n*  **options**: Global options for the page, in particular defined the default attribute for the various\n*  **src**: Markdown source content. To fetch from a URL leave it empty & provide instead\nthe  `url`  attribute.\n*  **url**: Url pointing to the markdown content, only used if the  `src`  attribute is not provided.\n*  **onDisplayed**: Callback triggered when the view has been displayed\ncells.\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -4065,7 +4068,7 @@
                             }
                         ]
                     },
-                    "path": "NotebookSection.NotebookSection",
+                    "path": "NotebookSection.constructor",
                     "navPath": "@nav/api/Notebook.NotebookSection.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/notebook-page.ts",
@@ -4217,7 +4220,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  [CSSAttribute](undefined) .",
+                                "content": "The style associated with the element. Typically, for a static value:\n ```typescript\n{\n     tag: 'div',\n     style: {\n         backgroundColor: 'blue'\n     }\n}\n``` \nFor more details on hyphenated properties, see  <mkapi-ext-link href=\"/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute\">CSSAttribute</mkapi-ext-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -4341,7 +4344,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the execution side of a Python cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThis implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook\npages to retrieve exported symbols.\nHowever, this implementation is typically inherited from  [PyCellView](@nav/api/Notebook.PyCellView)  to provide the regular views of\na python cell.",
+                        "content": "Represents the execution side of a Python cell within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThis implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook\npages to retrieve exported symbols.\nHowever, this implementation is typically inherited from  <mkapi-api-link nav=\"@nav/api/Notebook.PyCellView\" semantic=\"class\">PyCellView</mkapi-api-link>  to provide the regular views of\na python cell.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -4511,7 +4514,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -4543,7 +4546,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Execute the cell. See  [executePy](@nav/api/Notebook.executePy) .",
+                                "content": "Execute the cell. See  <mkapi-api-link nav=\"@nav/api/Notebook.executePy\" semantic=\"function\">executePy</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -4554,7 +4557,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **args**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **args**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecArgs\" semantic=\"type-alias\">ExecArgs</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -4622,7 +4625,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a Python cell (running in browser) within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThey are typically included from a DOM definition with tag name  `py-cell`  in Markdown content,\nsee  [PyCellView.FromDom](@nav/api/Notebook.PyCellView.FromDom) .\n\nDetails regarding the execution are provided in the documentation of  [executePy](@nav/api/Notebook.executePy) .\n\n<note level='warning'>\nAn instance of Pyodide runtime should be available through  `window.pyodide`  with expected python modules installed.\n</note>",
+                        "content": "Represents a Python cell (running in browser) within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThey are typically included from a DOM definition with tag name  `py-cell`  in Markdown content,\nsee  <mkapi-api-link nav=\"@nav/api/Notebook.PyCellView.FromDom\" semantic=\"method\">PyCellView.FromDom</mkapi-api-link> .\n\nDetails regarding the execution are provided in the documentation of  <mkapi-api-link nav=\"@nav/api/Notebook.executePy\" semantic=\"function\">executePy</mkapi-api-link> .\n\n<note level='warning'>\nAn instance of Pyodide runtime should be available through  `window.pyodide`  with expected python modules installed.\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -4899,7 +4902,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -5032,7 +5035,7 @@
             ],
             "callables": [
                 {
-                    "name": "PyCellView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -5058,7 +5061,7 @@
                             }
                         ]
                     },
-                    "path": "PyCellView.PyCellView",
+                    "path": "PyCellView.constructor",
                     "navPath": "@nav/api/Notebook.PyCellView.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/py-cell-view.ts",
@@ -5084,7 +5087,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Initialize an instance of  [PyCellView](@nav/api/Notebook.PyCellView)  from a DOM element  `py-cell`  in Markdown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.PyCellView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "content": "Initialize an instance of  <mkapi-api-link nav=\"@nav/api/Notebook.PyCellView\" semantic=\"class\">PyCellView</mkapi-api-link>  from a DOM element  `py-cell`  in Markdown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  <mkapi-api-link nav=\"@nav/api/Notebook.PyCellView.FromDomAttributes\" semantic=\"attribute\">FromDomAttributes</mkapi-api-link> \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -5210,8 +5213,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 253,
-                        "endLine": 254,
+                        "startLine": 262,
+                        "endLine": 263,
                         "references": {
                             "children": "@nav/api/MainModule/MdWidgets.CodeSnippetView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -5246,8 +5249,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`",
                         "implementation": "",
-                        "startLine": 243,
-                        "endLine": 244,
+                        "startLine": 252,
+                        "endLine": 253,
                         "references": {
                             "class": "@nav/api/MainModule/MdWidgets.CodeSnippetView.class"
                         }
@@ -5281,8 +5284,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }",
                         "implementation": "",
-                        "startLine": 233,
-                        "endLine": 234,
+                        "startLine": 242,
+                        "endLine": 243,
                         "references": {
                             "codeMirrorConfiguration": "@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration"
                         }
@@ -5316,8 +5319,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly style = {\n        fontSize: 'initial',\n    }",
                         "implementation": "",
-                        "startLine": 247,
-                        "endLine": 248,
+                        "startLine": 256,
+                        "endLine": 257,
                         "references": {
                             "style": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style"
                         }
@@ -5351,8 +5354,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 229,
-                        "endLine": 230,
+                        "startLine": 238,
+                        "endLine": 239,
                         "references": {
                             "tag": "@nav/api/MainModule/MdWidgets.CodeSnippetView.tag"
                         }
@@ -5386,8 +5389,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeSnippetView'",
                         "implementation": "",
-                        "startLine": 173,
-                        "endLine": 174,
+                        "startLine": 182,
+                        "endLine": 183,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/MdWidgets.CodeSnippetView.CssSelector"
                         }
@@ -5421,8 +5424,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly hlLineClass = 'mkdocs-ts-bg-highlight'",
                         "implementation": "",
-                        "startLine": 224,
-                        "endLine": 225,
+                        "startLine": 233,
+                        "endLine": 234,
                         "references": {
                             "hlLineClass": "@nav/api/MainModule/MdWidgets.CodeSnippetView.hlLineClass"
                         }
@@ -5443,10 +5446,12 @@
                     "CodeSnippetView.class": "@nav/api/MainModule/MdWidgets.CodeSnippetView.class",
                     "CodeSnippetView.codeMirrorConfiguration": "@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration",
                     "CodeSnippetView.content$": "@nav/api/MainModule/MdWidgets.CodeSnippetView.content$",
+                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor",
                     "CodeSnippetView.editor$": "@nav/api/MainModule/MdWidgets.CodeSnippetView.editor$",
                     "CodeSnippetView.style": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style",
                     "CodeSnippetView.tag": "@nav/api/MainModule/MdWidgets.CodeSnippetView.tag",
                     "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
+                    "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
                     "CodeSnippetView.cmDependencies$": "@nav/api/MainModule/MdWidgets.CodeSnippetView.cmDependencies$",
                     "CodeSnippetView.CssSelector": "@nav/api/MainModule/MdWidgets.CodeSnippetView.CssSelector",
                     "CodeSnippetView.hlLineClass": "@nav/api/MainModule/MdWidgets.CodeSnippetView.hlLineClass",
@@ -5472,7 +5477,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the state of a  [NotebookPage](@nav/api/Notebook.NotebookPage)  or  [NotebookSection](@nav/api/Notebook.NotebookSection) .",
+                        "content": "Represents the state of a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link>  or  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookSection\" semantic=\"class\">NotebookSection</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -5497,7 +5502,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Observables over the cell IDs included in the associated  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "Observables over the cell IDs included in the associated  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -5894,7 +5899,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Optional related parent state (*e.g.*  [MdCellView](@nav/api/Notebook.MdCellView)  own their own executing state created upon execution).",
+                                "content": "Optional related parent state (*e.g.*  <mkapi-api-link nav=\"@nav/api/Notebook.MdCellView\" semantic=\"class\">MdCellView</mkapi-api-link>  own their own executing state created upon execution).",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -6073,7 +6078,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a worker cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .\n\nThey are typically included from a DOM definition with tag name  `worker-cell`  in Markdown content,\nsee  [WorkerCellView.FromDom](@nav/api/Notebook.WorkerCellView.FromDom) .\n\nDetails regarding the execution are provided in the documentation of  [executeWorkersPool](@nav/api/Notebook.executeWorkersPool)  for\nnon-reactive cells and  [executeWorkersPool$](@nav/api/Notebook.executeWorkersPool$)  for reactive cells.",
+                        "content": "Represents a worker cell within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .\n\nThey are typically included from a DOM definition with tag name  `worker-cell`  in Markdown content,\nsee  <mkapi-api-link nav=\"@nav/api/Notebook.WorkerCellView.FromDom\" semantic=\"method\">WorkerCellView.FromDom</mkapi-api-link> .\n\nDetails regarding the execution are provided in the documentation of  <mkapi-api-link nav=\"@nav/api/Notebook.executeWorkersPool\" semantic=\"function\">executeWorkersPool</mkapi-api-link>  for\nnon-reactive cells and  <mkapi-api-link nav=\"@nav/api/Notebook.executeWorkersPool$\" semantic=\"function\">executeWorkersPool$</mkapi-api-link>  for reactive cells.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -6386,7 +6391,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "State manager, owned by the parent  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                                "content": "State manager, owned by the parent  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -6519,7 +6524,7 @@
             ],
             "callables": [
                 {
-                    "name": "WorkerCellView",
+                    "name": "constructor",
                     "documentation": {
                         "sections": [
                             {
@@ -6545,7 +6550,7 @@
                             }
                         ]
                     },
-                    "path": "WorkerCellView.WorkerCellView",
+                    "path": "WorkerCellView.constructor",
                     "navPath": "@nav/api/Notebook.WorkerCellView.constructor",
                     "code": {
                         "filePath": "src/lib/notebook/worker-cell-view.ts",
@@ -6582,7 +6587,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **execArgs**: See  [ExecArgs](@nav/api/Notebook.ExecArgs) .\n*  **ctx**: Execution context used for logging and tracing.",
+                                "content": "\n*  **execArgs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecArgs\" semantic=\"type-alias\">ExecArgs</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -6620,7 +6625,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Initialize an instance of  [WorkerCellView](@nav/api/Notebook.WorkerCellView)  from a DOM element  `worker-cell`  in Markdown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  [FromDomAttributes](@nav/api/Notebook.WorkerCellView.FromDomAttributes) \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
+                                "content": "Initialize an instance of  <mkapi-api-link nav=\"@nav/api/Notebook.WorkerCellView\" semantic=\"class\">WorkerCellView</mkapi-api-link>  from a DOM element  `worker-cell`  in Markdown content\n (the parameter  `state`  is automatically provided).\n\n<note level=\"hint\" label=\"Constructor's attributes mapping\">\n The static property  <mkapi-api-link nav=\"@nav/api/Notebook.WorkerCellView.FromDomAttributes\" semantic=\"attribute\">FromDomAttributes</mkapi-api-link> \n defines the mapping between the DOM element and the constructor's attributes.\n</note>",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -6940,7 +6945,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Trait for a Cell within a  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                        "content": "Trait for a Cell within a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -7096,7 +7101,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents the type of component of  [DisplayFactory](@nav/api/Notebook.DisplayFactory) .",
+                        "content": "Represents the type of component of  <mkapi-api-link nav=\"@nav/api/Notebook.DisplayFactory\" semantic=\"type-alias\">DisplayFactory</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -7647,7 +7652,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Global options for a  [NotebookPage](@nav/api/Notebook.NotebookPage) .",
+                        "content": "Global options for a  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -7794,7 +7799,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Parameters to instantiate a  [State](@nav/api/Notebook.State) .",
+                        "content": "Parameters to instantiate a  <mkapi-api-link nav=\"@nav/api/Notebook.State\" semantic=\"class\">State</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -7819,7 +7824,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Additional custom  [DisplayFactory](@nav/api/Notebook.DisplayFactory)  invoked when  `display`  is used.",
+                                "content": "Additional custom  <mkapi-api-link nav=\"@nav/api/Notebook.DisplayFactory\" semantic=\"type-alias\">DisplayFactory</mkapi-api-link>  invoked when  `display`  is used.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -8155,11 +8160,48 @@
             }
         },
         {
+            "name": "AstType",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The different kind of nodes in AST structures.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "AstType",
+            "navPath": "@nav/api/Notebook.AstType",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/js-execution.ts",
+                "declaration": "export type AstType =\n    | 'Identifier'\n    | 'VariableDeclaration'\n    | 'BlockStatement'\n    | 'FunctionDeclaration'\n    | 'CallExpression'\n    | 'ObjectExpression'\n    | 'MemberExpression'\n    | 'ClassDeclaration'",
+                "implementation": "",
+                "startLine": 21,
+                "endLine": 22,
+                "references": {
+                    "AstType": "@nav/api/Notebook.AstType"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "DisplayFactory",
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a factory to display elements on the page.\n\nIt is usually composed by the elements of the  [defaultDisplayFactory](@nav/api/Notebook.defaultDisplayFactory) , and eventually includes custom\ncomponents provided to the  [NotebookPage](@nav/api/Notebook.NotebookPage)  constructor.",
+                        "content": "Represents a factory to display elements on the page.\n\nIt is usually composed by the elements of the  <mkapi-api-link nav=\"@nav/api/Notebook.defaultDisplayFactory\" semantic=\"function\">defaultDisplayFactory</mkapi-api-link> , and eventually includes custom\ncomponents provided to the  <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link>  constructor.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8197,7 +8239,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Arguments used to execute a cell, see  [CellTrait.execute](@nav/api/Notebook.CellTrait.execute) .",
+                        "content": "Arguments used to execute a cell, see  <mkapi-api-link nav=\"@nav/api/Notebook.CellTrait.execute\" semantic=\"attribute\">CellTrait.execute</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8256,8 +8298,8 @@
                 "filePath": "src/lib/notebook/js-execution.ts",
                 "declaration": "export type ExecJsInput = ExecInput & {\n    /**\n     * The function used to load a submodule from another notebook page.\n     * @param path Navigation path of the page.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    load: (\n        path: string,\n        ctx: ContextTrait,\n    ) => Promise<{ [_k: string]: unknown }>\n}",
                 "implementation": "",
-                "startLine": 100,
-                "endLine": 101,
+                "startLine": 103,
+                "endLine": 104,
                 "references": {
                     "ExecJsInput": "@nav/api/Notebook.ExecJsInput",
                     "ExecInput": "@nav/api/Notebook.ExecInput",
@@ -8353,7 +8395,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "All attributes available for a  [InterpreterCellView](@nav/api/Notebook.InterpreterCellView) .",
+                        "content": "All attributes available for a  <mkapi-api-link nav=\"@nav/api/Notebook.InterpreterCellView\" semantic=\"class\">InterpreterCellView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8425,6 +8467,43 @@
             }
         },
         {
+            "name": "Language",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Accepted language.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Language",
+            "navPath": "@nav/api/Notebook.Language",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/notebook/cell-views.ts",
+                "declaration": "export type Language = 'javascript' | 'markdown' | 'python' | 'unknown'",
+                "implementation": "",
+                "startLine": 28,
+                "endLine": 29,
+                "references": {
+                    "Language": "@nav/api/Notebook.Language"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "MdCellAttributes",
             "documentation": {
                 "sections": [
@@ -8467,7 +8546,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Parameters to instantiate a notebook view - either a whole page as ( [NotebookPage](@nav/api/Notebook.NotebookPage) ), or a single section\n( [NotebookSection](@nav/api/Notebook.NotebookSection) ).",
+                        "content": "Parameters to instantiate a notebook view - either a whole page as ( <mkapi-api-link nav=\"@nav/api/Notebook.NotebookPage\" semantic=\"class\">NotebookPage</mkapi-api-link> ), or a single section\n( <mkapi-api-link nav=\"@nav/api/Notebook.NotebookSection\" semantic=\"class\">NotebookSection</mkapi-api-link> ).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8544,7 +8623,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Display mode for  [deported outputs](@nav/api/Notebook.DeportedOutputsView) .",
+                        "content": "Display mode for  <mkapi-api-link nav=\"@nav/api/Notebook.DeportedOutputsView\" semantic=\"class\">deported outputs</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8659,7 +8738,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Defines default factory regarding elements passed to the  `display`  function.\n\nThe first item, acting as fallback, is implemented using  [rawView](@nav/api/Notebook.rawView) .\n\nThe second item is specific for  `VirtualDOM`  or  `HTMLElement` , see  [htmlView](@nav/api/Notebook.htmlView) .",
+                        "content": "Defines default factory regarding elements passed to the  `display`  function.\n\nThe first item, acting as fallback, is implemented using  <mkapi-api-link nav=\"@nav/api/Notebook.rawView\" semantic=\"function\">rawView</mkapi-api-link> .\n\nThe second item is specific for  `VirtualDOM`  or  `HTMLElement` , see  <mkapi-api-link nav=\"@nav/api/Notebook.htmlView\" semantic=\"function\">htmlView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8706,7 +8785,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Renders and displays elements using registered view generators.\n\nThis function is primarily used in  [JsCellView](@nav/api/Notebook.JsCellView) . When invoked from a JavaScript cell,\nthe  `output$`  and  `factory`  parameters are automatically provided, meaning only  `elements` \nneed to be passed explicitly.\n\n**Behavior**\n\n**If an element is not an Observable**\n\n  - Finds the first compatible view generator in  `factory`  (searching in reverse order).\n  - Generates the view using the selected generator.\n  - **The first view generator in  `factory`  is guaranteed to be compatible** and acts as a fallback,\n    providing a raw representation of the object if no other generator is found.\n\n\n**If an element is an Observable**:\n\n  - Subscribes to it and applies the same view generation logic dynamically.\n\n\n**If multiple elements** are provided, they are displayed in a horizontally flexible layout.\n\nOnce rendered, the resulting view is emitted via the  `output$`  stream.\n\nSee  [DisplayFactory](@nav/api/Notebook.DisplayFactory)  for available view generators.",
+                        "content": "Renders and displays elements using registered view generators.\n\nThis function is primarily used in  <mkapi-api-link nav=\"@nav/api/Notebook.JsCellView\" semantic=\"class\">JsCellView</mkapi-api-link> . When invoked from a JavaScript cell,\nthe  `output$`  and  `factory`  parameters are automatically provided, meaning only  `elements` \nneed to be passed explicitly.\n\n**Behavior**\n\n**If an element is not an Observable**\n\n  - Finds the first compatible view generator in  `factory`  (searching in reverse order).\n  - Generates the view using the selected generator.\n  - **The first view generator in  `factory`  is guaranteed to be compatible** and acts as a fallback,\n    providing a raw representation of the object if no other generator is found.\n\n\n**If an element is an Observable**:\n\n  - Subscribes to it and applies the same view generation logic dynamically.\n\n\n**If multiple elements** are provided, they are displayed in a horizontally flexible layout.\n\nOnce rendered, the resulting view is emitted via the  `output$`  stream.\n\nSee  <mkapi-api-link nav=\"@nav/api/Notebook.DisplayFactory\" semantic=\"type-alias\">DisplayFactory</mkapi-api-link>  for available view generators.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8766,7 +8845,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **inputs**: See  [ExecJsInput](@nav/api/Notebook.ExecJsInput) .\n*  **load**: The function used to load a submodule from another notebook page.\n*  **path**: Navigation path of the page.\n*  **ctx**: Execution context used for logging and tracing.\n*  **declarations**: Optional parsed declarations if available.\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **inputs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecJsInput\" semantic=\"type-alias\">ExecJsInput</mkapi-api-link> .\n*  **load**: The function used to load a submodule from another notebook page.\n*  **path**: Navigation path of the page.\n*  **ctx**: Execution context used for logging and tracing.\n*  **declarations**: Optional parsed declarations if available.\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -8794,8 +8873,8 @@
                 "filePath": "src/lib/notebook/js-execution.ts",
                 "declaration": "export async function executeJs(\n    inputs: ExecJsInput & { declarations?: { const: string[]; let: string[] } },\n    ctx?: ContextTrait,\n): Promise<Scope>",
                 "implementation": "export async function executeJs(\n    inputs: ExecJsInput & { declarations?: { const: string[]; let: string[] } },\n    ctx?: ContextTrait,\n): Promise<Scope> {\n    ctx = (ctx || new NoContext()).start('executeJs', ['Exec'])\n    const { src, scope, output$, error$, displayFactory, load, invalidated$ } =\n        inputs\n\n    let declarations = inputs.declarations\n    if (!declarations) {\n        const ast = parseProgram(src, inputs.cellId, error$)\n        declarations = extractGlobalDeclarations(ast)\n    }\n    const displayInOutput = (...element: HTMLElement[]) =>\n        display(output$, displayFactory, ...element)\n\n    const srcPatched = `\nasync function execute_cell(scope, {display, output$, error$, load, invalidated$, formatError, rawSrc}){\n    const {${extractKeys({ ...scope.const, ...scope.python })}} = {...scope.const, ...scope.python}\n    let {${extractKeys(scope.let)}} = scope.let\n\n    try{\n    \n${src}\n        \n        return { \n            const:{ ${extractKeys(scope.const)} ${extractKeys(declarations.const)} },\n            let:{ ${extractKeys(scope.let)} ${extractKeys(declarations.let)} },\n            python:{ ${extractKeys(scope.python)} },\n        }\n    }\n    catch(e) {\n        const error = formatError({cellId:'${inputs.cellId}',e, scopeIn: scope, src: rawSrc, deltaLineInStack:9})\n        error$.next(error)\n        throw e\n    }\n}\nreturn execute_cell\n`\n    const fctUser = new Function(srcPatched)\n    const scopeOut = await fctUser()(scope, {\n        display: displayInOutput,\n        load: (path: string) => load(path, ctx),\n        invalidated$,\n        output$,\n        error$,\n        formatError,\n        rawSrc: src,\n    })\n    ctx.info('JS cell execution done', { src, scopeIn: scope, scopeOut })\n    ctx.exit()\n    return scopeOut\n}",
-                "startLine": 182,
-                "endLine": 235,
+                "startLine": 185,
+                "endLine": 238,
                 "references": {
                     "executeJs": "@nav/api/Notebook.executeJs",
                     "ExecInput": "@nav/api/Notebook.ExecInput",
@@ -8826,7 +8905,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **inputs**: See  [ExecJsInput](@nav/api/Notebook.ExecJsInput) .\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **inputs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecJsInput\" semantic=\"type-alias\">ExecJsInput</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -8854,8 +8933,8 @@
                 "filePath": "src/lib/notebook/js-execution.ts",
                 "declaration": "export async function executeJs$(\n    inputs: ExecJsInput,\n    ctx?: ContextTrait,\n): Promise<Scope>",
                 "implementation": "export async function executeJs$(\n    inputs: ExecJsInput,\n    ctx?: ContextTrait,\n): Promise<Scope> {\n    ctx = (ctx || new NoContext()).start('executeJs$', ['Exec'])\n\n    const { src, error$, scope, invalidated$, output$ } = inputs\n    const ast = parseProgram(src, inputs.cellId, error$)\n    const declarations = extractGlobalDeclarations(ast)\n    const undefs = extractUndefinedReferences(ast)\n\n    ctx.info('Found undefined references in script', undefs)\n    const select = (scopeConstLet: Record<string, unknown>) => {\n        return Object.entries(scopeConstLet)\n            .filter(\n                ([k, v]) =>\n                    undefs.includes(k) &&\n                    (v instanceof Observable || v instanceof Promise),\n            )\n            .map(([k, v]) => {\n                return [k, v instanceof Promise ? from(v) : v]\n            }) as unknown as [string, Observable<unknown> | Promise<unknown>][]\n    }\n    const reactivesConst = select(scope.const)\n    const reactivesLet = select(scope.let)\n    const reactives = [...reactivesLet, ...reactivesConst]\n    ctx.info('Undefined references bound to input scope observable retrieved', {\n        reactivesConst,\n        reactivesLet,\n    })\n    const values$ = reactives.map(([_, v]) => v)\n\n    const extractValues = (values: unknown[]) => {\n        return values.reduce((acc: Record<string, unknown>, e, i) => {\n            const key = reactives[i][0]\n            return {\n                ...acc,\n                [key]: e,\n            }\n        }, {}) as unknown as Record<string, unknown>\n    }\n    const scope$ = combineLatest(values$).pipe(\n        takeUntil(invalidated$),\n        map(async (values) => {\n            const reactScope = extractValues(values)\n            const patchedScope = {\n                ...scope,\n                const: { ...scope.const, ...reactScope },\n            }\n            output$.next(undefined)\n            return await executeJs(\n                { ...inputs, scope: patchedScope, declarations },\n                ctx,\n            )\n        }),\n        switchMap((d) => from(d)),\n        shareReplay({ bufferSize: 1, refCount: true }),\n    )\n    scope$.subscribe()\n\n    const reactScopeConstOut = declarations.const.reduce((acc, k) => {\n        return {\n            ...acc,\n            [k]: scope$.pipe(map((scopeOut) => scopeOut.const[k])),\n        }\n    }, {})\n    const reactScopeLetOut = declarations.let.reduce((acc, k) => {\n        return {\n            ...acc,\n            [k]: scope$.pipe(map((scopeOut) => scopeOut.let[k])),\n        }\n    }, {})\n\n    ctx.info('Output scope observable created', {\n        reactScopeConstOut,\n        reactScopeLetOut,\n    })\n    ctx.exit()\n    return {\n        ...scope,\n        let: { ...scope.let, ...reactScopeLetOut },\n        const: { ...scope.const, ...reactScopeConstOut },\n    }\n}",
-                "startLine": 243,
-                "endLine": 327,
+                "startLine": 246,
+                "endLine": 330,
                 "references": {
                     "executeJs$": "@nav/api/Notebook.executeJs$",
                     "ExecJsInput": "@nav/api/Notebook.ExecJsInput",
@@ -8886,7 +8965,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **inputs**: See  [ExecJsInput](@nav/api/Notebook.ExecJsInput) .",
+                        "content": "\n*  **inputs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecJsInput\" semantic=\"type-alias\">ExecJsInput</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -8914,8 +8993,8 @@
                 "filePath": "src/lib/notebook/js-execution.ts",
                 "declaration": "export async function executeJsStatement(inputs: ExecJsInput)",
                 "implementation": "export async function executeJsStatement(inputs: ExecJsInput) {\n    return await executeJs$({\n        ...inputs,\n        src: `display(${inputs.src})`,\n    })\n}",
-                "startLine": 167,
-                "endLine": 173,
+                "startLine": 170,
+                "endLine": 176,
                 "references": {
                     "executeJsStatement": "@nav/api/Notebook.executeJsStatement",
                     "ExecJsInput": "@nav/api/Notebook.ExecJsInput",
@@ -8934,7 +9013,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Executes a given Python code snippet using Pyodide within a controlled execution scope.\n\n<note level=\"warning\">\nThe Pyodide runtime must be provided via  `scope.const.pyodide` .\n</note>\n\n## Scope Management\n\n- **Variable Persistence**:\n  - Only **top-level variables** defined in the cell persist to subsequent Python cells.\n  - **Primitive types** (e.g.,  `int` ,  `float` ,  `str` ,  `bool` ) are re-initialized with each execution.\n  - **Non-primitive objects** (e.g., lists, dictionaries, custom classes) are stored in  `globals()` , meaning their\n  state can be **modified** by later cells.\n\n- **JavaScript Integration**:\n  - JavaScript variables declared as  `const`  or  `let`  in prior JS cells **can be accessed and mutated**.\n  - However, **they cannot be reassigned** within Python execution.\n  - See  [registerMknbCellModule](@nav/api/Notebook.registerMknbCellModule)  for details on JavaScript-Python variable sharing (some variables may\n  be renamed to comply with Python synthax).\n\n- **Predefined Symbols**:\n  - The following symbols are scoped to the cell and automatically injected into the Python execution environment:\n    -  `display` : A function to render output in the notebook interface.\n    -  `invalidated_` : An observable that emits when the cell is invalidated.\n\n## Execution Lifecycle\n\n- Upon execution, Python code runs within a **unified runtime**, where JavaScript and Python share state.\n- When a cell is **invalidated** (e.g., re-executed or modified), all proxies of **Python objects exposed to\n  JavaScript** are automatically **destroyed** to prevent memory leaks.",
+                        "content": "Executes a given Python code snippet using Pyodide within a controlled execution scope.\n\n<note level=\"warning\">\nThe Pyodide runtime must be provided via  `scope.const.pyodide` .\n</note>\n\n## Scope Management\n\n- **Variable Persistence**:\n  - Only **top-level variables** defined in the cell persist to subsequent Python cells.\n  - **Primitive types** (e.g.,  `int` ,  `float` ,  `str` ,  `bool` ) are re-initialized with each execution.\n  - **Non-primitive objects** (e.g., lists, dictionaries, custom classes) are stored in  `globals()` , meaning their\n  state can be **modified** by later cells.\n\n- **JavaScript Integration**:\n  - JavaScript variables declared as  `const`  or  `let`  in prior JS cells **can be accessed and mutated**.\n  - However, **they cannot be reassigned** within Python execution.\n  - See  <mkapi-api-link nav=\"@nav/api/Notebook.registerMknbCellModule\" semantic=\"function\">registerMknbCellModule</mkapi-api-link>  for details on JavaScript-Python variable sharing (some variables may\n  be renamed to comply with Python synthax).\n\n- **Predefined Symbols**:\n  - The following symbols are scoped to the cell and automatically injected into the Python execution environment:\n    -  `display` : A function to render output in the notebook interface.\n    -  `invalidated_` : An observable that emits when the cell is invalidated.\n\n## Execution Lifecycle\n\n- Upon execution, Python code runs within a **unified runtime**, where JavaScript and Python share state.\n- When a cell is **invalidated** (e.g., re-executed or modified), all proxies of **Python objects exposed to\n  JavaScript** are automatically **destroyed** to prevent memory leaks.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -8945,7 +9024,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **inputs**: See  [ExecPyInput](@nav/api/Notebook.ExecPyInput)\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **inputs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecPyInput\" semantic=\"type-alias\">ExecPyInput</mkapi-api-link>\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -8993,7 +9072,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Execute a given JavaScript or Python snippet within a workers pool.\n\nThis implementation is for non-reactive cells, see  [executeWorkersPool$](@nav/api/Notebook.executeWorkersPool$)  for reactive cells.\n\n**Functionality**",
+                        "content": "Execute a given JavaScript or Python snippet within a workers pool.\n\nThis implementation is for non-reactive cells, see  <mkapi-api-link nav=\"@nav/api/Notebook.executeWorkersPool$\" semantic=\"function\">executeWorkersPool$</mkapi-api-link>  for reactive cells.\n\n**Functionality**",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -9004,7 +9083,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **inputs**: See  [ExecWorkerPoolInput](@nav/api/Notebook.ExecWorkerPoolInput) .\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **inputs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecWorkerPoolInput\" semantic=\"type-alias\">ExecWorkerPoolInput</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -9053,7 +9132,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Executes a reactive JavaScript or Python cell within a worker pool.\n\nThis function is a wrapper around  [executeWorkersPool](@nav/api/Notebook.executeWorkersPool) , enabling the execution of computations\nin worker threads with automatic handling of reactive inputs and outputs.",
+                        "content": "Executes a reactive JavaScript or Python cell within a worker pool.\n\nThis function is a wrapper around  <mkapi-api-link nav=\"@nav/api/Notebook.executeWorkersPool\" semantic=\"function\">executeWorkersPool</mkapi-api-link> , enabling the execution of computations\nin worker threads with automatic handling of reactive inputs and outputs.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -9064,7 +9143,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **inputs**: See  [ExecWorkerPoolInput](@nav/api/Notebook.ExecWorkerPoolInput) .\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **inputs**: See  <mkapi-api-link nav=\"@nav/api/Notebook.ExecWorkerPoolInput\" semantic=\"type-alias\">ExecWorkerPoolInput</mkapi-api-link> .\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -9172,7 +9251,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Renderer for  `HTMLElement | AnyVirtualDOM | RxChild`  referenced in  [defaultDisplayFactory](@nav/api/Notebook.defaultDisplayFactory) .",
+                        "content": "Renderer for  `HTMLElement | AnyVirtualDOM | RxChild`  referenced in  <mkapi-api-link nav=\"@nav/api/Notebook.defaultDisplayFactory\" semantic=\"function\">defaultDisplayFactory</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -9289,7 +9368,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Fallback renderer referenced in  [defaultDisplayFactory](@nav/api/Notebook.defaultDisplayFactory) .\n\n*  For primitive types, an  `HTMLElement`  is generated with  `innerText`  property set to the value.\n\n*  Otherwise an object explorer is displayed.",
+                        "content": "Fallback renderer referenced in  <mkapi-api-link nav=\"@nav/api/Notebook.defaultDisplayFactory\" semantic=\"function\">defaultDisplayFactory</mkapi-api-link> .\n\n*  For primitive types, an  `HTMLElement`  is generated with  `innerText`  property set to the value.\n\n*  Otherwise an object explorer is displayed.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -9347,7 +9426,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Registers a **cell-specific Python module** under the name  `mknb_cell_${cellId}`  within Pyodide.\n\nIt exposes:\n-  `display` : A function to send output elements to the JavaScript execution environment (see  [display](@nav/api/Notebook.display) ).\n-  `invalidated_` : An observable that emits when the cell is invalidated. This can be used in Python to clean up resources.\n- JavaScript Scope Variables:\n  - All  `let`  and  `const`  variables from JavaScript are exposed as Python symbols.\n  - Variable names may be adjusted to ensure they are valid Python identifiers (see  [fixScopeInvalidVar](@nav/api/Notebook.fixScopeInvalidVar) ).",
+                        "content": "Registers a **cell-specific Python module** under the name  `mknb_cell_${cellId}`  within Pyodide.\n\nIt exposes:\n-  `display` : A function to send output elements to the JavaScript execution environment (see  <mkapi-api-link nav=\"@nav/api/Notebook.display\" semantic=\"function\">display</mkapi-api-link> ).\n-  `invalidated_` : An observable that emits when the cell is invalidated. This can be used in Python to clean up resources.\n- JavaScript Scope Variables:\n  - All  `let`  and  `const`  variables from JavaScript are exposed as Python symbols.\n  - Variable names may be adjusted to ensure they are valid Python identifiers (see  <mkapi-api-link nav=\"@nav/api/Notebook.fixScopeInvalidVar\" semantic=\"function\">fixScopeInvalidVar</mkapi-api-link> ).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
