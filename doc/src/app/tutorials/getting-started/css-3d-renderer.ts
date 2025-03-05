@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type * as THREE from 'three'
 
 export function CSS3DModule(three: THREE) {

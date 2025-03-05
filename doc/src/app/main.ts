@@ -1,9 +1,11 @@
-require('./style.css')
+import './style.css'
 export {}
 import * as webpmClient from '@w3nest/webpm-client'
 
 import { setup } from '../auto-generated'
 import { DebugMode } from './config.debug'
+
+//eslint-disable-next-line @typescript-eslint/dot-notation
 window['mkdocsConfig'] = { enableContextual: DebugMode }
 
 await setup.installMainModule({

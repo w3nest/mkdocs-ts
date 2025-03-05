@@ -1,10 +1,10 @@
 import { render, VirtualDOM, ChildrenLike, CSSAttribute } from 'rx-vdom'
 import { navigation } from './navigation'
-import { Router, DefaultLayout, MdWidgets, WebBrowser } from 'mkdocs-ts'
+import { Router, DefaultLayout, MdWidgets } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
 import { createRootContext, inMemReporter } from './config.context'
 
-export const companionNodes$ = new BehaviorSubject([])
+export const companionNodes$ = new BehaviorSubject<string[]>([])
 
 const ctx = createRootContext({
     threadName: 'App',
@@ -81,4 +81,4 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
     ctx,
 )
 
-document.getElementById('content').appendChild(render(routerView))
+document.body.appendChild(render(routerView))

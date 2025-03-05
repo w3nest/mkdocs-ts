@@ -8,7 +8,10 @@ export class ApiLink implements VirtualDOM<'a'> {
     public readonly href: string
 
     constructor(elem: HTMLElement) {
-        const target = elem.getAttribute('target')!
+        const target = elem.getAttribute('target')
+        if (!target) {
+            return
+        }
         const navs = {
             Notebook: '@nav/api/Notebook',
             'Notebook.Views': '@nav/api/Notebook/Views',
@@ -165,12 +168,16 @@ export class ApiLink implements VirtualDOM<'a'> {
             MkApiTypescript: 'mkapi-role-module',
             mkapi_python: 'mkapi-role-module',
         }
-        this.href = navs[target]
+        if (!(target in navs)) {
+            return
+        }
+        this.href = navs[target as keyof typeof navs]
         this.children = [
             {
                 tag: 'i',
-                innerText: elem.textContent === '' ? target : elem.textContent,
-                class: `mkapi-semantic-flag ${classes[target]}`,
+                innerText:
+                    elem.textContent === '' ? target : (elem.textContent ?? ''),
+                class: `mkapi-semantic-flag ${classes[target] as string}`,
             },
             {
                 tag: 'i',
@@ -189,7 +196,10 @@ export class ExtLink implements VirtualDOM<'a'> {
     public readonly target = '_blank'
 
     constructor(elem: HTMLElement) {
-        const target = elem.getAttribute('target')!
+        const target = elem.getAttribute('target')
+        if (!target) {
+            return
+        }
         const navs = {
             w3nest: '/apps/@w3nest/doc/latest',
             w3lab: '/w3lab',
@@ -225,11 +235,14 @@ export class ExtLink implements VirtualDOM<'a'> {
             'shared-array':
                 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer',
         }
-        this.href = navs[target]
+        if (!(target in navs)) {
+            return
+        }
+        this.href = navs[target as keyof typeof navs]
         this.children = [
             {
                 tag: 'i',
-                innerText: elem.textContent,
+                innerText: elem.textContent ?? '',
             },
             {
                 tag: 'i',
@@ -248,7 +261,11 @@ export class GitHubLink implements VirtualDOM<'a'> {
     public readonly target = '_blank'
 
     constructor(elem: HTMLElement) {
-        const target = elem.getAttribute('target')!
+        const target = elem.getAttribute('target')
+
+        if (!target) {
+            return
+        }
         const navs = {
             'tutorials.notebook.md':
                 'https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.notebook.md?raw=1',
@@ -264,11 +281,14 @@ export class GitHubLink implements VirtualDOM<'a'> {
             'static-tests.composite-layout':
                 'https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests/composite-layout.ts',
         }
-        this.href = navs[target]
+        if (!(target in navs)) {
+            return
+        }
+        this.href = navs[target as keyof typeof navs]
         this.children = [
             {
                 tag: 'i',
-                innerText: elem.textContent,
+                innerText: elem.textContent ?? '',
             },
             {
                 tag: 'i',
@@ -286,7 +306,10 @@ export class CrossLink implements VirtualDOM<'a'> {
     public readonly href: string
 
     constructor(elem: HTMLElement) {
-        const target = elem.getAttribute('target')!
+        const target = elem.getAttribute('target')
+        if (!target) {
+            return
+        }
         const navs = {
             notebook: '@nav/tutorials/notebook',
             'notebook.python': '@nav/tutorials/notebook/python',
@@ -313,11 +336,14 @@ export class CrossLink implements VirtualDOM<'a'> {
             'code-api': '@nav/tutorials/code-api',
             'api-backend': '@nav/how-to/api-backend',
         }
-        this.href = navs[target]
+        if (!(target in navs)) {
+            return
+        }
+        this.href = navs[target as keyof typeof navs]
         this.children = [
             {
                 tag: 'i',
-                innerText: elem.textContent,
+                innerText: elem.textContent ?? '',
             },
             {
                 tag: 'i',

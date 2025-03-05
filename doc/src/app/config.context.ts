@@ -20,6 +20,7 @@ export function createRootContext({
     threadName: string
     labels: Label[]
 }): ContextTrait {
+    //eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!DebugMode) {
         return new NoContext()
     }
