@@ -98,9 +98,13 @@ export class PageView implements VirtualDOM<'div'> {
                         return isResolvedTarget(target)
                     }),
                     distinctUntilChanged((prev, current) => {
+                        if (current.forceReload) {
+                            return false
+                        }
                         return (
-                            current.forceReload !== true &&
-                            prev.path === current.path
+                            prev.path === current.path &&
+                            JSON.stringify(prev.parameters) ===
+                                JSON.stringify(current.parameters)
                         )
                     }),
                     tap((t) => {

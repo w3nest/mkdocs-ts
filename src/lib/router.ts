@@ -432,6 +432,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
             path,
             sectionId: sectionId === '' ? undefined : sectionId,
             forceReload: originalTarget.forceReload ? true : false,
+            parameters: redirectTarget.parameters,
         })
         await this.expandNavigationTree(path)
     }
