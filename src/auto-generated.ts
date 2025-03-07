@@ -161,8 +161,8 @@ const entries = {
 export const setup = {
     name: 'mkdocs-ts',
     assetId: 'bWtkb2NzLXRz',
-    version: '0.3.1',
-    webpmPath: '/api/assets-gateway/webpm/resources/bWtkb2NzLXRz/0.3.1',
+    version: '0.3.2-wip',
+    webpmPath: '/api/assets-gateway/webpm/resources/bWtkb2NzLXRz/0.3.2-wip',
     apiVersion: '03',
     runTimeDependencies,
     externals,
@@ -220,7 +220,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `mkdocs-ts#0.3.1~dist/${entry.name}.js`,
+            `mkdocs-ts#0.3.2-wip~dist/${entry.name}.js`,
         ]
         const modules = [
             ...(parameters.modules || []),

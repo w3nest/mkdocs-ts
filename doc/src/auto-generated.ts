@@ -3,7 +3,7 @@ const runTimeDependencies = {
     "externals": {
         "@w3nest/webpm-client": "^0.1.4",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "^0.3.1",
+        "mkdocs-ts": "^0.3.2",
         "rx-vdom": "^0.1.3",
         "rxjs": "^7.5.6"
     },
@@ -65,8 +65,8 @@ const entries = {
 export const setup = {
     name: '@mkdocs-ts/doc',
     assetId: 'QG1rZG9jcy10cy9kb2M=',
-    version: '0.3.1',
-    webpmPath: '/api/assets-gateway/webpm/resources/QG1rZG9jcy10cy9kb2M=/0.3.1',
+    version: '0.3.2-wip',
+    webpmPath: '/api/assets-gateway/webpm/resources/QG1rZG9jcy10cy9kb2M=/0.3.2-wip',
     apiVersion: '03',
     runTimeDependencies,
     externals,
@@ -124,7 +124,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@mkdocs-ts/doc#0.3.1~dist/${entry.name}.js`,
+            `@mkdocs-ts/doc#0.3.2-wip~dist/${entry.name}.js`,
         ]
         const modules = [
             ...(parameters.modules || []),
