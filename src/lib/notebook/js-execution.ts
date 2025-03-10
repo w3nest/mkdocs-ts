@@ -337,7 +337,7 @@ function find_children({
 }: {
     node: AstNode
     skipKeys?: string[]
-    skipNode?: (n: AstNode) => boolean
+    skipNode?: (parent: AstNode, key: string, node: AstNode) => boolean
     leafs?: (n: AstNode) => AstNode[] | undefined
     match: (node: AstNode) => boolean
 }): AstNode[] {
@@ -360,7 +360,7 @@ function find_children({
             for (const [k, value] of Object.entries(obj)) {
                 if (
                     (skipKeys ?? []).includes(k) ||
-                    (skipNode ?? (() => false))(obj)
+                    (skipNode ?? (() => false))(obj, k, value)
                 ) {
                     // noinspection ContinueStatementJS
                     continue
@@ -492,8 +492,8 @@ export function extractUndefinedReferences(
 ): string[] {
     let allIds: string[] = find_children({
         node: body,
-        skipNode: (n) =>
-            ['BlockStatement', 'FunctionDeclaration'].includes(n.type),
+        skipNode: (parent) =>
+            ['BlockStatement', 'FunctionDeclaration'].includes(parent.type),
         match: (d: AstNode) => d.type === 'Identifier',
         leafs: (n: AstNode): AstNode[] | undefined => {
             if (hasCallExpressionTrait(n)) {
@@ -519,7 +519,7 @@ export function extractUndefinedReferences(
     const blocks = find_children({
         node: body,
         match: (n) => hasBlockStatementTrait(n),
-        skipNode: (n) => ['FunctionDeclaration'].includes(n.type),
+        skipNode: (parent) => ['FunctionDeclaration'].includes(parent.type),
     }) as (AstNode<'BlockStatement'> & AstBlockStatementTrait)[]
 
     const undefsBlocks = blocks
