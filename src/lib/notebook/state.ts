@@ -234,7 +234,10 @@ export class State {
         string,
         BehaviorSubject<Scope | undefined>
     > = {}
-
+    /**
+     * Observables over the cell's exiting scopes keyed by the cell's ID.
+     */
+    public readonly exitScopes$: Record<string, ReplaySubject<Scope>> = {}
     /**
      * The factory used to pick up the right mapping between variable and view when `display` is called.
      */
@@ -412,6 +415,7 @@ export class State {
             Object.keys(this.scopes$).length === 0
                 ? new BehaviorSubject<Scope | undefined>(this.initialScope)
                 : new BehaviorSubject<Scope | undefined>(undefined)
+        this.exitScopes$[cell.cellId] = new ReplaySubject<Scope>(1)
         cell.content$.subscribe((src) => {
             this.updateSrc({ cellId: cell.cellId, src })
         })
@@ -489,15 +493,13 @@ export class State {
             },
             ctx,
         )
+        this.exitScopes$[id].next(scope)
         this.cellsStatus$[id].next('success')
         const nextId = this.ids[index + 1]
         const remainingIds = this.ids.slice(index + 2)
         if (nextId) {
             this.scopes$[nextId].next(scope)
             this.cellsStatus$[nextId].next('ready')
-        }
-        if (nextId) {
-            this.scopes$[nextId].next(scope)
         }
         remainingIds.forEach((id) => {
             if (rootExecution) {
