@@ -24,6 +24,11 @@
  * refer to the associated {@link JsCellAttributes}, {@link MdCellAttributes}, {@link PyCellAttributes},
  * {@link InterpreterCellAttributes} and {@link WorkerCellAttributes}.
  *
+ *
+ * <note level="hint">
+ * It is possible to register custom cells using {@link State.CellsFactory}.
+ * </note>
+ *
  * The entry point of the module is the {@link NotebookPage}; most of the implementation logic regarding synchronization
  * is included in the {@link State} class.
  *

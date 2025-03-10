@@ -31,7 +31,7 @@ import type { MdParsingOptions } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
-import { Resolvable, resolve } from '../navigation.node'
+import { AnyView, Resolvable, resolve } from '../navigation.node'
 import { ContextTrait, Contextual, NoContext } from '../context'
 import { ExecInput } from './execution-common'
 
@@ -151,10 +151,82 @@ export interface NotebookStateParameters {
      */
     displayFactory?: DisplayFactory
 }
+
+/**
+ * Defines a factory function signature for creating a specific type of cell.
+ *
+ * Each factory function is responsible for constructing a cell's behavior and view
+ * based on the provided notebook state and HTML representation.
+ *
+ * Factory functions are registered in {@link State.CellsFactory} and are invoked
+ * when parsing Markdown source containing corresponding cell elements.
+ */
+export type CellFactory = (p: {
+    // The notebook page state.
+    state: State
+    // The HTML cell declaration in the Markdown source.
+    elem: HTMLElement
+    // Markdown parsing options.
+    parserOptions: MdParsingOptions
+}) => CellTrait & AnyView
+
 /**
  * Represents the state of a {@link NotebookPage} or {@link NotebookSection}.
  */
 export class State {
+    /**
+     * A registry of cell factory functions.
+     *
+     * The keys in this mapping correspond to the tag names of cell elements
+     * in the Markdown source. Each registered factory function defines how
+     * a specific cell type should be instantiated and rendered.
+     *
+     * **Registering a New Cell Type**
+     *
+     * To add a new cell type, extend `State.CellsFactory` as shown below:
+     *
+     * <code-snippet language="javascript">
+     * State.CellsFactory = {
+     *     ...State.CellsFactory,
+     *     'custom-cell': (p:{state: State, elem: HTMLElement}) => {
+     *          const src = elem.textContent()
+     *          const attFoo = elem.getAttribute('foo')
+     *          // Return an instance of `CellTrait & AnyView`
+     *      }
+     * }
+     * </code-snippet>
+     *
+     * Once registered, the following Markdown source:
+     *
+     * <code-snippet language="markdown">
+     * The next cell is a `custom-cell`:
+     *
+     * <custom-cell foo="42">
+     *     ...
+     * </custom-cell>
+     *
+     * </code-snippet>
+     *
+     * Will be recognized and processed accordingly.
+     */
+    public static CellsFactory: Record<string, CellFactory> = {
+        'js-cell': (p) => {
+            return JsCellView.FromDom(p)
+        },
+        'md-cell': (p) => {
+            return MdCellView.FromDom(p)
+        },
+        'py-cell': (p) => {
+            return PyCellView.FromDom(p)
+        },
+        'interpreter-cell': (p) => {
+            return InterpreterCellView.FromDom(p)
+        },
+        'worker-cell': (p) => {
+            return WorkerCellView.FromDom(p)
+        },
+    }
+
     /**
      * Observables over the cell's entering scopes keyed by the cell's ID.
      */
@@ -297,6 +369,31 @@ export class State {
         return this.pyNamespace
     }
 
+    getCellsFactory(): Record<
+        string,
+        (elem: HTMLElement, parserOptions?: MdParsingOptions) => AnyView
+    > {
+        const deportedOutput = (elem: HTMLElement) => {
+            return this.createDeportedOutputsView(elem)
+        }
+        return Object.entries(State.CellsFactory).reduce(
+            (acc, [k, v]) => {
+                const fct = (
+                    elem: HTMLElement,
+                    parserOptions: MdParsingOptions,
+                ) => {
+                    const cell = v({ state: this, elem, parserOptions })
+                    this.appendCell(cell)
+                    return cell
+                }
+                return { ...acc, [k]: fct }
+            },
+            {
+                'cell-output': deportedOutput,
+            },
+        )
+    }
+
     appendCell(cell: CellTrait) {
         this.ids.push(cell.cellId)
         this.cellIds$.next(this.ids)
@@ -318,39 +415,6 @@ export class State {
         cell.content$.subscribe((src) => {
             this.updateSrc({ cellId: cell.cellId, src })
         })
-    }
-
-    createJsCell(elem: HTMLElement): JsCellView {
-        const cell = JsCellView.FromDom({ elem, state: this })
-        this.appendCell(cell)
-        return cell
-    }
-
-    createPyCell(elem: HTMLElement): PyCellView {
-        const cell = PyCellView.FromDom({ elem, state: this })
-        this.appendCell(cell)
-        return cell
-    }
-
-    createMdCell(
-        elem: HTMLElement,
-        parserOptions: MdParsingOptions,
-    ): MdCellView {
-        const cell = MdCellView.FromDom({ elem, state: this, parserOptions })
-        this.appendCell(cell)
-        return cell
-    }
-
-    createInterpreterCell(elem: HTMLElement): InterpreterCellView {
-        const cell = InterpreterCellView.FromDom({ elem, state: this })
-        this.appendCell(cell)
-        return cell
-    }
-
-    createWorkerCell(elem: HTMLElement): WorkerCellView {
-        const cell = WorkerCellView.FromDom({ elem, state: this })
-        this.appendCell(cell)
-        return cell
     }
 
     createDeportedOutputsView(elem: HTMLElement): OutputsView {

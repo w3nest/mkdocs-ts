@@ -1,6 +1,6 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { CodeSnippetView } from '../md-widgets'
-import { CellCommonAttributes, notebookViews } from './notebook-page'
+import { CellCommonAttributes } from './notebook-page'
 import {
     CellTrait,
     ExecArgs,
@@ -272,9 +272,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                         load,
                     })
                 },
-                ...notebookViews({
-                    state: state,
-                }),
+                ...state.getCellsFactory(),
             },
         })
         output$.next(vdom)

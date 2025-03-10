@@ -52,29 +52,6 @@ export interface NotebookOptions {
     markdown?: MdParsingOptions
 }
 
-export const notebookViews = ({ state }: { state: State }) => {
-    return {
-        'cell-output': (elem: HTMLElement) => {
-            return state.createDeportedOutputsView(elem)
-        },
-        'js-cell': (elem: HTMLElement) => {
-            return state.createJsCell(elem)
-        },
-        'md-cell': (elem: HTMLElement, parserOptions: MdParsingOptions) => {
-            return state.createMdCell(elem, parserOptions)
-        },
-        'py-cell': (elem: HTMLElement) => {
-            return state.createPyCell(elem)
-        },
-        'interpreter-cell': (elem: HTMLElement) => {
-            return state.createInterpreterCell(elem)
-        },
-        'worker-cell': (elem: HTMLElement) => {
-            return state.createWorkerCell(elem)
-        },
-    }
-}
-
 /**
  * Parameters to instantiate a notebook view - either a whole page as ({@link NotebookPage}), or a single section
  * ({@link NotebookSection}).
@@ -185,9 +162,7 @@ export class NotebookSection implements VirtualDOM<'div'> {
                         ...(this.options?.markdown ?? {}),
                         views: {
                             ...(this.options?.markdown?.views ?? {}),
-                            ...notebookViews({
-                                state: this.state,
-                            }),
+                            ...this.state.getCellsFactory(),
                         },
                     })
                     const end = Date.now()
