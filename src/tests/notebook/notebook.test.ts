@@ -9,8 +9,10 @@ import {
     Scope,
     executeJs,
     getCellUid,
+    executeJs$,
 } from '../../lib/notebook'
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs'
+import * as rxjs from 'rxjs'
 
 Dependencies.parseMd = parseMd
 Dependencies.MdWidgets = MdWidgets
@@ -39,6 +41,7 @@ export class JsCellTest implements CellTrait, VirtualDOM<'div'> {
         cellId: string
         content$: BehaviorSubject<string>
         state: State
+        reactive: boolean
     }) {
         Object.assign(this, params)
         this.invalidated$ = this.state.invalidated$.pipe(
@@ -47,23 +50,33 @@ export class JsCellTest implements CellTrait, VirtualDOM<'div'> {
     }
 
     async execute(args: ExecArgs, ctx?: ContextTrait): Promise<Scope> {
-        return await executeJs(
-            {
-                ...args,
-                invalidated$: this.invalidated$,
-            },
-            ctx,
-        )
+        return this.reactive
+            ? await executeJs$(
+                  {
+                      ...args,
+                      invalidated$: this.invalidated$,
+                  },
+                  ctx,
+              )
+            : await executeJs(
+                  {
+                      ...args,
+                      invalidated$: this.invalidated$,
+                  },
+                  ctx,
+              )
     }
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
             e.getAttribute('cell-id') ?? e.getAttribute('id'),
         content: (e: HTMLElement) => e.textContent ?? '',
+        reactive: (e: HTMLElement) => e.getAttribute('reactive') === 'true',
     }
     static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
         const params = {
             cellId: JsCellTest.FromDomAttributes.cellId(elem) ?? getCellUid(),
             content: JsCellTest.FromDomAttributes.content(elem),
+            reactive: JsCellTest.FromDomAttributes.reactive(elem),
         }
         return new JsCellTest({
             ...params,
@@ -178,5 +191,62 @@ const x = 42
         expect(error.message).toMatch(
             /Identifier 'x' has already been declared/,
         )
+    })
+})
+
+describe('Notebook with reactive js-cell', () => {
+    beforeAll(() => {})
+    let picked$ = new rxjs.ReplaySubject<unknown>(1)
+
+    afterEach(() => {
+        document.body.innerHTML = ''
+    })
+    it('Should run smoothly', async () => {
+        let router = new Router({
+            navigation: {
+                name: 'root',
+                layout: { tag: 'div' },
+            },
+        })
+        const page = new NotebookPage({
+            router,
+            src: `
+<js-cell cell-id="cell1">
+const x = rxjs.of(42)
+let y = 42
+</js-cell>
+
+
+<js-cell cell-id="cell2" reactive="true">
+const x2 = x * 2
+let y = 84 // OK because only 'const' are injected in reactive cells
+</js-cell>
+
+<js-cell cell-id="cell3" reactive="true">
+pick(x2)
+</js-cell>
+            `,
+            options: { runAtStart: true },
+            initialScope: {
+                const: { rxjs, pick: (d: unknown) => picked$.next(d) },
+            },
+        })
+
+        document.body.append(render(page))
+        let scope = await firstValueFrom(page.state.exitScopes$.cell1)
+        expect(scope.const.x).toBeInstanceOf(Observable)
+        expect(scope.let.y).toBe(42)
+
+        scope = await firstValueFrom(page.state.exitScopes$.cell2)
+        expect(scope.const.x).toBeInstanceOf(Observable)
+        expect(scope.let.y).toBe(42)
+
+        scope = await firstValueFrom(page.state.exitScopes$.cell3)
+        expect(scope.const.x).toBeInstanceOf(Observable)
+        expect(scope.const.x2).toBeInstanceOf(Observable)
+        expect(scope.let.y).toBe(42)
+
+        const picked = await firstValueFrom(picked$)
+        expect(picked).toBe(84)
     })
 })

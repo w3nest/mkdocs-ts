@@ -251,7 +251,107 @@ return execute_cell
 }
 
 /**
- * Execute a given **reactive** javascript source content.
+ * Executes a **reactive JavaScript cell** within the notebook.
+ *
+ * It automatically unwrap observables or promises referenced within the cell, and provides their current value in
+ * place of the observable.
+ *
+ * **Behavior:**
+ *
+ * 1. **Identify Reactive Inputs:**
+ *    - The function scans the cell for variables that reference a {@link typescript.Promise} or
+ *      {@link rxjs.Observable} within the **const variables** in the input scope. `Promise` are internally transformed
+ *      as `Observable` using {@link rxjs.from}.
+ *    - These **reactive inputs** determine when the cell should be executed.
+ *
+ * 2. **Trigger Execution on Input Changes:**
+ *    - All reactive inputs are combined using {@link rxjs.combineLatest}.
+ *    - Each time **any** input emits, the cell **re-executes** with the latest values.
+ *    - The resulting observable is called `trigger`, and it emits an object where:
+ *      - **Keys** = The names of reactive inputs.
+ *      - **Values** = Their most recent values.
+ *
+ * 3. **Define the Cell's Input Scope:**
+ *    - **Reactive inputs:** Values from `trigger` (updated on every execution).
+ *    - **Other `const` variables:** Non-reactive const variables available in the input scope.
+ *
+ * 4. **Call the 'standard' {@link executeJs} function** using the prepared input scope.
+ *
+ * 5. **Expose Outputs:**
+ *    - **All `const` variables** declared in the cell become {@link rxjs.Observable} in subsequent cells.
+ *    - They can then be used as **reactive inputs** for future reactive cells.
+ *
+ * <note level="warning" title="`let` variables" >
+ *
+ * To ensure **predictability and robustness**, `let` variables:
+ * - **Are NOT considered reactive inputs.**
+ * - **Are NOT included in the input or output scope.**
+ *
+ * **Reactive inputs**:
+ *
+ * In the following **non-reactive cell**:
+ *
+ * <code-snippet language="javascript">
+ * const foo = rxjs.of(42)
+ * let bar = rxjs.of(42)
+ * </code-snippet>
+ *
+ * Only `foo` can be used as a **reactive input** in a later reactive cell.
+ *
+ * **Input Scope**:
+ *
+ * In the following **non-reactive** cell:
+ *
+ * <code-snippet language="javascript">
+ * const foo = 42
+ * let bar = 42
+ * </code-snippet>
+ *
+ * Only `foo` is available in later reactive cells as a **static** input.
+ *
+ * **Output Scope**:
+ *
+ * In the following **reactive** cell:
+ *
+ * <code-snippet language="javascript">
+ * // this is a reactive cell that captured 'foo'
+ * const fooSquare = foo * foo
+ * let fooDoubled = 2 * foo
+ * </code-snippet>
+ *
+ * `fooSquare` is available for future cells, while `fooDoubled` is **local only**.
+ *
+ * </note>
+ *
+ * **Future Extensions: Supporting Custom Combination Policies**
+ *
+ * Currently, `combineLatest` is the default and only combiner available.
+ *
+ * Future improvements could allow users to specify a **combination policy** such as:
+ * - {@link rxjs.combineLatest} (default) – Triggers when any input updates.
+ * - {@link rxjs.withLatestFrom} – Triggers only when a **specific input** updates.
+ * - {@link rxjs.zip} – Triggers **only when all inputs** have emitted at least once.
+ *
+ * **For now**, if you need a **custom combination strategy**, manually define a new **intermediate variable**
+ * that applies the desired combinator (e.g., *withLatestFrom*, *zip*). Then, reference this variable in the reactive
+ * cell instead of configuring the strategy directly. For instance, using {@link rxjs.zip} to synchronize emissions:
+ *
+ * <code-snippet language="javascript">
+ * // this is a non reactive cell combine `foo$` and `bar$` explicitly
+ * const customTrigger$ = rxjs.zip([foo$, bar$])
+ * </code-snippet>
+ *
+ * And the reactive cell:
+ *
+ * <code-snippet language="javascript">
+ * // this is a reactive cell using `customTrigger$` as reactive input
+ * // -> `customTrigger$` is automatically resolved to the latest emitted values
+ * const [fooVal, barVal] = customTrigger$
+ * </code-snippet>
+ *
+ * The reactive cell treats `customTrigger$` as a source of new values,
+ * ensuring `fooVal` and `barVal` update automatically when `customTrigger$` emits ( *i.e.* when **both**
+ * `foo$` and `bar$` emitted a new value).
  *
  * @param inputs  See {@link ExecJsInput}.
  * @param ctx Execution context used for logging and tracing.
@@ -281,17 +381,14 @@ export async function executeJs$(
             }) as unknown as [string, Observable<unknown> | Promise<unknown>][]
     }
     const reactivesConst = select(scope.const)
-    const reactivesLet = select(scope.let)
-    const reactives = [...reactivesLet, ...reactivesConst]
     ctx.info('Undefined references bound to input scope observable retrieved', {
         reactivesConst,
-        reactivesLet,
     })
-    const values$ = reactives.map(([_, v]) => v)
+    const values$ = reactivesConst.map(([_, v]) => v)
 
     const extractValues = (values: unknown[]) => {
         return values.reduce((acc: Record<string, unknown>, e, i) => {
-            const key = reactives[i][0]
+            const key = reactivesConst[i][0]
             return {
                 ...acc,
                 [key]: e,
@@ -304,6 +401,7 @@ export async function executeJs$(
             const reactScope = extractValues(values)
             const patchedScope = {
                 ...scope,
+                let: {}, // No mutable variables injected in reactive cells
                 const: { ...scope.const, ...reactScope },
             }
             output$.next(undefined)
@@ -323,21 +421,13 @@ export async function executeJs$(
             [k]: scope$.pipe(map((scopeOut) => scopeOut.const[k])),
         }
     }, {})
-    const reactScopeLetOut = declarations.let.reduce((acc, k) => {
-        return {
-            ...acc,
-            [k]: scope$.pipe(map((scopeOut) => scopeOut.let[k])),
-        }
-    }, {})
 
     ctx.info('Output scope observable created', {
         reactScopeConstOut,
-        reactScopeLetOut,
     })
     ctx.exit()
     return {
         ...scope,
-        let: { ...scope.let, ...reactScopeLetOut },
         const: { ...scope.const, ...reactScopeConstOut },
     }
 }

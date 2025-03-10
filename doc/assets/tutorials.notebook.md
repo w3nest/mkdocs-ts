@@ -334,6 +334,13 @@ display(`Its is: ${date}`)
 </note> 
 
 
+<note level='warning' label="Scope">
+To ensure **robustness and predictability**, reactive cells can only reference **`const` variables from
+the input scope**, and **only export `const` variable in the output scope**.
+
+For more information, refer to the <api-link target="executeJs$"></api-link>.
+</note>
+
 ### Views
 
 <note level='info'>

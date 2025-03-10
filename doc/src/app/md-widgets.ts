@@ -22,6 +22,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             install: '@nav/api/Notebook/Installer.install',
             NotebookViewParameters: '@nav/api/Notebook.NotebookViewParameters',
             JsCellView: '@nav/api/Notebook.JsCellView',
+            executeJs$: '@nav/api/Notebook.executeJs$',
             MdCellView: '@nav/api/Notebook.MdCellView',
             PyCellView: '@nav/api/Notebook.PyCellView',
             'PyCellView.FromDomAttributes':

@@ -35,6 +35,12 @@ generateApiFiles({
                 ReplaySubject:
                     'https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject',
                 Observable: 'https://rxjs.dev/guide/observable',
+                combineLatest:
+                    'https://rxjs.dev/api/index/function/combineLatest',
+                withLatestFrom:
+                    'https://rxjs.dev/api/index/function/withLatestFrom',
+                zip: 'https://rxjs.dev/api/index/function/zip',
+                from: 'https://www.learnrxjs.io/learn-rxjs/operators/creation/from'
             }
             if (!(name in urls)) {
                 console.warn(`Can not find URL for rxjs ${name} symbol`)
