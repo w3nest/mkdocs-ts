@@ -184,10 +184,11 @@ export class NotebookSection implements VirtualDOM<'div'> {
                                 const cellId = this.state.ids.slice(-1)[0]
                                 const start = Date.now()
                                 this.state.execute(cellId).then(
-                                    () => {
+                                    (scope) => {
                                         const end = Date.now()
                                         context.info(
                                             `Notebook execution time: ${String(end - start)} ms`,
+                                            { scope },
                                         )
                                     },
                                     (e: unknown) => {
