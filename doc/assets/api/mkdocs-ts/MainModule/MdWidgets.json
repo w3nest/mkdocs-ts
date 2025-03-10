@@ -298,7 +298,8 @@
                         "startLine": 105,
                         "endLine": 106,
                         "references": {
-                            "attributeMapper": "@nav/api/MainModule/MdWidgets.CodeBadgesView.attributeMapper"
+                            "attributeMapper": "@nav/api/MainModule/MdWidgets.CodeBadgesView.attributeMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     },
                     "semantic": {
@@ -345,6 +346,7 @@
                         "endLine": 125,
                         "references": {
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.CodeBadgesView.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "CodeBadgesView": "@nav/api/MainModule/MdWidgets.CodeBadgesView"
                         }
                     },
@@ -365,6 +367,7 @@
                 "references": {
                     "CodeBadgesView": "@nav/api/MainModule/MdWidgets.CodeBadgesView",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -679,7 +682,8 @@
                         "endLine": 362,
                         "references": {
                             "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
-                            "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage"
+                            "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     },
                     "semantic": {
@@ -726,6 +730,7 @@
                         "endLine": 276,
                         "references": {
                             "attributeMapper": "@nav/api/MainModule/MdWidgets.CodeSnippetView.attributeMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage"
                         }
                     },
@@ -773,6 +778,7 @@
                         "endLine": 292,
                         "references": {
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.CodeSnippetView.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView"
                         }
                     },
@@ -797,9 +803,11 @@
                     "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
                     "SnippetEditorView": "@nav/api/Notebook.SnippetEditorView",
                     "ResizeObserverTrait": "@nav/api/MainModule/MdWidgets.ResizeObserverTrait",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "Observable": "https://rxjs.dev/guide/observable",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -1045,6 +1053,7 @@
                         "endLine": 218,
                         "references": {
                             "attributeMapper": "@nav/api/MainModule/MdWidgets.NoteView.attributeMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "ExpandableMode": "@nav/api/MainModule/MdWidgets.ExpandableMode"
                         }
                     },
@@ -1094,6 +1103,7 @@
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.NoteView.fromHTMLElement",
                             "Router": "@nav/api/MainModule.Router",
                             "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "NoteView": "@nav/api/MainModule/MdWidgets.NoteView"
                         }
                     },
@@ -1120,6 +1130,7 @@
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -1280,7 +1291,9 @@
                 "endLine": 32,
                 "references": {
                     "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
-                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor"
+                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1442,7 +1455,8 @@
                 "startLine": 21,
                 "endLine": 29,
                 "references": {
-                    "refreshResizeObservers": "@nav/api/MainModule/MdWidgets.refreshResizeObservers"
+                    "refreshResizeObservers": "@nav/api/MainModule/MdWidgets.refreshResizeObservers",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {

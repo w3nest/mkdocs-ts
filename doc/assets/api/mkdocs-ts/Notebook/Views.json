@@ -295,6 +295,7 @@
                 "endLine": 112,
                 "references": {
                     "DropDown": "@nav/api/Notebook/Views.DropDown",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
                     "RxChildren": "/apps/@rx-vdom/doc/latest?nav=/api.RxChildren",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
@@ -785,7 +786,8 @@
                         "startLine": 32,
                         "endLine": 33,
                         "references": {
-                            "connectedCallback": "@nav/api/Notebook/Views.Text.connectedCallback"
+                            "connectedCallback": "@nav/api/Notebook/Views.Text.connectedCallback",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -871,6 +873,7 @@
                     "Text": "@nav/api/Notebook/Views.Text",
                     "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },

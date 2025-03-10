@@ -895,6 +895,7 @@
                     "DeclarationView": "@nav/api/CodeApi.DeclarationView",
                     "Code": "@nav/api/CodeApi.Code",
                     "Entity": "@nav/api/CodeApi.Entity",
+                    "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
@@ -1304,7 +1305,8 @@
                         "startLine": 112,
                         "endLine": 117,
                         "references": {
-                            "installCss": "@nav/api/CodeApi.HttpClient.installCss"
+                            "installCss": "@nav/api/CodeApi.HttpClient.installCss",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1329,7 +1331,9 @@
                     "HttpClientTrait.fetchModule": "@nav/api/CodeApi.HttpClientTrait.fetchModule",
                     "HttpClientTrait.installCss": "@nav/api/CodeApi.HttpClientTrait.installCss",
                     "HttpClientTrait": "@nav/api/CodeApi.HttpClientTrait",
-                    "Observable": "https://rxjs.dev/guide/observable"
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -1985,7 +1989,8 @@
                         "startLine": 184,
                         "endLine": 185,
                         "references": {
-                            "onclick": "@nav/api/CodeApi.SummaryLink.onclick"
+                            "onclick": "@nav/api/CodeApi.SummaryLink.onclick",
+                            "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent"
                         }
                     }
                 },
@@ -2107,6 +2112,7 @@
                     "Router": "@nav/api/MainModule.Router",
                     "EntityForSummary": "@nav/api/CodeApi.EntityForSummary",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -2861,7 +2867,8 @@
                         "startLine": 96,
                         "endLine": 97,
                         "references": {
-                            "references": "@nav/api/CodeApi.Code.references"
+                            "references": "@nav/api/CodeApi.Code.references",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -2909,7 +2916,8 @@
                 "startLine": 71,
                 "endLine": 98,
                 "references": {
-                    "Code": "@nav/api/CodeApi.Code"
+                    "Code": "@nav/api/CodeApi.Code",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -3041,7 +3049,8 @@
                         "startLine": 58,
                         "endLine": 59,
                         "references": {
-                            "externalTypes": "@nav/api/CodeApi.Configuration.externalTypes"
+                            "externalTypes": "@nav/api/CodeApi.Configuration.externalTypes",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -3115,7 +3124,8 @@
                             "notebook": "@nav/api/CodeApi.Configuration.notebook",
                             "DisplayFactory": "@nav/api/Notebook.DisplayFactory",
                             "Scope": "@nav/api/Notebook.Scope",
-                            "NotebookOptions": "@nav/api/Notebook.NotebookOptions"
+                            "NotebookOptions": "@nav/api/Notebook.NotebookOptions",
+                            "Partial": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype"
                         }
                     }
                 }
@@ -3138,7 +3148,9 @@
                     "Scope": "@nav/api/Notebook.Scope",
                     "NotebookOptions": "@nav/api/Notebook.NotebookOptions",
                     "DefaultLayout.NavLayout": "@nav/api/MainModule/DefaultLayout.NavLayout",
-                    "DefaultLayout.NavHeader": "@nav/api/MainModule/DefaultLayout.NavHeader"
+                    "DefaultLayout.NavHeader": "@nav/api/MainModule/DefaultLayout.NavHeader",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+                    "Partial": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype"
                 }
             },
             "semantic": {
@@ -3896,7 +3908,8 @@
                         "startLine": 70,
                         "endLine": 71,
                         "references": {
-                            "installCss": "@nav/api/CodeApi.HttpClientTrait.installCss"
+                            "installCss": "@nav/api/CodeApi.HttpClientTrait.installCss",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -3917,7 +3930,8 @@
                     "HttpClientTrait": "@nav/api/CodeApi.HttpClientTrait",
                     "Module": "@nav/api/CodeApi.Module",
                     "HttpClient": "@nav/api/CodeApi.HttpClient",
-                    "Observable": "https://rxjs.dev/guide/observable"
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -4200,7 +4214,8 @@
                         "startLine": 116,
                         "endLine": 117,
                         "references": {
-                            "attributes": "@nav/api/CodeApi.Semantic.attributes"
+                            "attributes": "@nav/api/CodeApi.Semantic.attributes",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -4270,7 +4285,8 @@
                         "startLine": 120,
                         "endLine": 121,
                         "references": {
-                            "relations": "@nav/api/CodeApi.Semantic.relations"
+                            "relations": "@nav/api/CodeApi.Semantic.relations",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -4318,7 +4334,8 @@
                 "startLine": 104,
                 "endLine": 122,
                 "references": {
-                    "Semantic": "@nav/api/CodeApi.Semantic"
+                    "Semantic": "@nav/api/CodeApi.Semantic",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4765,7 +4782,8 @@
                 "endLine": 200,
                 "references": {
                     "ChildModule": "@nav/api/CodeApi.ChildModule",
-                    "Entity": "@nav/api/CodeApi.Entity"
+                    "Entity": "@nav/api/CodeApi.Entity",
+                    "Omit": "https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys"
                 }
             },
             "semantic": {
@@ -4884,7 +4902,8 @@
                     "Callable": "@nav/api/CodeApi.Callable",
                     "ChildModule": "@nav/api/CodeApi.ChildModule",
                     "File": "@nav/api/CodeApi.File",
-                    "Type": "@nav/api/CodeApi.Type"
+                    "Type": "@nav/api/CodeApi.Type",
+                    "Omit": "https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys"
                 }
             },
             "semantic": {

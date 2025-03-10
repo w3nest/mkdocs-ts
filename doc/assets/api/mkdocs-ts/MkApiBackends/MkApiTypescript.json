@@ -618,7 +618,8 @@
                         "startLine": 78,
                         "endLine": 79,
                         "references": {
-                            "navigations": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.navigations"
+                            "navigations": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.navigations",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -690,7 +691,8 @@
                         "endLine": 87,
                         "references": {
                             "typedocIdMap": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocIdMap",
-                            "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode"
+                            "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -726,7 +728,8 @@
                         "endLine": 91,
                         "references": {
                             "typedocParentIdMap": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocParentIdMap",
-                            "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode"
+                            "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 }
@@ -743,7 +746,8 @@
                     "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
                     "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
                     "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode"
+                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1071,7 +1075,8 @@
                 "endLine": 178,
                 "references": {
                     "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "Comment": "@nav/api/MkApiBackends/MkApiTypescript.Comment"
+                    "Comment": "@nav/api/MkApiBackends/MkApiTypescript.Comment",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1188,7 +1193,8 @@
                 "endLine": 62,
                 "references": {
                     "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
-                    "ExternalUrlGetter": "@nav/api/MkApiBackends/MkApiTypescript.ExternalUrlGetter"
+                    "ExternalUrlGetter": "@nav/api/MkApiBackends/MkApiTypescript.ExternalUrlGetter",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1262,7 +1268,8 @@
                 "startLine": 70,
                 "endLine": 71,
                 "references": {
-                    "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences"
+                    "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1455,7 +1462,8 @@
                 "endLine": 296,
                 "references": {
                     "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
-                    "TsSrcElement": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement"
+                    "TsSrcElement": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1551,7 +1559,8 @@
                 "endLine": 316,
                 "references": {
                     "generateTsInputs": "@nav/api/MkApiBackends/MkApiTypescript.generateTsInputs",
-                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements"
+                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
+                    "Set": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"
                 }
             },
             "semantic": {
@@ -1854,6 +1863,7 @@
                     "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
                     "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
                     "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
                     "Code": "@nav/api/CodeApi.Code"
                 }
             },

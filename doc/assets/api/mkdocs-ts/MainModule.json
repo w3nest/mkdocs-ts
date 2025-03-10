@@ -495,7 +495,8 @@
                         "references": {
                             "executeAsync": "@nav/api/MainModule.Context.executeAsync",
                             "ContextTrait": "@nav/api/MainModule.ContextTrait",
-                            "Label": "@nav/api/MainModule.Label"
+                            "Label": "@nav/api/MainModule.Label",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -676,7 +677,8 @@
                     "ContextTrait.exit": "@nav/api/MainModule.ContextTrait.exit",
                     "ContextTrait.info": "@nav/api/MainModule.ContextTrait.info",
                     "ContextTrait.start": "@nav/api/MainModule.ContextTrait.start",
-                    "ContextTrait.warning": "@nav/api/MainModule.ContextTrait.warning"
+                    "ContextTrait.warning": "@nav/api/MainModule.ContextTrait.warning",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -737,7 +739,8 @@
                         "endLine": 161,
                         "references": {
                             "factory": "@nav/api/MainModule.GlobalMarkdownViews.factory",
-                            "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                            "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 }
@@ -751,7 +754,8 @@
                 "endLine": 177,
                 "references": {
                     "GlobalMarkdownViews": "@nav/api/MainModule.GlobalMarkdownViews",
-                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1041,7 +1045,8 @@
                         "startLine": 221,
                         "endLine": 230,
                         "references": {
-                            "next": "@nav/api/MainModule.MockBrowser.next"
+                            "next": "@nav/api/MainModule.MockBrowser.next",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1123,7 +1128,8 @@
                         "startLine": 209,
                         "endLine": 218,
                         "references": {
-                            "prev": "@nav/api/MainModule.MockBrowser.prev"
+                            "prev": "@nav/api/MainModule.MockBrowser.prev",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1194,7 +1200,8 @@
                     "BrowserInterface.parseUrl": "@nav/api/MainModule.BrowserInterface.parseUrl",
                     "BrowserInterface.pushState": "@nav/api/MainModule.BrowserInterface.pushState",
                     "BrowserInterface": "@nav/api/MainModule.BrowserInterface",
-                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -1345,7 +1352,8 @@
                         "references": {
                             "executeAsync": "@nav/api/MainModule.NoContext.executeAsync",
                             "ContextTrait": "@nav/api/MainModule.ContextTrait",
-                            "Label": "@nav/api/MainModule.Label"
+                            "Label": "@nav/api/MainModule.Label",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1514,7 +1522,8 @@
                     "ContextTrait.exit": "@nav/api/MainModule.ContextTrait.exit",
                     "ContextTrait.info": "@nav/api/MainModule.ContextTrait.info",
                     "ContextTrait.start": "@nav/api/MainModule.ContextTrait.start",
-                    "ContextTrait.warning": "@nav/api/MainModule.ContextTrait.warning"
+                    "ContextTrait.warning": "@nav/api/MainModule.ContextTrait.warning",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -1975,8 +1984,8 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "emitHtmlUpdated()",
                         "implementation": "emitHtmlUpdated() {\n    this.htmlUpdated$.next(true)\n}",
-                        "startLine": 717,
-                        "endLine": 720,
+                        "startLine": 718,
+                        "endLine": 721,
                         "references": {
                             "emitHtmlUpdated": "@nav/api/MainModule.Router.emitHtmlUpdated"
                         }
@@ -2080,13 +2089,14 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "@Contextual({\n    key: ({ path }: { path: string }) => path,\n    async: true,\n})\nasync getNav(\n    target: UrlTarget,\n    ctx?: ContextTrait,\n): Promise<Navigation<TLayout, THeader> | 'not-found'>",
                         "implementation": "@Contextual({\n    key: ({ path }: { path: string }) => path,\n    async: true,\n})\nasync getNav(\n    target: UrlTarget,\n    ctx?: ContextTrait,\n): Promise<Navigation<TLayout, THeader> | 'not-found'> {\n    ctx = this.ctx(ctx)\n    const { path, parameters } = target\n    if (\n        path in this.navNodeCache &&\n        Object.keys(parameters ?? {}).length === 0\n    ) {\n        ctx.info(\n            `No query parameters & node in cache => return it`,\n            this.navNodeCache[path],\n        )\n        return this.navNodeCache[path]\n    }\n    const nav = timer(0, this.retryNavPeriod).pipe(\n        switchMap((i) => {\n            ctx.info(`Attempt 'getNav' #${String(i)}`)\n            const nav = this._getNav({ path }, ctx)\n            if (nav instanceof Observable) {\n                return nav\n            }\n            return of(nav)\n        }),\n        tap((nav) => {\n            if (nav === 'unresolved') {\n                console.log('Try to wait...')\n                this.target$.next({\n                    path,\n                    reason: 'Pending',\n                })\n            }\n        }),\n        filter((nav) => nav !== 'unresolved'),\n        take(1),\n    )\n    return await firstValueFrom(nav)\n}",
-                        "startLine": 537,
-                        "endLine": 580,
+                        "startLine": 538,
+                        "endLine": 581,
                         "references": {
                             "getNav": "@nav/api/MainModule.Router.getNav",
                             "UrlTarget": "@nav/api/MainModule.UrlTarget",
                             "ContextTrait": "@nav/api/MainModule.ContextTrait",
-                            "Navigation": "@nav/api/MainModule.Navigation"
+                            "Navigation": "@nav/api/MainModule.Navigation",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -2128,13 +2138,14 @@
                     "code": {
                         "filePath": "src/lib/router.ts",
                         "declaration": "@Contextual({\n    async: true,\n    key: (target: UrlTarget | string) =>\n        typeof target === 'string' ? target : target.path,\n})\nasync navigateTo(target: UrlTarget | string, ctx?: ContextTrait)",
-                        "implementation": "@Contextual({\n    async: true,\n    key: (target: UrlTarget | string) =>\n        typeof target === 'string' ? target : target.path,\n})\nasync navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {\n    ctx = this.ctx(ctx)\n    const originalTarget =\n        typeof target === 'string' ? parseUrl(target) : target\n\n    const redirectTarget = await this.redirects\n        .reverse()\n        .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {\n            const from = await acc\n            return from\n                ? await redirect(from, ctx)\n                : Promise.resolve(undefined)\n        }, Promise.resolve(originalTarget))\n\n    if (!redirectTarget) {\n        ctx.info('Redirect returned `undefined`: cancel navigation')\n        return\n    }\n    const path = sanitizeNavPath(redirectTarget.path)\n    const sectionId = redirectTarget.sectionId\n\n    ctx.info('Schedule async nav node retrieval', target)\n    const resolved = await this.getNav(redirectTarget, ctx)\n    if (resolved === 'not-found') {\n        this.target$.next({\n            path,\n            reason: 'NotFound',\n        })\n        return\n    }\n    this.browserClient.pushState({ target: redirectTarget }, ctx)\n    this.path$.next(path)\n\n    this.target$.next({\n        node: resolved,\n        path,\n        sectionId: sectionId === '' ? undefined : sectionId,\n        forceReload: originalTarget.forceReload ? true : false,\n    })\n    await this.expandNavigationTree(path)\n}",
+                        "implementation": "@Contextual({\n    async: true,\n    key: (target: UrlTarget | string) =>\n        typeof target === 'string' ? target : target.path,\n})\nasync navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {\n    ctx = this.ctx(ctx)\n    const originalTarget =\n        typeof target === 'string' ? parseUrl(target) : target\n\n    const redirectTarget = await this.redirects\n        .reverse()\n        .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {\n            const from = await acc\n            return from\n                ? await redirect(from, ctx)\n                : Promise.resolve(undefined)\n        }, Promise.resolve(originalTarget))\n\n    if (!redirectTarget) {\n        ctx.info('Redirect returned `undefined`: cancel navigation')\n        return\n    }\n    const path = sanitizeNavPath(redirectTarget.path)\n    const sectionId = redirectTarget.sectionId\n\n    ctx.info('Schedule async nav node retrieval', target)\n    const resolved = await this.getNav(redirectTarget, ctx)\n    if (resolved === 'not-found') {\n        this.target$.next({\n            path,\n            reason: 'NotFound',\n        })\n        return\n    }\n    this.browserClient.pushState({ target: redirectTarget }, ctx)\n    this.path$.next(path)\n\n    this.target$.next({\n        node: resolved,\n        path,\n        sectionId: sectionId === '' ? undefined : sectionId,\n        forceReload: originalTarget.forceReload ? true : false,\n        parameters: redirectTarget.parameters,\n    })\n    await this.expandNavigationTree(path)\n}",
                         "startLine": 397,
-                        "endLine": 443,
+                        "endLine": 444,
                         "references": {
                             "navigateTo": "@nav/api/MainModule.Router.navigateTo",
                             "UrlTarget": "@nav/api/MainModule.UrlTarget",
-                            "ContextTrait": "@nav/api/MainModule.ContextTrait"
+                            "ContextTrait": "@nav/api/MainModule.ContextTrait",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -2213,10 +2224,11 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "public scrollTo(target?: string | HTMLElement)",
                         "implementation": "public scrollTo(target?: string | HTMLElement) {\n    this.scrollTo$.next(target)\n}",
-                        "startLine": 460,
-                        "endLine": 463,
+                        "startLine": 461,
+                        "endLine": 464,
                         "references": {
-                            "scrollTo": "@nav/api/MainModule.Router.scrollTo"
+                            "scrollTo": "@nav/api/MainModule.Router.scrollTo",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     },
                     "semantic": {
@@ -2259,10 +2271,11 @@
                         "filePath": "src/lib/router.ts",
                         "declaration": "setScrollableElement(element: HTMLElement)",
                         "implementation": "setScrollableElement(element: HTMLElement) {\n    this.scrollableElement = element\n    this.target$\n        .pipe(\n            take(1),\n            filter((target) => 'node' in target),\n        )\n        .subscribe((target) => {\n            this.scrollTo(target.sectionId)\n        })\n}",
-                        "startLine": 444,
-                        "endLine": 455,
+                        "startLine": 445,
+                        "endLine": 456,
                         "references": {
-                            "setScrollableElement": "@nav/api/MainModule.Router.setScrollableElement"
+                            "setScrollableElement": "@nav/api/MainModule.Router.setScrollableElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     },
                     "semantic": {
@@ -2276,9 +2289,9 @@
             "code": {
                 "filePath": "src/lib/router.ts",
                 "declaration": "export class Router<TLayout = unknown, THeader = unknown>",
-                "implementation": "export class Router<TLayout = unknown, THeader = unknown> {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation<TLayout, THeader>\n\n    /**\n     * Debounced time applied when scrolling to specific target is triggered.\n     */\n    public readonly scrollingDebounceTime: number = 100\n\n    /**\n     * Handles navigation redirections.\n     *\n     * These functions are invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * Functions are evaluated in reversed order, if one returns `undefined`, navigation is canceled.\n     *\n     * @param target - The requested target that the user intends to navigate to.\n     * @returns The modified target to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: Redirect[] = [\n        (target) => Promise.resolve(target),\n    ]\n\n    /**\n     * Observable that emit the current page target.\n     */\n    public readonly target$: ReplaySubject<\n        Target<TLayout, THeader> | UnresolvedTarget\n    > = new ReplaySubject<Target<TLayout, THeader> | UnresolvedTarget>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly path$: ReplaySubject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<\n        AnyNavNode<TLayout, THeader>\n    >\n\n    public scrollableElement: HTMLElement | undefined\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        Record<string, unknown[]>\n    > = { Warning: {}, Error: {} }\n\n    /**\n     * Storage attribute for user data.\n     */\n    public readonly userStore?: unknown\n\n    private navUpdates: Record<string, LazyRoutesCb<TLayout, THeader>> = {}\n    private navResolved: Record<string, Navigation<TLayout, THeader>> = {}\n\n    /**\n     * Browser client, see {@link WebBrowser} for regular scenario (library running within a tab of a web browser).\n     */\n    public readonly browserClient: BrowserInterface\n\n    public readonly context?: ContextTrait\n    private navParser = new NavParser()\n    private scrollTo$ = new Subject<string | HTMLElement | undefined>()\n\n    private navNodeCache: Record<string, Navigation<TLayout, THeader>> = {}\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.browserClient See {@link BrowserInterface}.\n     * @param params.scrollingDebounceTime See {@link Router.scrollingDebounceTime}.\n     * @param params.userStore See {@link Router.userStore}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    constructor(\n        params: {\n            navigation: Navigation<TLayout, THeader>\n            basePath?: string\n            retryNavPeriod?: number\n            redirects?: Redirect[]\n            browserClient?: (\n                p: {\n                    router: Router\n                    basePath: string\n                },\n                ctx?: ContextTrait,\n            ) => BrowserInterface\n            scrollingDebounceTime?: number\n            userStore?: unknown\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        this.context = ctx\n        const context = this.ctx().start('new Router', ['Router'])\n        this.basePath = this.basePath || document.location.pathname\n        this.browserClient = params.browserClient\n            ? params.browserClient({ router: this, basePath: this.basePath })\n            : new WebBrowser({ router: this, basePath: this.basePath }, context)\n\n        const { rootNode, reactiveNavs, promiseNavs } =\n            this.navParser.createRootNode(\n                {\n                    navigation: this.navigation,\n                    router: this,\n                },\n                context,\n            )\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        this.bindReactiveNavs(reactiveNavs, context)\n        this.bindPromiseNavs(promiseNavs, context)\n\n        this.target$\n            .pipe(\n                filter((page) => {\n                    return isResolvedTarget(page)\n                }),\n            )\n            .subscribe((page) => {\n                if (page.sectionId === undefined) {\n                    this.scrollTo()\n                }\n            })\n        fireAndForget(this.navigateTo(this.parseUrl(), context))\n\n        const removedNodes$ = this.explorerState.directUpdates$.pipe(\n            map((updates) =>\n                updates.map((update) => update.removedNodes).flat(),\n            ),\n            filter((nodes) => nodes.length > 0),\n        )\n        removedNodes$\n            .pipe(\n                withLatestFrom(this.target$),\n                filter(([nodes, target]) => {\n                    return (\n                        nodes.find((node) =>\n                            target.path.startsWith(node.href),\n                        ) !== undefined\n                    )\n                }),\n            )\n            .subscribe(([, target]) => {\n                context.info('Node parent of current path removed')\n                this.fireNavigateTo(\n                    { ...target, forceReload: true },\n                    undefined,\n                    context,\n                )\n            })\n        const scroll$ =\n            this.scrollingDebounceTime > 0\n                ? this.scrollTo$.pipe(debounceTime(this.scrollingDebounceTime))\n                : this.scrollTo$\n        scroll$.subscribe((target) => {\n            this._scrollTo(target)\n        })\n\n        removedNodes$.subscribe(() => {\n            this.navNodeCache = {}\n        })\n        this.target$.pipe(filter((t) => isResolvedTarget(t))).subscribe((t) => {\n            this.navNodeCache[t.path] = t.node\n            this.scrollTo(t.sectionId)\n        })\n        context.exit()\n    }\n\n    ctx(ctx?: ContextTrait) {\n        if (ctx) {\n            return ctx\n        }\n        return this.context ?? new NoContext()\n    }\n    /**\n     * Returns the current navigation path.\n     */\n    parseUrl(): UrlTarget {\n        return this.browserClient.parseUrl()\n    }\n\n    /**\n     * Fire navigation to given path with no `await`.\n     *\n     * @param target  The path to navigate to.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param onError Callback called if errors happen.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    fireNavigateTo(\n        target: UrlTarget | string,\n        onError?: (err: unknown) => void,\n        ctx?: ContextTrait,\n    ) {\n        fireAndForget(this.navigateTo(target, ctx), onError)\n    }\n\n    /**\n     * Navigate to a specific target.\n     *\n     * @param target The URL target.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        async: true,\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    async navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {\n        ctx = this.ctx(ctx)\n        const originalTarget =\n            typeof target === 'string' ? parseUrl(target) : target\n\n        const redirectTarget = await this.redirects\n            .reverse()\n            .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {\n                const from = await acc\n                return from\n                    ? await redirect(from, ctx)\n                    : Promise.resolve(undefined)\n            }, Promise.resolve(originalTarget))\n\n        if (!redirectTarget) {\n            ctx.info('Redirect returned `undefined`: cancel navigation')\n            return\n        }\n        const path = sanitizeNavPath(redirectTarget.path)\n        const sectionId = redirectTarget.sectionId\n\n        ctx.info('Schedule async nav node retrieval', target)\n        const resolved = await this.getNav(redirectTarget, ctx)\n        if (resolved === 'not-found') {\n            this.target$.next({\n                path,\n                reason: 'NotFound',\n            })\n            return\n        }\n        this.browserClient.pushState({ target: redirectTarget }, ctx)\n        this.path$.next(path)\n\n        this.target$.next({\n            node: resolved,\n            path,\n            sectionId: sectionId === '' ? undefined : sectionId,\n            forceReload: originalTarget.forceReload ? true : false,\n        })\n        await this.expandNavigationTree(path)\n    }\n\n    /**\n     * Set the element in page that can be 'scrolled' to reach target destination's section ID (reference from URL).\n     *\n     * @param element Scrollable element.\n     */\n    setScrollableElement(element: HTMLElement) {\n        this.scrollableElement = element\n        this.target$\n            .pipe(\n                take(1),\n                filter((target) => 'node' in target),\n            )\n            .subscribe((target) => {\n                this.scrollTo(target.sectionId)\n            })\n    }\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    public scrollTo(target?: string | HTMLElement) {\n        this.scrollTo$.next(target)\n    }\n\n    private _scrollTo(target?: string | HTMLElement) {\n        const ctx = this.ctx()\n        if (\n            !this.scrollableElement ||\n            !('scrollTo' in this.scrollableElement)\n        ) {\n            return\n        }\n        const scrollableElement = this.scrollableElement\n        if (!target) {\n            ctx.info('No target specified, scroll to top.')\n            scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const br = scrollableElement.getBoundingClientRect()\n        const div =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(scrollableElement, target)\n\n        if (!div) {\n            ctx.warning(`Can not scroll to element`, target)\n            return\n        }\n        this.browserClient.pushState(\n            {\n                target: {\n                    ...this.parseUrl(),\n                    sectionId: div.id,\n                    issuer: 'scroll',\n                },\n            },\n            ctx,\n        )\n        setTimeout(() => {\n            ctx.info('Target found, scroll to it.')\n            const offset = div.offsetTop\n            scrollableElement.scrollTo({\n                top: div.offsetTop - br.top - 1,\n                left: 0,\n                behavior: 'smooth',\n            })\n            setTimeout(() => {\n                if (div.offsetTop - offset !== 0) {\n                    scrollableElement.scrollTo({\n                        top: div.offsetTop - br.top - 1,\n                        left: 0,\n                        behavior: 'smooth',\n                    })\n                }\n            }, this.scrollingDebounceTime)\n        }, 0)\n    }\n\n    /**\n     * Asynchronously retrieves the navigation node for a given path.\n     * If the node is not immediately available, it will retry for a short period before returning a result.\n     *\n     * - If the node is found, it returns the corresponding `Navigation<TLayout, THeader>` object.\n     * - If the node does not exist, it returns `'not-found'`.\n     * - If the node is still unresolved, it waits and retries periodically.\n     *\n     * @param target The target.\n     * @param ctx Execution context used for logging and tracing.\n     * @returns A `Promise` resolving to the navigation node, or `'not-found'` if the node does not exist.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n        async: true,\n    })\n    async getNav(\n        target: UrlTarget,\n        ctx?: ContextTrait,\n    ): Promise<Navigation<TLayout, THeader> | 'not-found'> {\n        ctx = this.ctx(ctx)\n        const { path, parameters } = target\n        if (\n            path in this.navNodeCache &&\n            Object.keys(parameters ?? {}).length === 0\n        ) {\n            ctx.info(\n                `No query parameters & node in cache => return it`,\n                this.navNodeCache[path],\n            )\n            return this.navNodeCache[path]\n        }\n        const nav = timer(0, this.retryNavPeriod).pipe(\n            switchMap((i) => {\n                ctx.info(`Attempt 'getNav' #${String(i)}`)\n                const nav = this._getNav({ path }, ctx)\n                if (nav instanceof Observable) {\n                    return nav\n                }\n                return of(nav)\n            }),\n            tap((nav) => {\n                if (nav === 'unresolved') {\n                    console.log('Try to wait...')\n                    this.target$.next({\n                        path,\n                        reason: 'Pending',\n                    })\n                }\n            }),\n            filter((nav) => nav !== 'unresolved'),\n            take(1),\n        )\n        return await firstValueFrom(nav)\n    }\n    /**\n     * Retrieves the navigation node corresponding to a given path as observable (emitting 1 item and closing),\n     * or `not-found` if it does not exist, or `unresolved` if the node is not resolved yet but maybe in a\n     * (hopefully short) future.\n     *\n     * @param path The target path.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n    })\n    private _getNav(\n        {\n            path,\n        }: {\n            path: string\n        },\n        ctx?: ContextTrait,\n    ): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {\n        ctx = this.ctx(ctx)\n        path = sanitizeNavPath(path)\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                ctx.info(`Resolve ${resolvedPath}/${part}`)\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                if (tree.routes === undefined) {\n                    return 'not-found'\n                }\n                const routes = tree.routes\n                if (\n                    typeof routes === 'function' ||\n                    routes instanceof Observable\n                ) {\n                    // the navigation is a catch-all routes\n                    return {\n                        tree:\n                            resolvedPath in this.navUpdates\n                                ? this.navUpdates[resolvedPath]\n                                : routes,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n\n                if (`/${part}` in routes) {\n                    const route = routes[`/${part}`]\n\n                    if (!(route instanceof Promise)) {\n                        return {\n                            tree: route,\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n\n                    const fullPath = sanitizeNavPath(`${resolvedPath}/${part}`)\n                    if (fullPath in this.navResolved) {\n                        return {\n                            tree: this.navResolved[fullPath],\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n                    // a retry in some period of time will be executed\n                    return {\n                        tree: route,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return 'not-found'\n            },\n            { tree: this.navigation, resolvedPath: `/`, keepGoing: true },\n        )\n        if (node === 'not-found') {\n            ctx.info('Navigation node is not found')\n            return 'not-found'\n        }\n        // node.tree: Navigation |  Promise<Navigation> | LazyRoutesCb | LazyRoutesCb$\n        if (node.tree instanceof Observable || node.tree instanceof Promise) {\n            ctx.info('Navigation node is unresolved')\n            // case: Promise<Navigation> or LazyRoutesCb$ -> a retry in some period of time will be executed\n            return 'unresolved'\n        }\n        if (typeof node.tree === 'function') {\n            ctx.info('Navigation node is function for lazy definition')\n            // case: LazyRoutesCb, remove starting '/'\n            const relative =\n                node.resolvedPath === '/'\n                    ? path\n                    : sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const parent = sanitizeNavPath(\n                relative.split('/').slice(0, -1).join('/'),\n            )\n            const parentNav = node.tree({ path: parent, router: this })\n            if (!parentNav) {\n                return 'not-found'\n            }\n            return resolve(parentNav).pipe(\n                mergeMap((resolved) => {\n                    const target = sanitizeNavPath(\n                        relative.split('/').slice(-1)[0],\n                    )\n                    return resolve(resolved[target])\n                }),\n            )\n        }\n        // node.tree: Navigation\n        ctx.info('Navigation node found', node.tree)\n        return of(node.tree)\n    }\n\n    private async expandNavigationTree(path: string) {\n        const ids = pathIds(path)\n        for (const id of ids.slice(0, -1)) {\n            const node = this.explorerState.getNodeResolved(id)\n            this.explorerState.getChildren(node)\n            await firstValueFrom(this.explorerState.getChildren$(node))\n        }\n        const node = this.explorerState.getNodeResolved(ids.slice(-1)[0])\n        this.explorerState.selectNodeAndExpand(node)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n\n    @Contextual()\n    private bindReactiveNavs(\n        reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNodeResolved(href)\n                ctx.info(`Replace Node w/ Observable '${href}'`, oldNode)\n                const children = this.navParser.createLazyChildren$(\n                    {\n                        resolver: resolver,\n                        hrefBase: href,\n                        path: '',\n                        withExplicit: [],\n                        router: this,\n                        depth: 0,\n                    },\n                    ctx,\n                )\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                }) as AnyNavNode<TLayout, THeader>\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n    }\n    @Contextual()\n    private bindPromiseNavs(\n        promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(promiseNavs).forEach(([href, v]) => {\n            v.then(\n                (nav) => {\n                    this.navResolved[href] = nav\n                    const oldNode = this.explorerState.getNodeResolved(href)\n                    ctx.info(`Replace Node w/ Promise '${href}'`, oldNode)\n                    const { rootNode, reactiveNavs, promiseNavs } =\n                        this.navParser.createRootNode(\n                            {\n                                navigation: nav,\n                                router: this,\n                                hrefBase: href,\n                            },\n                            ctx,\n                        )\n                    this.explorerState.replaceNode(oldNode, rootNode)\n                    this.bindReactiveNavs(reactiveNavs, ctx)\n                    this.bindPromiseNavs(promiseNavs, ctx)\n                },\n                () => {\n                    throw Error(\n                        `Router.bindPromiseNavs: unable to bind promise navigation on ${href}`,\n                    )\n                },\n            )\n        })\n    }\n}",
+                "implementation": "export class Router<TLayout = unknown, THeader = unknown> {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation<TLayout, THeader>\n\n    /**\n     * Debounced time applied when scrolling to specific target is triggered.\n     */\n    public readonly scrollingDebounceTime: number = 100\n\n    /**\n     * Handles navigation redirections.\n     *\n     * These functions are invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * Functions are evaluated in reversed order, if one returns `undefined`, navigation is canceled.\n     *\n     * @param target - The requested target that the user intends to navigate to.\n     * @returns The modified target to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: Redirect[] = [\n        (target) => Promise.resolve(target),\n    ]\n\n    /**\n     * Observable that emit the current page target.\n     */\n    public readonly target$: ReplaySubject<\n        Target<TLayout, THeader> | UnresolvedTarget\n    > = new ReplaySubject<Target<TLayout, THeader> | UnresolvedTarget>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly path$: ReplaySubject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<\n        AnyNavNode<TLayout, THeader>\n    >\n\n    public scrollableElement: HTMLElement | undefined\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        Record<string, unknown[]>\n    > = { Warning: {}, Error: {} }\n\n    /**\n     * Storage attribute for user data.\n     */\n    public readonly userStore?: unknown\n\n    private navUpdates: Record<string, LazyRoutesCb<TLayout, THeader>> = {}\n    private navResolved: Record<string, Navigation<TLayout, THeader>> = {}\n\n    /**\n     * Browser client, see {@link WebBrowser} for regular scenario (library running within a tab of a web browser).\n     */\n    public readonly browserClient: BrowserInterface\n\n    public readonly context?: ContextTrait\n    private navParser = new NavParser()\n    private scrollTo$ = new Subject<string | HTMLElement | undefined>()\n\n    private navNodeCache: Record<string, Navigation<TLayout, THeader>> = {}\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.browserClient See {@link BrowserInterface}.\n     * @param params.scrollingDebounceTime See {@link Router.scrollingDebounceTime}.\n     * @param params.userStore See {@link Router.userStore}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    constructor(\n        params: {\n            navigation: Navigation<TLayout, THeader>\n            basePath?: string\n            retryNavPeriod?: number\n            redirects?: Redirect[]\n            browserClient?: (\n                p: {\n                    router: Router\n                    basePath: string\n                },\n                ctx?: ContextTrait,\n            ) => BrowserInterface\n            scrollingDebounceTime?: number\n            userStore?: unknown\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        this.context = ctx\n        const context = this.ctx().start('new Router', ['Router'])\n        this.basePath = this.basePath || document.location.pathname\n        this.browserClient = params.browserClient\n            ? params.browserClient({ router: this, basePath: this.basePath })\n            : new WebBrowser({ router: this, basePath: this.basePath }, context)\n\n        const { rootNode, reactiveNavs, promiseNavs } =\n            this.navParser.createRootNode(\n                {\n                    navigation: this.navigation,\n                    router: this,\n                },\n                context,\n            )\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n        this.bindReactiveNavs(reactiveNavs, context)\n        this.bindPromiseNavs(promiseNavs, context)\n\n        this.target$\n            .pipe(\n                filter((page) => {\n                    return isResolvedTarget(page)\n                }),\n            )\n            .subscribe((page) => {\n                if (page.sectionId === undefined) {\n                    this.scrollTo()\n                }\n            })\n        fireAndForget(this.navigateTo(this.parseUrl(), context))\n\n        const removedNodes$ = this.explorerState.directUpdates$.pipe(\n            map((updates) =>\n                updates.map((update) => update.removedNodes).flat(),\n            ),\n            filter((nodes) => nodes.length > 0),\n        )\n        removedNodes$\n            .pipe(\n                withLatestFrom(this.target$),\n                filter(([nodes, target]) => {\n                    return (\n                        nodes.find((node) =>\n                            target.path.startsWith(node.href),\n                        ) !== undefined\n                    )\n                }),\n            )\n            .subscribe(([, target]) => {\n                context.info('Node parent of current path removed')\n                this.fireNavigateTo(\n                    { ...target, forceReload: true },\n                    undefined,\n                    context,\n                )\n            })\n        const scroll$ =\n            this.scrollingDebounceTime > 0\n                ? this.scrollTo$.pipe(debounceTime(this.scrollingDebounceTime))\n                : this.scrollTo$\n        scroll$.subscribe((target) => {\n            this._scrollTo(target)\n        })\n\n        removedNodes$.subscribe(() => {\n            this.navNodeCache = {}\n        })\n        this.target$.pipe(filter((t) => isResolvedTarget(t))).subscribe((t) => {\n            this.navNodeCache[t.path] = t.node\n            this.scrollTo(t.sectionId)\n        })\n        context.exit()\n    }\n\n    ctx(ctx?: ContextTrait) {\n        if (ctx) {\n            return ctx\n        }\n        return this.context ?? new NoContext()\n    }\n    /**\n     * Returns the current navigation path.\n     */\n    parseUrl(): UrlTarget {\n        return this.browserClient.parseUrl()\n    }\n\n    /**\n     * Fire navigation to given path with no `await`.\n     *\n     * @param target  The path to navigate to.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param onError Callback called if errors happen.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    fireNavigateTo(\n        target: UrlTarget | string,\n        onError?: (err: unknown) => void,\n        ctx?: ContextTrait,\n    ) {\n        fireAndForget(this.navigateTo(target, ctx), onError)\n    }\n\n    /**\n     * Navigate to a specific target.\n     *\n     * @param target The URL target.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        async: true,\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    async navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {\n        ctx = this.ctx(ctx)\n        const originalTarget =\n            typeof target === 'string' ? parseUrl(target) : target\n\n        const redirectTarget = await this.redirects\n            .reverse()\n            .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {\n                const from = await acc\n                return from\n                    ? await redirect(from, ctx)\n                    : Promise.resolve(undefined)\n            }, Promise.resolve(originalTarget))\n\n        if (!redirectTarget) {\n            ctx.info('Redirect returned `undefined`: cancel navigation')\n            return\n        }\n        const path = sanitizeNavPath(redirectTarget.path)\n        const sectionId = redirectTarget.sectionId\n\n        ctx.info('Schedule async nav node retrieval', target)\n        const resolved = await this.getNav(redirectTarget, ctx)\n        if (resolved === 'not-found') {\n            this.target$.next({\n                path,\n                reason: 'NotFound',\n            })\n            return\n        }\n        this.browserClient.pushState({ target: redirectTarget }, ctx)\n        this.path$.next(path)\n\n        this.target$.next({\n            node: resolved,\n            path,\n            sectionId: sectionId === '' ? undefined : sectionId,\n            forceReload: originalTarget.forceReload ? true : false,\n            parameters: redirectTarget.parameters,\n        })\n        await this.expandNavigationTree(path)\n    }\n\n    /**\n     * Set the element in page that can be 'scrolled' to reach target destination's section ID (reference from URL).\n     *\n     * @param element Scrollable element.\n     */\n    setScrollableElement(element: HTMLElement) {\n        this.scrollableElement = element\n        this.target$\n            .pipe(\n                take(1),\n                filter((target) => 'node' in target),\n            )\n            .subscribe((target) => {\n                this.scrollTo(target.sectionId)\n            })\n    }\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    public scrollTo(target?: string | HTMLElement) {\n        this.scrollTo$.next(target)\n    }\n\n    private _scrollTo(target?: string | HTMLElement) {\n        const ctx = this.ctx()\n        if (\n            !this.scrollableElement ||\n            !('scrollTo' in this.scrollableElement)\n        ) {\n            return\n        }\n        const scrollableElement = this.scrollableElement\n        if (!target) {\n            ctx.info('No target specified, scroll to top.')\n            scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const br = scrollableElement.getBoundingClientRect()\n        const div =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(scrollableElement, target)\n\n        if (!div) {\n            ctx.warning(`Can not scroll to element`, target)\n            return\n        }\n        this.browserClient.pushState(\n            {\n                target: {\n                    ...this.parseUrl(),\n                    sectionId: div.id,\n                    issuer: 'scroll',\n                },\n            },\n            ctx,\n        )\n        setTimeout(() => {\n            ctx.info('Target found, scroll to it.')\n            const offset = div.offsetTop\n            scrollableElement.scrollTo({\n                top: div.offsetTop - br.top - 1,\n                left: 0,\n                behavior: 'smooth',\n            })\n            setTimeout(() => {\n                if (div.offsetTop - offset !== 0) {\n                    scrollableElement.scrollTo({\n                        top: div.offsetTop - br.top - 1,\n                        left: 0,\n                        behavior: 'smooth',\n                    })\n                }\n            }, this.scrollingDebounceTime)\n        }, 0)\n    }\n\n    /**\n     * Asynchronously retrieves the navigation node for a given path.\n     * If the node is not immediately available, it will retry for a short period before returning a result.\n     *\n     * - If the node is found, it returns the corresponding `Navigation<TLayout, THeader>` object.\n     * - If the node does not exist, it returns `'not-found'`.\n     * - If the node is still unresolved, it waits and retries periodically.\n     *\n     * @param target The target.\n     * @param ctx Execution context used for logging and tracing.\n     * @returns A `Promise` resolving to the navigation node, or `'not-found'` if the node does not exist.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n        async: true,\n    })\n    async getNav(\n        target: UrlTarget,\n        ctx?: ContextTrait,\n    ): Promise<Navigation<TLayout, THeader> | 'not-found'> {\n        ctx = this.ctx(ctx)\n        const { path, parameters } = target\n        if (\n            path in this.navNodeCache &&\n            Object.keys(parameters ?? {}).length === 0\n        ) {\n            ctx.info(\n                `No query parameters & node in cache => return it`,\n                this.navNodeCache[path],\n            )\n            return this.navNodeCache[path]\n        }\n        const nav = timer(0, this.retryNavPeriod).pipe(\n            switchMap((i) => {\n                ctx.info(`Attempt 'getNav' #${String(i)}`)\n                const nav = this._getNav({ path }, ctx)\n                if (nav instanceof Observable) {\n                    return nav\n                }\n                return of(nav)\n            }),\n            tap((nav) => {\n                if (nav === 'unresolved') {\n                    console.log('Try to wait...')\n                    this.target$.next({\n                        path,\n                        reason: 'Pending',\n                    })\n                }\n            }),\n            filter((nav) => nav !== 'unresolved'),\n            take(1),\n        )\n        return await firstValueFrom(nav)\n    }\n    /**\n     * Retrieves the navigation node corresponding to a given path as observable (emitting 1 item and closing),\n     * or `not-found` if it does not exist, or `unresolved` if the node is not resolved yet but maybe in a\n     * (hopefully short) future.\n     *\n     * @param path The target path.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n    })\n    private _getNav(\n        {\n            path,\n        }: {\n            path: string\n        },\n        ctx?: ContextTrait,\n    ): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {\n        ctx = this.ctx(ctx)\n        path = sanitizeNavPath(path)\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                ctx.info(`Resolve ${resolvedPath}/${part}`)\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                if (tree.routes === undefined) {\n                    return 'not-found'\n                }\n                const routes = tree.routes\n                if (\n                    typeof routes === 'function' ||\n                    routes instanceof Observable\n                ) {\n                    // the navigation is a catch-all routes\n                    return {\n                        tree:\n                            resolvedPath in this.navUpdates\n                                ? this.navUpdates[resolvedPath]\n                                : routes,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n\n                if (`/${part}` in routes) {\n                    const route = routes[`/${part}`]\n\n                    if (!(route instanceof Promise)) {\n                        return {\n                            tree: route,\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n\n                    const fullPath = sanitizeNavPath(`${resolvedPath}/${part}`)\n                    if (fullPath in this.navResolved) {\n                        return {\n                            tree: this.navResolved[fullPath],\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n                    // a retry in some period of time will be executed\n                    return {\n                        tree: route,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return 'not-found'\n            },\n            { tree: this.navigation, resolvedPath: `/`, keepGoing: true },\n        )\n        if (node === 'not-found') {\n            ctx.info('Navigation node is not found')\n            return 'not-found'\n        }\n        // node.tree: Navigation |  Promise<Navigation> | LazyRoutesCb | LazyRoutesCb$\n        if (node.tree instanceof Observable || node.tree instanceof Promise) {\n            ctx.info('Navigation node is unresolved')\n            // case: Promise<Navigation> or LazyRoutesCb$ -> a retry in some period of time will be executed\n            return 'unresolved'\n        }\n        if (typeof node.tree === 'function') {\n            ctx.info('Navigation node is function for lazy definition')\n            // case: LazyRoutesCb, remove starting '/'\n            const relative =\n                node.resolvedPath === '/'\n                    ? path\n                    : sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const parent = sanitizeNavPath(\n                relative.split('/').slice(0, -1).join('/'),\n            )\n            const parentNav = node.tree({ path: parent, router: this })\n            if (!parentNav) {\n                return 'not-found'\n            }\n            return resolve(parentNav).pipe(\n                mergeMap((resolved) => {\n                    const target = sanitizeNavPath(\n                        relative.split('/').slice(-1)[0],\n                    )\n                    return resolve(resolved[target])\n                }),\n            )\n        }\n        // node.tree: Navigation\n        ctx.info('Navigation node found', node.tree)\n        return of(node.tree)\n    }\n\n    private async expandNavigationTree(path: string) {\n        const ids = pathIds(path)\n        for (const id of ids.slice(0, -1)) {\n            const node = this.explorerState.getNodeResolved(id)\n            this.explorerState.getChildren(node)\n            await firstValueFrom(this.explorerState.getChildren$(node))\n        }\n        const node = this.explorerState.getNodeResolved(ids.slice(-1)[0])\n        this.explorerState.selectNodeAndExpand(node)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n\n    @Contextual()\n    private bindReactiveNavs(\n        reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNodeResolved(href)\n                ctx.info(`Replace Node w/ Observable '${href}'`, oldNode)\n                const children = this.navParser.createLazyChildren$(\n                    {\n                        resolver: resolver,\n                        hrefBase: href,\n                        path: '',\n                        withExplicit: [],\n                        router: this,\n                        depth: 0,\n                    },\n                    ctx,\n                )\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                }) as AnyNavNode<TLayout, THeader>\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n    }\n    @Contextual()\n    private bindPromiseNavs(\n        promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(promiseNavs).forEach(([href, v]) => {\n            v.then(\n                (nav) => {\n                    this.navResolved[href] = nav\n                    const oldNode = this.explorerState.getNodeResolved(href)\n                    ctx.info(`Replace Node w/ Promise '${href}'`, oldNode)\n                    const { rootNode, reactiveNavs, promiseNavs } =\n                        this.navParser.createRootNode(\n                            {\n                                navigation: nav,\n                                router: this,\n                                hrefBase: href,\n                            },\n                            ctx,\n                        )\n                    this.explorerState.replaceNode(oldNode, rootNode)\n                    this.bindReactiveNavs(reactiveNavs, ctx)\n                    this.bindPromiseNavs(promiseNavs, ctx)\n                },\n                () => {\n                    throw Error(\n                        `Router.bindPromiseNavs: unable to bind promise navigation on ${href}`,\n                    )\n                },\n            )\n        })\n    }\n}",
                 "startLine": 155,
-                "endLine": 785,
+                "endLine": 786,
                 "references": {
                     "Router": "@nav/api/MainModule.Router",
                     "ContextTrait": "@nav/api/MainModule.ContextTrait",
@@ -2290,7 +2303,10 @@
                     "UnresolvedTarget": "@nav/api/MainModule.UnresolvedTarget",
                     "UrlTarget": "@nav/api/MainModule.UrlTarget",
                     "Subject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
-                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
+                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -2717,7 +2733,8 @@
                         "references": {
                             "executeAsync": "@nav/api/MainModule.ContextTrait.executeAsync",
                             "ContextTrait": "@nav/api/MainModule.ContextTrait",
-                            "Label": "@nav/api/MainModule.Label"
+                            "Label": "@nav/api/MainModule.Label",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -2891,7 +2908,8 @@
                     "ContextTrait": "@nav/api/MainModule.ContextTrait",
                     "Label": "@nav/api/MainModule.Label",
                     "Context": "@nav/api/MainModule.Context",
-                    "NoContext": "@nav/api/MainModule.NoContext"
+                    "NoContext": "@nav/api/MainModule.NoContext",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -3308,7 +3326,8 @@
                         "startLine": 139,
                         "endLine": 140,
                         "references": {
-                            "onRendered": "@nav/api/MainModule.MdParsingOptions.onRendered"
+                            "onRendered": "@nav/api/MainModule.MdParsingOptions.onRendered",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -3343,7 +3362,8 @@
                         "startLine": 40,
                         "endLine": 41,
                         "references": {
-                            "placeholders": "@nav/api/MainModule.MdParsingOptions.placeholders"
+                            "placeholders": "@nav/api/MainModule.MdParsingOptions.placeholders",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -3414,7 +3434,8 @@
                         "endLine": 87,
                         "references": {
                             "views": "@nav/api/MainModule.MdParsingOptions.views",
-                            "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                            "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 }
@@ -3428,7 +3449,9 @@
                 "endLine": 141,
                 "references": {
                     "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
-                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator"
+                    "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -3827,7 +3850,8 @@
                         "startLine": 52,
                         "endLine": 53,
                         "references": {
-                            "parameters": "@nav/api/MainModule.UrlTarget.parameters"
+                            "parameters": "@nav/api/MainModule.UrlTarget.parameters",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -3910,7 +3934,8 @@
                 "startLine": 39,
                 "endLine": 75,
                 "references": {
-                    "UrlTarget": "@nav/api/MainModule.UrlTarget"
+                    "UrlTarget": "@nav/api/MainModule.UrlTarget",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -3948,7 +3973,8 @@
                 "endLine": 13,
                 "references": {
                     "AnyView": "@nav/api/MainModule.AnyView",
-                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -4561,7 +4587,8 @@
                 "endLine": 25,
                 "references": {
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
-                    "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved"
+                    "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4648,7 +4675,8 @@
                 "references": {
                     "Redirect": "@nav/api/MainModule.Redirect",
                     "UrlTarget": "@nav/api/MainModule.UrlTarget",
-                    "ContextTrait": "@nav/api/MainModule.ContextTrait"
+                    "ContextTrait": "@nav/api/MainModule.ContextTrait",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -4697,6 +4725,7 @@
                 "endLine": 370,
                 "references": {
                     "Resolvable": "@nav/api/MainModule.Resolvable",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
                     "Observable": "https://rxjs.dev/guide/observable"
                 }
             },
@@ -4745,7 +4774,8 @@
                 "startLine": 388,
                 "endLine": 389,
                 "references": {
-                    "SegmentsRecord": "@nav/api/MainModule.SegmentsRecord"
+                    "SegmentsRecord": "@nav/api/MainModule.SegmentsRecord",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4795,7 +4825,8 @@
                 "references": {
                     "StaticRoutes": "@nav/api/MainModule.StaticRoutes",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
-                    "Navigation": "@nav/api/MainModule.Navigation"
+                    "Navigation": "@nav/api/MainModule.Navigation",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4874,7 +4905,8 @@
                     "ViewGenerator": "@nav/api/MainModule.ViewGenerator",
                     "Router": "@nav/api/MainModule.Router",
                     "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
-                    "AnyView": "@nav/api/MainModule.AnyView"
+                    "AnyView": "@nav/api/MainModule.AnyView",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -4912,7 +4944,8 @@
                 "endLine": 16,
                 "references": {
                     "WindowWithStaticConfig": "@nav/api/MainModule.WindowWithStaticConfig",
-                    "StaticConfig": "@nav/api/MainModule.StaticConfig"
+                    "StaticConfig": "@nav/api/MainModule.StaticConfig",
+                    "window": "https://developer.mozilla.org/en-US/docs/Web/API/Window"
                 }
             },
             "semantic": {
@@ -4972,7 +5005,8 @@
                 "endLine": 401,
                 "references": {
                     "Contextual": "@nav/api/MainModule.Contextual",
-                    "Label": "@nav/api/MainModule.Label"
+                    "Label": "@nav/api/MainModule.Label",
+                    "ClassMethodDecoratorContext": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html"
                 }
             },
             "semantic": {
@@ -5008,7 +5042,8 @@
                 "endLine": 23,
                 "references": {
                     "installCodeApiModule": "@nav/api/MainModule.installCodeApiModule",
-                    "__module": "@nav/api/CodeApi"
+                    "__module": "@nav/api/CodeApi",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -5044,7 +5079,8 @@
                 "endLine": 36,
                 "references": {
                     "installNotebookModule": "@nav/api/MainModule.installNotebookModule",
-                    "__module": "@nav/api/Notebook"
+                    "__module": "@nav/api/Notebook",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -5211,6 +5247,7 @@
                     "parseMdFromUrl": "@nav/api/MainModule.parseMdFromUrl",
                     "Router": "@nav/api/MainModule.Router",
                     "MdParsingOptions": "@nav/api/MainModule.MdParsingOptions",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -5304,7 +5341,8 @@
                 "startLine": 442,
                 "endLine": 474,
                 "references": {
-                    "removeEscapedText": "@nav/api/MainModule.removeEscapedText"
+                    "removeEscapedText": "@nav/api/MainModule.removeEscapedText",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -5351,7 +5389,8 @@
                 "endLine": 579,
                 "references": {
                     "replaceLinks": "@nav/api/MainModule.replaceLinks",
-                    "Router": "@nav/api/MainModule.Router"
+                    "Router": "@nav/api/MainModule.Router",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {

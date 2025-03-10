@@ -822,8 +822,8 @@
                         "filePath": "src/lib/default-layout/page.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 181,
-                        "endLine": 182,
+                        "startLine": 185,
+                        "endLine": 186,
                         "references": {
                             "children": "@nav/api/MainModule/DefaultLayout.FooterView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -858,8 +858,8 @@
                         "filePath": "src/lib/default-layout/page.view.ts",
                         "declaration": "public readonly class =\n        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center flex-wrap justify-content-center border-top py-1'",
                         "implementation": "",
-                        "startLine": 179,
-                        "endLine": 180,
+                        "startLine": 183,
+                        "endLine": 184,
                         "references": {
                             "class": "@nav/api/MainModule/DefaultLayout.FooterView.class"
                         }
@@ -893,8 +893,8 @@
                         "filePath": "src/lib/default-layout/page.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 178,
-                        "endLine": 179,
+                        "startLine": 182,
+                        "endLine": 183,
                         "references": {
                             "tag": "@nav/api/MainModule/DefaultLayout.FooterView.tag"
                         }
@@ -906,8 +906,8 @@
                 "filePath": "src/lib/default-layout/page.view.ts",
                 "declaration": "export class FooterView implements VirtualDOM<'div'>",
                 "implementation": "export class FooterView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly class =\n        'w-75 mx-auto mkdocs-FooterView d-flex align-items-center flex-wrap justify-content-center border-top py-1'\n    public readonly children: ChildrenLike\n\n    constructor(params?: { sourceName: string; sourceUrl: string }) {\n        const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`\n        const mkdocs: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center',\n            children: [\n                {\n                    tag: 'div',\n                    innerText: 'Made with',\n                },\n                {\n                    tag: 'div',\n                    class: 'mx-2',\n                },\n                {\n                    tag: 'img',\n                    src: `${baseIconPath}/mkdocs-ts.svg`,\n                    width: 25,\n                },\n                {\n                    tag: 'a',\n                    class: 'mx-1',\n                    innerText: 'mkdocs-ts',\n                    target: '_blank',\n                    href: '/apps/@mkdocs-ts/doc',\n                },\n            ],\n        }\n        const sources = () => ({\n            tag: 'div' as const,\n            class: 'd-flex align-items-center px-1 border rounded mx-2 my-1',\n            children: [\n                {\n                    tag: 'i' as const,\n                    class: 'fas fa-code-branch',\n                },\n                {\n                    tag: 'a' as const,\n                    class: 'mx-1',\n                    innerText: params?.sourceName,\n                    target: '_blank',\n                    href: params?.sourceUrl,\n                },\n            ],\n        })\n        this.children = [params ? sources() : undefined, mkdocs]\n    }\n}",
-                "startLine": 177,
-                "endLine": 231,
+                "startLine": 181,
+                "endLine": 235,
                 "references": {
                     "FooterView": "@nav/api/MainModule/DefaultLayout.FooterView",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
@@ -1042,7 +1042,8 @@
                         "startLine": 314,
                         "endLine": 315,
                         "references": {
-                            "connectedCallback": "@nav/api/MainModule/DefaultLayout.Layout.connectedCallback"
+                            "connectedCallback": "@nav/api/MainModule/DefaultLayout.Layout.connectedCallback",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -1253,6 +1254,7 @@
                     "ContextTrait": "@nav/api/MainModule.ContextTrait",
                     "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
@@ -1657,7 +1659,8 @@
                         "startLine": 168,
                         "endLine": 169,
                         "references": {
-                            "onclick": "@nav/api/MainModule/DefaultLayout.NavHeaderView.onclick"
+                            "onclick": "@nav/api/MainModule/DefaultLayout.NavHeaderView.onclick",
+                            "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent"
                         }
                     }
                 },
@@ -1834,6 +1837,7 @@
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                    "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent",
                     "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
@@ -2592,9 +2596,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/page.view.ts",
                 "declaration": "export class PageView implements VirtualDOM<'div'>",
-                "implementation": "export class PageView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-PageView'\n    public readonly router: Router<NavLayout>\n    public readonly tag = 'div'\n    public readonly class = `${PageView.CssSelector} w-100 mkdocs-ts-page text-justify`\n    public readonly children: ChildrenLike\n\n    public readonly content$ = new ReplaySubject<HTMLElement>(1)\n    public readonly filter?: (target: Target) => boolean\n    public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void\n\n    constructor(\n        params: {\n            router: Router<NavLayout>\n            filter?: (target: Target) => boolean\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        ctx = ctx ?? new NoContext()\n        const context = ctx.start('new PageView', ['PageView'])\n        const filterFct = this.filter ?? (() => true)\n        const maybeError$ = child$({\n            source$: this.router.target$,\n            vdomMap: (target) => {\n                if (isResolvedTarget(target)) {\n                    return { tag: 'div' }\n                }\n                if (target.reason === 'NotFound') {\n                    return new UnresolvedPageView({ path: target.path })\n                }\n                return new FuturePageView()\n            },\n        })\n        this.children = [\n            maybeError$,\n            child$({\n                source$: this.router.target$.pipe(\n                    tap((t) => {\n                        context.info(`PageUpdate: Received target ${t.path}`, t)\n                        if ('reason' in t) {\n                            context.info(`PageUpdate: target is ${t.reason}`)\n                        }\n                    }),\n                    filter((target) => {\n                        return isResolvedTarget(target)\n                    }),\n                    distinctUntilChanged((prev, current) => {\n                        return (\n                            current.forceReload !== true &&\n                            prev.path === current.path\n                        )\n                    }),\n                    tap((t) => {\n                        context.info(`PageUpdate: Distinct target ${t.path}`)\n                    }),\n                    filter(filterFct),\n                    filter((target) => {\n                        return hasContentViewTrait(target.node)\n                    }),\n                    switchMap((target: Target & { node: ContentTrait }) => {\n                        context.info('PageUpdate: New target to display')\n                        const contentGetter =\n                            typeof target.node.layout === 'function' ||\n                            typeof target.node.layout === 'string'\n                                ? target.node.layout\n                                : target.node.layout.content\n\n                        const html =\n                            typeof contentGetter === 'string'\n                                ? parseMdFromUrl({\n                                      url: contentGetter,\n                                      router: this.router,\n                                  })\n                                : contentGetter({\n                                      router: this.router,\n                                  })\n                        if (html instanceof Promise) {\n                            return from(html).pipe(\n                                map((html) => ({ html, ...target })),\n                            )\n                        }\n                        if (html instanceof Observable) {\n                            return html.pipe(take(1)).pipe(\n                                map((html) => ({\n                                    html,\n                                    ...target,\n                                })),\n                            )\n                        }\n                        return of(html).pipe(\n                            map((html) => ({ html, ...target })),\n                        )\n                    }),\n                ),\n                vdomMap: (destination) => {\n                    return {\n                        tag: 'div',\n                        children: [destination.html],\n                        connectedCallback: (page) => {\n                            if (destination.sectionId) {\n                                this.router.scrollTo(destination.sectionId)\n                            }\n                            this.content$.next(\n                                // This is the `html` content returned by `destination.html`\n                                page.firstElementChild as HTMLElement,\n                            )\n                            replaceLinks({\n                                router: this.router,\n                                elem: page,\n                                fromMarkdown: false,\n                            })\n                        },\n                    }\n                },\n            }),\n        ]\n        context.exit()\n    }\n}",
+                "implementation": "export class PageView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-PageView'\n    public readonly router: Router<NavLayout>\n    public readonly tag = 'div'\n    public readonly class = `${PageView.CssSelector} w-100 mkdocs-ts-page text-justify`\n    public readonly children: ChildrenLike\n\n    public readonly content$ = new ReplaySubject<HTMLElement>(1)\n    public readonly filter?: (target: Target) => boolean\n    public readonly connectedCallback: (html: RxHTMLElement<'div'>) => void\n\n    constructor(\n        params: {\n            router: Router<NavLayout>\n            filter?: (target: Target) => boolean\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        ctx = ctx ?? new NoContext()\n        const context = ctx.start('new PageView', ['PageView'])\n        const filterFct = this.filter ?? (() => true)\n        const maybeError$ = child$({\n            source$: this.router.target$,\n            vdomMap: (target) => {\n                if (isResolvedTarget(target)) {\n                    return { tag: 'div' }\n                }\n                if (target.reason === 'NotFound') {\n                    return new UnresolvedPageView({ path: target.path })\n                }\n                return new FuturePageView()\n            },\n        })\n        this.children = [\n            maybeError$,\n            child$({\n                source$: this.router.target$.pipe(\n                    tap((t) => {\n                        context.info(`PageUpdate: Received target ${t.path}`, t)\n                        if ('reason' in t) {\n                            context.info(`PageUpdate: target is ${t.reason}`)\n                        }\n                    }),\n                    filter((target) => {\n                        return isResolvedTarget(target)\n                    }),\n                    distinctUntilChanged((prev, current) => {\n                        if (current.forceReload) {\n                            return false\n                        }\n                        return (\n                            prev.path === current.path &&\n                            JSON.stringify(prev.parameters) ===\n                                JSON.stringify(current.parameters)\n                        )\n                    }),\n                    tap((t) => {\n                        context.info(`PageUpdate: Distinct target ${t.path}`)\n                    }),\n                    filter(filterFct),\n                    filter((target) => {\n                        return hasContentViewTrait(target.node)\n                    }),\n                    switchMap((target: Target & { node: ContentTrait }) => {\n                        context.info('PageUpdate: New target to display')\n                        const contentGetter =\n                            typeof target.node.layout === 'function' ||\n                            typeof target.node.layout === 'string'\n                                ? target.node.layout\n                                : target.node.layout.content\n\n                        const html =\n                            typeof contentGetter === 'string'\n                                ? parseMdFromUrl({\n                                      url: contentGetter,\n                                      router: this.router,\n                                  })\n                                : contentGetter({\n                                      router: this.router,\n                                  })\n                        if (html instanceof Promise) {\n                            return from(html).pipe(\n                                map((html) => ({ html, ...target })),\n                            )\n                        }\n                        if (html instanceof Observable) {\n                            return html.pipe(take(1)).pipe(\n                                map((html) => ({\n                                    html,\n                                    ...target,\n                                })),\n                            )\n                        }\n                        return of(html).pipe(\n                            map((html) => ({ html, ...target })),\n                        )\n                    }),\n                ),\n                vdomMap: (destination) => {\n                    return {\n                        tag: 'div',\n                        children: [destination.html],\n                        connectedCallback: (page) => {\n                            if (destination.sectionId) {\n                                this.router.scrollTo(destination.sectionId)\n                            }\n                            this.content$.next(\n                                // This is the `html` content returned by `destination.html`\n                                page.firstElementChild as HTMLElement,\n                            )\n                            replaceLinks({\n                                router: this.router,\n                                elem: page,\n                                fromMarkdown: false,\n                            })\n                        },\n                    }\n                },\n            }),\n        ]\n        context.exit()\n    }\n}",
                 "startLine": 50,
-                "endLine": 173,
+                "endLine": 177,
                 "references": {
                     "PageView": "@nav/api/MainModule/DefaultLayout.PageView",
                     "Target": "@nav/api/MainModule.Target",
@@ -2604,6 +2608,7 @@
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
                     "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -2821,6 +2826,7 @@
                 "references": {
                     "TocItemView": "@nav/api/MainModule/DefaultLayout.TocItemView",
                     "Router": "@nav/api/MainModule.Router",
+                    "HTMLHeadingElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLHeadingElement",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "Observable": "https://rxjs.dev/guide/observable",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
@@ -3185,7 +3191,9 @@
                 "references": {
                     "TOCView": "@nav/api/MainModule/DefaultLayout.TOCView",
                     "Router": "@nav/api/MainModule.Router",
+                    "HTMLHeadingElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLHeadingElement",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
@@ -3373,6 +3381,7 @@
                     "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
                     "Router": "@nav/api/MainModule.Router",
                     "Observable": "https://rxjs.dev/guide/observable",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
@@ -3472,7 +3481,8 @@
                         "endLine": 181,
                         "references": {
                             "displayOptions": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.displayOptions",
-                            "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions"
+                            "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions",
+                            "Partial": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype"
                         }
                     }
                 },
@@ -3547,7 +3557,8 @@
                             "page": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.page",
                             "LayoutElementView": "@nav/api/MainModule/DefaultLayout.LayoutElementView",
                             "AnyView": "@nav/api/MainModule.AnyView",
-                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
+                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -3680,7 +3691,10 @@
                     "NavLayout": "@nav/api/MainModule/DefaultLayout.NavLayout",
                     "NavHeader": "@nav/api/MainModule/DefaultLayout.NavHeader",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
-                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
+                    "Partial": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype",
+                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -3908,7 +3922,8 @@
                 "references": {
                     "ClientTocView": "@nav/api/MainModule/DefaultLayout.ClientTocView",
                     "Router": "@nav/api/MainModule.Router",
-                    "NavLayoutView": "@nav/api/MainModule/DefaultLayout.NavLayoutView"
+                    "NavLayoutView": "@nav/api/MainModule/DefaultLayout.NavLayoutView",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -4057,7 +4072,8 @@
                 "endLine": 57,
                 "references": {
                     "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions",
-                    "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode"
+                    "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4318,8 +4334,11 @@
                 "references": {
                     "tocView": "@nav/api/MainModule/DefaultLayout.tocView",
                     "Router": "@nav/api/MainModule.Router",
+                    "HTMLHeadingElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLHeadingElement",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
-                    "TOCView": "@nav/api/MainModule/DefaultLayout.TOCView"
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "TOCView": "@nav/api/MainModule/DefaultLayout.TOCView",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {

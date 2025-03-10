@@ -733,7 +733,8 @@
                         "startLine": 62,
                         "endLine": 63,
                         "references": {
-                            "connectedCallback": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.connectedCallback"
+                            "connectedCallback": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout.connectedCallback",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -868,6 +869,7 @@
                     "ViewPortOnlyLayout": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyLayout",
                     "ViewPortOnlyArguments": "@nav/api/Notebook/Views/Layouts.ViewPortOnlyArguments",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
@@ -967,7 +969,8 @@
                         "endLine": 27,
                         "references": {
                             "sideNavElements": "@nav/api/Notebook/Views/Layouts.SideNavArguments.sideNavElements",
-                            "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement"
+                            "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 }
@@ -982,7 +985,8 @@
                 "references": {
                     "SideNavArguments": "@nav/api/Notebook/Views/Layouts.SideNavArguments",
                     "SideNavElement": "@nav/api/Notebook/Views/Layouts.SideNavElement",
-                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
