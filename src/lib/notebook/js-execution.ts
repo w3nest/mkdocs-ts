@@ -200,11 +200,11 @@ export async function executeJs(
 
     const srcPatched = `
 async function execute_cell(scope, {display, output$, error$, load, invalidated$, formatError, rawSrc}){
-    const {${extractKeys({ ...scope.const, ...scope.python })}} = {...scope.const, ...scope.python}
-    let {${extractKeys(scope.let)}} = scope.let
 
     try{
     
+        const {${extractKeys({ ...scope.const, ...scope.python })}} = {...scope.const, ...scope.python}
+        let {${extractKeys(scope.let)}} = scope.let
 ${src}
         
         return { 
@@ -221,7 +221,21 @@ ${src}
 }
 return execute_cell
 `
-    const fctUser = new Function(srcPatched)
+    let fctUser: Function
+    try {
+        fctUser = new Function(srcPatched)
+    } catch (e) {
+        const error = {
+            cellId: inputs.cellId,
+            kind: 'AST' as const,
+            message: e.message,
+            scopeIn: inputs.scope,
+            src: inputs.src.split('\n'),
+        }
+        error$.next(error)
+        throw e
+    }
+
     const scopeOut = await fctUser()(scope, {
         display: displayInOutput,
         load: (path: string) => load(path, ctx),
