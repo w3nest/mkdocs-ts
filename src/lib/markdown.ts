@@ -492,7 +492,6 @@ function fixedMarkedParseCustomViews({
     setOptions({
         langPrefix: 'hljs language-',
         highlight: function (code: string, lang: string) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
             return highlight.highlightAuto(code, [lang]).value
         },
         // deprecated since v0.3.0, removed in v8.0.0,
