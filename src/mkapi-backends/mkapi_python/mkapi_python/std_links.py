@@ -20,6 +20,7 @@ def std_links() -> dict[str, str]:
         "builtins.dict": "https://docs.python.org/3/library/functions.html#func-dict",
         "Exception": "https://docs.python.org/3/tutorial/errors.html",
         "RuntimeError": "https://docs.python.org/3/library/exceptions.html#RuntimeError",
+        "ValueError": "https://docs.python.org/3/library/exceptions.html#ValueError",
         "bytes": "https://docs.python.org/3/library/stdtypes.html#bytes-and-bytearray-operations",
         "str": "https://docs.python.org/fr/3/library/string.html",
         "bool": "https://docs.python.org/fr/3/library/stdtypes.html#boolean-type-bool",
