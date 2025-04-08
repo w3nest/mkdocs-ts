@@ -8,7 +8,6 @@ import {
     of,
     ReplaySubject,
     Subject,
-    switchMap,
     take,
     tap,
     timer,
@@ -552,7 +551,8 @@ export class Router<TLayout = unknown, THeader = unknown> {
             return this.navNodeCache[path]
         }
         const nav = timer(0, this.retryNavPeriod).pipe(
-            switchMap((i) => {
+            // Do not use 'switchMap': we wait for the first resolution (which can take more than `this.retryNavPeriod`)
+            mergeMap((i) => {
                 ctx.info(`Attempt 'getNav' #${String(i)}`)
                 const nav = this._getNav({ path }, ctx)
                 if (nav instanceof Observable) {
