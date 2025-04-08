@@ -1,6 +1,5 @@
 import {
     attr$,
-    AttributeLike,
     ChildrenLike,
     CSSAttribute,
     replace$,
@@ -17,8 +16,19 @@ import {
 } from 'rxjs'
 import { NavNodeResolved } from '../navigation.node'
 import { Router } from '../router'
-import { DisplayMode } from './default-layout.view'
+import {
+    defaultDisplayOptions,
+    DisplayMode,
+    DisplayOptions,
+} from './default-layout.view'
 import { NavHeader } from './navigation.view'
+
+/**
+ * Sizing hints regarding for {@link FavoritesView}.
+ *
+ */
+export type FavoritesDisplayOptions = Pick<DisplayOptions, 'favoritesMaxWidth'>
+
 /**
  * Column gathering favorites (at the very left, always visible whatever device's screen size).
  * This implementation only includes the {@link BookmarksView}.
@@ -32,7 +42,7 @@ export class FavoritesView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly class = `${FavoritesView.CssSelector} d-flex flex-column align-items-center mkdocs-bg-6 p-1 h-100`
     public readonly children: ChildrenLike
-    public readonly style: AttributeLike<CSSAttribute>
+    public readonly style: CSSAttribute
 
     public readonly displayMode$: BehaviorSubject<DisplayMode>
     public readonly topStickyPaddingMax: string
@@ -47,13 +57,19 @@ export class FavoritesView implements VirtualDOM<'div'> {
      * @param params.bookmarks$ Observable over the bookmarked pages' href.
      * @param params.router Application's router.
      * @param params.displayMode$ The display mode.
+     * @param params.displayOptions Sizing hints.
      */
     constructor(params: {
         bookmarks$: Observable<string[]>
         router: Router<unknown, NavHeader>
         displayMode$: BehaviorSubject<DisplayMode>
+        displayOptions?: FavoritesDisplayOptions
     }) {
         Object.assign(this, params)
+        this.style = {
+            maxWidth: (params.displayOptions ?? defaultDisplayOptions)
+                .favoritesMaxWidth,
+        }
         const { bookmarks$, router } = this
         this.children = [new BookmarksView({ bookmarks$, router })]
         this.connectedCallback = (elem) => {

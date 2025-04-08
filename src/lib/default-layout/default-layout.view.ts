@@ -84,6 +84,11 @@ export type DisplayOptions<
      */
     navMaxWidth: number
     /**
+     * The maximum width constraint for the favorites column.
+     * Accepts any valid CSS width value (e.g., '10rem', '80vw', 'max-content').
+     */
+    favoritesMaxWidth: string
+    /**
      * Page's width.
      */
     pageWidth: string
@@ -114,6 +119,7 @@ export const defaultDisplayOptions: DisplayOptions = {
     toggleTocWidth: 1600,
     tocMinWidth: 250,
     tocMaxWidth: 400,
+    favoritesMaxWidth: '5rem',
     toggleNavWidth: 1300,
     navMaxWidth: 500,
     navMinWidth: 300,
