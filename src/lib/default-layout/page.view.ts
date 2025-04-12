@@ -99,12 +99,18 @@ export class PageView implements VirtualDOM<'div'> {
                     }),
                     distinctUntilChanged((prev, current) => {
                         if (current.forceReload) {
+                            context.info(
+                                `PageUpdate: Option 'forceReload' is activated on ${current.path} `,
+                            )
                             return false
                         }
+                        const prevParams = JSON.stringify(prev.parameters ?? {})
+                        const currParams = JSON.stringify(
+                            current.parameters ?? {},
+                        )
                         return (
                             prev.path === current.path &&
-                            JSON.stringify(prev.parameters) ===
-                                JSON.stringify(current.parameters)
+                            prevParams === currParams
                         )
                     }),
                     tap((t) => {
