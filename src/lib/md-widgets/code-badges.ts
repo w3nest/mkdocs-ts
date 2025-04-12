@@ -51,7 +51,7 @@ export class BadgeView implements VirtualDOM<'div'> {
                 tag: 'a',
                 class: 'mx-1',
                 innerText: name,
-                target: 'blank',
+                target: '_blank',
                 href,
             },
         ]
