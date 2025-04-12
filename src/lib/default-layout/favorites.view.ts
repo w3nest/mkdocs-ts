@@ -14,7 +14,7 @@ import {
     Observable,
     ReplaySubject,
 } from 'rxjs'
-import { NavNodeResolved } from '../navigation.node'
+import { AnyView, NavNodeResolved } from '../navigation.node'
 import { Router } from '../router'
 import {
     defaultDisplayOptions,
@@ -57,12 +57,14 @@ export class FavoritesView implements VirtualDOM<'div'> {
      * @param params.bookmarks$ Observable over the bookmarked pages' href.
      * @param params.router Application's router.
      * @param params.displayMode$ The display mode.
+     * @param params.footer Optional footer for the favorites column.
      * @param params.displayOptions Sizing hints.
      */
     constructor(params: {
         bookmarks$: Observable<string[]>
         router: Router<unknown, NavHeader>
         displayMode$: BehaviorSubject<DisplayMode>
+        footer?: AnyView
         displayOptions?: FavoritesDisplayOptions
     }) {
         Object.assign(this, params)
@@ -71,7 +73,11 @@ export class FavoritesView implements VirtualDOM<'div'> {
                 .favoritesMaxWidth,
         }
         const { bookmarks$, router } = this
-        this.children = [new BookmarksView({ bookmarks$, router })]
+        this.children = [
+            new BookmarksView({ bookmarks$, router }),
+            { tag: 'div', class: 'flex-grow-1' },
+            params.footer,
+        ]
         this.connectedCallback = (elem) => {
             this.htmlElement$.next(elem)
         }

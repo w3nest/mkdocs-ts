@@ -194,6 +194,11 @@ export interface DefaultLayoutParams<
      * The consumer should provide this variable initialized with the URL for initial bookmarked pages.
      */
     bookmarks$?: BehaviorSubject<string[]>
+
+    /**
+     * A view to display in the favorite bar as footer.
+     */
+    favoritesFooter?: AnyView
 }
 
 /**
@@ -339,6 +344,7 @@ export class Layout implements VirtualDOM<'div'> {
             displayOptions,
             favoritesColumn,
             bookmarks$,
+            favoritesFooter,
         } = params
         this.displayOptions = Object.assign(
             this.displayOptions,
@@ -386,6 +392,7 @@ export class Layout implements VirtualDOM<'div'> {
                   router,
                   bookmarks$: bookmarks$ ?? new BehaviorSubject([]),
                   displayMode$: this.displayModeNav$,
+                  footer: favoritesFooter,
               })
         const navView = new NavigationWrapperView({
             router,
