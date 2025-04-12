@@ -5,6 +5,8 @@ import {
     child$,
     AnyVirtualDOM,
     CSSAttribute,
+    EmptyDiv,
+    attr$,
 } from 'rx-vdom'
 import { Target, isResolvedTarget, Router } from '../router'
 import { parseMd, parseMdFromUrl, replaceLinks } from '../markdown'
@@ -84,8 +86,16 @@ export class PageView implements VirtualDOM<'div'> {
                 return new FuturePageView()
             },
         })
+        const pending$ = new BehaviorSubject(false)
+
         this.children = [
             maybeError$,
+            child$({
+                source$: pending$,
+                vdomMap: (pending) => {
+                    return pending ? new FuturePageView() : EmptyDiv
+                },
+            }),
             child$({
                 source$: this.router.target$.pipe(
                     tap((t) => {
@@ -119,6 +129,9 @@ export class PageView implements VirtualDOM<'div'> {
                     filter(filterFct),
                     filter((target) => {
                         return hasContentViewTrait(target.node)
+                    }),
+                    tap(() => {
+                        pending$.next(true)
                     }),
                     switchMap((target: Target & { node: ContentTrait }) => {
                         context.info('PageUpdate: New target to display')
@@ -156,8 +169,13 @@ export class PageView implements VirtualDOM<'div'> {
                     }),
                 ),
                 vdomMap: (destination) => {
+                    pending$.next(false)
                     return {
                         tag: 'div',
+                        class: attr$({
+                            source$: pending$,
+                            vdomMap: (pending) => (pending ? 'd-none' : ''),
+                        }),
                         children: [destination.html],
                         connectedCallback: (page) => {
                             if (destination.sectionId) {
@@ -214,7 +232,7 @@ export class FooterView implements VirtualDOM<'div'> {
                     class: 'mx-1',
                     innerText: 'mkdocs-ts',
                     target: '_blank',
-                    href: '/apps/@mkdocs-ts/doc',
+                    href: '/apps/@mkdocs-ts/doc/latest',
                 },
             ],
         }
