@@ -303,7 +303,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             capturedOut: this.cellAttributes.capturedOut,
         }
         this.reactive$.next(isReactive)
-        const interpreter = window[
+        const interpreter = scope.const[
             this.cellAttributes.interpreter
         ] as unknown as BackendClient
         if (isReactive) {
