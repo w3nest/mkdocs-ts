@@ -421,7 +421,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                 ],
             },
             child$({
-                source$: from(install({ modules: ['bootstrap#^4.4.1'] })),
+                source$: from(install({ esm: ['bootstrap#^4.4.1'] })),
                 vdomMap: () => ({
                     tag: 'div',
                     class: 'dropdown-menu py-1',

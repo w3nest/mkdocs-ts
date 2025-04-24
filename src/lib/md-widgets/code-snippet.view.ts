@@ -217,8 +217,7 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
         }
         CodeSnippetView.cmDependencies$[language] = from(
             install({
-                modules: ['codemirror'],
-                scripts: scripts[language],
+                esm: { modules: ['codemirror'], scripts: scripts[language] },
                 css: ['codemirror#5.52.0~codemirror.min.css'],
             }),
         ).pipe(shareReplay(1)) as unknown as Observable<{

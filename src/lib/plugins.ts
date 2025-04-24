@@ -1,8 +1,8 @@
 import { headingId, parseMd, DefaultLayout, MdWidgets } from '../lib'
-import { setup } from '../auto-generated'
+import pkgJson from '../../package.json'
 import * as webpmClient from '@w3nest/webpm-client'
 import type * as CodeApiModule from './code-api'
-import type * as NotebookModule from './notebook'
+import * as NotebookModule from './notebook'
 export type * as CodeApiTypes from './code-api'
 export type * as NotebookTypes from './notebook'
 
@@ -10,10 +10,11 @@ export type * as NotebookTypes from './notebook'
  * Install and returns the {@link CodeApiModule} module.
  */
 export async function installCodeApiModule() {
-    const module = (await setup.installAuxiliaryModule({
-        name: 'CodeApi',
-        cdnClient: webpmClient,
-    })) as typeof CodeApiModule
+    const { module } = await webpmClient.install<{
+        module: typeof CodeApiModule
+    }>({
+        esm: [`${pkgJson.name}/CodeApi#${pkgJson.version} as module`],
+    })
     module.Dependencies.parseMd = parseMd
     module.Dependencies.DefaultLayout = DefaultLayout
     module.Dependencies.installNotebookModule = installNotebookModule
@@ -25,10 +26,11 @@ export async function installCodeApiModule() {
  * Install and returns the {@link NotebookModule} module.
  */
 export async function installNotebookModule() {
-    const module = (await setup.installAuxiliaryModule({
-        name: 'Notebook',
-        cdnClient: webpmClient,
-    })) as typeof NotebookModule
+    const { module } = await webpmClient.install<{
+        module: typeof NotebookModule
+    }>({
+        esm: [`${pkgJson.name}/Notebook#${pkgJson.version} as module`],
+    })
     module.Dependencies.parseMd = parseMd
     module.Dependencies.MdWidgets = MdWidgets
     return module
