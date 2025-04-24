@@ -1,4 +1,4 @@
-import { setup } from '../auto-generated'
+import pkgJson from '../../package.json'
 import { fromMarkdown, GlobalMarkdownViews } from 'mkdocs-ts'
 import {
     ApiLink,
@@ -41,14 +41,14 @@ export const example1 = `
     <script type="module">
         const { MkDocs, RxDom } = await webpm.install({
             modules:[ 
-                'mkdocs-ts#${setup.version} as MkDocs',
+                'mkdocs-ts#${pkgJson.version} as MkDocs',
                 'rx-vdom as RxDom'
             ],
             css: [
                 'bootstrap#4.4.1~bootstrap.min.css',
                 'fontawesome#5.12.1~css/all.min.css',
                 '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
-                'mkdocs-ts#${setup.version}~assets/mkdocs-light.css'
+                'mkdocs-ts#${pkgJson.version}~assets/mkdocs-light.css'
                 ],
             displayLoadingScreen: true
         })
@@ -95,7 +95,7 @@ Please refer to the tutorial section to learn about the multiple features propos
 
 export const placeholders = {
     '{{project}}': project.name,
-    '{{mkdocs-version}}': setup.version,
+    '{{mkdocs-version}}': pkgJson.version,
     '{{pyodide-version}}': '0.27.2',
     '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
     '{{assetsBasePath}}': `../assets`,

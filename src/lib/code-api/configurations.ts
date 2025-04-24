@@ -5,7 +5,7 @@
  */
 
 import { Project } from './models'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import type {
     DisplayFactory,
     NotebookOptions,
@@ -108,7 +108,7 @@ export const configurationDefault: Configuration = {
         return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`
     },
     externalTypes: {},
-    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,
+    css: () => `${pkgJson.name}#${pkgJson.version}~assets/ts-typedoc.css`,
     notebook: undefined,
     navNode: ({ name, header, layout }) => ({
         name,

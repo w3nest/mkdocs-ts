@@ -89,7 +89,6 @@ template_folder = project_folder / ".w3nest" / ".template"
 generate_template(config=config, dst_folder=template_folder)
 
 files = [
-    Path("src") / "auto-generated.ts",
     "README.md",
     "package.json",
     # '.npmignore', add 'mkdocs-ts-doc'

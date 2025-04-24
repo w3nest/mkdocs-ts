@@ -1,6 +1,8 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { setup } from '../../auto-generated'
-const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`
+import pkgJson from '../../../package.json'
+
+const assetId = window.btoa(pkgJson.name)
+const baseIconPath = `/api/assets-gateway/webpm/resources/${assetId}/${pkgJson.version}/assets`
 
 export const githubIcon = {
     tag: 'img' as const,

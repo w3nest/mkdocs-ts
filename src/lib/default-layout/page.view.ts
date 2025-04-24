@@ -23,7 +23,7 @@ import {
     take,
     tap,
 } from 'rxjs'
-import { setup } from '../../auto-generated'
+import pkgJson from '../../../package.json'
 import { DisplayMode, DisplayOptions, NavLayout } from './default-layout.view'
 import { ContextTrait, NoContext } from '../context'
 import { AnyView } from '../navigation.node'
@@ -209,7 +209,8 @@ export class FooterView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor(params?: { sourceName: string; sourceUrl: string }) {
-        const baseIconPath = `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/assets`
+        const assetId = window.btoa(pkgJson.name)
+        const baseIconPath = `/api/assets-gateway/webpm/resources/${assetId}/${pkgJson.version}/assets`
         const mkdocs: AnyVirtualDOM = {
             tag: 'div',
             class: 'd-flex align-items-center',
