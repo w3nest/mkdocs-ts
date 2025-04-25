@@ -305,7 +305,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
         this.reactive$.next(isReactive)
         const interpreter = scope.const[
             this.cellAttributes.interpreter
-        ] as unknown as BackendClient
+        ] as BackendClient
         if (isReactive) {
             return executeInterpreter$({
                 body,
