@@ -19,7 +19,7 @@ pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
     "rx-vdom": "^0.1.3",
-    "@w3nest/webpm-client": "^0.1.4",
+    "@w3nest/webpm-client": "^0.1.5",
     "@w3nest/http-clients": "^0.1.5",
     "rxjs": "^7.5.6",
     "marked": "^4.2.3",
