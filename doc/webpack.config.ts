@@ -1,6 +1,5 @@
 import * as path from 'path'
-// Do not shorten following import, it will cause webpack.config file to not compile anymore
-import { setup } from './src/auto-generated'
+import pkgJson from './package.json'
 import * as webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -8,19 +7,26 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 
 // This line is required to get type's definition of 'devServer' attribute.
 import 'webpack-dev-server'
-
-const ROOT = path.resolve(__dirname, 'src/app')
+const WP_INPUTS = pkgJson.webpack
+const ROOT = path.resolve(__dirname, WP_INPUTS.root)
 const DESTINATION = path.resolve(__dirname, 'dist')
-
+const ASSET_ID = btoa(pkgJson.name)
+const EXTERNALS = Object.entries(WP_INPUTS.externals).reduce(
+    (acc, [k, v]) => ({
+        ...acc,
+        [k]: v,
+    }),
+    {},
+)
 const base = {
     context: ROOT,
     mode: 'production' as const,
     output: {
         path: DESTINATION,
-        publicPath: `/api/assets-gateway/webpm/resources/${setup.assetId}/${setup.version}/dist/`,
+        publicPath: `/api/assets-gateway/webpm/resources/${ASSET_ID}/${pkgJson.version}/dist/`,
         libraryTarget: 'umd',
         umdNamedDefine: true,
-        devtoolNamespace: `${setup.name}_APIv${setup.apiVersion}`,
+        devtoolNamespace: `${pkgJson.name}_APIv${WP_INPUTS.apiVersion}`,
         filename: '[name].js',
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
@@ -28,7 +34,7 @@ const base = {
         extensions: ['.ts', 'tsx', '.js'],
         modules: [ROOT, 'node_modules'],
     },
-    externals: setup.externals,
+    externals: EXTERNALS,
     module: {
         rules: [
             {
@@ -44,7 +50,7 @@ const base = {
 const webpackConfigApp: webpack.Configuration = {
     ...base,
     entry: {
-        main: './main.ts',
+        main: WP_INPUTS.main,
     },
     plugins: [
         new MiniCssExtractPlugin({
@@ -52,9 +58,9 @@ const webpackConfigApp: webpack.Configuration = {
             insert: '#css-anchor',
         }),
         new HtmlWebpackPlugin({
-            template: './index.html',
-            filename: './index.html',
-            baseHref: `/apps/${setup.name}/${setup.version}/dist/`,
+            template: 'app/index.html',
+            filename: 'index.html',
+            baseHref: `/apps/${pkgJson.name}/${pkgJson.version}/dist/`,
         }),
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
@@ -66,7 +72,6 @@ const webpackConfigApp: webpack.Configuration = {
         filename: '[name].[contenthash].js',
         path: DESTINATION,
     },
-    externals: setup.externals,
     module: {
         rules: [
             ...base.module.rules,
@@ -90,22 +95,22 @@ const webpackConfigApp: webpack.Configuration = {
     },
 }
 
-const webpackConfigSubModules: webpack.Configuration[] = Object.values(
-    setup.secondaryEntries,
-).map((e) => ({
+const webpackConfigSubModules: webpack.Configuration[] = Object.entries(
+    WP_INPUTS.additionalEntries,
+).map(([k, v]: [string, string]) => ({
     ...base,
     plugins: [
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
-            reportFilename: `./bundle-analysis-${e.name}.html`,
+            reportFilename: `./bundle-analysis-${k}.html`,
             openAnalyzer: false,
         }),
     ],
-    entry: { [e.name]: e.entryFile },
+    entry: { [k]: v },
     output: {
         ...base.output,
         library: {
-            root: [`${setup.name}_APIv${setup.apiVersion}`, '[name]'],
+            root: [`${pkgJson.name}_APIv${WP_INPUTS.apiVersion}`, '[name]'],
             amd: '[name]',
             commonjs: '[name]',
         },

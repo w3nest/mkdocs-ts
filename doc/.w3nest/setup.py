@@ -25,9 +25,9 @@ pkg_json_mkdocs = parse_json(project_folder / ".." / pkg_json_name)
 
 externals_deps = {
     "rxjs": "^7.5.6",
-    "rx-vdom": "^0.1.3",
+    "rx-vdom": "^0.1.4",
     "mkdocs-ts": f"^{pkg_json_mkdocs['version'].replace('-wip', '')}",
-    "@w3nest/webpm-client": "^0.1.4",
+    "@w3nest/webpm-client": "^0.1.5",
     "mathjax": "^3.1.4",
 }
 in_bundle_deps = {}
