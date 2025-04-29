@@ -40,8 +40,8 @@ library.
 
 <js-cell>
 const ChartView = async ({data, xScale, yScale}) => {
-    const { chartJs } = await webpm.install({
-        modules:['chart.js#^3.9.1 as chartJs'],
+    const { chartJs, rxjs } = await webpm.install({
+        esm:['chart.js#^3.9.1 as chartJs', 'rxjs#^7.5.6 as rxjs'],
     })
     const data$ = data instanceof rxjs.Observable ? data : rxjs.of(data)
     chartJs.registerables.forEach((plot)=>chartJs.Chart.register(plot))
@@ -139,7 +139,11 @@ These notifications help users **monitor the state of worker pools** while using
 <api-link target="WorkerCellView"></api-link>.
 
 <js-cell>
-const plugWPoolNotifications = (name, workerPool, view) => {
+const plugWPoolNotifications = async (name, workerPool, view) => {
+
+    const { rxjs } = await webpm.install({
+        esm:['rxjs#^7.5.6 as rxjs'],
+    })
     // Handle installation notifications
     workerPool.cdnEvent$.pipe(
         rxjs.take(1)

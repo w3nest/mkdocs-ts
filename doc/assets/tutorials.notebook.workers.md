@@ -113,7 +113,7 @@ const { plugWPoolNotifications } = await load("/tutorials/notebook/import-utils"
 
 const jsPoolView = new WorkersPoolView({workersPool:jsPool})
 display(jsPoolView)
-plugWPoolNotifications('JS Pool', jsPool, jsPoolView)
+await plugWPoolNotifications('JS Pool', jsPool, jsPoolView)
 
 await jsPool.ready()
 </js-cell>
@@ -176,6 +176,7 @@ const velocityView = LabelRange({
 display(angleView);  
 display(velocityView);
 
+const { rxjs } = await webpm.install({esm:["rxjs#^7.5.6 as rxjs"]})
 const params = rxjs.combineLatest([angleView.value$, velocityView.value$]).pipe(  
 rxjs.map(([angle0, v0]) => ({ v0, angle0 })),  
 rxjs.debounceTime(200)  

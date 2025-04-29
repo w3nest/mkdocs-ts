@@ -2,7 +2,8 @@
 
 
 <note level='warning' label='Important'>
-This feature requires the application to be run through <ext-link target="w3nest">W3Nest</ext-link>. 
+This feature requires the application to be run through the 
+**<ext-link target="w3nest">local W3Nest server</ext-link>**. 
 Only this environment supports the automatic backend installation required for interpreters.
 </note>
 
@@ -20,7 +21,8 @@ print(numpy)
 </interpreter-cell>
 </code-snippet>
 
-The available attributes for a `py-cell` are documented in <api-link target="PyCellView.FromDomAttributes"></api-link>.
+The available attributes for a `interpreter-cell` are documented in 
+<api-link target="InterpreterCellView.FromDomAttributes"></api-link>.
 
 
 The backend used in this example is <api-link target="pyrun_backend"></api-link>, a built-in interpreter in

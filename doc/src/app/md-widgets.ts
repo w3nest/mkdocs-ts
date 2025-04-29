@@ -13,6 +13,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             return
         }
         const navs = {
+            API: '@nav/api',
             Notebook: '@nav/api/Notebook',
             'Notebook.Views': '@nav/api/Notebook/Views',
             notify: '@nav/api/Notebook/Views.notify',
@@ -22,17 +23,20 @@ export class ApiLink implements VirtualDOM<'a'> {
             install: '@nav/api/Notebook/Installer.install',
             NotebookViewParameters: '@nav/api/Notebook.NotebookViewParameters',
             JsCellView: '@nav/api/Notebook.JsCellView',
+            'JsCellView.FromDomAttributes': '@nav/api/Notebook.JsCellView.FromDomAttributes',
             executeJs$: '@nav/api/Notebook.executeJs$',
             MdCellView: '@nav/api/Notebook.MdCellView',
             PyCellView: '@nav/api/Notebook.PyCellView',
             'PyCellView.FromDomAttributes':
                 '@nav/api/Notebook.PyCellView.FromDomAttributes',
+            InterpreterCellView: '@nav/api/Notebook.InterpreterCellView',
+            'InterpreterCellView.FromDomAttributes':
+                '@nav/api/Notebook.InterpreterCellView.FromDomAttributes',
             WorkerCellView: '@nav/api/Notebook.WorkerCellView',
             'WorkerCellView.FromDomAttributes':
                 '@nav/api/Notebook.WorkerCellView.FromDomAttributes',
             executePy: '@nav/api/Notebook.executePy',
             fixScopeInvalidVar: '@nav/api/Notebook.fixScopeInvalidVar',
-            InterpreterCellView: '@nav/api/Notebook.InterpreterCellView',
             InterpreterApi: '@nav/api/Notebook.InterpreterApi',
             display: '@nav/api/Notebook.display',
             DisplayFactory: '@nav/api/Notebook.DisplayFactory',
@@ -76,8 +80,8 @@ export class ApiLink implements VirtualDOM<'a'> {
             CodeSnippetView: '@nav/api/MainModule/MdWidgets.CodeSnippetView',
             'DefaultLayout.PageView':
                 '@nav/api/MainModule/DefaultLayout.PageView',
-            'DefaultLayout.NavHeader':
-                '@nav/api/MainModule/DefaultLayout.NavHeader',
+            'DefaultLayout.NavHeaderSpec':
+                '@nav/api/MainModule/DefaultLayout.NavHeaderSpec',
             'DefaultLayout.NavLayout':
                 '@nav/api/MainModule/DefaultLayout.NavLayout',
             'DefaultLayoutParams.sideNavHeader':
@@ -102,6 +106,7 @@ export class ApiLink implements VirtualDOM<'a'> {
         }
 
         const classes = {
+            API:  'mkapi-role-module',
             Notebook: 'mkapi-role-module',
             'Notebook.Views': 'mkapi-role-module',
             'Notebook.Views.Layouts': 'mkapi-role-module',
@@ -110,14 +115,16 @@ export class ApiLink implements VirtualDOM<'a'> {
             NotebookViewParameters: 'mkapi-role-type-alias',
             install: 'mkapi-role-function',
             JsCellView: 'mkapi-role-class',
+            'JsCellView.FromDomAttributes': 'mkapi-role-attribute',
             MdCellView: 'mkapi-role-class',
             PyCellView: 'mkapi-role-class',
             'PyCellView.FromDomAttributes': 'mkapi-role-attribute',
+            InterpreterCellView: 'mkapi-role-class',
+            'InterpreterCellView.FromDomAttributes':'mkapi-role-attribute',
             WorkerCellView: 'mkapi-role-class',
             'WorkerCellView.FromDomAttributes': 'mkapi-role-attribute',
             executePy: 'mkapi-role-function',
             fixScopeInvalidVar: 'mkapi-role-function',
-            InterpreterCellView: 'mkapi-role-class',
             InterpreterApi: 'mkapi-role-interface',
             display: 'mkapi-role-type-alias',
             DisplayFactory: 'mkapi-role-type-alias',
@@ -156,7 +163,7 @@ export class ApiLink implements VirtualDOM<'a'> {
             ViewGenerator: 'mkapi-role-type-alias',
             CodeSnippetView: 'mkapi-role-class',
             'DefaultLayout.PageView': 'mkapi-role-class',
-            'DefaultLayout.NavHeader': 'mkapi-role-interface',
+            'DefaultLayout.NavHeaderSpec': 'mkapi-role-interface',
             'DefaultLayout.NavLayout': 'mkapi-role-type-alias',
             'DefaultLayoutParams.sideNavHeader': 'mkapi-role-attribute',
             'DefaultLayoutParams.sideNavFooter': 'mkapi-role-attribute',
@@ -223,7 +230,7 @@ export class ExtLink implements VirtualDOM<'a'> {
             'bootstrap.d-flex':
                 'https://getbootstrap.com/docs/4.0/utilities/flex/',
             RxChild: '/apps/@rx-vdom/doc/latest?nav=/api.RxChild',
-            webpm: '/apps/@webpm/doc/latest',
+            webpm: '/apps/@webpm-client/doc/latest',
             'floating-ui': 'https://floating-ui.com/',
             BehaviorSubject:
                 'https://www.learnrxjs.io/learn-rxjs/subjects/behaviorsubject',
@@ -235,6 +242,7 @@ export class ExtLink implements VirtualDOM<'a'> {
                 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API',
             'shared-array':
                 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer',
+            'reactivex':'https://reactivex.io/'
         }
         if (!(target in navs)) {
             return
@@ -312,6 +320,9 @@ export class CrossLink implements VirtualDOM<'a'> {
             return
         }
         const navs = {
+            tutorials: '@nav/tutorials',
+            'how-to': '@nav/how-to',
+            API: '@nav/api',
             notebook: '@nav/tutorials/notebook',
             'notebook.python': '@nav/tutorials/notebook/python',
             'notebook.python.matplotlib':

@@ -159,7 +159,7 @@ Each node includes:
 Note that the attribute `layout` & `header` have a structure that is determined by the type of layout uses
 for rendering. In the current case, showcasing the default layout, they are defined by 
 <api-link target="DefaultLayout.NavLayout"></api-link> and 
-<api-link target="DefaultLayout.NavHeader"></api-link> 
+<api-link target="DefaultLayout.NavHeaderSpec"></api-link> 
 respectively.
 In particular, it is possible to provide a `string` to the `layout` attribute: in this case it is interpreted as a 
 URL pointing to markdown source that is fetched and parsed.
@@ -329,7 +329,7 @@ const vDOM : AnyVirtualDOM = { tag: 'div', children: [element] }
 </code-snippet>
 </note>
 
-The <api-link target="parseMd">Markdown parser</api-link> function enables combining  `HTMLElement` and `VirtualDOM`
+The <api-link target="parseMd"></api-link> function enables combining  `HTMLElement` and `VirtualDOM`
 within Markdown content to build powerful, reactive views. 
 
 Let’s illustrate this with a new navigation node **/answer**, showcasing a dynamic computation panel embedded in 
@@ -509,7 +509,7 @@ To give users control over the view mode, we define a toggle button using a `Vir
 This button switches between **`normal`** and **`wizard`** modes:
 
 <js-cell>
-
+const { rxjs } = await webpm.install({esm:["rxjs#^7.5.6 as rxjs"]})
 const mode$ = new rxjs.BehaviorSubject('normal')
 
 const checkBox = { 

@@ -168,6 +168,10 @@ const files = {
 The mock client implements the <api-link target="HttpClientTrait"></api-link>:
 
 <js-cell>
+const { rxjs } = await webpm.install({
+    esm:[ `rxjs#^7.5.6 as rxjs`]
+})
+
 class MockClient {
     constructor({configuration, project}){
         this.configuration = configuration
@@ -204,6 +208,7 @@ const apiNode = ApiPlugin.codeApiEntryNode({
     entryModule: 'Foo',
     docBasePath: 'assets/api',
     configuration: ApiPlugin.configurationTsTypedoc,
+    // This next parameter is not required in usual setup
     httpClient: ({project, configuration}) => new MockClient({project, configuration}) 
 })
 </js-cell>

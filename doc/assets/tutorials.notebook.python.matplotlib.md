@@ -15,7 +15,7 @@ Let's start with installing {{mkdocs-ts}}:
 <js-cell>
 const version = "{{mkdocs-version}}"
 
-const { MkDocs } = await webpm.install({
+const { MkDocs, rxjs} = await webpm.install({
     esm:[ 
          // Both are used to display a notification
         `mkdocs-ts#${version} as MkDocs`, 

@@ -62,8 +62,17 @@ Before navigating the file system of {{mkdocs-ts}}, we need to configure an HTTP
 
 <js-cell>
 const toId = (name) => window.btoa(name)
+const fromId = (name) => window.atob(name)
+const toNavPath = (path) => path.split('/')
+    .filter(d => d !=='')
+    .reduce((acc,e)=> `${acc}/${toId(e)}`,"")
+
+const toFilePath = (link) => link.split('/')
+    .filter(d => d !=='')
+    .reduce((acc,e)=> `${acc}/${fromId(e)}`,"")
+
 const libraryId = toId('mkdocs-ts')
-const client = new clients.Webpm.Client()
+const client = new clients.AssetsGateway.Client().webpm
 </js-cell>
 
 <note level="question" title="toId?">
@@ -144,7 +153,7 @@ const rowView = ({parentPath, name, type, size}) => ({
         {
             tag: 'a',
             innerText: name,
-            href: type === 'file' ? `@nav/${parentPath}/${toId(name)}` : `@nav/${parentPath}/${name}`
+            href: `@nav${toNavPath(`${parentPath}/${name}`)}`
         },
         {   tag: 'div', class: 'flex-grow-1' },
         {   tag: 'div', innerText: `${size/1000} kB` },
@@ -154,7 +163,11 @@ const rowView = ({parentPath, name, type, size}) => ({
 
 We can test the folder and file rendering using the `root` data:
 
-<js-cell reactive="true">
+<note level="warning" title="Do not click on links" >
+The links won't work just yet, as they depend on the complete navigation system being set up later. 
+</note>
+
+<js-cell>
 for(let folder of root.folders ){
     display(rowView({...folder, type:'folder', parentPath:'/'}))
 }
@@ -163,9 +176,6 @@ for(let file of root.files ){
 }
 </js-cell>
 
-<note level="bug" title="Links not working yet" expandable="true">
-The links won't work just yet, as they depend on the complete navigation system being set up later. 
-</note>
 
 ### Folder
 
@@ -252,7 +262,7 @@ const fromBlob = (language) =>
     async (resp, path) => ({
         language,
         path,
-        content: await resp.text()
+        content: typeof(resp) === 'string' ?  resp : await resp.text()
 })
 const fromImg = (language) => async (resp, path) => ({
     path,
@@ -288,7 +298,15 @@ const factory = {
 const formatContent = async (file, resp) => {
     for( let [k, v] of Object.entries(factory)){
         if(file.endsWith(k)){
-            return await v(resp, file)
+            try{
+                return await v(resp, file)
+            }
+            catch(e){
+                console.error(e)
+                console.log("Response", resp)
+                return {language:'markdown', path:file, content: 'Failed to load content'}
+            }
+            
         }
     }
     return (resp instanceof Blob) ? await fromBlob('unknown')(resp, file) : await fromText('unknown')(resp, file)
@@ -361,7 +379,7 @@ const navNodeDataFile = (version, path, fileResp, router) => ({
     header: { icon: { tag: 'i', class: 'fas fa-file' } },
     layout: { 
         content: async () => {    
-            const content = await getContent(version, `${path}/${fileResp.name}`)
+            const content = await getContent(version, `${toFilePath(path)}/${fileResp.name}`)
             return fileView(content, router)
         }, 
         toc: ({html}) => tocView(fileResp)
@@ -372,10 +390,10 @@ const navNodeDataFolder = (version, path, folderResp, router) => ({
     name: folderResp.name,
     header: { icon: { tag: 'i', class: 'fas fa-folder' } },
     layout: { 
-        content: async () => { 
-            const folderPath = `${path}/${folderResp.name}`
-            const resp = await queryExplorer(version, folderPath)
-            return folderView(resp, folderPath, router)
+        content: async () => {
+            const folder = `${toFilePath(path)}/${folderResp.name}`
+            const resp = await queryExplorer(version, folder)
+            return folderView(resp, folder, router)
         }, 
         toc: ({html}) => tocView(folderResp)
     }
@@ -387,14 +405,15 @@ the routes attribute is defined using a <api-link target="LazyRoutesCb"></api-li
 
 <js-cell>
 const routes = async ({ version, path, router }) => {
-    const resp = await queryExplorer(version, path)
+    const folder = path.split('/').reduce((acc,e)=> `${acc}/${fromId(e)}`, "")
+    const resp = await queryExplorer(version, folder)
     const files = resp.files.reduce((acc, f) => ({
         ...acc,
         [`/${toId(f.name)}`]: navNodeDataFile(version, path, f, router)
     }), {})
     const folders = resp.folders.reduce((acc, f) => ({ 
         ...acc, 
-        [`/${f.name}`]: navNodeDataFolder(version, path, f, router)  
+        [`/${toId(f.name)}`]: navNodeDataFolder(version, path, f, router)  
     }), {})
     return { ...folders, ...files, }
 }
@@ -430,6 +449,6 @@ display(view)
 This cell is associated with a deported view port: the one displayed at the top of this page:
 
 <js-cell cell-id="app-start">
-display(view)
+display(await withNavBar(navigation))
 </js-cell>
 </note>

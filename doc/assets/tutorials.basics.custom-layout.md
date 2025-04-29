@@ -182,7 +182,7 @@ const headers = {
 We could have here defined the icon using only the relevant class name (*e.g.* `Welcome: 'fa-home'`}.
 For reasons that will be detailed in the <cross-link target="composite-layout">Composite Layout</cross-link> tutorial,
 we align the API with the one used for header in the default layout 
-(see <api-link target="DefaultLayout.NavHeader"></api-link>).
+(see <api-link target="DefaultLayout.NavHeaderSpec"></api-link>).
 </note>
 
 

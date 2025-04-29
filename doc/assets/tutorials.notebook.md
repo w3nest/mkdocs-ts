@@ -135,8 +135,19 @@ Notebook pages are made up of coding cells. Each cell can access variables defin
 When you modify and run a cell, the cells that follow are invalidated and need to be re-executed.
 
 In the following sections, we will focus on  <api-link target="JsCellView"></api-link> cells to cover the basics. 
-If you're interested in Python cells, please visit the 
-<cross-link target="notebook.python">Python Tutorial</cross-link>.
+They are referenced from the Markdown source code using a DOM element with the tag 
+`js-cell`, e.g.:
+
+<code-snippet language="markdown">
+This exemplifies the usage of `js-cell` within a notebook page:
+
+<js-cell>
+console.log("Hello JavaScript cell")
+</js-cell>
+</code-snippet>
+
+The available attributes for a `js-cell` are documented in 
+<api-link target="JsCellView.FromDomAttributes"></api-link>.
 
 
 ### Scope
@@ -190,6 +201,10 @@ display(htmlElement)
 display({tag:'div', innerText:'A VirtualDOM', class:"p-2 rounded border bg-light"})
 
 // Observable
+const { rxjs } = await webpm.install({
+    esm:[ `rxjs#^7.5.6 as rxjs`]
+})
+
 const obs$ = new rxjs.timer(0,1000).pipe(
     rxjs.map((count) => `Observable (over elementary type): ${count}`)
 )

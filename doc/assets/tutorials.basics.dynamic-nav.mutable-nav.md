@@ -3,16 +3,12 @@
 This tutorial extends the concept of dynamic navigation by showcasing how to handle mutations within the navigation 
 tree.
 The files explorer application constructed <cross-link target="dynamic-nav">here</cross-link> is completed
-to include a version selector in the side navigation panel:
-
-<cell-output cell-id="app-start" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
-</cell-output>
-
-
+to include a version selector in the side navigation panel.
 Most of the implementation is reused from the previous tutorial. The following cell imports the necessary functions:
 
 <js-cell>
-const { version,
+const { MkDocs,
+        version,
         libraryId, 
         client, 
         routes, 
@@ -33,6 +29,8 @@ Let's start by defining the selectable input exposing the versions of {{mkdocs-t
 retrieved using the `client.getLibraryInfo$` method.
 
 <js-cell>
+const { rxjs } = await webpm.install({esm:["rxjs#^7.5.6 as rxjs"]})
+
 const selectedVersion$ = new rxjs.BehaviorSubject(version)
 const sideNavHeader = {
     tag: 'select',
@@ -159,11 +157,3 @@ display(view)
 <cell-output cell-id="app" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
 </cell-output>
 
-
-<note level="info" title="Top View" expandable="true" mode="stateful">
-This cell is associated with a deported view port: the one displayed at the top of this page:
-
-<js-cell cell-id="app-start">
-display(view)
-</js-cell>
-</note>

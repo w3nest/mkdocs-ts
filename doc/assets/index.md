@@ -5,86 +5,105 @@
 
 ---
 
-## Overview
+## 🗺️ Overview
 
-{{mkdocs-ts}} is a powerful library designed for creating hierarchical documents using JavaScript or TypeScript.
-This document itself is an example of its capabilities.
+{{mkdocs-ts}} empowers you to create flexible, hierarchical document-based applications with ease. 
+Whether you're building living technical docs, rich knowledge bases, or interactive educational content, 
+{{mkdocs-ts}} gives you the tools to move fast — without sacrificing structure or power.
 
-Built on the foundation of [MkDocs](https://www.mkdocs.org/), it introduces two key distinctions:
-
-*  **Dynamic Nature**: The navigation structure can evolve dynamically, adapting to the runtime state of your application.
-
-*  **Native TypeScript Support**: Navigation is built using TypeScript, providing a robust environment that includes:
-
-    *  Integration with JavaScript libraries for dynamic views.
-
-    *  Type-safe coding with features like error detection and parameter suggestions.
-
-
-<note level="hint">
-While {{mkdocs-ts}} projects are written in TypeScript or JavaScript, **Markdown** is a first class citizen and typical 
-use cases are mostly implemented using Markdown pages.
-</note>
+Of course, this very application is built using {{mkdocs-ts}}.
 
 ---
 
-## Key Features
+## ✨ Key Features
 
-### Hierarchical Documents
+*  **Declarative Navigation Structure**
+   
+   Model your site's structure as a simple, nested JavaScript object. Unlike many solutions where navigation is
+   static (fixed after the page loads), {{mkdocs-ts}} supports dynamic navigation updates at runtime.
 
-With {{mkdocs-ts}}, you can create hierarchical document structures that are flexible and dynamic. 
-The library enables you to adapt navigation in real-time, making it ideal for applications with evolving content or 
-complex data-driven needs.
+*  **Flexible Layout System**
+   
+   Compose layouts from modular views. Mix and match templates across your project to 
+   adapt any design or UX need.
 
-### Notebook Environment
+*  **Markdown as First-Class Citizen**
+  
+   Write views in Markdown and extend them with custom components effortlessly. 
+   Our enhanced Markdown engine lets you blend content and interactivity without friction.
 
-{{mkdocs-ts}} includes features that resemble platforms like ObservableHQ, enabling the creation of notebook-like pages.
-Supported functionalities include:
+*  **Powered by TypeScript**
 
-*  JavaScript cells for dynamic content.
+   Get full type safety, rich IDE support, and confident scaling.  {{mkdocs-ts}} leverages the TypeScript compiler 
+   for error detection, parameter validation, and smarter development workflows.
 
-*  Python-in-browser execution using Pyodide.
-
-*  Cells' reactivity with ReactiveX.
-
-*  Dynamic imports of dependencies via <a target='_blank' href="https://w3nest/apps/@webpm/doc">webpm</a>.
-
-<note level="hint">
-Should you chose to serve your application within <a target="_blank" href="https://w3nest.org">w3nest</a>,
-**webpm** can also provide backends installation. It can for instance be leveraged to provide backend interpreters
-in various languages.
-</note>
-
----
-
-### And More
-
-{{mkdocs-ts}} is modular by design, adhering to a "you pay for what you use" philosophy. 
-
-The Notebook environment previously presented is one example of it: it does not come with {{mkdocs-ts}} by itself, 
-but is proposed as an additional module that can be consumed if needed. 
-
-Another example of such extension is the **CodeApi** module, providing the ability to include Code API documentation
-(for one or multiples libraries) within your project. For instance, you can find documentation of the (typescript)
-{{mkdocs-ts}} library in this document [here](@nav/api/), itself featuring documentation of python modules 
-(e.g. [here](@nav/api/Backends/mkdocs_py_griffe)).
-
-<note level="hint">
-While {{mkdocs-ts}} only support generating code API data for python and typescript libraries for now, new 
-backends can be implemented to handle other languages.
-</note>
+*  **Modular by Design**
+  
+   Extend your project with purpose-built plugins. See for instance our **Notebook plugin** 
+   for interactive documents, or **Code-API plugin** for integrated API documentation.
 
 ---
 
-## Getting Started
+## 🧩 Native Plugins
+
+{{mkdocs-ts}} ships with two native plugins, described below.
+They illustrate the extensibility of the library — developers can easily create additional plugins as JavaScript 
+libraries to fulfill a wide range of needs.
+
+### 📓 Notebook 
+
+Turn your documentation into a live playground
+The Notebook module lets you build dynamic, computation-ready content — ideal for technical walkthroughs, experiments, 
+and interactive storytelling.
+
+**Key features include**:
+
+- **Multiple Cell Types**  
+  Write and run JavaScript, Python (in-browser via Pyodide), Web Workers, and more — all within your app.  
+  Hosting with <ext-link target="w3nest">w3nest</ext-link>? Unlock even more possibilities with custom interpreters 
+  for a variety of languages.
+
+- **Reactive Execution Model**  
+  Build dynamic, reactive notebooks where cells automatically update based on changes — powered by the robustness of 
+  <ext-link target="reactivex">ReactiveX</ext-link>.
+
+Dive deeper into all the capabilities in our <cross-link target="notebook">interactive tutorials</cross-link>.
+
+---
+
+### 🧾 Code Api
+
+Seamlessly embed API documentation for one or multiple libraries directly into your site.
+For example, you can explore the documentation of the (TypeScript) library from
+<api-link target="API"></api-link>, which even includes Python module
+(like <api-link target="mkapi_python"></api-link>) — all in one unified experience.
+
+<note level="hint" title="Extending Language Support"> 
+Out of the box, {{mkdocs-ts}} supports generating API documentation for Python and TypeScript projects.
+Looking to support another language? New API backends can be developed — we'd love to hear what you're building! 
+</note>
+
+
+---
+
+## 🚀 Getting Started
 
 To begin using {{mkdocs-ts}}, consider the following resources:
 
-*  [Tutorials](@nav/tutorials): Ideal for newcomers, offering a step-by-step & interactive introduction.
+*  <cross-link target="tutorials">Tutorials</cross-link>: Ideal for newcomers, offering a step-by-step & 
+   interactive introduction.
 
-*  [How-to](@nav/how-to): Detailed, task-oriented instructions for specific use cases. 
+*  <cross-link target="how-to">How-to</cross-link>: Detailed, task-oriented instructions for specific use cases. 
 
-*  [API Reference](@nav/api):  Comprehensive technical documentation for advanced users.
+*  <cross-link target="API">API Reference</cross-link>:  Comprehensive technical documentation for advanced users.
 
-These sections provide a structured path for users to explore the full potential of mkdocs-ts.
+---
 
+## 🌟 Love what you're seeing?
+
+- ⭐ Give us a star on <github-link target="github">GitHub</github-link>.
+- 🐦 Share it with friends, colleagues, or on your favorite platform.
+- 💬 Feedback, ideas, or contributions are always welcome!
+
+Every bit of support keeps the project growing — and helps remind us that we’re not building in the dark. 🚀  
+Thank you for being part of the journey!
