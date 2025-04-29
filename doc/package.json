@@ -26,24 +26,26 @@
     "exports": {
         ".": {
             "default": "./dist/@mkdocs-ts/doc.js",
-            "types": "./src/main.ts",
+            "types": "./src/app/main.ts",
             "webpm": {
                 "dependencies": [
                     "rxjs",
                     "rx-vdom",
                     "mkdocs-ts",
                     "@w3nest/webpm-client",
-                    "mathjax"
+                    "mathjax",
+                    "@w3nest/ui-tk/Badges"
                 ],
                 "aliases": []
             }
         }
     },
     "dependencies": {
-        "@w3nest/webpm-client": "^0.1.4",
+        "@w3nest/ui-tk": "^0.1.0",
+        "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "^0.3.1",
-        "rx-vdom": "^0.1.3",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.3.3-1745921823.tgz",
+        "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
     "devDependencies": {
@@ -81,12 +83,30 @@
     "webpm": {
         "kind": "webapp",
         "dependencies": {
-            "@w3nest/webpm-client": "^0.1.4",
+            "@w3nest/ui-tk": "^0.1.0",
+            "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
-            "mkdocs-ts": "^0.3.1",
-            "rx-vdom": "^0.1.3",
+            "mkdocs-ts": "^0.3.3",
+            "rx-vdom": "^0.1.4",
             "rxjs": "^7.5.6"
         },
         "html": "dist/index.html"
+    },
+    "webpack": {
+        "root": "src",
+        "apiVersion": "03",
+        "main": "./app/main.ts",
+        "additionalEntries": {},
+        "externals": {
+            "rxjs": "window['rxjs_APIv7']",
+            "rx-vdom": "window['rx-vdom_APIv01']",
+            "mkdocs-ts": "window['mkdocs-ts_APIv03']",
+            "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
+            "mathjax": "window['mathjax_APIv3']",
+            "@w3nest/ui-tk/Badges": "window['@w3nest/ui-tk_APIv01']['Badges']"
+        }
+    },
+    "resolutions": {
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.3.3-1745921823.tgz"
     }
 }
