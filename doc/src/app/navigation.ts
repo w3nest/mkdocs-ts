@@ -7,21 +7,13 @@ import {
 import { firstValueFrom } from 'rxjs'
 import { logo } from './logo'
 import { companionNodes$ } from './on-load'
-import { NotebookModule } from './config.notebook'
 import { fromMd, placeholders } from './config.markdown'
 
 import * as HowTo from './how-to'
 import * as Tutorials from './tutorials'
 import { createRootContext } from './config.context'
 
-await Promise.all([
-    firstValueFrom(
-        NotebookModule.SnippetEditorView.fetchCmDependencies$('javascript'),
-    ),
-    firstValueFrom(
-        NotebookModule.SnippetEditorView.fetchCmDependencies$('python'),
-    ),
-])
+
 
 export type AppNav = Navigation<
     DefaultLayout.NavLayout,
