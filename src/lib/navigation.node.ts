@@ -517,7 +517,7 @@ export function sanitizeNavPath(path: string) {
  *
  * The type {@link PathSegment} ensures that the given string adheres to specific rules:
  * - The segment must be a single static path segment (e.g., `/foo`).
- * - Segments containing backslashes (`\\`), query parameters (`?`), or fragments (`#`) are not allowed.
+ * - Segments containing backslashes (`\\`), query parameters (`?`), dot (`.`), or fragments (`#`) are not allowed.
  * - Nested paths (e.g., `/foo/bar`) are disallowed.
  *
  * To use it as validator of your segments:
@@ -542,6 +542,7 @@ export type PathSegment<T extends string> = T extends `/${string}/${string}`
             | `${string}\\${string}`
             | `${string}?${string}`
             | `${string}#${string}`
+            | `${string}.${string}`
           ? never
           : T
       : never
