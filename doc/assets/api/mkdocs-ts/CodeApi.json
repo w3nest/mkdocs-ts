@@ -43,7 +43,7 @@
             "navPath": "@nav/api/CodeApi.configurationDefault",
             "code": {
                 "filePath": "src/lib/code-api/configurations.ts",
-                "declaration": "configurationDefault: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`\n    },\n    externalTypes: {},\n    css: () => `${setup.name}#${setup.version}~assets/ts-typedoc.css`,\n    notebook: undefined,\n    navNode: ({ name, header, layout }) => ({\n        name,\n        header,\n        layout,\n    }),\n}",
+                "declaration": "configurationDefault: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`\n    },\n    externalTypes: {},\n    css: () => `${pkgJson.name}#${pkgJson.version}~assets/ts-typedoc.css`,\n    notebook: undefined,\n    navNode: ({ name, header, layout }) => ({\n        name,\n        header,\n        layout,\n    }),\n}",
                 "implementation": "",
                 "startLine": 98,
                 "endLine": 99,

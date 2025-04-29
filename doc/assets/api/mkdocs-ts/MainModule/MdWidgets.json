@@ -101,8 +101,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 98,
-                        "endLine": 99,
+                        "startLine": 100,
+                        "endLine": 101,
                         "references": {
                             "children": "@nav/api/MainModule/MdWidgets.CodeBadgesView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -137,8 +137,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "public readonly class = `${CodeBadgesView.CssSelector} d-flex align-items-center flex-wrap`",
                         "implementation": "",
-                        "startLine": 97,
-                        "endLine": 98,
+                        "startLine": 99,
+                        "endLine": 100,
                         "references": {
                             "class": "@nav/api/MainModule/MdWidgets.CodeBadgesView.class"
                         }
@@ -172,8 +172,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 96,
-                        "endLine": 97,
+                        "startLine": 98,
+                        "endLine": 99,
                         "references": {
                             "tag": "@nav/api/MainModule/MdWidgets.CodeBadgesView.tag"
                         }
@@ -207,8 +207,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeBadgesView'",
                         "implementation": "",
-                        "startLine": 94,
-                        "endLine": 95,
+                        "startLine": 96,
+                        "endLine": 97,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/MdWidgets.CodeBadgesView.CssSelector"
                         }
@@ -249,8 +249,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "constructor({\n    github,\n    npm,\n    pypi,\n    version,\n    license,\n}: {\n    github?: string\n    npm?: string\n    pypi?: string\n    version?: string\n    license?: string\n})",
                         "implementation": "constructor({\n    github,\n    npm,\n    pypi,\n    version,\n    license,\n}: {\n    github?: string\n    npm?: string\n    pypi?: string\n    version?: string\n    license?: string\n}) {\n    this.children = [\n        version ? new VersionBadge({ version }) : undefined,\n        github\n            ? new BadgeView({\n                  name: 'Github Sources',\n                  filename: 'github.svg',\n                  href: `https://github.com/${github}`,\n              })\n            : undefined,\n        npm\n            ? new BadgeView({\n                  name: 'Package',\n                  filename: 'npm.svg',\n                  href: `https://npmjs.com/package/${npm}`,\n              })\n            : undefined,\n        pypi\n            ? new BadgeView({\n                  name: 'Package',\n                  filename: 'pypi.svg',\n                  href: `https://pypi.org/project/${pypi}`,\n              })\n            : undefined,\n        license && license === 'mit'\n            ? new BadgeView({\n                  name: 'MIT',\n                  filename: 'mit.svg',\n                  href: `https://en.wikipedia.org/wiki/MIT_License`,\n              })\n            : undefined,\n    ]\n}",
-                        "startLine": 139,
-                        "endLine": 184,
+                        "startLine": 141,
+                        "endLine": 186,
                         "references": {
                             "CodeBadgesView": "@nav/api/MainModule/MdWidgets.CodeBadgesView"
                         }
@@ -295,8 +295,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        license: element.getAttribute('license') ?? undefined,\n        version: element.getAttribute('version') ?? undefined,\n        npm: element.getAttribute('npm') ?? undefined,\n        pypi: element.getAttribute('pypi') ?? undefined,\n        github: element.getAttribute('github') ?? undefined,\n    })",
                         "implementation": "",
-                        "startLine": 105,
-                        "endLine": 106,
+                        "startLine": 107,
+                        "endLine": 108,
                         "references": {
                             "attributeMapper": "@nav/api/MainModule/MdWidgets.CodeBadgesView.attributeMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
@@ -342,8 +342,8 @@
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "static fromHTMLElement(element: HTMLElement)",
                         "implementation": "static fromHTMLElement(element: HTMLElement) {\n    return new CodeBadgesView({\n        ...CodeBadgesView.attributeMapper(element),\n    })\n}",
-                        "startLine": 120,
-                        "endLine": 125,
+                        "startLine": 122,
+                        "endLine": 127,
                         "references": {
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.CodeBadgesView.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
@@ -362,8 +362,8 @@
                 "filePath": "src/lib/md-widgets/code-badges.ts",
                 "declaration": "export class CodeBadgesView implements VirtualDOM<'div'>",
                 "implementation": "export class CodeBadgesView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeBadgesView'\n\n    public readonly tag = 'div'\n    public readonly class = `${CodeBadgesView.CssSelector} d-flex align-items-center flex-wrap`\n    public readonly children: ChildrenLike\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        license: element.getAttribute('license') ?? undefined,\n        version: element.getAttribute('version') ?? undefined,\n        npm: element.getAttribute('npm') ?? undefined,\n        pypi: element.getAttribute('pypi') ?? undefined,\n        github: element.getAttribute('github') ?? undefined,\n    })\n\n    /**\n     * Construct an instance of NoteView from an `HTMLElement`.\n     *\n     * See {@link CodeBadgesView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static fromHTMLElement(element: HTMLElement) {\n        return new CodeBadgesView({\n            ...CodeBadgesView.attributeMapper(element),\n        })\n    }\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param _args The arguments.\n     * @param _args.github Github target, if not provided the associated badge is not displayed.\n     * The final url is `https://github.com/${github}`.\n     * @param _args.npm NPM target, if not provided the associated badge is not displayed.\n     * The final url is `https://npmjs.com/package/${npm}`.\n     * @param _args.pypi Pypi target, if not provided the associated badge is not displayed.\n     * The final url is `https://pypi.org/project/${pypi}`.\n     * @param _args.version Version bookmark, if not provided the associated badge is not displayed.\n     * @param _args.license License badge (only 'MIT' supported), if not provided the associated badge is not displayed.\n     */\n    constructor({\n        github,\n        npm,\n        pypi,\n        version,\n        license,\n    }: {\n        github?: string\n        npm?: string\n        pypi?: string\n        version?: string\n        license?: string\n    }) {\n        this.children = [\n            version ? new VersionBadge({ version }) : undefined,\n            github\n                ? new BadgeView({\n                      name: 'Github Sources',\n                      filename: 'github.svg',\n                      href: `https://github.com/${github}`,\n                  })\n                : undefined,\n            npm\n                ? new BadgeView({\n                      name: 'Package',\n                      filename: 'npm.svg',\n                      href: `https://npmjs.com/package/${npm}`,\n                  })\n                : undefined,\n            pypi\n                ? new BadgeView({\n                      name: 'Package',\n                      filename: 'pypi.svg',\n                      href: `https://pypi.org/project/${pypi}`,\n                  })\n                : undefined,\n            license && license === 'mit'\n                ? new BadgeView({\n                      name: 'MIT',\n                      filename: 'mit.svg',\n                      href: `https://en.wikipedia.org/wiki/MIT_License`,\n                  })\n                : undefined,\n        ]\n    }\n}",
-                "startLine": 90,
-                "endLine": 185,
+                "startLine": 92,
+                "endLine": 187,
                 "references": {
                     "CodeBadgesView": "@nav/api/MainModule/MdWidgets.CodeBadgesView",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
@@ -425,8 +425,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 262,
-                        "endLine": 263,
+                        "startLine": 264,
+                        "endLine": 265,
                         "references": {
                             "children": "@nav/api/MainModule/MdWidgets.CodeSnippetView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -461,8 +461,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`",
                         "implementation": "",
-                        "startLine": 252,
-                        "endLine": 253,
+                        "startLine": 254,
+                        "endLine": 255,
                         "references": {
                             "class": "@nav/api/MainModule/MdWidgets.CodeSnippetView.class"
                         }
@@ -496,8 +496,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }",
                         "implementation": "",
-                        "startLine": 242,
-                        "endLine": 243,
+                        "startLine": 244,
+                        "endLine": 245,
                         "references": {
                             "codeMirrorConfiguration": "@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration"
                         }
@@ -531,8 +531,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly style = {\n        fontSize: 'initial',\n    }",
                         "implementation": "",
-                        "startLine": 256,
-                        "endLine": 257,
+                        "startLine": 258,
+                        "endLine": 259,
                         "references": {
                             "style": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style"
                         }
@@ -566,8 +566,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 238,
-                        "endLine": 239,
+                        "startLine": 240,
+                        "endLine": 241,
                         "references": {
                             "tag": "@nav/api/MainModule/MdWidgets.CodeSnippetView.tag"
                         }
@@ -601,8 +601,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeSnippetView'",
                         "implementation": "",
-                        "startLine": 182,
-                        "endLine": 183,
+                        "startLine": 184,
+                        "endLine": 185,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/MdWidgets.CodeSnippetView.CssSelector"
                         }
@@ -636,8 +636,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly hlLineClass = 'mkdocs-ts-bg-highlight'",
                         "implementation": "",
-                        "startLine": 233,
-                        "endLine": 234,
+                        "startLine": 235,
+                        "endLine": 236,
                         "references": {
                             "hlLineClass": "@nav/api/MainModule/MdWidgets.CodeSnippetView.hlLineClass"
                         }
@@ -677,9 +677,9 @@
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "constructor({\n    language,\n    content,\n    highlightedLines,\n    cmConfig,\n}: {\n    language: CodeLanguage\n    highlightedLines?: string\n    content: string //| Observable<string>\n    cmConfig?: Record<string, unknown>\n})",
-                        "implementation": "constructor({\n    language,\n    content,\n    highlightedLines,\n    cmConfig,\n}: {\n    language: CodeLanguage\n    highlightedLines?: string\n    content: string //| Observable<string>\n    cmConfig?: Record<string, unknown>\n}) {\n    const content$ = of(content)\n    const linesToHighlight = parseLineIndices(highlightedLines)\n    this.content$ = new BehaviorSubject<string>(content)\n    this.children = [\n        child$({\n            source$: combineLatest([\n                content$,\n                CodeSnippetView.fetchCmDependencies$(language),\n            ]),\n            vdomMap: ([content, { CodeMirror }]) => {\n                return {\n                    tag: 'div',\n                    class: 'h-100 w-100',\n                    connectedCallback: (\n                        htmlElement: RxHTMLElement<'div'>,\n                    ) => {\n                        const config = {\n                            mode: language,\n                            ...this.codeMirrorConfiguration,\n                            value: content,\n                            ...cmConfig,\n                        }\n                        const editor = CodeMirror(htmlElement, config)\n                        editor.on('change', (args) => {\n                            this.content$.next(args.getValue())\n                        })\n                        linesToHighlight.forEach(function (lineNumber) {\n                            editor.addLineClass(\n                                lineNumber,\n                                'background',\n                                CodeSnippetView.hlLineClass,\n                            )\n                        })\n                        editor.refresh()\n                        this.editor$.next(editor)\n                    },\n                }\n            },\n        }),\n    ]\n}",
-                        "startLine": 310,
-                        "endLine": 362,
+                        "implementation": "constructor({\n    language,\n    content,\n    highlightedLines,\n    cmConfig,\n}: {\n    language: CodeLanguage\n    highlightedLines?: string\n    content: string //| Observable<string>\n    cmConfig?: Record<string, unknown>\n}) {\n    const content$ = of(content)\n    const linesToHighlight = parseLineIndices(highlightedLines)\n    this.content$ = new BehaviorSubject<string>(content)\n    this.children = [\n        child$({\n            source$: combineLatest([\n                content$,\n                CodeSnippetView.fetchCmDependencies$(language),\n            ]),\n            vdomMap: ([content, { CodeMirror }]) => {\n                return {\n                    tag: 'div',\n                    class: 'h-100 w-100',\n                    connectedCallback: (\n                        htmlElement: RxHTMLElement<'div'>,\n                    ) => {\n                        const config = {\n                            mode: language,\n                            ...this.codeMirrorConfiguration,\n                            value: content,\n                            ...cmConfig,\n                        }\n                        const editor = CodeMirror.default(\n                            htmlElement,\n                            config,\n                        )\n                        editor.on('change', (args) => {\n                            this.content$.next(args.getValue())\n                        })\n                        linesToHighlight.forEach(function (lineNumber) {\n                            editor.addLineClass(\n                                lineNumber,\n                                'background',\n                                CodeSnippetView.hlLineClass,\n                            )\n                        })\n                        editor.refresh()\n                        this.editor$.next(editor)\n                    },\n                }\n            },\n        }),\n    ]\n}",
+                        "startLine": 312,
+                        "endLine": 367,
                         "references": {
                             "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
                             "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
@@ -726,8 +726,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })",
                         "implementation": "",
-                        "startLine": 275,
-                        "endLine": 276,
+                        "startLine": 277,
+                        "endLine": 278,
                         "references": {
                             "attributeMapper": "@nav/api/MainModule/MdWidgets.CodeSnippetView.attributeMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
@@ -774,8 +774,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static fromHTMLElement(element: HTMLElement)",
                         "implementation": "static fromHTMLElement(element: HTMLElement) {\n    return new CodeSnippetView({\n        ...CodeSnippetView.attributeMapper(element),\n    })\n}",
-                        "startLine": 287,
-                        "endLine": 292,
+                        "startLine": 289,
+                        "endLine": 294,
                         "references": {
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.CodeSnippetView.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
@@ -793,9 +793,9 @@
             "code": {
                 "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                 "declaration": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait",
-                "implementation": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeSnippetView'\n\n    static readonly cmDependencies$: Record<\n        CodeLanguage,\n        Observable<{ CodeMirror: CodeMirror }> | undefined\n    > = {\n        python: undefined,\n        javascript: undefined,\n        markdown: undefined,\n        html: undefined,\n        yaml: undefined,\n        css: undefined,\n        unknown: undefined,\n    }\n    static fetchCmDependencies$(\n        language: CodeLanguage,\n    ): Observable<{ CodeMirror: CodeMirror }> {\n        if (CodeSnippetView.cmDependencies$[language]) {\n            return CodeSnippetView.cmDependencies$[language]\n        }\n        const scripts = {\n            python: ['codemirror#5.52.0~mode/python.min.js'],\n            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],\n            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],\n            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],\n            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],\n            css: ['codemirror#5.52.0~mode/css.min.js'],\n            xml: ['codemirror#5.52.0~mode/xml.min.js'],\n            htmlmixed: [\n                'codemirror#5.52.0~mode/htmlmixed.min.js',\n                'codemirror#5.52.0~mode/css.min.js',\n                'codemirror#5.52.0~mode/xml.min.js',\n                'codemirror#5.52.0~mode/javascript.min.js',\n            ],\n            unknown: [],\n        }\n        CodeSnippetView.cmDependencies$[language] = from(\n            install({\n                modules: ['codemirror'],\n                scripts: scripts[language],\n                css: ['codemirror#5.52.0~codemirror.min.css'],\n            }),\n        ).pipe(shareReplay(1)) as unknown as Observable<{\n            CodeMirror: CodeMirror\n        }>\n        return CodeSnippetView.cmDependencies$[language]\n    }\n\n    /**\n     * Class appended to the line DOM for highlighted lines.\n     */\n    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'\n\n    /**\n     * The tag of the associated HTML element.\n     */\n    public readonly tag = 'div'\n    /**\n     * The code mirror configuration.\n     */\n    public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }\n\n    /**\n     * The class list of the associated HTML element.\n     */\n    public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`\n    /**\n     * The style of the associated HTML element.\n     */\n    public readonly style = {\n        fontSize: 'initial',\n    }\n    /**\n     * The children of the associated HTML element.\n     */\n    public readonly children: ChildrenLike\n\n    public readonly content$: BehaviorSubject<string>\n\n    public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(\n        undefined,\n    )\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })\n    /**\n     * Construct an instance of CodeSnippetView from an `HTMLElement`.\n     *\n     * See {@link CodeSnippetView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static fromHTMLElement(element: HTMLElement) {\n        return new CodeSnippetView({\n            ...CodeSnippetView.attributeMapper(element),\n        })\n    }\n\n    /**\n     * Initialize the widget.\n     *\n     * @param _args arguments\n     * @param _args.language The target language. Supported languages are:\n     *      *  python\n     *      *  javascript\n     *      *  markdown\n     *      *  html\n     *      *  yaml\n     *      *  css\n     *      *  xml\n     * @param _args.content The snippet's content.\n     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`\n     * @param _args.cmConfig The code mirror editor configuration, it is merged with the\n     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).\n     */\n    constructor({\n        language,\n        content,\n        highlightedLines,\n        cmConfig,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string //| Observable<string>\n        cmConfig?: Record<string, unknown>\n    }) {\n        const content$ = of(content)\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.content$ = new BehaviorSubject<string>(content)\n        this.children = [\n            child$({\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, { CodeMirror }]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                                ...cmConfig,\n                            }\n                            const editor = CodeMirror(htmlElement, config)\n                            editor.on('change', (args) => {\n                                this.content$.next(args.getValue())\n                            })\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n                            editor.refresh()\n                            this.editor$.next(editor)\n                        },\n                    }\n                },\n            }),\n        ]\n    }\n\n    refreshView() {\n        this.editor$.value?.refresh()\n    }\n}",
-                "startLine": 178,
-                "endLine": 367,
+                "implementation": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeSnippetView'\n\n    static readonly cmDependencies$: Record<\n        CodeLanguage,\n        Observable<{ CodeMirror: CodeMirror }> | undefined\n    > = {\n        python: undefined,\n        javascript: undefined,\n        markdown: undefined,\n        html: undefined,\n        yaml: undefined,\n        css: undefined,\n        unknown: undefined,\n    }\n    static fetchCmDependencies$(\n        language: CodeLanguage,\n    ): Observable<{ CodeMirror: CodeMirror }> {\n        if (CodeSnippetView.cmDependencies$[language]) {\n            return CodeSnippetView.cmDependencies$[language]\n        }\n        const scripts = {\n            python: ['codemirror#5.52.0~mode/python.min.js'],\n            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],\n            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],\n            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],\n            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],\n            css: ['codemirror#5.52.0~mode/css.min.js'],\n            xml: ['codemirror#5.52.0~mode/xml.min.js'],\n            htmlmixed: [\n                'codemirror#5.52.0~mode/htmlmixed.min.js',\n                'codemirror#5.52.0~mode/css.min.js',\n                'codemirror#5.52.0~mode/xml.min.js',\n                'codemirror#5.52.0~mode/javascript.min.js',\n            ],\n            unknown: [],\n        }\n        CodeSnippetView.cmDependencies$[language] = from(\n            install<{ CodeMirror: CodeMirror }>({\n                esm: {\n                    modules: ['codemirror#^5.52.0 as CodeMirror'],\n                    scripts: scripts[language],\n                },\n                css: ['codemirror#5.52.0~codemirror.min.css'],\n            }),\n        ).pipe(shareReplay(1))\n        return CodeSnippetView.cmDependencies$[language]\n    }\n\n    /**\n     * Class appended to the line DOM for highlighted lines.\n     */\n    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'\n\n    /**\n     * The tag of the associated HTML element.\n     */\n    public readonly tag = 'div'\n    /**\n     * The code mirror configuration.\n     */\n    public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }\n\n    /**\n     * The class list of the associated HTML element.\n     */\n    public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`\n    /**\n     * The style of the associated HTML element.\n     */\n    public readonly style = {\n        fontSize: 'initial',\n    }\n    /**\n     * The children of the associated HTML element.\n     */\n    public readonly children: ChildrenLike\n\n    public readonly content$: BehaviorSubject<string>\n\n    public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(\n        undefined,\n    )\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })\n    /**\n     * Construct an instance of CodeSnippetView from an `HTMLElement`.\n     *\n     * See {@link CodeSnippetView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static fromHTMLElement(element: HTMLElement) {\n        return new CodeSnippetView({\n            ...CodeSnippetView.attributeMapper(element),\n        })\n    }\n\n    /**\n     * Initialize the widget.\n     *\n     * @param _args arguments\n     * @param _args.language The target language. Supported languages are:\n     *      *  python\n     *      *  javascript\n     *      *  markdown\n     *      *  html\n     *      *  yaml\n     *      *  css\n     *      *  xml\n     * @param _args.content The snippet's content.\n     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`\n     * @param _args.cmConfig The code mirror editor configuration, it is merged with the\n     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).\n     */\n    constructor({\n        language,\n        content,\n        highlightedLines,\n        cmConfig,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string //| Observable<string>\n        cmConfig?: Record<string, unknown>\n    }) {\n        const content$ = of(content)\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.content$ = new BehaviorSubject<string>(content)\n        this.children = [\n            child$({\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, { CodeMirror }]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                                ...cmConfig,\n                            }\n                            const editor = CodeMirror.default(\n                                htmlElement,\n                                config,\n                            )\n                            editor.on('change', (args) => {\n                                this.content$.next(args.getValue())\n                            })\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n                            editor.refresh()\n                            this.editor$.next(editor)\n                        },\n                    }\n                },\n            }),\n        ]\n    }\n\n    refreshView() {\n        this.editor$.value?.refresh()\n    }\n}",
+                "startLine": 180,
+                "endLine": 372,
                 "references": {
                     "CodeSnippetView": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
                     "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage",
@@ -1142,6 +1142,46 @@
             }
         },
         {
+            "name": "CodeMirror",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Interface specification of CodeMirror module.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CodeMirror",
+            "navPath": "@nav/api/MainModule/MdWidgets.CodeMirror",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/code-snippet.view.ts",
+                "declaration": "export interface CodeMirror",
+                "implementation": "export interface CodeMirror {\n    default: (\n        element: HTMLElement,\n        config: Record<string, unknown>,\n    ) => CodeMirrorEditor\n}",
+                "startLine": 31,
+                "endLine": 37,
+                "references": {
+                    "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
+                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "CodeMirrorEditor",
             "documentation": {
                 "sections": [
@@ -1254,46 +1294,6 @@
                 "endLine": 11,
                 "references": {
                     "CodeLanguage": "@nav/api/MainModule/MdWidgets.CodeLanguage"
-                }
-            },
-            "semantic": {
-                "role": "type-alias",
-                "labels": [],
-                "attributes": {},
-                "relations": {}
-            }
-        },
-        {
-            "name": "CodeMirror",
-            "documentation": {
-                "sections": [
-                    {
-                        "content": "Interface specification of CodeMirror module.",
-                        "contentType": "markdown",
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        }
-                    }
-                ]
-            },
-            "path": "CodeMirror",
-            "navPath": "@nav/api/MainModule/MdWidgets.CodeMirror",
-            "attributes": [],
-            "callables": [],
-            "code": {
-                "filePath": "src/lib/md-widgets/code-snippet.view.ts",
-                "declaration": "export type CodeMirror = (\n    element: HTMLElement,\n    config: Record<string, unknown>,\n) => CodeMirrorEditor",
-                "implementation": "",
-                "startLine": 31,
-                "endLine": 32,
-                "references": {
-                    "CodeMirror": "@nav/api/MainModule/MdWidgets.CodeMirror",
-                    "CodeMirrorEditor": "@nav/api/MainModule/MdWidgets.CodeMirrorEditor",
-                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
