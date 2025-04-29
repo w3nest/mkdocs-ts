@@ -3,6 +3,7 @@ import { navigation } from './navigation'
 import { Router, DefaultLayout, MdWidgets } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
 import { createRootContext, inMemReporter } from './config.context'
+import { AuthBadge } from '@w3nest/ui-tk/Badges'
 
 export const companionNodes$ = new BehaviorSubject<string[]>([])
 
@@ -77,6 +78,7 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
                 sourceUrl: 'https://github.com/w3nest/mkdocs-ts/tree/main/doc',
             }),
         companionNodes$,
+        favoritesFooter: new AuthBadge(),
     },
     ctx,
 )

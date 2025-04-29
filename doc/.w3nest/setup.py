@@ -29,6 +29,7 @@ externals_deps = {
     "mkdocs-ts": f"^{pkg_json_mkdocs['version'].replace('-wip', '')}",
     "@w3nest/webpm-client": "^0.1.5",
     "mathjax": "^3.1.4",
+    "@w3nest/ui-tk": "^0.1.0",
 }
 in_bundle_deps = {}
 dev_deps = {
@@ -49,7 +50,15 @@ config = ProjectConfig(
     ),
     bundles=Bundles(
         mainModule=MainModule(
-            entryFile="./app/main.ts", loadDependencies=list(externals_deps.keys())
+            entryFile="./app/main.ts",
+            loadDependencies=[
+                "rxjs",
+                "rx-vdom",
+                "mkdocs-ts",
+                "@w3nest/webpm-client",
+                "mathjax",
+                "@w3nest/ui-tk/Badges",
+            ],
         )
     ),
     userGuide=True,
