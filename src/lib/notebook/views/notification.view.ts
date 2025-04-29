@@ -19,6 +19,7 @@ import type { NoteLevel } from '../../md-widgets'
  * **Example**
  *
  * <js-cell>
+ * const { rxjs } = await webpm.install({ esm: ["rxjs#^7.5.6 as rxjs"] })
  * const notification = {
  *     tag: 'div',
  *     class: 'p-3',

@@ -51,7 +51,7 @@ export interface MdParsingOptions {
      * **Example**:
      *
      * <js-cell>
-     * const { rxjs } = await webpm.install({esm:[
+     * const { rxjs, MkDocs } = await webpm.install({esm:[
      *     'mkdocs-ts#{{mkdocs-version}} as MkDocs',
      *     'rxjs#^7.5.6 as rxjs']
      * })
@@ -91,7 +91,7 @@ export interface MdParsingOptions {
      * **Example**
      *
      * <js-cell>
-     * await webpm.install({esm: [
+     * const { MkDocs } = await webpm.install({esm: [
      *     'mkdocs-ts#{{mkdocs-version}} as MkDocs',
      *     'mathjax#^3.1.4'
      * ]})
