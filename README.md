@@ -1,62 +1,46 @@
-# mkdocs-ts
+## 📦 `mkdocs-ts`
 
-Typescript based mkdocs like solution
+> A toolkit to build dynamic, modular, and type-safe hierarchical document-based applications using TypeScript
+> and Markdown.
 
-This library is part of the hybrid cloud/local ecosystem
-[YouWol](https://platform.youwol.com/apps/@youwol/platform/latest).
+---
 
-## Links
+### 🧩 Key Features
 
-<!-- no user guide provided -->
+- Declarative and dynamic navigation system.
+- Flexible layout templating engine.
+- Type-safe, Markdown-first content creation.
+- Native support for Notebooks and API documentation.
+- Extensible plugin system.
 
-[Developers documentation](https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=mkdocs-ts&tab=doc)
+All documentation, tutorials, and API references are available in the official docs:
 
-[Package on npm](https://www.npmjs.com/package/mkdocs-ts)
+👉 [**Explore the Docs**](https://w3nest.org/apps/@mkdocs-ts/doc/latest)
 
-[Source on GitHub](https://github.com/mkdocs-ts)
+---
 
-# Installation, Build, Test
+### 🚀 Quick Start
 
-To install the required dependencies:
+```bash
+npm install mkdocs-ts
+```
 
-```shell
-yarn
+Or with `yarn`:
+
+```bash
+yarn add mkdocs-ts
 ```
 
 ---
 
-To build for development:
+### 🛠️ Contributing
 
-```shell
-yarn build:dev
-```
+We welcome contributions! Bug reports, feature ideas, or plugin proposals — jump in.
 
-To build for production:
-
-```shell
-yarn build:prod
-```
+> 📬 See the [Contributing Guide](CONTRIBUTING.md)
 
 ---
 
-<!-- no specific test configuration documented -->
+### 📝 License
 
-To run tests:
-
-```shell
-yarn test
-```
-
-Coverage can be evaluated using:
-
-```shell
-yarn test-coverage
-```
-
----
-
-To generate code's documentation:
-
-```shell
-yarn doc
-```
+MIT License

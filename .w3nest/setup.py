@@ -89,7 +89,7 @@ template_folder = project_folder / ".w3nest" / ".template"
 generate_template(config=config, dst_folder=template_folder)
 
 files = [
-    "README.md",
+    # "README.md",
     "package.json",
     # '.npmignore', add 'mkdocs-ts-doc'
     # '.prettierignore', add '**/assets/**/*.md'
