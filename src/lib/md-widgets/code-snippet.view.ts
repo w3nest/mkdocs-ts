@@ -28,10 +28,12 @@ export interface CodeMirrorEditor {
 /**
  * Interface specification of CodeMirror module.
  */
-export type CodeMirror = (
-    element: HTMLElement,
-    config: Record<string, unknown>,
-) => CodeMirrorEditor
+export interface CodeMirror {
+    default: (
+        element: HTMLElement,
+        config: Record<string, unknown>,
+    ) => CodeMirrorEditor
+}
 
 /**
  * Represents a code snippet view.
@@ -216,13 +218,14 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
             unknown: [],
         }
         CodeSnippetView.cmDependencies$[language] = from(
-            install({
-                esm: { modules: ['codemirror'], scripts: scripts[language] },
+            install<{ CodeMirror: CodeMirror }>({
+                esm: {
+                    modules: ['codemirror#^5.52.0 as CodeMirror'],
+                    scripts: scripts[language],
+                },
                 css: ['codemirror#5.52.0~codemirror.min.css'],
             }),
-        ).pipe(shareReplay(1)) as unknown as Observable<{
-            CodeMirror: CodeMirror
-        }>
+        ).pipe(shareReplay(1))
         return CodeSnippetView.cmDependencies$[language]
     }
 
@@ -339,7 +342,10 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
                                 value: content,
                                 ...cmConfig,
                             }
-                            const editor = CodeMirror(htmlElement, config)
+                            const editor = CodeMirror.default(
+                                htmlElement,
+                                config,
+                            )
                             editor.on('change', (args) => {
                                 this.content$.next(args.getValue())
                             })
