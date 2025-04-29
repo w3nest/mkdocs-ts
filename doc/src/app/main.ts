@@ -26,5 +26,5 @@ await install({
     ],
     onEvent: (ev) => loadingScreen.next(ev)
 })
-loadingScreen.done()
 await import('./on-load')
+loadingScreen.done()
