@@ -16,8 +16,8 @@ export class MkApiExtLink implements VirtualDOM<'a'> {
             },
             {
                 tag: 'i',
-                class: 'fas fa-external-link-alt',
-                style: { transform: 'scale(0.6)' },
+                class: 'fas fa-external-link-alt ps-1',
+                style: { fontSize: '0.6rem' },
             },
         ]
     }
@@ -41,8 +41,8 @@ export class MkApiApiLink implements VirtualDOM<'a'> {
             },
             {
                 tag: 'i',
-                class: 'fas fa-code',
-                style: { transform: 'scale(0.6)' },
+                class: 'fas fa-code ps-1',
+                style: { fontSize: '0.6rem' },
             },
         ]
     }
