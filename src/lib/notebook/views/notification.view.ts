@@ -78,7 +78,8 @@ export function notify({
                 top: '0px',
                 left: '50vw',
                 transform: 'translateX(-50%)',
-                zIndex: 10,
+                // To be above the top banner (in 100...199)
+                zIndex: 200,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
