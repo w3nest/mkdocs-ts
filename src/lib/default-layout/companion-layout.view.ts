@@ -164,7 +164,7 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                     const expandableRightSideNav = new ExpandableTocColumn({
                         tocView,
                         displayOptions: mainView.displayOptions,
-                        height$: mainView.height$,
+                        sizings$: mainView.sizings$,
                         displayMode$: displayModeToc$,
                     })
                     return {
@@ -178,6 +178,15 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                                 content: pageView,
                                 displayOptions: mainView.displayOptions,
                                 displayModeToc$,
+                                minHeight$: mainView.sizings$.pipe(
+                                    map(({ app, topBanner, footer }) => {
+                                        return (
+                                            app.height -
+                                            topBanner.height -
+                                            footer.height
+                                        )
+                                    }),
+                                ),
                             }),
                             expandableRightSideNav,
                         ],

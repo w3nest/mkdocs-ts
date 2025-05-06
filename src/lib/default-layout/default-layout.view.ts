@@ -8,23 +8,28 @@ import {
     attr$,
     RxHTMLElement,
     ChildLike,
+    EmptyDiv,
 } from 'rx-vdom'
 import { NavHeader, NavigationWrapperView } from './navigation.view'
 import { Router } from '../router'
-import { FooterView, PageView, WrapperPageView } from './page.view'
+import { PageView, WrapperPageView } from './page.view'
 import {
     BehaviorSubject,
+    combineLatest,
     distinctUntilChanged,
     map,
     Observable,
     ReplaySubject,
     Subject,
+    take,
 } from 'rxjs'
-import { FavoritesView } from './favorites.view'
+
 import { ExpandableNavColumn, ExpandableTocColumn } from './small-screen.view'
 import { TocWrapperView } from './toc.view'
 import { AnyView, Resolvable } from '../navigation.node'
 import { ContextTrait, NoContext } from '../context'
+import { EmptyTopBanner, TopBanner, TopBannerSpec } from './top-banner.view'
+import { FooterWrapper } from './footer.view'
 
 /**
  * Represents the display mode for UI components, controlling their visibility and behavior.
@@ -42,7 +47,7 @@ import { ContextTrait, NoContext } from '../context'
  *
  * This type is typically used to configure the visibility states of side panel elements.
  */
-export type DisplayMode = 'pined' | 'hidden' | 'expanded'
+export type DisplayMode = 'pined' | 'hidden' | 'expanded' | 'removed'
 
 /**
  * Hints regarding sizing of the main elements on the page.
@@ -139,16 +144,12 @@ export const defaultDisplayOptions: DisplayOptions = {
 export type LayoutElementView<TView extends AnyView = AnyView> = (p: {
     // Application's router
     router: Router<NavLayout>
-    // Current display mode regarding navigation.
-    displayModeNav$: Subject<DisplayMode>
-    // Current display mode regarding table of content.
-    displayModeToc$: Subject<DisplayMode>
     // The layout options provided.
     layoutOptions: DisplayOptions
     // Current bookmarked URLs
     bookmarks$?: BehaviorSubject<string[]>
-    // Current height of the layout in pixels
-    height$: Observable<number>
+    // Sizings observable
+    sizings$: Observable<Sizings>
 }) => TView
 
 /**
@@ -164,6 +165,14 @@ export interface DefaultLayoutParams<
      * Application router.
      */
     router: Router<NavLayout, NavHeader>
+    /**
+     * Top banner specification.
+     */
+    topBanner?: TopBannerSpec
+    /**
+     * The page footer.
+     */
+    footer?: AnyView
     /**
      * An optional content generator for the page, replacing the default {@link PageView}.
      *
@@ -185,20 +194,18 @@ export interface DefaultLayoutParams<
      */
     displayOptions?: Partial<DisplayOptions<ExtraDisplayOption>>
     /**
-     * An optional favorites column, replacing the default {@link FavoritesView}.
-     */
-    favoritesColumn?: LayoutElementView
-    /**
-     * If provided, include a {@link BookmarksView} column at the very left, as well as a
-     * <button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button in the navigation node's header.
-     * The consumer should provide this variable initialized with the URL for initial bookmarked pages.
+     * Enables bookmarking functionality within navigation nodes.
+     *
+     * When provided, a <button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button
+     * will appear in selected navigation node's header. This allows users to "pin" pages they want
+     * to access quickly.
+     *
+     * It's typically used in conjunction with the {@link BookmarksView} component in the top banner,
+     * which displays the list of bookmarks.
+     *
+     * The consumer should initialize this observable with the default list of bookmarked navigation paths.
      */
     bookmarks$?: BehaviorSubject<string[]>
-
-    /**
-     * A view to display in the favorite bar as footer.
-     */
-    favoritesFooter?: AnyView
 }
 
 /**
@@ -266,6 +273,22 @@ export type NavLayout =
       }
     | ClientContentView
 
+export interface DisplayedRect {
+    width: number
+    height: number
+}
+/**
+ */
+export interface Sizings {
+    app: DisplayedRect
+    topBanner: DisplayedRect
+    footer: DisplayedRect
+    page: DisplayedRect
+    scrollTop: number
+    pageVisibleHeight: number
+    navigation: DisplayedRect & { mode: DisplayMode }
+    toc: DisplayedRect & { mode: DisplayMode }
+}
 /**
  * Represents the default layout of the library.
  *
@@ -287,6 +310,8 @@ export type NavLayout =
  *   Provides quick access to structured content, by default using {@link TOCView}.
  *   Customization options are available through the `toc` attribute of {@link NavLayout},
  *   applicable to navigation nodes.
+ *
+ * The layout can optionally includes a top-banner and a footer.
  *
  * **Responsive Behavior**
  *
@@ -318,9 +343,11 @@ export class Layout implements VirtualDOM<'div'> {
 
     public readonly connectedCallback: (e: HTMLElement) => undefined
 
-    public readonly height$ = new ReplaySubject<number>(1)
-
     private readonly context?: ContextTrait
+
+    public readonly pageScrollTop$ = new BehaviorSubject(0)
+
+    public readonly sizings$: Observable<Sizings>
     /**
      * Initializes a new instance.
      *
@@ -333,12 +360,12 @@ export class Layout implements VirtualDOM<'div'> {
         const {
             router,
             page,
+            topBanner,
+            footer,
             sideNavHeader,
             sideNavFooter,
             displayOptions,
-            favoritesColumn,
             bookmarks$,
-            favoritesFooter,
         } = params
         this.displayOptions = Object.assign(
             this.displayOptions,
@@ -350,9 +377,18 @@ export class Layout implements VirtualDOM<'div'> {
         if (this.displayOptions.forceTocDisplayMode) {
             this.displayModeToc$.next(this.displayOptions.forceTocDisplayMode)
         }
+        const appBoundingBox$ = new ReplaySubject<DOMRect>(1)
         this.connectedCallback = (e: RxHTMLElement<'div'>) => {
             this.plugResizer(e)
-            router.setScrollableElement(e)
+            router.setScrollableElement(e, ({ top, left, behavior }) =>
+                this.sizings$.pipe(take(1)).subscribe((sizing) => {
+                    e.scrollTo({
+                        left,
+                        behavior,
+                        top: top ? top - sizing.topBanner.height : 0,
+                    })
+                }),
+            )
             e.ownSubscriptions(
                 router.path$.subscribe(() => {
                     if (this.displayModeNav$.value === 'expanded') {
@@ -360,15 +396,35 @@ export class Layout implements VirtualDOM<'div'> {
                     }
                 }),
             )
+            e.addEventListener('scroll', () => {
+                this.pageScrollTop$.next(e.scrollTop)
+            })
+            const resizeObserver = new ResizeObserver(() => {
+                appBoundingBox$.next(e.getBoundingClientRect())
+            })
+            resizeObserver.observe(e)
         }
         const viewInputs = {
             router,
-            displayModeNav$: this.displayModeNav$,
-            displayModeToc$: this.displayModeToc$,
             layoutOptions: this.displayOptions,
             bookmarks$,
-            height$: this.height$,
+            sizings$: this.sizings$,
         }
+
+        const navigationBoundingBox$ = new ReplaySubject<DOMRect>(1)
+        const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)
+
+        const topBannerView = topBanner
+            ? new TopBanner({
+                  router,
+                  navigationBoundingBox$,
+                  tocBoundingBox$,
+                  displayMode$: this.displayModeNav$,
+                  spec: topBanner,
+              })
+            : new EmptyTopBanner()
+
+        const footerView = new FooterWrapper(footer)
 
         const contentView = page
             ? page(viewInputs)
@@ -378,47 +434,109 @@ export class Layout implements VirtualDOM<'div'> {
             displayOptions: this.displayOptions,
             displayModeNav$: this.displayModeNav$,
             displayModeToc$: this.displayModeToc$,
+            minHeight$: combineLatest([
+                appBoundingBox$,
+                topBannerView.boundingBox$,
+                footerView.boundingBox$,
+            ]).pipe(
+                map(
+                    ([appBB, topBB, footerBB]) =>
+                        appBB.height - topBB.height - footerBB.height,
+                ),
+            ),
         })
-
-        const favoritesView = favoritesColumn
-            ? favoritesColumn(viewInputs)
-            : new FavoritesView({
-                  router,
-                  bookmarks$: bookmarks$ ?? new BehaviorSubject([]),
-                  displayMode$: this.displayModeNav$,
-                  footer: favoritesFooter,
-              })
         const navView = new NavigationWrapperView({
             router,
             displayOptions: this.displayOptions,
             bookmarks$,
             header: sideNavHeader?.(viewInputs),
-            footer: sideNavFooter
-                ? sideNavFooter(viewInputs)
-                : new FooterView(),
+            footer: sideNavFooter?.(viewInputs),
         })
-        const leftSideNav = {
+
+        this.sizings$ = combineLatest([
+            pageView.boundingBox$,
+            topBannerView.boundingBox$,
+            footerView.boundingBox$,
+            appBoundingBox$,
+            navigationBoundingBox$,
+            tocBoundingBox$,
+            this.pageScrollTop$,
+            this.displayModeNav$,
+            this.displayModeToc$,
+        ]).pipe(
+            map(
+                ([
+                    page,
+                    topBanner,
+                    footer,
+                    app,
+                    navigation,
+                    toc,
+                    t,
+                    navMode,
+                    tocMode,
+                ]) => {
+                    const remainingPageHeight = page.height - t
+                    const pageVisibleHeight =
+                        remainingPageHeight > app.height
+                            ? app.height - topBanner.height
+                            : remainingPageHeight
+                    return {
+                        app: { width: app.width, height: app.height },
+                        page: { width: page.width, height: page.height },
+                        scrollTop: t,
+                        pageVisibleHeight,
+                        topBanner: {
+                            width: topBanner.width,
+                            height: topBanner.height,
+                        },
+                        footer: {
+                            width: footer.width,
+                            height: footer.height,
+                        },
+                        navigation: {
+                            width: navigation.width,
+                            height: navigation.height,
+                            mode: navMode,
+                        },
+                        toc: {
+                            width: toc.width,
+                            height: toc.height,
+                            mode: tocMode,
+                        },
+                    }
+                },
+            ),
+        )
+        const wrapperSideNav = (
+            type: 'nav' | 'toc',
+            content: AnyVirtualDOM,
+            bbox$: Subject<DOMRect>,
+        ) => ({
             tag: 'div' as const,
             class: 'd-flex flex-grow-1',
             children: [
-                bookmarks$
-                    ? new StickyColumnContainer({
-                          type: 'favorites',
-                          content: favoritesView,
-                          height$: this.height$,
-                      })
-                    : undefined,
                 new StickyColumnContainer({
-                    type: 'nav',
-                    content: navView,
-                    height$: this.height$,
+                    type,
+                    content,
+                    sizings$: this.sizings$,
                 }),
             ],
-        }
-        const expandableLeftSideNav = new ExpandableNavColumn({
-            favoritesView,
+            connectedCallback: (e: HTMLElement) => {
+                const resizeObserver = new ResizeObserver(() => {
+                    bbox$.next(e.getBoundingClientRect())
+                })
+                resizeObserver.observe(e)
+            },
+        })
+        const leftSideNav = wrapperSideNav(
+            'nav',
             navView,
-            height$: this.height$,
+            navigationBoundingBox$,
+        )
+        const expandableLeftSideNav = new ExpandableNavColumn({
+            navView,
+            sizings$: this.sizings$,
             displayOptions: this.displayOptions,
             displayMode$: this.displayModeNav$,
         })
@@ -428,15 +546,11 @@ export class Layout implements VirtualDOM<'div'> {
             displayOptions: this.displayOptions,
             content$: contentView.content$,
         })
-        const rightSideNav = new StickyColumnContainer({
-            type: 'toc',
-            content: tocView,
-            height$: this.height$,
-        })
+        const rightSideNav = wrapperSideNav('toc', tocView, tocBoundingBox$)
         const expandableRightSideNav = new ExpandableTocColumn({
             tocView,
             displayOptions: this.displayOptions,
-            height$: this.height$,
+            sizings$: this.sizings$,
             displayMode$: this.displayModeToc$,
         })
         const hSep = {
@@ -450,18 +564,32 @@ export class Layout implements VirtualDOM<'div'> {
         ) =>
             child$({
                 source$: mode$.pipe(
-                    map((mode) => (mode === 'pined' ? 'pined' : 'expandable')),
+                    map((mode) => {
+                        if (mode === 'removed') {
+                            return 'removed'
+                        }
+                        return mode === 'pined' ? 'pined' : 'expandable'
+                    }),
                     distinctUntilChanged(),
                 ),
-                vdomMap: (mode: 'pined' | 'expandable') =>
-                    mode === 'pined' ? pined : expandable,
+                vdomMap: (mode: 'pined' | 'expandable' | 'removed') => {
+                    if (mode === 'removed') {
+                        return EmptyDiv
+                    }
+                    return mode === 'pined' ? pined : expandable
+                },
             })
 
+        const displayModes$ = combineLatest([
+            this.displayModeNav$,
+            this.displayModeToc$,
+        ])
         this.children = [
             {
                 tag: 'div',
                 class: 'w-100',
                 children: [
+                    topBannerView,
                     {
                         tag: 'div',
                         class: 'd-flex w-100',
@@ -473,7 +601,14 @@ export class Layout implements VirtualDOM<'div'> {
                             ),
                             hSep,
                             pageView,
-                            hSep,
+                            child$({
+                                source$: displayModes$,
+                                vdomMap: ([nav, toc]) => {
+                                    return nav === toc || toc === 'removed'
+                                        ? hSep
+                                        : EmptyDiv
+                                },
+                            }),
                             switchMode(
                                 this.displayModeToc$,
                                 rightSideNav,
@@ -481,6 +616,7 @@ export class Layout implements VirtualDOM<'div'> {
                             ),
                         ],
                     },
+                    footerView,
                 ],
             },
         ]
@@ -498,8 +634,13 @@ export class Layout implements VirtualDOM<'div'> {
         const switcher = (
             width: number,
             treshold: number,
+            removed: number,
             displayMode$: BehaviorSubject<DisplayMode>,
         ) => {
+            if (width < removed) {
+                displayMode$.next('removed')
+                return
+            }
             if (width > treshold) {
                 displayMode$.next('pined')
             }
@@ -509,12 +650,11 @@ export class Layout implements VirtualDOM<'div'> {
         }
         const resizeObserver = new ResizeObserver((entries) => {
             const width = entries[0].contentRect.width
-            const height = entries[0].contentRect.height
-            this.height$.next(height)
             if (this.displayOptions.forceTocDisplayMode === undefined) {
                 switcher(
                     width,
                     this.displayOptions.toggleTocWidth,
+                    this.displayOptions.toggleNavWidth,
                     this.displayModeToc$,
                 )
             }
@@ -522,6 +662,7 @@ export class Layout implements VirtualDOM<'div'> {
                 switcher(
                     width,
                     this.displayOptions.toggleNavWidth,
+                    0,
                     this.displayModeNav$,
                 )
             }
@@ -547,7 +688,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     constructor(params: {
         type: Container
         content: AnyView
-        height$: Observable<number>
+        sizings$: Observable<Sizings>
     }) {
         Object.assign(this, params)
         const colors: Record<Container, string> = {
@@ -555,22 +696,36 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
             nav: 'mkdocs-bg-5 mkdocs-text-5',
             toc: 'mkdocs-bg-0 mkdocs-text-0',
         }
-        // At least the column should take the full available height
         this.style = attr$({
-            source$: params.height$,
-            vdomMap: (height) => {
+            source$: params.sizings$,
+            vdomMap: ({ topBanner }) => {
                 return {
-                    height: `${String(height)}px`,
+                    height: `0px`,
                     position: 'sticky',
-                    top: '0px',
+                    top: `${String(topBanner.height)}px`,
                     minWidth: 'fit-content',
+                    overflow: 'visible',
                 }
             },
         })
         const flexGrow = params.type === 'favorites' ? 0 : 1
         const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} d-flex flex-column overflow-auto`
-
-        this.children = [this.content]
+        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} d-flex flex-column`
+        this.children = [
+            {
+                tag: 'div',
+                class: 'overflow-auto mkdocs-thin-v-scroller',
+                style: attr$({
+                    source$: params.sizings$,
+                    vdomMap: ({ pageVisibleHeight }) => {
+                        return {
+                            minHeight: `${String(pageVisibleHeight)}px`,
+                            maxHeight: `${String(pageVisibleHeight)}px`,
+                        }
+                    },
+                }),
+                children: [this.content],
+            },
+        ]
     }
 }

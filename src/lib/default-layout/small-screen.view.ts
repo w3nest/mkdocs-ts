@@ -9,7 +9,7 @@ import {
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs'
 import { NavigationWrapperView } from './navigation.view'
-import { DisplayMode, DisplayOptions } from './default-layout.view'
+import { Sizings, DisplayMode, DisplayOptions } from './default-layout.view'
 import { TocWrapperView } from './toc.view'
 import { AnyView } from '../navigation.node'
 
@@ -19,15 +19,19 @@ function slidingStyle({
     side,
     maxWidth,
     translationTime,
+    paddingY,
 }: {
     mode: DisplayMode
     offset: number
     side: 'right' | 'left'
     maxWidth: number
     translationTime: number
+    paddingY: string
 }): CSSAttribute {
     return {
         position: 'absolute',
+        paddingTop: paddingY,
+        paddingBottom: paddingY,
         height: `100%`,
         transition: `${side} ${String(translationTime)}ms`,
         [side]:
@@ -35,7 +39,7 @@ function slidingStyle({
                 ? `${String(offset)}px`
                 : `-${String(maxWidth + offset)}px`,
         top: '0px',
-        zIndex: -1,
+        //zIndex: -1,
     }
 }
 
@@ -59,7 +63,7 @@ export class ToggleSidePanelButton implements VirtualDOM<'div'> {
         visible$?: Observable<boolean>
         icon: string
     }) {
-        const classBase = `${ToggleSidePanelButton.CssSelector} w-100 p-1`
+        const classBase = ToggleSidePanelButton.CssSelector
         this.class = params.visible$
             ? {
                   source$: params.visible$,
@@ -125,20 +129,21 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
     }
 
     constructor(params: {
-        height$: Observable<number>
         items: AnyView[]
-        toggleIcon: string
+        toggleIcon?: string
+        sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
         displayMode$: BehaviorSubject<DisplayMode | 'none'>
         visible$?: Observable<boolean>
         onDisplayed?: (elem: RxHTMLElement<'div'>) => void
     }) {
         this.style = attr$({
-            source$: params.height$,
-            vdomMap: (height) => {
+            source$: params.sizings$,
+            vdomMap: ({ topBanner }) => {
                 return {
-                    height: `${String(height)}px`,
+                    height: `0px`,
+                    overflow: 'visible',
                     position: 'sticky',
-                    top: '0px',
+                    top: `${String(topBanner.height)}px`,
                     zIndex: 10,
                 }
             },
@@ -146,16 +151,24 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'h-100 d-flex flex-column',
-                style: {
-                    position: 'relative',
-                },
+                class: 'd-flex flex-column py-3',
+                style: attr$({
+                    source$: params.sizings$,
+                    vdomMap: ({ pageVisibleHeight }) => {
+                        return {
+                            height: `${String(pageVisibleHeight)}px`,
+                            position: 'relative',
+                        }
+                    },
+                }),
                 children: [
-                    new ToggleSidePanelButton({
-                        displayMode$: params.displayMode$,
-                        icon: params.toggleIcon,
-                        visible$: params.visible$,
-                    }),
+                    params.toggleIcon
+                        ? new ToggleSidePanelButton({
+                              displayMode$: params.displayMode$,
+                              icon: params.toggleIcon,
+                              visible$: params.visible$,
+                          })
+                        : undefined,
                     ...params.items,
                 ],
             },
@@ -173,14 +186,14 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
     /**
      * Component's class name for CSS query.
      */
-    static readonly CssSelector = 'mkdocs-ExpandableTocColumn'
+    static readonly CssSelector = 'mkdocs-ExpandableTocColumn pe-5'
 
     public readonly class = ExpandableTocColumn.CssSelector
 
     constructor(params: {
         displayOptions: DisplayOptions
         tocView: TocWrapperView
-        height$: Observable<number>
+        sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
         displayMode$: BehaviorSubject<DisplayMode>
     }) {
         super({
@@ -197,9 +210,11 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
                                 mode,
                                 offset: 0,
                                 side: 'right',
-                                maxWidth: params.displayOptions.tocMaxWidth,
+                                maxWidth:
+                                    params.displayOptions.tocMaxWidth + 50,
                                 translationTime:
                                     params.displayOptions.translationTime,
+                                paddingY: '3rem',
                             })
                         },
                     }),
@@ -219,16 +234,14 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
     public readonly class = `${ExpandableNavColumn.CssSelector} mkdocs-bg-6`
 
     constructor(params: {
-        favoritesView: AnyView
         navView: NavigationWrapperView
-        height$: Observable<number>
+        sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
         displayOptions: DisplayOptions
         displayMode$: BehaviorSubject<DisplayMode>
     }) {
         const htmlElement$ = new Subject<HTMLElement>()
         super({
             ...params,
-            toggleIcon: 'fa-sitemap',
             onDisplayed: (elem: RxHTMLElement<'div'>) => {
                 htmlElement$.next(elem)
             },
@@ -249,6 +262,7 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
                                 maxWidth: params.displayOptions.navMaxWidth,
                                 translationTime:
                                     params.displayOptions.translationTime,
+                                paddingY: '0rem',
                             })
                         },
                     }),

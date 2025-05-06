@@ -7,6 +7,7 @@ import {
     CSSAttribute,
     EmptyDiv,
     attr$,
+    AttributeLike,
 } from 'rx-vdom'
 import { Target, isResolvedTarget, Router } from '../router'
 import { parseMd, parseMdFromUrl, replaceLinks } from '../markdown'
@@ -293,8 +294,8 @@ The page at location \`${path}\` does not exist. Please try navigating to other 
 
 export class WrapperPageView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly class = `flex-grow-1 px-3`
-    public readonly style: CSSAttribute
+    public readonly class = `d-flex flex-grow-1 px-3`
+    public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
 
     public readonly displayModeNav$?: BehaviorSubject<DisplayMode>
@@ -302,21 +303,30 @@ export class WrapperPageView implements VirtualDOM<'div'> {
 
     public readonly onclick: (ev: MouseEvent) => void
 
+    public readonly boundingBox$ = new ReplaySubject<DOMRect>(1)
+    public readonly connectedCallback: (element: RxHTMLElement<'div'>) => void
+
     constructor(params: {
         content: AnyView
         displayOptions: DisplayOptions
         displayModeNav$?: BehaviorSubject<DisplayMode>
         displayModeToc$?: BehaviorSubject<DisplayMode>
+        minHeight$: Observable<number>
     }) {
         this.displayModeNav$ = params.displayModeNav$
         this.displayModeToc$ = params.displayModeToc$
-        this.style = {
-            width: params.displayOptions.pageWidth,
-            height: 'fit-content',
-            minWidth: '0px',
-            paddingTop: params.displayOptions.pageVertPadding,
-            paddingBottom: params.displayOptions.pageVertPadding,
-        }
+        this.style = attr$({
+            source$: params.minHeight$,
+            vdomMap: (minHeight) => ({
+                width: params.displayOptions.pageWidth,
+                height: 'fit-content',
+                minHeight: `${String(minHeight)}px`,
+                minWidth: '0px',
+                paddingTop: params.displayOptions.pageVertPadding,
+                paddingBottom: params.displayOptions.pageVertPadding,
+            }),
+        })
+
         this.children = [params.content]
 
         this.onclick = () => {
@@ -332,6 +342,12 @@ export class WrapperPageView implements VirtualDOM<'div'> {
             ) {
                 this.displayModeToc$.next('hidden')
             }
+        }
+        this.connectedCallback = (elem) => {
+            const resizeObserver = new ResizeObserver(() => {
+                this.boundingBox$.next(elem.getBoundingClientRect())
+            })
+            resizeObserver.observe(elem)
         }
     }
 }
