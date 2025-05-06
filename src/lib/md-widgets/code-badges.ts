@@ -7,23 +7,23 @@ const baseIconPath = `/api/assets-gateway/webpm/resources/${assetId}/${pkgJson.v
 export const githubIcon = {
     tag: 'img' as const,
     src: `${baseIconPath}/github.svg`,
-    width: 25,
+    style: { width: '1.2rem' },
 }
 
 export const pypiIcon = {
     tag: 'img' as const,
     src: `${baseIconPath}/pypi.svg`,
-    width: 25,
+    style: { width: '1.2rem' },
 }
 export const mitIcon = {
     tag: 'img' as const,
     src: `${baseIconPath}/mit.svg`,
-    width: 25,
+    style: { width: '1.2rem' },
 }
 export const npmIcon = {
     tag: 'img' as const,
     src: `${baseIconPath}/npm.svg`,
-    width: 25,
+    style: { width: '1.2rem' },
 }
 export class BadgeView implements VirtualDOM<'div'> {
     /**
