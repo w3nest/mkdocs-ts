@@ -236,6 +236,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
     public readonly context?: ContextTrait
     private navParser = new NavParser()
     private scrollTo$ = new Subject<string | HTMLElement | undefined>()
+    private scroller?: (options: ScrollToOptions) => void
 
     private navNodeCache: Record<string, Navigation<TLayout, THeader>> = {}
     /**
@@ -440,9 +441,15 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * Set the element in page that can be 'scrolled' to reach target destination's section ID (reference from URL).
      *
      * @param element Scrollable element.
+     * @param scroller Callback to override the default `scrollTo` used from `element`. This is useful for instance
+     * when a sticky top-banner is used (an offset has to be added).
      */
-    setScrollableElement(element: HTMLElement) {
+    setScrollableElement(
+        element: HTMLElement,
+        scroller?: (options: ScrollToOptions) => void,
+    ) {
         this.scrollableElement = element
+        this.scroller = scroller
         this.target$
             .pipe(
                 take(1),
@@ -501,14 +508,19 @@ export class Router<TLayout = unknown, THeader = unknown> {
         setTimeout(() => {
             ctx.info('Target found, scroll to it.')
             const offset = div.offsetTop
-            scrollableElement.scrollTo({
+            const scrollTo = this.scroller
+                ? this.scroller
+                : (p: ScrollToOptions) => {
+                      scrollableElement.scrollTo(p)
+                  }
+            scrollTo({
                 top: div.offsetTop - br.top - 1,
                 left: 0,
                 behavior: 'smooth',
             })
             setTimeout(() => {
                 if (div.offsetTop - offset !== 0) {
-                    scrollableElement.scrollTo({
+                    scrollTo({
                         top: div.offsetTop - br.top - 1,
                         left: 0,
                         behavior: 'smooth',
