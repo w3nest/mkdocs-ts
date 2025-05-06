@@ -310,7 +310,7 @@ export class TocItemView implements VirtualDOM<'div'> {
         })
         const getItemClass = (firstIndex: number): string => {
             if (index === firstIndex) {
-                return 'fw-bolder'
+                return 'text-primary'
             }
             return index < firstIndex ? 'text-dark' : 'mkdocs-text-1'
         }
