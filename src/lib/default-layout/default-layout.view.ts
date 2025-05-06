@@ -273,12 +273,6 @@ export type NavLayout =
  *
  * This layout is organized into a column-based structure, proceeding from left to right:
  *
- * - **Favorites Column**:
- *   An optional, slim column dedicated to favorites, always visible regardless of screen size (if present).
- *   By default, it uses {@link FavoritesView}, which include the {@link BookmarksView}.
- *   if no {@link DefaultLayoutParams.bookmarks$} parameters is provided, the column is not display.
- *   A custom favorites view can be provided using the {@link DefaultLayoutParams.favoritesColumn} parameter.
- *
  * - **Navigation Column**:
  *   The navigation panel provides access to the various  {@link Navigation} nodes.
  *   It supports custom header content through {@link DefaultLayoutParams.sideNavHeader}

@@ -235,14 +235,6 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
             items: [
                 {
                     tag: 'div',
-                    class: 'flex-grow-1',
-                    style: {
-                        minHeight: '0px',
-                    },
-                    children: [params.favoritesView],
-                },
-                {
-                    tag: 'div',
                     class: 'overflow-auto mkdocs-bg-5 mkdocs-text-5 h-100 mkdocs-thin-v-scroller',
                     style: attr$({
                         source$: combineLatest([
