@@ -8,6 +8,7 @@ import {
     CSSAttribute,
     AttributeLike,
     ChildLike,
+    EmptyDiv,
 } from 'rx-vdom'
 import { Router } from '../router'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
@@ -58,7 +59,7 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router<unknown, NavHeader>
 
     public readonly tag = 'div'
-    public readonly class: string = `${NavigationView.CssSelector} mkdocs-thin-v-scroller mkdocs-bg-5 mkdocs-text-5 px-1 rounded h-100`
+    public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100`
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
     public readonly displayOptions: DisplayOptions
@@ -91,6 +92,9 @@ export class NavigationView implements VirtualDOM<'div'> {
                             tag: 'i' as const,
                             class: 'fas fa-spinner fa-spin',
                         }
+                    }
+                    if (node.href === '/') {
+                        return EmptyDiv
                     }
                     return new NavHeaderView({
                         node,
