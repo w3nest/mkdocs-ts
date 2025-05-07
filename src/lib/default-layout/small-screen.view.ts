@@ -50,6 +50,9 @@ export class ToggleSidePanelButton implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mkdocs-ToggleNavButton'
     public readonly tag = 'div'
     public readonly class: AttributeLike<string>
+    public readonly style = {
+        zIndex: 1,
+    }
     public readonly children: ChildrenLike
     /**
      * Initializes a new instance.
