@@ -4,6 +4,7 @@ import { Router, DefaultLayout, MdWidgets } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
 import { createRootContext, inMemReporter } from './config.context'
 import { AuthBadge } from '@w3nest/ui-tk/Badges'
+import { Footer } from '@w3nest/ui-tk/Mkdocs'
 
 export const companionNodes$ = new BehaviorSubject<string[]>([])
 
@@ -13,6 +14,17 @@ const ctx = createRootContext({
 })
 
 console.log('In memory logs reporter', inMemReporter)
+
+const footer = new Footer({
+    license: 'MIT',
+    copyrights: [
+        { year: '2021', holder: 'YouWol' },
+        { year: '2025', holder: 'Guillaume Reinisch' },
+    ],
+    github: 'https://github.com/w3nest/py-w3nest',
+    pypi: 'https://pypi.org/project/w3nest/',
+    docGithub: 'https://github.com/w3nest/py-w3nest/tree/main/doc/front-app',
+})
 
 export const router = new Router(
     {
@@ -68,17 +80,26 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
     {
         router,
         bookmarks$,
+        topBanner: {
+            logoUrl: '../assets/favicon.svg',
+            title: 'MkDocs-TS',
+            expandedContent: new DefaultLayout.BookmarksView({
+                bookmarks$,
+                router,
+            }),
+            badge: new AuthBadge(),
+        },
+        footer,
         displayOptions: {
             pageVertPadding: '3rem',
         },
-        sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
+        /*sideNavHeader: () => new NavHeaderView({ topStickyPaddingMax }),
         sideNavFooter: () =>
             new DefaultLayout.FooterView({
                 sourceName: '@mkdocs-ts/doc',
                 sourceUrl: 'https://github.com/w3nest/mkdocs-ts/tree/main/doc',
-            }),
-        companionNodes$,
-        favoritesFooter: new AuthBadge(),
+            }),*/
+        companionNodes$
     },
     ctx,
 )

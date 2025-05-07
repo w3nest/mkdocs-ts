@@ -29,7 +29,7 @@ externals_deps = {
     "mkdocs-ts": f"^{pkg_json_mkdocs['version'].replace('-wip', '')}",
     "@w3nest/webpm-client": "^0.1.5",
     "mathjax": "^3.1.4",
-    "@w3nest/ui-tk": "^0.1.0",
+    "@w3nest/ui-tk": "^0.1.1",
 }
 in_bundle_deps = {}
 dev_deps = {
