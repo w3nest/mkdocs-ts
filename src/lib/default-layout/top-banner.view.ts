@@ -257,7 +257,7 @@ export class TopBannerExpanded implements VirtualDOM<'div'> {
             },
             {
                 tag: 'div',
-                class: 'd-flex justify-content-left pe-5',
+                class: 'd-flex justify-content-left',
                 style: attr$({
                     source$: tocBoundingBox$,
                     vdomMap: (tocBox) => ({

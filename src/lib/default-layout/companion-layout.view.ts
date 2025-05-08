@@ -15,6 +15,7 @@ import {
     switchMap,
     take,
     firstValueFrom,
+    ReplaySubject,
 } from 'rxjs'
 import { Layout } from './default-layout.view'
 import { PageView, WrapperPageView } from './page.view'
@@ -92,16 +93,19 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
         this.companionNodes$ = params.companionNodes$
         const context = this.ctx().start('new LayoutWithCompanion', ['View'])
 
-        const mainView = new Layout({
-            ...params,
-            page: ({ router }) =>
-                new PageView(
-                    {
-                        router,
-                    },
-                    context,
-                ),
-        })
+        const mainView = new Layout(
+            {
+                ...params,
+                page: ({ router }) =>
+                    new PageView(
+                        {
+                            router,
+                        },
+                        context,
+                    ),
+            },
+            context,
+        )
         const companionRouter = context.execute('setupRouters', (ctx) =>
             setupRouters(
                 {
@@ -161,11 +165,13 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                     const displayModeToc$ = new BehaviorSubject<DisplayMode>(
                         'hidden',
                     )
+                    const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)
                     const expandableRightSideNav = new ExpandableTocColumn({
                         tocView,
                         displayOptions: mainView.displayOptions,
-                        sizings$: mainView.sizings$,
+                        layoutSizes$: mainView.layoutObserver,
                         displayMode$: displayModeToc$,
+                        boundingBox$: tocBoundingBox$,
                     })
                     return {
                         tag: 'div',
@@ -178,7 +184,7 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                                 content: pageView,
                                 displayOptions: mainView.displayOptions,
                                 displayModeToc$,
-                                minHeight$: mainView.sizings$.pipe(
+                                minHeight$: mainView.layoutObserver.boxes$.pipe(
                                     map(({ app, topBanner, footer }) => {
                                         return (
                                             app.height -

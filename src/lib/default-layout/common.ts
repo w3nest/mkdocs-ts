@@ -1,13 +1,27 @@
 import {
+    AnyVirtualDOM,
     AttributeLike,
+    child$,
     ChildLike,
     ChildrenLike,
+    RxChild,
     RxHTMLElement,
     SupportedHTMLTags,
 } from 'rx-vdom'
 import { Router } from '../router'
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs'
+import {
+    BehaviorSubject,
+    combineLatest,
+    distinctUntilChanged,
+    map,
+    Observable,
+    ReplaySubject,
+    shareReplay,
+    Subject,
+    tap,
+} from 'rxjs'
 import { AnyView, Resolvable } from '../navigation.node'
+import { ContextTrait, NoContext } from '../context'
 
 /**
  * Represents the display mode for UI components, controlling their visibility and behavior.
@@ -120,8 +134,6 @@ export type LayoutElementView<TView extends AnyView = AnyView> = (p: {
     layoutOptions: DisplayOptions
     // Current bookmarked URLs
     bookmarks$?: BehaviorSubject<string[]>
-    // Sizings observable
-    sizings$: Observable<Sizings>
 }) => TView
 
 /**
@@ -297,30 +309,189 @@ export interface DisplayedRect {
     width: number
     height: number
 }
-/**
- */
-export interface Sizings {
-    app: DisplayedRect
-    topBanner: DisplayedRect
-    footer: DisplayedRect
-    page: DisplayedRect
-    scrollTop: number
-    pageVisibleHeight: number
-    navigation: DisplayedRect & { mode: DisplayMode }
-    toc: DisplayedRect & { mode: DisplayMode }
+
+export interface BBox {
+    width: number
+    height: number
+}
+type BBox$ = Observable<BBox>
+type DisplayModeOptions = Pick<
+    DisplayOptions,
+    | 'forceTocDisplayMode'
+    | 'toggleTocWidth'
+    | 'toggleNavWidth'
+    | 'forceNavDisplayMode'
+>
+export class LayoutObserver {
+    public readonly boxes$: Observable<{
+        page: BBox
+        topBanner: BBox
+        footer: BBox
+        app: BBox
+        nav: BBox
+        toc: BBox
+    }>
+    public readonly pageVisible$: Observable<{ top: number; height: number }>
+    public readonly displayModeOptions: DisplayModeOptions
+    public readonly displayModeNav$: BehaviorSubject<DisplayMode>
+    public readonly displayModeToc$: BehaviorSubject<DisplayMode>
+
+    constructor(
+        p: {
+            boxes: {
+                pageBBox$: BBox$
+                topBannerBBox$: BBox$
+                footerBBox$: BBox$
+                appBBox$: BBox$
+                navBBox$: BBox$
+                tocBBox$: BBox$
+            }
+            pageScrollTop$: Observable<number>
+            displayModeNav$: BehaviorSubject<DisplayMode>
+            displayModeToc$: BehaviorSubject<DisplayMode>
+            displayModeOptions: DisplayModeOptions
+        },
+        ctx?: ContextTrait,
+    ) {
+        const context = (ctx ?? new NoContext()).start('new LayoutObserver', [
+            'View',
+        ])
+
+        this.displayModeNav$ = p.displayModeNav$
+        this.displayModeToc$ = p.displayModeToc$
+        this.displayModeOptions = p.displayModeOptions
+        const round = (rect: BBox): BBox => ({
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+        })
+        this.boxes$ = combineLatest([
+            p.boxes.pageBBox$,
+            p.boxes.topBannerBBox$,
+            p.boxes.footerBBox$,
+            p.boxes.appBBox$,
+            p.boxes.navBBox$,
+            p.boxes.tocBBox$,
+        ]).pipe(
+            map(([page, topBanner, footer, app, nav, toc]) => {
+                return {
+                    page: round(page),
+                    topBanner: round(topBanner),
+                    footer: round(footer),
+                    app: round(app),
+                    nav: round(nav),
+                    toc: round(toc),
+                }
+            }),
+            distinctUntilChanged(
+                (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
+            ),
+            tap((boxes) => {
+                context.info('BBox update', boxes)
+                this.displayModeSwitcher(boxes.app, context)
+            }),
+            shareReplay({ bufferSize: 1, refCount: true }),
+        )
+        this.pageVisible$ = combineLatest([this.boxes$, p.pageScrollTop$]).pipe(
+            map(([{ page, topBanner, app }, scrollTop]) => {
+                const remainingPageHeight = page.height - scrollTop
+                const pageVisibleHeight =
+                    remainingPageHeight > app.height
+                        ? app.height - topBanner.height
+                        : remainingPageHeight
+                return {
+                    top: topBanner.height,
+                    height: pageVisibleHeight,
+                }
+            }),
+            shareReplay({ bufferSize: 1, refCount: true }),
+        )
+    }
+    private displayModeSwitcher(bbox: BBox, context: ContextTrait) {
+        const switcher = (
+            elem: 'nav' | 'toc',
+            width: number,
+            treshold: number,
+            removed: number,
+            displayMode$: BehaviorSubject<DisplayMode>,
+        ) => {
+            let nextValue: DisplayMode | undefined = undefined
+            if (
+                width <= treshold &&
+                ['removed', 'pined'].includes(displayMode$.value)
+            ) {
+                nextValue = 'hidden'
+            }
+            if (width < removed) {
+                nextValue = 'removed'
+            }
+            if (width > treshold) {
+                nextValue = 'pined'
+            }
+
+            if (nextValue && displayMode$.value !== nextValue) {
+                context.info(`Switch mode for ${elem}`, {
+                    old: displayMode$.value,
+                    new: nextValue,
+                })
+                displayMode$.next(nextValue)
+            }
+        }
+        if (this.displayModeOptions.forceTocDisplayMode === undefined) {
+            switcher(
+                'toc',
+                bbox.width,
+                this.displayModeOptions.toggleTocWidth,
+                this.displayModeOptions.toggleNavWidth,
+                this.displayModeToc$,
+            )
+        }
+        if (this.displayModeOptions.forceNavDisplayMode === undefined) {
+            switcher(
+                'nav',
+                bbox.width,
+                this.displayModeOptions.toggleNavWidth,
+                0,
+                this.displayModeNav$,
+            )
+        }
+    }
+
+    switchMode(
+        source: 'nav' | 'toc',
+        mapTo: {
+            pined: AnyVirtualDOM
+            expandable: AnyVirtualDOM
+            removed: AnyVirtualDOM
+        },
+    ): RxChild {
+        const source$ =
+            source === 'nav' ? this.displayModeNav$ : this.displayModeToc$
+        return child$({
+            source$: source$.pipe(
+                map((mode) => {
+                    if (mode === 'removed') {
+                        return 'removed'
+                    }
+                    return mode === 'pined' ? 'pined' : 'expandable'
+                }),
+                distinctUntilChanged(),
+            ),
+            vdomMap: (mode: 'pined' | 'expandable' | 'removed') => {
+                if (mode === 'removed') {
+                    return mapTo.removed
+                }
+                return mode === 'pined' ? mapTo.pined : mapTo.expandable
+            },
+        })
+    }
 }
 
 export function plugBoundingBoxObserver<Tag extends SupportedHTMLTags>(
     elem: RxHTMLElement<Tag>,
     boundingBox$: Subject<DOMRect>,
-    onBBoxUpdated?: (bbox: DOMRect) => void,
 ) {
     const resizeObserver = new ResizeObserver(() => {
-        const bbox = elem.getBoundingClientRect()
         boundingBox$.next(elem.getBoundingClientRect())
-        if (onBBoxUpdated) {
-            onBBoxUpdated(bbox)
-        }
     })
     resizeObserver.observe(elem)
     elem.hookOnDisconnected(() => {

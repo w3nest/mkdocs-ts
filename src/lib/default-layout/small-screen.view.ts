@@ -8,10 +8,11 @@ import {
     VirtualDOM,
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs'
-import { Sizings, DisplayMode, DisplayOptions } from './common'
+import { DisplayMode, DisplayOptions, plugBoundingBoxObserver } from './common'
 import { TocWrapperView } from './toc.view'
 import { AnyView } from '../navigation.node'
 import { NavigationView } from './navigation.view'
+import { LayoutObserver } from './common'
 
 function slidingStyle({
     mode,
@@ -134,13 +135,14 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
     constructor(params: {
         items: AnyView[]
         toggleIcon?: string
-        sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
+        layoutSizes$: LayoutObserver
         displayMode$: BehaviorSubject<DisplayMode | 'none'>
         visible$?: Observable<boolean>
         onDisplayed?: (elem: RxHTMLElement<'div'>) => void
+        boundingBox$: Subject<DOMRect>
     }) {
         this.style = attr$({
-            source$: params.sizings$,
+            source$: params.layoutSizes$.boxes$,
             vdomMap: ({ topBanner }) => {
                 return {
                     height: `0px`,
@@ -156,10 +158,10 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'd-flex flex-column py-3',
                 style: attr$({
-                    source$: params.sizings$,
-                    vdomMap: ({ pageVisibleHeight }) => {
+                    source$: params.layoutSizes$.pageVisible$,
+                    vdomMap: ({ height }) => {
                         return {
-                            height: `${String(pageVisibleHeight)}px`,
+                            height: `${String(height)}px`,
                             position: 'relative',
                         }
                     },
@@ -181,6 +183,7 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
                 params.onDisplayed(elem)
             }
             this.htmlElement$.next(elem)
+            plugBoundingBoxObserver(elem, params.boundingBox$)
         }
     }
 }
@@ -196,8 +199,9 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
     constructor(params: {
         displayOptions: DisplayOptions
         tocView: TocWrapperView
-        sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
+        layoutSizes$: LayoutObserver
         displayMode$: BehaviorSubject<DisplayMode>
+        boundingBox$: Subject<DOMRect>
     }) {
         super({
             ...params,
@@ -238,9 +242,10 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
 
     constructor(params: {
         navView: NavigationView
-        sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
+        layoutSizes$: LayoutObserver
         displayOptions: DisplayOptions
         displayMode$: BehaviorSubject<DisplayMode>
+        boundingBox$: Subject<DOMRect>
     }) {
         const htmlElement$ = new Subject<HTMLElement>()
         super({
@@ -273,5 +278,16 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
                 },
             ],
         })
+    }
+}
+
+export class EmptyToc implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly connectedCallback: (element: RxHTMLElement<'div'>) => void
+
+    constructor(boundingBox$: Subject<DOMRect>) {
+        this.connectedCallback = (elem) => {
+            plugBoundingBoxObserver(elem, boundingBox$)
+        }
     }
 }
