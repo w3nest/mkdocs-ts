@@ -36,6 +36,7 @@ import {
     Sizings,
 } from './common'
 import { AnyView } from '../navigation.node'
+import { Router } from '../router'
 
 /**
  * Represents the default layout of the library.
@@ -86,13 +87,15 @@ export class Layout implements VirtualDOM<'div'> {
      */
     public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('pined')
 
-    public readonly connectedCallback: (e: HTMLElement) => undefined
+    public readonly connectedCallback: (e: RxHTMLElement<'div'>) => void
 
     private readonly context?: ContextTrait
 
     public readonly pageScrollTop$ = new BehaviorSubject(0)
 
     public readonly sizings$: Observable<Sizings>
+
+    private appBoundingBox$ = new ReplaySubject<DOMRect>(1)
     /**
      * Initializes a new instance.
      *
@@ -114,30 +117,9 @@ export class Layout implements VirtualDOM<'div'> {
         if (this.displayOptions.forceTocDisplayMode) {
             this.displayModeToc$.next(this.displayOptions.forceTocDisplayMode)
         }
-        const appBoundingBox$ = new ReplaySubject<DOMRect>(1)
-        this.connectedCallback = (e: RxHTMLElement<'div'>) => {
-            this.plugResizer(e)
-            router.setScrollableElement(e, ({ top, left, behavior }) =>
-                this.sizings$.pipe(take(1)).subscribe((sizing) => {
-                    e.scrollTo({
-                        left,
-                        behavior,
-                        top: top ? top - sizing.topBanner.height : 0,
-                    })
-                }),
-            )
-            e.ownSubscriptions(
-                router.path$.subscribe(() => {
-                    if (this.displayModeNav$.value === 'expanded') {
-                        this.displayModeNav$.next('hidden')
-                    }
-                }),
-            )
-            e.addEventListener('scroll', () => {
-                this.pageScrollTop$.next(e.scrollTop)
-            })
-            plugBoundingBoxObserver(e, appBoundingBox$)
-        }
+
+        this.connectedCallback = this.getConnectedCallback(router)
+
         const viewInputs = {
             router,
             layoutOptions: this.displayOptions,
@@ -169,7 +151,7 @@ export class Layout implements VirtualDOM<'div'> {
             displayModeNav$: this.displayModeNav$,
             displayModeToc$: this.displayModeToc$,
             minHeight$: combineLatest([
-                appBoundingBox$,
+                this.appBoundingBox$,
                 topBannerView.boundingBox$,
                 footerView.boundingBox$,
             ]).pipe(
@@ -189,7 +171,7 @@ export class Layout implements VirtualDOM<'div'> {
             pageView.boundingBox$,
             topBannerView.boundingBox$,
             footerView.boundingBox$,
-            appBoundingBox$,
+            this.appBoundingBox$,
             navigationBoundingBox$,
             tocBoundingBox$,
             this.pageScrollTop$,
@@ -359,7 +341,35 @@ export class Layout implements VirtualDOM<'div'> {
         return this.context ?? new NoContext()
     }
 
-    private plugResizer(thisElement: RxHTMLElement<'div'>) {
+    private getConnectedCallback(router: Router) {
+        return (e: RxHTMLElement<'div'>) => {
+            const patchScrollTo = ({ top, left, behavior }: ScrollToOptions) =>
+                this.sizings$.pipe(take(1)).subscribe((sizing) => {
+                    e.scrollTo({
+                        left,
+                        behavior,
+                        top: top ? top - sizing.topBanner.height : 0,
+                    })
+                })
+
+            router.setScrollableElement(e, patchScrollTo)
+            e.ownSubscriptions(
+                router.path$.subscribe(() => {
+                    if (this.displayModeNav$.value === 'expanded') {
+                        this.displayModeNav$.next('hidden')
+                    }
+                }),
+            )
+            e.addEventListener('scroll', () => {
+                this.pageScrollTop$.next(e.scrollTop)
+            })
+            plugBoundingBoxObserver(e, this.appBoundingBox$, (bbox) => {
+                this.displayModeSwitcher(bbox)
+            })
+        }
+    }
+
+    private displayModeSwitcher(bbox: DOMRect) {
         const switcher = (
             width: number,
             treshold: number,
@@ -377,11 +387,9 @@ export class Layout implements VirtualDOM<'div'> {
                 displayMode$.next('hidden')
             }
         }
-        const resizeObserver = new ResizeObserver((entries) => {
-            const width = entries[0].contentRect.width
             if (this.displayOptions.forceTocDisplayMode === undefined) {
                 switcher(
-                    width,
+                bbox.width,
                     this.displayOptions.toggleTocWidth,
                     this.displayOptions.toggleNavWidth,
                     this.displayModeToc$,
@@ -389,18 +397,11 @@ export class Layout implements VirtualDOM<'div'> {
             }
             if (this.displayOptions.forceNavDisplayMode === undefined) {
                 switcher(
-                    width,
+                bbox.width,
                     this.displayOptions.toggleNavWidth,
                     0,
                     this.displayModeNav$,
                 )
-            }
-        })
-        if (thisElement.parentElement) {
-            resizeObserver.observe(thisElement.parentElement)
-            thisElement.hookOnDisconnected(() => {
-                resizeObserver.disconnect()
-            })
         }
     }
 }

@@ -313,9 +313,14 @@ export interface Sizings {
 export function plugBoundingBoxObserver<Tag extends SupportedHTMLTags>(
     elem: RxHTMLElement<Tag>,
     boundingBox$: Subject<DOMRect>,
+    onBBoxUpdated?: (bbox: DOMRect) => void,
 ) {
     const resizeObserver = new ResizeObserver(() => {
+        const bbox = elem.getBoundingClientRect()
         boundingBox$.next(elem.getBoundingClientRect())
+        if (onBBoxUpdated) {
+            onBBoxUpdated(bbox)
+        }
     })
     resizeObserver.observe(elem)
     elem.hookOnDisconnected(() => {
