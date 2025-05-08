@@ -25,7 +25,12 @@ import {
     tap,
 } from 'rxjs'
 import pkgJson from '../../../package.json'
-import { DisplayMode, DisplayOptions, NavLayout } from './common'
+import {
+    DisplayMode,
+    DisplayOptions,
+    NavLayout,
+    plugBoundingBoxObserver,
+} from './common'
 import { ContextTrait, NoContext } from '../context'
 import { AnyView } from '../navigation.node'
 
@@ -344,10 +349,7 @@ export class WrapperPageView implements VirtualDOM<'div'> {
             }
         }
         this.connectedCallback = (elem) => {
-            const resizeObserver = new ResizeObserver(() => {
-                this.boundingBox$.next(elem.getBoundingClientRect())
-            })
-            resizeObserver.observe(elem)
+            plugBoundingBoxObserver(elem, this.boundingBox$)
         }
     }
 }

@@ -19,7 +19,12 @@ import {
 } from 'rxjs'
 import { Router } from '../router'
 import { NavNodeResolved } from '../navigation.node'
-import { NavHeader, DisplayMode, TopBannerSpec } from './common'
+import {
+    NavHeader,
+    DisplayMode,
+    TopBannerSpec,
+    plugBoundingBoxObserver,
+} from './common'
 import { ToggleSidePanelButton } from './small-screen.view'
 
 export class Logo implements VirtualDOM<'div'> {
@@ -76,10 +81,7 @@ export class EmptyTopBanner implements VirtualDOM<'div'> {
 
     constructor() {
         this.connectedCallback = (elem) => {
-            const resizeObserver = new ResizeObserver(() => {
-                this.boundingBox$.next(elem.getBoundingClientRect())
-            })
-            resizeObserver.observe(elem)
+            plugBoundingBoxObserver(elem, this.boundingBox$)
         }
     }
 }
@@ -145,10 +147,7 @@ export class TopBanner implements VirtualDOM<'div'> {
             }),
         ]
         this.connectedCallback = (elem) => {
-            const resizeObserver = new ResizeObserver(() => {
-                this.boundingBox$.next(elem.getBoundingClientRect())
-            })
-            resizeObserver.observe(elem)
+            plugBoundingBoxObserver(elem, this.boundingBox$)
         }
     }
 }

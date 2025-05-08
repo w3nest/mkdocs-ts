@@ -1,6 +1,12 @@
-import { AttributeLike, ChildLike, ChildrenLike } from 'rx-vdom'
+import {
+    AttributeLike,
+    ChildLike,
+    ChildrenLike,
+    RxHTMLElement,
+    SupportedHTMLTags,
+} from 'rx-vdom'
 import { Router } from '../router'
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs'
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs'
 import { AnyView, Resolvable } from '../navigation.node'
 
 /**
@@ -308,4 +314,17 @@ export interface Sizings {
     pageVisibleHeight: number
     navigation: DisplayedRect & { mode: DisplayMode }
     toc: DisplayedRect & { mode: DisplayMode }
+}
+
+export function plugBoundingBoxObserver<Tag extends SupportedHTMLTags>(
+    elem: RxHTMLElement<Tag>,
+    boundingBox$: Subject<DOMRect>,
+) {
+    const resizeObserver = new ResizeObserver(() => {
+        boundingBox$.next(elem.getBoundingClientRect())
+    })
+    resizeObserver.observe(elem)
+    elem.hookOnDisconnected(() => {
+        resizeObserver.disconnect()
+    })
 }

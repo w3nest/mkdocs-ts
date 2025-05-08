@@ -1,6 +1,7 @@
 import { ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { ReplaySubject } from 'rxjs'
 import { AnyView } from '../navigation.node'
+import { plugBoundingBoxObserver } from './common'
 
 export class FooterWrapper implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -10,10 +11,7 @@ export class FooterWrapper implements VirtualDOM<'div'> {
     constructor(footer?: AnyView) {
         this.children = [footer]
         this.connectedCallback = (elem) => {
-            const resizeObserver = new ResizeObserver(() => {
-                this.boundingBox$.next(elem.getBoundingClientRect())
-            })
-            resizeObserver.observe(elem)
+            plugBoundingBoxObserver(elem, this.boundingBox$)
         }
     }
 }

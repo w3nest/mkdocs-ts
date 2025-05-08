@@ -32,6 +32,7 @@ import {
     DefaultLayoutParams,
     DisplayMode,
     DisplayOptions,
+    plugBoundingBoxObserver,
     Sizings,
 } from './common'
 import { AnyView } from '../navigation.node'
@@ -135,10 +136,7 @@ export class Layout implements VirtualDOM<'div'> {
             e.addEventListener('scroll', () => {
                 this.pageScrollTop$.next(e.scrollTop)
             })
-            const resizeObserver = new ResizeObserver(() => {
-                appBoundingBox$.next(e.getBoundingClientRect())
-            })
-            resizeObserver.observe(e)
+            plugBoundingBoxObserver(e, appBoundingBox$)
         }
         const viewInputs = {
             router,
@@ -256,11 +254,8 @@ export class Layout implements VirtualDOM<'div'> {
                     sizings$: this.sizings$,
                 }),
             ],
-            connectedCallback: (e: HTMLElement) => {
-                const resizeObserver = new ResizeObserver(() => {
-                    bbox$.next(e.getBoundingClientRect())
-                })
-                resizeObserver.observe(e)
+            connectedCallback: (e: RxHTMLElement<'div'>) => {
+                plugBoundingBoxObserver(e, bbox$)
             },
         })
         const leftSideNav = wrapperSideNav(
@@ -364,7 +359,7 @@ export class Layout implements VirtualDOM<'div'> {
         return this.context ?? new NoContext()
     }
 
-    private plugResizer(thisElement: HTMLElement) {
+    private plugResizer(thisElement: RxHTMLElement<'div'>) {
         const switcher = (
             width: number,
             treshold: number,
@@ -403,6 +398,9 @@ export class Layout implements VirtualDOM<'div'> {
         })
         if (thisElement.parentElement) {
             resizeObserver.observe(thisElement.parentElement)
+            thisElement.hookOnDisconnected(() => {
+                resizeObserver.disconnect()
+            })
         }
     }
 }
