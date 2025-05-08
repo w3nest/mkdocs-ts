@@ -866,6 +866,7 @@
 .mkdocs-NavigationView .rxtree-header.rxtree-depth-1 {
     margin-top: 0.8rem;
     font-size: 1rem;
+    font-weight: bolder;
 }
 
 .mkdocs-NavigationView .rxtree-header:hover {
