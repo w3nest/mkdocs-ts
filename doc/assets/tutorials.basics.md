@@ -2,7 +2,8 @@
 
 This tutorial serves as an introduction to the core concepts and features of {{mkdocs-ts}}, 
 a library designed for creating hierarchical, interactive, and dynamic documentation. 
-While the example used—a whimsical guide to *The Hitchhiker’s Guide to the Galaxy* quotes—might lean on humor, 
+While the example used—a whimsical guide to *The Hitchhiker’s Guide to the Galaxy* quotes 
+(from <ext-link target="adams">Douglas Adams</ext-link>) —might lean on humor, 
 the underlying purpose is to demonstrate practical techniques for building structured applications with {{mkdocs-ts}}.
 
 Through this step by step tutorial, you'll gain an understanding of how to use Markdown, the library's layout system,
@@ -216,9 +217,26 @@ Its implementation has been deported within <cross-link target="basics-utils">Co
 const { navBarView } = await load("/tutorials/basics/code-utils")
 </js-cell>
 
-With the `navBarView` loaded, here’s the complete application:
+Let's also use a simple top banner defined from 
+<api-link target="DefaultLayout.TopBannerSpec"></api-link>:
+
+<js-cell>
+const topBanner = {
+    logo: {
+        icon: '../assets/favicon.svg',
+        title: 'Getting Started'
+    },
+    badge: { tag:'img', src:'../assets/Douglas_Adams.jpg', style:{height:'2rem'} }
+}
+</js-cell>
+
+With the `navBarView` loaded and the top banner specified, here’s the complete application:
 
 <js-cell cell-id="example0">
+const appView = new MkDocs.DefaultLayout.Layout({ 
+    router,
+    topBanner
+})
 display({
     tag: 'div',
     class:'border p-1 d-flex flex-column w-100 h-100',
@@ -229,7 +247,7 @@ display({
             class: 'flex-grow-1',
             style: { minHeight: '0px' },
             children:[
-                new MkDocs.DefaultLayout.Layout({ router })
+                appView
             ] 
         }
     ]
@@ -244,7 +262,7 @@ display({
 The above view is reactive and adapts to available space. 
 For small viewports - just like above when embedded -, it displays in a compact format. 
 If you're using a large enough screen, click the <button class="btn btn-sm btn-light fas fa-expand"></button> button at 
-the top right of the output to see its expanded format.
+the top right of the output to see its expanded view.
 </note>
 
 <note level="warning" label="Important">
@@ -462,7 +480,7 @@ navigation = {
 }
 
 display(
-    await withNavBar(navigation)
+    await withNavBar({navigation, topBanner})
 )
 </js-cell>
 
@@ -604,7 +622,7 @@ navigation = {
     }
 }
 display(
-    await withNavBar(navigation)
+    await withNavBar({navigation, topBanner})
 )
 </js-cell>
 
@@ -615,9 +633,9 @@ display(
 
 ## Farewell
 
-Let's add a goodbye page:
+To conclude this tutorial, let's define a goodbye page:
 
-<js-cell >
+<js-cell>
 const pageFarewell = `
 # Farewell
 
@@ -633,49 +651,6 @@ stay creative, and most importantly, Don’t Panic.
 > – Douglas Adams, *The Hitchhiker's Guide to the Galaxy*
 
 `
-</js-cell>
-
-
-### Banners
-
-The <api-link target="DefaultLayout.Layout"></api-link> constructor accepts providing a custom
-<api-link target="DefaultLayoutParams.sideNavHeader">sideNavHeader</api-link> and/or
-<api-link target="DefaultLayoutParams.sideNavFooter">sideNavFooter</api-link>.
-
-Let's define them as such:
-
-<js-cell cell-id="example-banners">
-const sideNavHeader = () => ({
-    tag: 'i',
-    class:'w-75 text-center my-2 border-bottom mx-auto',
-    innerText: "Don't Panic"
-})
-const sideNavFooter = () => ({
-    tag: 'i', 
-    class:'w-100 text-center border-top', 
-    innerText: 'Bring Your Towel'
-})
-</js-cell>
-
-
-### Bookmarks
-
-Bookmarks can be included in the favorite bar at the very left of the default layout.
-They are provided through <api-link target="DefaultLayoutParams.bookmarks$">bookmarks$</api-link> of
-the <api-link target="DefaultLayout.Layout.new">default layout constructor</api-link> as
-<ext-link target="BehaviorSubject">BehaviorSubject</ext-link>.
-
-When `bookmarks` is provided, the navigation' nodes header feature a
-<button class="btn btn-sm btn-light fas fa-bookmark"></button> button allowing the reader to dynamically add/remove
-bookmarks.
-
-<js-cell>
-const bookmarks$ = new rxjs.BehaviorSubject(['/', '/dont-panic', '/answer', '/unprobability', '/farewell'])
-</js-cell>
-
-**Finally**
-
-<js-cell cell-id="final">
 
 navigation = {
     ...navigation,
@@ -688,15 +663,42 @@ navigation = {
         }
     }
 }
-const finalView = await withNavBar(navigation, ({router}) => {
-    return new MkDocs.DefaultLayout.Layout({
-        router,
-        sideNavHeader,
-        sideNavFooter,
-        bookmarks$
+</js-cell>
+
+And provide a top banner that illustrates reactivity w/ current navigation target:
+
+<js-cell>
+const messages = {
+    "A Guide": "🧭 A Whimsical Guide to Crafting Documents",
+    "Don't panic": "😱 The First Rule of Intergalactic Travel",
+    "The Answer": "🔢 The Ultimate Answer to Life, the Universe, and Everything",
+    "Unprobability": "🌀 One Improbable Step",
+    "Farewell": "👋 Closing the Guide, But Not the Adventure",
+}
+const topBannerFinal = {
+    ...topBanner,
+    expandedContent: ({router}) => ({ 
+        tag: 'div',
+        class: 'mx-auto fw-bolder',
+        innerText: {
+            source$: router.target$,
+            vdomMap: (target) => messages[target.node.name] 
+        }
     })
-})
-display(finalView)
+}
+</js-cell>
+
+<note level="hint">
+The `expandedContent` only appears on large enough screen, if your screen is large enough, try expanding
+the following cell output using the <button class="btn btn-sm btn-light fas fa-expand"></button> button.
+
+A common expanded content, not illustrated here, is the <api-link target="DefaultLayout.BookmarksView"></api-link>.
+</note>
+
+Finally:
+
+<js-cell cell-id="final">
+display(await withNavBar({navigation, topBanner: topBannerFinal}))
 </js-cell>
 
 <cell-output cell-id="final" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
@@ -706,7 +708,7 @@ display(finalView)
 This cell is associated with a deported view port: the one displayed at the top of this page:
 
 <js-cell cell-id="app-start">
-display(finalView)
+display(await withNavBar({navigation, topBanner: topBannerFinal}))
 </js-cell>
 </note>
 

@@ -58,6 +58,7 @@ config = ProjectConfig(
                 "@w3nest/webpm-client",
                 "mathjax",
                 "@w3nest/ui-tk/Badges",
+                "@w3nest/ui-tk/Mkdocs",
             ],
         )
     ),

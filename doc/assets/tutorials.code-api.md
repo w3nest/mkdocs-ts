@@ -239,7 +239,13 @@ We proceed as usual to create the application:
 
 <js-cell cell-id="app">
 const { withNavBar } = await load("/tutorials/basics/code-utils")
-const view = await withNavBar(navigation)
+const topBanner = {
+    logo: {
+        icon: { tag:'div', innerText:'📜' },
+        title: 'API doc.'
+    },
+}
+const view = await withNavBar({navigation, topBanner})
 display(view)
 </js-cell>
 

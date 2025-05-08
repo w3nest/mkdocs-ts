@@ -32,9 +32,8 @@ retrieved using the `client.getLibraryInfo$` method.
 const { rxjs } = await webpm.install({esm:["rxjs#^7.5.6 as rxjs"]})
 
 const selectedVersion$ = new rxjs.BehaviorSubject(version)
-const sideNavHeader = {
+const dropDown = {
     tag: 'select',
-    class: 'my-2 w-75',
     onchange: (ev) => selectedVersion$.next(ev.target.value),
     children: {
         policy: 'replace',
@@ -54,7 +53,7 @@ const sideNavHeader = {
         }
     }
 }
-display(sideNavHeader, Views.mx2, "Selection:", Views.mx1, selectedVersion$)
+display(dropDown, Views.mx2, "Selection:", Views.mx1, selectedVersion$)
 </js-cell>
 
 ---
@@ -134,6 +133,18 @@ function createAnchor(title, targetPath, router) {
 The application is finally defined and displayed:
 
 <js-cell cell-id="app">
+const topBanner = {
+    logo: {
+        icon: { tag:'div', innerText:'🗃️' },
+        title: 'Explorer'
+    },
+    expandedContent: { 
+        tag:'div', 
+        class:'fw-bolder text-center', 
+        innerText: 'Dynamic & Mutable Navigation'
+    },
+    badge: dropDown
+}
 
 const navigation = {
     name: 'Explorer',
@@ -144,12 +155,12 @@ const navigation = {
 
 const { withNavBar } = await load("/tutorials/basics/code-utils")
 
-const view = await withNavBar(navigation, ({router}) => {
+const view = await withNavBar({navigation, layout:({router}) => {
     return new MkDocs.DefaultLayout.Layout({
         router,
-        sideNavHeader: () => sideNavHeader
+        topBanner
     })
-})
+}})
 
 display(view)
 </js-cell>

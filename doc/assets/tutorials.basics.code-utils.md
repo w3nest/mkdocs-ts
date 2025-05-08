@@ -212,7 +212,7 @@ It returns a **virtual DOM (rx-vdom)** view stacking vertically:
 - A **main content area**, which fills the remaining space and contains the selected layout.
 
 <js-cell>
-const withNavBar = async (navigation, layout) => {
+const withNavBar = async ({navigation, topBanner, layout}) => {
     const version = "{{mkdocs-version}}"
     const { MkDocs } = await webpm.install({
         esm:[ `mkdocs-ts#${version} as MkDocs`]
@@ -221,7 +221,9 @@ const withNavBar = async (navigation, layout) => {
         navigation, 
         browserClient: ({router}) => new MkDocs.MockBrowser({router})
     })
-    layout = layout ? layout({router}) : new MkDocs.DefaultLayout.Layout({router})
+    layout = layout 
+        ? layout({router}) 
+        : new MkDocs.DefaultLayout.Layout({router,topBanner})
     return {
         tag: 'div',
         class:'border p-1 d-flex flex-column w-100 h-100',

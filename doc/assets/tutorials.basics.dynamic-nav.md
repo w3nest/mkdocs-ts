@@ -424,6 +424,19 @@ We can finally define the navigation and application:
 
 <js-cell cell-id="app">
 const rootFolder = await queryExplorer(version, '/') 
+const topBanner = {
+    logo: {
+        icon: { tag:'div', innerText:'🗃️' },
+        title: 'Explorer'
+    },
+    badge: { tag:'i', class:'my-auto', innerText:`🔖 ${version}` },
+    expandedContent: { 
+        tag:'div', 
+        class:'fw-bolder text-center', 
+        innerText: 'Dynamic Navigation'
+    },
+}
+
 const navigation = {
     name: 'Explorer',
     layout: { 
@@ -437,7 +450,7 @@ const navigation = {
 }
 
 const { withNavBar } = await load("/tutorials/basics/code-utils")
-const view = await withNavBar(navigation)
+const view = await withNavBar({navigation, topBanner})
 display(view)
 </js-cell>
 
@@ -449,6 +462,6 @@ display(view)
 This cell is associated with a deported view port: the one displayed at the top of this page:
 
 <js-cell cell-id="app-start">
-display(await withNavBar(navigation))
+display(await withNavBar({navigation, topBanner}))
 </js-cell>
 </note>

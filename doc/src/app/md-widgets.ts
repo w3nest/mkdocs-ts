@@ -80,6 +80,10 @@ export class ApiLink implements VirtualDOM<'a'> {
             CodeSnippetView: '@nav/api/MainModule/MdWidgets.CodeSnippetView',
             'DefaultLayout.PageView':
                 '@nav/api/MainModule/DefaultLayout.PageView',
+            'DefaultLayout.TopBannerSpec':
+                '@nav/api/MainModule/DefaultLayout.TopBannerSpec',
+            'DefaultLayout.BookmarksView':
+                '@nav/api/MainModule/DefaultLayout.BookmarksView',
             'DefaultLayout.NavHeaderSpec':
                 '@nav/api/MainModule/DefaultLayout.NavHeaderSpec',
             'DefaultLayout.NavLayout':
@@ -163,6 +167,8 @@ export class ApiLink implements VirtualDOM<'a'> {
             ViewGenerator: 'mkapi-role-type-alias',
             CodeSnippetView: 'mkapi-role-class',
             'DefaultLayout.PageView': 'mkapi-role-class',
+            'DefaultLayout.TopBannerSpec': 'mkapi-role-class',
+            'DefaultLayout.BookmarksView':'mkapi-role-class',
             'DefaultLayout.NavHeaderSpec': 'mkapi-role-interface',
             'DefaultLayout.NavLayout': 'mkapi-role-type-alias',
             'DefaultLayoutParams.sideNavHeader': 'mkapi-role-attribute',
@@ -209,6 +215,7 @@ export class ExtLink implements VirtualDOM<'a'> {
             return
         }
         const navs = {
+            adams: 'https://fr.wikipedia.org/wiki/Douglas_Adams',
             w3nest: '/apps/@w3nest/doc/latest',
             w3lab: '/w3lab',
             'w3nest-gallery': '/apps/@w3nest/gallery/latest',
