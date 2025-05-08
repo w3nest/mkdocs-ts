@@ -8,10 +8,10 @@ import {
     VirtualDOM,
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs'
-import { NavigationWrapperView } from './navigation.view'
 import { Sizings, DisplayMode, DisplayOptions } from './default-layout.view'
 import { TocWrapperView } from './toc.view'
 import { AnyView } from '../navigation.node'
+import { NavigationView } from './navigation.view'
 
 function slidingStyle({
     mode,
@@ -237,7 +237,7 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
     public readonly class = `${ExpandableNavColumn.CssSelector} mkdocs-bg-6`
 
     constructor(params: {
-        navView: NavigationWrapperView
+        navView: NavigationView
         sizings$: Observable<Pick<Sizings, 'pageVisibleHeight' | 'topBanner'>>
         displayOptions: DisplayOptions
         displayMode$: BehaviorSubject<DisplayMode>

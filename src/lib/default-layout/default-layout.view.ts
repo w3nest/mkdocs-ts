@@ -10,7 +10,7 @@ import {
     ChildLike,
     EmptyDiv,
 } from 'rx-vdom'
-import { NavHeader, NavigationWrapperView } from './navigation.view'
+import { NavHeader, NavigationView } from './navigation.view'
 import { Router } from '../router'
 import { PageView, WrapperPageView } from './page.view'
 import {
@@ -181,14 +181,6 @@ export interface DefaultLayoutParams<
      */
     page?: LayoutElementView<AnyView & { content$: ReplaySubject<HTMLElement> }>
     /**
-     * Optional custom header view to use at the top of the navigation panel, empty if not provided.
-     */
-    sideNavHeader?: LayoutElementView
-    /**
-     * Optional custom header view to use at the bottom of the navigation panel, empty if not provided.
-     */
-    sideNavFooter?: LayoutElementView
-    /**
      * Display options, mostly regarding sizing of the main elements in the page. Values provided - if any -
      * are merged with {@link defaultDisplayOptions}.
      */
@@ -297,10 +289,7 @@ export interface Sizings {
  * This layout is organized into a column-based structure, proceeding from left to right:
  *
  * - **Navigation Column**:
- *   The navigation panel provides access to the various  {@link Navigation} nodes.
- *   It supports custom header content through {@link DefaultLayoutParams.sideNavHeader}
- *   and footer content through {@link DefaultLayoutParams.sideNavFooter}.
- *   It is implemented by {@link NavigationWrapperView}.
+ *   The navigation panel provides access to the various  {@link Navigation} nodes, see {@link NavigationView}.
  *
  * - **Page Column**:
  *   Displays the content of the selected navigation node, by default using {@link PageView}.
@@ -357,16 +346,8 @@ export class Layout implements VirtualDOM<'div'> {
     constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {
         this.context = ctx
         const context = this.ctx().start('new Layout', ['View'])
-        const {
-            router,
-            page,
-            topBanner,
-            footer,
-            sideNavHeader,
-            sideNavFooter,
-            displayOptions,
-            bookmarks$,
-        } = params
+        const { router, page, topBanner, footer, displayOptions, bookmarks$ } =
+            params
         this.displayOptions = Object.assign(
             this.displayOptions,
             displayOptions ?? {},
@@ -445,12 +426,10 @@ export class Layout implements VirtualDOM<'div'> {
                 ),
             ),
         })
-        const navView = new NavigationWrapperView({
-            router,
+        const navView = new NavigationView({
+            router: router,
             displayOptions: this.displayOptions,
-            bookmarks$,
-            header: sideNavHeader?.(viewInputs),
-            footer: sideNavFooter?.(viewInputs),
+            bookmarks$: bookmarks$,
         })
 
         this.sizings$ = combineLatest([

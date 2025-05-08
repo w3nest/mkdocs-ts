@@ -15,7 +15,7 @@ import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { DisplayOptions } from './default-layout.view'
 import { NavHeaderView } from './nav-header.view'
 import { BehaviorSubject } from 'rxjs'
-import { AnyView, NavNodePromise } from '../navigation.node'
+import { NavNodePromise } from '../navigation.node'
 
 /**
  * Defines attributes regarding the visual rendering of the node if the navigation view.
@@ -109,70 +109,6 @@ export class NavigationView implements VirtualDOM<'div'> {
                     },
                 },
             }),
-        ]
-    }
-}
-
-/**
- * A columnar layout wrapper around {@link NavigationView}, providing optional header and footer views.
- *
- * **Structure**
- *
- * This wrapper organizes the navigation view into a vertically-stacked column layout:
- *
- * - **Header**: An optional view displayed at the top of the column. It can be used for branding, titles,
- * or custom controls.
- * - **NavigationView**: The main navigation panel that manages access to navigation nodes.
- * - **Footer**: An optional view displayed at the bottom of the column. It can be used for additional controls or
- * contextual information.
- **/
-export class NavigationWrapperView implements VirtualDOM<'div'> {
-    /**
-     * Component's class name for CSS query.
-     */
-    static readonly CssSelector = 'mkdocs-NavigationWrapperView'
-
-    public readonly tag = 'div'
-    public readonly class = `${NavigationWrapperView.CssSelector} d-flex flex-column h-100`
-    public readonly children: ChildrenLike
-    public readonly style = {}
-
-    public readonly router: Router<unknown, NavHeader>
-    public readonly displayOptions: DisplayOptions
-    public readonly bookmarks$?: BehaviorSubject<string[]>
-
-    /**
-     * Initializes a new instance.
-     *
-     * @param params
-     * @param params.router Application router.
-     * @param params.header Optional header.
-     * @param params.footer Optional footer.
-     * @param params.displayOptions Layout display options.
-     * @param params.bookmarks$ State of bookmarked URLs.
-     */
-    constructor(params: {
-        router: Router<unknown, NavHeader>
-        header?: AnyView
-        footer?: AnyView
-        displayOptions: DisplayOptions
-        bookmarks$?: BehaviorSubject<string[]>
-    }) {
-        Object.assign(this, params)
-        const navView = new NavigationView({
-            router: this.router,
-            displayOptions: this.displayOptions,
-            bookmarks$: this.bookmarks$,
-        })
-
-        this.children = [
-            params.header,
-            {
-                tag: 'div',
-                class: 'flex-grow-1',
-                children: [navView],
-            },
-            params.footer,
         ]
     }
 }
