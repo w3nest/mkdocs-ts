@@ -18,9 +18,8 @@ import {
     ReplaySubject,
 } from 'rxjs'
 import { Router } from '../router'
-import { AnyView, NavNodeResolved } from '../navigation.node'
-import { NavHeader } from './navigation.view'
-import { DisplayMode } from './default-layout.view'
+import { NavNodeResolved } from '../navigation.node'
+import { NavHeader, DisplayMode, TopBannerSpec } from './common'
 import { ToggleSidePanelButton } from './small-screen.view'
 
 export class Logo implements VirtualDOM<'div'> {
@@ -83,40 +82,6 @@ export class EmptyTopBanner implements VirtualDOM<'div'> {
             resizeObserver.observe(elem)
         }
     }
-}
-
-/**
- * Defines the content and structure of the {@link TopBanner} component.
- */
-export interface TopBannerSpec {
-    /**
-     * Define the logo of the application.
-     */
-    logo: {
-        /**
-         * Icon specification.
-         * When a `string` is provided, it is interpreted as an URL.
-         */
-        icon: string | AnyView
-        /**
-         * Title of the logo.
-         */
-        title: string
-    }
-    /**
-     * Optional content to display in the center of the banner in large-screen mode.
-     */
-    expandedContent?: AnyView | ((p: { router: Router }) => AnyView)
-    /**
-     * Optional badge or UI element displayed on the right side of the banner.
-     * Often used to show status indicators or short links (e.g. GitHub, Profile link).
-     */
-    badge?: AnyView
-
-    /**
-     * Optional z-index associated to the top-banner style, default is `100`.
-     */
-    zIndex?: number
 }
 
 /**

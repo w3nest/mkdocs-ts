@@ -10,7 +10,7 @@ import {
 import { AnyNavNode, AnyView, NavNodeResolved } from '../navigation.node'
 import { BehaviorSubject, map } from 'rxjs'
 import { Router } from '../router'
-import { NavHeader } from './navigation.view'
+import { NavHeader } from './common'
 
 export class NavActionView implements VirtualDOM<'button'> {
     /**

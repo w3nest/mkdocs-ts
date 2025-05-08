@@ -8,7 +8,7 @@ import {
     VirtualDOM,
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs'
-import { Sizings, DisplayMode, DisplayOptions } from './default-layout.view'
+import { Sizings, DisplayMode, DisplayOptions } from './common'
 import { TocWrapperView } from './toc.view'
 import { AnyView } from '../navigation.node'
 import { NavigationView } from './navigation.view'

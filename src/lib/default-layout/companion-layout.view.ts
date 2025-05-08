@@ -16,19 +16,19 @@ import {
     take,
     firstValueFrom,
 } from 'rxjs'
-import {
-    Layout,
-    DefaultLayoutParams,
-    NavLayout,
-    DisplayMode,
-} from './default-layout.view'
+import { Layout } from './default-layout.view'
 import { PageView, WrapperPageView } from './page.view'
 import { MockBrowser } from '../browser.interface'
 import { NavActionView } from './nav-header.view'
 import { ContextTrait, NoContext } from '../context'
-import { NavHeader } from './navigation.view'
 import { TocWrapperView } from './toc.view'
 import { ExpandableTocColumn } from './small-screen.view'
+import {
+    DefaultLayoutParams,
+    DisplayMode,
+    NavHeader,
+    NavLayout,
+} from './common'
 
 /**
  * Parameters for constructing {@link LayoutWithCompanion} layout.

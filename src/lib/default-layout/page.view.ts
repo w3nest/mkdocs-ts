@@ -25,7 +25,7 @@ import {
     tap,
 } from 'rxjs'
 import pkgJson from '../../../package.json'
-import { DisplayMode, DisplayOptions, NavLayout } from './default-layout.view'
+import { DisplayMode, DisplayOptions, NavLayout } from './common'
 import { ContextTrait, NoContext } from '../context'
 import { AnyView } from '../navigation.node'
 

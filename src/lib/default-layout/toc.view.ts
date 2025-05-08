@@ -33,7 +33,7 @@ import {
     DisabledTocMarker,
     DisplayMode,
     DisplayOptions,
-} from './default-layout.view'
+} from './common'
 
 type H1 = 'H1'
 type H2 = 'H2'

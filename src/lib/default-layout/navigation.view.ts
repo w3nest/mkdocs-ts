@@ -2,42 +2,13 @@
  * This file gathers views related to navigation.
  */
 
-import {
-    ChildrenLike,
-    VirtualDOM,
-    CSSAttribute,
-    AttributeLike,
-    ChildLike,
-    EmptyDiv,
-} from 'rx-vdom'
+import { ChildrenLike, VirtualDOM, CSSAttribute, EmptyDiv } from 'rx-vdom'
 import { Router } from '../router'
 import { ImmutableTree } from '@w3nest/rx-tree-views'
-import { DisplayOptions } from './default-layout.view'
+import { DisplayOptions, NavHeader } from './common'
 import { NavHeaderView } from './nav-header.view'
 import { BehaviorSubject } from 'rxjs'
 import { NavNodePromise } from '../navigation.node'
-
-/**
- * Defines attributes regarding the visual rendering of the node if the navigation view.
- */
-export interface NavHeaderSpec {
-    /**
-     * Optional class added as wrapper to the HTML element representing the node.
-     */
-    wrapperClass?: AttributeLike<string>
-    /**
-     * Optional icon, inserted before the node's name.
-     */
-    icon?: ChildLike
-    /**
-     * Optional actions, inserted after the node's name.
-     */
-    actions?: ChildrenLike
-}
-
-export type NavHeader =
-    | NavHeaderSpec
-    | (({ router }: { router: Router }) => NavHeaderSpec)
 
 /**
  * Represents the navigation view of the application, displaying a hierarchical structure of navigation nodes.
