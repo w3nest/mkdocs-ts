@@ -167,9 +167,9 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                     )
                     const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)
                     const expandableRightSideNav = new ExpandableTocColumn({
-                        tocView,
+                        content: tocView,
                         displayOptions: mainView.displayOptions,
-                        layoutSizes$: mainView.layoutObserver,
+                        layoutObserver: mainView.layoutObserver,
                         displayMode$: displayModeToc$,
                         boundingBox$: tocBoundingBox$,
                     })

@@ -8,7 +8,12 @@ import {
     VirtualDOM,
 } from 'rx-vdom'
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs'
-import { DisplayMode, DisplayOptions, plugBoundingBoxObserver } from './common'
+import {
+    BBox,
+    DisplayMode,
+    DisplayOptions,
+    plugBoundingBoxObserver,
+} from './common'
 import { TocWrapperView } from './toc.view'
 import { AnyView } from '../navigation.node'
 import { NavigationView } from './navigation.view'
@@ -121,6 +126,15 @@ export class ToggleSidePanelButton implements VirtualDOM<'div'> {
     }
 }
 
+export interface ExpandableParams<
+    T extends TocWrapperView | NavigationView = TocWrapperView | NavigationView,
+> {
+    content: T
+    layoutObserver: LayoutObserver
+    displayOptions: DisplayOptions
+    displayMode$: BehaviorSubject<DisplayMode>
+    boundingBox$: Subject<BBox>
+}
 export class ExpandableBaseColumn implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
@@ -132,17 +146,19 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
         ev.stopPropagation()
     }
 
-    constructor(params: {
-        items: AnyView[]
-        toggleIcon?: string
-        layoutSizes$: LayoutObserver
-        displayMode$: BehaviorSubject<DisplayMode | 'none'>
-        visible$?: Observable<boolean>
-        onDisplayed?: (elem: RxHTMLElement<'div'>) => void
-        boundingBox$: Subject<DOMRect>
-    }) {
+    constructor(
+        params: {
+            items: AnyView[]
+            toggleIcon?: string
+            visible$?: Observable<boolean>
+            onDisplayed?: (elem: RxHTMLElement<'div'>) => void
+        } & Pick<
+            ExpandableParams,
+            'layoutObserver' | 'displayMode$' | 'boundingBox$'
+        >,
+    ) {
         this.style = attr$({
-            source$: params.layoutSizes$.boxes$,
+            source$: params.layoutObserver.boxes$,
             vdomMap: ({ topBanner }) => {
                 return {
                     height: `0px`,
@@ -158,7 +174,7 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
                 tag: 'div',
                 class: 'd-flex flex-column py-3',
                 style: attr$({
-                    source$: params.layoutSizes$.pageVisible$,
+                    source$: params.layoutObserver.pageVisible$,
                     vdomMap: ({ height }) => {
                         return {
                             height: `${String(height)}px`,
@@ -196,16 +212,10 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
 
     public readonly class = ExpandableTocColumn.CssSelector
 
-    constructor(params: {
-        displayOptions: DisplayOptions
-        tocView: TocWrapperView
-        layoutSizes$: LayoutObserver
-        displayMode$: BehaviorSubject<DisplayMode>
-        boundingBox$: Subject<DOMRect>
-    }) {
+    constructor(params: ExpandableParams<TocWrapperView>) {
         super({
             ...params,
-            visible$: params.tocView.tocEnabled$,
+            visible$: params.content.tocEnabled$,
             toggleIcon: 'fa-list-ul',
             items: [
                 {
@@ -225,7 +235,7 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
                             })
                         },
                     }),
-                    children: [params.tocView],
+                    children: [params.content],
                 },
             ],
         })
@@ -240,13 +250,7 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
 
     public readonly class = `${ExpandableNavColumn.CssSelector} mkdocs-bg-6`
 
-    constructor(params: {
-        navView: NavigationView
-        layoutSizes$: LayoutObserver
-        displayOptions: DisplayOptions
-        displayMode$: BehaviorSubject<DisplayMode>
-        boundingBox$: Subject<DOMRect>
-    }) {
+    constructor(params: ExpandableParams<NavigationView>) {
         const htmlElement$ = new Subject<HTMLElement>()
         super({
             ...params,
@@ -274,7 +278,7 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
                             })
                         },
                     }),
-                    children: [params.navView],
+                    children: [params.content],
                 },
             ],
         })

@@ -22,6 +22,7 @@ import {
 import {
     EmptyToc,
     ExpandableNavColumn,
+    ExpandableParams,
     ExpandableTocColumn,
 } from './small-screen.view'
 import { TocWrapperView } from './toc.view'
@@ -163,11 +164,6 @@ export class Layout implements VirtualDOM<'div'> {
                 ),
             ),
         })
-        const navView = new NavigationView({
-            router: router,
-            displayOptions: this.displayOptions,
-            bookmarks$: bookmarks$,
-        })
         this.layoutObserver = new LayoutObserver(
             {
                 boxes: {
@@ -185,36 +181,32 @@ export class Layout implements VirtualDOM<'div'> {
             },
             context,
         )
-        const leftSideNav = StickyColumnContainer.wrap(
-            navView,
-            this.layoutObserver,
-            navigationBoundingBox$,
-        )
-        const expandableLeftSideNav = new ExpandableNavColumn({
-            navView,
-            layoutSizes$: this.layoutObserver,
+
+        const navView = new NavigationView({
+            router: router,
             displayOptions: this.displayOptions,
-            displayMode$: this.displayModeNav$,
-            boundingBox$: navigationBoundingBox$,
+            bookmarks$: bookmarks$,
         })
+        const { pined: pinedNav, expandable: expandableNav } = this.sideView(
+            navView,
+            this.displayModeNav$,
+            navigationBoundingBox$,
+            ExpandableNavColumn,
+        )
+
         const tocView = new TocWrapperView({
             router,
             displayMode$: this.displayModeToc$,
             displayOptions: this.displayOptions,
             content$: contentView.content$,
         })
-        const rightSideNav = StickyColumnContainer.wrap(
+        const { pined: pinedToc, expandable: expandableToc } = this.sideView(
             tocView,
-            this.layoutObserver,
+            this.displayModeToc$,
             tocBoundingBox$,
+            ExpandableTocColumn,
         )
-        const expandableRightSideNav = new ExpandableTocColumn({
-            tocView,
-            displayOptions: this.displayOptions,
-            layoutSizes$: this.layoutObserver,
-            displayMode$: this.displayModeToc$,
-            boundingBox$: tocBoundingBox$,
-        })
+
         const hSep = {
             tag: 'div' as const,
             class: 'flex-grow-1',
@@ -260,6 +252,37 @@ export class Layout implements VirtualDOM<'div'> {
             return ctx
         }
         return this.context ?? new NoContext()
+    }
+
+    private sideView<T extends TocWrapperView | NavigationView>(
+        content: T,
+        displayMode$: BehaviorSubject<DisplayMode>,
+        bbox$: Subject<BBox>,
+        Expandable: new (
+            p: ExpandableParams<T>,
+        ) => T extends TocWrapperView
+            ? ExpandableTocColumn
+            : ExpandableNavColumn,
+    ): {
+        pined: AnyVirtualDOM
+        expandable: AnyVirtualDOM
+    } {
+        const pined = StickyColumnContainer.wrap(
+            content,
+            this.layoutObserver,
+            bbox$,
+        )
+        const expandable = new Expandable({
+            content,
+            layoutObserver: this.layoutObserver,
+            displayOptions: this.displayOptions,
+            displayMode$,
+            boundingBox$: bbox$,
+        })
+        return {
+            pined,
+            expandable,
+        }
     }
 
     private getConnectedCallback(router: Router) {
