@@ -54,7 +54,24 @@
  *
  * ---
  *
+ * ### {@link ExtLink}, {@link ApiLink}, {@link GitHubLink}, {@link CrossLink},
+ *
+ *
+ * <md-cell>
+ * <ext-link target="adams">D. Adams</ext-link>
+ *
+ * <api-link target="MdWidgets"></api-link>
+ *
+ * <cross-link target="API">API</cross-link>
+ *
+ * <github-link target="tutorials.basics.md">GitHub page </github-link>
+ *
+ * </md-cell>
+ *
+ * ---
+ *
  * ## New Widgets
+ *
  * To extend the functionality of {@link parseMd}, you can define and register custom widgets globally.
  *
  * ---
@@ -113,4 +130,5 @@
 export * from './code-snippet.view'
 export * from './note.view'
 export * from './code-badges'
+export * from './links.view'
 export * from './traits'

@@ -11,6 +11,12 @@ import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
 import { AnyView } from './navigation.node'
 import { parseUrl } from './browser.interface'
+import {
+    ApiLink,
+    CrossLink,
+    ExtLink,
+    GitHubLink,
+} from './md-widgets/links.view'
 
 /**
  * Type definition for custom view generators.
@@ -172,6 +178,22 @@ export class GlobalMarkdownViews {
          */
         'code-badges': (elem: HTMLElement) =>
             CodeBadgesView.fromHTMLElement(elem),
+        /**
+         * Transforms a `<ext-link target='...'></ext-link>`  element into {@link ExtLink}.
+         */
+        'ext-link': (elem: HTMLElement) => ExtLink.fromHTMLElement(elem),
+        /**
+         * Transforms a `<cross-link target='...'></cross-link>`  element into {@link CrossLink}.
+         */
+        'cross-link': (elem: HTMLElement) => CrossLink.fromHTMLElement(elem),
+        /**
+         * Transforms a `<api-link target='...'></api-link>`  element into {@link ApiLink}.
+         */
+        'api-link': (elem: HTMLElement) => ApiLink.fromHTMLElement(elem),
+        /**
+         * Transforms a `<github-link target='...'></github-link>`  element into {@link GitHubLink}.
+         */
+        'github-link': (elem: HTMLElement) => GitHubLink.fromHTMLElement(elem),
     }
 }
 
