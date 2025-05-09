@@ -405,6 +405,17 @@ export class LayoutObserver {
             }),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
+
+        if (this.displayModeOptions.forceNavDisplayMode) {
+            this.displayModeNav$.next(
+                this.displayModeOptions.forceNavDisplayMode,
+            )
+        }
+        if (this.displayModeOptions.forceTocDisplayMode) {
+            this.displayModeToc$.next(
+                this.displayModeOptions.forceTocDisplayMode,
+            )
+        }
     }
     private displayModeSwitcher(bbox: BBox, context: ContextTrait) {
         const switcher = (
@@ -483,6 +494,15 @@ export class LayoutObserver {
                 return mode === 'pined' ? mapTo.pined : mapTo.expandable
             },
         })
+    }
+
+    static minPageHeight$(app$: BBox$, topBanner$: BBox$, footer$: BBox$) {
+        return combineLatest([app$, topBanner$, footer$]).pipe(
+            map(
+                ([appBB, topBB, footerBB]) =>
+                    appBB.height - topBB.height - footerBB.height,
+            ),
+        )
     }
 }
 

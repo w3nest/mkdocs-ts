@@ -10,14 +10,7 @@ import {
 } from 'rx-vdom'
 import { NavigationView } from './navigation.view'
 import { PageView, WrapperPageView } from './page.view'
-import {
-    BehaviorSubject,
-    combineLatest,
-    map,
-    ReplaySubject,
-    Subject,
-    take,
-} from 'rxjs'
+import { BehaviorSubject, ReplaySubject, Subject, take } from 'rxjs'
 
 import {
     EmptyToc,
@@ -110,16 +103,11 @@ export class Layout implements VirtualDOM<'div'> {
         const context = this.ctx().start('new Layout', ['View'])
         const { router, page, topBanner, footer, displayOptions, bookmarks$ } =
             params
+
         this.displayOptions = Object.assign(
             this.displayOptions,
             displayOptions ?? {},
         )
-        if (this.displayOptions.forceNavDisplayMode) {
-            this.displayModeNav$.next(this.displayOptions.forceNavDisplayMode)
-        }
-        if (this.displayOptions.forceTocDisplayMode) {
-            this.displayModeToc$.next(this.displayOptions.forceTocDisplayMode)
-        }
 
         this.connectedCallback = this.getConnectedCallback(router)
 
@@ -153,15 +141,10 @@ export class Layout implements VirtualDOM<'div'> {
             displayOptions: this.displayOptions,
             displayModeNav$: this.displayModeNav$,
             displayModeToc$: this.displayModeToc$,
-            minHeight$: combineLatest([
+            minHeight$: LayoutObserver.minPageHeight$(
                 this.appBoundingBox$,
                 topBannerView.boundingBox$,
                 footerView.boundingBox$,
-            ]).pipe(
-                map(
-                    ([appBB, topBB, footerBB]) =>
-                        appBB.height - topBB.height - footerBB.height,
-                ),
             ),
         })
         this.layoutObserver = new LayoutObserver(
