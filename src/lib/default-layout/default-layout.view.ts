@@ -212,37 +212,31 @@ export class Layout implements VirtualDOM<'div'> {
             class: 'flex-grow-1',
         }
         this.children = [
+            topBannerView,
             {
                 tag: 'div',
-                class: 'w-100',
+                class: 'd-flex w-100',
                 children: [
-                    topBannerView,
-                    {
-                        tag: 'div',
-                        class: 'd-flex w-100',
-                        children: [
-                            this.layoutObserver.switchMode('nav', {
-                                pined: leftSideNav,
-                                expandable: expandableLeftSideNav,
-                                removed: EmptyDiv,
-                            }),
-                            hSep,
-                            pageView,
-                            this.layoutObserver.switchMode('toc', {
-                                pined: hSep,
-                                expandable: EmptyDiv,
-                                removed: hSep,
-                            }),
-                            this.layoutObserver.switchMode('toc', {
-                                pined: rightSideNav,
-                                expandable: expandableRightSideNav,
-                                removed: new EmptyToc(tocBoundingBox$),
-                            }),
-                        ],
-                    },
-                    footerView,
+                    this.layoutObserver.switchMode('nav', {
+                        pined: pinedNav,
+                        expandable: expandableNav,
+                        removed: EmptyDiv,
+                    }),
+                    hSep,
+                    pageView,
+                    this.layoutObserver.switchMode('toc', {
+                        pined: hSep,
+                        expandable: EmptyDiv,
+                        removed: hSep,
+                    }),
+                    this.layoutObserver.switchMode('toc', {
+                        pined: pinedToc,
+                        expandable: expandableToc,
+                        removed: new EmptyToc(tocBoundingBox$),
+                    }),
                 ],
             },
+            footerView,
         ]
         context.exit()
     }
