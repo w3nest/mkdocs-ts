@@ -1,11 +1,7 @@
 import pkgJson from '../../package.json'
 import { fromMarkdown, GlobalMarkdownViews } from 'mkdocs-ts'
 import {
-    ApiLink,
-    CrossLink,
-    ExtLink,
     SplitApiButton,
-    GitHubLink,
 } from './md-widgets'
 
 const project = {
@@ -17,10 +13,6 @@ export const url = (restOfPath: string) => `../assets/${restOfPath}`
 
 GlobalMarkdownViews.factory = {
     ...GlobalMarkdownViews.factory,
-    'api-link': (elem: HTMLElement) => new ApiLink(elem),
-    'ext-link': (elem: HTMLElement) => new ExtLink(elem),
-    'cross-link': (elem: HTMLElement) => new CrossLink(elem),
-    'github-link': (elem: HTMLElement) => new GitHubLink(elem),
     'split-api': () => new SplitApiButton(),
 }
 
