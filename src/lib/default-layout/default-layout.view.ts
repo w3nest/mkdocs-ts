@@ -29,6 +29,7 @@ import { ContextTrait, NoContext } from '../context'
 import { EmptyTopBanner, TopBanner } from './top-banner.view'
 import { FooterWrapper } from './footer.view'
 import {
+    BBox,
     defaultDisplayOptions,
     DefaultLayoutParams,
     DisplayMode,
@@ -184,28 +185,9 @@ export class Layout implements VirtualDOM<'div'> {
             },
             context,
         )
-
-        const wrapperSideNav = (
-            type: 'nav' | 'toc',
-            content: AnyVirtualDOM,
-            bbox$: Subject<DOMRect>,
-        ) => ({
-            tag: 'div' as const,
-            class: 'd-flex flex-grow-1',
-            children: [
-                new StickyColumnContainer({
-                    type,
-                    content,
-                    layoutSizes$: this.layoutObserver,
-                }),
-            ],
-            connectedCallback: (e: RxHTMLElement<'div'>) => {
-                plugBoundingBoxObserver(e, bbox$)
-            },
-        })
-        const leftSideNav = wrapperSideNav(
-            'nav',
+        const leftSideNav = StickyColumnContainer.wrap(
             navView,
+            this.layoutObserver,
             navigationBoundingBox$,
         )
         const expandableLeftSideNav = new ExpandableNavColumn({
@@ -221,7 +203,11 @@ export class Layout implements VirtualDOM<'div'> {
             displayOptions: this.displayOptions,
             content$: contentView.content$,
         })
-        const rightSideNav = wrapperSideNav('toc', tocView, tocBoundingBox$)
+        const rightSideNav = StickyColumnContainer.wrap(
+            tocView,
+            this.layoutObserver,
+            tocBoundingBox$,
+        )
         const expandableRightSideNav = new ExpandableTocColumn({
             tocView,
             displayOptions: this.displayOptions,
@@ -304,32 +290,22 @@ export class Layout implements VirtualDOM<'div'> {
         }
     }
 }
-/**
- * The supported kinds wrapped by {@link StickyColumnContainer}.
- */
-export type Container = 'favorites' | 'nav' | 'toc'
 
 export class StickyColumnContainer implements VirtualDOM<'div'> {
+    /**
+     * Component's class name for CSS query.
+     */
+    static readonly CssSelector = 'mkdocs-StickyColumnContainer'
     public readonly tag = 'div'
-    public readonly class: AttributeLike<string>
+    public readonly class = `${StickyColumnContainer.CssSelector} flex-grow-1 d-flex flex-column`
     public readonly style: AttributeLike<CSSAttribute>
     public readonly children: ChildrenLike
     public readonly content: AnyVirtualDOM
-    public readonly type: Container
 
-    constructor(params: {
-        type: Container
-        content: AnyView
-        layoutSizes$: LayoutObserver
-    }) {
+    constructor(params: { content: AnyView; layoutObserver: LayoutObserver }) {
         Object.assign(this, params)
-        const colors: Record<Container, string> = {
-            favorites: 'mkdocs-bg-6 mkdocs-text-6',
-            nav: 'mkdocs-bg-5 mkdocs-text-5',
-            toc: 'mkdocs-bg-0 mkdocs-text-0',
-        }
         this.style = attr$({
-            source$: params.layoutSizes$.boxes$,
+            source$: params.layoutObserver.boxes$,
             vdomMap: ({ topBanner }) => {
                 return {
                     height: `0px`,
@@ -340,15 +316,12 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
                 }
             },
         })
-        const flexGrow = params.type === 'favorites' ? 0 : 1
-        const color = colors[this.type]
-        this.class = `mkdocs-StickyColumnContainer flex-grow-${String(flexGrow)} ${color} d-flex flex-column`
         this.children = [
             {
                 tag: 'div',
                 class: 'overflow-auto mkdocs-thin-v-scroller',
                 style: attr$({
-                    source$: params.layoutSizes$.pageVisible$,
+                    source$: params.layoutObserver.pageVisible$,
                     vdomMap: ({ height }) => {
                         return {
                             minHeight: `${String(height)}px`,
@@ -359,5 +332,25 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
                 children: [this.content],
             },
         ]
+    }
+
+    static wrap(
+        content: AnyView,
+        layoutObserver: LayoutObserver,
+        bbox$: Subject<BBox>,
+    ) {
+        return {
+            tag: 'div' as const,
+            class: 'd-flex flex-grow-1',
+            children: [
+                new StickyColumnContainer({
+                    content,
+                    layoutObserver,
+                }),
+            ],
+            connectedCallback: (e: RxHTMLElement<'div'>) => {
+                plugBoundingBoxObserver(e, bbox$)
+            },
+        }
     }
 }

@@ -488,7 +488,7 @@ export class LayoutObserver {
 
 export function plugBoundingBoxObserver<Tag extends SupportedHTMLTags>(
     elem: RxHTMLElement<Tag>,
-    boundingBox$: Subject<DOMRect>,
+    boundingBox$: Subject<BBox>,
 ) {
     const resizeObserver = new ResizeObserver(() => {
         boundingBox$.next(elem.getBoundingClientRect())
