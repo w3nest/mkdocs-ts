@@ -360,7 +360,7 @@ const tocView = (data) => {
 
 We can test it by displaying metadata for the root folder:
 
-<js-cell reactive="true">
+<js-cell>
 display(tocView(root))
 </js-cell>
 

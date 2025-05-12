@@ -52,8 +52,8 @@ libraries to fulfill a wide range of needs.
 
 ### 📓 Notebook 
 
-Turn your documentation into a live playground
-The Notebook module lets you build dynamic, computation-ready content — ideal for technical walkthroughs, experiments, 
+Turn your documentation into a live playground:
+the `Notebook` module lets you build dynamic, computation-ready content. Ideal for technical walkthroughs, experiments, 
 and interactive storytelling.
 
 **Key features include**:
