@@ -45,6 +45,7 @@
             "types": "./src/lib/code-api/index.ts",
             "webpm": {
                 "dependencies": [
+                    "rxjs",
                     "rx-vdom",
                     "@w3nest/http-clients"
                 ],
@@ -58,6 +59,7 @@
                 "dependencies": [
                     "rx-vdom",
                     "rxjs",
+                    "rxjs/fetch",
                     "@w3nest/rx-tree-views",
                     "esprima"
                 ],
@@ -133,6 +135,10 @@
             "highlight.js": "highlight.js_APIv11",
             "@w3nest/rx-tree-views": "@w3nest/rx-tree-views_APIv02",
             "@w3nest/http-clients": "@w3nest/http-clients_APIv01",
+            "rxjs/fetch": [
+                "rxjs_APIv7",
+                "fetch"
+            ],
             "esprima": "esprima_APIv4"
         }
     }

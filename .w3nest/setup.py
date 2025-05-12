@@ -63,7 +63,7 @@ config = ProjectConfig(
             AuxiliaryModule(
                 name="CodeApi",
                 entryFile="./lib/code-api/index.ts",
-                loadDependencies=["rx-vdom", "@w3nest/http-clients"],
+                loadDependencies=["rxjs", "rx-vdom", "@w3nest/http-clients"],
             ),
             AuxiliaryModule(
                 name="Notebook",
@@ -71,6 +71,7 @@ config = ProjectConfig(
                 loadDependencies=[
                     "rx-vdom",
                     "rxjs",
+                    "rxjs/fetch",
                     "@w3nest/rx-tree-views",
                     "esprima",
                 ],
