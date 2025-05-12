@@ -274,10 +274,6 @@ export class TopBannerExpanded implements VirtualDOM<'div'> {
             typeof spec.expandedContent === 'function'
                 ? spec.expandedContent({ router })
                 : spec.expandedContent
-        const mainRow = {
-            tag: 'div',
-            children: [],
-        }
         this.children = [
             logo,
             {
