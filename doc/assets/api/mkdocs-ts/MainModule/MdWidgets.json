@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link>  function. Widgets are referenced within  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> ,\nwhich maps  `tag-name -> implementation`  to enable seamless integration into Markdown content.\n\nEach widget provides a static  `fromHTMLElement`  method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeSnippetView\" semantic=\"class\">CodeSnippetView</mkapi-api-link> \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeBadgesView\" semantic=\"class\">CodeBadgesView</mkapi-api-link> \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n## New Widgets\nTo extend the functionality of  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link> , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link>  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view  `custom-view-example`  instantiated with  `improbabilityFactor=5` :\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
+                "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link>  function. Widgets are referenced within  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> ,\nwhich maps  `tag-name -> implementation`  to enable seamless integration into Markdown content.\n\nEach widget provides a static  `fromHTMLElement`  method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeSnippetView\" semantic=\"class\">CodeSnippetView</mkapi-api-link> \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CodeBadgesView\" semantic=\"class\">CodeBadgesView</mkapi-api-link> \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.ExtLink\" semantic=\"class\">ExtLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.ApiLink\" semantic=\"class\">ApiLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.GitHubLink\" semantic=\"class\">GitHubLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CrossLink\" semantic=\"class\">CrossLink</mkapi-api-link> ,\n\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n\n<api-link target=\"MdWidgets\"></api-link>\n\n<cross-link target=\"API\">API</cross-link>\n\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n\n</md-cell>\n\n---\n\n## New Widgets\n\nTo extend the functionality of  <mkapi-api-link nav=\"@nav/api/MainModule.parseMd\" semantic=\"function\">parseMd</mkapi-api-link> , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  <mkapi-api-link nav=\"@nav/api/MainModule.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link>  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view  `custom-view-example`  instantiated with  `improbabilityFactor=5` :\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -54,6 +54,380 @@
         }
     ],
     "types": [
+        {
+            "name": "ApiLink",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Link component for referencing API entities (such as modules, classes, methods, etc):\n\n<md-cell>\n<api-link target=\"MdWidgets\"></api-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.ApiLink.Mapper\" semantic=\"attribute\">ApiLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ApiLink",
+            "navPath": "@nav/api/MainModule/MdWidgets.ApiLink",
+            "attributes": [
+                {
+                    "name": "icon",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Icon representing API links, shown alongside the label.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ApiLink.icon",
+                    "navPath": "@nav/api/MainModule/MdWidgets.ApiLink.icon",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fas fa-code',\n        style: { fontSize: stdIconFontSize },\n    }",
+                        "implementation": "",
+                        "startLine": 83,
+                        "endLine": 84,
+                        "references": {
+                            "icon": "@nav/api/MainModule/MdWidgets.ApiLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "Mapper",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Maps a string  `target`  to an object containing:\n-  `href` : the relative URL fragment in the form e.g.  `@nav/api/foo.bar` .\n-  `withClass` : a semantic CSS class such as  `mkapi-role-function` ,  `mkapi-role-method` , etc.\n-  `withStyle`  (optional): additional inline styles.\n\nThis should be implemented by the consumer of the class.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ApiLink.Mapper",
+                    "navPath": "@nav/api/MainModule/MdWidgets.ApiLink.Mapper",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static Mapper: LinkMapper",
+                        "implementation": "",
+                        "startLine": 78,
+                        "endLine": 79,
+                        "references": {
+                            "Mapper": "@nav/api/MainModule/MdWidgets.ApiLink.Mapper",
+                            "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates the view from a given HTML element.\nThe element should include a  `target`  attribute used to resolve link details via the mapper.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The original HTMLElement parsed from Markdown or the DOM.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "A  `BaseLink`  instance representing the rendered VirtualDOM anchor tag.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ApiLink.fromHTMLElement",
+                    "navPath": "@nav/api/MainModule/MdWidgets.ApiLink.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static fromHTMLElement(elem: HTMLElement): BaseLink",
+                        "implementation": "static fromHTMLElement(elem: HTMLElement): BaseLink {\n    return new BaseLink(elem, ApiLink.icon, ApiLink.PatchedMapper)\n}",
+                        "startLine": 104,
+                        "endLine": 107,
+                        "references": {
+                            "fromHTMLElement": "@nav/api/MainModule/MdWidgets.ApiLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/links.view.ts",
+                "declaration": "export class ApiLink",
+                "implementation": "export class ApiLink {\n    /**\n     * Maps a string `target` to an object containing:\n     * - `href`: the relative URL fragment in the form e.g. `@nav/api/foo.bar`.\n     * - `withClass`: a semantic CSS class such as `mkapi-role-function`, `mkapi-role-method`, etc.\n     * - `withStyle` (optional): additional inline styles.\n     *\n     * This should be implemented by the consumer of the class.\n     */\n    static Mapper: LinkMapper\n\n    /**\n     * Icon representing API links, shown alongside the label.\n     */\n    static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fas fa-code',\n        style: { fontSize: stdIconFontSize },\n    }\n    static readonly PatchedMapper = (target: string) => {\n        const mapTo = ApiLink.Mapper(target)\n        return {\n            ...mapTo,\n            withClass: mapTo.withClass\n                ? `mkapi-semantic-flag ${mapTo.withClass}`\n                : '',\n        }\n    }\n    /**\n     * Creates the view from a given HTML element.\n     * The element should include a `target` attribute used to resolve link details via the mapper.\n     *\n     * @param elem - The original HTMLElement parsed from Markdown or the DOM.\n     * @returns A `BaseLink` instance representing the rendered VirtualDOM anchor tag.\n     */\n    static fromHTMLElement(elem: HTMLElement): BaseLink {\n        return new BaseLink(elem, ApiLink.icon, ApiLink.PatchedMapper)\n    }\n}",
+                "startLine": 69,
+                "endLine": 108,
+                "references": {
+                    "ApiLink": "@nav/api/MainModule/MdWidgets.ApiLink",
+                    "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                    "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "BaseLink",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Base class for rendering a hyperlink ( `<a>` ) VirtualDOM element with text & icon.\nThis uses the  `target`  attribute from the provided DOM element along with the provided mapping function\nto resolve link information and generate text & icon.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "BaseLink",
+            "navPath": "@nav/api/MainModule/MdWidgets.BaseLink",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "BaseLink.children",
+                    "navPath": "@nav/api/MainModule/MdWidgets.BaseLink.children",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 19,
+                        "endLine": 20,
+                        "references": {
+                            "children": "@nav/api/MainModule/MdWidgets.BaseLink.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "href",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Returns the hyperlink's URL.\n\nCan be set, to change the URL.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLAnchorElement/href)",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "BaseLink.href",
+                    "navPath": "@nav/api/MainModule/MdWidgets.BaseLink.href",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "public readonly href: string",
+                        "implementation": "",
+                        "startLine": 20,
+                        "endLine": 21,
+                        "references": {
+                            "href": "@nav/api/MainModule/MdWidgets.BaseLink.href"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "BaseLink.tag",
+                    "navPath": "@nav/api/MainModule/MdWidgets.BaseLink.tag",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "public readonly tag = 'a'",
+                        "implementation": "",
+                        "startLine": 18,
+                        "endLine": 19,
+                        "references": {
+                            "tag": "@nav/api/MainModule/MdWidgets.BaseLink.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "constructor",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Create a  `BaseLink`  hyperlink.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The source HTML element containing a  `target`  attribute.\n*  **icon**: An icon to render before or after the label.\n*  **mapper**: A function that maps the target string to  `href` ,  `withClass` , and  `withStyle` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "BaseLink.constructor",
+                    "navPath": "@nav/api/MainModule/MdWidgets.BaseLink.constructor",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "constructor(elem: HTMLElement, icon: AnyVirtualDOM, mapper: LinkMapper)",
+                        "implementation": "constructor(elem: HTMLElement, icon: AnyVirtualDOM, mapper: LinkMapper) {\n    this.elem = elem\n    const target = this.elem.getAttribute('target')\n    if (!target) {\n        return\n    }\n    const { href, withClass, withStyle } = mapper(target)\n    if (!href) {\n        return\n    }\n    this.href = href\n    const customClass = withClass ?? ''\n    this.children = [\n        {\n            tag: 'i',\n            innerText:\n                elem.textContent === '' ? target : (elem.textContent ?? ''),\n            class: `${customClass} pe-1`,\n            style: withStyle ?? {},\n        },\n        icon,\n    ]\n}",
+                        "startLine": 29,
+                        "endLine": 52,
+                        "references": {
+                            "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink",
+                            "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/links.view.ts",
+                "declaration": "export class BaseLink implements VirtualDOM<'a'>",
+                "implementation": "export class BaseLink implements VirtualDOM<'a'> {\n    public readonly tag = 'a'\n    public readonly children: ChildrenLike\n    public readonly href: string\n    private readonly elem: HTMLElement\n    /**\n     * Create a `BaseLink` hyperlink.\n     *\n     * @param elem The source HTML element containing a `target` attribute.\n     * @param icon An icon to render before or after the label.\n     * @param mapper A function that maps the target string to `href`, `withClass`, and `withStyle`.\n     */\n    constructor(elem: HTMLElement, icon: AnyVirtualDOM, mapper: LinkMapper) {\n        this.elem = elem\n        const target = this.elem.getAttribute('target')\n        if (!target) {\n            return\n        }\n        const { href, withClass, withStyle } = mapper(target)\n        if (!href) {\n            return\n        }\n        this.href = href\n        const customClass = withClass ?? ''\n        this.children = [\n            {\n                tag: 'i',\n                innerText:\n                    elem.textContent === '' ? target : (elem.textContent ?? ''),\n                class: `${customClass} pe-1`,\n                style: withStyle ?? {},\n            },\n            icon,\n        ]\n    }\n}",
+                "startLine": 17,
+                "endLine": 53,
+                "references": {
+                    "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink",
+                    "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
         {
             "name": "CodeBadgesView",
             "documentation": {
@@ -529,7 +903,7 @@
                     "navPath": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
-                        "declaration": "public readonly style = {\n        fontSize: 'initial',\n    }",
+                        "declaration": "public readonly style = {\n        fontSize: '0.8rem',\n    }",
                         "implementation": "",
                         "startLine": 258,
                         "endLine": 259,
@@ -793,7 +1167,7 @@
             "code": {
                 "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                 "declaration": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait",
-                "implementation": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeSnippetView'\n\n    static readonly cmDependencies$: Record<\n        CodeLanguage,\n        Observable<{ CodeMirror: CodeMirror }> | undefined\n    > = {\n        python: undefined,\n        javascript: undefined,\n        markdown: undefined,\n        html: undefined,\n        yaml: undefined,\n        css: undefined,\n        unknown: undefined,\n    }\n    static fetchCmDependencies$(\n        language: CodeLanguage,\n    ): Observable<{ CodeMirror: CodeMirror }> {\n        if (CodeSnippetView.cmDependencies$[language]) {\n            return CodeSnippetView.cmDependencies$[language]\n        }\n        const scripts = {\n            python: ['codemirror#5.52.0~mode/python.min.js'],\n            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],\n            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],\n            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],\n            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],\n            css: ['codemirror#5.52.0~mode/css.min.js'],\n            xml: ['codemirror#5.52.0~mode/xml.min.js'],\n            htmlmixed: [\n                'codemirror#5.52.0~mode/htmlmixed.min.js',\n                'codemirror#5.52.0~mode/css.min.js',\n                'codemirror#5.52.0~mode/xml.min.js',\n                'codemirror#5.52.0~mode/javascript.min.js',\n            ],\n            unknown: [],\n        }\n        CodeSnippetView.cmDependencies$[language] = from(\n            install<{ CodeMirror: CodeMirror }>({\n                esm: {\n                    modules: ['codemirror#^5.52.0 as CodeMirror'],\n                    scripts: scripts[language],\n                },\n                css: ['codemirror#5.52.0~codemirror.min.css'],\n            }),\n        ).pipe(shareReplay(1))\n        return CodeSnippetView.cmDependencies$[language]\n    }\n\n    /**\n     * Class appended to the line DOM for highlighted lines.\n     */\n    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'\n\n    /**\n     * The tag of the associated HTML element.\n     */\n    public readonly tag = 'div'\n    /**\n     * The code mirror configuration.\n     */\n    public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }\n\n    /**\n     * The class list of the associated HTML element.\n     */\n    public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`\n    /**\n     * The style of the associated HTML element.\n     */\n    public readonly style = {\n        fontSize: 'initial',\n    }\n    /**\n     * The children of the associated HTML element.\n     */\n    public readonly children: ChildrenLike\n\n    public readonly content$: BehaviorSubject<string>\n\n    public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(\n        undefined,\n    )\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })\n    /**\n     * Construct an instance of CodeSnippetView from an `HTMLElement`.\n     *\n     * See {@link CodeSnippetView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static fromHTMLElement(element: HTMLElement) {\n        return new CodeSnippetView({\n            ...CodeSnippetView.attributeMapper(element),\n        })\n    }\n\n    /**\n     * Initialize the widget.\n     *\n     * @param _args arguments\n     * @param _args.language The target language. Supported languages are:\n     *      *  python\n     *      *  javascript\n     *      *  markdown\n     *      *  html\n     *      *  yaml\n     *      *  css\n     *      *  xml\n     * @param _args.content The snippet's content.\n     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`\n     * @param _args.cmConfig The code mirror editor configuration, it is merged with the\n     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).\n     */\n    constructor({\n        language,\n        content,\n        highlightedLines,\n        cmConfig,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string //| Observable<string>\n        cmConfig?: Record<string, unknown>\n    }) {\n        const content$ = of(content)\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.content$ = new BehaviorSubject<string>(content)\n        this.children = [\n            child$({\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, { CodeMirror }]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                                ...cmConfig,\n                            }\n                            const editor = CodeMirror.default(\n                                htmlElement,\n                                config,\n                            )\n                            editor.on('change', (args) => {\n                                this.content$.next(args.getValue())\n                            })\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n                            editor.refresh()\n                            this.editor$.next(editor)\n                        },\n                    }\n                },\n            }),\n        ]\n    }\n\n    refreshView() {\n        this.editor$.value?.refresh()\n    }\n}",
+                "implementation": "export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeSnippetView'\n\n    static readonly cmDependencies$: Record<\n        CodeLanguage,\n        Observable<{ CodeMirror: CodeMirror }> | undefined\n    > = {\n        python: undefined,\n        javascript: undefined,\n        markdown: undefined,\n        html: undefined,\n        yaml: undefined,\n        css: undefined,\n        unknown: undefined,\n    }\n    static fetchCmDependencies$(\n        language: CodeLanguage,\n    ): Observable<{ CodeMirror: CodeMirror }> {\n        if (CodeSnippetView.cmDependencies$[language]) {\n            return CodeSnippetView.cmDependencies$[language]\n        }\n        const scripts = {\n            python: ['codemirror#5.52.0~mode/python.min.js'],\n            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],\n            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],\n            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],\n            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],\n            css: ['codemirror#5.52.0~mode/css.min.js'],\n            xml: ['codemirror#5.52.0~mode/xml.min.js'],\n            htmlmixed: [\n                'codemirror#5.52.0~mode/htmlmixed.min.js',\n                'codemirror#5.52.0~mode/css.min.js',\n                'codemirror#5.52.0~mode/xml.min.js',\n                'codemirror#5.52.0~mode/javascript.min.js',\n            ],\n            unknown: [],\n        }\n        CodeSnippetView.cmDependencies$[language] = from(\n            install<{ CodeMirror: CodeMirror }>({\n                esm: {\n                    modules: ['codemirror#^5.52.0 as CodeMirror'],\n                    scripts: scripts[language],\n                },\n                css: ['codemirror#5.52.0~codemirror.min.css'],\n            }),\n        ).pipe(shareReplay(1))\n        return CodeSnippetView.cmDependencies$[language]\n    }\n\n    /**\n     * Class appended to the line DOM for highlighted lines.\n     */\n    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'\n\n    /**\n     * The tag of the associated HTML element.\n     */\n    public readonly tag = 'div'\n    /**\n     * The code mirror configuration.\n     */\n    public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }\n\n    /**\n     * The class list of the associated HTML element.\n     */\n    public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`\n    /**\n     * The style of the associated HTML element.\n     */\n    public readonly style = {\n        fontSize: '0.8rem',\n    }\n    /**\n     * The children of the associated HTML element.\n     */\n    public readonly children: ChildrenLike\n\n    public readonly content$: BehaviorSubject<string>\n\n    public readonly editor$ = new BehaviorSubject<CodeMirrorEditor | undefined>(\n        undefined,\n    )\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        language: element.getAttribute('language') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        content: element.textContent ?? '',\n    })\n    /**\n     * Construct an instance of CodeSnippetView from an `HTMLElement`.\n     *\n     * See {@link CodeSnippetView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static fromHTMLElement(element: HTMLElement) {\n        return new CodeSnippetView({\n            ...CodeSnippetView.attributeMapper(element),\n        })\n    }\n\n    /**\n     * Initialize the widget.\n     *\n     * @param _args arguments\n     * @param _args.language The target language. Supported languages are:\n     *      *  python\n     *      *  javascript\n     *      *  markdown\n     *      *  html\n     *      *  yaml\n     *      *  css\n     *      *  xml\n     * @param _args.content The snippet's content.\n     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`\n     * @param _args.cmConfig The code mirror editor configuration, it is merged with the\n     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).\n     */\n    constructor({\n        language,\n        content,\n        highlightedLines,\n        cmConfig,\n    }: {\n        language: CodeLanguage\n        highlightedLines?: string\n        content: string //| Observable<string>\n        cmConfig?: Record<string, unknown>\n    }) {\n        const content$ = of(content)\n        const linesToHighlight = parseLineIndices(highlightedLines)\n        this.content$ = new BehaviorSubject<string>(content)\n        this.children = [\n            child$({\n                source$: combineLatest([\n                    content$,\n                    CodeSnippetView.fetchCmDependencies$(language),\n                ]),\n                vdomMap: ([content, { CodeMirror }]) => {\n                    return {\n                        tag: 'div',\n                        class: 'h-100 w-100',\n                        connectedCallback: (\n                            htmlElement: RxHTMLElement<'div'>,\n                        ) => {\n                            const config = {\n                                mode: language,\n                                ...this.codeMirrorConfiguration,\n                                value: content,\n                                ...cmConfig,\n                            }\n                            const editor = CodeMirror.default(\n                                htmlElement,\n                                config,\n                            )\n                            editor.on('change', (args) => {\n                                this.content$.next(args.getValue())\n                            })\n                            linesToHighlight.forEach(function (lineNumber) {\n                                editor.addLineClass(\n                                    lineNumber,\n                                    'background',\n                                    CodeSnippetView.hlLineClass,\n                                )\n                            })\n                            editor.refresh()\n                            this.editor$.next(editor)\n                        },\n                    }\n                },\n            }),\n        ]\n    }\n\n    refreshView() {\n        this.editor$.value?.refresh()\n    }\n}",
                 "startLine": 180,
                 "endLine": 372,
                 "references": {
@@ -809,6 +1183,528 @@
                     "Observable": "https://rxjs.dev/guide/observable",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "CrossLink",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Link component for cross-links:\n\n<md-cell>\n<cross-link target=\"API\">API</cross-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.CrossLink.Mapper\" semantic=\"attribute\">CrossLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "CrossLink",
+            "navPath": "@nav/api/MainModule/MdWidgets.CrossLink",
+            "attributes": [
+                {
+                    "name": "icon",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Icon representing cross links, shown alongside the label.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CrossLink.icon",
+                    "navPath": "@nav/api/MainModule/MdWidgets.CrossLink.icon",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fas fa-book-open',\n        style: { fontSize: stdIconFontSize },\n    }",
+                        "implementation": "",
+                        "startLine": 219,
+                        "endLine": 220,
+                        "references": {
+                            "icon": "@nav/api/MainModule/MdWidgets.CrossLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "Mapper",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Maps a string  `target`  to an object containing:\n-  `href` : the relative URL fragment in the form e.g.  `@nav/tuto/getting-started` .\n-  `withClass`  (optional): a CSS class to apply for custom styling.\n-  `withStyle`  (optional): additional inline styles.\n\nThis should be implemented by the consumer of the class.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CrossLink.Mapper",
+                    "navPath": "@nav/api/MainModule/MdWidgets.CrossLink.Mapper",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static Mapper: LinkMapper",
+                        "implementation": "",
+                        "startLine": 215,
+                        "endLine": 216,
+                        "references": {
+                            "Mapper": "@nav/api/MainModule/MdWidgets.CrossLink.Mapper",
+                            "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates the view from a given HTML element.\nThe element should include a  `target`  attribute used to resolve link details via the mapper.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The original HTMLElement parsed from Markdown or the DOM.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "A  `BaseLink`  instance representing the rendered VirtualDOM anchor tag.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "CrossLink.fromHTMLElement",
+                    "navPath": "@nav/api/MainModule/MdWidgets.CrossLink.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static fromHTMLElement(elem: HTMLElement): BaseLink",
+                        "implementation": "static fromHTMLElement(elem: HTMLElement): BaseLink {\n    return new BaseLink(elem, CrossLink.icon, CrossLink.Mapper)\n}",
+                        "startLine": 231,
+                        "endLine": 234,
+                        "references": {
+                            "fromHTMLElement": "@nav/api/MainModule/MdWidgets.CrossLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/links.view.ts",
+                "declaration": "export class CrossLink",
+                "implementation": "export class CrossLink {\n    /**\n     * Maps a string `target` to an object containing:\n     * - `href`: the relative URL fragment in the form e.g. `@nav/tuto/getting-started`.\n     * - `withClass` (optional): a CSS class to apply for custom styling.\n     * - `withStyle` (optional): additional inline styles.\n     *\n     * This should be implemented by the consumer of the class.\n     */\n    static Mapper: LinkMapper\n    /**\n     * Icon representing cross links, shown alongside the label.\n     */\n    static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fas fa-book-open',\n        style: { fontSize: stdIconFontSize },\n    }\n    /**\n     * Creates the view from a given HTML element.\n     * The element should include a `target` attribute used to resolve link details via the mapper.\n     *\n     * @param elem - The original HTMLElement parsed from Markdown or the DOM.\n     * @returns A `BaseLink` instance representing the rendered VirtualDOM anchor tag.\n     */\n    static fromHTMLElement(elem: HTMLElement): BaseLink {\n        return new BaseLink(elem, CrossLink.icon, CrossLink.Mapper)\n    }\n}",
+                "startLine": 206,
+                "endLine": 235,
+                "references": {
+                    "CrossLink": "@nav/api/MainModule/MdWidgets.CrossLink",
+                    "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                    "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ExtLink",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Link component for external resources:\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n</md-cell>\n\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.ExtLink.Mapper\" semantic=\"attribute\">ExtLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ExtLink",
+            "navPath": "@nav/api/MainModule/MdWidgets.ExtLink",
+            "attributes": [
+                {
+                    "name": "icon",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Icon representing external links, shown alongside the label.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ExtLink.icon",
+                    "navPath": "@nav/api/MainModule/MdWidgets.ExtLink.icon",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fas fa-external-link-alt',\n        style: { fontSize: stdIconFontSize },\n    }",
+                        "implementation": "",
+                        "startLine": 136,
+                        "endLine": 137,
+                        "references": {
+                            "icon": "@nav/api/MainModule/MdWidgets.ExtLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "Mapper",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Maps a string  `target`  to an object containing:\n-  `href` : an absolute URL (e.g.,  `https://example.com` )\n-  `withClass`  (optional): a CSS class to apply for custom styling.\n-  `withStyle`  (optional): inline styles to apply to the link.\n\nThis should be implemented by the consumer of the class.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ExtLink.Mapper",
+                    "navPath": "@nav/api/MainModule/MdWidgets.ExtLink.Mapper",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static Mapper: LinkMapper",
+                        "implementation": "",
+                        "startLine": 132,
+                        "endLine": 133,
+                        "references": {
+                            "Mapper": "@nav/api/MainModule/MdWidgets.ExtLink.Mapper",
+                            "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Constructor from HTML element as defined in the Markdown source.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: HTML element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "The hyperlink element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ExtLink.fromHTMLElement",
+                    "navPath": "@nav/api/MainModule/MdWidgets.ExtLink.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static fromHTMLElement(elem: HTMLElement): BaseLink",
+                        "implementation": "static fromHTMLElement(elem: HTMLElement): BaseLink {\n    return new BaseLink(elem, ExtLink.icon, ExtLink.Mapper)\n}",
+                        "startLine": 147,
+                        "endLine": 150,
+                        "references": {
+                            "fromHTMLElement": "@nav/api/MainModule/MdWidgets.ExtLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/links.view.ts",
+                "declaration": "export class ExtLink",
+                "implementation": "export class ExtLink {\n    /**\n     * Maps a string `target` to an object containing:\n     * - `href`: an absolute URL (e.g., `https://example.com`)\n     * - `withClass` (optional): a CSS class to apply for custom styling.\n     * - `withStyle` (optional): inline styles to apply to the link.\n     *\n     * This should be implemented by the consumer of the class.\n     */\n    static Mapper: LinkMapper\n    /**\n     * Icon representing external links, shown alongside the label.\n     */\n    static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fas fa-external-link-alt',\n        style: { fontSize: stdIconFontSize },\n    }\n    /**\n     * Constructor from HTML element as defined in the Markdown source.\n     *\n     * @param elem HTML element.\n     * @returns The hyperlink element.\n     */\n    static fromHTMLElement(elem: HTMLElement): BaseLink {\n        return new BaseLink(elem, ExtLink.icon, ExtLink.Mapper)\n    }\n}",
+                "startLine": 123,
+                "endLine": 151,
+                "references": {
+                    "ExtLink": "@nav/api/MainModule/MdWidgets.ExtLink",
+                    "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                    "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "GitHubLink",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Link component for GitHub resources:\n\n<md-cell>\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/MainModule/MdWidgets.GitHubLink.Mapper\" semantic=\"attribute\">GitHubLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "GitHubLink",
+            "navPath": "@nav/api/MainModule/MdWidgets.GitHubLink",
+            "attributes": [
+                {
+                    "name": "icon",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Icon representing GitHub links, shown alongside the label.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "GitHubLink.icon",
+                    "navPath": "@nav/api/MainModule/MdWidgets.GitHubLink.icon",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fab fa-github',\n        style: { fontSize: '0.8rem' },\n    }",
+                        "implementation": "",
+                        "startLine": 177,
+                        "endLine": 178,
+                        "references": {
+                            "icon": "@nav/api/MainModule/MdWidgets.GitHubLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
+                        }
+                    }
+                },
+                {
+                    "name": "Mapper",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Maps a string  `target`  to an object containing:\n-  `href` : an absolute URL to a GitHub resource.\n-  `withClass`  (optional): a CSS class to apply for custom styling.\n-  `withStyle`  (optional): inline styles to apply to the link.\n\nThis should be implemented by the consumer of the class.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "GitHubLink.Mapper",
+                    "navPath": "@nav/api/MainModule/MdWidgets.GitHubLink.Mapper",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static Mapper: LinkMapper",
+                        "implementation": "",
+                        "startLine": 173,
+                        "endLine": 174,
+                        "references": {
+                            "Mapper": "@nav/api/MainModule/MdWidgets.GitHubLink.Mapper",
+                            "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates the view from a given HTML element.\nThe element should include a  `target`  attribute used to resolve link details via the mapper.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The original HTMLElement parsed from Markdown or the DOM.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "A  `BaseLink`  instance representing the rendered VirtualDOM anchor tag.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "GitHubLink.fromHTMLElement",
+                    "navPath": "@nav/api/MainModule/MdWidgets.GitHubLink.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/lib/md-widgets/links.view.ts",
+                        "declaration": "static fromHTMLElement(elem: HTMLElement): BaseLink",
+                        "implementation": "static fromHTMLElement(elem: HTMLElement): BaseLink {\n    return new BaseLink(elem, GitHubLink.icon, GitHubLink.Mapper)\n}",
+                        "startLine": 189,
+                        "endLine": 192,
+                        "references": {
+                            "fromHTMLElement": "@nav/api/MainModule/MdWidgets.GitHubLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/md-widgets/links.view.ts",
+                "declaration": "export class GitHubLink",
+                "implementation": "export class GitHubLink {\n    /**\n     * Maps a string `target` to an object containing:\n     * - `href`: an absolute URL to a GitHub resource.\n     * - `withClass` (optional): a CSS class to apply for custom styling.\n     * - `withStyle` (optional): inline styles to apply to the link.\n     *\n     * This should be implemented by the consumer of the class.\n     */\n    static Mapper: LinkMapper\n    /**\n     * Icon representing GitHub links, shown alongside the label.\n     */\n    static readonly icon: AnyVirtualDOM = {\n        tag: 'i',\n        class: 'fab fa-github',\n        style: { fontSize: '0.8rem' },\n    }\n    /**\n     * Creates the view from a given HTML element.\n     * The element should include a `target` attribute used to resolve link details via the mapper.\n     *\n     * @param elem - The original HTMLElement parsed from Markdown or the DOM.\n     * @returns A `BaseLink` instance representing the rendered VirtualDOM anchor tag.\n     */\n    static fromHTMLElement(elem: HTMLElement): BaseLink {\n        return new BaseLink(elem, GitHubLink.icon, GitHubLink.Mapper)\n    }\n}",
+                "startLine": 164,
+                "endLine": 193,
+                "references": {
+                    "GitHubLink": "@nav/api/MainModule/MdWidgets.GitHubLink",
+                    "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                    "BaseLink": "@nav/api/MainModule/MdWidgets.BaseLink",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -1341,6 +2237,44 @@
             }
         },
         {
+            "name": "LinkMapper",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A function that maps a string target (link identifier) to\nhref, optional CSS class, and optional style attributes.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "LinkMapper",
+            "navPath": "@nav/api/MainModule/MdWidgets.LinkMapper",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/md-widgets/links.view.ts",
+                "declaration": "export type LinkMapper = (target: string) => {\n    href?: string\n    withClass?: string\n    withStyle?: CSSAttribute\n}",
+                "implementation": "",
+                "startLine": 7,
+                "endLine": 8,
+                "references": {
+                    "LinkMapper": "@nav/api/MainModule/MdWidgets.LinkMapper",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "NoteLevel",
             "documentation": {
                 "sections": [
@@ -1468,6 +2402,24 @@
         }
     ],
     "files": [
+        {
+            "name": "links.view.ts",
+            "path": "src/lib/md-widgets/links.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
         {
             "name": "code-badges.ts",
             "path": "src/lib/md-widgets/code-badges.ts",

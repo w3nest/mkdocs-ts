@@ -5344,7 +5344,7 @@
                     "navPath": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
-                        "declaration": "public readonly style = {\n        fontSize: 'initial',\n    }",
+                        "declaration": "public readonly style = {\n        fontSize: '0.8rem',\n    }",
                         "implementation": "",
                         "startLine": 258,
                         "endLine": 259,

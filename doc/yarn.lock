@@ -1350,10 +1350,10 @@
     rx-vdom "^0.1.0"
     rxjs "^7.5.6"
 
-"@w3nest/ui-tk@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@w3nest/ui-tk/-/ui-tk-0.1.0.tgz#57fa4fbc78b0d971f6743fb79da52665f5e17385"
-  integrity sha512-0/Cy8Lk8AUHR2q0r6wVttZKiKKy7bm5OmKQxRTvsv6n/z/drl017mVxbiS+0xUptNd2YfBPNdm6M2uSRStg6Pw==
+"@w3nest/ui-tk@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@w3nest/ui-tk/-/ui-tk-0.1.1.tgz#cacd567db9701e87f6f72a80f97a36de48050402"
+  integrity sha512-aHS+kFspIUr7XvxVMyeSRwDRxSsmqgfoQl7ntOZe4pqFzxDXSCxLMVZ5gH6m/n7eODdh9dVGiG5CwP5XYxbwHQ==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     rxjs "^7.8.1"
@@ -4361,9 +4361,10 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-"mkdocs-ts@file:.local-dependencies/mkdocs-ts-0.3.3-1745921823.tgz":
-  version "0.3.3"
-  resolved "file:.local-dependencies/mkdocs-ts-0.3.3-1745921823.tgz#103e2b654160e3d84089996dd72418a24a3de2f9"
+mkdocs-ts@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.4.0.tgz#9293de88b1c7389da4e6aea7288e89d4da5fedd5"
+  integrity sha512-dzFYDC9JVG9OKwJ/V5oYc5C+eSLe7737RKR2ltnSHEWVLoyViTI2QrlRLANHb87nJUflLoJTYIjVZjdzsx3czw==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     "@w3nest/rx-tree-views" "^0.2.0"
