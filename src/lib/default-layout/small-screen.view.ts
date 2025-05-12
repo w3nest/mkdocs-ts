@@ -208,9 +208,9 @@ export class ExpandableTocColumn extends ExpandableBaseColumn {
     /**
      * Component's class name for CSS query.
      */
-    static readonly CssSelector = 'mkdocs-ExpandableTocColumn pe-5'
+    static readonly CssSelector = 'mkdocs-ExpandableTocColumn'
 
-    public readonly class = ExpandableTocColumn.CssSelector
+    public readonly class = `${ExpandableTocColumn.CssSelector} pe-5`
 
     constructor(params: ExpandableParams<TocWrapperView>) {
         super({
