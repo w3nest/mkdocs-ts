@@ -8,8 +8,8 @@ import {
     switchMap,
     takeUntil,
     tap,
+    shareReplay,
 } from 'rxjs'
-import { shareReplay } from 'rxjs/operators'
 import { Output, ExecCellError, Scope } from './state'
 import { InterpreterApi } from './interpreter-cell-view'
 

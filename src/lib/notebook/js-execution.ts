@@ -6,12 +6,12 @@ import {
     Subject,
     switchMap,
     takeUntil,
+    shareReplay,
 } from 'rxjs'
 import { display } from './display-utils'
 import { parseScript } from 'esprima'
 import { ExecCellError, Scope } from './state'
 import { ContextTrait, NoContext } from '../context'
-import { shareReplay } from 'rxjs/operators'
 import { ExecInput } from './execution-common'
 /* eslint-disable */
 

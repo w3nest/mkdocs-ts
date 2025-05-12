@@ -8,10 +8,10 @@ import {
     ReplaySubject,
     switchMap,
     takeUntil,
+    shareReplay,
 } from 'rxjs'
 import { Scope } from './state'
 import { type WorkersPoolTypes } from '@w3nest/webpm-client'
-import { shareReplay } from 'rxjs/operators'
 import { ExecInput } from './execution-common'
 import { ContextTrait, NoContext } from '../context'
 

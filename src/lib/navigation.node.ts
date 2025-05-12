@@ -1,8 +1,7 @@
 import { ImmutableTree } from '@w3nest/rx-tree-views'
 import { Router } from './router'
-import { from, map, Observable, of, take } from 'rxjs'
+import { from, map, Observable, of, take, shareReplay } from 'rxjs'
 import { AnyVirtualDOM } from 'rx-vdom'
-import { shareReplay } from 'rxjs/operators'
 import { Contextual, ContextTrait, NoContext } from './context'
 
 /**

@@ -1,6 +1,12 @@
-import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs'
+import {
+    BehaviorSubject,
+    combineLatest,
+    from,
+    Observable,
+    of,
+    shareReplay,
+} from 'rxjs'
 import { install } from '@w3nest/webpm-client'
-import { shareReplay } from 'rxjs/operators'
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
 import { ResizeObserverTrait } from './traits'
 

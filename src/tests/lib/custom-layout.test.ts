@@ -1,4 +1,4 @@
-import { filter, firstValueFrom, from, map, skip } from 'rxjs'
+import { filter, firstValueFrom, from, map, skip, shareReplay } from 'rxjs'
 import {
     isResolvedTarget,
     Navigation,
@@ -6,7 +6,6 @@ import {
     Router,
     DefaultLayout,
 } from '../../lib'
-import { shareReplay } from 'rxjs/operators'
 import {
     AnyVirtualDOM,
     child$,
