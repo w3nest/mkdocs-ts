@@ -69,7 +69,7 @@ export class Logo implements VirtualDOM<'div'> {
         ]
         this.onclick = (ev) => {
             ev.stopPropagation()
-            router.fireNavigateTo('/')
+            router.fireNavigateTo('?nav=/')
         }
     }
 }
@@ -86,6 +86,29 @@ export class EmptyTopBanner implements VirtualDOM<'div'> {
     }
 }
 
+export function topOnlyBanner({
+    pageScrollTop$,
+    banner,
+}: {
+    pageScrollTop$: Observable<number>
+    banner: AnyVirtualDOM
+}): AnyVirtualDOM {
+    return {
+        tag: 'div',
+        class: 'w-100',
+        children: [
+            child$({
+                source$: pageScrollTop$.pipe(
+                    map((t) => (t < 10 ? 'visible' : 'hidden')),
+                    distinctUntilChanged(),
+                ),
+                vdomMap: (mode) => {
+                    return mode === 'hidden' ? EmptyDiv : banner
+                },
+            }),
+        ],
+    }
+}
 /**
  * Sticky top banner component that remains visible while scrolling.
  *
@@ -119,14 +142,16 @@ export class TopBanner implements VirtualDOM<'div'> {
         spec: TopBannerSpec
         navigationBoundingBox$: Observable<DOMRect>
         tocBoundingBox$: Observable<DOMRect>
-        displayMode$: BehaviorSubject<DisplayMode>
+        pageScrollTop$: Observable<number>
+        navDisplayMode$: BehaviorSubject<DisplayMode>
     }) {
         if (params.spec.zIndex) {
             this.style.zIndex = params.spec.zIndex
         }
         this.children = [
+            params.spec.header?.(params),
             child$({
-                source$: params.displayMode$.pipe(
+                source$: params.navDisplayMode$.pipe(
                     map((mode) => {
                         if (mode === 'removed') {
                             return 'removed'
@@ -139,12 +164,13 @@ export class TopBanner implements VirtualDOM<'div'> {
                     return displayMode === 'pined'
                         ? new TopBannerExpanded(params)
                         : new TopBannerMinimized({
-                              displayMode$: params.displayMode$,
+                              displayMode$: params.navDisplayMode$,
                               router: params.router,
                               spec: params.spec,
                           })
                 },
             }),
+            params.spec.footer?.(params),
         ]
         this.connectedCallback = (elem) => {
             plugBoundingBoxObserver(elem, this.boundingBox$)
@@ -248,6 +274,10 @@ export class TopBannerExpanded implements VirtualDOM<'div'> {
             typeof spec.expandedContent === 'function'
                 ? spec.expandedContent({ router })
                 : spec.expandedContent
+        const mainRow = {
+            tag: 'div',
+            children: [],
+        }
         this.children = [
             logo,
             {

@@ -125,8 +125,9 @@ export class Layout implements VirtualDOM<'div'> {
                   router,
                   navigationBoundingBox$,
                   tocBoundingBox$,
-                  displayMode$: this.displayModeNav$,
+                  navDisplayMode$: this.displayModeNav$,
                   spec: topBanner,
+                  pageScrollTop$: this.pageScrollTop$,
               })
             : new EmptyTopBanner()
 

@@ -177,6 +177,25 @@ export interface TopBannerSpec {
         title: string
     }
     /**
+     * Optional top banner header.
+     */
+    header?: (p: {
+        router: Router
+        navigationBoundingBox$: Observable<BBox>
+        tocBoundingBox$: Observable<BBox>
+        pageScrollTop$: Observable<number>
+    }) => AnyView
+    /**
+     * Optional top banner footer.
+     */
+    footer?: (p: {
+        router: Router
+        navigationBoundingBox$: Observable<BBox>
+        tocBoundingBox$: Observable<BBox>
+        pageScrollTop$: Observable<number>
+    }) => AnyView
+
+    /**
      * Optional content to display in the center of the banner in large-screen mode.
      */
     expandedContent?: AnyView | ((p: { router: Router }) => AnyView)
