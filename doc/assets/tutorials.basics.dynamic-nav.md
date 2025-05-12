@@ -34,7 +34,7 @@ const { MkDocs, rxjs, clients } = await webpm.install({
     esm:[
         `mkdocs-ts#${version} as MkDocs`, 
         '@w3nest/http-clients#^0.1.3 as clients',
-        'rxjs#7.8.1 as rxjs',
+        'rxjs#^7.8.2 as rxjs',
     ],
     css: [
         // Required by mkdocs-ts itself:

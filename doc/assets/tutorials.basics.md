@@ -459,7 +459,7 @@ navigation = {
             header: header('fa-cogs'),
             layout: async () => {
                 const {rxjs} = await webpm.install({
-                    esm:['rxjs#7.8.1 as rxjs']
+                    esm:['rxjs#^7.8.2 as rxjs']
                 })
                 const result$ = new rxjs.Subject()
                 const ctrlPane = await controls((params) => {

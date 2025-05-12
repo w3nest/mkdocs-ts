@@ -25,7 +25,7 @@ const version = "{{mkdocs-version}}"
 const { MkDocs, rxjs, clients } = await webpm.install({
     esm:[
         `mkdocs-ts#${version} as MkDocs`, 
-        'rxjs#7.8.1 as rxjs',
+        'rxjs#^7.8.2 as rxjs',
     ],
     css: [
         'bootstrap#5.3.3~bootstrap.min.css',
