@@ -371,7 +371,7 @@ class SlideView{
     constructor({slide}){
         Object.assign(this,{
             tag: 'div',
-            class: 'flex-grow-1 d-flex flex-column w-100',
+            class: 'flex-grow-1 d-flex flex-column w-100 overflow-auto',
             style: { minHeight: '0px' }
         })
         const header = {
@@ -412,7 +412,7 @@ class CustomLayout{
     constructor({router}){
         Object.assign(this,{
             tag: 'div',
-            class: 'h-100 w-100 d-flex flex-column bg-light p-5 rounded',
+            class: 'h-100 w-100 d-flex flex-column bg-light p-3 rounded',
         })
         this.children = [ 
             {   
@@ -459,10 +459,13 @@ const navigation = {
 
 const { withNavBar } = await load("/tutorials/basics/code-utils")
 
-const customView = await withNavBar(navigation, ({router}) => {
-    return new CustomLayout({
-        router,
-    })
+const customView = await withNavBar({
+        navigation, 
+        layout: ({router}) => {
+            return new CustomLayout({
+                router,
+        })
+    }
 })
 display(customView)
 

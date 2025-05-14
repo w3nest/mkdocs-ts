@@ -13,6 +13,13 @@ Whether you're building living technical docs, rich knowledge bases, or interact
 
 Of course, this very application is built using {{mkdocs-ts}}.
 
+<note level="hint" expandable="true" title="Thanks & Philosophy">
+This package is largely inspired by <ext-link target="mkdocs">MkDocs</ext-link> and 
+<ext-link target="mkdocs-material">Material for MkDocs</ext-link>, which have set a high bar for great documentation.  
+While it shares some of their philosophy, {{mkdocs-ts}} takes a different route: it's built with TypeScript and 
+designed to be dynamic—enabling reactive, component-based documentation directly from your code.
+</note>
+
 ---
 
 ## ✨ Key Features

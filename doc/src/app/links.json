@@ -357,7 +357,9 @@
         "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
         "worker-transferable": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API",
         "shared-array": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer",
-        "reactivex": "https://reactivex.io/"
+        "reactivex": "https://reactivex.io/",
+        "mkdocs": "https://www.mkdocs.org/",
+        "mkdocs-material": "https://squidfunk.github.io/mkdocs-material/"
     },
     "githubLinks": {
         "tutorials.notebook.md": "https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.notebook.md?raw=1",

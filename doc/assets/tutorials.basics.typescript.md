@@ -117,7 +117,7 @@ const view = DefaultLayout.Layout({router})
 When using a **custom layout**, you need to define new types for the 
 layout and header within the navigation object. 
 These are equivalent to <api-link target="DefaultLayout.NavLayout"></api-link> and 
-<api-link target="DefaultLayout.NavHeader"></api-link>.
+<api-link target="DefaultLayout.NavHeaderSpec"></api-link> for the default layout.
 
 **Example**
 

@@ -20,11 +20,14 @@ const {
 
 The presentation was left to:
 
-<js-cell>
+<js-cell cell-id="initial">
 display(customView)
 </js-cell>
 
-The objective here is to use the default layout of {{mkdocs-ts}} for the first page only, while keeping the 
+<cell-output cell-id="initial" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
+</cell-output>
+
+The objective here is to use the default layout of {{mkdocs-ts}} **for the first page only**, while keeping the 
 custom layout for all other pages.
 
 ## Factory
@@ -89,16 +92,36 @@ And finally, The <api-link target="CompositeLayout"></api-link> view is instanti
 <js-cell cell-id="app">
 const { withNavBar } = await load("/tutorials/basics/code-utils")
 
-const compositeView = await withNavBar(navigation, ({router}) => {
-    return new MkDocs.CompositeLayout({
-        router,
-        layoutsFactory: {
-            'default': ({router}) => new MkDocs.DefaultLayout.Layout({router}),
-            'custom': ({router}) => new CustomLayout({router}),
-        },
-        onNotFound: 'default',
-        onPending: 'default',
-    })
+const topBanner = {
+    logo: {
+        icon: { tag:'div', innerText:'📐e = ∑∞ⁿ⁼⁰ ¹ₙ🤓' },
+        title: ''
+    },
+    badge: { tag:'i', class:'my-auto fas fa-atom'},
+    expandedContent: { 
+        tag:'div', 
+        class:'fw-bolder text-center', 
+        innerText: 'Dynamic Navigation'
+    },
+}
+
+
+const compositeView = await withNavBar({
+    navigation,
+    layout: ({router}) => {
+        return new MkDocs.CompositeLayout({
+            router,
+            layoutsFactory: {
+                'default': ({router}) => new MkDocs.DefaultLayout.Layout({
+                    router,
+                    topBanner
+                }),
+                'custom': ({router}) => new CustomLayout({router}),
+            },
+            onNotFound: 'default',
+            onPending: 'default',
+        })
+    }
 })
 display(compositeView)
 
