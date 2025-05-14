@@ -3969,8 +3969,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type AnyView = AnyVirtualDOM | HTMLElement",
                 "implementation": "",
-                "startLine": 12,
-                "endLine": 13,
+                "startLine": 11,
+                "endLine": 12,
                 "references": {
                     "AnyView": "@nav/api/MainModule.AnyView",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
@@ -4019,8 +4019,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type DynamicRoutes<TLayout, THeader> =\n    | LazyRoutesCb<TLayout, THeader>\n    | LazyRoutesCb$<TLayout, THeader>",
                 "implementation": "",
-                "startLine": 474,
-                "endLine": 475,
+                "startLine": 473,
+                "endLine": 474,
                 "references": {
                     "DynamicRoutes": "@nav/api/MainModule.DynamicRoutes",
                     "LazyRoutesCb": "@nav/api/MainModule.LazyRoutesCb",
@@ -4328,8 +4328,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutes<TLayout, THeader> = SegmentsRecord<\n    NavNodeData<TLayout, THeader, true>\n>",
                 "implementation": "",
-                "startLine": 401,
-                "endLine": 402,
+                "startLine": 400,
+                "endLine": 401,
                 "references": {
                     "LazyRoutes": "@nav/api/MainModule.LazyRoutes",
                     "SegmentsRecord": "@nav/api/MainModule.SegmentsRecord",
@@ -4367,8 +4367,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutesCb<TLayout, THeader> = (p: {\n    // The targeted path in the navigation\n    path: string\n    // Router instance\n    router: Router\n}) => LazyRoutesReturn<TLayout, THeader>",
                 "implementation": "",
-                "startLine": 417,
-                "endLine": 418,
+                "startLine": 416,
+                "endLine": 417,
                 "references": {
                     "LazyRoutesCb": "@nav/api/MainModule.LazyRoutesCb",
                     "Router": "@nav/api/MainModule.Router",
@@ -4406,8 +4406,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutesCb$<TLayout, THeader> = Observable<\n    LazyRoutesCb<TLayout, THeader>\n>",
                 "implementation": "",
-                "startLine": 462,
-                "endLine": 463,
+                "startLine": 461,
+                "endLine": 462,
                 "references": {
                     "LazyRoutesCb$": "@nav/api/MainModule.LazyRoutesCb$",
                     "LazyRoutesCb": "@nav/api/MainModule.LazyRoutesCb",
@@ -4445,8 +4445,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutesReturn<TLayout, THeader> =\n    | Resolvable<LazyRoutes<TLayout, THeader>>\n    | undefined",
                 "implementation": "",
-                "startLine": 408,
-                "endLine": 409,
+                "startLine": 407,
+                "endLine": 408,
                 "references": {
                     "LazyRoutesReturn": "@nav/api/MainModule.LazyRoutesReturn",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
@@ -4532,8 +4532,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type Navigation<TLayout, THeader> = NavNodeData<TLayout, THeader> & {\n    /**\n     * Children routes of the node.\n     */\n    routes?: StaticRoutes<TLayout, THeader> | DynamicRoutes<TLayout, THeader>\n}",
                 "implementation": "",
-                "startLine": 489,
-                "endLine": 490,
+                "startLine": 488,
+                "endLine": 489,
                 "references": {
                     "Navigation": "@nav/api/MainModule.Navigation",
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
@@ -4583,8 +4583,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type NavNodeData<\n    TLayout,\n    THeader,\n    WithLeafInfo extends boolean = false,\n> = {\n    /**\n     * The name of the node.\n     */\n    name: string\n    /**\n     * Optional user-defined metadata associated with the node.\n     */\n    metadata?: unknown\n    /**\n     * The header configuration for the node.\n     */\n    header?: THeader\n    /**\n     * The layout configuration for the node.\n     */\n    layout: TLayout\n} & (WithLeafInfo extends true ? { leaf?: boolean } : Record<never, unknown>)",
                 "implementation": "",
-                "startLine": 24,
-                "endLine": 25,
+                "startLine": 23,
+                "endLine": 24,
                 "references": {
                     "NavNodeData": "@nav/api/MainModule.NavNodeData",
                     "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved",
@@ -4633,8 +4633,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type PathSegment<T extends string> = T extends `/${string}/${string}`\n    ? never\n    : T extends `/${string}`\n      ? T extends\n            | `${string}\\\\${string}`\n            | `${string}?${string}`\n            | `${string}#${string}`\n            | `${string}.${string}`\n          ? never\n          : T\n      : never",
                 "implementation": "",
-                "startLine": 538,
-                "endLine": 539,
+                "startLine": 537,
+                "endLine": 538,
                 "references": {
                     "PathSegment": "@nav/api/MainModule.PathSegment"
                 }
@@ -4721,8 +4721,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type Resolvable<T> = T | Promise<T> | Observable<T>",
                 "implementation": "",
-                "startLine": 369,
-                "endLine": 370,
+                "startLine": 368,
+                "endLine": 369,
                 "references": {
                     "Resolvable": "@nav/api/MainModule.Resolvable",
                     "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
@@ -4771,8 +4771,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type SegmentsRecord<T> = Record<string, T>",
                 "implementation": "",
-                "startLine": 388,
-                "endLine": 389,
+                "startLine": 387,
+                "endLine": 388,
                 "references": {
                     "SegmentsRecord": "@nav/api/MainModule.SegmentsRecord",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
@@ -4820,8 +4820,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type StaticRoutes<TLayout, THeader> = Record<\n    string,\n    Resolvable<Navigation<TLayout, THeader>>\n>",
                 "implementation": "",
-                "startLine": 453,
-                "endLine": 454,
+                "startLine": 452,
+                "endLine": 453,
                 "references": {
                     "StaticRoutes": "@nav/api/MainModule.StaticRoutes",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
@@ -5444,8 +5444,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export function sanitizeNavPath(path: string)",
                 "implementation": "export function sanitizeNavPath(path: string) {\n    return (\n        '/' +\n        path\n            .replace(/^\\/+/, '') // Remove leading slashes\n            .replace(/\\/+/g, '/') // Collapse multiple slashes\n            .replace('/.', '.') // Fix misplaced dot\n            .replace(/\\/+$/, '') // Remove trailing slashes\n    )\n}",
-                "startLine": 504,
-                "endLine": 514,
+                "startLine": 503,
+                "endLine": 513,
                 "references": {
                     "sanitizeNavPath": "@nav/api/MainModule.sanitizeNavPath"
                 }
@@ -5501,8 +5501,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export function segment<T extends string>(p: PathSegment<T>)",
                 "implementation": "export function segment<T extends string>(p: PathSegment<T>) {\n    return p\n}",
-                "startLine": 560,
-                "endLine": 563,
+                "startLine": 559,
+                "endLine": 562,
                 "references": {
                     "segment": "@nav/api/MainModule.segment",
                     "PathSegment": "@nav/api/MainModule.PathSegment"

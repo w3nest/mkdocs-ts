@@ -34,8 +34,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "defaultDisplayOptions: DisplayOptions = {\n    toggleTocWidth: 1600,\n    tocMinWidth: 250,\n    tocMaxWidth: 400,\n    toggleNavWidth: 1300,\n    navMaxWidth: 500,\n    navMinWidth: 300,\n    pageWidth: '35rem',\n    translationTime: 400,\n    pageVertPadding: '3rem',\n    forceTocDisplayMode: undefined,\n    forceNavDisplayMode: undefined,\n}",
                 "implementation": "",
-                "startLine": 110,
-                "endLine": 111,
+                "startLine": 114,
+                "endLine": 115,
                 "references": {
                     "defaultDisplayOptions": "@nav/api/MainModule/DefaultLayout.defaultDisplayOptions",
                     "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions"
@@ -91,8 +91,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 322,
-                        "endLine": 323,
+                        "startLine": 318,
+                        "endLine": 319,
                         "references": {
                             "children": "@nav/api/MainModule/DefaultLayout.BookmarksView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -127,8 +127,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "public readonly class = `${BookmarksView.CssSelector} d-flex align-items-center justify-content-center d-flex`",
                         "implementation": "",
-                        "startLine": 321,
-                        "endLine": 322,
+                        "startLine": 317,
+                        "endLine": 318,
                         "references": {
                             "class": "@nav/api/MainModule/DefaultLayout.BookmarksView.class"
                         }
@@ -162,8 +162,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 320,
-                        "endLine": 321,
+                        "startLine": 316,
+                        "endLine": 317,
                         "references": {
                             "tag": "@nav/api/MainModule/DefaultLayout.BookmarksView.tag"
                         }
@@ -197,8 +197,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-BookmarksView'",
                         "implementation": "",
-                        "startLine": 319,
-                        "endLine": 320,
+                        "startLine": 315,
+                        "endLine": 316,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/DefaultLayout.BookmarksView.CssSelector"
                         }
@@ -239,8 +239,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "constructor({\n    bookmarks$,\n    router,\n}: {\n    bookmarks$?: Observable<string[]>\n    router: Router\n})",
                         "implementation": "constructor({\n    bookmarks$,\n    router,\n}: {\n    bookmarks$?: Observable<string[]>\n    router: Router\n}) {\n    if (!bookmarks$) {\n        return\n    }\n    const source$ = combineLatest([bookmarks$, router.explorerState.root$])\n    this.children = replace$({\n        policy: 'replace',\n        source$,\n        vdomMap: ([bookmarks, _root]) => {\n            return bookmarks.map((bookmark) => {\n                const node = router.explorerState.getNode(\n                    bookmark,\n                ) as unknown\n                return node\n                    ? new BookmarkView({\n                          node: node as NavNodeResolved<unknown, NavHeader>,\n                          router,\n                      })\n                    : EmptyDiv\n            })\n        },\n    })\n}",
-                        "startLine": 331,
-                        "endLine": 360,
+                        "startLine": 327,
+                        "endLine": 356,
                         "references": {
                             "BookmarksView": "@nav/api/MainModule/DefaultLayout.BookmarksView",
                             "Router": "@nav/api/MainModule.Router",
@@ -259,8 +259,8 @@
                 "filePath": "src/lib/default-layout/top-banner.view.ts",
                 "declaration": "export class BookmarksView implements VirtualDOM<'div'>",
                 "implementation": "export class BookmarksView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-BookmarksView'\n    public readonly tag = 'div'\n    public readonly class = `${BookmarksView.CssSelector} d-flex align-items-center justify-content-center d-flex`\n    public readonly children: ChildrenLike\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param _p Parameters\n     * @param _p.bookmarks$ Observable of the bookmarks' navigation path.\n     * @param _p.router Applications's router.\n     */\n    constructor({\n        bookmarks$,\n        router,\n    }: {\n        bookmarks$?: Observable<string[]>\n        router: Router\n    }) {\n        if (!bookmarks$) {\n            return\n        }\n        const source$ = combineLatest([bookmarks$, router.explorerState.root$])\n        this.children = replace$({\n            policy: 'replace',\n            source$,\n            vdomMap: ([bookmarks, _root]) => {\n                return bookmarks.map((bookmark) => {\n                    const node = router.explorerState.getNode(\n                        bookmark,\n                    ) as unknown\n                    return node\n                        ? new BookmarkView({\n                              node: node as NavNodeResolved<unknown, NavHeader>,\n                              router,\n                          })\n                        : EmptyDiv\n                })\n            },\n        })\n    }\n}",
-                "startLine": 315,
-                "endLine": 361,
+                "startLine": 311,
+                "endLine": 357,
                 "references": {
                     "BookmarksView": "@nav/api/MainModule/DefaultLayout.BookmarksView",
                     "Router": "@nav/api/MainModule.Router",
@@ -323,8 +323,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 372,
-                        "endLine": 373,
+                        "startLine": 368,
+                        "endLine": 369,
                         "references": {
                             "children": "@nav/api/MainModule/DefaultLayout.BookmarkView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -359,8 +359,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "public readonly class = BookmarkView.CssSelector",
                         "implementation": "",
-                        "startLine": 371,
-                        "endLine": 372,
+                        "startLine": 367,
+                        "endLine": 368,
                         "references": {
                             "class": "@nav/api/MainModule/DefaultLayout.BookmarkView.class"
                         }
@@ -394,8 +394,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 370,
-                        "endLine": 371,
+                        "startLine": 366,
+                        "endLine": 367,
                         "references": {
                             "tag": "@nav/api/MainModule/DefaultLayout.BookmarkView.tag"
                         }
@@ -429,8 +429,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "static readonly CssSelector: string = 'mkdocs-BookmarkView mx-3'",
                         "implementation": "",
-                        "startLine": 368,
-                        "endLine": 369,
+                        "startLine": 364,
+                        "endLine": 365,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/DefaultLayout.BookmarkView.CssSelector"
                         }
@@ -471,8 +471,8 @@
                         "filePath": "src/lib/default-layout/top-banner.view.ts",
                         "declaration": "constructor({\n    node,\n    router,\n}: {\n    node: NavNodeResolved<unknown, NavHeader>\n    router: Router\n})",
                         "implementation": "constructor({\n    node,\n    router,\n}: {\n    node: NavNodeResolved<unknown, NavHeader>\n    router: Router\n}) {\n    this.children = [\n        {\n            tag: 'a',\n            class: attr$({\n                source$: router.path$,\n                vdomMap: (path) => {\n                    return path === node.href\n                        ? 'mkdocs-text-5 selected mkdocs-text-focus'\n                        : 'mkdocs-text-4'\n                },\n                wrapper: (d) =>\n                    `${d} mkdocs-hover-text-5 text-center d-flex flex-column align-items-center`,\n                untilFirst: 'mkdocs-text-4',\n            }),\n            style: {\n                textDecoration: 'none',\n            },\n            href: node.href,\n            children: [\n                {\n                    tag: 'div',\n                    innerText: node.name,\n                },\n            ],\n            onclick: (ev) => {\n                ev.preventDefault()\n                router.fireNavigateTo({ path: node.href })\n                if (node.href === '/') {\n                    router.explorerState.expandedNodes$.next(['/'])\n                    return\n                }\n                const expanded =\n                    router.explorerState.expandedNodes$.value.filter(\n                        (n) => {\n                            return n.startsWith(node.href)\n                        },\n                    )\n                router.explorerState.expandedNodes$.next(['/', ...expanded])\n            },\n        },\n    ]\n}",
-                        "startLine": 380,
-                        "endLine": 429,
+                        "startLine": 376,
+                        "endLine": 425,
                         "references": {
                             "BookmarkView": "@nav/api/MainModule/DefaultLayout.BookmarkView",
                             "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved",
@@ -492,8 +492,8 @@
                 "filePath": "src/lib/default-layout/top-banner.view.ts",
                 "declaration": "export class BookmarkView implements VirtualDOM<'div'>",
                 "implementation": "export class BookmarkView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector: string = 'mkdocs-BookmarkView mx-3'\n\n    public readonly tag = 'div'\n    public readonly class = BookmarkView.CssSelector\n    public readonly children: ChildrenLike\n    /**\n     * Initializes a new instance.\n     *\n     * @param _p Parameters\n     * @param _p.node Node associated to the bookmark.\n     * @param _p.router Application's router.\n     */\n    constructor({\n        node,\n        router,\n    }: {\n        node: NavNodeResolved<unknown, NavHeader>\n        router: Router\n    }) {\n        this.children = [\n            {\n                tag: 'a',\n                class: attr$({\n                    source$: router.path$,\n                    vdomMap: (path) => {\n                        return path === node.href\n                            ? 'mkdocs-text-5 selected mkdocs-text-focus'\n                            : 'mkdocs-text-4'\n                    },\n                    wrapper: (d) =>\n                        `${d} mkdocs-hover-text-5 text-center d-flex flex-column align-items-center`,\n                    untilFirst: 'mkdocs-text-4',\n                }),\n                style: {\n                    textDecoration: 'none',\n                },\n                href: node.href,\n                children: [\n                    {\n                        tag: 'div',\n                        innerText: node.name,\n                    },\n                ],\n                onclick: (ev) => {\n                    ev.preventDefault()\n                    router.fireNavigateTo({ path: node.href })\n                    if (node.href === '/') {\n                        router.explorerState.expandedNodes$.next(['/'])\n                        return\n                    }\n                    const expanded =\n                        router.explorerState.expandedNodes$.value.filter(\n                            (n) => {\n                                return n.startsWith(node.href)\n                            },\n                        )\n                    router.explorerState.expandedNodes$.next(['/', ...expanded])\n                },\n            },\n        ]\n    }\n}",
-                "startLine": 364,
-                "endLine": 430,
+                "startLine": 360,
+                "endLine": 426,
                 "references": {
                     "BookmarkView": "@nav/api/MainModule/DefaultLayout.BookmarkView",
                     "NavNodeResolved": "@nav/api/MainModule.NavNodeResolved",
@@ -960,9 +960,9 @@
                     "code": {
                         "filePath": "src/lib/default-layout/default-layout.view.ts",
                         "declaration": "constructor(params: DefaultLayoutParams, ctx?: ContextTrait)",
-                        "implementation": "constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {\n    this.context = ctx\n    const context = this.ctx().start('new Layout', ['View'])\n    const { router, page, topBanner, footer, displayOptions, bookmarks$ } =\n        params\n\n    this.displayOptions = Object.assign(\n        this.displayOptions,\n        displayOptions ?? {},\n    )\n\n    this.connectedCallback = this.getConnectedCallback(router)\n\n    const viewInputs = {\n        router,\n        layoutOptions: this.displayOptions,\n        bookmarks$,\n    }\n\n    const navigationBoundingBox$ = new ReplaySubject<DOMRect>(1)\n    const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)\n\n    const topBannerView = topBanner\n        ? new TopBanner({\n              router,\n              navigationBoundingBox$,\n              tocBoundingBox$,\n              navDisplayMode$: this.displayModeNav$,\n              spec: topBanner,\n              pageScrollTop$: this.pageScrollTop$,\n          })\n        : new EmptyTopBanner()\n\n    const footerView = new FooterWrapper(footer)\n\n    const contentView = page\n        ? page(viewInputs)\n        : new PageView({ router: router }, context)\n\n    const pageView = new WrapperPageView({\n        content: contentView,\n        displayOptions: this.displayOptions,\n        displayModeNav$: this.displayModeNav$,\n        displayModeToc$: this.displayModeToc$,\n        minHeight$: LayoutObserver.minPageHeight$(\n            this.appBoundingBox$,\n            topBannerView.boundingBox$,\n            footerView.boundingBox$,\n        ),\n    })\n    this.layoutObserver = new LayoutObserver(\n        {\n            boxes: {\n                pageBBox$: pageView.boundingBox$,\n                topBannerBBox$: topBannerView.boundingBox$,\n                footerBBox$: footerView.boundingBox$,\n                appBBox$: this.appBoundingBox$,\n                navBBox$: navigationBoundingBox$,\n                tocBBox$: tocBoundingBox$,\n            },\n            pageScrollTop$: this.pageScrollTop$,\n            displayModeNav$: this.displayModeNav$,\n            displayModeToc$: this.displayModeToc$,\n            displayModeOptions: this.displayOptions,\n        },\n        context,\n    )\n\n    const navView = new NavigationView({\n        router: router,\n        displayOptions: this.displayOptions,\n        bookmarks$: bookmarks$,\n    })\n    const { pined: pinedNav, expandable: expandableNav } = this.sideView(\n        navView,\n        this.displayModeNav$,\n        navigationBoundingBox$,\n        ExpandableNavColumn,\n    )\n\n    const tocView = new TocWrapperView({\n        router,\n        displayMode$: this.displayModeToc$,\n        displayOptions: this.displayOptions,\n        content$: contentView.content$,\n    })\n    const { pined: pinedToc, expandable: expandableToc } = this.sideView(\n        tocView,\n        this.displayModeToc$,\n        tocBoundingBox$,\n        ExpandableTocColumn,\n    )\n\n    const hSep = {\n        tag: 'div' as const,\n        class: 'flex-grow-1',\n    }\n    this.children = [\n        topBannerView,\n        {\n            tag: 'div',\n            class: 'd-flex w-100',\n            children: [\n                this.layoutObserver.switchMode('nav', {\n                    pined: pinedNav,\n                    expandable: expandableNav,\n                    removed: EmptyDiv,\n                }),\n                hSep,\n                pageView,\n                this.layoutObserver.switchMode('toc', {\n                    pined: hSep,\n                    expandable: EmptyDiv,\n                    removed: hSep,\n                }),\n                this.layoutObserver.switchMode('toc', {\n                    pined: pinedToc,\n                    expandable: expandableToc,\n                    removed: new EmptyToc(tocBoundingBox$),\n                }),\n            ],\n        },\n        footerView,\n    ]\n    context.exit()\n}",
+                        "implementation": "constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {\n    this.context = ctx\n    const context = this.ctx().start('new Layout', ['View'])\n    const {\n        router,\n        page,\n        topBanner,\n        footer,\n        displayOptions,\n        bookmarks$,\n        navFooter,\n    } = params\n\n    this.displayOptions = Object.assign(\n        this.displayOptions,\n        displayOptions ?? {},\n    )\n\n    this.connectedCallback = this.getConnectedCallback(router)\n\n    const viewInputs = {\n        router,\n        layoutOptions: this.displayOptions,\n        bookmarks$,\n    }\n\n    const navigationBoundingBox$ = new ReplaySubject<DOMRect>(1)\n    const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)\n\n    const topBannerView = topBanner\n        ? new TopBanner({\n              router,\n              navigationBoundingBox$,\n              tocBoundingBox$,\n              navDisplayMode$: this.displayModeNav$,\n              spec: topBanner,\n              pageScrollTop$: this.pageScrollTop$,\n          })\n        : new EmptyTopBanner()\n\n    const footerView = new FooterWrapper({\n        router,\n        footer,\n        withNav: navFooter,\n    })\n\n    const contentView = page\n        ? page(viewInputs)\n        : new PageView({ router: router }, context)\n\n    const pageView = new WrapperPageView({\n        content: contentView,\n        displayOptions: this.displayOptions,\n        displayModeNav$: this.displayModeNav$,\n        displayModeToc$: this.displayModeToc$,\n        minHeight$: LayoutObserver.minPageHeight$(\n            this.appBoundingBox$,\n            topBannerView.boundingBox$,\n            footerView.boundingBox$,\n        ),\n    })\n    this.layoutObserver = new LayoutObserver(\n        {\n            boxes: {\n                pageBBox$: pageView.boundingBox$,\n                topBannerBBox$: topBannerView.boundingBox$,\n                footerBBox$: footerView.boundingBox$,\n                appBBox$: this.appBoundingBox$,\n                navBBox$: navigationBoundingBox$,\n                tocBBox$: tocBoundingBox$,\n            },\n            pageScrollTop$: this.pageScrollTop$,\n            displayModeNav$: this.displayModeNav$,\n            displayModeToc$: this.displayModeToc$,\n            displayModeOptions: this.displayOptions,\n        },\n        context,\n    )\n\n    const navView = new NavigationView({\n        router: router,\n        displayOptions: this.displayOptions,\n        bookmarks$: bookmarks$,\n    })\n    const { pined: pinedNav, expandable: expandableNav } = this.sideView(\n        navView,\n        this.displayModeNav$,\n        navigationBoundingBox$,\n        ExpandableNavColumn,\n    )\n\n    const tocView = new TocWrapperView({\n        router,\n        displayMode$: this.displayModeToc$,\n        displayOptions: this.displayOptions,\n        content$: contentView.content$,\n    })\n    const { pined: pinedToc, expandable: expandableToc } = this.sideView(\n        tocView,\n        this.displayModeToc$,\n        tocBoundingBox$,\n        ExpandableTocColumn,\n    )\n\n    const hSep = {\n        tag: 'div' as const,\n        class: 'flex-grow-1',\n    }\n    this.children = [\n        topBannerView,\n        {\n            tag: 'div',\n            class: 'd-flex w-100',\n            children: [\n                this.layoutObserver.switchMode('nav', {\n                    pined: pinedNav,\n                    expandable: expandableNav,\n                    removed: EmptyDiv,\n                }),\n                hSep,\n                pageView,\n                this.layoutObserver.switchMode('toc', {\n                    pined: hSep,\n                    expandable: EmptyDiv,\n                    removed: hSep,\n                }),\n                this.layoutObserver.switchMode('toc', {\n                    pined: pinedToc,\n                    expandable: expandableToc,\n                    removed: new EmptyToc(tocBoundingBox$),\n                }),\n            ],\n        },\n        footerView,\n    ]\n    context.exit()\n}",
                         "startLine": 101,
-                        "endLine": 227,
+                        "endLine": 238,
                         "references": {
                             "Layout": "@nav/api/MainModule/DefaultLayout.Layout",
                             "DefaultLayoutParams": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams",
@@ -980,9 +980,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/default-layout.view.ts",
                 "declaration": "export class Layout implements VirtualDOM<'div'>",
-                "implementation": "export class Layout implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-DefaultLayoutView'\n    public readonly displayOptions: DisplayOptions = defaultDisplayOptions\n\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${Layout.CssSelector} d-flex flex-column h-100 w-100 overflow-y-auto overflow-x-hidden`\n\n    /**\n     * The display mode regarding the navigation panel.\n     */\n    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('pined')\n    /**\n     * The display mode regarding the table of content.\n     */\n    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('pined')\n\n    public readonly connectedCallback: (e: RxHTMLElement<'div'>) => void\n\n    private readonly context?: ContextTrait\n\n    public readonly pageScrollTop$ = new BehaviorSubject(0)\n\n    public readonly layoutObserver: LayoutObserver\n\n    private appBoundingBox$ = new ReplaySubject<DOMRect>(1)\n    /**\n     * Initializes a new instance.\n     *\n     * @param params See {@link DefaultLayoutParams}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {\n        this.context = ctx\n        const context = this.ctx().start('new Layout', ['View'])\n        const { router, page, topBanner, footer, displayOptions, bookmarks$ } =\n            params\n\n        this.displayOptions = Object.assign(\n            this.displayOptions,\n            displayOptions ?? {},\n        )\n\n        this.connectedCallback = this.getConnectedCallback(router)\n\n        const viewInputs = {\n            router,\n            layoutOptions: this.displayOptions,\n            bookmarks$,\n        }\n\n        const navigationBoundingBox$ = new ReplaySubject<DOMRect>(1)\n        const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)\n\n        const topBannerView = topBanner\n            ? new TopBanner({\n                  router,\n                  navigationBoundingBox$,\n                  tocBoundingBox$,\n                  navDisplayMode$: this.displayModeNav$,\n                  spec: topBanner,\n                  pageScrollTop$: this.pageScrollTop$,\n              })\n            : new EmptyTopBanner()\n\n        const footerView = new FooterWrapper(footer)\n\n        const contentView = page\n            ? page(viewInputs)\n            : new PageView({ router: router }, context)\n\n        const pageView = new WrapperPageView({\n            content: contentView,\n            displayOptions: this.displayOptions,\n            displayModeNav$: this.displayModeNav$,\n            displayModeToc$: this.displayModeToc$,\n            minHeight$: LayoutObserver.minPageHeight$(\n                this.appBoundingBox$,\n                topBannerView.boundingBox$,\n                footerView.boundingBox$,\n            ),\n        })\n        this.layoutObserver = new LayoutObserver(\n            {\n                boxes: {\n                    pageBBox$: pageView.boundingBox$,\n                    topBannerBBox$: topBannerView.boundingBox$,\n                    footerBBox$: footerView.boundingBox$,\n                    appBBox$: this.appBoundingBox$,\n                    navBBox$: navigationBoundingBox$,\n                    tocBBox$: tocBoundingBox$,\n                },\n                pageScrollTop$: this.pageScrollTop$,\n                displayModeNav$: this.displayModeNav$,\n                displayModeToc$: this.displayModeToc$,\n                displayModeOptions: this.displayOptions,\n            },\n            context,\n        )\n\n        const navView = new NavigationView({\n            router: router,\n            displayOptions: this.displayOptions,\n            bookmarks$: bookmarks$,\n        })\n        const { pined: pinedNav, expandable: expandableNav } = this.sideView(\n            navView,\n            this.displayModeNav$,\n            navigationBoundingBox$,\n            ExpandableNavColumn,\n        )\n\n        const tocView = new TocWrapperView({\n            router,\n            displayMode$: this.displayModeToc$,\n            displayOptions: this.displayOptions,\n            content$: contentView.content$,\n        })\n        const { pined: pinedToc, expandable: expandableToc } = this.sideView(\n            tocView,\n            this.displayModeToc$,\n            tocBoundingBox$,\n            ExpandableTocColumn,\n        )\n\n        const hSep = {\n            tag: 'div' as const,\n            class: 'flex-grow-1',\n        }\n        this.children = [\n            topBannerView,\n            {\n                tag: 'div',\n                class: 'd-flex w-100',\n                children: [\n                    this.layoutObserver.switchMode('nav', {\n                        pined: pinedNav,\n                        expandable: expandableNav,\n                        removed: EmptyDiv,\n                    }),\n                    hSep,\n                    pageView,\n                    this.layoutObserver.switchMode('toc', {\n                        pined: hSep,\n                        expandable: EmptyDiv,\n                        removed: hSep,\n                    }),\n                    this.layoutObserver.switchMode('toc', {\n                        pined: pinedToc,\n                        expandable: expandableToc,\n                        removed: new EmptyToc(tocBoundingBox$),\n                    }),\n                ],\n            },\n            footerView,\n        ]\n        context.exit()\n    }\n\n    ctx(ctx?: ContextTrait) {\n        if (ctx) {\n            return ctx\n        }\n        return this.context ?? new NoContext()\n    }\n\n    private sideView<T extends TocWrapperView | NavigationView>(\n        content: T,\n        displayMode$: BehaviorSubject<DisplayMode>,\n        bbox$: Subject<BBox>,\n        Expandable: new (\n            p: ExpandableParams<T>,\n        ) => T extends TocWrapperView\n            ? ExpandableTocColumn\n            : ExpandableNavColumn,\n    ): {\n        pined: AnyVirtualDOM\n        expandable: AnyVirtualDOM\n    } {\n        const pined = StickyColumnContainer.wrap(\n            content,\n            this.layoutObserver,\n            bbox$,\n        )\n        const expandable = new Expandable({\n            content,\n            layoutObserver: this.layoutObserver,\n            displayOptions: this.displayOptions,\n            displayMode$,\n            boundingBox$: bbox$,\n        })\n        return {\n            pined,\n            expandable,\n        }\n    }\n\n    private getConnectedCallback(router: Router) {\n        return (e: RxHTMLElement<'div'>) => {\n            const patchScrollTo = ({ top, left, behavior }: ScrollToOptions) =>\n                this.layoutObserver.boxes$\n                    .pipe(take(1))\n                    .subscribe(({ topBanner }) => {\n                        e.scrollTo({\n                            left,\n                            behavior,\n                            top: top ? top - topBanner.height : 0,\n                        })\n                    })\n\n            router.setScrollableElement(e, patchScrollTo)\n            e.ownSubscriptions(\n                router.path$.subscribe(() => {\n                    if (this.displayModeNav$.value === 'expanded') {\n                        this.displayModeNav$.next('hidden')\n                    }\n                }),\n            )\n            e.addEventListener('scroll', () => {\n                this.pageScrollTop$.next(e.scrollTop)\n            })\n            plugBoundingBoxObserver(e, this.appBoundingBox$)\n        }\n    }\n}",
+                "implementation": "export class Layout implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-DefaultLayoutView'\n    public readonly displayOptions: DisplayOptions = defaultDisplayOptions\n\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${Layout.CssSelector} d-flex flex-column h-100 w-100 overflow-y-auto overflow-x-hidden`\n\n    /**\n     * The display mode regarding the navigation panel.\n     */\n    public readonly displayModeNav$ = new BehaviorSubject<DisplayMode>('pined')\n    /**\n     * The display mode regarding the table of content.\n     */\n    public readonly displayModeToc$ = new BehaviorSubject<DisplayMode>('pined')\n\n    public readonly connectedCallback: (e: RxHTMLElement<'div'>) => void\n\n    private readonly context?: ContextTrait\n\n    public readonly pageScrollTop$ = new BehaviorSubject(0)\n\n    public readonly layoutObserver: LayoutObserver\n\n    private appBoundingBox$ = new ReplaySubject<DOMRect>(1)\n    /**\n     * Initializes a new instance.\n     *\n     * @param params See {@link DefaultLayoutParams}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {\n        this.context = ctx\n        const context = this.ctx().start('new Layout', ['View'])\n        const {\n            router,\n            page,\n            topBanner,\n            footer,\n            displayOptions,\n            bookmarks$,\n            navFooter,\n        } = params\n\n        this.displayOptions = Object.assign(\n            this.displayOptions,\n            displayOptions ?? {},\n        )\n\n        this.connectedCallback = this.getConnectedCallback(router)\n\n        const viewInputs = {\n            router,\n            layoutOptions: this.displayOptions,\n            bookmarks$,\n        }\n\n        const navigationBoundingBox$ = new ReplaySubject<DOMRect>(1)\n        const tocBoundingBox$ = new ReplaySubject<DOMRect>(1)\n\n        const topBannerView = topBanner\n            ? new TopBanner({\n                  router,\n                  navigationBoundingBox$,\n                  tocBoundingBox$,\n                  navDisplayMode$: this.displayModeNav$,\n                  spec: topBanner,\n                  pageScrollTop$: this.pageScrollTop$,\n              })\n            : new EmptyTopBanner()\n\n        const footerView = new FooterWrapper({\n            router,\n            footer,\n            withNav: navFooter,\n        })\n\n        const contentView = page\n            ? page(viewInputs)\n            : new PageView({ router: router }, context)\n\n        const pageView = new WrapperPageView({\n            content: contentView,\n            displayOptions: this.displayOptions,\n            displayModeNav$: this.displayModeNav$,\n            displayModeToc$: this.displayModeToc$,\n            minHeight$: LayoutObserver.minPageHeight$(\n                this.appBoundingBox$,\n                topBannerView.boundingBox$,\n                footerView.boundingBox$,\n            ),\n        })\n        this.layoutObserver = new LayoutObserver(\n            {\n                boxes: {\n                    pageBBox$: pageView.boundingBox$,\n                    topBannerBBox$: topBannerView.boundingBox$,\n                    footerBBox$: footerView.boundingBox$,\n                    appBBox$: this.appBoundingBox$,\n                    navBBox$: navigationBoundingBox$,\n                    tocBBox$: tocBoundingBox$,\n                },\n                pageScrollTop$: this.pageScrollTop$,\n                displayModeNav$: this.displayModeNav$,\n                displayModeToc$: this.displayModeToc$,\n                displayModeOptions: this.displayOptions,\n            },\n            context,\n        )\n\n        const navView = new NavigationView({\n            router: router,\n            displayOptions: this.displayOptions,\n            bookmarks$: bookmarks$,\n        })\n        const { pined: pinedNav, expandable: expandableNav } = this.sideView(\n            navView,\n            this.displayModeNav$,\n            navigationBoundingBox$,\n            ExpandableNavColumn,\n        )\n\n        const tocView = new TocWrapperView({\n            router,\n            displayMode$: this.displayModeToc$,\n            displayOptions: this.displayOptions,\n            content$: contentView.content$,\n        })\n        const { pined: pinedToc, expandable: expandableToc } = this.sideView(\n            tocView,\n            this.displayModeToc$,\n            tocBoundingBox$,\n            ExpandableTocColumn,\n        )\n\n        const hSep = {\n            tag: 'div' as const,\n            class: 'flex-grow-1',\n        }\n        this.children = [\n            topBannerView,\n            {\n                tag: 'div',\n                class: 'd-flex w-100',\n                children: [\n                    this.layoutObserver.switchMode('nav', {\n                        pined: pinedNav,\n                        expandable: expandableNav,\n                        removed: EmptyDiv,\n                    }),\n                    hSep,\n                    pageView,\n                    this.layoutObserver.switchMode('toc', {\n                        pined: hSep,\n                        expandable: EmptyDiv,\n                        removed: hSep,\n                    }),\n                    this.layoutObserver.switchMode('toc', {\n                        pined: pinedToc,\n                        expandable: expandableToc,\n                        removed: new EmptyToc(tocBoundingBox$),\n                    }),\n                ],\n            },\n            footerView,\n        ]\n        context.exit()\n    }\n\n    ctx(ctx?: ContextTrait) {\n        if (ctx) {\n            return ctx\n        }\n        return this.context ?? new NoContext()\n    }\n\n    private sideView<T extends TocWrapperView | NavigationView>(\n        content: T,\n        displayMode$: BehaviorSubject<DisplayMode>,\n        bbox$: Subject<BBox>,\n        Expandable: new (\n            p: ExpandableParams<T>,\n        ) => T extends TocWrapperView\n            ? ExpandableTocColumn\n            : ExpandableNavColumn,\n    ): {\n        pined: AnyVirtualDOM\n        expandable: AnyVirtualDOM\n    } {\n        const pined = StickyColumnContainer.wrap(\n            content,\n            this.layoutObserver,\n            bbox$,\n        )\n        const expandable = new Expandable({\n            content,\n            layoutObserver: this.layoutObserver,\n            displayOptions: this.displayOptions,\n            displayMode$,\n            boundingBox$: bbox$,\n        })\n        return {\n            pined,\n            expandable,\n        }\n    }\n\n    private getConnectedCallback(router: Router) {\n        return (e: RxHTMLElement<'div'>) => {\n            const patchScrollTo = ({ top, left, behavior }: ScrollToOptions) =>\n                this.layoutObserver.boxes$\n                    .pipe(take(1))\n                    .subscribe(({ topBanner }) => {\n                        e.scrollTo({\n                            left,\n                            behavior,\n                            top: top ? top - topBanner.height : 0,\n                        })\n                    })\n\n            router.setScrollableElement(e, patchScrollTo)\n            e.ownSubscriptions(\n                router.path$.subscribe(() => {\n                    if (this.displayModeNav$.value === 'expanded') {\n                        this.displayModeNav$.next('hidden')\n                    }\n                }),\n            )\n            e.addEventListener('scroll', () => {\n                this.pageScrollTop$.next(e.scrollTop)\n            })\n            plugBoundingBoxObserver(e, this.appBoundingBox$)\n        }\n    }\n}",
                 "startLine": 66,
-                "endLine": 294,
+                "endLine": 305,
                 "references": {
                     "Layout": "@nav/api/MainModule/DefaultLayout.Layout",
                     "DefaultLayoutParams": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams",
@@ -993,6 +993,289 @@
                     "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "LayoutObserver",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Observes layout dimensions and visibility as screen size or display mode changes.\nUsed to coordinate layout behaviors like navigation or TOC visibility and transitions.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "LayoutObserver",
+            "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver",
+            "attributes": [
+                {
+                    "name": "boxes$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Emits rounded layout bounding boxes whenever their dimensions change.\nShared replayed for efficient subscriptions.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LayoutObserver.boxes$",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver.boxes$",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "public readonly boxes$: Observable<{\n        page: BBox\n        topBanner: BBox\n        footer: BBox\n        app: BBox\n        nav: BBox\n        toc: BBox\n    }>",
+                        "implementation": "",
+                        "startLine": 371,
+                        "endLine": 372,
+                        "references": {
+                            "boxes$": "@nav/api/MainModule/DefaultLayout.LayoutObserver.boxes$",
+                            "BBox": "@nav/api/MainModule/DefaultLayout.BBox",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    }
+                },
+                {
+                    "name": "displayModeNav$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Tracks the current display mode of the navigation panel. May be externally controlled or automatically updated.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LayoutObserver.displayModeNav$",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver.displayModeNav$",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "public readonly displayModeNav$: BehaviorSubject<DisplayMode>",
+                        "implementation": "",
+                        "startLine": 390,
+                        "endLine": 391,
+                        "references": {
+                            "displayModeNav$": "@nav/api/MainModule/DefaultLayout.LayoutObserver.displayModeNav$",
+                            "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
+                        }
+                    }
+                },
+                {
+                    "name": "displayModeOptions",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Holds configuration for display mode toggling and force-mode settings.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LayoutObserver.displayModeOptions",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver.displayModeOptions",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "public readonly displayModeOptions: DisplayModeOptions",
+                        "implementation": "",
+                        "startLine": 386,
+                        "endLine": 387,
+                        "references": {
+                            "displayModeOptions": "@nav/api/MainModule/DefaultLayout.LayoutObserver.displayModeOptions",
+                            "DisplayModeOptions": "@nav/api/MainModule/DefaultLayout.DisplayModeOptions"
+                        }
+                    }
+                },
+                {
+                    "name": "displayModeToc$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Tracks the current display mode of the TOC (Table of Contents) panel.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LayoutObserver.displayModeToc$",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver.displayModeToc$",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "public readonly displayModeToc$: BehaviorSubject<DisplayMode>",
+                        "implementation": "",
+                        "startLine": 394,
+                        "endLine": 395,
+                        "references": {
+                            "displayModeToc$": "@nav/api/MainModule/DefaultLayout.LayoutObserver.displayModeToc$",
+                            "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
+                        }
+                    }
+                },
+                {
+                    "name": "pageVisible$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Represents the visible vertical area of the page content, taking banners and scroll position into account.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LayoutObserver.pageVisible$",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver.pageVisible$",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "public readonly pageVisible$: Observable<{ top: number; height: number }>",
+                        "implementation": "",
+                        "startLine": 382,
+                        "endLine": 383,
+                        "references": {
+                            "pageVisible$": "@nav/api/MainModule/DefaultLayout.LayoutObserver.pageVisible$",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    }
+                }
+            ],
+            "callables": [
+                {
+                    "name": "constructor",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates a new instance to watch layout bounding boxes and display mode settings.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **boxes**: Various bounding box observables.\n*  **displayModeNav$**: Reactive subject controlling navigation display mode.\n*  **displayModeOptions**: Configuration for display mode behaviors .\n*  **displayModeToc$**: Reactive subject controlling TOC display mode.\n*  **pageScrollTop$**: Stream of vertical scroll position for the page.\n*  **ctx**: Logging and debugging context provider.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "LayoutObserver.constructor",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.LayoutObserver.constructor",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "constructor(\n    p: {\n        boxes: {\n            pageBBox$: BBox$\n            topBannerBBox$: BBox$\n            footerBBox$: BBox$\n            appBBox$: BBox$\n            navBBox$: BBox$\n            tocBBox$: BBox$\n        }\n        pageScrollTop$: Observable<number>\n        displayModeNav$: BehaviorSubject<DisplayMode>\n        displayModeToc$: BehaviorSubject<DisplayMode>\n        displayModeOptions: DisplayModeOptions\n    },\n    ctx?: ContextTrait,\n)",
+                        "implementation": "constructor(\n    p: {\n        boxes: {\n            pageBBox$: BBox$\n            topBannerBBox$: BBox$\n            footerBBox$: BBox$\n            appBBox$: BBox$\n            navBBox$: BBox$\n            tocBBox$: BBox$\n        }\n        pageScrollTop$: Observable<number>\n        displayModeNav$: BehaviorSubject<DisplayMode>\n        displayModeToc$: BehaviorSubject<DisplayMode>\n        displayModeOptions: DisplayModeOptions\n    },\n    ctx?: ContextTrait,\n) {\n    const context = (ctx ?? new NoContext()).start('new LayoutObserver', [\n        'View',\n    ])\n\n    this.displayModeNav$ = p.displayModeNav$\n    this.displayModeToc$ = p.displayModeToc$\n    this.displayModeOptions = p.displayModeOptions\n    const round = (rect: BBox): BBox => ({\n        width: Math.round(rect.width),\n        height: Math.round(rect.height),\n    })\n    this.boxes$ = combineLatest([\n        p.boxes.pageBBox$,\n        p.boxes.topBannerBBox$,\n        p.boxes.footerBBox$,\n        p.boxes.appBBox$,\n        p.boxes.navBBox$,\n        p.boxes.tocBBox$,\n    ]).pipe(\n        map(([page, topBanner, footer, app, nav, toc]) => {\n            return {\n                page: round(page),\n                topBanner: round(topBanner),\n                footer: round(footer),\n                app: round(app),\n                nav: round(nav),\n                toc: round(toc),\n            }\n        }),\n        distinctUntilChanged(\n            (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),\n        ),\n        tap((boxes) => {\n            context.info('BBox update', boxes)\n            this.displayModeSwitcher(boxes.app, context)\n        }),\n        shareReplay({ bufferSize: 1, refCount: true }),\n    )\n    this.pageVisible$ = combineLatest([this.boxes$, p.pageScrollTop$]).pipe(\n        map(([{ page, topBanner, app }, scrollTop]) => {\n            const remainingPageHeight = page.height - scrollTop\n            const pageVisibleHeight =\n                remainingPageHeight > app.height\n                    ? app.height - topBanner.height\n                    : remainingPageHeight\n            return {\n                top: topBanner.height,\n                height: pageVisibleHeight,\n            }\n        }),\n        shareReplay({ bufferSize: 1, refCount: true }),\n    )\n\n    if (this.displayModeOptions.forceNavDisplayMode) {\n        this.displayModeNav$.next(\n            this.displayModeOptions.forceNavDisplayMode,\n        )\n    }\n    if (this.displayModeOptions.forceTocDisplayMode) {\n        this.displayModeToc$.next(\n            this.displayModeOptions.forceTocDisplayMode,\n        )\n    }\n}",
+                        "startLine": 407,
+                        "endLine": 488,
+                        "references": {
+                            "LayoutObserver": "@nav/api/MainModule/DefaultLayout.LayoutObserver",
+                            "BBox$": "@nav/api/MainModule/DefaultLayout.BBox$",
+                            "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
+                            "DisplayModeOptions": "@nav/api/MainModule/DefaultLayout.DisplayModeOptions",
+                            "ContextTrait": "@nav/api/MainModule.ContextTrait",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                            "Observable": "https://rxjs.dev/guide/observable"
+                        }
+                    },
+                    "semantic": {
+                        "role": "constructor",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/default-layout/common.ts",
+                "declaration": "export class LayoutObserver",
+                "implementation": "export class LayoutObserver {\n    /**\n     * Emits rounded layout bounding boxes whenever their dimensions change.\n     * Shared replayed for efficient subscriptions.\n     */\n    public readonly boxes$: Observable<{\n        page: BBox\n        topBanner: BBox\n        footer: BBox\n        app: BBox\n        nav: BBox\n        toc: BBox\n    }>\n    /**\n     * Represents the visible vertical area of the page content, taking banners and scroll position into account.\n     */\n    public readonly pageVisible$: Observable<{ top: number; height: number }>\n    /**\n     * Holds configuration for display mode toggling and force-mode settings.\n     */\n    public readonly displayModeOptions: DisplayModeOptions\n    /**\n     * Tracks the current display mode of the navigation panel. May be externally controlled or automatically updated.\n     */\n    public readonly displayModeNav$: BehaviorSubject<DisplayMode>\n    /**\n     * Tracks the current display mode of the TOC (Table of Contents) panel.\n     */\n    public readonly displayModeToc$: BehaviorSubject<DisplayMode>\n\n    /**\n     * Creates a new instance to watch layout bounding boxes and display mode settings.\n     *\n     * @param p\n     * @param p.boxes Various bounding box observables.\n     * @param p.pageScrollTop$ Stream of vertical scroll position for the page.\n     * @param p.displayModeNav$ Reactive subject controlling navigation display mode.\n     * @param p.displayModeToc$ Reactive subject controlling TOC display mode.\n     * @param p.displayModeOptions Configuration for display mode behaviors .\n     * @param ctx Logging and debugging context provider.\n     */\n    constructor(\n        p: {\n            boxes: {\n                pageBBox$: BBox$\n                topBannerBBox$: BBox$\n                footerBBox$: BBox$\n                appBBox$: BBox$\n                navBBox$: BBox$\n                tocBBox$: BBox$\n            }\n            pageScrollTop$: Observable<number>\n            displayModeNav$: BehaviorSubject<DisplayMode>\n            displayModeToc$: BehaviorSubject<DisplayMode>\n            displayModeOptions: DisplayModeOptions\n        },\n        ctx?: ContextTrait,\n    ) {\n        const context = (ctx ?? new NoContext()).start('new LayoutObserver', [\n            'View',\n        ])\n\n        this.displayModeNav$ = p.displayModeNav$\n        this.displayModeToc$ = p.displayModeToc$\n        this.displayModeOptions = p.displayModeOptions\n        const round = (rect: BBox): BBox => ({\n            width: Math.round(rect.width),\n            height: Math.round(rect.height),\n        })\n        this.boxes$ = combineLatest([\n            p.boxes.pageBBox$,\n            p.boxes.topBannerBBox$,\n            p.boxes.footerBBox$,\n            p.boxes.appBBox$,\n            p.boxes.navBBox$,\n            p.boxes.tocBBox$,\n        ]).pipe(\n            map(([page, topBanner, footer, app, nav, toc]) => {\n                return {\n                    page: round(page),\n                    topBanner: round(topBanner),\n                    footer: round(footer),\n                    app: round(app),\n                    nav: round(nav),\n                    toc: round(toc),\n                }\n            }),\n            distinctUntilChanged(\n                (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),\n            ),\n            tap((boxes) => {\n                context.info('BBox update', boxes)\n                this.displayModeSwitcher(boxes.app, context)\n            }),\n            shareReplay({ bufferSize: 1, refCount: true }),\n        )\n        this.pageVisible$ = combineLatest([this.boxes$, p.pageScrollTop$]).pipe(\n            map(([{ page, topBanner, app }, scrollTop]) => {\n                const remainingPageHeight = page.height - scrollTop\n                const pageVisibleHeight =\n                    remainingPageHeight > app.height\n                        ? app.height - topBanner.height\n                        : remainingPageHeight\n                return {\n                    top: topBanner.height,\n                    height: pageVisibleHeight,\n                }\n            }),\n            shareReplay({ bufferSize: 1, refCount: true }),\n        )\n\n        if (this.displayModeOptions.forceNavDisplayMode) {\n            this.displayModeNav$.next(\n                this.displayModeOptions.forceNavDisplayMode,\n            )\n        }\n        if (this.displayModeOptions.forceTocDisplayMode) {\n            this.displayModeToc$.next(\n                this.displayModeOptions.forceTocDisplayMode,\n            )\n        }\n    }\n    private displayModeSwitcher(bbox: BBox, context: ContextTrait) {\n        const switcher = (\n            elem: 'nav' | 'toc',\n            width: number,\n            treshold: number,\n            removed: number,\n            displayMode$: BehaviorSubject<DisplayMode>,\n        ) => {\n            let nextValue: DisplayMode | undefined = undefined\n            if (\n                width <= treshold &&\n                ['removed', 'pined'].includes(displayMode$.value)\n            ) {\n                nextValue = 'hidden'\n            }\n            if (width < removed) {\n                nextValue = 'removed'\n            }\n            if (width > treshold) {\n                nextValue = 'pined'\n            }\n\n            if (nextValue && displayMode$.value !== nextValue) {\n                context.info(`Switch mode for ${elem}`, {\n                    old: displayMode$.value,\n                    new: nextValue,\n                })\n                displayMode$.next(nextValue)\n            }\n        }\n        if (this.displayModeOptions.forceTocDisplayMode === undefined) {\n            switcher(\n                'toc',\n                bbox.width,\n                this.displayModeOptions.toggleTocWidth,\n                this.displayModeOptions.toggleNavWidth,\n                this.displayModeToc$,\n            )\n        }\n        if (this.displayModeOptions.forceNavDisplayMode === undefined) {\n            switcher(\n                'nav',\n                bbox.width,\n                this.displayModeOptions.toggleNavWidth,\n                0,\n                this.displayModeNav$,\n            )\n        }\n    }\n\n    switchMode(\n        source: 'nav' | 'toc',\n        mapTo: {\n            pined: AnyVirtualDOM\n            expandable: AnyVirtualDOM\n            removed: AnyVirtualDOM\n        },\n    ): RxChild {\n        const source$ =\n            source === 'nav' ? this.displayModeNav$ : this.displayModeToc$\n        return child$({\n            source$: source$.pipe(\n                map((mode) => {\n                    if (mode === 'removed') {\n                        return 'removed'\n                    }\n                    return mode === 'pined' ? 'pined' : 'expandable'\n                }),\n                distinctUntilChanged(),\n            ),\n            vdomMap: (mode: 'pined' | 'expandable' | 'removed') => {\n                if (mode === 'removed') {\n                    return mapTo.removed\n                }\n                return mode === 'pined' ? mapTo.pined : mapTo.expandable\n            },\n        })\n    }\n\n    static minPageHeight$(app$: BBox$, topBanner$: BBox$, footer$: BBox$) {\n        return combineLatest([app$, topBanner$, footer$]).pipe(\n            map(\n                ([appBB, topBB, footerBB]) =>\n                    appBB.height - topBB.height - footerBB.height,\n            ),\n        )\n    }\n}",
+                "startLine": 366,
+                "endLine": 576,
+                "references": {
+                    "LayoutObserver": "@nav/api/MainModule/DefaultLayout.LayoutObserver",
+                    "BBox$": "@nav/api/MainModule/DefaultLayout.BBox$",
+                    "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
+                    "DisplayModeOptions": "@nav/api/MainModule/DefaultLayout.DisplayModeOptions",
+                    "ContextTrait": "@nav/api/MainModule.ContextTrait",
+                    "BBox": "@nav/api/MainModule/DefaultLayout.BBox",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "RxChild": "/apps/@rx-vdom/doc/latest?nav=/api.RxChild"
                 }
             },
             "semantic": {
@@ -1227,6 +1510,188 @@
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "NavFooterView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "An horizontal banner, usually included in footer, providing links to **Previous** & **Next**.\nIt is included in the default layout's footer when  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.navFooter\" semantic=\"attribute\">DefaultLayoutParams.navFooter</mkapi-api-link>  is turned on.\n\nRegarding siblings look up, see  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.getSiblings$\" semantic=\"function\">getSiblings$</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "NavFooterView",
+            "navPath": "@nav/api/MainModule/DefaultLayout.NavFooterView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "NavFooterView.children",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.NavFooterView.children",
+                    "code": {
+                        "filePath": "src/lib/default-layout/footer.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 50,
+                        "endLine": 51,
+                        "references": {
+                            "children": "@nav/api/MainModule/DefaultLayout.NavFooterView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The class associated with the element, equivalent to the  `className`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "NavFooterView.class",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.NavFooterView.class",
+                    "code": {
+                        "filePath": "src/lib/default-layout/footer.view.ts",
+                        "declaration": "public readonly class = `${NavFooterView.CssSelector} d-flex flex-wrap align-items-center w-100 border-top mkdocs-bg-5 mkdocs-lighter mkdocs-text-5 py-2`",
+                        "implementation": "",
+                        "startLine": 49,
+                        "endLine": 50,
+                        "references": {
+                            "class": "@nav/api/MainModule/DefaultLayout.NavFooterView.class"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "NavFooterView.tag",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.NavFooterView.tag",
+                    "code": {
+                        "filePath": "src/lib/default-layout/footer.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 48,
+                        "endLine": 49,
+                        "references": {
+                            "tag": "@nav/api/MainModule/DefaultLayout.NavFooterView.tag"
+                        }
+                    }
+                },
+                {
+                    "name": "CssSelector",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Component's class name for CSS query.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "NavFooterView.CssSelector",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.NavFooterView.CssSelector",
+                    "code": {
+                        "filePath": "src/lib/default-layout/footer.view.ts",
+                        "declaration": "static readonly CssSelector = 'mkdocs-NavFooterView'",
+                        "implementation": "",
+                        "startLine": 47,
+                        "endLine": 48,
+                        "references": {
+                            "CssSelector": "@nav/api/MainModule/DefaultLayout.NavFooterView.CssSelector"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/default-layout/footer.view.ts",
+                "declaration": "export class NavFooterView implements VirtualDOM<'div'>",
+                "implementation": "export class NavFooterView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NavFooterView'\n    public readonly tag = 'div'\n    public readonly class = `${NavFooterView.CssSelector} d-flex flex-wrap align-items-center w-100 border-top mkdocs-bg-5 mkdocs-lighter mkdocs-text-5 py-2`\n    public readonly children: ChildrenLike\n\n    constructor(params: { router: Router }) {\n        const { router } = params\n        const nav$ = getSiblings$(router)\n        const sep = {\n            tag: 'div' as const,\n            class: 'flex-grow-1',\n        }\n        this.children = [\n            sep,\n            child$({\n                source$: nav$,\n                vdomMap: ({ prev }) => {\n                    return prev\n                        ? new NavFooterAnchorView({\n                              router,\n                              direction: 'Previous',\n                              node: prev,\n                          })\n                        : EmptyDiv\n                },\n            }),\n            sep,\n            sep,\n            child$({\n                source$: nav$,\n                vdomMap: ({ next }) => {\n                    return next\n                        ? new NavFooterAnchorView({\n                              router,\n                              direction: 'Next',\n                              node: next,\n                          })\n                        : EmptyDiv\n                },\n            }),\n            sep,\n        ]\n    }\n}",
+                "startLine": 43,
+                "endLine": 91,
+                "references": {
+                    "NavFooterView": "@nav/api/MainModule/DefaultLayout.NavFooterView",
+                    "Router": "@nav/api/MainModule.Router",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
@@ -1665,7 +2130,7 @@
                     "navPath": "@nav/api/MainModule/DefaultLayout.NavigationView.class",
                     "code": {
                         "filePath": "src/lib/default-layout/navigation.view.ts",
-                        "declaration": "public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100`",
+                        "declaration": "public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100 overflow-auto mkdocs-thin-v-scroller`",
                         "implementation": "",
                         "startLine": 33,
                         "endLine": 34,
@@ -1836,7 +2301,7 @@
             "code": {
                 "filePath": "src/lib/default-layout/navigation.view.ts",
                 "declaration": "export class NavigationView implements VirtualDOM<'div'>",
-                "implementation": "export class NavigationView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NavigationView'\n    public readonly router: Router<unknown, NavHeader>\n\n    public readonly tag = 'div'\n    public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100`\n    public readonly style: CSSAttribute\n    public readonly children: ChildrenLike\n    public readonly displayOptions: DisplayOptions\n    public readonly bookmarks$?: BehaviorSubject<string[]>\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param params\n     * @param params.router Application router.\n     * @param params.displayOptions Layout display options.\n     * @param params.bookmarks$ State of bookmarked URLs.\n     */\n    constructor(params: {\n        router: Router<unknown, NavHeader>\n        displayOptions: DisplayOptions\n        bookmarks$?: BehaviorSubject<string[]>\n    }) {\n        Object.assign(this, params)\n        this.style = {\n            minWidth: `${String(params.displayOptions.navMinWidth)}px`,\n            //height: `calc(100vh-${params.displayOptions.topStickyPaddingMax}-${params.displayOptions.bottomStickyPaddingMax})`,\n        }\n        this.children = [\n            new ImmutableTree.View({\n                state: this.router.explorerState,\n                headerView: (_, node) => {\n                    if (node instanceof NavNodePromise) {\n                        return {\n                            tag: 'i' as const,\n                            class: 'fas fa-spinner fa-spin',\n                        }\n                    }\n                    if (node.href === '/') {\n                        return EmptyDiv\n                    }\n                    return new NavHeaderView({\n                        node,\n                        router: this.router,\n                        bookmarks$: this.bookmarks$,\n                    })\n                },\n                options: {\n                    autoScroll: {\n                        trigger: 'not-visible',\n                        top: 50,\n                    },\n                },\n            }),\n        ]\n    }\n}",
+                "implementation": "export class NavigationView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NavigationView'\n    public readonly router: Router<unknown, NavHeader>\n\n    public readonly tag = 'div'\n    public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100 overflow-auto mkdocs-thin-v-scroller`\n    public readonly style: CSSAttribute\n    public readonly children: ChildrenLike\n    public readonly displayOptions: DisplayOptions\n    public readonly bookmarks$?: BehaviorSubject<string[]>\n\n    /**\n     * Initializes a new instance.\n     *\n     * @param params\n     * @param params.router Application router.\n     * @param params.displayOptions Layout display options.\n     * @param params.bookmarks$ State of bookmarked URLs.\n     */\n    constructor(params: {\n        router: Router<unknown, NavHeader>\n        displayOptions: DisplayOptions\n        bookmarks$?: BehaviorSubject<string[]>\n    }) {\n        Object.assign(this, params)\n        this.style = {\n            minWidth: `${String(params.displayOptions.navMinWidth)}px`,\n            //height: `calc(100vh-${params.displayOptions.topStickyPaddingMax}-${params.displayOptions.bottomStickyPaddingMax})`,\n        }\n        this.children = [\n            new ImmutableTree.View({\n                state: this.router.explorerState,\n                headerView: (_, node) => {\n                    if (node instanceof NavNodePromise) {\n                        return {\n                            tag: 'i' as const,\n                            class: 'fas fa-spinner fa-spin',\n                        }\n                    }\n                    if (node.href === '/') {\n                        return EmptyDiv\n                    }\n                    return new NavHeaderView({\n                        node,\n                        router: this.router,\n                        bookmarks$: this.bookmarks$,\n                    })\n                },\n                options: {\n                    autoScroll: {\n                        trigger: 'not-visible',\n                        top: 50,\n                    },\n                },\n            }),\n        ]\n    }\n}",
                 "startLine": 25,
                 "endLine": 86,
                 "references": {
@@ -3516,9 +3981,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/top-banner.view.ts",
                 "declaration": "export class TopBannerExpanded implements VirtualDOM<'div'>",
-                "implementation": "export class TopBannerExpanded implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-TopBannerExpanded'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${TopBannerExpanded.CssSelector} d-flex justify-content-center py-1`\n\n    constructor({\n        router,\n        navigationBoundingBox$,\n        tocBoundingBox$,\n        spec,\n    }: {\n        router: Router\n        navigationBoundingBox$: Observable<DOMRect>\n        tocBoundingBox$: Observable<DOMRect>\n        spec: TopBannerSpec\n    }) {\n        const logo: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center justify-content-center mkdocs-hover-bg-5',\n            style: attr$({\n                source$: navigationBoundingBox$,\n                vdomMap: (navBox) => ({\n                    width: `${String(navBox.width)}px`,\n                }),\n            }),\n            children: [new Logo({ router, spec })],\n        }\n        const expandedContent =\n            typeof spec.expandedContent === 'function'\n                ? spec.expandedContent({ router })\n                : spec.expandedContent\n        const mainRow = {\n            tag: 'div',\n            children: [],\n        }\n        this.children = [\n            logo,\n            {\n                tag: 'div',\n                class: 'flex-grow-1 d-flex flex-column justify-content-center',\n                children: [expandedContent],\n            },\n            {\n                tag: 'div',\n                class: 'd-flex justify-content-left',\n                style: attr$({\n                    source$: tocBoundingBox$,\n                    vdomMap: (tocBox) => ({\n                        width: `${String(tocBox.width)}px`,\n                        minWidth: 'fit-content',\n                    }),\n                }),\n                children: [spec.badge],\n            },\n        ]\n    }\n}",
+                "implementation": "export class TopBannerExpanded implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-TopBannerExpanded'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${TopBannerExpanded.CssSelector} d-flex justify-content-center py-1`\n\n    constructor({\n        router,\n        navigationBoundingBox$,\n        tocBoundingBox$,\n        spec,\n    }: {\n        router: Router\n        navigationBoundingBox$: Observable<DOMRect>\n        tocBoundingBox$: Observable<DOMRect>\n        spec: TopBannerSpec\n    }) {\n        const logo: AnyVirtualDOM = {\n            tag: 'div',\n            class: 'd-flex align-items-center justify-content-center mkdocs-hover-bg-5',\n            style: attr$({\n                source$: navigationBoundingBox$,\n                vdomMap: (navBox) => ({\n                    width: `${String(navBox.width)}px`,\n                }),\n            }),\n            children: [new Logo({ router, spec })],\n        }\n        const expandedContent =\n            typeof spec.expandedContent === 'function'\n                ? spec.expandedContent({ router })\n                : spec.expandedContent\n        this.children = [\n            logo,\n            {\n                tag: 'div',\n                class: 'flex-grow-1 d-flex flex-column justify-content-center',\n                children: [expandedContent],\n            },\n            {\n                tag: 'div',\n                class: 'd-flex justify-content-left',\n                style: attr$({\n                    source$: tocBoundingBox$,\n                    vdomMap: (tocBox) => ({\n                        width: `${String(tocBox.width)}px`,\n                        minWidth: 'fit-content',\n                    }),\n                }),\n                children: [spec.badge],\n            },\n        ]\n    }\n}",
                 "startLine": 242,
-                "endLine": 303,
+                "endLine": 299,
                 "references": {
                     "TopBannerExpanded": "@nav/api/MainModule/DefaultLayout.TopBannerExpanded",
                     "Router": "@nav/api/MainModule.Router",
@@ -3803,8 +4268,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "bookmarks$?: BehaviorSubject<string[]>",
                         "implementation": "",
-                        "startLine": 259,
-                        "endLine": 260,
+                        "startLine": 269,
+                        "endLine": 270,
                         "references": {
                             "bookmarks$": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.bookmarks$",
                             "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
@@ -3839,8 +4304,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "displayOptions?: Partial<DisplayOptions<ExtraDisplayOption>>",
                         "implementation": "",
-                        "startLine": 246,
-                        "endLine": 247,
+                        "startLine": 256,
+                        "endLine": 257,
                         "references": {
                             "displayOptions": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.displayOptions",
                             "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions",
@@ -3859,7 +4324,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The page footer.",
+                                "content": "A custom footer.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3876,11 +4341,46 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "footer?: AnyView",
                         "implementation": "",
-                        "startLine": 234,
-                        "endLine": 235,
+                        "startLine": 238,
+                        "endLine": 239,
                         "references": {
                             "footer": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.footer",
                             "AnyView": "@nav/api/MainModule.AnyView"
+                        }
+                    }
+                },
+                {
+                    "name": "navFooter",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Whether to include a **Previous** / **Next** navigation banner in the footer.\nSee  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.NavFooterView\" semantic=\"class\">NavFooterView</mkapi-api-link> .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "DefaultLayoutParams.navFooter",
+                    "navPath": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.navFooter",
+                    "code": {
+                        "filePath": "src/lib/default-layout/common.ts",
+                        "declaration": "navFooter?: boolean",
+                        "implementation": "",
+                        "startLine": 244,
+                        "endLine": 245,
+                        "references": {
+                            "navFooter": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.navFooter"
                         }
                     }
                 },
@@ -3912,8 +4412,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "page?: LayoutElementView<AnyView & { content$: ReplaySubject<HTMLElement> }>",
                         "implementation": "",
-                        "startLine": 241,
-                        "endLine": 242,
+                        "startLine": 251,
+                        "endLine": 252,
                         "references": {
                             "page": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.page",
                             "LayoutElementView": "@nav/api/MainModule/DefaultLayout.LayoutElementView",
@@ -3951,8 +4451,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "router: Router<NavLayout, NavHeader>",
                         "implementation": "",
-                        "startLine": 226,
-                        "endLine": 227,
+                        "startLine": 230,
+                        "endLine": 231,
                         "references": {
                             "router": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.router",
                             "Router": "@nav/api/MainModule.Router",
@@ -3989,8 +4489,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "topBanner?: TopBannerSpec",
                         "implementation": "",
-                        "startLine": 230,
-                        "endLine": 231,
+                        "startLine": 234,
+                        "endLine": 235,
                         "references": {
                             "topBanner": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.topBanner",
                             "TopBannerSpec": "@nav/api/MainModule/DefaultLayout.TopBannerSpec"
@@ -4002,9 +4502,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export interface DefaultLayoutParams<\n    // eslint-disable-next-line @typescript-eslint/no-empty-object-type\n    ExtraDisplayOption extends Record<string, unknown> = {},\n>",
-                "implementation": "export interface DefaultLayoutParams<\n    // eslint-disable-next-line @typescript-eslint/no-empty-object-type\n    ExtraDisplayOption extends Record<string, unknown> = {},\n> {\n    /**\n     * Application router.\n     */\n    router: Router<NavLayout, NavHeader>\n    /**\n     * Top banner specification.\n     */\n    topBanner?: TopBannerSpec\n    /**\n     * The page footer.\n     */\n    footer?: AnyView\n    /**\n     * An optional content generator for the page, replacing the default {@link PageView}.\n     *\n     * The provided type must emit itself as an `HTMLElement` through the `content$` observable\n     * whenever it completes an update triggered by a change in the navigation path.\n     */\n    page?: LayoutElementView<AnyView & { content$: ReplaySubject<HTMLElement> }>\n    /**\n     * Display options, mostly regarding sizing of the main elements in the page. Values provided - if any -\n     * are merged with {@link defaultDisplayOptions}.\n     */\n    displayOptions?: Partial<DisplayOptions<ExtraDisplayOption>>\n    /**\n     * Enables bookmarking functionality within navigation nodes.\n     *\n     * When provided, a <button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button\n     * will appear in selected navigation node's header. This allows users to \"pin\" pages they want\n     * to access quickly.\n     *\n     * It's typically used in conjunction with the {@link BookmarksView} component in the top banner,\n     * which displays the list of bookmarks.\n     *\n     * The consumer should initialize this observable with the default list of bookmarked navigation paths.\n     */\n    bookmarks$?: BehaviorSubject<string[]>\n}",
-                "startLine": 219,
-                "endLine": 261,
+                "implementation": "export interface DefaultLayoutParams<\n    // eslint-disable-next-line @typescript-eslint/no-empty-object-type\n    ExtraDisplayOption extends Record<string, unknown> = {},\n> {\n    /**\n     * Application router.\n     */\n    router: Router<NavLayout, NavHeader>\n    /**\n     * Top banner specification.\n     */\n    topBanner?: TopBannerSpec\n    /**\n     * A custom footer.\n     */\n    footer?: AnyView\n    /**\n     * Whether to include a **Previous** / **Next** navigation banner in the footer.\n     * See {@link NavFooterView}.\n     *\n     */\n    navFooter?: boolean\n    /**\n     * An optional content generator for the page, replacing the default {@link PageView}.\n     *\n     * The provided type must emit itself as an `HTMLElement` through the `content$` observable\n     * whenever it completes an update triggered by a change in the navigation path.\n     */\n    page?: LayoutElementView<AnyView & { content$: ReplaySubject<HTMLElement> }>\n    /**\n     * Display options, mostly regarding sizing of the main elements in the page. Values provided - if any -\n     * are merged with {@link defaultDisplayOptions}.\n     */\n    displayOptions?: Partial<DisplayOptions<ExtraDisplayOption>>\n    /**\n     * Enables bookmarking functionality within navigation nodes.\n     *\n     * When provided, a <button class='btn btn-sm btn-light fas fa-bookmark'></button> toggle button\n     * will appear in selected navigation node's header. This allows users to \"pin\" pages they want\n     * to access quickly.\n     *\n     * It's typically used in conjunction with the {@link BookmarksView} component in the top banner,\n     * which displays the list of bookmarks.\n     *\n     * The consumer should initialize this observable with the default list of bookmarked navigation paths.\n     */\n    bookmarks$?: BehaviorSubject<string[]>\n}",
+                "startLine": 223,
+                "endLine": 271,
                 "references": {
                     "DefaultLayoutParams": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams",
                     "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions",
@@ -4075,8 +4575,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "actions?: ChildrenLike",
                         "implementation": "",
-                        "startLine": 154,
-                        "endLine": 155,
+                        "startLine": 158,
+                        "endLine": 159,
                         "references": {
                             "actions": "@nav/api/MainModule/DefaultLayout.NavHeaderSpec.actions",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -4111,8 +4611,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "icon?: ChildLike",
                         "implementation": "",
-                        "startLine": 150,
-                        "endLine": 151,
+                        "startLine": 154,
+                        "endLine": 155,
                         "references": {
                             "icon": "@nav/api/MainModule/DefaultLayout.NavHeaderSpec.icon",
                             "ChildLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildLike"
@@ -4147,8 +4647,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "wrapperClass?: AttributeLike<string>",
                         "implementation": "",
-                        "startLine": 146,
-                        "endLine": 147,
+                        "startLine": 150,
+                        "endLine": 151,
                         "references": {
                             "wrapperClass": "@nav/api/MainModule/DefaultLayout.NavHeaderSpec.wrapperClass",
                             "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
@@ -4161,8 +4661,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export interface NavHeaderSpec",
                 "implementation": "export interface NavHeaderSpec {\n    /**\n     * Optional class added as wrapper to the HTML element representing the node.\n     */\n    wrapperClass?: AttributeLike<string>\n    /**\n     * Optional icon, inserted before the node's name.\n     */\n    icon?: ChildLike\n    /**\n     * Optional actions, inserted after the node's name.\n     */\n    actions?: ChildrenLike\n}",
-                "startLine": 142,
-                "endLine": 156,
+                "startLine": 146,
+                "endLine": 160,
                 "references": {
                     "NavHeaderSpec": "@nav/api/MainModule/DefaultLayout.NavHeaderSpec",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
@@ -4224,8 +4724,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "badge?: AnyView",
                         "implementation": "",
-                        "startLine": 206,
-                        "endLine": 207,
+                        "startLine": 210,
+                        "endLine": 211,
                         "references": {
                             "badge": "@nav/api/MainModule/DefaultLayout.TopBannerSpec.badge",
                             "AnyView": "@nav/api/MainModule.AnyView"
@@ -4260,8 +4760,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "expandedContent?: AnyView | ((p: { router: Router }) => AnyView)",
                         "implementation": "",
-                        "startLine": 201,
-                        "endLine": 202,
+                        "startLine": 205,
+                        "endLine": 206,
                         "references": {
                             "expandedContent": "@nav/api/MainModule/DefaultLayout.TopBannerSpec.expandedContent",
                             "AnyView": "@nav/api/MainModule.AnyView",
@@ -4297,8 +4797,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "footer?: (p: {\n        router: Router\n        navigationBoundingBox$: Observable<BBox>\n        tocBoundingBox$: Observable<BBox>\n        pageScrollTop$: Observable<number>\n    }) => AnyView",
                         "implementation": "",
-                        "startLine": 191,
-                        "endLine": 192,
+                        "startLine": 195,
+                        "endLine": 196,
                         "references": {
                             "footer": "@nav/api/MainModule/DefaultLayout.TopBannerSpec.footer",
                             "BBox": "@nav/api/MainModule/DefaultLayout.BBox",
@@ -4336,8 +4836,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "header?: (p: {\n        router: Router\n        navigationBoundingBox$: Observable<BBox>\n        tocBoundingBox$: Observable<BBox>\n        pageScrollTop$: Observable<number>\n    }) => AnyView",
                         "implementation": "",
-                        "startLine": 182,
-                        "endLine": 183,
+                        "startLine": 186,
+                        "endLine": 187,
                         "references": {
                             "header": "@nav/api/MainModule/DefaultLayout.TopBannerSpec.header",
                             "BBox": "@nav/api/MainModule/DefaultLayout.BBox",
@@ -4375,8 +4875,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "logo: {\n        /**\n         * Icon specification.\n         * When a `string` is provided, it is interpreted as an URL.\n         */\n        icon: string | AnyView\n        /**\n         * Title of the logo.\n         */\n        title: string\n    }",
                         "implementation": "",
-                        "startLine": 168,
-                        "endLine": 169,
+                        "startLine": 172,
+                        "endLine": 173,
                         "references": {
                             "logo": "@nav/api/MainModule/DefaultLayout.TopBannerSpec.logo",
                             "AnyView": "@nav/api/MainModule.AnyView"
@@ -4411,8 +4911,8 @@
                         "filePath": "src/lib/default-layout/common.ts",
                         "declaration": "zIndex?: number",
                         "implementation": "",
-                        "startLine": 211,
-                        "endLine": 212,
+                        "startLine": 215,
+                        "endLine": 216,
                         "references": {
                             "zIndex": "@nav/api/MainModule/DefaultLayout.TopBannerSpec.zIndex"
                         }
@@ -4424,8 +4924,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export interface TopBannerSpec",
                 "implementation": "export interface TopBannerSpec {\n    /**\n     * Define the logo of the application.\n     */\n    logo: {\n        /**\n         * Icon specification.\n         * When a `string` is provided, it is interpreted as an URL.\n         */\n        icon: string | AnyView\n        /**\n         * Title of the logo.\n         */\n        title: string\n    }\n    /**\n     * Optional top banner header.\n     */\n    header?: (p: {\n        router: Router\n        navigationBoundingBox$: Observable<BBox>\n        tocBoundingBox$: Observable<BBox>\n        pageScrollTop$: Observable<number>\n    }) => AnyView\n    /**\n     * Optional top banner footer.\n     */\n    footer?: (p: {\n        router: Router\n        navigationBoundingBox$: Observable<BBox>\n        tocBoundingBox$: Observable<BBox>\n        pageScrollTop$: Observable<number>\n    }) => AnyView\n\n    /**\n     * Optional content to display in the center of the banner in large-screen mode.\n     */\n    expandedContent?: AnyView | ((p: { router: Router }) => AnyView)\n    /**\n     * Optional badge or UI element displayed on the right side of the banner.\n     * Often used to show status indicators or short links (e.g. GitHub, Profile link).\n     */\n    badge?: AnyView\n\n    /**\n     * Optional z-index associated to the top-banner style, default is `100`.\n     */\n    zIndex?: number\n}",
-                "startLine": 164,
-                "endLine": 213,
+                "startLine": 168,
+                "endLine": 217,
                 "references": {
                     "TopBannerSpec": "@nav/api/MainModule/DefaultLayout.TopBannerSpec",
                     "AnyView": "@nav/api/MainModule.AnyView",
@@ -4436,6 +4936,83 @@
             },
             "semantic": {
                 "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "BBox",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Specification of a bounding box, used e.g. by  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.LayoutObserver\" semantic=\"class\">LayoutObserver</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "BBox",
+            "navPath": "@nav/api/MainModule/DefaultLayout.BBox",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/default-layout/common.ts",
+                "declaration": "export type BBox = Pick<DOMRect, 'width' | 'height'>",
+                "implementation": "",
+                "startLine": 345,
+                "endLine": 346,
+                "references": {
+                    "BBox": "@nav/api/MainModule/DefaultLayout.BBox",
+                    "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "BBox$",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Observable of  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.BBox\" semantic=\"type-alias\">BBox</mkapi-api-link> , see  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.LayoutObserver\" semantic=\"class\">LayoutObserver</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "BBox$",
+            "navPath": "@nav/api/MainModule/DefaultLayout.BBox$",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/default-layout/common.ts",
+                "declaration": "export type BBox$ = Observable<BBox>",
+                "implementation": "",
+                "startLine": 350,
+                "endLine": 351,
+                "references": {
+                    "BBox$": "@nav/api/MainModule/DefaultLayout.BBox$",
+                    "BBox": "@nav/api/MainModule/DefaultLayout.BBox",
+                    "Observable": "https://rxjs.dev/guide/observable"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
                 "labels": [],
                 "attributes": {},
                 "relations": {}
@@ -4465,8 +5042,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type ClientContentView =\n    | ((params: { router: Router<NavLayout> }) => NavLayoutView)\n    | string",
                 "implementation": "",
-                "startLine": 280,
-                "endLine": 281,
+                "startLine": 290,
+                "endLine": 291,
                 "references": {
                     "ClientContentView": "@nav/api/MainModule/DefaultLayout.ClientContentView",
                     "Router": "@nav/api/MainModule.Router",
@@ -4505,8 +5082,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type ClientTocView = (params: {\n    html: HTMLElement\n    router: Router\n}) => NavLayoutView",
                 "implementation": "",
-                "startLine": 292,
-                "endLine": 293,
+                "startLine": 302,
+                "endLine": 303,
                 "references": {
                     "ClientTocView": "@nav/api/MainModule/DefaultLayout.ClientTocView",
                     "Router": "@nav/api/MainModule.Router",
@@ -4545,8 +5122,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type DisabledTocMarker = 'disabled'",
                 "implementation": "",
-                "startLine": 300,
-                "endLine": 301,
+                "startLine": 310,
+                "endLine": 311,
                 "references": {
                     "DisabledTocMarker": "@nav/api/MainModule/DefaultLayout.DisabledTocMarker"
                 }
@@ -4582,10 +5159,49 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type DisplayMode = 'pined' | 'hidden' | 'expanded' | 'removed'",
                 "implementation": "",
-                "startLine": 42,
-                "endLine": 43,
+                "startLine": 46,
+                "endLine": 47,
                 "references": {
                     "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "DisplayModeOptions",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Structure used by the  <mkapi-api-link nav=\"@nav/api/MainModule/DefaultLayout.LayoutObserver\" semantic=\"class\">LayoutObserver</mkapi-api-link>  regarding display mode.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "DisplayModeOptions",
+            "navPath": "@nav/api/MainModule/DefaultLayout.DisplayModeOptions",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/default-layout/common.ts",
+                "declaration": "export type DisplayModeOptions = Pick<\n    DisplayOptions,\n    | 'forceTocDisplayMode'\n    | 'toggleTocWidth'\n    | 'toggleNavWidth'\n    | 'forceNavDisplayMode'\n>",
+                "implementation": "",
+                "startLine": 355,
+                "endLine": 356,
+                "references": {
+                    "DisplayModeOptions": "@nav/api/MainModule/DefaultLayout.DisplayModeOptions",
+                    "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions",
+                    "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys"
                 }
             },
             "semantic": {
@@ -4619,8 +5235,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type DisplayOptions<\n    // eslint-disable-next-line @typescript-eslint/no-empty-object-type\n    ExtraDisplayOption extends Record<string, unknown> = {},\n> = {\n    /**\n     * Screen size in pixel transitioning from pined Navigation panel, to\n     * collapsable one.\n     */\n    toggleNavWidth: number\n    /**\n     * Screen size in pixel transitioning from pined TOC panel, to\n     * collapsable one.\n     */\n    toggleTocWidth: number\n    /**\n     * Minimum width for the TOC panel in pixel.\n     */\n    tocMinWidth: number\n    /**\n     * Maximum width for the TOC panel in pixel.\n     */\n    tocMaxWidth: number\n    /**\n     * Minimum width for the navigation panel in pixel.\n     */\n    navMinWidth: number\n    /**\n     * Maximum width for the navigation panel in pixel.\n     */\n    navMaxWidth: number\n    /**\n     * Page's width.\n     */\n    pageWidth: string\n    /**\n     * Page's vertical padding.\n     */\n    pageVertPadding: string\n    /**\n     * Translation duration for panels in ms.\n     */\n    translationTime: number\n\n    /**\n     * If defined, force the TOC display mode to this value.\n     */\n    forceTocDisplayMode: DisplayMode | undefined\n\n    /**\n     * If defined, force the Nav display mode to this value.\n     */\n    forceNavDisplayMode: DisplayMode | undefined\n} & ExtraDisplayOption",
                 "implementation": "",
-                "startLine": 53,
-                "endLine": 54,
+                "startLine": 57,
+                "endLine": 58,
                 "references": {
                     "DisplayOptions": "@nav/api/MainModule/DefaultLayout.DisplayOptions",
                     "DisplayMode": "@nav/api/MainModule/DefaultLayout.DisplayMode",
@@ -4669,8 +5285,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type LayoutElementView<TView extends AnyView = AnyView> = (p: {\n    // Application's router\n    router: Router<NavLayout>\n    // The layout options provided.\n    layoutOptions: DisplayOptions\n    // Current bookmarked URLs\n    bookmarks$?: BehaviorSubject<string[]>\n}) => TView",
                 "implementation": "",
-                "startLine": 130,
-                "endLine": 131,
+                "startLine": 134,
+                "endLine": 135,
                 "references": {
                     "LayoutElementView": "@nav/api/MainModule/DefaultLayout.LayoutElementView",
                     "AnyView": "@nav/api/MainModule.AnyView",
@@ -4750,8 +5366,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type NavLayout =\n    | {\n          /**\n           * Defines the view for the table of contents (TOC) within the page.\n           *\n           * <note level=\"warning\">\n           * The function is invoked **only once** when the page content is first rendered.\n           * If the TOC needs to be updated later due to content changes, this must be handled explicitly\n           * (e.g., by using mutation observers).\n           * </note>\n           */\n          toc?: DisabledTocMarker | ClientTocView\n\n          /**\n           * Defines the main content view of the page.\n           */\n          content: ClientContentView\n      }\n    | ClientContentView",
                 "implementation": "",
-                "startLine": 307,
-                "endLine": 308,
+                "startLine": 317,
+                "endLine": 318,
                 "references": {
                     "NavLayout": "@nav/api/MainModule/DefaultLayout.NavLayout",
                     "ClientContentView": "@nav/api/MainModule/DefaultLayout.ClientContentView",
@@ -4790,8 +5406,8 @@
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export type NavLayoutView = Resolvable<AnyView> | ChildLike",
                 "implementation": "",
-                "startLine": 269,
-                "endLine": 270,
+                "startLine": 279,
+                "endLine": 280,
                 "references": {
                     "NavLayoutView": "@nav/api/MainModule/DefaultLayout.NavLayoutView",
                     "Resolvable": "@nav/api/MainModule.Resolvable",
@@ -4808,6 +5424,66 @@
         }
     ],
     "callables": [
+        {
+            "name": "getSiblings$",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Returns an observable of the previous and next \"sibling\" navigation nodes\nrelative to the currently active target in the navigation tree.\n\nThe logic works as follows:\n- If the current node has children, its first child is the **next** node.\n- If not, the next sibling in the parent's children is considered.\n- If none exists, the function recursively walks up the tree to find the next available sibling.\n- The **prev** sibling is the previous sibling in the parent node’s children,\n  or the parent itself if the current node is the first child.\n\nThis is useful for navigation UIs like \"previous/next\" buttons.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **router**: The active router instance providing navigation state and target tracking.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "Observable over **prev** and **next** node.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "getSiblings$",
+            "navPath": "@nav/api/MainModule/DefaultLayout.getSiblings$",
+            "code": {
+                "filePath": "src/lib/default-layout/common.ts",
+                "declaration": "export function getSiblings$(router: Router): Observable<{\n    prev: AnyNavNode<unknown, unknown> | undefined\n    next: AnyNavNode<unknown, unknown> | undefined\n}>",
+                "implementation": "export function getSiblings$(router: Router): Observable<{\n    prev: AnyNavNode<unknown, unknown> | undefined\n    next: AnyNavNode<unknown, unknown> | undefined\n}> {\n    type MaybeNavNode = AnyNavNode<unknown, unknown> | undefined\n    const tree = router.explorerState\n\n    function findRightFallback(\n        node: AnyNavNode<unknown, unknown>,\n    ): MaybeNavNode {\n        let current = tree.getParent(node.id)\n        while (current) {\n            const parent = tree.getParent(current.id)\n            if (parent) {\n                const siblings = parent.resolvedChildren()\n                const index = siblings.indexOf(current)\n                if (index < siblings.length - 1) {\n                    return siblings[index + 1] as MaybeNavNode\n                }\n                current = parent\n            } else {\n                break\n            }\n        }\n        return undefined\n    }\n\n    return combineLatest([router.target$, tree.root$]).pipe(\n        filter(([target]) => {\n            return (\n                isResolvedTarget(target) &&\n                tree.getNode(target.path) !== undefined\n            )\n        }),\n        switchMap(([target, root]) => {\n            const node = tree.getNodeResolved(target.path)\n            const parentNode = tree.getParent(node.id)\n\n            const children$: Observable<AnyNavNode<unknown, unknown>[]> =\n                node.children ? tree.getChildren$(node) : of([])\n            const parentChildren$: Observable<AnyNavNode<unknown, unknown>[]> =\n                parentNode ? tree.getChildren$(parentNode) : of([])\n\n            return combineLatest([children$, parentChildren$]).pipe(\n                take(1),\n                map(([children, parentChildren]) => {\n                    return {\n                        target,\n                        node,\n                        children,\n                        parentNode,\n                        parentChildren,\n                        root,\n                    }\n                }),\n            )\n        }),\n        map(({ children, parentChildren, parentNode, node }) => {\n            const index = parentChildren.indexOf(node)\n\n            const prev: MaybeNavNode =\n                index === 0 ? parentNode : parentChildren[index - 1]\n            let next: MaybeNavNode = undefined\n            if (children.length > 0) {\n                next = children[0]\n            }\n            if (!next && index < parentChildren.length - 1) {\n                next = parentChildren[index + 1]\n            }\n            if (!next) {\n                next = findRightFallback(node)\n            }\n            return {\n                prev,\n                next,\n            }\n        }),\n        shareReplay({ refCount: true, bufferSize: 1 }),\n    )\n}",
+                "startLine": 605,
+                "endLine": 685,
+                "references": {
+                    "getSiblings$": "@nav/api/MainModule/DefaultLayout.getSiblings$",
+                    "Router": "@nav/api/MainModule.Router",
+                    "AnyNavNode": "@nav/api/MainModule.AnyNavNode",
+                    "Observable": "https://rxjs.dev/guide/observable"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
         {
             "name": "popupModal",
             "documentation": {
@@ -4937,6 +5613,24 @@
         {
             "name": "page.view.ts",
             "path": "src/lib/default-layout/page.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "footer.view.ts",
+            "path": "src/lib/default-layout/footer.view.ts",
             "documentation": {
                 "sections": [
                     {

@@ -5240,8 +5240,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 264,
-                        "endLine": 265,
+                        "startLine": 270,
+                        "endLine": 271,
                         "references": {
                             "children": "@nav/api/MainModule/MdWidgets.CodeSnippetView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -5276,8 +5276,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`",
                         "implementation": "",
-                        "startLine": 254,
-                        "endLine": 255,
+                        "startLine": 260,
+                        "endLine": 261,
                         "references": {
                             "class": "@nav/api/MainModule/MdWidgets.CodeSnippetView.class"
                         }
@@ -5311,8 +5311,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly codeMirrorConfiguration = {\n        lineNumbers: true,\n        lineWrapping: false,\n        indentUnit: 4,\n        readOnly: true,\n    }",
                         "implementation": "",
-                        "startLine": 244,
-                        "endLine": 245,
+                        "startLine": 250,
+                        "endLine": 251,
                         "references": {
                             "codeMirrorConfiguration": "@nav/api/MainModule/MdWidgets.CodeSnippetView.codeMirrorConfiguration"
                         }
@@ -5346,8 +5346,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly style = {\n        fontSize: '0.8rem',\n    }",
                         "implementation": "",
-                        "startLine": 258,
-                        "endLine": 259,
+                        "startLine": 264,
+                        "endLine": 265,
                         "references": {
                             "style": "@nav/api/MainModule/MdWidgets.CodeSnippetView.style"
                         }
@@ -5381,8 +5381,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 240,
-                        "endLine": 241,
+                        "startLine": 246,
+                        "endLine": 247,
                         "references": {
                             "tag": "@nav/api/MainModule/MdWidgets.CodeSnippetView.tag"
                         }
@@ -5416,8 +5416,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeSnippetView'",
                         "implementation": "",
-                        "startLine": 184,
-                        "endLine": 185,
+                        "startLine": 190,
+                        "endLine": 191,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/MdWidgets.CodeSnippetView.CssSelector"
                         }
@@ -5451,8 +5451,8 @@
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly hlLineClass = 'mkdocs-ts-bg-highlight'",
                         "implementation": "",
-                        "startLine": 235,
-                        "endLine": 236,
+                        "startLine": 241,
+                        "endLine": 242,
                         "references": {
                             "hlLineClass": "@nav/api/MainModule/MdWidgets.CodeSnippetView.hlLineClass"
                         }
