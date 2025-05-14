@@ -18,6 +18,7 @@ export class BaseLink implements VirtualDOM<'a'> {
     public readonly tag = 'a'
     public readonly children: ChildrenLike
     public readonly href: string
+    public readonly target: string
     private readonly elem: HTMLElement
     /**
      * Create a `BaseLink` hyperlink.
@@ -25,8 +26,14 @@ export class BaseLink implements VirtualDOM<'a'> {
      * @param elem The source HTML element containing a `target` attribute.
      * @param icon An icon to render before or after the label.
      * @param mapper A function that maps the target string to `href`, `withClass`, and `withStyle`.
+     * @param newTab Whether to open the link in a new tab.
      */
-    constructor(elem: HTMLElement, icon: AnyVirtualDOM, mapper: LinkMapper) {
+    constructor(
+        elem: HTMLElement,
+        icon: AnyVirtualDOM,
+        mapper: LinkMapper,
+        newTab: boolean,
+    ) {
         this.elem = elem
         const target = this.elem.getAttribute('target')
         if (!target) {
@@ -35,6 +42,9 @@ export class BaseLink implements VirtualDOM<'a'> {
         const { href, withClass, withStyle } = mapper(target)
         if (!href) {
             return
+        }
+        if (newTab) {
+            this.target = '_blank'
         }
         this.href = href
         const customClass = withClass ?? ''
@@ -102,7 +112,7 @@ export class ApiLink {
      * @returns A `BaseLink` instance representing the rendered VirtualDOM anchor tag.
      */
     static fromHTMLElement(elem: HTMLElement): BaseLink {
-        return new BaseLink(elem, ApiLink.icon, ApiLink.PatchedMapper)
+        return new BaseLink(elem, ApiLink.icon, ApiLink.PatchedMapper, false)
     }
 }
 
@@ -145,7 +155,7 @@ export class ExtLink {
      * @returns The hyperlink element.
      */
     static fromHTMLElement(elem: HTMLElement): BaseLink {
-        return new BaseLink(elem, ExtLink.icon, ExtLink.Mapper)
+        return new BaseLink(elem, ExtLink.icon, ExtLink.Mapper, true)
     }
 }
 /**
@@ -187,7 +197,7 @@ export class GitHubLink {
      * @returns A `BaseLink` instance representing the rendered VirtualDOM anchor tag.
      */
     static fromHTMLElement(elem: HTMLElement): BaseLink {
-        return new BaseLink(elem, GitHubLink.icon, GitHubLink.Mapper)
+        return new BaseLink(elem, GitHubLink.icon, GitHubLink.Mapper, true)
     }
 }
 /**
@@ -229,6 +239,6 @@ export class CrossLink {
      * @returns A `BaseLink` instance representing the rendered VirtualDOM anchor tag.
      */
     static fromHTMLElement(elem: HTMLElement): BaseLink {
-        return new BaseLink(elem, CrossLink.icon, CrossLink.Mapper)
+        return new BaseLink(elem, CrossLink.icon, CrossLink.Mapper, false)
     }
 }
