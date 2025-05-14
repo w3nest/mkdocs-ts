@@ -339,19 +339,35 @@ export interface DisplayedRect {
     height: number
 }
 
-export interface BBox {
-    width: number
-    height: number
-}
-type BBox$ = Observable<BBox>
-type DisplayModeOptions = Pick<
+/**
+ * Specification of a bounding box, used e.g. by {@link LayoutObserver}.
+ */
+export type BBox = Pick<DOMRect, 'width' | 'height'>
+
+/**
+ * Observable of {@link BBox}, see {@link LayoutObserver}.
+ */
+export type BBox$ = Observable<BBox>
+
+/**
+ * Structure used by the {@link LayoutObserver} regarding display mode.
+ */
+export type DisplayModeOptions = Pick<
     DisplayOptions,
     | 'forceTocDisplayMode'
     | 'toggleTocWidth'
     | 'toggleNavWidth'
     | 'forceNavDisplayMode'
 >
+/**
+ * Observes layout dimensions and visibility as screen size or display mode changes.
+ * Used to coordinate layout behaviors like navigation or TOC visibility and transitions.
+ */
 export class LayoutObserver {
+    /**
+     * Emits rounded layout bounding boxes whenever their dimensions change.
+     * Shared replayed for efficient subscriptions.
+     */
     public readonly boxes$: Observable<{
         page: BBox
         topBanner: BBox
@@ -360,11 +376,34 @@ export class LayoutObserver {
         nav: BBox
         toc: BBox
     }>
+    /**
+     * Represents the visible vertical area of the page content, taking banners and scroll position into account.
+     */
     public readonly pageVisible$: Observable<{ top: number; height: number }>
+    /**
+     * Holds configuration for display mode toggling and force-mode settings.
+     */
     public readonly displayModeOptions: DisplayModeOptions
+    /**
+     * Tracks the current display mode of the navigation panel. May be externally controlled or automatically updated.
+     */
     public readonly displayModeNav$: BehaviorSubject<DisplayMode>
+    /**
+     * Tracks the current display mode of the TOC (Table of Contents) panel.
+     */
     public readonly displayModeToc$: BehaviorSubject<DisplayMode>
 
+    /**
+     * Creates a new instance to watch layout bounding boxes and display mode settings.
+     *
+     * @param p
+     * @param p.boxes Various bounding box observables.
+     * @param p.pageScrollTop$ Stream of vertical scroll position for the page.
+     * @param p.displayModeNav$ Reactive subject controlling navigation display mode.
+     * @param p.displayModeToc$ Reactive subject controlling TOC display mode.
+     * @param p.displayModeOptions Configuration for display mode behaviors .
+     * @param ctx Logging and debugging context provider.
+     */
     constructor(
         p: {
             boxes: {
