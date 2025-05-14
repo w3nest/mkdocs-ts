@@ -30,7 +30,7 @@ export class NavigationView implements VirtualDOM<'div'> {
     public readonly router: Router<unknown, NavHeader>
 
     public readonly tag = 'div'
-    public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100`
+    public readonly class: string = `${NavigationView.CssSelector} mkdocs-bg-5 mkdocs-text-5 px-1 h-100 overflow-auto mkdocs-thin-v-scroller`
     public readonly style: CSSAttribute
     public readonly children: ChildrenLike
     public readonly displayOptions: DisplayOptions

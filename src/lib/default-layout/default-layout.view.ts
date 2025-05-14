@@ -320,7 +320,6 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'div',
-                class: 'overflow-auto mkdocs-thin-v-scroller',
                 style: attr$({
                     source$: params.layoutObserver.pageVisible$,
                     vdomMap: ({ height }) => {
