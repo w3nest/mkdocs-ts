@@ -16,6 +16,7 @@ body {
     line-height: var(--line-height-base) !important;
 }
 
-.mkdocs-ExpandableNavColumn .mkdocs-NavigationView{
-    width: 500px!important;max-width: 75vw;
+.mkdocs-ExpandableNavColumn .mkdocs-NavigationView {
+    width: 500px !important;
+    max-width: 75vw;
 }

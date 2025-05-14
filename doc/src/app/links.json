@@ -1,5 +1,5 @@
 {
-    "apiLinks":{
+    "apiLinks": {
         "API": {
             "href": "@nav/api",
             "withClass": "mkapi-role-module"
@@ -305,7 +305,7 @@
             "withClass": "mkapi-role-module"
         }
     },
-    "crossLinks":{
+    "crossLinks": {
         "tutorials": "@nav/tutorials",
         "how-to": "@nav/how-to",
         "API": "@nav/api",
@@ -330,7 +330,7 @@
         "code-api": "@nav/tutorials/code-api",
         "api-backend": "@nav/how-to/api-backend"
     },
-    "extLinks":{
+    "extLinks": {
         "adams": "https://fr.wikipedia.org/wiki/Douglas_Adams",
         "w3nest": "/apps/@w3nest/doc/latest",
         "w3lab": "/w3lab",
@@ -359,7 +359,7 @@
         "shared-array": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer",
         "reactivex": "https://reactivex.io/"
     },
-    "githubLinks":{
+    "githubLinks": {
         "tutorials.notebook.md": "https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.notebook.md?raw=1",
         "tutorials.basics.md": "https://github.com/w3nest/mkdocs-ts/blob/main/doc/assets/tutorials.basics.md?raw=1",
         "github": "https://github.com/w3nest/mkdocs-ts",

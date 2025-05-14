@@ -1,6 +1,6 @@
 import './style.css'
 export {}
-import {install, LoadingScreen} from '@w3nest/webpm-client'
+import { install, LoadingScreen } from '@w3nest/webpm-client'
 
 import pkgJson from '../../package.json'
 import { DebugMode } from './config.debug'
@@ -11,12 +11,12 @@ window['mkdocsConfig'] = { enableContextual: DebugMode }
 const version = pkgJson.webpm.dependencies['mkdocs-ts']
 
 const loadingScreen = new LoadingScreen({
-    name:pkgJson.name,
-    description:pkgJson.description,
-    logo:'../assets/favicon.svg'
+    name: pkgJson.name,
+    description: pkgJson.description,
+    logo: '../assets/favicon.svg',
 })
 await install({
-    esm:[`${pkgJson.name}#${pkgJson.version}`],
+    esm: [`${pkgJson.name}#${pkgJson.version}`],
     css: [
         'bootstrap#5.3.3~bootstrap.min.css',
         'fontawesome#5.12.1~css/all.min.css',
@@ -24,7 +24,9 @@ await install({
         `mkdocs-ts#${version}~assets/notebook.css`,
         `mkdocs-ts#${version}~assets/ts-typedoc.css`,
     ],
-    onEvent: (ev) => loadingScreen.next(ev)
+    onEvent: (ev) => {
+        loadingScreen.next(ev)
+    },
 })
 await import('./on-load')
 loadingScreen.done()

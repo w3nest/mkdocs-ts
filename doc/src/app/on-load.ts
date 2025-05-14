@@ -1,6 +1,6 @@
-import { render, VirtualDOM, ChildrenLike, CSSAttribute } from 'rx-vdom'
+import { render } from 'rx-vdom'
 import { navigation } from './navigation'
-import { Router, DefaultLayout, MdWidgets } from 'mkdocs-ts'
+import { Router, DefaultLayout } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
 import { createRootContext, inMemReporter } from './config.context'
 import { AuthBadge } from '@w3nest/ui-tk/Badges'
@@ -40,9 +40,9 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
         router,
         bookmarks$,
         topBanner: {
-            logo: { 
-                icon:'../assets/favicon.svg', 
-                title: 'MkDocs-TS'
+            logo: {
+                icon: '../assets/favicon.svg',
+                title: 'MkDocs-TS',
             },
             expandedContent: new DefaultLayout.BookmarksView({
                 bookmarks$,
@@ -50,13 +50,13 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
             }),
             badge: new AuthBadge(),
             // This is to place the app top banner above those from the tutorials.
-            zIndex:101
+            zIndex: 101,
         },
         footer,
         displayOptions: {
             pageVertPadding: '3rem',
         },
-        companionNodes$
+        companionNodes$,
     },
     ctx,
 )

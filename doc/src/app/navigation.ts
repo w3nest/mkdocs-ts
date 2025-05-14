@@ -13,8 +13,6 @@ import * as HowTo from './how-to'
 import * as Tutorials from './tutorials'
 import { createRootContext } from './config.context'
 
-
-
 export type AppNav = Navigation<
     DefaultLayout.NavLayout,
     DefaultLayout.NavHeader

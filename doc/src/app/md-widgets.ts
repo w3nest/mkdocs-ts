@@ -1,21 +1,26 @@
 import { VirtualDOM } from 'rx-vdom'
 import { companionNodes$ } from './on-load'
-import { MdWidgets} from 'mkdocs-ts'
+import { MdWidgets } from 'mkdocs-ts'
 import LinksDict from './links.json'
 
 MdWidgets.ApiLink.Mapper = (target: string) => {
-    return LinksDict.apiLinks[target]
+    return LinksDict.apiLinks[target] as ReturnType<MdWidgets.LinkMapper>
 }
 MdWidgets.ExtLink.Mapper = (target: string) => {
-    return { href:LinksDict.extLinks[target] }
+    return {
+        href: LinksDict.extLinks[target] as string,
+    }
 }
 MdWidgets.GitHubLink.Mapper = (target: string) => {
-    return { href:LinksDict.githubLinks[target] }
+    return {
+        href: LinksDict.githubLinks[target] as string,
+    }
 }
 MdWidgets.CrossLink.Mapper = (target: string) => {
-    return { href:LinksDict.crossLinks[target] }
+    return {
+        href: LinksDict.crossLinks[target] as string,
+    }
 }
-
 
 export class SplitApiButton implements VirtualDOM<'button'> {
     public readonly tag = 'button'

@@ -1,8 +1,6 @@
 import pkgJson from '../../package.json'
 import { fromMarkdown, GlobalMarkdownViews } from 'mkdocs-ts'
-import {
-    SplitApiButton,
-} from './md-widgets'
+import { SplitApiButton } from './md-widgets'
 
 const project = {
     name: 'mkdocs-ts',
