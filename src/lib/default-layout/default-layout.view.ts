@@ -101,8 +101,15 @@ export class Layout implements VirtualDOM<'div'> {
     constructor(params: DefaultLayoutParams, ctx?: ContextTrait) {
         this.context = ctx
         const context = this.ctx().start('new Layout', ['View'])
-        const { router, page, topBanner, footer, displayOptions, bookmarks$ } =
-            params
+        const {
+            router,
+            page,
+            topBanner,
+            footer,
+            displayOptions,
+            bookmarks$,
+            navFooter,
+        } = params
 
         this.displayOptions = Object.assign(
             this.displayOptions,
@@ -131,7 +138,11 @@ export class Layout implements VirtualDOM<'div'> {
               })
             : new EmptyTopBanner()
 
-        const footerView = new FooterWrapper(footer)
+        const footerView = new FooterWrapper({
+            router,
+            footer,
+            withNav: navFooter,
+        })
 
         const contentView = page
             ? page(viewInputs)

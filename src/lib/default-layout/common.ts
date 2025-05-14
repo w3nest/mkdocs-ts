@@ -8,19 +8,23 @@ import {
     RxHTMLElement,
     SupportedHTMLTags,
 } from 'rx-vdom'
-import { Router } from '../router'
+import { isResolvedTarget, Router } from '../router'
 import {
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
+    filter,
     map,
     Observable,
+    of,
     ReplaySubject,
     shareReplay,
     Subject,
+    switchMap,
+    take,
     tap,
 } from 'rxjs'
-import { AnyView, Resolvable } from '../navigation.node'
+import { AnyNavNode, AnyView, Resolvable } from '../navigation.node'
 import { ContextTrait, NoContext } from '../context'
 
 /**
@@ -229,9 +233,15 @@ export interface DefaultLayoutParams<
      */
     topBanner?: TopBannerSpec
     /**
-     * The page footer.
+     * A custom footer.
      */
     footer?: AnyView
+    /**
+     * Whether to include a **Previous** / **Next** navigation banner in the footer.
+     * See {@link NavFooterView}.
+     *
+     */
+    navFooter?: boolean
     /**
      * An optional content generator for the page, replacing the default {@link PageView}.
      *
@@ -536,4 +546,100 @@ export function plugBoundingBoxObserver<Tag extends SupportedHTMLTags>(
     elem.hookOnDisconnected(() => {
         resizeObserver.disconnect()
     })
+}
+/**
+ * Returns an observable of the previous and next "sibling" navigation nodes
+ * relative to the currently active target in the navigation tree.
+ *
+ * The logic works as follows:
+ * - If the current node has children, its first child is the **next** node.
+ * - If not, the next sibling in the parent's children is considered.
+ * - If none exists, the function recursively walks up the tree to find the next available sibling.
+ * - The **prev** sibling is the previous sibling in the parent node’s children,
+ *   or the parent itself if the current node is the first child.
+ *
+ * This is useful for navigation UIs like "previous/next" buttons.
+ *
+ * @param router The active router instance providing navigation state and target tracking.
+ * @returns Observable over **prev** and **next** node.
+ */
+export function getSiblings$(router: Router): Observable<{
+    prev: AnyNavNode<unknown, unknown> | undefined
+    next: AnyNavNode<unknown, unknown> | undefined
+}> {
+    type MaybeNavNode = AnyNavNode<unknown, unknown> | undefined
+    const tree = router.explorerState
+
+    function findRightFallback(
+        node: AnyNavNode<unknown, unknown>,
+    ): MaybeNavNode {
+        let current = tree.getParent(node.id)
+        while (current) {
+            const parent = tree.getParent(current.id)
+            if (parent) {
+                const siblings = parent.resolvedChildren()
+                const index = siblings.indexOf(current)
+                if (index < siblings.length - 1) {
+                    return siblings[index + 1] as MaybeNavNode
+                }
+                current = parent
+            } else {
+                break
+            }
+        }
+        return undefined
+    }
+
+    return combineLatest([router.target$, tree.root$]).pipe(
+        filter(([target]) => {
+            return (
+                isResolvedTarget(target) &&
+                tree.getNode(target.path) !== undefined
+            )
+        }),
+        switchMap(([target, root]) => {
+            const node = tree.getNodeResolved(target.path)
+            const parentNode = tree.getParent(node.id)
+
+            const children$: Observable<AnyNavNode<unknown, unknown>[]> =
+                node.children ? tree.getChildren$(node) : of([])
+            const parentChildren$: Observable<AnyNavNode<unknown, unknown>[]> =
+                parentNode ? tree.getChildren$(parentNode) : of([])
+
+            return combineLatest([children$, parentChildren$]).pipe(
+                take(1),
+                map(([children, parentChildren]) => {
+                    return {
+                        target,
+                        node,
+                        children,
+                        parentNode,
+                        parentChildren,
+                        root,
+                    }
+                }),
+            )
+        }),
+        map(({ children, parentChildren, parentNode, node }) => {
+            const index = parentChildren.indexOf(node)
+
+            const prev: MaybeNavNode =
+                index === 0 ? parentNode : parentChildren[index - 1]
+            let next: MaybeNavNode = undefined
+            if (children.length > 0) {
+                next = children[0]
+            }
+            if (!next && index < parentChildren.length - 1) {
+                next = parentChildren[index + 1]
+            }
+            if (!next) {
+                next = findRightFallback(node)
+            }
+            return {
+                prev,
+                next,
+            }
+        }),
+        shareReplay({ refCount: true, bufferSize: 1 }),
+    )
 }
