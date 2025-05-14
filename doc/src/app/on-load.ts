@@ -1,6 +1,6 @@
 import { render } from 'rx-vdom'
 import { navigation } from './navigation'
-import { Router, DefaultLayout } from 'mkdocs-ts'
+import { Router, DefaultLayout, installNotebookModule } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
 import { createRootContext, inMemReporter } from './config.context'
 import { AuthBadge } from '@w3nest/ui-tk/Badges'
@@ -63,3 +63,6 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
 )
 
 document.body.appendChild(render(routerView))
+setTimeout(() => {
+    void installNotebookModule().then()
+}, 3000)
