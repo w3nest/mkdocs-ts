@@ -53,6 +53,7 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
             zIndex: 101,
         },
         footer,
+        navFooter: true,
         displayOptions: {
             pageVertPadding: '3rem',
         },
