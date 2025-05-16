@@ -13,7 +13,13 @@ import {
     VirtualDOM,
     EmptyDiv,
 } from 'rx-vdom'
-import { BehaviorSubject, filter, Observable, take } from 'rxjs'
+import {
+    BehaviorSubject,
+    distinctUntilChanged,
+    filter,
+    Observable,
+    take,
+} from 'rxjs'
 import { CellStatus, ExecCellError, Output, State } from './state'
 import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
@@ -261,8 +267,10 @@ export class CellHeaderView implements VirtualDOM<'div'> {
         Object.assign(this, params)
         this.children = [
             child$({
-                source$: this.state.cellsStatus$[this.cellId],
-                vdomMap: (s) => {
+                source$: this.state.cellsStatus$[this.cellId].pipe(
+                    distinctUntilChanged(),
+                ),
+                vdomMap: (s: CellStatus) => {
                     if (['success', 'pending', 'executing'].includes(s)) {
                         return { tag: 'div' }
                     }
