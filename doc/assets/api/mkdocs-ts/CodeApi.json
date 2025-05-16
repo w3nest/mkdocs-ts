@@ -770,8 +770,8 @@
                         "filePath": "src/lib/code-api/declaration.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 94,
-                        "endLine": 95,
+                        "startLine": 96,
+                        "endLine": 97,
                         "references": {
                             "children": "@nav/api/CodeApi.DeclarationView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -806,8 +806,8 @@
                         "filePath": "src/lib/code-api/declaration.view.ts",
                         "declaration": "public readonly class = `${DeclarationView.CssSelector} mkapi-declaration mkapi-semantic-color p-2 rounded`",
                         "implementation": "",
-                        "startLine": 95,
-                        "endLine": 96,
+                        "startLine": 97,
+                        "endLine": 98,
                         "references": {
                             "class": "@nav/api/CodeApi.DeclarationView.class"
                         }
@@ -841,8 +841,8 @@
                         "filePath": "src/lib/code-api/declaration.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 93,
-                        "endLine": 94,
+                        "startLine": 95,
+                        "endLine": 96,
                         "references": {
                             "tag": "@nav/api/CodeApi.DeclarationView.tag"
                         }
@@ -876,8 +876,8 @@
                         "filePath": "src/lib/code-api/declaration.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-DeclarationView'",
                         "implementation": "",
-                        "startLine": 92,
-                        "endLine": 93,
+                        "startLine": 94,
+                        "endLine": 95,
                         "references": {
                             "CssSelector": "@nav/api/CodeApi.DeclarationView.CssSelector"
                         }
@@ -889,8 +889,8 @@
                 "filePath": "src/lib/code-api/declaration.view.ts",
                 "declaration": "export class DeclarationView implements VirtualDOM<'div'>",
                 "implementation": "export class DeclarationView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-DeclarationView'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${DeclarationView.CssSelector} mkapi-declaration mkapi-semantic-color p-2 rounded`\n    constructor({\n        code,\n        parent,\n    }: {\n        code: Pick<Code, 'references' | 'declaration'>\n        parent: Pick<Entity, 'semantic'>\n    }) {\n        this.class += ` mkapi-role-${parent.semantic.role}`\n        const nonNullReferences = Object.entries(code.references).reduce(\n            (acc, [k, v]) => {\n                if (!v) {\n                    return acc\n                }\n                return { ...acc, [k]: v }\n            },\n            {},\n        )\n        const declaration = processDeclaration(\n            code.declaration,\n            nonNullReferences,\n            (k: string, v: string) => `<a target='_blank' href='${v}'>${k}</a>`,\n        )\n\n        this.children = [\n            {\n                tag: 'pre',\n                class: 'py-0 my-0',\n                innerHTML: declaration,\n            },\n        ]\n    }\n}",
-                "startLine": 88,
-                "endLine": 128,
+                "startLine": 90,
+                "endLine": 130,
                 "references": {
                     "DeclarationView": "@nav/api/CodeApi.DeclarationView",
                     "Code": "@nav/api/CodeApi.Code",

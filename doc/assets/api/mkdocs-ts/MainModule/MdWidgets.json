@@ -1795,8 +1795,8 @@
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 108,
-                        "endLine": 109,
+                        "startLine": 109,
+                        "endLine": 110,
                         "references": {
                             "children": "@nav/api/MainModule/MdWidgets.NoteView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -1831,8 +1831,8 @@
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly class: string = `${NoteView.CssSelector} border rounded text-justify`",
                         "implementation": "",
-                        "startLine": 107,
-                        "endLine": 108,
+                        "startLine": 108,
+                        "endLine": 109,
                         "references": {
                             "class": "@nav/api/MainModule/MdWidgets.NoteView.class"
                         }
@@ -1866,8 +1866,8 @@
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void",
                         "implementation": "",
-                        "startLine": 119,
-                        "endLine": 120,
+                        "startLine": 120,
+                        "endLine": 121,
                         "references": {
                             "connectedCallback": "@nav/api/MainModule/MdWidgets.NoteView.connectedCallback",
                             "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement"
@@ -1902,8 +1902,8 @@
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 106,
-                        "endLine": 107,
+                        "startLine": 107,
+                        "endLine": 108,
                         "references": {
                             "tag": "@nav/api/MainModule/MdWidgets.NoteView.tag"
                         }
@@ -1937,8 +1937,8 @@
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-NoteView'",
                         "implementation": "",
-                        "startLine": 104,
-                        "endLine": 105,
+                        "startLine": 105,
+                        "endLine": 106,
                         "references": {
                             "CssSelector": "@nav/api/MainModule/MdWidgets.NoteView.CssSelector"
                         }
@@ -1977,10 +1977,10 @@
                     "navPath": "@nav/api/MainModule/MdWidgets.NoteView.attributeMapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
-                        "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        level: element.getAttribute('level') as NoteLevel,\n        label:\n            element.getAttribute('title') ??\n            element.getAttribute('label') ??\n            undefined,\n        content: element.textContent ?? '',\n        expandable: element.getAttribute('expandable')\n            ? element.getAttribute('expandable') === 'true'\n            : false,\n        mode:\n            (element.getAttribute('mode') as ExpandableMode | null) ??\n            'stateless',\n        icon: element.getAttribute('icon') ?? undefined,\n    })",
+                        "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        level: element.getAttribute('level') as NoteLevel,\n        label:\n            element.getAttribute('title') ??\n            element.getAttribute('label') ??\n            undefined,\n        content: element.textContent ?? '',\n        expandable: element.getAttribute('expandable')\n            ? element.getAttribute('expandable') === 'true'\n            : false,\n        mode:\n            (element.getAttribute('mode') as ExpandableMode | null) ??\n            'stateful',\n        icon: element.getAttribute('icon') ?? undefined,\n    })",
                         "implementation": "",
-                        "startLine": 217,
-                        "endLine": 218,
+                        "startLine": 221,
+                        "endLine": 222,
                         "references": {
                             "attributeMapper": "@nav/api/MainModule/MdWidgets.NoteView.attributeMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
@@ -2027,8 +2027,8 @@
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "static fromHTMLElement(\n    element: HTMLElement,\n    parsingArgs: { router?: Router } & MdParsingOptions,\n)",
                         "implementation": "static fromHTMLElement(\n    element: HTMLElement,\n    parsingArgs: { router?: Router } & MdParsingOptions,\n) {\n    return new NoteView({\n        ...NoteView.attributeMapper(element),\n        parsingArgs,\n    })\n}",
-                        "startLine": 241,
-                        "endLine": 250,
+                        "startLine": 245,
+                        "endLine": 254,
                         "references": {
                             "fromHTMLElement": "@nav/api/MainModule/MdWidgets.NoteView.fromHTMLElement",
                             "Router": "@nav/api/MainModule.Router",
@@ -2048,9 +2048,9 @@
             "code": {
                 "filePath": "src/lib/md-widgets/note.view.ts",
                 "declaration": "export class NoteView implements VirtualDOM<'div'>",
-                "implementation": "export class NoteView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NoteView'\n\n    public readonly tag = 'div'\n    public readonly class: string = `${NoteView.CssSelector} border rounded text-justify`\n    public readonly children: ChildrenLike\n\n    public readonly level: NoteLevel\n    public readonly icon?: string | AnyVirtualDOM\n    public readonly label: string | AnyVirtualDOM\n    public readonly content: string | AnyVirtualDOM\n    public readonly parsingArgs: { router: Router } & MdParsingOptions\n    public readonly expandable: boolean = false\n    public readonly expanded$ = new BehaviorSubject(false)\n    public readonly mode: ExpandableMode = 'stateless'\n\n    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void\n    /**\n     * @param params\n     * @param params.level Level of the note.\n     * @param params.icon If provided, overrides the default icon associated to the given level.\n     * @param params.label Label to display. If none is provided, it uses the level as default value.\n     * @param params.content Text content.\n     * @param params.expandable Whether the note is expandable. Expandable note are collapsed by default.\n     * Default to `false`,\n     * @param params.mode Only relevant for expandable note, see {@link ExpandableMode}.\n     * @param params.parsingArgs Parsing options used to parse the content in MarkDown.\n     */\n    constructor(params: {\n        level: NoteLevel\n        icon?: string | AnyVirtualDOM\n        label?: string | AnyVirtualDOM\n        content: string | AnyVirtualDOM\n        expandable?: boolean\n        mode?: ExpandableMode\n        parsingArgs: { router?: Router } & MdParsingOptions\n    }) {\n        Object.assign(this, params)\n        const defaultLabels: Record<NoteLevel, string> = {\n            note: 'Note',\n            abstract: 'Abstract',\n            info: 'Info',\n            hint: 'Hint',\n            success: 'Success',\n            question: 'Question',\n            warning: 'Warning',\n            failure: 'Failure',\n            danger: 'Danger',\n            bug: 'Bug',\n            example: 'Example',\n            quote: 'Quote',\n        }\n        if (!this.expandable) {\n            this.expanded$.next(true)\n        }\n        this.label = this.label || defaultLabels[this.level]\n        this.class = `${this.class} mkdocs-border-${this.level}`\n        const content = (): AnyVirtualDOM => ({\n            tag: 'div' as const,\n            class: 'p-2',\n            children: [\n                typeof this.content === 'string'\n                    ? parseMd({\n                          src: this.content,\n                          ...this.parsingArgs,\n                      })\n                    : this.content,\n            ],\n        })\n\n        const maybeContent: AnyVirtualDOM | RxChild =\n            this.mode === 'stateless'\n                ? child$({\n                      source$: this.expanded$,\n                      vdomMap: (expanded) =>\n                          expanded ? content() : { tag: 'div' },\n                  })\n                : {\n                      tag: 'div' as const,\n                      class: attr$({\n                          source$: this.expanded$,\n                          vdomMap: (expanded) => (expanded ? '' : 'd-none'),\n                      }),\n                      children: [content()],\n                  }\n\n        this.children = [\n            new NoteHeaderView({\n                level: this.level,\n                label: this.label,\n                icon: this.icon,\n                expandable: this.expandable,\n                expanded$: this.expanded$,\n            }),\n            maybeContent,\n        ]\n        this.connectedCallback = (elem) => {\n            if (this.mode === 'stateful') {\n                elem.ownSubscriptions(\n                    this.expanded$\n                        .pipe(filter((expanded) => expanded))\n                        .subscribe(() => {\n                            refreshResizeObservers(elem)\n                        }),\n                )\n            }\n        }\n    }\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        level: element.getAttribute('level') as NoteLevel,\n        label:\n            element.getAttribute('title') ??\n            element.getAttribute('label') ??\n            undefined,\n        content: element.textContent ?? '',\n        expandable: element.getAttribute('expandable')\n            ? element.getAttribute('expandable') === 'true'\n            : false,\n        mode:\n            (element.getAttribute('mode') as ExpandableMode | null) ??\n            'stateless',\n        icon: element.getAttribute('icon') ?? undefined,\n    })\n\n    /**\n     * Construct an instance of NoteView from an `HTMLElement`.\n     *\n     * See {@link NoteView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     * @param parsingArgs Parsing options used to parse the content in MarkDown\n     */\n    static fromHTMLElement(\n        element: HTMLElement,\n        parsingArgs: { router?: Router } & MdParsingOptions,\n    ) {\n        return new NoteView({\n            ...NoteView.attributeMapper(element),\n            parsingArgs,\n        })\n    }\n}",
-                "startLine": 100,
-                "endLine": 251,
+                "implementation": "export class NoteView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-NoteView'\n\n    public readonly tag = 'div'\n    public readonly class: string = `${NoteView.CssSelector} border rounded text-justify`\n    public readonly children: ChildrenLike\n\n    public readonly level: NoteLevel\n    public readonly icon?: string | AnyVirtualDOM\n    public readonly label: string | AnyVirtualDOM\n    public readonly content: string | AnyVirtualDOM\n    public readonly parsingArgs: { router: Router } & MdParsingOptions\n    public readonly expandable: boolean = false\n    public readonly expanded$ = new BehaviorSubject(false)\n    public readonly mode: ExpandableMode = 'stateful'\n\n    public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void\n    /**\n     * @param params\n     * @param params.level Level of the note.\n     * @param params.icon If provided, overrides the default icon associated to the given level.\n     * @param params.label Label to display. If none is provided, it uses the level as default value.\n     * @param params.content Text content.\n     * @param params.expandable Whether the note is expandable. Expandable note are collapsed by default.\n     * Default to `false`,\n     * @param params.mode See {@link ExpandableMode}.\n     * @param params.parsingArgs Parsing options used to parse the content in MarkDown.\n     */\n    constructor(params: {\n        level: NoteLevel\n        icon?: string | AnyVirtualDOM\n        label?: string | AnyVirtualDOM\n        content: string | AnyVirtualDOM\n        expandable?: boolean\n        mode?: ExpandableMode\n        parsingArgs: { router?: Router } & MdParsingOptions\n    }) {\n        Object.assign(this, params)\n        const defaultLabels: Record<NoteLevel, string> = {\n            note: 'Note',\n            abstract: 'Abstract',\n            info: 'Info',\n            hint: 'Hint',\n            success: 'Success',\n            question: 'Question',\n            warning: 'Warning',\n            failure: 'Failure',\n            danger: 'Danger',\n            bug: 'Bug',\n            example: 'Example',\n            quote: 'Quote',\n        }\n        if (!this.expandable) {\n            this.expanded$.next(true)\n        }\n        this.label = this.label || defaultLabels[this.level]\n        this.class = `${this.class} mkdocs-border-${this.level}`\n        const content = (): AnyVirtualDOM => ({\n            tag: 'div' as const,\n            class: 'p-2',\n            children: [\n                typeof this.content === 'string'\n                    ? parseMd({\n                          src: this.content,\n                          ...this.parsingArgs,\n                      })\n                    : this.content,\n            ],\n        })\n\n        const maybeContent: AnyVirtualDOM | RxChild =\n            this.mode === 'stateless' && this.expandable\n                ? child$({\n                      source$: this.expanded$,\n                      vdomMap: (expanded) =>\n                          expanded ? content() : { tag: 'div' },\n                  })\n                : {\n                      tag: 'div' as const,\n                      class: attr$({\n                          source$: this.expanded$,\n                          vdomMap: (expanded) => (expanded ? '' : 'd-none'),\n                      }),\n                      children: [content()],\n                  }\n\n        this.children = [\n            new NoteHeaderView({\n                level: this.level,\n                label: this.label,\n                icon: this.icon,\n                expandable: this.expandable,\n                expanded$: this.expanded$,\n            }),\n            maybeContent,\n        ]\n        this.connectedCallback = (elem) => {\n            if (this.mode === 'stateful') {\n                elem.ownSubscriptions(\n                    this.expanded$\n                        .pipe(\n                            filter((expanded) => expanded),\n                            delay(10),\n                        )\n                        .subscribe(() => {\n                            refreshResizeObservers(elem)\n                        }),\n                )\n            }\n        }\n    }\n\n    /**\n     * Attributes mapper from an `HTMLElement` to the arguments of the class's constructor.\n     *\n     * @param element The `HTMLElement`.\n     */\n    static attributeMapper = (element: HTMLElement) => ({\n        level: element.getAttribute('level') as NoteLevel,\n        label:\n            element.getAttribute('title') ??\n            element.getAttribute('label') ??\n            undefined,\n        content: element.textContent ?? '',\n        expandable: element.getAttribute('expandable')\n            ? element.getAttribute('expandable') === 'true'\n            : false,\n        mode:\n            (element.getAttribute('mode') as ExpandableMode | null) ??\n            'stateful',\n        icon: element.getAttribute('icon') ?? undefined,\n    })\n\n    /**\n     * Construct an instance of NoteView from an `HTMLElement`.\n     *\n     * See {@link NoteView.attributeMapper} for details on the attributes conversion from the `HTMLElement`.\n     *\n     * @param element The `HTMLElement`.\n     * @param parsingArgs Parsing options used to parse the content in MarkDown\n     */\n    static fromHTMLElement(\n        element: HTMLElement,\n        parsingArgs: { router?: Router } & MdParsingOptions,\n    ) {\n        return new NoteView({\n            ...NoteView.attributeMapper(element),\n            parsingArgs,\n        })\n    }\n}",
+                "startLine": 101,
+                "endLine": 255,
                 "references": {
                     "NoteView": "@nav/api/MainModule/MdWidgets.NoteView",
                     "ExpandableMode": "@nav/api/MainModule/MdWidgets.ExpandableMode",
@@ -2238,7 +2238,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Relevant for expandable note only.\nIf  `stateful` , the note will preserve its state upon collapse/expand,\notherwise the content is removed on collapse and regenerated on expand (effectively deleting the state).",
+                        "content": "Relevant for expandable note only.\nIf  `stateful` , the note is created right away and will preserve its state upon collapse/expand.\nIf  `stateless` , the content is created/removed each time the note is expanded/collapsed, effectively deleting the\nstate.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2257,8 +2257,8 @@
                 "filePath": "src/lib/md-widgets/note.view.ts",
                 "declaration": "export type ExpandableMode = 'stateful' | 'stateless'",
                 "implementation": "",
-                "startLine": 42,
-                "endLine": 43,
+                "startLine": 43,
+                "endLine": 44,
                 "references": {
                     "ExpandableMode": "@nav/api/MainModule/MdWidgets.ExpandableMode"
                 }
