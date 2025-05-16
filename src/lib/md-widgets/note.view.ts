@@ -9,7 +9,7 @@ import {
 } from 'rx-vdom'
 import { parseMd, MdParsingOptions } from '../markdown'
 import { Router } from '../router'
-import { BehaviorSubject, filter } from 'rxjs'
+import { BehaviorSubject, delay, filter } from 'rxjs'
 import { refreshResizeObservers } from './traits'
 
 /**
@@ -36,8 +36,9 @@ export type NoteLevel = keyof typeof icons
 
 /**
  * Relevant for expandable note only.
- * If `stateful`, the note will preserve its state upon collapse/expand,
- * otherwise the content is removed on collapse and regenerated on expand (effectively deleting the state).
+ * If `stateful`, the note is created right away and will preserve its state upon collapse/expand.
+ * If `stateless`, the content is created/removed each time the note is expanded/collapsed, effectively deleting the
+ * state.
  */
 export type ExpandableMode = 'stateful' | 'stateless'
 /**
@@ -114,7 +115,7 @@ export class NoteView implements VirtualDOM<'div'> {
     public readonly parsingArgs: { router: Router } & MdParsingOptions
     public readonly expandable: boolean = false
     public readonly expanded$ = new BehaviorSubject(false)
-    public readonly mode: ExpandableMode = 'stateless'
+    public readonly mode: ExpandableMode = 'stateful'
 
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     /**
@@ -125,7 +126,7 @@ export class NoteView implements VirtualDOM<'div'> {
      * @param params.content Text content.
      * @param params.expandable Whether the note is expandable. Expandable note are collapsed by default.
      * Default to `false`,
-     * @param params.mode Only relevant for expandable note, see {@link ExpandableMode}.
+     * @param params.mode See {@link ExpandableMode}.
      * @param params.parsingArgs Parsing options used to parse the content in MarkDown.
      */
     constructor(params: {
@@ -171,7 +172,7 @@ export class NoteView implements VirtualDOM<'div'> {
         })
 
         const maybeContent: AnyVirtualDOM | RxChild =
-            this.mode === 'stateless'
+            this.mode === 'stateless' && this.expandable
                 ? child$({
                       source$: this.expanded$,
                       vdomMap: (expanded) =>
@@ -200,7 +201,10 @@ export class NoteView implements VirtualDOM<'div'> {
             if (this.mode === 'stateful') {
                 elem.ownSubscriptions(
                     this.expanded$
-                        .pipe(filter((expanded) => expanded))
+                        .pipe(
+                            filter((expanded) => expanded),
+                            delay(10),
+                        )
                         .subscribe(() => {
                             refreshResizeObservers(elem)
                         }),
@@ -226,7 +230,7 @@ export class NoteView implements VirtualDOM<'div'> {
             : false,
         mode:
             (element.getAttribute('mode') as ExpandableMode | null) ??
-            'stateless',
+            'stateful',
         icon: element.getAttribute('icon') ?? undefined,
     })
 
