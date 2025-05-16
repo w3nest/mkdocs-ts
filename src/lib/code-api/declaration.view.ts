@@ -61,16 +61,18 @@ export function processDeclaration(
         .map((separator) => `\\${separator}`)
         .join('')
     const regex = new RegExp(
-        `(?<=[${separatorsPattern}])(${wordsPattern})(?=[${separatorsPattern}])`,
+        `([${separatorsPattern}])(${wordsPattern})(?=[${separatorsPattern}])`,
         'g',
     )
-
     const replaceWords = (inputString: string) => {
-        return inputString.replace(regex, (matchedWord: string) => {
-            return matchedWord === ''
-                ? matchedWord
-                : `_mklink_${matchedWord}_mklink_`
-        })
+        return inputString.replace(
+            regex,
+            (_, sepBefore: string, matchedWord: string) => {
+                return matchedWord === ''
+                    ? matchedWord
+                    : `${sepBefore}_mklink_${matchedWord}_mklink_`
+            },
+        )
     }
     const initial = replaceWords(declaration)
         .replace(/</g, '&lt;')
