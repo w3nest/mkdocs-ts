@@ -7,7 +7,7 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs'
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import {
     BBox,
     DisplayMode,
@@ -262,14 +262,11 @@ export class ExpandableNavColumn extends ExpandableBaseColumn {
                     tag: 'div',
                     class: 'overflow-auto mkdocs-bg-5 mkdocs-text-5 h-100 mkdocs-thin-v-scroller',
                     style: attr$({
-                        source$: combineLatest([
-                            params.displayMode$,
-                            htmlElement$,
-                        ]),
-                        vdomMap: ([mode, favView]) => {
+                        source$: params.displayMode$,
+                        vdomMap: (mode) => {
                             return slidingStyle({
                                 mode,
-                                offset: favView.offsetWidth,
+                                offset: 0,
                                 side: 'left',
                                 maxWidth: params.displayOptions.navMaxWidth,
                                 translationTime:
