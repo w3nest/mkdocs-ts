@@ -162,7 +162,7 @@ export class NotebookSection implements VirtualDOM<'div'> {
                         ...(this.options?.markdown ?? {}),
                         views: {
                             ...(this.options?.markdown?.views ?? {}),
-                            ...this.state.getCellsFactory(),
+                            ...this.state.getCellsFactory(context),
                         },
                     })
                     const end = Date.now()
@@ -181,23 +181,32 @@ export class NotebookSection implements VirtualDOM<'div'> {
                             }
 
                             if (params.options?.runAtStart) {
-                                const cellId = this.state.ids.slice(-1)[0]
-                                const start = Date.now()
-                                this.state.execute(cellId).then(
-                                    (scope) => {
-                                        const end = Date.now()
-                                        context.info(
-                                            `Notebook execution time: ${String(end - start)} ms`,
-                                            { scope },
-                                        )
-                                    },
-                                    (e: unknown) => {
-                                        console.error(
-                                            `Failed to run notebook.`,
-                                            e,
-                                        )
+                                const lastCellId = this.state.ids.slice(-1)[0]
+                                context.info(
+                                    `Trigger page execution from cell ${lastCellId}`,
+                                    {
+                                        options: params.options,
+                                        cellIds: [...this.state.ids],
                                     },
                                 )
+                                const start = Date.now()
+                                this.state
+                                    .execute(lastCellId, true, context)
+                                    .then(
+                                        (scope) => {
+                                            const end = Date.now()
+                                            context.info(
+                                                `Notebook execution time: ${String(end - start)} ms`,
+                                                { scope },
+                                            )
+                                        },
+                                        (e: unknown) => {
+                                            console.error(
+                                                `Failed to run notebook.`,
+                                                e,
+                                            )
+                                        },
+                                    )
                             }
                         },
                         disconnectedCallback: () => {

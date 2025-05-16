@@ -372,21 +372,26 @@ export class State {
         return this.pyNamespace
     }
 
-    getCellsFactory(): Record<
+    @Contextual()
+    getCellsFactory(
+        ctx?: ContextTrait,
+    ): Record<
         string,
         (elem: HTMLElement, parserOptions?: MdParsingOptions) => AnyView
     > {
+        ctx = this.ctx(ctx)
+
         const deportedOutput = (elem: HTMLElement) => {
             return this.createDeportedOutputsView(elem)
         }
-        return Object.entries(State.CellsFactory).reduce(
+        const factory = Object.entries(State.CellsFactory).reduce(
             (acc, [k, v]) => {
                 const fct = (
                     elem: HTMLElement,
                     parserOptions: MdParsingOptions,
                 ) => {
                     const cell = v({ state: this, elem, parserOptions })
-                    this.appendCell(cell)
+                    this.appendCell(cell, ctx)
                     return cell
                 }
                 return { ...acc, [k]: fct }
@@ -395,9 +400,14 @@ export class State {
                 'cell-output': deportedOutput,
             },
         )
+        ctx.info('Cells factory initialized', factory)
+        return factory
     }
 
-    appendCell(cell: CellTrait) {
+    @Contextual({ key: (cell: CellTrait) => cell.cellId })
+    appendCell(cell: CellTrait, ctx?: ContextTrait) {
+        ctx = this.ctx(ctx)
+        ctx.info('Append new cell to the notebook', cell)
         this.ids.push(cell.cellId)
         this.cellIds$.next(this.ids)
         this.cells.push(cell)
