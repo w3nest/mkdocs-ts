@@ -42,7 +42,7 @@ display({MkDocs, rxjs, clients})
 A custom layout requires a structured `TLayout` (for slide content) and `THeader` (for navigation)
 involved in <api-link target='Navigation'></api-link> node.
 
-### `TLayout`
+### Layout
 
 Each slide consists of:
 
@@ -163,7 +163,7 @@ const slides = {
 </js-cell>
 </note>
 
-### `THeader`
+### Header
 
 It defines the structure of the navigation node's header, representing an icon from 
 <ext-link target='fontawesome'>Font Awesome</ext-link>:
@@ -186,128 +186,6 @@ we align the API with the one used for header in the default layout
 </note>
 
 
-## Navigation System
-
-The navigation system includes 4 transitions between the slides defined in the navigation:
-*  **left**: navigate to the previous sibling.
-*  **right**: navigate to the next sibling.
-*  **up**: navigate to the parent.
-*  **down**: navigate to the first child.
-
-### Navigation Paths
-
-The available navigation paths required for the **left**/**right**/**up**/**down** transitions need to be updated at 
-each router's re-location, exposed through <api-link target="Router.target$"></api-link>.
-
-The next cell finds out the path of the eventual parent (`up`), siblings (`left` & `right`), and first child (`down`),
-from `router.target$`:
-
-<js-cell>
-
-const getNav$ = (router) => {
-    const tree = router.explorerState
-    return router.target$.pipe(
-        rxjs.map( (target) => {
-            if(!MkDocs.isResolvedTarget(target)){ 
-                // If the path is not resolved, no items displayed
-                return {}
-            }
-            const treeNode = tree.getNodeResolved(target.path)
-            const treeParentNode = tree.getParent(treeNode.id)
-            const children = treeParentNode?.resolvedChildren() || []
-            const index = children.indexOf(treeNode)
-            return {
-                down: treeNode.children
-                    ? treeNode.resolvedChildren()[0].id
-                    : undefined,
-                up: children[0] === treeNode ? treeParentNode?.id : undefined,
-                left: children[index - 1]?.id,
-                right: children[index + 1]?.id,
-            }
-        }),
-        rxjs.shareReplay({refCount: true, bufferSize: 1}),
-    )
-}
-</js-cell>
-
-It constructs and returns an <ext-link target="Observable">Observable</ext-link>: each time `router.target$` is updated, 
-the returned `Observable` emits a new object with the 4 corresponding transition paths.
-
-
-<note level="question" title="explorerState?">
-When instantiating a <api-link target="Router"></api-link> instance, one of the first action realized is the 
-initialization of a <api-link target="Router.explorerState"></api-link> from the given
-<api-link target="Navigation"></api-link>.
-
-This is a convenient structure to query resolved nodes.
-Their IDs are the corresponding path computed from the input `Navigation`.
-</note>
-
-
-### Navigation Bar
-
-The navigation bar dynamically updates based on available links for `top`/`bottom`/`left`/`right` navigation.
-
-Let's start by implementing an item for the navigation:
-
-
-<js-cell>
-const navItem = (direction, nav, router) => {
-    if(!nav[direction]){
-        return { tag: 'div' }
-    }
-    return {
-        tag: 'button',
-        class: `btn btn-sm btn-dark mx-1`,
-        children: {
-            policy: 'replace',
-            source$: rxjs.from(router.getNav({path:nav[direction]})),
-            vdomMap: (navNode) => [
-                { tag: 'i', class: `fas fa-chevron-${direction}`},
-                { tag: 'i', class: `mx-2`},
-                { tag: 'i', innerText: navNode.name},
-                { tag: 'i', class: `mx-1`},
-                navNode.header.icon,
-            ] 
-        },  
-        onclick: () => {
-            router && router.fireNavigateTo({path:nav[direction]})
-        }
-    }
-}
-</js-cell>
-
-This function takes a direction (`'top' | 'bottom' | 'left' | 'right'`), and navigation object 
-(`{top?:string, bottom?:string, left?:string, right?:string}` - `string` being the corresponding path) 
-and a router as arguments.
-
-The returned navigation item is a **button** that triggers navigation when clicked.
-It connects to <api-link target='Router.getNav'></api-link>, a promise resolving the navigation node for the
-given path. The `vdomMap` is then called upon resolution, returning the (virtual) DOM children.
-
-Then, the navigation bar is implemented:
-
-<js-cell>
-class NavBar{
-    constructor({router}){
-        Object.assign(this, {
-            tag: 'div',
-            class: 'd-flex align-items-center w-100 border-top py-1'
-        })
-        this.children = ['up', 'down', 'left', 'right'].map((direction) => ({
-            source$: getNav$(router),
-            vdomMap: (nav) => navItem(direction, nav, router)
-        }))
-    }
-}
-</js-cell>
-
-Here is a short description of the reactive flows involved:
-*  At first, the `navBar` is a `div` featuring a couple of class tokens and four children
-  (associated to `up`, `down`, *etc.* ) - only **placeholders** before the first update of `nav$`.
-*  When the router navigates to a given path, the `nav$` object emit the updated navigation object.
-   The placeholders are replaced with the **interactive buttons**, created using the `navItem(direction, nav, router)`.
-
 ## Slides View
 
 Each slide consists of **text**, **picture**, **quotes**, **paragraph**.
@@ -329,7 +207,11 @@ const picture = (element) => {
         tag:'div',
         class: 'w-100 flex-grow-1 d-flex justify-content-center py-1',
         style: { minHeight: '0px' },
-        children:[{ tag: 'img', src: element.picture, style: { maxHeight: '100%' , maxWidth: '100%'}}]
+        children:[{ 
+            tag: 'img', 
+            src: element.picture, 
+            style: { maxHeight: '100%' , maxWidth: '100%', height:'100%'}
+        }]
     }
 }
 const text = (element) => {
@@ -393,6 +275,51 @@ class SlideView{
 </js-cell>
 
 
+## Navigation Bar
+
+Let’s add a navigation bar at the bottom of the layout.
+
+This bar displays two buttons—Previous and Next—allowing navigation between pages or slides.
+It leverages the  <api-link target="Router.siblings$"></api-link> observable, 
+which emits the adjacent navigation nodes relative to the current page.
+
+Below is a simple implementation:
+
+<js-cell>
+const navItem = (router, navNode, direction) => ({
+    tag: 'a',
+    class: `btn btn-sm btn-dark mx-1`,
+    // prefixing with '@nav' enable internal redirect, this is discussed in the next section
+    href: `@nav/${navNode.href}`,
+    children: [
+        { tag: 'i', class: `fas fa-chevron-${direction}`},
+        { tag: 'i', class: `mx-2`, innerText: navNode.name},
+        navNode.header.icon,
+    ]
+})
+
+class NavBar{
+    constructor({router}){
+        Object.assign(this, {
+            tag: 'div',
+            class: 'd-flex align-items-center w-100 border-top py-1'
+        })
+        this.children = { 
+            policy: 'replace',
+            source$:router.siblings$,
+            vdomMap: ({prev, next}) => {
+                return [
+                    prev ? navItem(router, prev, 'left') : { tag: 'div'},
+                    next ? navItem(router, next, 'right') : { tag: 'div'}
+                ]
+            }
+        }
+            
+    }
+}
+</js-cell>
+
+
 ## Custom Layout
 
 The layout simply wrap the previously defined `SlideView` & `NavBar`:
@@ -409,6 +336,7 @@ The slide at location \`${path}\` can not be resolved: \`${reason}\`
 })
 
 class CustomLayout{
+    
     constructor({router}){
         Object.assign(this,{
             tag: 'div',
@@ -426,17 +354,22 @@ class CustomLayout{
             },
             new NavBar({router})      
         ]
+        this.onclick = (event) => {
+            MkDocs.DefaultLayout.handleInternalLinkClick({event, router})
+        }
     }
 }
 </js-cell>
 
 
-<note level="warning">
-For the sake of simplicity, the above cell does not account for the case of 
-<api-link target="UnresolvedTarget"></api-link> that may be emitted from 
-<api-link target="Router.target$"></api-link>.
-</note>
+<note level="question" title="Links & Internal Redirection" >
+In this example, the `onclick` handler captures all anchor clicks inside the layout and redirects them internally
+using <api-link target="DefaultLayout.handleInternalLinkClick"></api-link>.
+This prevents full-page reloads for internal links (@nav/...) and ensures smoother in-app navigation.
 
+The default layout already includes this behavior, but since we're creating a custom layout here, we need to add it 
+explicitly.
+</note>
 
 ## Navigation & App
 

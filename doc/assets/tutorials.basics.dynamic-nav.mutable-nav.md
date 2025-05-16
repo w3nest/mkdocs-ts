@@ -89,8 +89,7 @@ And use a <ext-link target="RxChild">RxChild</ext-link> to create a reactive `co
 const layout = {
     content: ({router}) => ({
         source$: rootFolder$,
-        vdomMap: (resp) => folderView(resp, '', router),
-        sideEffects: (rxElement) => MkDocs.replaceLinks({router, elem: rxElement.element, fromMarkdown: false})
+        vdomMap: (resp) => folderView(resp, '', router)
     }),
     toc: () => ({
         source$: rootFolder$,
@@ -103,31 +102,6 @@ const layout = {
 Per the <api-link target="DefaultLayout.NavLayout"></api-link> documentation, developers must explicitly update 
 the TOC if changes occur after the initial rendering. 
 This is why the `toc` is also declared using an <ext-link target="RxChild">RxChild</ext-link>.
-</note>
-
-<note level="question" title="`MkDocs.replaceLinks`" expandable="true">
-The <api-link target="replaceLinks"></api-link> function is called on each view update because anchor (`<a>`)
-elements contain `href` attributes formatted as `@nav/path/to/target` (in the definition of `ItemView`), 
-which is specific to {{mkdocs-ts}}.
-Normally, the <api-link target="DefaultLayout.PageView"></api-link> automatically processes these links during the initial
-rendering to enable proper navigation. 
-However, since the content is dynamic here, we must explicitly call `replaceLinks` at each update to ensure 
-updated links function correctly.
-
-Another option to define anchors in your views, avoiding the `@nav/path/to/target` 'magic', is to redefine the 
-`onclick` callback when creating them, *e.g.*:
-
-<code-snippet language="javascript">
-function createAnchor(title, targetPath, router) {
-    const anchor = document.createElement('a')
-    anchor.innerText = title
-    anchor.onclick = (ev) => {
-        e.preventDefault()
-        router.fireNavigateTo(targetPath)
-    }
-}
-</code-snippet>
-
 </note>
 
 The application is finally defined and displayed:

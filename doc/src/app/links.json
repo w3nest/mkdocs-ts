@@ -176,6 +176,10 @@
             "href": "@nav/api/MainModule.Router.target$",
             "withClass": "mkapi-role-attribute"
         },
+        "Router.siblings$": {
+            "href": "@nav/api/MainModule.Router.siblings$",
+            "withClass": "mkapi-role-attribute"
+        },
         "Router.explorerState": {
             "href": "@nav/api/MainModule.Router.explorerState",
             "withClass": "mkapi-role-attribute"
@@ -199,6 +203,10 @@
         "DefaultLayout.Layout": {
             "href": "@nav/api/MainModule/DefaultLayout.Layout",
             "withClass": "mkapi-role-class"
+        },
+        "DefaultLayout.handleInternalLinkClick": {
+            "href": "@nav/api/MainModule/DefaultLayout.handleInternalLinkClick",
+            "withClass": "mkapi-role-function"
         },
         "DefaultLayout.Layout.new": {
             "href": "@nav/api/MainModule/DefaultLayout.Layout.newLayout",
