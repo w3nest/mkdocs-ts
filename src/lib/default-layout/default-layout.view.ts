@@ -28,6 +28,7 @@ import {
     DefaultLayoutParams,
     DisplayMode,
     DisplayOptions,
+    handleInternalLinkClick,
     LayoutObserver,
     plugBoundingBoxObserver,
 } from './common'
@@ -91,6 +92,7 @@ export class Layout implements VirtualDOM<'div'> {
 
     public readonly layoutObserver: LayoutObserver
 
+    public readonly onclick: (ev: MouseEvent) => void
     private appBoundingBox$ = new ReplaySubject<DOMRect>(1)
     /**
      * Initializes a new instance.
@@ -117,6 +119,10 @@ export class Layout implements VirtualDOM<'div'> {
         )
 
         this.connectedCallback = this.getConnectedCallback(router)
+
+        this.onclick = (event: MouseEvent) => {
+            handleInternalLinkClick({ router, event })
+        }
 
         const viewInputs = {
             router,

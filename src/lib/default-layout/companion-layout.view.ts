@@ -29,6 +29,7 @@ import {
     DisplayMode,
     NavHeader,
     NavLayout,
+    handleInternalLinkClick,
 } from './common'
 
 /**
@@ -196,6 +197,12 @@ export class LayoutWithCompanion implements VirtualDOM<'div'> {
                             }),
                             expandableRightSideNav,
                         ],
+                        onclick: (event: MouseEvent) => {
+                            handleInternalLinkClick({
+                                router: companionRouter,
+                                event,
+                            })
+                        },
                         connectedCallback: (e) => {
                             companionRouter.setScrollableElement(e)
                         },

@@ -9,6 +9,7 @@ import {
 import { expectTruthy } from './utils'
 import { filter, firstValueFrom } from 'rxjs'
 import { ChildrenLike, render, RxHTMLElement, VirtualDOM } from 'rx-vdom'
+import { handleInternalLinkClick } from '../../lib/default-layout'
 
 test('patchSrc happy path', () => {
     const inner = `Some content\n<i>some HTML content</i>\nAnd special characters: > < &`
@@ -107,6 +108,10 @@ describe('render markdown', () => {
         })
         document.body.appendChild(render(vdom))
         const anchor = expectTruthy(document.querySelector('a'))
+        // somehow onclick delegation seems to not work in tests
+        anchor.onclick = (event) => {
+            handleInternalLinkClick({ router, event })
+        }
         anchor.dispatchEvent(new MouseEvent('click'))
         const target = await firstValueFrom(
             router.target$.pipe(

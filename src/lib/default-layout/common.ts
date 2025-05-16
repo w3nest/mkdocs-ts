@@ -574,6 +574,36 @@ export class LayoutObserver {
     }
 }
 
+/**
+ * Intercepts and handles internal link clicks for in-app navigation (`href` starting with `@nav`).
+ *
+ * This function is typically used in an `onclick` handler on a top-level container element,
+ * allowing it to catch and manage anchor clicks from any of its child elements.
+ *
+ * @param _p
+ * @param _p.event The click event triggered on the document.
+ * @param _p.router The application's router instance.
+ */
+export function handleInternalLinkClick({
+    event,
+    router,
+}: {
+    event: MouseEvent
+    router: Router
+}) {
+    const target = event.target as HTMLElement
+    const anchor = target.closest('a')
+    if (anchor) {
+        const baseURI = document.head.baseURI.split('?')[0]
+        const href = anchor.href.replace(baseURI, '')
+        if (href.startsWith('@nav')) {
+            event.preventDefault()
+            event.stopPropagation()
+            router.fireNavigateTo(href.replace('@nav', '?nav='))
+        }
+    }
+}
+
 export function plugBoundingBoxObserver<Tag extends SupportedHTMLTags>(
     elem: RxHTMLElement<Tag>,
     boundingBox$: Subject<BBox>,

@@ -10,7 +10,7 @@ import {
     AttributeLike,
 } from 'rx-vdom'
 import { Target, isResolvedTarget, Router } from '../router'
-import { parseMd, parseMdFromUrl, replaceLinks } from '../markdown'
+import { parseMd, parseMdFromUrl } from '../markdown'
 import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -191,11 +191,6 @@ export class PageView implements VirtualDOM<'div'> {
                                 // This is the `html` content returned by `destination.html`
                                 page.firstElementChild as HTMLElement,
                             )
-                            replaceLinks({
-                                router: this.router,
-                                elem: page,
-                                fromMarkdown: false,
-                            })
                         },
                     }
                 },

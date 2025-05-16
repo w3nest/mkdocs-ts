@@ -10,7 +10,6 @@ import { from } from 'rxjs'
 import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
 import { AnyView } from './navigation.node'
-import { parseUrl } from './browser.interface'
 import {
     ApiLink,
     CrossLink,
@@ -337,10 +336,6 @@ export function parseMd({
         tag: 'div',
         children: [div],
         connectedCallback: (elem) => {
-            // Navigation links
-            if (router) {
-                replaceLinks({ router, elem, fromMarkdown: true })
-            }
             if (onRendered) {
                 onRendered(elem)
             }
@@ -536,64 +531,4 @@ function fixedMarkedParseCustomViews({
     })
 
     return { div: divResult, replacedViews: contents }
-}
-
-/**
- * This function scans all anchor (`<a>`) elements inside `elem` with `href` starting with `@nav` marker and
- * transforms them with an anchor element that properly triggers a navigation event to the path defined
- * after the `@nav` marker.
- *
- * The processed anchors typically have the form `<a href='@nav/path/to/link'>link</a>`.
- * The transformation is basically executing:
- * <code-snippet language="javascript">
- * if (link.href.includes('@nav')) {
- *     const path = `nav=${link.href.split('@nav')[1]}`
- *     link.href = `${router.basePath}?${path}`
- *     link.onclick = (e: MouseEvent) => {
- *         e.preventDefault()
- *         router.fireNavigateTo(path)
- *     }
- * }
- * </code-snippet>
- *
- * If `fromMarkdown` is `true`, it processes metadata stored in the `title` attribute (e.g., additional CSS classes)
- * for links that were generated from Markdown content.
- *
- * @param _p
- * @param _p.router The router instance used for navigation.
- * @param _p.elem The HTML element containing links to be processed.
- * @param _p.fromMarkdown - Whether the links originate from Markdown content.
- *
- */
-export function replaceLinks({
-    router,
-    elem,
-    fromMarkdown,
-}: {
-    router: Router
-    elem: HTMLElement
-    fromMarkdown: boolean
-}) {
-    const links = elem.querySelectorAll('a')
-    links.forEach((link) => {
-        if (link.href.includes('@nav')) {
-            const path = `nav=${link.href.split('@nav')[1]}`
-            link.href = `${router.basePath}?${path}`
-            link.onclick = (e: MouseEvent) => {
-                e.preventDefault()
-                const target = parseUrl(path)
-                router.fireNavigateTo({ ...target, issuer: 'link' })
-            }
-            if (fromMarkdown && link.title) {
-                // When the anchor is generated from markdown, the title is used to append classes to the generated
-                // element.
-                const metadata_json = JSON.parse(
-                    link.title,
-                ) as unknown as Record<string, string | undefined>
-                link.title = ''
-                const classes = metadata_json.class?.split(' ') ?? []
-                link.classList.add(...classes)
-            }
-        }
-    })
 }

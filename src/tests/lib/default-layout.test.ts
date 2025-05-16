@@ -12,6 +12,7 @@ import { expectTruthy, mockMissingUIComponents } from './utils'
 import { render } from 'rx-vdom'
 import {
     DisplayOptions,
+    handleInternalLinkClick,
     NavigationView,
     PageView,
     TOCView,
@@ -198,6 +199,10 @@ describe('Page', () => {
         )
         const anchor = expectTruthy(page.querySelector('a'))
         expect(anchor.innerText).toBe('An internal link')
+        // somehow onclick delegation seems to not work in tests
+        anchor.onclick = (event) => {
+            handleInternalLinkClick({ router, event })
+        }
         anchor.dispatchEvent(new MouseEvent('click'))
         const redirectTarget = await firstValueFrom(
             router.target$.pipe(
