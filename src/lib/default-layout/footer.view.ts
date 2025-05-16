@@ -9,7 +9,7 @@ import {
 } from 'rx-vdom'
 import { ReplaySubject } from 'rxjs'
 import { AnyNavNode, AnyView, NavNodePromise } from '../navigation.node'
-import { getSiblings$, plugBoundingBoxObserver } from './common'
+import { plugBoundingBoxObserver } from './common'
 import { Router } from '../router'
 
 export class FooterWrapper implements VirtualDOM<'div'> {
@@ -51,7 +51,7 @@ export class NavFooterView implements VirtualDOM<'div'> {
 
     constructor(params: { router: Router }) {
         const { router } = params
-        const nav$ = getSiblings$(router)
+        const nav$ = router.siblings$
         const sep = {
             tag: 'div' as const,
             class: 'flex-grow-1',
