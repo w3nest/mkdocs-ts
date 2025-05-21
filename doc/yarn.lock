@@ -4366,10 +4366,10 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.4.2.tgz#25a4b50de2e179cd46e438f8d47113b966b1fd4e"
-  integrity sha512-vKMp+2cM1mzCyOz8CIjaCR4Hx8nDfbw1CitNp010JXBD2d/NLTutj8VQGZPr3+STUOZZIvvXr2rt5aFBncypFw==
+mkdocs-ts@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.4.3.tgz#6a43b7649752f42b9f2f1525429b0169c4f11b82"
+  integrity sha512-YaGIQocHEFeulC9Ks2K0HWcGjuQnbAJ07RFfTxOHTXW8b6mVzhGRNs/Pxz7PelpldOdv/BA9Lt3un1ye5bsGtQ==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     "@w3nest/rx-tree-views" "^0.2.0"
