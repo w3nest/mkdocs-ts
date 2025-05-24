@@ -132,7 +132,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
      */
     public readonly state: State
 
-    public readonly editorView: CodeSnippetView
+    public readonly editorView: SnippetEditorView
     /**
      * Observable over the source content of the cell.
      */
@@ -440,7 +440,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                     {
                         tag: 'i',
                         class: 'mx-1',
-            },
+                    },
                     {
                         tag: 'i',
                         class: 'fas fa-caret-down',
@@ -452,36 +452,36 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                 },
             },
             {
-                    tag: 'div',
+                tag: 'div',
                 class: attr$({
                     source$: expanded$,
                     vdomMap: (e): string => (e ? '' : 'd-none'),
                     wrapper: (d) => `${d} p-1 px-2 mkdocs-bg-0 border rounded`,
                 }),
-                    style: {
+                style: {
                     position: 'absolute',
                     top: '100%',
                     minWidth: '100%',
                     zIndex: 1,
-                    },
-                    children: params.variables.map((v) => ({
-                        tag: 'div',
+                },
+                children: params.variables.map((v) => ({
+                    tag: 'div',
                     class: 'd-flex align-items-center',
-                        children: [
-                            {
-                                tag: 'i',
-                                class: 'fas fa-dot-circle',
-                            },
-                            {
-                                tag: 'i',
-                                class: 'mx-1',
-                            },
-                            {
-                                tag: 'div',
-                                innerText: v,
-                            },
-                        ],
-                    })),
+                    children: [
+                        {
+                            tag: 'i',
+                            class: 'fas fa-dot-circle',
+                        },
+                        {
+                            tag: 'i',
+                            class: 'mx-1',
+                        },
+                        {
+                            tag: 'div',
+                            innerText: v,
+                        },
+                    ],
+                })),
             },
         ]
     }

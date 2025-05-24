@@ -12,6 +12,7 @@ import {
     sync$,
     VirtualDOM,
     EmptyDiv,
+    RxHTMLElement,
 } from 'rx-vdom'
 import {
     BehaviorSubject,
@@ -21,12 +22,16 @@ import {
     take,
 } from 'rxjs'
 import { CellStatus, ExecCellError, Output, State } from './state'
-import { CodeSnippetView } from '../md-widgets'
+import type { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
 import { Dependencies } from '.'
 import { ObjectJs } from '@w3nest/rx-tree-views'
+import { createEditor } from 'prism-code-editor'
+import 'prism-code-editor/prism/languages/javascript'
+import 'prism-code-editor/prism/languages/python'
+import 'prism-code-editor/prism/languages/markdown'
 
 /**
  * Accepted language.
@@ -201,7 +206,17 @@ export class CellView implements VirtualDOM<'div'> {
 /**
  *  View that displays code snippet in edition mode.
  */
-export class SnippetEditorView extends CodeSnippetView {
+export class SnippetEditorView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+    public readonly content$: BehaviorSubject<string>
+    public readonly codeSnippetView: CodeSnippetView
+    /**
+     * The style of the associated HTML element.
+     */
+    public readonly style = {
+        fontSize: '0.8rem',
+    }
     /**
      *
      * @param params
@@ -213,10 +228,10 @@ export class SnippetEditorView extends CodeSnippetView {
      */
     constructor({
         language,
-        readOnly,
         content,
-        lineNumbers,
         onExecute,
+        readOnly,
+        lineNumbers,
     }: {
         content: string
         language: 'markdown' | 'javascript' | 'python' | 'unknown'
@@ -224,19 +239,32 @@ export class SnippetEditorView extends CodeSnippetView {
         lineNumbers?: boolean
         onExecute: () => void
     }) {
-        super({
-            content,
-            language,
-            cmConfig: {
-                lineNumbers: lineNumbers ?? false,
-                lineWrapping: false,
-                indentUnit: 4,
-                readOnly: readOnly ?? false,
-                extraKeys: {
-                    'Ctrl-Enter': onExecute,
+        this.content$ = new BehaviorSubject<string>(content)
+
+        this.children = [
+            {
+                tag: 'div',
+                class: 'h-100 w-100 no-line-numbers',
+                oninput: (ev: KeyboardEvent) => {
+                    if (ev.target && 'value' in ev.target) {
+                        this.content$.next(ev.target.value as string)
+                    }
+                },
+                onkeydown: (event: KeyboardEvent) => {
+                    if (event.ctrlKey && event.key === 'Enter') {
+                        onExecute()
+                    }
+                },
+                connectedCallback: (htmlElement: RxHTMLElement<'div'>) => {
+                    createEditor(htmlElement, {
+                        language,
+                        lineNumbers: lineNumbers ?? false,
+                        readOnly,
+                        value: content,
+                    })
                 },
             },
-        })
+        ]
     }
 }
 

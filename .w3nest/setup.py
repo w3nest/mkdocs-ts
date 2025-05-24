@@ -28,7 +28,9 @@ externals_deps = {
     "esprima": "^4.0.1",
     "prismjs": "^1.30.0",
 }
-in_bundle_deps = {}
+in_bundle_deps = {
+    "prism-code-editor": "^4.0.0",
+}
 dev_deps = {
     "conditional-type-checks": "^1.0.6",
     "sass": "^1.69.7",

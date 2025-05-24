@@ -1,5 +1,4 @@
 import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import {
     CellTrait,
@@ -117,7 +116,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
     /**
      * Encapsulated editor view.
      */
-    public readonly editorView: CodeSnippetView
+    public readonly editorView: SnippetEditorView
     /**
      * Observable over the source content of the cell.
      */

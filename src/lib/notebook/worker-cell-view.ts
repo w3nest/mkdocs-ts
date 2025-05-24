@@ -1,5 +1,4 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
@@ -69,7 +68,7 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
     /**
      * The encapsulated code editor view.
      */
-    public readonly editorView: CodeSnippetView
+    public readonly editorView: SnippetEditorView
     /**
      * Observable over the source content of the cell.
      */

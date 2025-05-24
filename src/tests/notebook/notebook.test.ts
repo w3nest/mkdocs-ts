@@ -1,3 +1,4 @@
+import './prism-code-editor.mock'
 import { ChildrenLike, render, VirtualDOM } from 'rx-vdom'
 import { ContextTrait, MdWidgets, parseMd, Router } from '../../lib'
 import {

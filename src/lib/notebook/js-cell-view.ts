@@ -1,5 +1,4 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { CodeSnippetView } from '../md-widgets'
 import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
@@ -115,7 +114,7 @@ export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
     /**
      * The encapsulated code editor view.
      */
-    public readonly editorView: CodeSnippetView
+    public readonly editorView: SnippetEditorView
 
     /**
      * Defines the methods to retrieve constructor's arguments from the DOM element `js-cell` within

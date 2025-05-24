@@ -1,3 +1,4 @@
+import './prism-code-editor.mock'
 import {
     executeJs,
     extractUndefinedReferences,
