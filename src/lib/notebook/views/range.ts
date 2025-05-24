@@ -33,7 +33,7 @@ export class Range implements VirtualDOM<'div'> {
     /**
      * Classes associated to the view.
      */
-    public readonly class = 'mknb-Range'
+    public readonly class = 'mknb-Range d-flex'
     public readonly children: ChildrenLike
     public readonly value$: Subject<number>
     /**
@@ -98,8 +98,12 @@ export class Range implements VirtualDOM<'div'> {
         this.children = [
             {
                 tag: 'input',
+                class: 'form-control',
                 type: 'number',
                 ...options,
+                style: {
+                    width: 'fit-content',
+                },
                 value: attr$({
                     source$: this.value$,
                     vdomMap: (v) => String(v),
@@ -111,6 +115,7 @@ export class Range implements VirtualDOM<'div'> {
             { tag: 'i', class: 'mx-1' },
             {
                 tag: 'input',
+                class: 'form-range my-auto',
                 type: 'range',
                 ...options,
                 value: attr$({
