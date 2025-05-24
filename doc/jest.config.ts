@@ -1,7 +1,7 @@
 import { Config } from 'jest'
 
 const jestConfig: Config = {
-    preset: '@youwol/jest-preset',
+    transform: { '^.+\\.tsx?$': ['ts-jest', {}] },
     modulePathIgnorePatterns: [],
 }
 export default jestConfig

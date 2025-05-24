@@ -7,4 +7,5 @@ src/mkapi-backends/*/*/**
 mkdocs-ts-doc
 cdn.zip
 doc/
+examples/
 .w3nest

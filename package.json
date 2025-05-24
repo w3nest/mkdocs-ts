@@ -34,8 +34,10 @@
                     "@w3nest/webpm-client",
                     "rxjs",
                     "marked",
-                    "highlight.js",
-                    "@w3nest/rx-tree-views"
+                    "@w3nest/rx-tree-views",
+                    "prismjs/components/prism-core",
+                    "prismjs/plugins/autoloader/prism-autoloader",
+                    "prismjs/plugins/line-numbers/prism-line-numbers"
                 ],
                 "aliases": []
             }
@@ -57,6 +59,7 @@
             "types": "./src/lib/notebook/index.ts",
             "webpm": {
                 "dependencies": [
+                    "@w3nest/webpm-client",
                     "rx-vdom",
                     "rxjs",
                     "rxjs/fetch",
@@ -71,10 +74,10 @@
         "@w3nest/http-clients": "^0.1.5",
         "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/webpm-client": "^0.1.5",
-        "codemirror": "^5.52.0",
         "esprima": "^4.0.1",
-        "highlight.js": "11.2.0",
         "marked": "^4.2.3",
+        "prism-code-editor": "^4.0.0",
+        "prismjs": "^1.30.0",
         "rx-vdom": "^0.1.3",
         "rxjs": "^7.5.6"
     },
@@ -91,6 +94,7 @@
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
         "jest-junit": "^16.0.0",
+        "mini-css-extract-plugin": "^2.9.2",
         "prettier": "^3.2.5",
         "prettier-plugin-properties": "^0.3.0",
         "sass": "^1.69.7",
@@ -111,17 +115,16 @@
             "@w3nest/http-clients": "^0.1.5",
             "@w3nest/rx-tree-views": "^0.2.0",
             "@w3nest/webpm-client": "^0.1.5",
-            "codemirror": "^5.52.0",
             "esprima": "^4.0.1",
-            "highlight.js": "11.2.0",
             "marked": "^4.2.3",
+            "prismjs": "^1.30.0",
             "rx-vdom": "^0.1.3",
             "rxjs": "^7.5.6"
         }
     },
     "webpack": {
         "root": "src",
-        "apiVersion": "04",
+        "apiVersion": "05",
         "main": "./index.ts",
         "additionalEntries": {
             "CodeApi": "./lib/code-api/index.ts",
@@ -132,8 +135,24 @@
             "@w3nest/webpm-client": "@w3nest/webpm-client_APIv01",
             "rxjs": "rxjs_APIv7",
             "marked": "marked_APIv4",
-            "highlight.js": "highlight.js_APIv11",
             "@w3nest/rx-tree-views": "@w3nest/rx-tree-views_APIv02",
+            "prismjs/components/prism-core": [
+                "prismjs_APIv1",
+                "components",
+                "prism-core"
+            ],
+            "prismjs/plugins/autoloader/prism-autoloader": [
+                "prismjs_APIv1",
+                "plugins",
+                "autoloader",
+                "prism-autoloader"
+            ],
+            "prismjs/plugins/line-numbers/prism-line-numbers": [
+                "prismjs_APIv1",
+                "plugins",
+                "line-numbers",
+                "prism-line-numbers"
+            ],
             "@w3nest/http-clients": "@w3nest/http-clients_APIv01",
             "rxjs/fetch": [
                 "rxjs_APIv7",

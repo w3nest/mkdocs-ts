@@ -21,3 +21,6 @@ type DevTags =
     | 'input'
     | 'button'
     | 'img'
+    | 'code'
+    | 'select'
+    | 'option'
