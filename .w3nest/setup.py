@@ -26,8 +26,7 @@ externals_deps = {
     "highlight.js": "11.2.0",
     "@w3nest/rx-tree-views": "^0.2.0",
     "esprima": "^4.0.1",
-    # It is only used for typing, not included in dev. dependencies to install it from consuming library.
-    "codemirror": "^5.52.0",
+    "prismjs": "^1.30.0",
 }
 in_bundle_deps = {}
 dev_deps = {
@@ -56,6 +55,10 @@ config = ProjectConfig(
                 "marked",
                 "highlight.js",
                 "@w3nest/rx-tree-views",
+                "prismjs/components/prism-core",
+                "prismjs/plugins/autoloader/prism-autoloader",
+                "prismjs/plugins/line-numbers/prism-line-numbers",
+                "prismjs/plugins/line-highlight/prism-line-highlight",
             ],
             aliases=[],
         ),

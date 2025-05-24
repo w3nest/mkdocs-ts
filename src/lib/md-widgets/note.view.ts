@@ -9,8 +9,7 @@ import {
 } from 'rx-vdom'
 import { parseMd, MdParsingOptions } from '../markdown'
 import { Router } from '../router'
-import { BehaviorSubject, delay, filter } from 'rxjs'
-import { refreshResizeObservers } from './traits'
+import { BehaviorSubject } from 'rxjs'
 
 /**
  * Icons factory, class refers to fontawesome v5 icons.
@@ -197,20 +196,6 @@ export class NoteView implements VirtualDOM<'div'> {
             }),
             maybeContent,
         ]
-        this.connectedCallback = (elem) => {
-            if (this.mode === 'stateful') {
-                elem.ownSubscriptions(
-                    this.expanded$
-                        .pipe(
-                            filter((expanded) => expanded),
-                            delay(10),
-                        )
-                        .subscribe(() => {
-                            refreshResizeObservers(elem)
-                        }),
-                )
-            }
-        }
     }
 
     /**

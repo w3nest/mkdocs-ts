@@ -1,26 +1,10 @@
-import {
-    BehaviorSubject,
-    combineLatest,
-    from,
-    Observable,
-    of,
-    shareReplay,
-} from 'rxjs'
-import { install } from '@w3nest/webpm-client'
-import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
-import { ResizeObserverTrait } from './traits'
+import { BehaviorSubject } from 'rxjs'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 
-/**
- * Languages supported.
- */
-export type CodeLanguage =
-    | 'python'
-    | 'javascript'
-    | 'markdown'
-    | 'html'
-    | 'css'
-    | 'yaml'
-    | 'unknown'
+import prismCore from 'prismjs/components/prism-core'
+import 'prismjs/plugins/autoloader/prism-autoloader'
+import 'prismjs/plugins/line-numbers/prism-line-numbers'
+import 'prismjs/plugins/line-highlight/prism-line-highlight'
 
 /**
  * Interface specification of CodeMirror editor.
@@ -41,18 +25,35 @@ export interface CodeMirror {
     ) => CodeMirrorEditor
 }
 
+function getW3NestCookie() {
+    const name = 'w3nest'
+    const regex = new RegExp(`(^| )${name}=([^;]+)`)
+    const match = regex.exec(document.cookie)
+    if (match) {
+        try {
+            const decoded = decodeURIComponent(match[2]).slice(1, -1)
+            return JSON.parse(decoded) as {
+                origin: string
+                webpm: { pathResource: string }
+            }
+        } catch {
+            return undefined
+        }
+    }
+}
 /**
  * Represents a code snippet view.
  *
  * This view is registered in {@link GlobalMarkdownViews}: it can be instantiated from Markdown with an HTMLElement
  * using the tag `code-snippet`, see {@link CodeSnippetView.fromHTMLElement}.
  *
+ * The language supported are defined by {@link CodeLanguage}.
+ *
  * ## Examples
  *
- * <note level="example" expandable="true" title="Javascript">
+ * <note level="example" title="Javascript" expandable="true" mode="stateless">
  * <md-cell>
  * <code-snippet language="javascript" highlightedLines="8">
- *
  * function compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){
  *     console.log("Computation complete! The result is 42");
  *     const result =
@@ -67,10 +68,9 @@ export interface CodeMirror {
  * </note>
  *
  *
- * <note level="example" expandable="true" title="Python">
+ * <note level="example" expandable="true" title="Python"  mode="stateless">
  * <md-cell>
  * <code-snippet language="python" highlightedLines="8">
- *
  * def compute(improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency ):
  *     print("Computation complete! The result is 42");
  *     const result =
@@ -83,9 +83,9 @@ export interface CodeMirror {
  * </md-cell>
  * </note>
  *
- * <note level="example" expandable="true" title="HTML">
+ * <note level="example" expandable="true" title="HTML"  mode="stateless">
  * <md-cell>
- * <code-snippet language="htmlmixed" highlightedLines="11-25">
+ * <code-snippet language="html" highlightedLines="11-25">
  * <!DOCTYPE html>
  * <html lang="en">
  * <head>
@@ -118,7 +118,7 @@ export interface CodeMirror {
  * </md-cell>
  * </note>
  *
- * <note level="example" expandable="true" title="XML">
+ * <note level="example" expandable="true" title="XML"  mode="stateless">
  * <md-cell>
  * <code-snippet language="xml">
  * <Computation>
@@ -135,7 +135,7 @@ export interface CodeMirror {
  * </md-cell>
  * </note>
  *
- * <note level="example" expandable="true" title="CSS">
+ * <note level="example" expandable="true" title="CSS"  mode="stateless">
  * <md-cell>
  * <code-snippet language="css">
  * .computation-container {
@@ -155,7 +155,7 @@ export interface CodeMirror {
  * </md-cell>
  * </note>
  *
- * <note level="example" expandable="true" title="YAML">
+ * <note level="example" expandable="true" title="YAML"  mode="stateless">
  * <md-cell>
  * <code-snippet language="yaml">
  * computation:
@@ -167,7 +167,7 @@ export interface CodeMirror {
  * </md-cell>
  * </note>
  *
- * <note level="example" expandable="true" title="Markdown">
+ * <note level="example" expandable="true" title="Markdown"  mode="stateless">
  * <md-cell>
  * <code-snippet language="markdown">
  * ## Computation
@@ -183,76 +183,19 @@ export interface CodeMirror {
  * </note>
  *
  */
-export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
+export class CodeSnippetView implements VirtualDOM<'div'> {
     /**
      * Component's class name for CSS query.
      */
     static readonly CssSelector = 'mkdocs-CodeSnippetView'
 
-    static readonly cmDependencies$: Record<
-        CodeLanguage,
-        Observable<{ CodeMirror: CodeMirror }> | undefined
-    > = {
-        python: undefined,
-        javascript: undefined,
-        markdown: undefined,
-        html: undefined,
-        yaml: undefined,
-        css: undefined,
-        unknown: undefined,
-    }
-    static fetchCmDependencies$(
-        language: CodeLanguage,
-    ): Observable<{ CodeMirror: CodeMirror }> {
-        if (CodeSnippetView.cmDependencies$[language]) {
-            return CodeSnippetView.cmDependencies$[language]
-        }
-        const scripts = {
-            python: ['codemirror#5.52.0~mode/python.min.js'],
-            javascript: ['codemirror#5.52.0~mode/javascript.min.js'],
-            markdown: ['codemirror#5.52.0~mode/markdown.min.js'],
-            html: ['codemirror#5.52.0~mode/htmlmixed.min.js'],
-            yaml: ['codemirror#5.52.0~mode/yaml.min.js'],
-            css: ['codemirror#5.52.0~mode/css.min.js'],
-            xml: ['codemirror#5.52.0~mode/xml.min.js'],
-            htmlmixed: [
-                'codemirror#5.52.0~mode/htmlmixed.min.js',
-                'codemirror#5.52.0~mode/css.min.js',
-                'codemirror#5.52.0~mode/xml.min.js',
-                'codemirror#5.52.0~mode/javascript.min.js',
-            ],
-            unknown: [],
-        }
-        CodeSnippetView.cmDependencies$[language] = from(
-            install<{ CodeMirror: CodeMirror }>({
-                esm: {
-                    modules: ['codemirror#^5.52.0 as CodeMirror'],
-                    scripts: scripts[language],
-                },
-                css: ['codemirror#5.52.0~codemirror.min.css'],
-            }),
-        ).pipe(shareReplay(1))
-        return CodeSnippetView.cmDependencies$[language]
-    }
-
-    /**
-     * Class appended to the line DOM for highlighted lines.
-     */
-    static readonly hlLineClass = 'mkdocs-ts-bg-highlight'
+    static defaultLanguagesFolder =
+        'https://w3nest.org/api/assets-gateway/webpm/resources/cHJpc21qcw==/1.30.0/components/'
 
     /**
      * The tag of the associated HTML element.
      */
     public readonly tag = 'div'
-    /**
-     * The code mirror configuration.
-     */
-    public readonly codeMirrorConfiguration = {
-        lineNumbers: true,
-        lineWrapping: false,
-        indentUnit: 4,
-        readOnly: true,
-    }
 
     /**
      * The class list of the associated HTML element.
@@ -281,8 +224,14 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
      * @param element The `HTMLElement`.
      */
     static attributeMapper = (element: HTMLElement) => ({
-        language: element.getAttribute('language') as CodeLanguage,
+        language: (element.getAttribute('language') ??
+            'unknown') as CodeLanguage,
         highlightedLines: element.getAttribute('highlightedLines') ?? undefined,
+        lineNumbers:
+            element.getAttribute('lineNumbers') &&
+            element.getAttribute('lineNumbers') == 'true'
+                ? true
+                : false,
         content: element.textContent ?? '',
     })
     /**
@@ -302,96 +251,469 @@ export class CodeSnippetView implements VirtualDOM<'div'>, ResizeObserverTrait {
      * Initialize the widget.
      *
      * @param _args arguments
-     * @param _args.language The target language. Supported languages are:
-     *      *  python
-     *      *  javascript
-     *      *  markdown
-     *      *  html
-     *      *  yaml
-     *      *  css
-     *      *  xml
+     * @param _args.language The target language.
      * @param _args.content The snippet's content.
-     * @param _args.highlightedLines Highlighted lines, *e.g.* `[5 10 20-25  28 30]`
-     * @param _args.cmConfig The code mirror editor configuration, it is merged with the
-     *     {@link CodeSnippetView.codeMirrorConfiguration | default configuration} (eventually overriding attributes).
+     * @param _args.highlightedLines Highlighted lines, *e.g.* `5 10 20-25 28 30`.
+     * @param _args.lineNumbers whether to display line numbers.
      */
     constructor({
         language,
         content,
         highlightedLines,
-        cmConfig,
+        lineNumbers,
     }: {
         language: CodeLanguage
         highlightedLines?: string
-        content: string //| Observable<string>
-        cmConfig?: Record<string, unknown>
+        lineNumbers?: boolean
+        content: string
     }) {
-        const content$ = of(content)
-        const linesToHighlight = parseLineIndices(highlightedLines)
         this.content$ = new BehaviorSubject<string>(content)
+
+        const prismCoreCasted = prismCore as {
+            plugins: { autoloader: { languages_path: string } }
+            highlightElement: (e: HTMLElement) => void
+        }
+        prismCoreCasted.plugins.autoloader.languages_path =
+            CodeSnippetView.defaultLanguagesFolder
+        const w3nestCookie = getW3NestCookie()
+        if (w3nestCookie) {
+            const origin = w3nestCookie.origin
+            const pathResource = w3nestCookie.webpm.pathResource
+            prismCoreCasted.plugins.autoloader.languages_path = `${origin}${pathResource}/cHJpc21qcw==/1.30.0/components/`
+        }
+        const lineNumbersClass =
+            lineNumbers || highlightedLines ? 'line-numbers' : ''
+        const languageClass =
+            language === 'unknown' ? '' : `language-${language}`
+        const customAttributes: Record<string, string> = highlightedLines
+            ? {
+                  dataLine: highlightedLines.trim().replace(/\s+/g, ','),
+              }
+            : {}
         this.children = [
-            child$({
-                source$: combineLatest([
-                    content$,
-                    CodeSnippetView.fetchCmDependencies$(language),
-                ]),
-                vdomMap: ([content, { CodeMirror }]) => {
-                    return {
-                        tag: 'div',
-                        class: 'h-100 w-100',
-                        connectedCallback: (
-                            htmlElement: RxHTMLElement<'div'>,
-                        ) => {
-                            const config = {
-                                mode: language,
-                                ...this.codeMirrorConfiguration,
-                                value: content,
-                                ...cmConfig,
-                            }
-                            const editor = CodeMirror.default(
-                                htmlElement,
-                                config,
-                            )
-                            editor.on('change', (args) => {
-                                this.content$.next(args.getValue())
-                            })
-                            linesToHighlight.forEach(function (lineNumber) {
-                                editor.addLineClass(
-                                    lineNumber,
-                                    'background',
-                                    CodeSnippetView.hlLineClass,
-                                )
-                            })
-                            editor.refresh()
-                            this.editor$.next(editor)
+            {
+                tag: 'pre',
+                class: `${lineNumbersClass} ${languageClass}`,
+                customAttributes,
+                children: [
+                    {
+                        tag: 'code',
+                        connectedCallback: (e) => {
+                            e.textContent = content
+                            prismCoreCasted.highlightElement(e)
                         },
-                    }
-                },
-            }),
+                    },
+                ],
+            },
         ]
     }
-
-    refreshView() {
-        this.editor$.value?.refresh()
-    }
 }
 
-function parseLineIndices(input?: string): number[] {
-    if (!input) {
-        return []
-    }
-    const parts = input.split(' ')
-    const indices: number[] = []
-
-    parts.forEach((part) => {
-        if (part.includes('-')) {
-            const [start, end] = part.split('-').map(Number) // Convert start and end to numbers
-            for (let i = start; i <= end; i++) {
-                indices.push(i)
-            }
-        } else {
-            indices.push(parseInt(part))
-        }
-    })
-    return [...new Set(indices)].sort((a, b) => a - b)
-}
+/**
+ * Languages supported.
+ *
+ * See {@link https://prismjs.com/#supported-languages}.
+ */
+export type CodeLanguage =
+    | 'unknown'
+    | 'markup'
+    | 'html'
+    | 'xml'
+    | 'svg'
+    | 'mathml'
+    | 'ssml'
+    | 'atom'
+    | 'rss'
+    | 'css'
+    | 'clike'
+    | 'javascript'
+    | 'js'
+    | 'abap'
+    | 'abnf'
+    | 'actionscript'
+    | 'ada'
+    | 'agda'
+    | 'al'
+    | 'antlr4'
+    | 'g4'
+    | 'apacheconf'
+    | 'apex'
+    | 'apl'
+    | 'applescript'
+    | 'aql'
+    | 'arduino'
+    | 'ino'
+    | 'arff'
+    | 'armasm'
+    | 'arm-asm'
+    | 'arturo'
+    | 'art'
+    | 'asciidoc'
+    | 'adoc'
+    | 'aspnet'
+    | 'asm6502'
+    | 'asmatmel'
+    | 'autohotkey'
+    | 'autoit'
+    | 'avisynth'
+    | 'avs'
+    | 'avro-idl'
+    | 'avdl'
+    | 'awk'
+    | 'gawk'
+    | 'bash'
+    | 'sh'
+    | 'shell'
+    | 'basic'
+    | 'batch'
+    | 'bbcode'
+    | 'shortcode'
+    | 'bbj'
+    | 'bicep'
+    | 'birb'
+    | 'bison'
+    | 'bnf'
+    | 'rbnf'
+    | 'bqn'
+    | 'brainfuck'
+    | 'brightscript'
+    | 'bro'
+    | 'bsl'
+    | 'oscript'
+    | 'c'
+    | 'csharp'
+    | 'cs'
+    | 'dotnet'
+    | 'cpp'
+    | 'cfscript'
+    | 'cfc'
+    | 'chaiscript'
+    | 'cil'
+    | 'cilkc'
+    | 'cilk-c'
+    | 'cilkcpp'
+    | 'cilk-cpp'
+    | 'cilk'
+    | 'clojure'
+    | 'cmake'
+    | 'cobol'
+    | 'coffeescript'
+    | 'coffee'
+    | 'concurnas'
+    | 'conc'
+    | 'csp'
+    | 'cooklang'
+    | 'coq'
+    | 'crystal'
+    | 'css-extras'
+    | 'csv'
+    | 'cue'
+    | 'cypher'
+    | 'd'
+    | 'dart'
+    | 'dataweave'
+    | 'dax'
+    | 'dhall'
+    | 'diff'
+    | 'django'
+    | 'jinja2'
+    | 'dns-zone-file'
+    | 'dns-zone'
+    | 'docker'
+    | 'dockerfile'
+    | 'dot'
+    | 'gv'
+    | 'ebnf'
+    | 'editorconfig'
+    | 'eiffel'
+    | 'ejs'
+    | 'eta'
+    | 'elixir'
+    | 'elm'
+    | 'etlua'
+    | 'erb'
+    | 'erlang'
+    | 'excel-formula'
+    | 'xlsx'
+    | 'xls'
+    | 'fsharp'
+    | 'factor'
+    | 'false'
+    | 'firestore-security-rules'
+    | 'flow'
+    | 'fortran'
+    | 'ftl'
+    | 'gml'
+    | 'gamemakerlanguage'
+    | 'gap'
+    | 'gcode'
+    | 'gdscript'
+    | 'gedcom'
+    | 'gettext'
+    | 'po'
+    | 'gherkin'
+    | 'git'
+    | 'glsl'
+    | 'gn'
+    | 'gni'
+    | 'linker-script'
+    | 'ld'
+    | 'go'
+    | 'go-module'
+    | 'go-mod'
+    | 'gradle'
+    | 'graphql'
+    | 'groovy'
+    | 'haml'
+    | 'handlebars'
+    | 'hbs'
+    | 'mustache'
+    | 'haskell'
+    | 'hs'
+    | 'haxe'
+    | 'hcl'
+    | 'hlsl'
+    | 'hoon'
+    | 'http'
+    | 'hpkp'
+    | 'hsts'
+    | 'ichigojam'
+    | 'icon'
+    | 'icu-message-format'
+    | 'idris'
+    | 'idr'
+    | 'ignore'
+    | 'gitignore'
+    | 'hgignore'
+    | 'npmignore'
+    | 'inform7'
+    | 'ini'
+    | 'io'
+    | 'j'
+    | 'java'
+    | 'javadoc'
+    | 'javadoclike'
+    | 'javastacktrace'
+    | 'jexl'
+    | 'jolie'
+    | 'jq'
+    | 'jsdoc'
+    | 'js-extras'
+    | 'json'
+    | 'webmanifest'
+    | 'json5'
+    | 'jsonp'
+    | 'jsstacktrace'
+    | 'js-templates'
+    | 'julia'
+    | 'keepalived'
+    | 'keyman'
+    | 'kotlin'
+    | 'kt'
+    | 'kts'
+    | 'kumir'
+    | 'kum'
+    | 'kusto'
+    | 'latex'
+    | 'tex'
+    | 'context'
+    | 'latte'
+    | 'less'
+    | 'lilypond'
+    | 'ly'
+    | 'liquid'
+    | 'lisp'
+    | 'emacs'
+    | 'elisp'
+    | 'emacs-lisp'
+    | 'livescript'
+    | 'llvm'
+    | 'log'
+    | 'lolcode'
+    | 'lua'
+    | 'magma'
+    | 'makefile'
+    | 'markdown'
+    | 'md'
+    | 'markup-templating'
+    | 'mata'
+    | 'matlab'
+    | 'maxscript'
+    | 'mel'
+    | 'mermaid'
+    | 'metafont'
+    | 'mizar'
+    | 'mongodb'
+    | 'monkey'
+    | 'moonscript'
+    | 'moon'
+    | 'n1ql'
+    | 'n4js'
+    | 'n4jsd'
+    | 'nand2tetris-hdl'
+    | 'naniscript'
+    | 'nani'
+    | 'nasm'
+    | 'neon'
+    | 'nevod'
+    | 'nginx'
+    | 'nim'
+    | 'nix'
+    | 'nsis'
+    | 'objectivec'
+    | 'objc'
+    | 'ocaml'
+    | 'odin'
+    | 'opencl'
+    | 'openqasm'
+    | 'qasm'
+    | 'oz'
+    | 'parigp'
+    | 'parser'
+    | 'pascal'
+    | 'objectpascal'
+    | 'pascaligo'
+    | 'psl'
+    | 'pcaxis'
+    | 'px'
+    | 'peoplecode'
+    | 'pcode'
+    | 'perl'
+    | 'php'
+    | 'phpdoc'
+    | 'php-extras'
+    | 'plant-uml'
+    | 'plantuml'
+    | 'plsql'
+    | 'powerquery'
+    | 'pq'
+    | 'mscript'
+    | 'powershell'
+    | 'processing'
+    | 'prolog'
+    | 'promql'
+    | 'properties'
+    | 'protobuf'
+    | 'pug'
+    | 'puppet'
+    | 'pure'
+    | 'purebasic'
+    | 'pbfasm'
+    | 'purescript'
+    | 'purs'
+    | 'python'
+    | 'py'
+    | 'qsharp'
+    | 'qs'
+    | 'q'
+    | 'qml'
+    | 'qore'
+    | 'r'
+    | 'racket'
+    | 'rkt'
+    | 'cshtml'
+    | 'razor'
+    | 'jsx'
+    | 'tsx'
+    | 'reason'
+    | 'regex'
+    | 'rego'
+    | 'renpy'
+    | 'rpy'
+    | 'rescript'
+    | 'res'
+    | 'rest'
+    | 'rip'
+    | 'roboconf'
+    | 'robotframework'
+    | 'robot'
+    | 'ruby'
+    | 'rb'
+    | 'rust'
+    | 'sas'
+    | 'sass'
+    | 'scss'
+    | 'scala'
+    | 'scheme'
+    | 'shell-session'
+    | 'sh-session'
+    | 'shellsession'
+    | 'smali'
+    | 'smalltalk'
+    | 'smarty'
+    | 'sml'
+    | 'smlnj'
+    | 'solidity'
+    | 'sol'
+    | 'solution-file'
+    | 'sln'
+    | 'soy'
+    | 'sparql'
+    | 'rq'
+    | 'splunk-spl'
+    | 'sqf'
+    | 'sql'
+    | 'squirrel'
+    | 'stan'
+    | 'stata'
+    | 'iecst'
+    | 'stylus'
+    | 'supercollider'
+    | 'sclang'
+    | 'swift'
+    | 'systemd'
+    | 't4-templating'
+    | 't4-cs'
+    | 't4'
+    | 't4-vb'
+    | 'tap'
+    | 'tcl'
+    | 'tt2'
+    | 'textile'
+    | 'toml'
+    | 'tremor'
+    | 'trickle'
+    | 'troy'
+    | 'turtle'
+    | 'trig'
+    | 'twig'
+    | 'typescript'
+    | 'ts'
+    | 'typoscript'
+    | 'tsconfig'
+    | 'unrealscript'
+    | 'uscript'
+    | 'uc'
+    | 'uorazor'
+    | 'uri'
+    | 'url'
+    | 'v'
+    | 'vala'
+    | 'vbnet'
+    | 'velocity'
+    | 'verilog'
+    | 'vhdl'
+    | 'vim'
+    | 'visual-basic'
+    | 'vb'
+    | 'vba'
+    | 'warpscript'
+    | 'wasm'
+    | 'web-idl'
+    | 'webidl'
+    | 'wgsl'
+    | 'wiki'
+    | 'wolfram'
+    | 'mathematica'
+    | 'nb'
+    | 'wl'
+    | 'wren'
+    | 'xeora'
+    | 'xeoracube'
+    | 'xml-doc'
+    | 'xojo'
+    | 'xquery'
+    | 'yaml'
+    | 'yml'
+    | 'yang'
+    | 'zig'

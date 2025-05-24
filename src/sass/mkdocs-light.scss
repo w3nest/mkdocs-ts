@@ -16,3 +16,7 @@ $color-focus-light: mix($color-bg, $color-focus, 95%);
 
 @import './mkdocs-utils.scss';
 @import './mkdocs-components';
+
+@import 'prismjs/prism.min.css';
+@import 'prismjs/prism-line-numbers.min.css';
+@import 'prismjs/prism-line-highlight.min.css';

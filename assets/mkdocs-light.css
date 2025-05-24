@@ -1,3 +1,6 @@
+@import 'prismjs/prism.min.css';
+@import 'prismjs/prism-line-numbers.min.css';
+@import 'prismjs/prism-line-highlight.min.css';
 .mkdocs-bg-0 {
     background-color: rgb(255, 255, 255) !important;
 }
