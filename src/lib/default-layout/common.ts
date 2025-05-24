@@ -8,23 +8,19 @@ import {
     RxHTMLElement,
     SupportedHTMLTags,
 } from 'rx-vdom'
-import { isResolvedTarget, Router } from '../router'
+import { Router } from '../router'
 import {
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
-    filter,
     map,
     Observable,
-    of,
     ReplaySubject,
     shareReplay,
     Subject,
-    switchMap,
-    take,
     tap,
 } from 'rxjs'
-import { AnyNavNode, AnyView, Resolvable } from '../navigation.node'
+import { AnyView, Resolvable } from '../navigation.node'
 import { ContextTrait, NoContext } from '../context'
 
 /**
