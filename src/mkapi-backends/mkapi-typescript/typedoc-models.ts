@@ -62,7 +62,7 @@ export interface DocInlineTag {
     kind: 'inline-tag'
     tag: '@link'
     text: string
-    target: number | { qualifiedName: string; sourceFileName: string }
+    target: string | number | { qualifiedName: string; sourceFileName: string }
 }
 
 /**

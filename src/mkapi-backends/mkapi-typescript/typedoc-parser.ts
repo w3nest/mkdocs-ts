@@ -654,6 +654,10 @@ function parseDocumentationElements({
                         : { role: 'undefined' }
                     return `<mkapi-api-link nav="${nav}" semantic="${semantic.role}">${element.text}</mkapi-api-link>`
                 }
+                if (typeof element.target === 'string') {
+                    // An external link (e.g. 'https://foo/bar')
+                    return `<mkapi-ext-link href="${element.target}">${element.text}</mkapi-ext-link>`
+                }
                 // This is a reference to something in node_modules, try to find matching external
                 const name = element.target.qualifiedName
                 const modulePath = element.target.sourceFileName.replace(
