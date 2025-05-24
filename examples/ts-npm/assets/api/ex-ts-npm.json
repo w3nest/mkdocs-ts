@@ -1,0 +1,399 @@
+{
+    "name": "@mkdocs-ts/ex-ts-npm",
+    "documentation": {
+        "sections": [
+            {
+                "content": "API documentation of the project.",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "ex-ts-npm",
+    "navPath": "@nav/api/",
+    "attributes": [
+        {
+            "name": "navigation",
+            "semantic": {
+                "role": "global",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "The navigation object, backbone of the application.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "navigation",
+            "navPath": "@nav/api/.navigation",
+            "code": {
+                "filePath": "src/app/main.ts",
+                "declaration": "navigation: AppNav = {\n    name: 'Demo TS + NPM',\n    layout: './README.md',\n    header: header('./assets/favicon.svg'),\n    routes: {\n        '/markdown': {\n            name: 'Markdown',\n            layout: './assets/markdown.md',\n            header: header('./assets/md.svg'),\n        },\n        '/notebook': {\n            name: 'Notebook',\n            layout: async ({ router }) => {\n                // The notebook plugin is only loaded when navigating to this page.\n                const NotebookModule = await import('@mkdocs-ts/notebook')\n                return new NotebookModule.NotebookPage({\n                    url: './assets/notebook.md',\n                    router,\n                })\n            },\n            header: header('./assets/notebook.svg'),\n        },\n        '/api': apiNav(),\n    },\n}",
+                "implementation": "",
+                "startLine": 28,
+                "endLine": 29,
+                "references": {
+                    "navigation": "@nav/api/.navigation",
+                    "AppNav": "@nav/api/.AppNav"
+                }
+            }
+        }
+    ],
+    "types": [
+        {
+            "name": "TRexState",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "State regarding TRex animation (see  <mkapi-api-link nav=\"@nav/api/.TRexView\" semantic=\"class\">TRexView</mkapi-api-link> ).",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "TRexState",
+            "navPath": "@nav/api/.TRexState",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/app/trex.view.ts",
+                "declaration": "export class TRexState",
+                "implementation": "export class TRexState {\n    public readonly label$: Observable<{ side: string; index: number }>\n\n    constructor() {\n        const running$ = timer(0, 100).pipe(\n            startWith(0),\n            takeWhile((t) => t < 40),\n            map((t) => {\n                const range = Math.ceil((t + 1) / 10)\n                const side = range % 2 === 0 ? 'l' : 'r'\n                const runningLegState = t % 2 === 1 ? 3 : 4\n                const index = t === 39 ? 1 : runningLegState\n                return { side, index }\n            }),\n        )\n\n        const blinkingEyes$ = timer(0, 500).pipe(\n            startWith(0),\n            takeWhile((t) => t < 5),\n            map((t) => ({ side: 'l', index: t % 2 === 1 ? 1 : 2 })),\n        )\n\n        const resting$ = timer(1000).pipe(\n            startWith(0),\n            map(() => ({ side: 'l', index: 2 })),\n        )\n        this.label$ = concat(running$, blinkingEyes$, resting$).pipe(\n            repeat(Infinity),\n        )\n    }\n}",
+                "startLine": 15,
+                "endLine": 46,
+                "references": {
+                    "TRexState": "@nav/api/.TRexState"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "TRexView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "TRex animation view.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "TRexView",
+            "navPath": "@nav/api/.TRexView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TRexView.children",
+                    "navPath": "@nav/api/.TRexView.children",
+                    "code": {
+                        "filePath": "src/app/trex.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 53,
+                        "endLine": 54,
+                        "references": {
+                            "children": "@nav/api/.TRexView.children",
+                            "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "TRexView.tag",
+                    "navPath": "@nav/api/.TRexView.tag",
+                    "code": {
+                        "filePath": "src/app/trex.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 52,
+                        "endLine": 53,
+                        "references": {
+                            "tag": "@nav/api/.TRexView.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/app/trex.view.ts",
+                "declaration": "export class TRexView implements VirtualDOM<'div'>",
+                "implementation": "export class TRexView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n\n    constructor({ name }: { name: string }) {\n        const state = new TRexState()\n        const styleBase = {\n            width: '80px',\n            height: '86px',\n            background: 'url(../assets/trex.png)',\n            backgroundPositionY: '-100px',\n        }\n        this.children = [\n            {\n                tag: 'div',\n                class: 'p-1',\n                innerText: ` 🦖 I'm ${name} 🦖`,\n            },\n            {\n                tag: 'div',\n                style: attr$({\n                    source$: state.label$,\n                    vdomMap: ({ side, index }) => ({\n                        ...styleBase,\n                        transform: side === 'l' ? `scaleX(-1)` : `scaleX(1)`,\n                        backgroundPositionX: `-${index - 1}00px`,\n                    }),\n                }),\n            },\n        ]\n    }\n}",
+                "startLine": 51,
+                "endLine": 83,
+                "references": {
+                    "TRexView": "@nav/api/.TRexView",
+                    "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "AppNav",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Type alias for the navigation.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "AppNav",
+            "navPath": "@nav/api/.AppNav",
+            "attributes": [],
+            "callables": [],
+            "code": {
+                "filePath": "src/app/main.ts",
+                "declaration": "export type AppNav = Navigation<\n    DefaultLayout.NavLayout,\n    DefaultLayout.NavHeader\n>",
+                "implementation": "",
+                "startLine": 21,
+                "endLine": 22,
+                "references": {
+                    "AppNav": "@nav/api/.AppNav",
+                    "Navigation": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Navigation",
+                    "DefaultLayout.NavLayout": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
+                    "DefaultLayout.NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
+                }
+            },
+            "semantic": {
+                "role": "type-alias",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [
+        {
+            "name": "apiNav",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Helpers to construct the API documentation node.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "The node definition.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "apiNav",
+            "navPath": "@nav/api/.apiNav",
+            "code": {
+                "filePath": "src/app/main.ts",
+                "declaration": "export async function apiNav(): Promise<AppNav>",
+                "implementation": "export async function apiNav(): Promise<AppNav> {\n    // The code-api plugin is asynchronously loaded here, it does not prevent the remaining navigation nodes to resolve.\n    const CodeApiModule = await import('@mkdocs-ts/code-api')\n    return CodeApiModule.codeApiEntryNode({\n        name: 'API',\n        header: header('./assets/api.svg'),\n        entryModule: 'ex-ts-npm',\n        docBasePath: `../assets/api`,\n        configuration: CodeApiModule.configurationTsTypedoc,\n    })\n}",
+                "startLine": 59,
+                "endLine": 70,
+                "references": {
+                    "apiNav": "@nav/api/.apiNav",
+                    "AppNav": "@nav/api/.AppNav"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "header",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Utility function for header definition.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **url**: URL of the icon.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "The header.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "header",
+            "navPath": "@nav/api/.header",
+            "code": {
+                "filePath": "src/app/main.ts",
+                "declaration": "export function header(url: string): DefaultLayout.NavHeader",
+                "implementation": "export function header(url: string): DefaultLayout.NavHeader {\n    return {\n        icon: { tag: 'img', src: url, height: 40, style: { maxWidth: '40px' } },\n    }\n}",
+                "startLine": 12,
+                "endLine": 17,
+                "references": {
+                    "header": "@nav/api/.header",
+                    "NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "files": [
+        {
+            "name": "trex.view.ts",
+            "path": "src/app/trex.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "main.ts",
+            "path": "src/app/main.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

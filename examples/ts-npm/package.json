@@ -1,0 +1,91 @@
+{
+    "name": "@mkdocs-ts/ex-ts-npm",
+    "description": "Example for mkdocs-ts library",
+    "version": "0.1.0-wip",
+    "author": "reinisch.gui@gmail.com",
+    "homepage": "https://github.com/mkdocs-ts/ex-ts-npm#README.md",
+    "main": "./dist/@mkdocs-ts/ex-ts-npm.js",
+    "types": "src/index.ts",
+    "scripts": {
+        "clean": "del-cli dist",
+        "setup": "python .w3nest/setup.py",
+        "build": "yarn build:prod",
+        "pre-build": "yarn clean",
+        "build:dev": "yarn pre-build && webpack --mode development",
+        "build:prod": "yarn pre-build && webpack --mode production",
+        "lint-check": "yarn lint-prettier-check && yarn lint-eslint-check",
+        "lint-prettier-check": "prettier --check ./src",
+        "lint-prettier-write": "prettier --write ./src",
+        "lint-eslint-check": "eslint ./src",
+        "test": "jest -i",
+        "test-coverage": "jest -i --collect-coverage",
+        "doc": "tsx .w3nest/doc.ts",
+        "publish-npm-public": "yarn build:prod && yarn test-coverage && yarn publish --access public",
+        "start": "webpack serve --node-env=development"
+    },
+    "exports": {
+        ".": {
+            "default": "./dist/@mkdocs-ts/ex-ts-npm.js",
+            "types": "./src/app/main.ts",
+            "webpm": {
+                "dependencies": [],
+                "aliases": []
+            }
+        }
+    },
+    "dependencies": {
+        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748433899.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748433899.tgz",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748433899.tgz",
+        "rx-vdom": "^0.1.6"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.4",
+        "@types/node": "^22.13.4",
+        "@types/webpack": "^5.28.5",
+        "css-loader": "^6.8.1",
+        "del-cli": "^5.1.0",
+        "eslint": "9.14.0",
+        "eslint-config-prettier": "9.1.0",
+        "eslint-plugin-jest": "^28.9.0",
+        "file-loader": "6.2.0",
+        "html-webpack-plugin": "5.6.3",
+        "isomorphic-fetch": "^3.0.0",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "jest-junit": "^16.0.0",
+        "mini-css-extract-plugin": "^2.9.2",
+        "prettier": "^3.2.5",
+        "prettier-plugin-properties": "^0.3.0",
+        "source-map-loader": "5.0.0",
+        "ts-jest": "^29.2.5",
+        "ts-loader": "9.5.2",
+        "ts-node": "10.9.2",
+        "tsx": "^4.19.2",
+        "typedoc": "^0.27.7",
+        "typescript": "5.7.3",
+        "typescript-eslint": "8.14.0",
+        "webpack": "^5.98.0",
+        "webpack-bundle-analyzer": "^4.10.2",
+        "webpack-cli": "6.0.1",
+        "webpack-dev-server": "^5.2.0"
+    },
+    "webpm": {
+        "kind": "webapp",
+        "dependencies": {},
+        "html": "dist/index.html"
+    },
+    "webpack": {
+        "root": "src",
+        "apiVersion": "01",
+        "main": "./app/main.ts",
+        "additionalEntries": {},
+        "externals": {}
+    },
+    "resolutions": {
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748433899.tgz",
+        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748433899.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748433899.tgz",
+        "@w3nest/webpm-client": "file:.local-dependencies/w3nest-webpm-client-0.1.9-wip-1748433899.tgz"
+    }
+}

@@ -1,0 +1,21 @@
+@import '../../node_modules/mkdocs-ts/assets/mkdocs-light.css';
+@import '../../node_modules/@mkdocs-ts/notebook/assets/notebook.css';
+@import '../../node_modules/@mkdocs-ts/code-api/assets/ts-typedoc.css';
+
+:root {
+    --font-size-base: clamp(14px, 2.5vw, 18px);
+    --font-family-base: 'Georgia', 'Times New Roman', serif;
+    --line-height-base: 1.8;
+}
+
+html {
+    font-size: var(--font-size-base);
+}
+
+/*
+!important to not be overridden by bootstrap
+ */
+body {
+    font-family: var(--font-family-base) !important;
+    line-height: var(--line-height-base) !important;
+}
