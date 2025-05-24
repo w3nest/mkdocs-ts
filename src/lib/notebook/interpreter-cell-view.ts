@@ -1,5 +1,10 @@
-import { AnyVirtualDOM, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
-import { CodeSnippetView } from '../md-widgets'
+import {
+    AnyVirtualDOM,
+    attr$,
+    ChildrenLike,
+    RxHTMLElement,
+    VirtualDOM,
+} from 'rx-vdom'
 import { CellCommonAttributes } from './notebook-page'
 import {
     CellTrait,
@@ -11,7 +16,6 @@ import {
 } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { BehaviorSubject, filter, from, Observable } from 'rxjs'
-import { install } from '@w3nest/webpm-client'
 import {
     BackendClient,
     executeInterpreter,
@@ -376,10 +380,18 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mknb-DropDownCaptureView'
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class = `${DropDownCaptureView.CssSelector} dropdown d-flex flex-column justify-content-center`
+    public readonly class = `${DropDownCaptureView.CssSelector} d-flex flex-column justify-content-center`
     public readonly style = {
         fontSize: 'small',
+        position: 'relative' as const,
     }
+
+    public readonly onblur: () => void
+    public readonly connectedCallback?: (element: RxHTMLElement<'div'>) => void
+    public readonly disconnectedCallback?: (
+        element: RxHTMLElement<'div'>,
+    ) => void
+
     constructor(params: { mode: 'in' | 'out'; variables: string[] }) {
         if (params.variables.filter((v) => v !== '').length === 0) {
             return
@@ -388,17 +400,24 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
             in: 'fa-sign-in-alt',
             out: 'fa-sign-out-alt',
         }
+        const expanded$ = new BehaviorSubject(false)
+        this.onblur = () => {
+            expanded$.next(false)
+        }
+        const onOutsideClick = () => {
+            expanded$.next(false)
+        }
+        this.connectedCallback = () => {
+            document.addEventListener('click', onOutsideClick)
+        }
+        this.disconnectedCallback = () => {
+            document.removeEventListener('click', onOutsideClick)
+        }
         this.children = [
             {
                 tag: 'button',
-                id: 'dropdownMenuButton',
-                class: `btn btn-sm py-0 btn-secondary dropdown-toggle d-flex align-items-center`,
+                class: `btn btn-sm py-0 btn-secondary  d-flex align-items-center`,
                 type: 'button',
-                customAttributes: {
-                    dataToggle: 'dropdown',
-                    ariaHaspopup: 'true',
-                    ariaExpanded: 'false',
-                },
                 children: [
                     params.mode === 'in'
                         ? {
@@ -418,22 +437,36 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                               class: 'mx-1',
                           }
                         : undefined,
-                ],
+                    {
+                        tag: 'i',
+                        class: 'mx-1',
             },
-            child$({
-                source$: from(install({ esm: ['bootstrap#^4.4.1'] })),
-                vdomMap: () => ({
-                    tag: 'div',
-                    class: 'dropdown-menu py-1',
-                    customAttributes: {
-                        ariaLabelledBy: 'dropdownMenuButton',
+                    {
+                        tag: 'i',
+                        class: 'fas fa-caret-down',
                     },
+                ],
+                onclick: (ev) => {
+                    ev.stopPropagation()
+                    expanded$.next(!expanded$.value)
+                },
+            },
+            {
+                    tag: 'div',
+                class: attr$({
+                    source$: expanded$,
+                    vdomMap: (e): string => (e ? '' : 'd-none'),
+                    wrapper: (d) => `${d} p-1 px-2 mkdocs-bg-0 border rounded`,
+                }),
                     style: {
-                        lineHeight: '0.8rem',
+                    position: 'absolute',
+                    top: '100%',
+                    minWidth: '100%',
+                    zIndex: 1,
                     },
                     children: params.variables.map((v) => ({
                         tag: 'div',
-                        class: 'dropdown-item d-flex align-items-center',
+                    class: 'd-flex align-items-center',
                         children: [
                             {
                                 tag: 'i',
@@ -449,8 +482,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                             },
                         ],
                     })),
-                }),
-            }),
+            },
         ]
     }
 }

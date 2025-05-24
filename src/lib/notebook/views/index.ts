@@ -6,32 +6,18 @@
  *
  * ## Quick Overview
  *
- * ### {@link CodeSnippet}
+ * ### {@link Select}
  *
- * The `CodeSnippet` component offers a simple **code editor** with syntax highlighting.
- *
- * <js-cell>
- * let codeEditor = new Views.CodeSnippet({
- *     language: 'javascript',
- *     content: 'const foo = 42',
- *     cmConfig: { readOnly: false }
- * })
- * display(codeEditor)
- * display(codeEditor.content$)
- * </js-cell>
- *
- * ### {@link DropDown}
- *
- * The `DropDown` component provides a **selectable list** with customizable display names.
+ * The `Select` component provides a **selectable list** with customizable display names.
  *
  * <js-cell>
- * let dropdown = new Views.DropDown({
+ * let select = new Views.Select({
  *     items: {foo:42, bar:84},
  *     selected: 'foo',
  *     displayedNames: { 'foo': 'Foo', 'bar': 'Bar'}
  * })
- * display(dropdown)
- * display(dropdown.value$)
+ * display(select)
+ * display(select.value$)
  * </js-cell>
  *
  * ### {@link Range}
@@ -80,7 +66,6 @@
 export * from './constants'
 export * from './range'
 export * from './text'
-export * from './dropdown'
-export { CodeSnippetView as CodeSnippet } from '../../md-widgets/code-snippet.view'
+export * from './select'
 export * as Layouts from './layouts'
 export * from './notification.view'
