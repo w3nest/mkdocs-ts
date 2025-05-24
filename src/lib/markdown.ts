@@ -4,9 +4,7 @@
  */
 import { parse, setOptions } from 'marked'
 import highlight from 'highlight.js'
-import { AnyVirtualDOM, child$, render, VirtualDOM } from 'rx-vdom'
-import * as webpm from '@w3nest/webpm-client'
-import { from } from 'rxjs'
+import { render, VirtualDOM } from 'rx-vdom'
 import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
 import { AnyView } from './navigation.node'
@@ -278,26 +276,6 @@ export function parseMd({
         window['MathJax'].typeset([div])
     }
 
-    const customs = div.querySelectorAll('.language-custom-view')
-    ;[...customs]
-        .filter((custom) => custom instanceof HTMLElement)
-        .forEach((custom) => {
-            // eslint-disable-next-line @typescript-eslint/no-implied-eval,@typescript-eslint/no-unsafe-call
-            const fct = new Function(custom.innerText)()({
-                webpm,
-            }) as unknown as Promise<AnyVirtualDOM>
-            const view = render({
-                tag: 'div',
-                children: [
-                    child$({
-                        source$: from(fct),
-                        vdomMap: (vDom) => vDom,
-                    }),
-                ],
-            })
-            custom.parentNode?.parentNode?.replaceChild(view, custom.parentNode)
-        })
-
     const options = {
         router,
         preprocessing,
@@ -508,9 +486,9 @@ function fixedMarkedParseCustomViews({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setOptions({
         langPrefix: 'hljs language-',
-        highlight: function (code: string, lang: string) {
-            return highlight.highlightAuto(code, [lang]).value
-        },
+        // highlight: function (code: string, lang: string) {
+        //     return highlight.highlightAuto(code, [lang]).value
+        // },
         // deprecated since v0.3.0, removed in v8.0.0,
         // see https://marked.js.org/using_advanced
         headerPrefix: headingPrefixId,
