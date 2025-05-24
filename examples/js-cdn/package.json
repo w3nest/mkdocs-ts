@@ -1,0 +1,8 @@
+{
+    "name": "@mkdocs-ts/ex-js-cdn",
+    "version": "0.1.0-wip",
+    "main": "index.html",
+    "scripts": {
+        "setup": "python .w3nest/setup.py"
+    }
+}
