@@ -3,7 +3,6 @@
  *
  */
 import { parse, setOptions } from 'marked'
-import highlight from 'highlight.js'
 import { render, VirtualDOM } from 'rx-vdom'
 import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
@@ -486,9 +485,6 @@ function fixedMarkedParseCustomViews({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setOptions({
         langPrefix: 'hljs language-',
-        // highlight: function (code: string, lang: string) {
-        //     return highlight.highlightAuto(code, [lang]).value
-        // },
         // deprecated since v0.3.0, removed in v8.0.0,
         // see https://marked.js.org/using_advanced
         headerPrefix: headingPrefixId,
