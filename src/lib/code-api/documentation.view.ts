@@ -1,9 +1,7 @@
-import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, EmptyDiv, VirtualDOM } from 'rx-vdom'
 import type { Router } from '../index'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
-import type { NotebookTypes } from '../plugins'
-import { from } from 'rxjs'
 import { Dependencies } from './index'
 import { MkApiApiLink, MkApiExtLink } from './md-widgets'
 import { NotebookViewParameters } from '../notebook'
@@ -62,32 +60,31 @@ export class SectionView implements VirtualDOM<'div'> {
                 return new MkApiApiLink(elem)
             },
         }
+        let notebookSection: AnyVirtualDOM = EmptyDiv
+        if (configuration.notebook && Dependencies.Notebook) {
+            const nbConfig =
+                typeof configuration.notebook === 'object'
+                    ? configuration.notebook
+                    : {}
+            const paramsNotebook = mergeDeep(
+                {
+                    src: section.content,
+                    router,
+                    options: {
+                        runAtStart: true,
+                        markdown: { views },
+                    },
+                },
+                nbConfig,
+            )
+            notebookSection = new Dependencies.Notebook.NotebookSection(
+                paramsNotebook as NotebookViewParameters,
+            )
+        }
         this.children = [
             section.title ? new SectionHeader(section) : undefined,
-            configuration.notebook
-                ? child$({
-                      source$: from(Dependencies.installNotebookModule()),
-                      vdomMap: (mdle: typeof NotebookTypes) => {
-                          const nbConfig =
-                              typeof configuration.notebook === 'object'
-                                  ? configuration.notebook
-                                  : {}
-                          const params = mergeDeep(
-                              {
-                                  src: section.content,
-                                  router,
-                                  options: {
-                                      runAtStart: true,
-                                      markdown: { views },
-                                  },
-                              },
-                              nbConfig,
-                          )
-                          return new mdle.NotebookSection(
-                              params as NotebookViewParameters,
-                          )
-                      },
-                  })
+            configuration.notebook && Dependencies.Notebook
+                ? notebookSection
                 : Dependencies.parseMd({
                       ...(configuration.mdParsingOptions ?? {}),
                       src: section.content,

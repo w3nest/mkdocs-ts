@@ -1,6 +1,6 @@
 import { headingId, parseMd, DefaultLayout, MdWidgets } from '../lib'
 import pkgJson from '../../package.json'
-import * as webpmClient from '@w3nest/webpm-client'
+import type * as WebPM from '@w3nest/webpm-client'
 import type * as CodeApiModule from './code-api'
 import * as NotebookModule from './notebook'
 export type * as CodeApiTypes from './code-api'
@@ -9,7 +9,10 @@ export type * as NotebookTypes from './notebook'
 /**
  * Install and returns the {@link CodeApiModule} module.
  */
-export async function installCodeApiModule() {
+export async function installCodeApiModule(
+    webpmClient: typeof WebPM,
+    Notebook?: typeof NotebookModule,
+) {
     const { module } = await webpmClient.install<{
         module: typeof CodeApiModule
     }>({
@@ -17,7 +20,7 @@ export async function installCodeApiModule() {
     })
     module.Dependencies.parseMd = parseMd
     module.Dependencies.DefaultLayout = DefaultLayout
-    module.Dependencies.installNotebookModule = installNotebookModule
+    module.Dependencies.Notebook = Notebook
     module.Dependencies.headingId = headingId
     return module
 }

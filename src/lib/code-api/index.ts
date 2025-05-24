@@ -28,13 +28,12 @@ export * from './module.view'
 export * from './summary.view'
 export * from './utils'
 
-import { combineLatest, map, Observable, of, tap } from 'rxjs'
+import { map, Observable, of, tap } from 'rxjs'
 import { ModuleView } from './module.view'
 import { AnyVirtualDOM } from 'rx-vdom'
 import { Configuration } from './configurations'
 import { request$, raiseHTTPErrors } from '@w3nest/http-clients'
 import { Module, Project } from './models'
-import { install } from '@w3nest/webpm-client'
 import {
     Navigation,
     Router,
@@ -42,17 +41,30 @@ import {
     LazyRoutes,
     ContextTrait,
 } from '../index'
-import type { installNotebookModule } from '../plugins'
+import type * as NotebookModule from '../notebook'
 import type { parseMd } from '../markdown'
+import type * as MkDocs from '..'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
     public static parseMd: typeof parseMd
     public static DefaultLayout: typeof DefaultLayout
-    public static installNotebookModule: typeof installNotebookModule
+    public static Notebook?: typeof NotebookModule
     public static headingId: (id: string) => string
 }
 
+export function setup({
+    mkdocs,
+    Notebook,
+}: {
+    mkdocs: typeof MkDocs
+    Notebook?: typeof NotebookModule
+}) {
+    Dependencies.parseMd = mkdocs.parseMd
+    Dependencies.DefaultLayout = mkdocs.DefaultLayout
+    Dependencies.Notebook = Notebook
+    Dependencies.headingId = mkdocs.headingId
+}
 /**
  * Interface for the HTTP client fetching API data used in {@link codeApiEntryNode}.
  */
@@ -63,11 +75,6 @@ export interface HttpClientTrait {
      * @param modulePath path of the module relative to project's `docBasePath`.
      */
     fetchModule(modulePath: string): Observable<Module>
-
-    /**
-     * Install required style sheets.
-     */
-    installCss(): Promise<unknown>
 }
 
 /**
@@ -108,12 +115,6 @@ export class HttpClient implements HttpClientTrait {
             tap((m) => (this.cache[assetPath] = m)),
         )
     }
-
-    installCss(): Promise<unknown> {
-        return install({
-            css: [this.configuration.css(this.project)],
-        })
-    }
 }
 
 const moduleView = <TLayout, THeader>(
@@ -132,11 +133,8 @@ const moduleView = <TLayout, THeader>(
     },
     ctx?: ContextTrait,
 ) => {
-    return combineLatest([
-        httpClient.fetchModule(path.replace(/\./g, '/')),
-        httpClient.installCss(),
-    ]).pipe(
-        map(([m]) => {
+    return httpClient.fetchModule(path.replace(/\./g, '/')).pipe(
+        map((m) => {
             return new ModuleView(
                 {
                     module: m,
