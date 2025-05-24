@@ -97,9 +97,24 @@ export * as Views from './views'
 export * from './display-utils'
 import type { parseMd } from '../markdown'
 import type { MdWidgets } from '..'
+import type * as WebPMClient from '@w3nest/webpm-client'
+import type * as MkDocs from '..'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Dependencies {
     public static parseMd: typeof parseMd
     public static MdWidgets: typeof MdWidgets
+    public static webpm?: typeof WebPMClient
+}
+
+export function setup({
+    mkdocs,
+    webpm,
+}: {
+    mkdocs: typeof MkDocs
+    webpm?: typeof WebPMClient
+}) {
+    Dependencies.parseMd = mkdocs.parseMd
+    Dependencies.MdWidgets = mkdocs.MdWidgets
+    Dependencies.webpm = webpm
 }

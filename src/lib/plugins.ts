@@ -28,7 +28,7 @@ export async function installCodeApiModule(
 /**
  * Install and returns the {@link NotebookModule} module.
  */
-export async function installNotebookModule() {
+export async function installNotebookModule(webpmClient: typeof WebPM) {
     const { module } = await webpmClient.install<{
         module: typeof NotebookModule
     }>({
@@ -36,5 +36,6 @@ export async function installNotebookModule() {
     })
     module.Dependencies.parseMd = parseMd
     module.Dependencies.MdWidgets = MdWidgets
+    module.Dependencies.webpm = webpmClient
     return module
 }

@@ -9,7 +9,6 @@ import {
     firstValueFrom,
 } from 'rxjs'
 import { OutputsView } from './cell-views'
-import * as webpm from '@w3nest/webpm-client'
 import { AnyVirtualDOM } from 'rx-vdom'
 import {
     CellCommonAttributes,
@@ -337,7 +336,7 @@ export class State {
         this.initialScope = {
             let: params.initialScope?.let ?? {},
             const: {
-                webpm,
+                webpm: Dependencies.webpm,
                 Views,
                 ...(params.initialScope?.const ?? {}),
             },
