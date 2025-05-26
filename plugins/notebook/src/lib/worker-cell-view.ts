@@ -6,7 +6,7 @@ import { CellCommonAttributes } from './notebook-page'
 import { DropDownCaptureView } from './interpreter-cell-view'
 import { executeWorkersPool, executeWorkersPool$ } from './worker-execution'
 import type { WorkersPoolTypes } from '@w3nest/webpm-client'
-import { ContextTrait, Contextual } from '../context'
+import { ContextTrait, Contextual } from 'mkdocs-ts'
 
 /**
  * All attributes available for a 'worker' cell.

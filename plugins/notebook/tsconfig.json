@@ -1,9 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "resolveJsonModule": true,
         "outDir": "./dist",
-        "rootDir": "./",
         "sourceMap": true,
         "declaration": true,
         "downlevelIteration": true,
@@ -24,6 +22,5 @@
         "compilerOptions": {
             "module": "CommonJS"
         }
-    },
-    "exclude": ["./doc", "./dist/**/*", "./examples", "./plugins"]
+    }
 }

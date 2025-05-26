@@ -1,6 +1,5 @@
 /**
  * This module provides a collection of lightweight UI components designed for use within a notebook page.
- * Additionally, it re-exports the {@link CodeSnippet} component for easy integration.
  *
  * For layout-specific elements, refer to the {@link Layouts} submodule.
  *

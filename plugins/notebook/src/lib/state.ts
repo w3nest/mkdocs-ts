@@ -13,7 +13,6 @@ import { AnyVirtualDOM } from 'rx-vdom'
 import {
     CellCommonAttributes,
     defaultCellAttributes,
-    Dependencies,
     DeportedOutputsView,
     InterpreterCellView,
     JsCellExecutor,
@@ -24,14 +23,21 @@ import {
     PyCellView,
     Views,
 } from '.'
-import { Router } from '../router'
+import {
+    Router,
+    AnyView,
+    Resolvable,
+    resolve,
+    ContextTrait,
+    Contextual,
+    NoContext,
+    parseMd,
+    MdParsingOptions,
+} from 'mkdocs-ts'
 import { fromFetch } from 'rxjs/fetch'
-import type { MdParsingOptions } from '../markdown'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
 import { WorkerCellView } from './worker-cell-view'
 import { Pyodide, PyodideNamespace } from './py-execution'
-import { AnyView, Resolvable, resolve } from '../navigation.node'
-import { ContextTrait, Contextual, NoContext } from '../context'
 import { ExecInput } from './execution-common'
 
 export type CellStatus =
@@ -336,7 +342,6 @@ export class State {
         this.initialScope = {
             let: params.initialScope?.let ?? {},
             const: {
-                webpm: Dependencies.webpm,
                 Views,
                 ...(params.initialScope?.const ?? {}),
             },
@@ -634,7 +639,7 @@ export class State {
                         },
                         nbCtx,
                     )
-                    Dependencies.parseMd({
+                    parseMd({
                         ...parsingOptions,
                         src: extractExportedCode(src),
                         router,

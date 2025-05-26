@@ -35,17 +35,21 @@
  * **Example**
  *
  * <js-cell cell-id="example">
- * const version = "{{mkdocs-version}}"
+ * const mkdocsVersion = "{{mkdocs-version}}"
+ * const notebookVersion = "{{notebook-version}}"
  *
- * const { MkDocs } = await webpm.install({
- *     esm:[ `mkdocs-ts#${version} as MkDocs`],
+ * const { MkDocs, NotebookModule } = await webpm.install({
+ *     esm:[
+ *         `mkdocs-ts#${mkdocsVersion} as MkDocs`,
+ *         `@mkdocs-ts/notebook#${notebookVersion} as NotebookModule`
+ *     ],
  *     css: [
  *         'bootstrap#5.3.3~bootstrap.min.css',
- *         `mkdocs-ts#${version}~assets/mkdocs-light.css`,
+ *         `mkdocs-ts#${mkdocsVersion}~assets/mkdocs-light.css`,
+ *         `@mkdocs-ts/notebook#${notebookVersion}~assets/notebook.css`,
  *         'fontawesome#5.12.1~css/all.min.css',
  *     ]
  * })
- * const NotebookModule = await MkDocs.installNotebookModule()
  * const src =  `
  * ### Hello world
  *
@@ -73,48 +77,11 @@
  * display(app)
  * </js-cell>
  *
- * <cell-output cell-id="example" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
+ * <cell-output cell-id="example" full-screen="true" class="p-1 border rounded" style="aspect-ratio: 1 / 1; min-height: 0px;">
  * </cell-output>
  *
  * @module Notebook
  */
+export * from './lib'
 
-export * from './notebook-page'
-export * from './state'
-export * from './cell-views'
-export * from './execution-common'
-export * from './deported-outputs-view'
-export * from './js-cell-view'
-export * from './md-cell-view'
-export * from './py-cell-view'
-export * from './py-execution'
-export * from './interpreter-cell-view'
-export * from './js-execution'
-export * from './interpreter-execution'
-export * from './worker-cell-view'
-export * from './worker-execution'
-export * as Views from './views'
-export * from './display-utils'
-import type { parseMd } from '../markdown'
-import type { MdWidgets } from '..'
-import type * as WebPMClient from '@w3nest/webpm-client'
-import type * as MkDocs from '..'
-
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class Dependencies {
-    public static parseMd: typeof parseMd
-    public static MdWidgets: typeof MdWidgets
-    public static webpm?: typeof WebPMClient
-}
-
-export function setup({
-    mkdocs,
-    webpm,
-}: {
-    mkdocs: typeof MkDocs
-    webpm?: typeof WebPMClient
-}) {
-    Dependencies.parseMd = mkdocs.parseMd
-    Dependencies.MdWidgets = mkdocs.MdWidgets
-    Dependencies.webpm = webpm
-}
+export * as Interpreters from './interpreters'

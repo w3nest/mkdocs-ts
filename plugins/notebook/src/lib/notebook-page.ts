@@ -1,10 +1,15 @@
 import { child$, ChildrenLike, RxHTMLElement, VirtualDOM } from 'rx-vdom'
-import type { MdParsingOptions, ViewGenerator } from '../markdown'
-import { isResolvedTarget, Router } from '../router'
+import {
+    parseMd,
+    isResolvedTarget,
+    Router,
+    ContextTrait,
+    NoContext,
+    MdParsingOptions,
+    ViewGenerator,
+} from 'mkdocs-ts'
 import { delay, filter, from, of, take } from 'rxjs'
 import { NotebookStateParameters, State } from './state'
-import { Dependencies } from './index'
-import { ContextTrait, NoContext } from '../context'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -156,7 +161,7 @@ export class NotebookSection implements VirtualDOM<'div'> {
                 },
                 vdomMap: (src) => {
                     const start = Date.now()
-                    const vdom = Dependencies.parseMd({
+                    const vdom = parseMd({
                         src,
                         router: this.router,
                         ...(this.options?.markdown ?? {}),

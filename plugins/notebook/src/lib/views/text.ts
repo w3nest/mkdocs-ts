@@ -1,6 +1,6 @@
-import { ChildrenLike, VirtualDOM, CSSAttribute, AnyVirtualDOM } from 'rx-vdom'
+import { ChildrenLike, VirtualDOM, CSSAttribute } from 'rx-vdom'
 
-import { parse } from 'marked'
+import { parseMd } from 'mkdocs-ts'
 /**
  * Represents a text view.
  *
@@ -52,25 +52,5 @@ export class Text implements VirtualDOM<'div'> {
             latex: true,
         })
         this.children = [div]
-    }
-}
-
-function parseMd({
-    src,
-    latex,
-}: {
-    src: string
-    latex: boolean
-}): AnyVirtualDOM {
-    return {
-        tag: 'div',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        innerHTML: parse(src) as string,
-        connectedCallback: (div: HTMLDivElement) => {
-            if (latex) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-                ;(window as unknown as { MathJax }).MathJax?.typeset([div])
-            }
-        },
     }
 }

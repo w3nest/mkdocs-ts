@@ -18,11 +18,9 @@ import {
     ReplaySubject,
     Subject,
 } from 'rxjs'
-import type { MdParsingOptions } from '../markdown'
 import { executeJsStatement } from './js-execution'
 import { DisplayFactory } from './display-utils'
-import { Dependencies } from '.'
-import { ContextTrait } from '../context'
+import { ContextTrait, parseMd, MdParsingOptions } from 'mkdocs-ts'
 
 /**
  * All attributes available for a Markdown cell are the common ones for now.
@@ -256,7 +254,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
             .replace(/\${/g, '<js-inlined>')
             .replace(/}\$/g, '</js-inlined>')
 
-        const vdom = Dependencies.parseMd({
+        const vdom = parseMd({
             src: patchSrc,
             ...this.parserOptions,
             views: {

@@ -21,12 +21,11 @@ import {
     Observable,
     take,
 } from 'rxjs'
+import { MdWidgets } from 'mkdocs-ts'
 import { CellStatus, ExecCellError, Output, State } from './state'
-import type { CodeSnippetView } from '../md-widgets'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
-import { Dependencies } from '.'
 import { ObjectJs } from '@w3nest/rx-tree-views'
 import { createEditor } from 'prism-code-editor'
 import 'prism-code-editor/prism/languages/javascript'
@@ -210,7 +209,6 @@ export class SnippetEditorView implements VirtualDOM<'div'> {
     public readonly tag = 'div'
     public readonly children: ChildrenLike
     public readonly content$: BehaviorSubject<string>
-    public readonly codeSnippetView: CodeSnippetView
     /**
      * The style of the associated HTML element.
      */
@@ -513,7 +511,7 @@ export class ErrorView implements VirtualDOM<'div'> {
         }
 
         this.children = [
-            new Dependencies.MdWidgets.NoteView({
+            new MdWidgets.NoteView({
                 level: 'bug' as const,
                 content,
                 parsingArgs: {

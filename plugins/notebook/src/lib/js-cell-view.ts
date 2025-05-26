@@ -3,28 +3,35 @@ import { BehaviorSubject, filter, Observable, of } from 'rxjs'
 import { SnippetEditorView, FutureCellView } from './cell-views'
 import { CellTrait, ExecArgs, getCellUid, Scope, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
-import { executePy, Pyodide } from './py-execution'
-import { ContextTrait, Contextual } from '../context'
+import { executeJs, executeJs$ } from './js-execution'
+import { ContextTrait, Contextual } from 'mkdocs-ts'
 
 /**
- * All attributes available for a python cell are the common ones for now.
+ * All attributes available for a javascript cell: the common ones + 'reactive'.
  */
-export type PyCellAttributes = CellCommonAttributes
+export type JsCellAttributes = CellCommonAttributes & {
+    /**
+     * If the cell is reactive, Observables & Promises referenced are automatically resolved.
+     * It uses a 'combineLatest' policy.
+     */
+    reactive: boolean
+}
 
 /**
  *
- * Represents the execution side of a Python cell within a {@link NotebookPage}.
+ * Represents the execution side of a Javascript cell within a {@link NotebookPage}.
  *
  * This implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook
  * pages to retrieve exported symbols.
- * However, this implementation is typically inherited from {@link PyCellView} to provide the regular views of
- * a python cell.
+ * However, this implementation is typically inherited from {@link JsCellView} to provide the regular views of
+ * a javascript cell.
  */
-export class PyCellExecutor implements CellTrait {
-    /**
-     * Cell ID.
-     */
+export class JsCellExecutor implements CellTrait {
     public readonly cellId: string
+    /**
+     * Initial source code.
+     */
+    public readonly content: string
 
     /**
      * Emit when the cell is invalidated.
@@ -35,10 +42,7 @@ export class PyCellExecutor implements CellTrait {
      */
     public readonly state: State
 
-    /**
-     * The provided attributes.
-     */
-    public readonly cellAttributes: PyCellAttributes
+    public readonly cellAttributes: JsCellAttributes
 
     /**
      * Observable over the source content of the cell.
@@ -49,7 +53,7 @@ export class PyCellExecutor implements CellTrait {
         cellId: string
         content$: BehaviorSubject<string>
         state: State
-        cellAttributes: PyCellAttributes
+        cellAttributes: JsCellAttributes
     }) {
         Object.assign(this, params)
         this.invalidated$ = this.state.invalidated$.pipe(
@@ -58,25 +62,26 @@ export class PyCellExecutor implements CellTrait {
     }
 
     /**
-     * Execute the cell. See {@link executePy}.
+     * Execute the cell. See {@link execute}.
      *
      * @param args See {@link ExecArgs}.
      * @param ctx Execution context used for logging and tracing.
      */
     @Contextual({ async: true, key: (args: ExecArgs) => args.cellId })
     async execute(args: ExecArgs, ctx?: ContextTrait): Promise<Scope> {
-        const pyodide = (window as unknown as { pyodide?: Pyodide }).pyodide
-        if (!pyodide) {
-            throw Error(
-                'No `window.pyodide` available to run the python cell. You can use `install({pyodide:...})' +
-                    ' to provide a pyodide runtime.',
+        if (this.cellAttributes.reactive) {
+            return await executeJs$(
+                {
+                    ...args,
+                    invalidated$: this.invalidated$,
+                },
+                ctx,
             )
         }
-        return await executePy(
+        return await executeJs(
             {
                 ...args,
                 invalidated$: this.invalidated$,
-                pyNamespace: this.state.getPyNamespace(pyodide),
             },
             ctx,
         )
@@ -85,28 +90,25 @@ export class PyCellExecutor implements CellTrait {
 
 /**
  *
- * Represents a Python cell (running in browser) within a {@link NotebookPage}.
+ * Represents a Javascript cell within a {@link NotebookPage}.
  *
- * They are typically included from a DOM definition with tag name `py-cell` in Markdown content,
- * see {@link PyCellView.FromDom}.
+ * They are typically included from a DOM definition with tag name `js-cell` in MarkDown content,
+ * see {@link JsCellView.FromDom}.
  *
- * Details regarding the execution are provided in the documentation of {@link executePy}.
  *
- * <note level='warning'>
- * An instance of Pyodide runtime should be available through `window.pyodide` with expected python modules installed.
- * </note>
- *
+ * Details regarding the execution are provided in the documentation of {@link executeJs} for
+ * non-reactive cells and {@link executeJs$} for reactive cells.
  */
-export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
+export class JsCellView extends JsCellExecutor implements VirtualDOM<'div'> {
     /**
      * Component's class name for CSS query.
      */
-    static readonly CssSelector = 'mknb-PyCellView'
+    static readonly CssSelector = 'mknb-JsCellView'
     public readonly tag = 'div'
     /**
      * Classes associated with the view.
      */
-    public readonly class = PyCellView.CssSelector
+    public readonly class = JsCellView.CssSelector
     public readonly children: ChildrenLike
 
     /**
@@ -115,8 +117,8 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
     public readonly editorView: SnippetEditorView
 
     /**
-     * Defines the methods to retrieve constructor's arguments from the DOM element `py-cell` within
-     * Markdown content.
+     * Defines the methods to retrieve constructor's arguments from the DOM element `js-cell` within
+     * MarkDown content.
      *
      * <note level='warning'>
      * Be mindful of the conversion from `camelCase` to `kebab-case`.
@@ -124,19 +126,20 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
-            e.getAttribute('cell-id') ?? e.getAttribute('id') ?? getCellUid(),
+            e.getAttribute('cell-id') ?? e.getAttribute('id'),
         content: (e: HTMLElement) => e.textContent ?? '',
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
+        reactive: (e: HTMLElement) => e.getAttribute('reactive') === 'true',
     }
 
     /**
-     * Initialize an instance of {@link PyCellView} from a DOM element `py-cell` in Markdown content
+     * Initialize an instance of {@link JsCellView} from a DOM element `js-cell` in MarkDown content
      *  (the parameter `state` is automatically provided).
      *
      * <note level="hint" label="Constructor's attributes mapping">
-     *  The static property {@link PyCellView.FromDomAttributes | FromDomAttributes}
+     *  The static property {@link JsCellView.FromDomAttributes | FromDomAttributes}
      *  defines the mapping between the DOM element and the constructor's attributes.
      * </note>
      *
@@ -146,14 +149,15 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
      */
     static FromDom({ elem, state }: { elem: HTMLElement; state: State }) {
         const params = {
-            cellId: PyCellView.FromDomAttributes.cellId(elem),
-            content: PyCellView.FromDomAttributes.content(elem),
+            cellId: JsCellView.FromDomAttributes.cellId(elem) ?? getCellUid(),
+            content: JsCellView.FromDomAttributes.content(elem),
             cellAttributes: {
-                readOnly: PyCellView.FromDomAttributes.readOnly(elem),
-                lineNumber: PyCellView.FromDomAttributes.lineNumber(elem),
+                readOnly: JsCellView.FromDomAttributes.readOnly(elem),
+                lineNumber: JsCellView.FromDomAttributes.lineNumber(elem),
+                reactive: JsCellView.FromDomAttributes.reactive(elem),
             },
         }
-        return new PyCellView({ ...params, state })
+        return new JsCellView({ ...params, state })
     }
 
     /**
@@ -169,20 +173,23 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
         cellId: string
         content: string
         state: State
-        cellAttributes: PyCellAttributes
+        cellAttributes: JsCellAttributes
     }) {
         const editorView = new SnippetEditorView({
-            language: 'python',
-            readOnly: params.cellAttributes.readOnly ?? false,
+            language: 'javascript',
+            readOnly: params.cellAttributes.readOnly,
             content: params.content,
-            lineNumbers: params.cellAttributes.lineNumbers ?? false,
+            lineNumbers: params.cellAttributes.lineNumbers,
             onExecute: () => {
                 this.state.execute(this.cellId).then(
                     () => {
                         /*No OP*/
                     },
-                    () => {
-                        throw Error(`Failed to execute cell ${this.cellId}`)
+                    (e: unknown) => {
+                        console.error(
+                            `Failed to execute cell ${this.cellId}`,
+                            e,
+                        )
                     },
                 )
             },
@@ -193,12 +200,12 @@ export class PyCellView extends PyCellExecutor implements VirtualDOM<'div'> {
 
         this.children = [
             new FutureCellView({
-                language: 'python',
+                language: 'javascript',
                 cellId: this.cellId,
                 state: this.state,
                 editorView: this.editorView,
                 cellAttributes: this.cellAttributes,
-                reactive$: of(false),
+                reactive$: of(this.cellAttributes.reactive),
             }),
         ]
     }

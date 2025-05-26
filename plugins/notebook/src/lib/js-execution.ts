@@ -11,7 +11,7 @@ import {
 import { display } from './display-utils'
 import { parseScript } from 'esprima'
 import { ExecCellError, Scope } from './state'
-import { ContextTrait, NoContext } from '../context'
+import { ContextTrait, NoContext } from 'mkdocs-ts'
 import { ExecInput } from './execution-common'
 /* eslint-disable */
 

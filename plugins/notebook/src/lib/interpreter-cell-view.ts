@@ -15,7 +15,7 @@ import {
     State,
 } from './state'
 import { SnippetEditorView, FutureCellView } from './cell-views'
-import { BehaviorSubject, filter, from, Observable } from 'rxjs'
+import { BehaviorSubject, filter, Observable } from 'rxjs'
 import {
     BackendClient,
     executeInterpreter,

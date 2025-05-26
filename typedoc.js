@@ -3,12 +3,11 @@ module.exports = {
     entryPoints: [
         './src/index.ts',
         './src/lib/code-api/index.ts',
-        './src/lib/notebook/index.ts',
         './src/mkapi-backends/index.ts',
         './src/interpreters/index.ts',
     ],
     readme: './assets/indexAPIdoc.md',
-    exclude: ['src/tests'],
+    exclude: ['src/tests', 'src/plugins'],
     out: 'dist/docs',
     theme: 'default',
     categorizeByGroup: false,

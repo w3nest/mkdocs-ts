@@ -8,4 +8,5 @@ mkdocs-ts-doc
 cdn.zip
 doc/
 examples/
+plugins/
 .w3nest

@@ -3,4 +3,4 @@
  *
  * @module Interpreters
  */
-export * as pyrun_backend from './pyrun_backend'
+export * as pyrun_backend from './pyrun_backend/index'

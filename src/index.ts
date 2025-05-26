@@ -29,15 +29,11 @@
  *
  * ## Plugins
  *
- * Two plugins are included:
+ * One plugin is included:
  *
  * - **Code API Module** ({@link CodeApiModule})
  *   - Installed using {@link installCodeApiModule}.
  *   - Enables automatic generation of pages from code API documentation.
- *
- * - **Notebook Module** ({@link NotebookModule})
- *   - Installed using {@link installNotebookModule}.
- *   - Supports pages with live code execution.
  *
  * @module MainModule
  */
@@ -46,7 +42,5 @@ import type * as DefaultLayout from './lib/default-layout' // eslint-disable-lin
 // noinspection ES6UnusedImports Include for documentation
 import type * as CodeApiModule from './lib/code-api' // eslint-disable-line  @typescript-eslint/no-unused-vars
 // noinspection ES6UnusedImports Include for documentation
-import type * as NotebookModule from './lib/notebook' // eslint-disable-line  @typescript-eslint/no-unused-vars
 export type * as MkApiBackendsModule from './mkapi-backends'
-export type * as Interpreters from './interpreters'
 export * from './lib'

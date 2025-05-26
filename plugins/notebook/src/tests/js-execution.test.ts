@@ -6,9 +6,9 @@ import {
     parseProgram,
     Output,
     ExecCellError,
-} from '../../lib/notebook'
+} from '../lib'
 import { Subject } from 'rxjs'
-import { DisplayFactory } from '../../lib/notebook'
+import { DisplayFactory } from '../lib'
 
 const error$ = new Subject<ExecCellError | undefined>()
 

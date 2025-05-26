@@ -1,7 +1,7 @@
 import { display } from './display-utils'
 import { ExecCellError, Scope } from './state'
 import { ExecInput, indent } from './execution-common'
-import { ContextTrait, NoContext } from '../context'
+import { ContextTrait, NoContext } from 'mkdocs-ts'
 import { Observable, Subject, take } from 'rxjs'
 
 export interface PyodideNamespace {

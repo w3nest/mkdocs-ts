@@ -13,7 +13,7 @@ import {
 import { Scope } from './state'
 import { type WorkersPoolTypes } from '@w3nest/webpm-client'
 import { ExecInput } from './execution-common'
-import { ContextTrait, NoContext } from '../context'
+import { ContextTrait, NoContext } from 'mkdocs-ts'
 
 /**
  * Represents the inputs when executing a Workers Pool cell.

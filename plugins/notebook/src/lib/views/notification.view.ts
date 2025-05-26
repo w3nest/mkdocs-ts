@@ -1,7 +1,6 @@
 import { AnyVirtualDOM, attr$, render } from 'rx-vdom'
 import { Observable, of, take } from 'rxjs'
-import type { AnyView } from '../../navigation.node'
-import type { NoteLevel } from '../../md-widgets'
+import type { AnyView, MdWidgets } from 'mkdocs-ts'
 
 /**
  * Displays a notification on the screen with the given content.
@@ -57,7 +56,7 @@ export function notify({
     level,
 }: {
     content: AnyView
-    level: NoteLevel | Observable<NoteLevel>
+    level: MdWidgets.NoteLevel | Observable<MdWidgets.NoteLevel>
     done$?: Observable<unknown>
     duration?: number
 }) {

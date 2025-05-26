@@ -1,9 +1,8 @@
 import './prism-code-editor.mock'
 import { ChildrenLike, render, VirtualDOM } from 'rx-vdom'
-import { ContextTrait, MdWidgets, parseMd, Router } from '../../lib'
+import { ContextTrait, MdWidgets, parseMd, Router } from 'mkdocs-ts'
 import {
     NotebookPage,
-    Dependencies,
     CellTrait,
     State,
     ExecArgs,
@@ -11,12 +10,9 @@ import {
     executeJs,
     getCellUid,
     executeJs$,
-} from '../../lib/notebook'
+} from '../lib'
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs'
 import * as rxjs from 'rxjs'
-
-Dependencies.parseMd = parseMd
-Dependencies.MdWidgets = MdWidgets
 
 /**
  *
