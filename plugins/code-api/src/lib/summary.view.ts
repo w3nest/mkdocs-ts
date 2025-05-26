@@ -8,7 +8,7 @@ import {
     ChildModule,
 } from './models'
 import { BehaviorSubject } from 'rxjs'
-import { Router } from '../router'
+import { Router } from 'mkdocs-ts'
 
 /**
  * Interface for entities included in {@link SummaryView}.

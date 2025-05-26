@@ -1,4 +1,4 @@
-import type { Router } from '../index'
+import type { Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
 import { VirtualDOM, ChildrenLike } from 'rx-vdom'
 import { DocumentationView } from './documentation.view'

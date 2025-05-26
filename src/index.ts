@@ -39,8 +39,4 @@
  */
 // noinspection ES6UnusedImports Include for documentation
 import type * as DefaultLayout from './lib/default-layout' // eslint-disable-line  @typescript-eslint/no-unused-vars
-// noinspection ES6UnusedImports Include for documentation
-import type * as CodeApiModule from './lib/code-api' // eslint-disable-line  @typescript-eslint/no-unused-vars
-// noinspection ES6UnusedImports Include for documentation
-export type * as MkApiBackendsModule from './mkapi-backends'
 export * from './lib'

@@ -4,22 +4,20 @@ import {
     DefaultLayout,
     parseMd,
     headingId,
-} from '../../lib'
+} from 'mkdocs-ts'
 import { BehaviorSubject, firstValueFrom, from, Observable, of } from 'rxjs'
 import {
     codeApiEntryNode,
     configurationTsTypedoc,
-    Dependencies,
     HttpClientTrait,
     Module,
     ModuleView,
     Project,
-} from '../../lib/code-api'
+} from '../lib'
 import fs from 'fs'
-import { mockMissingUIComponents, navigateAndAssert } from '../lib/utils'
+import { mockMissingUIComponents, navigateAndAssert } from './utils'
 import { render } from 'rx-vdom'
-import { HeaderView } from '../../lib/code-api/header.view'
-import { PageView, TOCView } from '../../lib/default-layout'
+import { HeaderView } from '../lib/header.view'
 import { MockClient } from './http-client'
 
 type TLayout = DefaultLayout.NavLayout
@@ -45,9 +43,9 @@ describe('Typescript/Typedoc documentation', () => {
     beforeAll(() => {
         mockMissingUIComponents()
 
-        Dependencies.parseMd = parseMd
-        Dependencies.DefaultLayout = DefaultLayout
-        Dependencies.headingId = headingId
+        // Dependencies.parseMd = parseMd
+        // Dependencies.DefaultLayout = DefaultLayout
+        // Dependencies.headingId = headingId
 
         const navigation: Navigation<
             DefaultLayout.NavLayout,
@@ -103,7 +101,7 @@ describe('Typescript/Typedoc documentation', () => {
             await navigateAndAssert(router, path, name)
             const t = await firstValueFrom(router.target$)
             const pageView = document.querySelector<HTMLElement>(
-                `.${PageView.CssSelector}`,
+                `.${DefaultLayout.PageView.CssSelector}`,
             )
             if (!pageView) {
                 throw Error('Page view not included in document')
@@ -121,7 +119,7 @@ describe('Typescript/Typedoc documentation', () => {
             expect(headingsInPage).toHaveLength(expectedHeadingsCount)
 
             const tocView = document.querySelector<HTMLElement>(
-                `.${TOCView.CssSelector}`,
+                `.${DefaultLayout.TOCView.CssSelector}`,
             )
             if (!tocView) {
                 throw Error('Page view not included in document')

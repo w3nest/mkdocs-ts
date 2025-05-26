@@ -1,10 +1,8 @@
-import { AnyVirtualDOM, ChildrenLike, EmptyDiv, VirtualDOM } from 'rx-vdom'
-import type { Router } from '../index'
+import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { parseMd, type Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
-import { Dependencies } from './index'
 import { MkApiApiLink, MkApiExtLink } from './md-widgets'
-import { NotebookViewParameters } from '../notebook'
 
 /**
  * View for a {@link Documentation}.
@@ -60,32 +58,15 @@ export class SectionView implements VirtualDOM<'div'> {
                 return new MkApiApiLink(elem)
             },
         }
-        let notebookSection: AnyVirtualDOM = EmptyDiv
-        if (configuration.notebook && Dependencies.Notebook) {
-            const nbConfig =
-                typeof configuration.notebook === 'object'
-                    ? configuration.notebook
-                    : {}
-            const paramsNotebook = mergeDeep(
-                {
-                    src: section.content,
-                    router,
-                    options: {
-                        runAtStart: true,
-                        markdown: { views },
-                    },
-                },
-                nbConfig,
-            )
-            notebookSection = new Dependencies.Notebook.NotebookSection(
-                paramsNotebook as NotebookViewParameters,
-            )
-        }
         this.children = [
             section.title ? new SectionHeader(section) : undefined,
-            configuration.notebook && Dependencies.Notebook
-                ? notebookSection
-                : Dependencies.parseMd({
+            configuration.sectionView
+                ? configuration.sectionView({
+                      src: section.content,
+                      router,
+                      mdViews: views,
+                  })
+                : parseMd({
                       ...(configuration.mdParsingOptions ?? {}),
                       src: section.content,
                       router: router,
@@ -121,32 +102,4 @@ export class SectionHeader implements VirtualDOM<'div'> {
             },
         ]
     }
-}
-
-function mergeDeep(obj1: object, obj2: object): object {
-    const result = { ...obj1 }
-
-    for (const key in obj2) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (obj2.hasOwnProperty(key)) {
-            if (
-                obj1[key] &&
-                obj2[key] &&
-                typeof obj1[key] === 'object' &&
-                typeof obj2[key] === 'object' &&
-                !Array.isArray(obj1[key]) &&
-                !Array.isArray(obj2[key])
-            ) {
-                result[key] = mergeDeep(
-                    obj1[key] as object,
-                    obj2[key] as object,
-                )
-            } else {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                result[key] = obj2[key]
-            }
-        }
-    }
-
-    return result
 }

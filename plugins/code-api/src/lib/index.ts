@@ -40,31 +40,8 @@ import {
     DefaultLayout,
     LazyRoutes,
     ContextTrait,
-} from '../index'
-import type * as NotebookModule from '../notebook'
-import type { parseMd } from '../markdown'
-import type * as MkDocs from '..'
+} from 'mkdocs-ts'
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class Dependencies {
-    public static parseMd: typeof parseMd
-    public static DefaultLayout: typeof DefaultLayout
-    public static Notebook?: typeof NotebookModule
-    public static headingId: (id: string) => string
-}
-
-export function setup({
-    mkdocs,
-    Notebook,
-}: {
-    mkdocs: typeof MkDocs
-    Notebook?: typeof NotebookModule
-}) {
-    Dependencies.parseMd = mkdocs.parseMd
-    Dependencies.DefaultLayout = mkdocs.DefaultLayout
-    Dependencies.Notebook = Notebook
-    Dependencies.headingId = mkdocs.headingId
-}
 /**
  * Interface for the HTTP client fetching API data used in {@link codeApiEntryNode}.
  */
@@ -148,7 +125,7 @@ const moduleView = <TLayout, THeader>(
     )
 }
 const toc = (d: { html: HTMLElement; router: Router }) => {
-    return Dependencies.DefaultLayout.tocView({
+    return DefaultLayout.tocView({
         ...d,
         domConvertor: (heading: HTMLHeadingElement): AnyVirtualDOM => {
             const firstHTMLElement = [...heading.children].find(

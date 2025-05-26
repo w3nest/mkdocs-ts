@@ -18,19 +18,13 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
+    "mkdocs-ts": "^0.5.0",
     "rx-vdom": "^0.1.3",
     "rxjs": "^7.5.6",
-    "marked": "^4.2.3",
-    "@w3nest/rx-tree-views": "^0.2.0",
-    "prismjs": "^1.30.0",
+    "@w3nest/http-clients": "^0.1.5",
 }
-in_bundle_deps = {
-    "prism-code-editor": "^4.0.0",
-}
-dev_deps = {
-    "conditional-type-checks": "^1.0.6",
-    "sass": "^1.69.7",
-}
+in_bundle_deps = {}
+dev_deps = {}
 
 config = ProjectConfig(
     path=project_folder,
@@ -46,37 +40,21 @@ config = ProjectConfig(
     bundles=Bundles(
         mainModule=MainModule(
             entryFile="./index.ts",
-            loadDependencies=[
-                "rx-vdom",
-                "rxjs",
-                "marked",
-                "@w3nest/rx-tree-views",
-                "prismjs/components/prism-core",
-                "prismjs/plugins/autoloader/prism-autoloader",
-                "prismjs/plugins/line-numbers/prism-line-numbers",
-                "prismjs/plugins/line-highlight/prism-line-highlight",
-            ],
+            loadDependencies=["mkdocs-ts", "rx-vdom", "rxjs", "@w3nest/http-clients"],
             aliases=[],
         ),
     ),
-    inPackageJson={
-        "scripts": {
-            "build-css-default": "sass ./src/sass/mkdocs-light.scss ./assets/mkdocs-light.css",
-            "build-css": "yarn build-css-default && prettier ./assets -w",
-            "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
-        },
-    },
 )
 template_folder = project_folder / ".w3nest" / ".template"
 generate_template(config=config, dst_folder=template_folder)
 
 files = [
-    # "README.md",
+    "README.md",
     "package.json",
-    # '.npmignore', add 'mkdocs-ts-doc'
-    # '.prettierignore', add '**/assets/**/*.md'
-    # "tsconfig.json", add `"exclude": ["mkdocs-ts-doc"]`
-    # 'jest.config.ts',  add `testPathIgnorePatterns: ['mkdocs-ts-doc']`
+    ".npmignore",
+    # ".prettierignore", Exclude 'src/backends'
+    # "tsconfig.json", Add strict null checks
+    "jest.config.ts",
     "webpack.config.ts",
 ]
 for file in files:

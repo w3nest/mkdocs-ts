@@ -1,5 +1,5 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
-import type { Router } from '../index'
+import type { Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
 import { DocumentationView } from './documentation.view'
 import { HeaderView } from './header.view'

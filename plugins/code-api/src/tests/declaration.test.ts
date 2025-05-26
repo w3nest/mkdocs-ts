@@ -1,8 +1,5 @@
-import {
-    DeclarationView,
-    processDeclaration,
-} from '../../lib/code-api/declaration.view'
-import { mockMissingUIComponents } from '../lib/utils'
+import { DeclarationView, processDeclaration } from '../lib/declaration.view'
+import { mockMissingUIComponents } from './utils'
 import { render } from 'rx-vdom'
 
 test('Declarations processing', () => {

@@ -5,17 +5,15 @@
  */
 
 import { Project } from './models'
-import pkgJson from '../../../package.json'
+
+import { NavNodeData } from 'mkdocs-ts'
 import type {
-    DisplayFactory,
-    NotebookOptions,
-    Scope,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used for documentation
-    NotebookPage,
-} from '../notebook'
-import { NavNodeData } from '../navigation.node'
-import type { DefaultLayout, MdParsingOptions, Router } from '../index'
-import type { ClientTocView, NavLayoutView } from '../default-layout'
+    AnyView,
+    DefaultLayout,
+    MdParsingOptions,
+    Router,
+    ViewGenerator,
+} from 'mkdocs-ts'
 
 /**
  * The navigation layout data-structure produced by the module.
@@ -25,12 +23,14 @@ export interface NavLayout {
     /**
      * Defines the view for the table of contents (TOC) within the page.
      */
-    toc?: ClientTocView
+    toc?: DefaultLayout.ClientTocView
 
     /**
      * Defines the main content view of the page.
      */
-    content: (params: { router: Router<NavLayout> }) => NavLayoutView
+    content: (params: {
+        router: Router<NavLayout>
+    }) => DefaultLayout.NavLayoutView
 }
 
 /**
@@ -45,13 +45,6 @@ export interface Configuration<
      */
     mdParsingOptions?: MdParsingOptions
 
-    /**
-     * Defines the stylesheet to install.
-     *
-     * @param project
-     * @returns Stylesheet full URL.
-     */
-    css: (project: Project) => string
     /**
      * External types to link in the documentation, where keys are symbol path and values associated URL.
      */
@@ -70,16 +63,14 @@ export interface Configuration<
     }) => string
 
     /**
-     * If `true` or an object, use the {@link Notebook} module to parse the code documentation included in the API
-     * files, eventually forwarding the parameters provided to the {@link NotebookPage} constructor.
+     * If provided, documentation sections are generated using this function.
+     * It enables for instance to use the **Notebook** plugin to include coding cells in the API documentation.
      */
-    notebook?:
-        | boolean
-        | {
-              initialScope?: Partial<Scope>
-              displayFactory?: DisplayFactory
-              options?: NotebookOptions
-          }
+    sectionView?: (p: {
+        router: Router
+        src: string
+        mdViews: Record<string, ViewGenerator>
+    }) => AnyView
 
     navNode: ({
         name,
@@ -108,8 +99,6 @@ export const configurationDefault: Configuration = {
         return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`
     },
     externalTypes: {},
-    css: () => `${pkgJson.name}#${pkgJson.version}~assets/ts-typedoc.css`,
-    notebook: undefined,
     navNode: ({ name, header, layout }) => ({
         name,
         header,

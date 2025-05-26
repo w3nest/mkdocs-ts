@@ -39,7 +39,7 @@ import {
     Code,
     Callable,
     ChildModule,
-} from '../../lib/code-api'
+} from '../../lib'
 import fs from 'fs'
 import * as pathLib from 'node:path'
 import path from 'path'

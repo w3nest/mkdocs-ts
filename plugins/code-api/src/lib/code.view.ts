@@ -1,10 +1,9 @@
 import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
-import type { Router } from '../index'
+import { parseMd, type Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
 import { Code, Entity, Project } from './models'
 import { DeclarationView } from './declaration.view'
-import { Dependencies } from './index'
 
 class CodeHeaderView implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mkdocs-CodeHeaderView'
@@ -133,7 +132,7 @@ export class CodeView implements VirtualDOM<'div'> {
                             fontSize: '0.8em',
                         },
                         children: [
-                            Dependencies.parseMd({
+                            parseMd({
                                 src: `
 <code-snippet language="javascript">
 ${implementation}
