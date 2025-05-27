@@ -814,7 +814,8 @@ export class Router<TLayout = unknown, THeader = unknown> {
                     this.bindReactiveNavs(reactiveNavs, ctx)
                     this.bindPromiseNavs(promiseNavs, ctx)
                 },
-                () => {
+                (e: unknown) => {
+                    console.error(e)
                     throw Error(
                         `Router.bindPromiseNavs: unable to bind promise navigation on ${href}`,
                     )
