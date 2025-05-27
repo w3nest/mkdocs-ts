@@ -2,7 +2,7 @@
  * This file gathers entry points related to Mardown parsing.
  *
  */
-import { parse, setOptions } from 'marked'
+import { parse, setOptions, Renderer } from 'marked'
 import { render, VirtualDOM } from 'rx-vdom'
 import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
@@ -482,9 +482,22 @@ function fixedMarkedParseCustomViews({
 
     const divResult = document.createElement('div')
     divResult.classList.add('mkdocs-markdown')
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
+    const renderer = new Renderer()
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    renderer.code = function (code: string, infostring: string) {
+        const id = `id_${String(Math.floor(Math.random() * Math.pow(10, 6)))}`
+        const lang = (infostring || '').trim()
+        const content = code
+        contents[id] = content
+        return `<code-snippet language="${lang}" id="${id}">${content}</code-snippet>\n`
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setOptions({
-        langPrefix: 'hljs language-',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        renderer,
         // deprecated since v0.3.0, removed in v8.0.0,
         // see https://marked.js.org/using_advanced
         headerPrefix: headingPrefixId,
