@@ -459,7 +459,8 @@ export function parseModule({
             parseAttribute({
                 typedocNode: attr,
                 projectGlobals,
-                parentPath: modulePath,
+                parentPath: path,
+                parentElement: module,
             }),
         )
         .filter((attr) => attr !== undefined)
@@ -1035,7 +1036,7 @@ export function parseAttribute({
     typedocNode: TypedocNode & SymbolTrait
     projectGlobals: ProjectGlobals
     parentPath: string
-    parentElement?: TypedocNode
+    parentElement: TypedocNode
 }): Attribute | undefined {
     if (
         hasInheritedTrait(typedocNode) &&
@@ -1056,26 +1057,30 @@ export function parseAttribute({
         path,
         projectGlobals,
     )
-    const documentation =
-        typedocNode.comment && parentElement
-            ? parseDocumentationElements({
-                  typedocNodes: typedocNode.comment.summary,
-                  parent: parentElement,
-                  projectGlobals,
-              })
-            : ''
+    const documentation = typedocNode.comment
+        ? parseDocumentationElements({
+              typedocNodes: typedocNode.comment.summary,
+              parent: parentElement,
+              projectGlobals,
+          })
+        : ''
     const semantic = semantics[typedocNode.kind]
+    const isGlobal = [
+        TYPEDOC_KINDS.PROJECT,
+        TYPEDOC_KINDS.MODULE,
+        TYPEDOC_KINDS.ENTRY_MODULE,
+    ].includes(parentElement.kind)
     return {
         name: name,
         semantic: semantic,
         documentation: getSummaryDoc(documentation),
-        path: parentElement ? `${parentElement.name}.${name}` : name,
+        path: isGlobal ? name : `${parentElement.name}.${name}`,
         navPath: projectGlobals.navigations[typedocNode.id],
         code: parseCode({
             typedocNode: typedocNode,
             projectGlobals,
             references,
-            parentElement,
+            parentElement: isGlobal ? undefined : parentElement,
         }),
     }
 }
