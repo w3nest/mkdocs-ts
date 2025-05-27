@@ -578,7 +578,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         ctx?: ContextTrait,
     ): Promise<Navigation<TLayout, THeader> | 'not-found'> {
         ctx = this.ctx(ctx)
-        const { path, parameters } = target
+        const { path, parameters, sectionId } = target
         if (
             path in this.navNodeCache &&
             Object.keys(parameters ?? {}).length === 0
@@ -605,6 +605,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
                     this.target$.next({
                         path,
                         reason: 'Pending',
+                        sectionId,
                     })
                 }
             }),
