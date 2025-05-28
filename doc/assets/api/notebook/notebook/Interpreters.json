@@ -14,8 +14,8 @@
             }
         ]
     },
-    "path": "mkdocs-ts/Interpreters",
-    "navPath": "@nav/api/",
+    "path": "notebook/Interpreters",
+    "navPath": "@nav/api/notebook/",
     "attributes": [],
     "types": [],
     "callables": [],
@@ -48,8 +48,8 @@
                 "attributes": {},
                 "relations": {}
             },
-            "path": "mkdocs-ts/Interpreters.pyrun_backend",
-            "navPath": "@nav/api/Interpreters/pyrun_backend",
+            "path": "notebook/Interpreters.pyrun_backend",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend",
             "isLeaf": true
         }
     ],

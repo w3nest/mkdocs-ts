@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "The backend for generating API files for TypeScript projects uses the\n<a href=\"https://typedoc.org/\" target=\"_blank\">TypeDoc</a> &\n<a href=\"https://www.npmjs.com/package/typescript\" target=\"_blank\">TypeScript</a> package as the primary\nAST (Abstract Syntax Tree) generators.\n\nThe entry point is the function  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.generateApiFiles\" semantic=\"function\">generateApiFiles</mkapi-api-link> , inputs are provided using  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.ApiInputs\" semantic=\"interface\">ApiInputs</mkapi-api-link> .\n\n**Usage Example**\n\n<note level=\"warning\">\nFor the backend to function correctly, the following prerequisites must be met in the project being documented:\n\n*   `typedoc`  must be available in the node_modules folder.\n*  A  `typedoc.js`  configuration file must be present.\n\nThe backend will not proceed if TypeDoc encounters errors while generating API documentation.\nEnsure TypeDoc runs successfully before using this backend.\n</note>\n\nThe following example demonstrates how to generate API files for a TypeScript project using a TypeScript script\n(for instance named  `gen-doc.ts` ):\n\n<code-snippet language=\"javascript\">\nimport { generateApiFiles } from 'mkdocs-ts/src/mkapi-backends/mkapi-typescript'\n\nconst appFolder =  `${__dirname}/../` \n\ngenerateApiFiles({\n    // The project to document (expected here as the parent of the application folder).\n    projectFolder:  `${appFolder}/../` ,\n    // Output's folder.\n    outputFolder:  `${appFolder}/assets/api` ,\n    baseNav: '/api',\n    externals: {\n        // For instance\n        rxjs: ({ name }: { name: string }) => {\n            const urls = {\n                Subject: 'https://www.learnrxjs.io/learn-rxjs/subjects/subject',\n                BehaviorSubject:\n                    'https://www.learnrxjs.io/learn-rxjs/subjects/subject',\n                ReplaySubject:\n                    'https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject',\n                Observable: 'https://rxjs.dev/guide/observable',\n            }\n            if (!(name in urls)) {\n                console.warn( `Can not find URL for rxjs ${name} symbol` )\n            }\n            return urls[name]\n        },\n    },\n})\n</code-snippet>\n\nTo execute the script:\n\n `npx tsx gen-doc.ts` ;  `tsx`  can be installed from <a href=\"https://www.npmjs.com/package/tsx\" target=\"_blank\">\nnpm</a>.\n\nSee also <a href=\"https://typedoc.org/\" target=\"_blank\">TypeDoc documentation</a> for available options.\n\n**Notes**\n\nThis parser supports a subset of the tags available in TypeDoc. Many tags are omitted because their meaning is\nimplied by the entity's declaration, *e.g.*  `@interface` ,  `@public` ,  `@private` ,\n `@property` ,  `@readonly` ,  `@virtual` .\n\nSome tags are related to grouping, such as  `@group` ,  `@category` ,  `@categoryDescription` , and\n `@groupDescription` . Currently, entities are grouped based on the files they belong to, with the possibility of\nincluding documentation sections at the beginning of each file. Additional semantic grouping is not yet supported.\n\nIn practical terms, the essentials tags used are:\n[ `@param` ](https://typedoc.org/tags/param/), [ `@returns` ](https://typedoc.org/tags/returns/),\n[ `@typeParams` ](https://typedoc.org/tags/typeParam/), [ `@module` ](https://typedoc.org/tags/module/),\n[ `@link` ](https://typedoc.org/tags/link/).\n\n<note level=\"warning\" title=\"Important\">\n- The parser does not handle namespaces. This functionality needs to be implemented separately\n(namespaces can be treated as modules in all practical terms concerning documentation purposes).\n- Only documented and exported symbols are included in the API documentation.\n</note>\n\n**Externals links**\n\nURL to externals links can be provided using   <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.externals\" semantic=\"attribute\">ApiInputs.externals</mkapi-api-link>  if they are part of the project's\n `node_modules` .\n\nWhen external symbols are referenced:\n\n*  **In signatures**: The parser uses the   <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl\" semantic=\"type-alias\">ExternalsUrl</mkapi-api-link>  provider. The keys referenced the package name as\nincluded in the  `node_modules` .\n*  **In documentation strings**: If  `{@link ...}`  have not been resolved by TypeDoc, the parser tries to interpret\nthem as externals using  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl\" semantic=\"type-alias\">ExternalsUrl</mkapi-api-link> . In this case the package name is provided explicitly using\n*e.g.*  `{@link rxjs.Subject}`  where  `rxjs`  is the package name.\n\n**Unnamed parameters**\n\nRegarding unnamed parameters:\n\n ```javascript\n\n/** Foo documentation\n@params _args0 Not relevant: parameters starting with `_` are not displayed\n@params _args0.bar A bar property\n@params _args1 Not relevant: parameters starting with `_` are not displayed\n@params _args1.baz A baz property\n**/\nexport function foo({bar}: { bar: number }, {baz}: { baz: string }) {}\n\n```",
+                "content": "The backend for generating API files for TypeScript projects uses the\n<a href=\"https://typedoc.org/\" target=\"_blank\">TypeDoc</a> &\n<a href=\"https://www.npmjs.com/package/typescript\" target=\"_blank\">TypeScript</a> package as the primary\nAST (Abstract Syntax Tree) generators.\n\nThe entry point is the function  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.generateApiFiles\" semantic=\"function\">generateApiFiles</mkapi-api-link> , inputs are provided using  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs\" semantic=\"interface\">ApiInputs</mkapi-api-link> .\n\n**Usage Example**\n\n<note level=\"warning\">\nFor the backend to function correctly, the following prerequisites must be met in the project being documented:\n\n*   `typedoc`  must be available in the node_modules folder.\n*  A  `typedoc.js`  configuration file must be present.\n\nThe backend will not proceed if TypeDoc encounters errors while generating API documentation.\nEnsure TypeDoc runs successfully before using this backend.\n</note>\n\nThe following example demonstrates how to generate API files for a TypeScript project using a TypeScript script\n(for instance named  `gen-doc.ts` , assuming  `@mkdocs-ts/code-api`  has been installed in  `node_modules` ):\n\n<code-snippet language=\"javascript\">\nimport { generateApiFiles } from './node_modules/@mkdocs-ts/code-api/src/mkapi-backends/mkapi-typescript'\n\n// appFolder is the folder of the documentation application\nconst appFolder =  `${__dirname}` \n\ngenerateApiFiles({\n    // The project to document (expected here as the parent of the application folder).\n    projectFolder:  `${appFolder}/../` ,\n    // Output's folder, where to include the generated JSON files\n    outputFolder:  `${appFolder}/assets/api` ,\n    baseNav: '/api',\n    externals: {\n        // For instance\n        rxjs: ({ name }: { name: string }) => {\n            const urls = {\n                Subject: 'https://www.learnrxjs.io/learn-rxjs/subjects/subject',\n                BehaviorSubject:\n                    'https://www.learnrxjs.io/learn-rxjs/subjects/subject',\n                ReplaySubject:\n                    'https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject',\n                Observable: 'https://rxjs.dev/guide/observable',\n            }\n            if (!(name in urls)) {\n                console.warn( `Can not find URL for rxjs ${name} symbol` )\n            }\n            return urls[name]\n        },\n    },\n})\n</code-snippet>\n\nTo execute the script:\n\n `npx tsx gen-doc.ts` ;  `tsx`  can be installed from <a href=\"https://www.npmjs.com/package/tsx\" target=\"_blank\">\nnpm</a>.\n\nA simple example in action can be found\n[here](https://github.com/w3nest/mkdocs-ts/blob/main/examples/ts-npm/.w3nest/doc.ts).\n\nSee also <a href=\"https://typedoc.org/\" target=\"_blank\">TypeDoc documentation</a> for available options.\n\n**Notes**\n\nThis parser supports a subset of the tags available in TypeDoc. Many tags are omitted because their meaning is\nimplied by the entity's declaration, *e.g.*  `@interface` ,  `@public` ,  `@private` ,\n `@property` ,  `@readonly` ,  `@virtual` .\n\nSome tags are related to grouping, such as  `@group` ,  `@category` ,  `@categoryDescription` , and\n `@groupDescription` . Currently, entities are grouped based on the files they belong to, with the possibility of\nincluding documentation sections at the beginning of each file. Additional semantic grouping is not yet supported.\n\nIn practical terms, the essentials tags used are:\n[ `@param` ](https://typedoc.org/tags/param/), [ `@returns` ](https://typedoc.org/tags/returns/),\n[ `@typeParams` ](https://typedoc.org/tags/typeParam/), [ `@module` ](https://typedoc.org/tags/module/),\n[ `@link` ](https://typedoc.org/tags/link/).\n\n<note level=\"warning\" title=\"Important\">\n- The parser does not handle namespaces. This functionality needs to be implemented separately\n(namespaces can be treated as modules in all practical terms concerning documentation purposes).\n- Only documented and exported symbols are included in the API documentation.\n</note>\n\n**Externals links**\n\nURL to externals links can be provided using   <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.externals\" semantic=\"attribute\">ApiInputs.externals</mkapi-api-link>  if they are part of the project's\n `node_modules` .\n\nWhen external symbols are referenced:\n\n*  **In signatures**: The parser uses the   <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl\" semantic=\"type-alias\">ExternalsUrl</mkapi-api-link>  provider. The keys referenced the package name as\nincluded in the  `node_modules` .\n*  **In documentation strings**: If  `{@link ...}`  have not been resolved by TypeDoc, the parser tries to interpret\nthem as externals using  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl\" semantic=\"type-alias\">ExternalsUrl</mkapi-api-link> . In this case the package name is provided explicitly using\n*e.g.*  `{@link rxjs.Subject}`  where  `rxjs`  is the package name.\n\n**Unnamed parameters**\n\nRegarding unnamed parameters:\n\n ```javascript\n\n/** Foo documentation\n@params _args0 Not relevant: parameters starting with `_` are not displayed\n@params _args0.bar A bar property\n@params _args1 Not relevant: parameters starting with `_` are not displayed\n@params _args1.baz A baz property\n**/\nexport function foo({bar}: { bar: number }, {baz}: { baz: string }) {}\n\n```",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -14,8 +14,8 @@
             }
         ]
     },
-    "path": "mkdocs-ts/MkApiBackends/MkApiTypescript",
-    "navPath": "@nav/api/",
+    "path": "code-api/MkApiBackends/MkApiTypescript",
+    "navPath": "@nav/api/code-api/",
     "attributes": [
         {
             "name": "DOC_KINDS",
@@ -28,7 +28,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "",
+                        "content": "Comment can have contribution from various kind.\nThose are the one handled by the backend.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -40,7 +40,7 @@
                 ]
             },
             "path": "DOC_KINDS",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.DOC_KINDS",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DOC_KINDS",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-models.ts",
                 "declaration": "DOC_KINDS = {\n    /**\n     * Simple text.\n     */\n    TEXT: 'text',\n    /**\n     * An anchor.\n     */\n    INLINE_TAG: 'inline-tag',\n    /**\n     * A code snippet.\n     */\n    CODE: 'code',\n}",
@@ -48,7 +48,7 @@
                 "startLine": 35,
                 "endLine": 36,
                 "references": {
-                    "DOC_KINDS": "@nav/api/MkApiBackends/MkApiTypescript.DOC_KINDS"
+                    "DOC_KINDS": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DOC_KINDS"
                 }
             }
         },
@@ -63,7 +63,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "",
+                        "content": "The kind handles by the backend.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -75,7 +75,7 @@
                 ]
             },
             "path": "TYPEDOC_KINDS",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TYPEDOC_KINDS",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TYPEDOC_KINDS",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-models.ts",
                 "declaration": "TYPEDOC_KINDS = {\n    PROJECT: 1,\n    ENTRY_MODULE: 2,\n    MODULE: 4,\n    VARIABLE: 32,\n    FUNCTION: 64,\n    CLASS: 128,\n    INTERFACE: 256,\n    CONSTRUCTOR: 512,\n    ATTRIBUTE: 1024,\n    METHOD: 2048,\n    SIGNATURE: 4096,\n    ALIAS: 2097152,\n}",
@@ -83,7 +83,7 @@
                 "startLine": 11,
                 "endLine": 12,
                 "references": {
-                    "TYPEDOC_KINDS": "@nav/api/MkApiBackends/MkApiTypescript.TYPEDOC_KINDS"
+                    "TYPEDOC_KINDS": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TYPEDOC_KINDS"
                 }
             }
         }
@@ -94,7 +94,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Inputs for  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.generateApiFiles\" semantic=\"function\">generateApiFiles</mkapi-api-link> .",
+                        "content": "Inputs for  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.generateApiFiles\" semantic=\"function\">generateApiFiles</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -106,7 +106,7 @@
                 ]
             },
             "path": "ApiInputs",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs",
             "attributes": [
                 {
                     "name": "baseNav",
@@ -131,7 +131,7 @@
                         ]
                     },
                     "path": "ApiInputs.baseNav",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.baseNav",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.baseNav",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "baseNav: string",
@@ -139,7 +139,7 @@
                         "startLine": 198,
                         "endLine": 199,
                         "references": {
-                            "baseNav": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.baseNav"
+                            "baseNav": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.baseNav"
                         }
                     }
                 },
@@ -166,7 +166,7 @@
                         ]
                     },
                     "path": "ApiInputs.externals",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.externals",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.externals",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "externals?: ExternalsUrl",
@@ -174,8 +174,8 @@
                         "startLine": 202,
                         "endLine": 203,
                         "references": {
-                            "externals": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.externals",
-                            "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl"
+                            "externals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.externals",
+                            "ExternalsUrl": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl"
                         }
                     }
                 },
@@ -202,7 +202,7 @@
                         ]
                     },
                     "path": "ApiInputs.extraDeclarationReferences",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.extraDeclarationReferences",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.extraDeclarationReferences",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "extraDeclarationReferences?: ExtraDeclarationReferences",
@@ -210,8 +210,8 @@
                         "startLine": 206,
                         "endLine": 207,
                         "references": {
-                            "extraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.extraDeclarationReferences",
-                            "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences"
+                            "extraDeclarationReferences": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.extraDeclarationReferences",
+                            "ExtraDeclarationReferences": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences"
                         }
                     }
                 },
@@ -238,7 +238,7 @@
                         ]
                     },
                     "path": "ApiInputs.outputFolder",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.outputFolder",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.outputFolder",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "outputFolder: string",
@@ -246,7 +246,7 @@
                         "startLine": 194,
                         "endLine": 195,
                         "references": {
-                            "outputFolder": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.outputFolder"
+                            "outputFolder": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.outputFolder"
                         }
                     }
                 },
@@ -273,7 +273,7 @@
                         ]
                     },
                     "path": "ApiInputs.projectFolder",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.projectFolder",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.projectFolder",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "projectFolder: string",
@@ -281,7 +281,7 @@
                         "startLine": 190,
                         "endLine": 191,
                         "references": {
-                            "projectFolder": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs.projectFolder"
+                            "projectFolder": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs.projectFolder"
                         }
                     }
                 }
@@ -294,9 +294,9 @@
                 "startLine": 185,
                 "endLine": 208,
                 "references": {
-                    "ApiInputs": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs",
-                    "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
-                    "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences"
+                    "ApiInputs": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs",
+                    "ExternalsUrl": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl",
+                    "ExtraDeclarationReferences": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences"
                 }
             },
             "semantic": {
@@ -323,7 +323,7 @@
                 ]
             },
             "path": "BlockTagsTrait",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.BlockTagsTrait",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.BlockTagsTrait",
             "attributes": [],
             "callables": [],
             "code": {
@@ -333,10 +333,10 @@
                 "startLine": 157,
                 "endLine": 160,
                 "references": {
-                    "BlockTagsTrait": "@nav/api/MkApiBackends/MkApiTypescript.BlockTagsTrait",
-                    "DocText": "@nav/api/MkApiBackends/MkApiTypescript.DocText",
-                    "DocInlineTag": "@nav/api/MkApiBackends/MkApiTypescript.DocInlineTag",
-                    "DocCode": "@nav/api/MkApiBackends/MkApiTypescript.DocCode"
+                    "BlockTagsTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.BlockTagsTrait",
+                    "DocText": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocText",
+                    "DocInlineTag": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocInlineTag",
+                    "DocCode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocCode"
                 }
             },
             "semantic": {
@@ -363,7 +363,7 @@
                 ]
             },
             "path": "Comment",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.Comment",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Comment",
             "attributes": [
                 {
                     "name": "summary",
@@ -388,7 +388,7 @@
                         ]
                     },
                     "path": "Comment.summary",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.Comment.summary",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Comment.summary",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-models.ts",
                         "declaration": "summary: CommentSection",
@@ -396,8 +396,8 @@
                         "startLine": 88,
                         "endLine": 89,
                         "references": {
-                            "summary": "@nav/api/MkApiBackends/MkApiTypescript.Comment.summary",
-                            "CommentSection": "@nav/api/MkApiBackends/MkApiTypescript.CommentSection"
+                            "summary": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Comment.summary",
+                            "CommentSection": "@nav/api/code-api/MkApiBackends/MkApiTypescript.CommentSection"
                         }
                     }
                 }
@@ -410,8 +410,8 @@
                 "startLine": 84,
                 "endLine": 90,
                 "references": {
-                    "Comment": "@nav/api/MkApiBackends/MkApiTypescript.Comment",
-                    "CommentSection": "@nav/api/MkApiBackends/MkApiTypescript.CommentSection"
+                    "Comment": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Comment",
+                    "CommentSection": "@nav/api/code-api/MkApiBackends/MkApiTypescript.CommentSection"
                 }
             },
             "semantic": {
@@ -438,7 +438,7 @@
                 ]
             },
             "path": "DocCode",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.DocCode",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocCode",
             "attributes": [],
             "callables": [],
             "code": {
@@ -448,7 +448,7 @@
                 "startLine": 71,
                 "endLine": 75,
                 "references": {
-                    "DocCode": "@nav/api/MkApiBackends/MkApiTypescript.DocCode"
+                    "DocCode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocCode"
                 }
             },
             "semantic": {
@@ -475,17 +475,17 @@
                 ]
             },
             "path": "DocInlineTag",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.DocInlineTag",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocInlineTag",
             "attributes": [],
             "callables": [],
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-models.ts",
                 "declaration": "export interface DocInlineTag",
-                "implementation": "export interface DocInlineTag {\n    kind: 'inline-tag'\n    tag: '@link'\n    text: string\n    target: number | { qualifiedName: string; sourceFileName: string }\n}",
+                "implementation": "export interface DocInlineTag {\n    kind: 'inline-tag'\n    tag: '@link'\n    text: string\n    target: string | number | { qualifiedName: string; sourceFileName: string }\n}",
                 "startLine": 61,
                 "endLine": 67,
                 "references": {
-                    "DocInlineTag": "@nav/api/MkApiBackends/MkApiTypescript.DocInlineTag"
+                    "DocInlineTag": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocInlineTag"
                 }
             },
             "semantic": {
@@ -512,7 +512,7 @@
                 ]
             },
             "path": "DocText",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.DocText",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocText",
             "attributes": [],
             "callables": [],
             "code": {
@@ -522,7 +522,7 @@
                 "startLine": 53,
                 "endLine": 57,
                 "references": {
-                    "DocText": "@nav/api/MkApiBackends/MkApiTypescript.DocText"
+                    "DocText": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocText"
                 }
             },
             "semantic": {
@@ -549,7 +549,7 @@
                 ]
             },
             "path": "ProjectGlobals",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
             "attributes": [
                 {
                     "name": "externals",
@@ -574,7 +574,7 @@
                         ]
                     },
                     "path": "ProjectGlobals.externals",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.externals",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.externals",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "externals?: ExternalsUrl",
@@ -582,8 +582,8 @@
                         "startLine": 97,
                         "endLine": 98,
                         "references": {
-                            "externals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.externals",
-                            "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl"
+                            "externals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.externals",
+                            "ExternalsUrl": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl"
                         }
                     }
                 },
@@ -610,7 +610,7 @@
                         ]
                     },
                     "path": "ProjectGlobals.navigations",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.navigations",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.navigations",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "navigations: Record<number, string>",
@@ -618,7 +618,7 @@
                         "startLine": 78,
                         "endLine": 79,
                         "references": {
-                            "navigations": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.navigations",
+                            "navigations": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.navigations",
                             "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
@@ -646,7 +646,7 @@
                         ]
                     },
                     "path": "ProjectGlobals.tsInputs",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.tsInputs",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.tsInputs",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "tsInputs: TsSrcElements",
@@ -654,8 +654,8 @@
                         "startLine": 82,
                         "endLine": 83,
                         "references": {
-                            "tsInputs": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.tsInputs",
-                            "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements"
+                            "tsInputs": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.tsInputs",
+                            "TsSrcElements": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements"
                         }
                     }
                 },
@@ -682,7 +682,7 @@
                         ]
                     },
                     "path": "ProjectGlobals.typedocIdMap",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocIdMap",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocIdMap",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "typedocIdMap: Record<number, TypedocNode | undefined>",
@@ -690,8 +690,8 @@
                         "startLine": 86,
                         "endLine": 87,
                         "references": {
-                            "typedocIdMap": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocIdMap",
-                            "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+                            "typedocIdMap": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocIdMap",
+                            "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
                             "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
@@ -719,7 +719,7 @@
                         ]
                     },
                     "path": "ProjectGlobals.typedocParentIdMap",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocParentIdMap",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocParentIdMap",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                         "declaration": "typedocParentIdMap: Record<number, TypedocNode>",
@@ -727,8 +727,8 @@
                         "startLine": 90,
                         "endLine": 91,
                         "references": {
-                            "typedocParentIdMap": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocParentIdMap",
-                            "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+                            "typedocParentIdMap": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals.typedocParentIdMap",
+                            "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
                             "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
@@ -742,11 +742,11 @@
                 "startLine": 74,
                 "endLine": 101,
                 "references": {
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
-                    "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
-                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "ExternalsUrl": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl",
+                    "ExtraDeclarationReferences": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
+                    "TsSrcElements": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
@@ -774,7 +774,7 @@
                 ]
             },
             "path": "Source",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.Source",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source",
             "attributes": [
                 {
                     "name": "fileName",
@@ -799,7 +799,7 @@
                         ]
                     },
                     "path": "Source.fileName",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.Source.fileName",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source.fileName",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-models.ts",
                         "declaration": "fileName: string",
@@ -807,7 +807,7 @@
                         "startLine": 98,
                         "endLine": 99,
                         "references": {
-                            "fileName": "@nav/api/MkApiBackends/MkApiTypescript.Source.fileName"
+                            "fileName": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source.fileName"
                         }
                     }
                 },
@@ -834,7 +834,7 @@
                         ]
                     },
                     "path": "Source.line",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.Source.line",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source.line",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-models.ts",
                         "declaration": "line: number",
@@ -842,7 +842,7 @@
                         "startLine": 102,
                         "endLine": 103,
                         "references": {
-                            "line": "@nav/api/MkApiBackends/MkApiTypescript.Source.line"
+                            "line": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source.line"
                         }
                     }
                 }
@@ -855,7 +855,7 @@
                 "startLine": 94,
                 "endLine": 104,
                 "references": {
-                    "Source": "@nav/api/MkApiBackends/MkApiTypescript.Source"
+                    "Source": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source"
                 }
             },
             "semantic": {
@@ -882,7 +882,7 @@
                 ]
             },
             "path": "SymbolTrait",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
             "attributes": [],
             "callables": [],
             "code": {
@@ -892,9 +892,9 @@
                 "startLine": 108,
                 "endLine": 112,
                 "references": {
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "Source": "@nav/api/MkApiBackends/MkApiTypescript.Source",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode"
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "Source": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Source",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode"
                 }
             },
             "semantic": {
@@ -921,7 +921,7 @@
                 ]
             },
             "path": "TsSrcElement",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement",
             "attributes": [
                 {
                     "name": "comment",
@@ -946,7 +946,7 @@
                         ]
                     },
                     "path": "TsSrcElement.comment",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement.comment",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement.comment",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/generate-ts-inputs.ts",
                         "declaration": "comment?: string",
@@ -954,7 +954,7 @@
                         "startLine": 288,
                         "endLine": 289,
                         "references": {
-                            "comment": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement.comment"
+                            "comment": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement.comment"
                         }
                     }
                 },
@@ -981,7 +981,7 @@
                         ]
                     },
                     "path": "TsSrcElement.declaration",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement.declaration",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement.declaration",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/generate-ts-inputs.ts",
                         "declaration": "declaration?: string",
@@ -989,7 +989,7 @@
                         "startLine": 280,
                         "endLine": 281,
                         "references": {
-                            "declaration": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement.declaration"
+                            "declaration": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement.declaration"
                         }
                     }
                 },
@@ -1016,7 +1016,7 @@
                         ]
                     },
                     "path": "TsSrcElement.implementation",
-                    "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement.implementation",
+                    "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement.implementation",
                     "code": {
                         "filePath": "src/mkapi-backends/mkapi-typescript/generate-ts-inputs.ts",
                         "declaration": "implementation?: string",
@@ -1024,7 +1024,7 @@
                         "startLine": 284,
                         "endLine": 285,
                         "references": {
-                            "implementation": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement.implementation"
+                            "implementation": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement.implementation"
                         }
                     }
                 }
@@ -1037,7 +1037,7 @@
                 "startLine": 276,
                 "endLine": 290,
                 "references": {
-                    "TsSrcElement": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement"
+                    "TsSrcElement": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement"
                 }
             },
             "semantic": {
@@ -1064,7 +1064,7 @@
                 ]
             },
             "path": "TypedocNode",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1074,8 +1074,8 @@
                 "startLine": 170,
                 "endLine": 178,
                 "references": {
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "Comment": "@nav/api/MkApiBackends/MkApiTypescript.Comment",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "Comment": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Comment",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
@@ -1103,7 +1103,7 @@
                 ]
             },
             "path": "ClassTrait",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ClassTrait",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ClassTrait",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1113,9 +1113,9 @@
                 "startLine": 123,
                 "endLine": 124,
                 "references": {
-                    "ClassTrait": "@nav/api/MkApiBackends/MkApiTypescript.ClassTrait",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode"
+                    "ClassTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ClassTrait",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode"
                 }
             },
             "semantic": {
@@ -1142,7 +1142,7 @@
                 ]
             },
             "path": "CommentSection",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.CommentSection",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.CommentSection",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1152,10 +1152,10 @@
                 "startLine": 79,
                 "endLine": 80,
                 "references": {
-                    "CommentSection": "@nav/api/MkApiBackends/MkApiTypescript.CommentSection",
-                    "DocText": "@nav/api/MkApiBackends/MkApiTypescript.DocText",
-                    "DocInlineTag": "@nav/api/MkApiBackends/MkApiTypescript.DocInlineTag",
-                    "DocCode": "@nav/api/MkApiBackends/MkApiTypescript.DocCode"
+                    "CommentSection": "@nav/api/code-api/MkApiBackends/MkApiTypescript.CommentSection",
+                    "DocText": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocText",
+                    "DocInlineTag": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocInlineTag",
+                    "DocCode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.DocCode"
                 }
             },
             "semantic": {
@@ -1182,7 +1182,7 @@
                 ]
             },
             "path": "ExternalsUrl",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1192,8 +1192,8 @@
                 "startLine": 61,
                 "endLine": 62,
                 "references": {
-                    "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
-                    "ExternalUrlGetter": "@nav/api/MkApiBackends/MkApiTypescript.ExternalUrlGetter",
+                    "ExternalsUrl": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl",
+                    "ExternalUrlGetter": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalUrlGetter",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
@@ -1209,7 +1209,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a function that returns the link to documentation of an external symbol given its name and file path\n(within  `node_modules` ).\n\nSee  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl\" semantic=\"type-alias\">ExternalsUrl</mkapi-api-link> .",
+                        "content": "Represents a function that returns the link to documentation of an external symbol given its name and file path\n(within  `node_modules` ).\n\nSee  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl\" semantic=\"type-alias\">ExternalsUrl</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1221,7 +1221,7 @@
                 ]
             },
             "path": "ExternalUrlGetter",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ExternalUrlGetter",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalUrlGetter",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1231,7 +1231,7 @@
                 "startLine": 53,
                 "endLine": 54,
                 "references": {
-                    "ExternalUrlGetter": "@nav/api/MkApiBackends/MkApiTypescript.ExternalUrlGetter"
+                    "ExternalUrlGetter": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalUrlGetter"
                 }
             },
             "semantic": {
@@ -1258,7 +1258,7 @@
                 ]
             },
             "path": "ExtraDeclarationReferences",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1268,7 +1268,7 @@
                 "startLine": 70,
                 "endLine": 71,
                 "references": {
-                    "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
+                    "ExtraDeclarationReferences": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
@@ -1296,7 +1296,7 @@
                 ]
             },
             "path": "Kind",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.Kind",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Kind",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1306,8 +1306,8 @@
                 "startLine": 29,
                 "endLine": 30,
                 "references": {
-                    "Kind": "@nav/api/MkApiBackends/MkApiTypescript.Kind",
-                    "TYPEDOC_KINDS": "@nav/api/MkApiBackends/MkApiTypescript.TYPEDOC_KINDS"
+                    "Kind": "@nav/api/code-api/MkApiBackends/MkApiTypescript.Kind",
+                    "TYPEDOC_KINDS": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TYPEDOC_KINDS"
                 }
             },
             "semantic": {
@@ -1334,7 +1334,7 @@
                 ]
             },
             "path": "MethodTrait",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.MethodTrait",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.MethodTrait",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1344,8 +1344,8 @@
                 "startLine": 181,
                 "endLine": 182,
                 "references": {
-                    "MethodTrait": "@nav/api/MkApiBackends/MkApiTypescript.MethodTrait",
-                    "SignaturesTrait": "@nav/api/MkApiBackends/MkApiTypescript.SignaturesTrait"
+                    "MethodTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.MethodTrait",
+                    "SignaturesTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SignaturesTrait"
                 }
             },
             "semantic": {
@@ -1372,7 +1372,7 @@
                 ]
             },
             "path": "SignaturesTrait",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.SignaturesTrait",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SignaturesTrait",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1382,10 +1382,10 @@
                 "startLine": 141,
                 "endLine": 142,
                 "references": {
-                    "SignaturesTrait": "@nav/api/MkApiBackends/MkApiTypescript.SignaturesTrait",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "SignatureTrait": "@nav/api/MkApiBackends/MkApiTypescript.SignatureTrait"
+                    "SignaturesTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SignaturesTrait",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "SignatureTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SignatureTrait"
                 }
             },
             "semantic": {
@@ -1412,7 +1412,7 @@
                 ]
             },
             "path": "SignatureTrait",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.SignatureTrait",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SignatureTrait",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1422,9 +1422,9 @@
                 "startLine": 131,
                 "endLine": 132,
                 "references": {
-                    "SignatureTrait": "@nav/api/MkApiBackends/MkApiTypescript.SignatureTrait",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode"
+                    "SignatureTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SignatureTrait",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode"
                 }
             },
             "semantic": {
@@ -1451,7 +1451,7 @@
                 ]
             },
             "path": "TsSrcElements",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements",
             "attributes": [],
             "callables": [],
             "code": {
@@ -1461,8 +1461,8 @@
                 "startLine": 295,
                 "endLine": 296,
                 "references": {
-                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
-                    "TsSrcElement": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElement",
+                    "TsSrcElements": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements",
+                    "TsSrcElement": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElement",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
@@ -1480,7 +1480,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Entry point function to generate API files.\n\nThe general operations of the backend involve:\n\n- Gathering TypeScript information using  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.generateTsInputs\" semantic=\"function\">generateTsInputs</mkapi-api-link> .\n\n- Gathering TypeDoc information using  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.generateTypedocInputs\" semantic=\"function\">generateTypedocInputs</mkapi-api-link> .\n\n- Creating the output files.",
+                        "content": "Entry point function to generate API files.\n\nThe general operations of the backend involve:\n\n- Gathering TypeScript information using  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.generateTsInputs\" semantic=\"function\">generateTsInputs</mkapi-api-link> .\n\n- Gathering TypeDoc information using  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.generateTypedocInputs\" semantic=\"function\">generateTypedocInputs</mkapi-api-link> .\n\n- Creating the output files.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1503,7 +1503,7 @@
                 ]
             },
             "path": "generateApiFiles",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.generateApiFiles",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.generateApiFiles",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function generateApiFiles(params: ApiInputs)",
@@ -1511,8 +1511,8 @@
                 "startLine": 221,
                 "endLine": 269,
                 "references": {
-                    "generateApiFiles": "@nav/api/MkApiBackends/MkApiTypescript.generateApiFiles",
-                    "ApiInputs": "@nav/api/MkApiBackends/MkApiTypescript.ApiInputs"
+                    "generateApiFiles": "@nav/api/code-api/MkApiBackends/MkApiTypescript.generateApiFiles",
+                    "ApiInputs": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ApiInputs"
                 }
             },
             "semantic": {
@@ -1550,7 +1550,7 @@
                 ]
             },
             "path": "generateTsInputs",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.generateTsInputs",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.generateTsInputs",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/generate-ts-inputs.ts",
                 "declaration": "export function generateTsInputs(\n    rootPath: string,\n    files: Set<string>,\n    elements: TsSrcElements = {},\n): TsSrcElements",
@@ -1558,8 +1558,8 @@
                 "startLine": 304,
                 "endLine": 316,
                 "references": {
-                    "generateTsInputs": "@nav/api/MkApiBackends/MkApiTypescript.generateTsInputs",
-                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
+                    "generateTsInputs": "@nav/api/code-api/MkApiBackends/MkApiTypescript.generateTsInputs",
+                    "TsSrcElements": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements",
                     "Set": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"
                 }
             },
@@ -1609,7 +1609,7 @@
                 ]
             },
             "path": "generateTypedocInputs",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.generateTypedocInputs",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.generateTypedocInputs",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/generate-typedoc-inputs.ts",
                 "declaration": "export function generateTypedocInputs(\n    projectFolder: string,\n): TypedocNode & ProjectTrait",
@@ -1617,9 +1617,9 @@
                 "startLine": 12,
                 "endLine": 50,
                 "references": {
-                    "generateTypedocInputs": "@nav/api/MkApiBackends/MkApiTypescript.generateTypedocInputs",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "ProjectTrait": "@nav/api/MkApiBackends/MkApiTypescript.ProjectTrait"
+                    "generateTypedocInputs": "@nav/api/code-api/MkApiBackends/MkApiTypescript.generateTypedocInputs",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ProjectTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectTrait"
                 }
             },
             "semantic": {
@@ -1668,19 +1668,19 @@
                 ]
             },
             "path": "parseAttribute",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseAttribute",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseAttribute",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
-                "declaration": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n    parentPath,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement?: TypedocNode\n}): Attribute | undefined",
-                "implementation": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n    parentPath,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement?: TypedocNode\n}): Attribute | undefined {\n    if (\n        hasInheritedTrait(typedocNode) &&\n        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]\n    ) {\n        return undefined\n    }\n    const name = typedocNode.name\n    const path = `${parentPath}.${name}`\n    if (hasInheritedTrait(typedocNode)) {\n        typedocNode = projectGlobals.typedocIdMap[\n            typedocNode.inheritedFrom.target\n        ] as TypedocNode & SymbolTrait\n        parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]\n    }\n    const references = gather_symbol_references(\n        typedocNode,\n        path,\n        projectGlobals,\n    )\n    const documentation =\n        typedocNode.comment && parentElement\n            ? parseDocumentationElements({\n                  typedocNodes: typedocNode.comment.summary,\n                  parent: parentElement,\n                  projectGlobals,\n              })\n            : ''\n    const semantic = semantics[typedocNode.kind]\n    return {\n        name: name,\n        semantic: semantic,\n        documentation: getSummaryDoc(documentation),\n        path: parentElement ? `${parentElement.name}.${name}` : name,\n        navPath: projectGlobals.navigations[typedocNode.id],\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n            parentElement,\n        }),\n    }\n}",
-                "startLine": 1025,
-                "endLine": 1078,
+                "declaration": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n    parentPath,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement: TypedocNode\n}): Attribute | undefined",
+                "implementation": "export function parseAttribute({\n    typedocNode,\n    projectGlobals,\n    parentElement,\n    parentPath,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    parentPath: string\n    parentElement: TypedocNode\n}): Attribute | undefined {\n    if (\n        hasInheritedTrait(typedocNode) &&\n        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]\n    ) {\n        return undefined\n    }\n    const name = typedocNode.name\n    const path = `${parentPath}.${name}`\n    if (hasInheritedTrait(typedocNode)) {\n        typedocNode = projectGlobals.typedocIdMap[\n            typedocNode.inheritedFrom.target\n        ] as TypedocNode & SymbolTrait\n        parentElement = projectGlobals.typedocParentIdMap[typedocNode.id]\n    }\n    const references = gather_symbol_references(\n        typedocNode,\n        path,\n        projectGlobals,\n    )\n    const documentation = typedocNode.comment\n        ? parseDocumentationElements({\n              typedocNodes: typedocNode.comment.summary,\n              parent: parentElement,\n              projectGlobals,\n          })\n        : ''\n    const semantic = semantics[typedocNode.kind]\n    const isGlobal = [\n        TYPEDOC_KINDS.PROJECT,\n        TYPEDOC_KINDS.MODULE,\n        TYPEDOC_KINDS.ENTRY_MODULE,\n    ].includes(parentElement.kind)\n    return {\n        name: name,\n        semantic: semantic,\n        documentation: getSummaryDoc(documentation),\n        path: isGlobal ? name : `${parentElement.name}.${name}`,\n        navPath: projectGlobals.navigations[typedocNode.id],\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n            parentElement: isGlobal ? undefined : parentElement,\n        }),\n    }\n}",
+                "startLine": 1030,
+                "endLine": 1087,
                 "references": {
-                    "parseAttribute": "@nav/api/MkApiBackends/MkApiTypescript.parseAttribute",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "Entity": "@nav/api/CodeApi.Entity"
+                    "parseAttribute": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseAttribute",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "Entity": "@nav/api/code-api/.Entity"
                 }
             },
             "semantic": {
@@ -1729,20 +1729,20 @@
                 ]
             },
             "path": "parseCallable",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseCallable",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseCallable",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseCallable({\n    typedocNode,\n    semantic,\n    projectGlobals,\n    parentPath,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SignaturesTrait\n    parentPath: string\n    semantic: Semantic\n    projectGlobals: ProjectGlobals\n    parentElement?: TypedocNode\n}): Callable | undefined",
                 "implementation": "export function parseCallable({\n    typedocNode,\n    semantic,\n    projectGlobals,\n    parentPath,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SignaturesTrait\n    parentPath: string\n    semantic: Semantic\n    projectGlobals: ProjectGlobals\n    parentElement?: TypedocNode\n}): Callable | undefined {\n    if (\n        hasInheritedTrait(typedocNode) &&\n        !projectGlobals.typedocIdMap[typedocNode.inheritedFrom.target]\n    ) {\n        return undefined\n    }\n    const typedocFct = typedocNode.signatures[0]\n\n    const name =\n        semantic.role === 'constructor' ? 'constructor' : typedocFct.name\n\n    const documentation = parseDocumentationElements({\n        typedocNodes: typedocFct.comment.summary,\n        parent: typedocFct,\n        projectGlobals,\n    })\n    const path = `${parentPath}.${name}`\n    const params_ref = typedocFct.parameters\n        ? gather_symbol_references(typedocFct.parameters, path, projectGlobals)\n        : {}\n    const returns_ref = gather_symbol_references(\n        typedocFct.type,\n        path,\n        projectGlobals,\n    )\n    const functionDoc = getSummaryDoc(documentation)\n    const parametersDoc = typedocFct.parameters\n        ? parseArgumentsDoc({\n              fromElement: typedocFct.parameters,\n              title: 'Arguments',\n              parentElement: typedocFct,\n              projectGlobals,\n          })\n        : undefined\n    const tParamDoc = typedocFct.typeParameters\n        ? parseArgumentsDoc({\n              fromElement: typedocFct.typeParameters,\n              title: 'Generics',\n              parentElement: typedocFct,\n              projectGlobals,\n          })\n        : undefined\n    const returnsDoc = parseReturnsDoc({\n        typedocNode: typedocFct,\n        projectGlobals,\n    })\n\n    functionDoc.sections.push(\n        ...[parametersDoc, tParamDoc, returnsDoc].filter(\n            (c) => c !== undefined,\n        ),\n    )\n    return {\n        name,\n        documentation: functionDoc,\n        path: parentElement ? `${parentElement.name}.${name}` : name, //`${typedocFct.sources[0].fileName}:${path}`,\n        navPath: projectGlobals.navigations[typedocNode.id],\n        code: parseCode({\n            typedocNode,\n            projectGlobals,\n            references: {\n                ...params_ref,\n                ...returns_ref,\n            },\n            parentElement,\n        }),\n        semantic,\n    }\n}",
-                "startLine": 758,
-                "endLine": 840,
+                "startLine": 763,
+                "endLine": 845,
                 "references": {
-                    "parseCallable": "@nav/api/MkApiBackends/MkApiTypescript.parseCallable",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "Semantic": "@nav/api/CodeApi.Semantic",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "Entity": "@nav/api/CodeApi.Entity"
+                    "parseCallable": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseCallable",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "Semantic": "@nav/api/code-api/.Semantic",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "Entity": "@nav/api/code-api/.Entity"
                 }
             },
             "semantic": {
@@ -1791,18 +1791,18 @@
                 ]
             },
             "path": "parseChildModule",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseChildModule",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseChildModule",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseChildModule({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): ChildModule",
                 "implementation": "export function parseChildModule({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): ChildModule {\n    const children = typedocNode.children ?? []\n    return {\n        name: typedocNode.name,\n        semantic: semantics[TYPEDOC_KINDS.MODULE],\n        path: `${parentPath}.${typedocNode.name}`,\n        navPath: projectGlobals.navigations[typedocNode.id],\n        isLeaf: !children.some((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        ),\n    }\n}",
-                "startLine": 515,
-                "endLine": 535,
+                "startLine": 516,
+                "endLine": 536,
                 "references": {
-                    "parseChildModule": "@nav/api/MkApiBackends/MkApiTypescript.parseChildModule",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "ChildModule": "@nav/api/CodeApi.ChildModule"
+                    "parseChildModule": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseChildModule",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ChildModule": "@nav/api/code-api/.ChildModule"
                 }
             },
             "semantic": {
@@ -1851,20 +1851,20 @@
                 ]
             },
             "path": "parseCode",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseCode",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseCode",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseCode({\n    typedocNode,\n    projectGlobals,\n    references,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    references: Record<string, string>\n    parentElement?: TypedocNode\n}): Code",
                 "implementation": "export function parseCode({\n    typedocNode,\n    projectGlobals,\n    references,\n    parentElement,\n}: {\n    typedocNode: TypedocNode & SymbolTrait\n    projectGlobals: ProjectGlobals\n    references: Record<string, string>\n    parentElement?: TypedocNode\n}): Code {\n    const symbols = projectGlobals.tsInputs\n    const signatureNode = hasSignatureTrait(typedocNode)\n        ? typedocNode.signatures[0]\n        : undefined\n\n    const name = signatureNode?.name ?? typedocNode.name\n\n    const source = typedocNode.sources[0]\n    const file_path = source.fileName\n    const key = parentElement\n        ? `${file_path}:${parentElement.name}.${name}`\n        : `${file_path}:${name}`\n    if (!(key in symbols)) {\n        console.warn(`Can not find reference of ${key}`)\n        return {\n            filePath: '',\n            declaration: '',\n            implementation: '',\n            startLine: 1,\n            endLine: 2,\n            references: {},\n        }\n    }\n    const symbol = symbols[key]\n    const implementation = symbol.implementation ?? ''\n    const nav = projectGlobals.navigations[typedocNode.id]\n    return {\n        filePath: source.fileName,\n        declaration: symbol.declaration ?? '',\n        implementation,\n        startLine: source.line,\n        endLine: source.line + implementation.split('\\n').length,\n        references: { [name]: nav, ...references },\n    }\n}",
-                "startLine": 701,
-                "endLine": 747,
+                "startLine": 706,
+                "endLine": 752,
                 "references": {
-                    "parseCode": "@nav/api/MkApiBackends/MkApiTypescript.parseCode",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "parseCode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseCode",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
-                    "Code": "@nav/api/CodeApi.Code"
+                    "Code": "@nav/api/code-api/.Code"
                 }
             },
             "semantic": {
@@ -1913,20 +1913,20 @@
                 ]
             },
             "path": "parseDocumentation",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseDocumentation",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseDocumentation",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseDocumentation({\n    semantic,\n    title,\n    typedocNode,\n    parent,\n    projectGlobals,\n}: {\n    semantic: Semantic\n    title?: string\n    typedocNode: CommentSection\n    parent: TypedocNode\n    projectGlobals: ProjectGlobals\n}): Documentation",
                 "implementation": "export function parseDocumentation({\n    semantic,\n    title,\n    typedocNode,\n    parent,\n    projectGlobals,\n}: {\n    semantic: Semantic\n    title?: string\n    typedocNode: CommentSection\n    parent: TypedocNode\n    projectGlobals: ProjectGlobals\n}): Documentation {\n    return {\n        sections: [\n            {\n                title,\n                content: parseDocumentationElements({\n                    typedocNodes: typedocNode,\n                    parent,\n                    projectGlobals,\n                }),\n                contentType: 'markdown',\n                semantic,\n            },\n        ],\n    }\n}",
-                "startLine": 578,
-                "endLine": 606,
+                "startLine": 579,
+                "endLine": 607,
                 "references": {
-                    "parseDocumentation": "@nav/api/MkApiBackends/MkApiTypescript.parseDocumentation",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "Semantic": "@nav/api/CodeApi.Semantic",
-                    "CommentSection": "@nav/api/MkApiBackends/MkApiTypescript.CommentSection",
-                    "Documentation": "@nav/api/CodeApi.Documentation"
+                    "parseDocumentation": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseDocumentation",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "Semantic": "@nav/api/code-api/.Semantic",
+                    "CommentSection": "@nav/api/code-api/MkApiBackends/MkApiTypescript.CommentSection",
+                    "Documentation": "@nav/api/code-api/.Documentation"
                 }
             },
             "semantic": {
@@ -1975,17 +1975,17 @@
                 ]
             },
             "path": "parseFile",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseFile",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseFile",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseFile({\n    path,\n    projectGlobals,\n}: {\n    path: string\n    projectGlobals: ProjectGlobals\n}): File",
                 "implementation": "export function parseFile({\n    path,\n    projectGlobals,\n}: {\n    path: string\n    projectGlobals: ProjectGlobals\n}): File {\n    const symbols = projectGlobals.tsInputs\n    const comment = symbols[path].comment\n    return {\n        name: Path.basename(path),\n        path: path,\n        documentation: {\n            sections: [\n                {\n                    semantic: noSemantic,\n                    content: comment ?? '',\n                    contentType: 'markdown',\n                },\n            ],\n        },\n    }\n}",
-                "startLine": 544,
-                "endLine": 567,
+                "startLine": 545,
+                "endLine": 568,
                 "references": {
-                    "parseFile": "@nav/api/MkApiBackends/MkApiTypescript.parseFile",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "File": "@nav/api/CodeApi.File"
+                    "parseFile": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseFile",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "File": "@nav/api/code-api/.File"
                 }
             },
             "semantic": {
@@ -2023,20 +2023,20 @@
                 ]
             },
             "path": "parseModule",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseModule",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseModule",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseModule({\n    typedocNode,\n    modulePath,\n    tsInputs,\n    baseNav,\n    externals,\n    extraDeclarationReferences,\n}: {\n    typedocNode: TypedocNode\n    modulePath: string\n    tsInputs: TsSrcElements\n    baseNav: string\n    externals?: ExternalsUrl\n    extraDeclarationReferences?: ExtraDeclarationReferences\n}): Module",
-                "implementation": "export function parseModule({\n    typedocNode,\n    modulePath,\n    tsInputs,\n    baseNav,\n    externals,\n    extraDeclarationReferences,\n}: {\n    typedocNode: TypedocNode\n    modulePath: string\n    tsInputs: TsSrcElements\n    baseNav: string\n    externals?: ExternalsUrl\n    extraDeclarationReferences?: ExtraDeclarationReferences\n}): Module {\n    const symbolIdMap: Record<number, TypedocNode> = {}\n    const parentSymbolIdMap: Record<number, TypedocNode> = {}\n    const navMap = generateNavigationPathsInModule(baseNav, '', typedocNode)\n    function constructSymbolsMap(elem: TypedocNode, parentId: number | null) {\n        symbolIdMap[elem.id] = elem\n        if (parentId) {\n            parentSymbolIdMap[elem.id] = symbolIdMap[parentId]\n        }\n        if (!elem.children) {\n            return\n        }\n        for (const child of elem.children) {\n            constructSymbolsMap(child, elem.id)\n        }\n    }\n\n    constructSymbolsMap(typedocNode, null)\n    const projectGlobals: ProjectGlobals = {\n        navigations: navMap,\n        tsInputs,\n        typedocIdMap: symbolIdMap,\n        typedocParentIdMap: parentSymbolIdMap,\n        externals,\n        extraDeclarationReferences,\n    }\n\n    function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {\n        if (parts.length === 0) {\n            return fromElem\n        }\n        if (\n            parts.length === 1 &&\n            fromElem.name === parts[0] &&\n            [TYPEDOC_KINDS.PROJECT, TYPEDOC_KINDS.MODULE].includes(\n                fromElem.kind,\n            )\n        ) {\n            return fromElem\n        }\n        const modules = (fromElem.children ?? []).filter((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        )\n        const targetPath = pathLib.join(...parts)\n        const children: [number, TypedocNode][] = modules\n            .filter((c) => targetPath.startsWith(c.name))\n            .map((c) => [1 + c.name.search(/\\//), c])\n        children.sort((a, b) => b[0] - a[0])\n        if (children.length > 0) {\n            // noinspection TailRecursionJS\n            return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))\n        }\n        throw new Error(`Module not found: ${parts.join('.')}`)\n    }\n\n    const module = getModuleRec(typedocNode, modulePath.split('/').slice(1))\n\n    if (\n        ![\n            TYPEDOC_KINDS.MODULE,\n            TYPEDOC_KINDS.PROJECT,\n            TYPEDOC_KINDS.ENTRY_MODULE,\n        ].includes(module.kind)\n    ) {\n        throw new Error(`Kind of module not knows (got ${String(module.kind)})`)\n    }\n\n    const path = modulePath\n    const children = module.children ?? []\n    const subModules = children.filter((child) =>\n        [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(child.kind),\n    )\n    const types = children\n        .filter((child) =>\n            [\n                TYPEDOC_KINDS.CLASS,\n                TYPEDOC_KINDS.INTERFACE,\n                TYPEDOC_KINDS.ALIAS,\n            ].includes(child.kind),\n        )\n        .filter((cls) => cls.comment)\n        .map((cls) => cls as unknown as TypedocNode & SymbolTrait & ClassTrait)\n        .map((cls) =>\n            parseType({\n                typedocNode: cls,\n                parentPath: path,\n                projectGlobals,\n            }),\n        )\n    const functions = children\n        .filter((child) => child.kind === TYPEDOC_KINDS.FUNCTION)\n        .map((func) => func as unknown as TypedocNode & SignaturesTrait)\n        .filter((func) => func.signatures[0].comment)\n        .map((func) =>\n            parseCallable({\n                typedocNode: func,\n                parentPath: path,\n                projectGlobals,\n                semantic: { ...noSemantic, role: 'function' },\n            }),\n        )\n        .filter((func) => func !== undefined)\n    const globals = children\n        .filter((child) => child.kind === TYPEDOC_KINDS.VARIABLE)\n        .filter((attr) => attr.comment)\n        .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n        .map((attr) =>\n            parseAttribute({\n                typedocNode: attr,\n                projectGlobals,\n                parentPath: modulePath,\n            }),\n        )\n        .filter((attr) => attr !== undefined)\n\n    const docSrc = module.comment\n        ? module.comment.summary\n        : hasProjectTrait(module)\n          ? module.readme\n          : undefined\n    const documentation = docSrc\n        ? parseDocumentation({\n              semantic: noSemantic,\n              typedocNode: docSrc,\n              parent: module,\n              projectGlobals,\n          })\n        : noDoc\n\n    const nodeWitSources = children.filter((child) => hasSymbolTrait(child))\n\n    const files = [\n        ...new Set(nodeWitSources.map((child) => child.sources[0].fileName)),\n    ].map((file) => parseFile({ path: file, projectGlobals }))\n\n    return {\n        name: module.name,\n        documentation,\n        path: modulePath,\n        navPath: typedocNode.id in navMap ? navMap[typedocNode.id] : '',\n        attributes: globals,\n        types: types,\n        callables: functions,\n        files,\n        children: subModules.map((child) =>\n            parseChildModule({\n                typedocNode: child,\n                parentPath: path,\n                projectGlobals,\n            }),\n        ),\n        semantic: semantics[TYPEDOC_KINDS.MODULE],\n    }\n}",
+                "implementation": "export function parseModule({\n    typedocNode,\n    modulePath,\n    tsInputs,\n    baseNav,\n    externals,\n    extraDeclarationReferences,\n}: {\n    typedocNode: TypedocNode\n    modulePath: string\n    tsInputs: TsSrcElements\n    baseNav: string\n    externals?: ExternalsUrl\n    extraDeclarationReferences?: ExtraDeclarationReferences\n}): Module {\n    const symbolIdMap: Record<number, TypedocNode> = {}\n    const parentSymbolIdMap: Record<number, TypedocNode> = {}\n    const navMap = generateNavigationPathsInModule(baseNav, '', typedocNode)\n    function constructSymbolsMap(elem: TypedocNode, parentId: number | null) {\n        symbolIdMap[elem.id] = elem\n        if (parentId) {\n            parentSymbolIdMap[elem.id] = symbolIdMap[parentId]\n        }\n        if (!elem.children) {\n            return\n        }\n        for (const child of elem.children) {\n            constructSymbolsMap(child, elem.id)\n        }\n    }\n\n    constructSymbolsMap(typedocNode, null)\n    const projectGlobals: ProjectGlobals = {\n        navigations: navMap,\n        tsInputs,\n        typedocIdMap: symbolIdMap,\n        typedocParentIdMap: parentSymbolIdMap,\n        externals,\n        extraDeclarationReferences,\n    }\n\n    function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {\n        if (parts.length === 0) {\n            return fromElem\n        }\n        if (\n            parts.length === 1 &&\n            fromElem.name === parts[0] &&\n            [TYPEDOC_KINDS.PROJECT, TYPEDOC_KINDS.MODULE].includes(\n                fromElem.kind,\n            )\n        ) {\n            return fromElem\n        }\n        const modules = (fromElem.children ?? []).filter((c) =>\n            [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),\n        )\n        const targetPath = pathLib.join(...parts)\n        const children: [number, TypedocNode][] = modules\n            .filter((c) => targetPath.startsWith(c.name))\n            .map((c) => [1 + c.name.search(/\\//), c])\n        children.sort((a, b) => b[0] - a[0])\n        if (children.length > 0) {\n            // noinspection TailRecursionJS\n            return getModuleRec(children[0][1], parts.slice(1 + children[0][0]))\n        }\n        throw new Error(`Module not found: ${parts.join('.')}`)\n    }\n\n    const module = getModuleRec(typedocNode, modulePath.split('/').slice(1))\n\n    if (\n        ![\n            TYPEDOC_KINDS.MODULE,\n            TYPEDOC_KINDS.PROJECT,\n            TYPEDOC_KINDS.ENTRY_MODULE,\n        ].includes(module.kind)\n    ) {\n        throw new Error(`Kind of module not knows (got ${String(module.kind)})`)\n    }\n\n    const path = modulePath\n    const children = module.children ?? []\n    const subModules = children.filter((child) =>\n        [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(child.kind),\n    )\n    const types = children\n        .filter((child) =>\n            [\n                TYPEDOC_KINDS.CLASS,\n                TYPEDOC_KINDS.INTERFACE,\n                TYPEDOC_KINDS.ALIAS,\n            ].includes(child.kind),\n        )\n        .filter((cls) => cls.comment)\n        .map((cls) => cls as unknown as TypedocNode & SymbolTrait & ClassTrait)\n        .map((cls) =>\n            parseType({\n                typedocNode: cls,\n                parentPath: path,\n                projectGlobals,\n            }),\n        )\n    const functions = children\n        .filter((child) => child.kind === TYPEDOC_KINDS.FUNCTION)\n        .map((func) => func as unknown as TypedocNode & SignaturesTrait)\n        .filter((func) => func.signatures[0].comment)\n        .map((func) =>\n            parseCallable({\n                typedocNode: func,\n                parentPath: path,\n                projectGlobals,\n                semantic: { ...noSemantic, role: 'function' },\n            }),\n        )\n        .filter((func) => func !== undefined)\n    const globals = children\n        .filter((child) => child.kind === TYPEDOC_KINDS.VARIABLE)\n        .filter((attr) => attr.comment)\n        .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n        .map((attr) =>\n            parseAttribute({\n                typedocNode: attr,\n                projectGlobals,\n                parentPath: path,\n                parentElement: module,\n            }),\n        )\n        .filter((attr) => attr !== undefined)\n\n    const docSrc = module.comment\n        ? module.comment.summary\n        : hasProjectTrait(module)\n          ? module.readme\n          : undefined\n    const documentation = docSrc\n        ? parseDocumentation({\n              semantic: noSemantic,\n              typedocNode: docSrc,\n              parent: module,\n              projectGlobals,\n          })\n        : noDoc\n\n    const nodeWitSources = children.filter((child) => hasSymbolTrait(child))\n\n    const files = [\n        ...new Set(nodeWitSources.map((child) => child.sources[0].fileName)),\n    ].map((file) => parseFile({ path: file, projectGlobals }))\n\n    return {\n        name: module.name,\n        documentation,\n        path: modulePath,\n        navPath: typedocNode.id in navMap ? navMap[typedocNode.id] : '',\n        attributes: globals,\n        types: types,\n        callables: functions,\n        files,\n        children: subModules.map((child) =>\n            parseChildModule({\n                typedocNode: child,\n                parentPath: path,\n                projectGlobals,\n            }),\n        ),\n        semantic: semantics[TYPEDOC_KINDS.MODULE],\n    }\n}",
                 "startLine": 338,
-                "endLine": 506,
+                "endLine": 507,
                 "references": {
-                    "parseModule": "@nav/api/MkApiBackends/MkApiTypescript.parseModule",
-                    "ExternalsUrl": "@nav/api/MkApiBackends/MkApiTypescript.ExternalsUrl",
-                    "ExtraDeclarationReferences": "@nav/api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
-                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "Module": "@nav/api/CodeApi.Module"
+                    "parseModule": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseModule",
+                    "ExternalsUrl": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExternalsUrl",
+                    "ExtraDeclarationReferences": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ExtraDeclarationReferences",
+                    "TsSrcElements": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "Module": "@nav/api/code-api/.Module"
                 }
             },
             "semantic": {
@@ -2085,19 +2085,19 @@
                 ]
             },
             "path": "parseType",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.parseType",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseType",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/typedoc-parser.ts",
                 "declaration": "export function parseType({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode & ClassTrait\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): Type",
                 "implementation": "export function parseType({\n    typedocNode,\n    parentPath,\n    projectGlobals,\n}: {\n    typedocNode: TypedocNode & ClassTrait\n    parentPath: string\n    projectGlobals: ProjectGlobals\n}): Type {\n    const name = typedocNode.name\n    const semantic = semantics[typedocNode.kind]\n    const path = `${parentPath}.${name}`\n    const children = typedocNode.children ?? []\n    const documentation = typedocNode.comment\n        ? parseDocumentationElements({\n              typedocNodes: typedocNode.comment.summary,\n              parent: typedocNode,\n              projectGlobals,\n          })\n        : ''\n    const attributes = children.filter(\n        (child) => child.kind === TYPEDOC_KINDS.ATTRIBUTE,\n    )\n    const methods = children\n        .filter((child) =>\n            [TYPEDOC_KINDS.CONSTRUCTOR, TYPEDOC_KINDS.METHOD].includes(\n                child.kind,\n            ),\n        )\n        // For now inherited methods are only documented in the class they belong.\n        .filter((child: TypedocNode & MethodTrait) => !child.inheritedFrom)\n\n    const references = gather_symbol_references(\n        typedocNode,\n        path,\n        projectGlobals,\n    )\n    const doc = getSummaryDoc(documentation)\n    const tParamDoc =\n        typedocNode.typeParameters &&\n        parseArgumentsDoc({\n            fromElement: typedocNode.typeParameters,\n            title: 'Generics',\n            parentElement: typedocNode,\n            projectGlobals,\n        })\n    if (tParamDoc) {\n        doc.sections.push(tParamDoc)\n    }\n    return {\n        name: typedocNode.name,\n        documentation: doc,\n        path: typedocNode.name,\n        navPath: projectGlobals.navigations[typedocNode.id],\n        attributes: attributes\n            .filter((attr) => attr.comment)\n            .map((attr) => attr as unknown as TypedocNode & SymbolTrait)\n            .map((attr) =>\n                parseAttribute({\n                    typedocNode: attr,\n                    projectGlobals,\n                    parentPath: path,\n                    parentElement: typedocNode,\n                }),\n            )\n            .filter((attr) => attr !== undefined),\n        callables: methods\n            .map((meth) => meth as unknown as TypedocNode & SignaturesTrait)\n            .filter((meth) => meth.signatures[0].comment)\n            .map((meth) =>\n                parseCallable({\n                    typedocNode: meth,\n                    parentPath: path,\n                    projectGlobals,\n                    semantic: semantics[meth.kind],\n                    parentElement: typedocNode,\n                }),\n            )\n            .filter((meth) => meth !== undefined),\n        code: parseCode({\n            typedocNode: typedocNode,\n            projectGlobals,\n            references,\n        }),\n        semantic,\n    }\n}",
-                "startLine": 928,
-                "endLine": 1015,
+                "startLine": 933,
+                "endLine": 1020,
                 "references": {
-                    "parseType": "@nav/api/MkApiBackends/MkApiTypescript.parseType",
-                    "ProjectGlobals": "@nav/api/MkApiBackends/MkApiTypescript.ProjectGlobals",
-                    "TypedocNode": "@nav/api/MkApiBackends/MkApiTypescript.TypedocNode",
-                    "SymbolTrait": "@nav/api/MkApiBackends/MkApiTypescript.SymbolTrait",
-                    "Type": "@nav/api/CodeApi.Type"
+                    "parseType": "@nav/api/code-api/MkApiBackends/MkApiTypescript.parseType",
+                    "ProjectGlobals": "@nav/api/code-api/MkApiBackends/MkApiTypescript.ProjectGlobals",
+                    "TypedocNode": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TypedocNode",
+                    "SymbolTrait": "@nav/api/code-api/MkApiBackends/MkApiTypescript.SymbolTrait",
+                    "Type": "@nav/api/code-api/.Type"
                 }
             },
             "semantic": {
@@ -2112,7 +2112,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Process a typescript file to extract associated  <mkapi-api-link nav=\"@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements\" semantic=\"type-alias\">TsSrcElements</mkapi-api-link> .",
+                        "content": "Process a typescript file to extract associated  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements\" semantic=\"type-alias\">TsSrcElements</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2135,7 +2135,7 @@
                 ]
             },
             "path": "processFile",
-            "navPath": "@nav/api/MkApiBackends/MkApiTypescript.processFile",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript.processFile",
             "code": {
                 "filePath": "src/mkapi-backends/mkapi-typescript/generate-ts-inputs.ts",
                 "declaration": "export function processFile(\n    rootPath: string,\n    filePath: string,\n    elements: TsSrcElements,\n)",
@@ -2143,8 +2143,8 @@
                 "startLine": 181,
                 "endLine": 272,
                 "references": {
-                    "processFile": "@nav/api/MkApiBackends/MkApiTypescript.processFile",
-                    "TsSrcElements": "@nav/api/MkApiBackends/MkApiTypescript.TsSrcElements"
+                    "processFile": "@nav/api/code-api/MkApiBackends/MkApiTypescript.processFile",
+                    "TsSrcElements": "@nav/api/code-api/MkApiBackends/MkApiTypescript.TsSrcElements"
                 }
             },
             "semantic": {

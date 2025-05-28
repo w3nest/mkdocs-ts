@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "A python backend interpreter for Notebook pages in `mkdocs-ts`.\n\nPython code snippets are executed via the `POST /run` endpoint, which is handled by\n<mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.router.run_code' semantic='function'>run_code</mkapi-api-link>.  This endpoint expects a <mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.schemas.RunBody' semantic='class'>RunBody</mkapi-api-link> as input and\nreturns a <mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse' semantic='class'>RunResponse</mkapi-api-link>.\n\nIt is usually installed and started using <a target=\"_blank\" href=\"/apps/@webpm/doc/latest\">WebPM</a>:\n\n<code-snippet language=\"javascript\">\n\nconst {pyrun} = await webpm.install({\n    backends:['pyrun_backend as pyrun']\n})\n</code-snippet>\n\n**Build Configuration**\n\nThe backend is deployed using a `Dockerfile` which specifies a container that can be configured to incorporate\na given python interpreter, python modules as well as system dependencies.\nThey are provided respectively using `modules` and `apt` attributes to the `Dockerfile`.\n\nUsing `webpm`, they are defined using \u0300configurations.${backend_name}.build`:\n\n<code-snippet language=\"javascript\">\n\nconst {pyrun} = await webpm.install({\n    backends: {\n        modules:['pyrun_backend as pyrun'],\n        configurations: {\n            pyrun_backend: {\n                build: {\n                    python: '3.12',\n                    modules: 'numpy pandas',\n                    apt: 'libgomp1'\n                }\n            }\n        }\n    }\n})\n</code-snippet>\n\n\n\n**Main Entry Points**\n\nThere are two primary ways to run the backend service:\n\n- **Local execution**: Use <mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.main_localhost.main' semantic='function'>main</mkapi-api-link> (from **main_localhost.py**) to run the service on\nlocalhost. The user is in charge to provide a properly configured environment in terms of python modules required.\nThe command lines argument `--port` & `--host_port` should be provided.\n\n- **Containerized execution**: Use <mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.main_docker.main' semantic='function'>main</mkapi-api-link> (from **main_docker.py**) to run the service\ninside a container.  Starting the container requires the definition of the environment variables `HOST_PORT` &\n`HOST_NAME` within the container.\n\nBoth entry points invoke <mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.app.start' semantic='function'>start</mkapi-api-link>, using a specific\n<mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.environment.Configuration' semantic='class'>Configuration</mkapi-api-link> for setup.",
+                "content": "A python backend interpreter for Notebook pages in `mkdocs-ts`.\n\nPython code snippets are executed via the `POST /run` endpoint, which is handled by\n<mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.router.run_code' semantic='function'>run_code</mkapi-api-link>.  This endpoint expects a <mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody' semantic='class'>RunBody</mkapi-api-link> as input and\nreturns a <mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse' semantic='class'>RunResponse</mkapi-api-link>.\n\nIt is usually installed and started using <a target=\"_blank\" href=\"/apps/@webpm/doc/latest\">WebPM</a>:\n\n<code-snippet language=\"javascript\">\n\nconst {pyrun} = await webpm.install({\n    backends:['pyrun_backend as pyrun']\n})\n</code-snippet>\n\n**Build Configuration**\n\nThe backend is deployed using a `Dockerfile` which specifies a container that can be configured to incorporate\na given python interpreter, python modules as well as system dependencies.\nThey are provided respectively using `modules` and `apt` attributes to the `Dockerfile`.\n\nUsing `webpm`, they are defined using \u0300configurations.${backend_name}.build`:\n\n<code-snippet language=\"javascript\">\n\nconst {pyrun} = await webpm.install({\n    backends: {\n        modules:['pyrun_backend as pyrun'],\n        configurations: {\n            pyrun_backend: {\n                build: {\n                    python: '3.12',\n                    modules: 'numpy pandas',\n                    apt: 'libgomp1'\n                }\n            }\n        }\n    }\n})\n</code-snippet>\n\n\n\n**Main Entry Points**\n\nThere are two primary ways to run the backend service:\n\n- **Local execution**: Use <mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.main_localhost.main' semantic='function'>main</mkapi-api-link> (from **main_localhost.py**) to run the service on\nlocalhost. The user is in charge to provide a properly configured environment in terms of python modules required.\nThe command lines argument `--port` & `--host_port` should be provided.\n\n- **Containerized execution**: Use <mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.main_docker.main' semantic='function'>main</mkapi-api-link> (from **main_docker.py**) to run the service\ninside a container.  Starting the container requires the definition of the environment variables `HOST_PORT` &\n`HOST_NAME` within the container.\n\nBoth entry points invoke <mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.app.start' semantic='function'>start</mkapi-api-link>, using a specific\n<mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration' semantic='class'>Configuration</mkapi-api-link> for setup.",
                 "contentType": "Markdown",
                 "semantic": {
                     "role": "text",
@@ -47,7 +47,7 @@
                 "startLine": 19,
                 "endLine": 38,
                 "references": {
-                    "main": "@nav/api/Interpreters/pyrun_backend/.main_localhost.main"
+                    "main": "@nav/api/notebook/Interpreters/pyrun_backend/.main_localhost.main"
                 },
                 "implementation": "def main() -> None:\n    \"\"\"\n    Starts the server on localhost.\n\n    The serving port and host's server port should be provided as command line arguments\n    (using `--port` and `--host_port` respectively).\n    \"\"\"\n\n    args = parser.parse_args()\n    localhost = \"localhost\"\n    start(\n        configuration=Configuration(\n            host=localhost,\n            port=int(args.port) if args.port else __default__port__,\n            host_port=int(args.host_port) if args.host_port else 2000,\n            host_name=localhost,\n            instance_name=localhost,\n            log_level=\"debug\",\n        )\n    )"
             },
@@ -58,7 +58,7 @@
                 "relations": {}
             },
             "path": "main_localhost.main",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.main_localhost.main"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.main_localhost.main"
         },
         {
             "name": "main",
@@ -83,7 +83,7 @@
                 "startLine": 12,
                 "endLine": 30,
                 "references": {
-                    "main": "@nav/api/Interpreters/pyrun_backend/.main_docker.main"
+                    "main": "@nav/api/notebook/Interpreters/pyrun_backend/.main_docker.main"
                 },
                 "implementation": "def main():\n    \"\"\"\n    Starts the server in a container.\n\n    The host name and port should be provided as environment variables\n    (using `HOST_NAME` and `HOST_PORT` respectively).\n\n    This function is used as script `run_pyrun_backend` entry point within the `project.toml` file.\n    \"\"\"\n    start(\n        configuration=Configuration(\n            host=\"0.0.0.0\",\n            port=8080,  # Port must be 8080 when running within a container.\n            host_port=int(os.getenv(\"HOST_PORT\")),\n            host_name=os.getenv(\"HOST_NAME\"),\n            instance_name=socket.gethostname(),  # Map to container ID by default.\n            log_level=\"debug\",\n        )\n    )"
             },
@@ -94,14 +94,14 @@
                 "relations": {}
             },
             "path": "main_docker.main",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.main_docker.main"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.main_docker.main"
         },
         {
             "name": "start",
             "documentation": {
                 "sections": [
                     {
-                        "content": "Start the backend server using the specified configuration:\n*  Create the application using <mkapi-api-link nav='@nav/api/Interpreters/pyrun_backend/.app.create_app' semantic='function'>create_app</mkapi-api-link>.\n*  Run the application using `uvicorn`.",
+                        "content": "Start the backend server using the specified configuration:\n*  Create the application using <mkapi-api-link nav='@nav/api/notebook/Interpreters/pyrun_backend/.app.create_app' semantic='function'>create_app</mkapi-api-link>.\n*  Run the application using `uvicorn`.",
                         "contentType": "Markdown",
                         "semantic": {
                             "role": "text",
@@ -130,8 +130,8 @@
                 "startLine": 18,
                 "endLine": 39,
                 "references": {
-                    "Configuration": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration",
-                    "start": "@nav/api/Interpreters/pyrun_backend/.app.start"
+                    "Configuration": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration",
+                    "start": "@nav/api/notebook/Interpreters/pyrun_backend/.app.start"
                 },
                 "implementation": "def start(configuration: Configuration) -> None:\n    \"\"\"\n    Start the backend server using the specified configuration:\n    *  Create the application using :func:`pyrun_backend.app.create_app`.\n    *  Run the application using `uvicorn`.\n\n    Parameters:\n        configuration: Server's configuration.\n    \"\"\"\n    Environment.set_config(configuration)\n\n    app = create_app(configuration=configuration)\n    try:\n        uvicorn.run(\n            app,\n            host=configuration.host,\n            port=configuration.port,\n            log_level=configuration.log_level,\n        )\n    except BaseException as e:\n        print(\"\".join(traceback.format_exception(type(e), value=e, tb=e.__traceback__)))\n        raise e"
             },
@@ -142,7 +142,7 @@
                 "relations": {}
             },
             "path": "app.start",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.app.start"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.app.start"
         },
         {
             "name": "create_app",
@@ -190,8 +190,8 @@
                 "endLine": 74,
                 "references": {
                     "FastAPI": "https://fastapi.tiangolo.com/reference/fastapi/?h=fastapi",
-                    "Configuration": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration",
-                    "create_app": "@nav/api/Interpreters/pyrun_backend/.app.create_app"
+                    "Configuration": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration",
+                    "create_app": "@nav/api/notebook/Interpreters/pyrun_backend/.app.create_app"
                 },
                 "implementation": "def create_app(configuration: Configuration) -> FastAPI:\n    \"\"\"\n    Create and configure the FastAPI application.\n\n    Parameters:\n        configuration: Configuration.\n\n    Returns:\n        The application.\n    \"\"\"\n\n    @asynccontextmanager\n    async def lifespan(_app: FastAPI):\n        \"\"\"\n        Defines startup and shutdown procedures.\n\n        Parameters:\n            _app: Application.\n        \"\"\"\n        logger = logging.getLogger(\"uvicorn.error\")\n        logger.info(Environment.get_config())\n        yield\n\n    root_base = \"http://localhost\"\n    app: FastAPI = FastAPI(\n        title=\"pyrun_backend\",\n        # Root path is always served from localhost (using the W3Nest server).\n        root_path=f\"{root_base}:{configuration.host_port}/backends/pyrun_backend/{__version__}\",\n        lifespan=lifespan,\n    )\n    app.include_router(root_router)\n\n    return app"
             },
@@ -202,7 +202,7 @@
                 "relations": {}
             },
             "path": "app.create_app",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.app.create_app"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.app.create_app"
         },
         {
             "name": "exec_cell",
@@ -252,8 +252,8 @@
                     "dict": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict",
                     "str": "https://docs.python.org/fr/3/library/string.html",
                     "Any": "https://docs.python.org/3/library/typing.html#typing.Any",
-                    "ScriptError": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError",
-                    "exec_cell": "@nav/api/Interpreters/pyrun_backend/.router.exec_cell"
+                    "ScriptError": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError",
+                    "exec_cell": "@nav/api/notebook/Interpreters/pyrun_backend/.router.exec_cell"
                 },
                 "implementation": "async def exec_cell(\n    cell_id: str, code: str, scope: dict[str, Any]\n) -> dict[str, Any] | ScriptError:\n    \"\"\"\n    Execute the provided code.\n\n    Parameters:\n        code: Code to interpret.\n        scope: Entering scope.\n\n    Returns:\n        Exiting scope.\n    \"\"\"\n    instrumented = f\"\"\"\nimport traceback\nasync def __exec():\n    try:\n        exec(compiled_src, globals())\n        return locals()\n    except Exception as e:\n        tb = traceback.extract_tb(e.__traceback__)\n        for entry in reversed(tb):\n            if entry.filename == \"<{cell_id}>\":\n                error_line = entry.lineno  # Correct user script line number\n                break\n        else:\n            error_line = None\n            \n        tb_list = traceback.format_exception(type(e), e, e.__traceback__)\n        return ScriptError(kind='Runtime', message=str(e), stackTrace=tb_list, lineNumber=error_line)\n\"\"\"\n    try:\n        scope[\"compiled_src\"] = compile(code, f\"<{cell_id}>\", \"exec\")\n    except (SyntaxError, IndentationError, TabError) as e:\n        return ScriptError(kind=\"AST\", message=str(e), lineNumber=e.lineno)\n    scope[\"ScriptError\"] = ScriptError\n    exec(instrumented, scope)\n\n    new_scope = await scope[\"__exec\"]()\n    if isinstance(new_scope, ScriptError):\n        return new_scope\n\n    return {**scope, **new_scope}"
             },
@@ -264,7 +264,7 @@
                 "relations": {}
             },
             "path": "router.exec_cell",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.router.exec_cell"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.router.exec_cell"
         },
         {
             "name": "healthz",
@@ -290,7 +290,7 @@
                 "endLine": 85,
                 "references": {
                     "Response": "https://www.starlette.io/responses/#response",
-                    "healthz": "@nav/api/Interpreters/pyrun_backend/.router.healthz"
+                    "healthz": "@nav/api/notebook/Interpreters/pyrun_backend/.router.healthz"
                 },
                 "implementation": "@router.get(\"/\")\nasync def healthz() -> Response:\n    \"\"\"\n    When proxied through W3Nest, this end point is triggered to ensure a backend\n    is listening.\n    \"\"\"\n    return Response(status_code=200)"
             },
@@ -301,7 +301,7 @@
                 "relations": {}
             },
             "path": "router.healthz",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.router.healthz"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.router.healthz"
         },
         {
             "name": "run_code",
@@ -348,15 +348,15 @@
                 "startLine": 88,
                 "endLine": 133,
                 "references": {
-                    "RunResponse": "@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse",
+                    "RunResponse": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse",
                     "BaseModel": "https://docs.pydantic.dev/latest/api/base_model/",
                     "Request": "https://www.starlette.io/requests/",
-                    "RunBody": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody",
-                    "Configuration": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration",
-                    "Environment": "@nav/api/Interpreters/pyrun_backend/.environment.Environment",
-                    "get_config": "@nav/api/Interpreters/pyrun_backend/.environment.Environment.get_config",
+                    "RunBody": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody",
+                    "Configuration": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration",
+                    "Environment": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment",
+                    "get_config": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment.get_config",
                     "Depends": "https://fastapi.tiangolo.com/tutorial/dependencies/",
-                    "run_code": "@nav/api/Interpreters/pyrun_backend/.router.run_code"
+                    "run_code": "@nav/api/notebook/Interpreters/pyrun_backend/.router.run_code"
                 },
                 "implementation": "@router.post(\"/run\")\nasync def run_code(\n    request: Request,\n    body: RunBody,\n    config: Configuration = Depends(Environment.get_config),\n) -> RunResponse:\n    \"\"\"\n    Run the provided code, optionally given captured input variables and returning the values of captured outputs.\n\n    Parameters:\n        request: Incoming request.\n        body: Body specification.\n        config: Injected configuration.\n\n    Returns:\n        Std outputs and eventual value of captured outputs.\n    \"\"\"\n    code = body.code\n    async with config.context(request).start(action=\"/run\") as ctx:\n\n        entering_scope = ScopeStore.global_scope\n        scope = {**entering_scope, **body.capturedIn, \"ctx\": ctx}\n        await ctx.info(\"Input scope prepared\")\n\n        start = time.time()\n        cell_stdout = io.StringIO()\n        cell_stderr = io.StringIO()\n        with redirect_stdout(cell_stdout), redirect_stderr(cell_stderr):\n            new_scope = await exec_cell(body.cellId, code, scope)\n            if isinstance(new_scope, ScriptError):\n                return RunResponse(\n                    output=cell_stdout.getvalue(), capturedOut={}, error=new_scope\n                )\n\n        end = time.time()\n        output = cell_stdout.getvalue()\n        error = cell_stderr.getvalue()\n        await ctx.info(\n            f\"'exec(code, scope)' done in {int(1000*(end-start))} ms\",\n            data={\"output\": output, \"error\": error},\n        )\n        ScopeStore.global_scope = new_scope\n        captured_out = {k: new_scope[k] for k in body.capturedOut if k}\n\n        await ctx.info(\"Output scope persisted\")\n        return RunResponse(output=output, capturedOut=captured_out)"
             },
@@ -367,7 +367,7 @@
                 "relations": {}
             },
             "path": "router.run_code",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.router.run_code"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.router.run_code"
         }
     ],
     "types": [
@@ -395,7 +395,7 @@
                 "endLine": 30,
                 "references": {
                     "BaseModel": "https://docs.pydantic.dev/latest/api/base_model/",
-                    "RunBody": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody"
+                    "RunBody": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody"
                 },
                 "implementation": "class RunBody(BaseModel):\n    \"\"\"\n    Body for the endpoint `/run`.\n    \"\"\"\n\n    cellId: str\n    \"\"\"\n    Cell's ID\n    \"\"\"\n    code: str\n    \"\"\"\n    Code to run.\n    \"\"\"\n    capturedIn: dict[str, Any]\n    \"\"\"\n    Captured input variables.\n    \"\"\"\n    capturedOut: list[str]\n    \"\"\"\n    Name of the captured output variables.\n    \"\"\""
             },
@@ -410,7 +410,7 @@
                 }
             },
             "path": "schemas.RunBody",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody",
             "callables": [],
             "attributes": [
                 {
@@ -447,7 +447,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunBody.cellId",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody.cellId"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody.cellId"
                 },
                 {
                     "name": "code",
@@ -483,7 +483,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunBody.code",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody.code"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody.code"
                 },
                 {
                     "name": "capturedIn",
@@ -521,7 +521,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunBody.capturedIn",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody.capturedIn"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody.capturedIn"
                 },
                 {
                     "name": "capturedOut",
@@ -558,7 +558,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunBody.capturedOut",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunBody.capturedOut"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunBody.capturedOut"
                 }
             ]
         },
@@ -586,7 +586,7 @@
                 "endLine": 54,
                 "references": {
                     "BaseModel": "https://docs.pydantic.dev/latest/api/base_model/",
-                    "ScriptError": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError"
+                    "ScriptError": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError"
                 },
                 "implementation": "class ScriptError(BaseModel):\n    \"\"\"\n    Represents error generated when interpreting the script.\n    \"\"\"\n\n    kind: Literal[\"AST\", \"Runtime\"]\n    \"\"\"\n    `AST` is an exception generated when compiling the script.\n    `Runtime` is an exception generated when executing the script.\n    \"\"\"\n    message: str\n    \"\"\"\n    Exception's message.\n    \"\"\"\n    stackTrace: list[str] | None = None\n    \"\"\"\n    Stack trace.\n    \"\"\"\n    lineNumber: int | None = None\n    \"\"\"\n    Line number within the script.\n    \"\"\""
             },
@@ -601,7 +601,7 @@
                 }
             },
             "path": "schemas.ScriptError",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError",
             "callables": [],
             "attributes": [
                 {
@@ -638,7 +638,7 @@
                         "relations": {}
                     },
                     "path": "schemas.ScriptError.kind",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError.kind"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError.kind"
                 },
                 {
                     "name": "message",
@@ -674,7 +674,7 @@
                         "relations": {}
                     },
                     "path": "schemas.ScriptError.message",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError.message"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError.message"
                 },
                 {
                     "name": "stackTrace",
@@ -711,7 +711,7 @@
                         "relations": {}
                     },
                     "path": "schemas.ScriptError.stackTrace",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError.stackTrace"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError.stackTrace"
                 },
                 {
                     "name": "lineNumber",
@@ -747,7 +747,7 @@
                         "relations": {}
                     },
                     "path": "schemas.ScriptError.lineNumber",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError.lineNumber"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError.lineNumber"
                 }
             ]
         },
@@ -775,7 +775,7 @@
                 "endLine": 73,
                 "references": {
                     "BaseModel": "https://docs.pydantic.dev/latest/api/base_model/",
-                    "RunResponse": "@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse"
+                    "RunResponse": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse"
                 },
                 "implementation": "class RunResponse(BaseModel):\n    \"\"\"\n    Response for the endpoint `/run`.\n    \"\"\"\n\n    output: str\n    \"\"\"\n    Std output.\n    \"\"\"\n    error: ScriptError | None = None\n    \"\"\"\n    Std error.\n    \"\"\"\n    capturedOut: dict[str, Any]\n    \"\"\"\n    Value of the capture output.\n    \"\"\""
             },
@@ -790,7 +790,7 @@
                 }
             },
             "path": "schemas.RunResponse",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse",
             "callables": [],
             "attributes": [
                 {
@@ -827,7 +827,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunResponse.output",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse.output"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse.output"
                 },
                 {
                     "name": "error",
@@ -852,7 +852,7 @@
                         "startLine": 66,
                         "endLine": 66,
                         "references": {
-                            "ScriptError": "@nav/api/Interpreters/pyrun_backend/.schemas.ScriptError"
+                            "ScriptError": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.ScriptError"
                         },
                         "implementation": null
                     },
@@ -863,7 +863,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunResponse.error",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse.error"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse.error"
                 },
                 {
                     "name": "capturedOut",
@@ -901,7 +901,7 @@
                         "relations": {}
                     },
                     "path": "schemas.RunResponse.capturedOut",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.schemas.RunResponse.capturedOut"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.schemas.RunResponse.capturedOut"
                 }
             ]
         },
@@ -928,7 +928,7 @@
                 "startLine": 23,
                 "endLine": 31,
                 "references": {
-                    "ScopeStore": "@nav/api/Interpreters/pyrun_backend/.router.ScopeStore"
+                    "ScopeStore": "@nav/api/notebook/Interpreters/pyrun_backend/.router.ScopeStore"
                 },
                 "implementation": "class ScopeStore:\n    \"\"\"\n    Encapsulates the global scope used when running the scripts.\n    \"\"\"\n\n    global_scope: dict[str, Any] = {}\n    \"\"\"\n    The scope.\n    \"\"\""
             },
@@ -941,7 +941,7 @@
                 }
             },
             "path": "router.ScopeStore",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.router.ScopeStore",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.router.ScopeStore",
             "callables": [],
             "attributes": [
                 {
@@ -980,7 +980,7 @@
                         "relations": {}
                     },
                     "path": "router.ScopeStore.global_scope",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.router.ScopeStore.global_scope"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.router.ScopeStore.global_scope"
                 }
             ]
         },
@@ -1008,7 +1008,7 @@
                 "endLine": 68,
                 "references": {
                     "dataclass": "https://docs.python.org/3/library/dataclasses.html#",
-                    "Configuration": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration"
+                    "Configuration": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration"
                 },
                 "implementation": "@dataclass(frozen=True)\nclass Configuration:\n    \"\"\"\n    Holds configuration fields.\n    \"\"\"\n\n    host: str\n    \"\"\"\n    Server's host.\n    \"\"\"\n    port: int\n    \"\"\"\n    Server's port.\n    \"\"\"\n    host_port: int\n    \"\"\"\n    Host's port.\n    \"\"\"\n    host_name: str\n    \"\"\"\n    Host's name.\n    \"\"\"\n    instance_name: str\n    \"\"\"\n    Instance name.\n    \"\"\"\n    log_level: str | int | None\n    \"\"\"\n    Uvicorn log level.\n    \"\"\"\n\n    def __str__(self):\n        \"\"\"\n        Returns a string representation of the configuration.\n\n        \"\"\"\n        return (\n            f\"Serving instance '{self.instance_name}' at '{self.host}:{self.port}', \"\n            f\"connected to W3Nest host at '{self.host_name}:{self.host_port}'\"\n        )\n\n    def context(self, request: Request) -> Context[ProxiedBackendCtxEnv]:\n        \"\"\"\n        Returns an instance of context given an incoming request.\n        It provides:\n        *  Access to logging methods (`info`, `warning`, etc.) along with trace management.\n        *  Access to W3Nest HTTP clients through its `.env` attribute.\n\n        Parameters:\n            request: Incoming request.\n\n        Return:\n            The context.\n        \"\"\"\n        return ContextFactory.proxied_backend_context(\n            request=request, host_url=f\"http://{self.host_name}:{self.host_port}\"\n        )"
             },
@@ -1021,7 +1021,7 @@
                 }
             },
             "path": "environment.Configuration",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration",
             "callables": [
                 {
                     "name": "__str__",
@@ -1046,7 +1046,7 @@
                         "startLine": 43,
                         "endLine": 51,
                         "references": {
-                            "__str__": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.__str__"
+                            "__str__": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.__str__"
                         },
                         "implementation": "    def __str__(self):\n        \"\"\"\n        Returns a string representation of the configuration.\n\n        \"\"\"\n        return (\n            f\"Serving instance '{self.instance_name}' at '{self.host}:{self.port}', \"\n            f\"connected to W3Nest host at '{self.host_name}:{self.host_port}'\"\n        )"
                     },
@@ -1057,7 +1057,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.__str__",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.__str__"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.__str__"
                 },
                 {
                     "name": "context",
@@ -1094,7 +1094,7 @@
                         "endLine": 68,
                         "references": {
                             "Request": "https://www.starlette.io/requests/",
-                            "context": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.context"
+                            "context": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.context"
                         },
                         "implementation": "    def context(self, request: Request) -> Context[ProxiedBackendCtxEnv]:\n        \"\"\"\n        Returns an instance of context given an incoming request.\n        It provides:\n        *  Access to logging methods (`info`, `warning`, etc.) along with trace management.\n        *  Access to W3Nest HTTP clients through its `.env` attribute.\n\n        Parameters:\n            request: Incoming request.\n\n        Return:\n            The context.\n        \"\"\"\n        return ContextFactory.proxied_backend_context(\n            request=request, host_url=f\"http://{self.host_name}:{self.host_port}\"\n        )"
                     },
@@ -1105,7 +1105,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.context",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.context"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.context"
                 }
             ],
             "attributes": [
@@ -1143,7 +1143,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.host",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.host"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.host"
                 },
                 {
                     "name": "port",
@@ -1179,7 +1179,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.port",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.port"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.port"
                 },
                 {
                     "name": "host_port",
@@ -1215,7 +1215,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.host_port",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.host_port"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.host_port"
                 },
                 {
                     "name": "host_name",
@@ -1251,7 +1251,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.host_name",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.host_name"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.host_name"
                 },
                 {
                     "name": "instance_name",
@@ -1287,7 +1287,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.instance_name",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.instance_name"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.instance_name"
                 },
                 {
                     "name": "log_level",
@@ -1324,7 +1324,7 @@
                         "relations": {}
                     },
                     "path": "environment.Configuration.log_level",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration.log_level"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration.log_level"
                 }
             ]
         },
@@ -1351,7 +1351,7 @@
                 "startLine": 71,
                 "endLine": 100,
                 "references": {
-                    "Environment": "@nav/api/Interpreters/pyrun_backend/.environment.Environment"
+                    "Environment": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment"
                 },
                 "implementation": "class Environment:\n    \"\"\"\n    Static class representing the running environment.\n    \"\"\"\n\n    configuration: Configuration | None = None\n    \"\"\"\n    Configuration instance.\n    \"\"\"\n\n    @staticmethod\n    def get_config():\n        \"\"\"\n        Retrieves the configuration instance.\n        It is injected in the various endpoints as a FastAPI dependency.\n        \"\"\"\n        if not Environment.configuration:\n            raise RuntimeError(\n                \"Configuration instance must be set before being accessed\"\n            )\n        return Environment.configuration\n\n    @staticmethod\n    def set_config(configuration: Configuration):\n        \"\"\"\n        Set the configuration singleton.\n        \"\"\"\n        if Environment.configuration:\n            raise RuntimeError(\"Configuration instance can only be set once.\")\n        Environment.configuration = configuration"
             },
@@ -1364,7 +1364,7 @@
                 }
             },
             "path": "environment.Environment",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Environment",
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment",
             "callables": [
                 {
                     "name": "get_config",
@@ -1389,7 +1389,7 @@
                         "startLine": 81,
                         "endLine": 91,
                         "references": {
-                            "get_config": "@nav/api/Interpreters/pyrun_backend/.environment.Environment.get_config"
+                            "get_config": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment.get_config"
                         },
                         "implementation": "    @staticmethod\n    def get_config():\n        \"\"\"\n        Retrieves the configuration instance.\n        It is injected in the various endpoints as a FastAPI dependency.\n        \"\"\"\n        if not Environment.configuration:\n            raise RuntimeError(\n                \"Configuration instance must be set before being accessed\"\n            )\n        return Environment.configuration"
                     },
@@ -1400,7 +1400,7 @@
                         "relations": {}
                     },
                     "path": "environment.Environment.get_config",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Environment.get_config"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment.get_config"
                 },
                 {
                     "name": "set_config",
@@ -1425,8 +1425,8 @@
                         "startLine": 93,
                         "endLine": 100,
                         "references": {
-                            "Configuration": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration",
-                            "set_config": "@nav/api/Interpreters/pyrun_backend/.environment.Environment.set_config"
+                            "Configuration": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration",
+                            "set_config": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment.set_config"
                         },
                         "implementation": "    @staticmethod\n    def set_config(configuration: Configuration):\n        \"\"\"\n        Set the configuration singleton.\n        \"\"\"\n        if Environment.configuration:\n            raise RuntimeError(\"Configuration instance can only be set once.\")\n        Environment.configuration = configuration"
                     },
@@ -1437,7 +1437,7 @@
                         "relations": {}
                     },
                     "path": "environment.Environment.set_config",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Environment.set_config"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment.set_config"
                 }
             ],
             "attributes": [
@@ -1464,7 +1464,7 @@
                         "startLine": 76,
                         "endLine": 76,
                         "references": {
-                            "Configuration": "@nav/api/Interpreters/pyrun_backend/.environment.Configuration"
+                            "Configuration": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Configuration"
                         },
                         "implementation": null
                     },
@@ -1475,7 +1475,7 @@
                         "relations": {}
                     },
                     "path": "environment.Environment.configuration",
-                    "navPath": "@nav/api/Interpreters/pyrun_backend/.environment.Environment.configuration"
+                    "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.environment.Environment.configuration"
                 }
             ]
         }
@@ -1515,7 +1515,7 @@
                 "relations": {}
             },
             "path": "router.router",
-            "navPath": "@nav/api/Interpreters/pyrun_backend/.router.router"
+            "navPath": "@nav/api/notebook/Interpreters/pyrun_backend/.router.router"
         }
     ],
     "files": [

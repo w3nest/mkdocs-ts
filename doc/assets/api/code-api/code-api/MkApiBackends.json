@@ -1,0 +1,92 @@
+{
+    "name": "MkApiBackends",
+    "documentation": {
+        "sections": [
+            {
+                "content": "Backends for parsing and generating API documentation from source code.\n\nThese backends are responsible for converting a project's source files into structured API  `.json`  files.\nEach generated file represents a **module** in the project, following the schema defined in  <mkapi-api-link nav=\"@nav/api/code-api/.Module\" semantic=\"type-alias\">Module</mkapi-api-link> .\n\n## Available Backends:\n\n-  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/MkApiTypescript\" semantic=\"module\">MkApiTypescript</mkapi-api-link> : A TypeScript module, using [TypeDoc](https://typedoc.org/) as\nprimary AST parser, to extract API models for **TypeScript Projects**.\n\n-  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends/mkapi_python\" semantic=\"module\">mkapi_python</mkapi-api-link> : Python module, using [griffe](https://mkdocstrings.github.io/griffe/guide/users/) as\nprimary AST parser, to extract API models for **Python Projects**.",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "code-api/MkApiBackends",
+    "navPath": "@nav/api/code-api/",
+    "attributes": [],
+    "types": [],
+    "callables": [],
+    "files": [
+        {
+            "name": "index.ts",
+            "path": "src/mkapi-backends/mkapi_python/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "Fake module, replaced at run time by the python generated doc.",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "index.ts",
+            "path": "src/mkapi-backends/mkapi-typescript/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "The backend for generating API files for TypeScript projects uses the\n<a href=\"https://typedoc.org/\" target=\"_blank\">TypeDoc</a> &\n<a href=\"https://www.npmjs.com/package/typescript\" target=\"_blank\">TypeScript</a> package as the primary\nAST (Abstract Syntax Tree) generators.\n\nThe entry point is the function , inputs are provided using .\n\n**Usage Example**\n\n<note level=\"warning\">\nFor the backend to function correctly, the following prerequisites must be met in the project being documented:\n\n*  `typedoc` must be available in the node_modules folder.\n*  A `typedoc.js` configuration file must be present.\n\nThe backend will not proceed if TypeDoc encounters errors while generating API documentation.\nEnsure TypeDoc runs successfully before using this backend.\n</note>\n\nThe following example demonstrates how to generate API files for a TypeScript project using a TypeScript script\n(for instance named `gen-doc.ts`, assuming `@mkdocs-ts/code-api` has been installed in `node_modules`):\n\n<code-snippet language=\"javascript\">\nimport { generateApiFiles } from './node_modules/@mkdocs-ts/code-api/src/mkapi-backends/mkapi-typescript'\n\n// appFolder is the folder of the documentation application\nconst appFolder = `${__dirname}`\n\ngenerateApiFiles({\n    // The project to document (expected here as the parent of the application folder).\n    projectFolder: `${appFolder}/../`,\n    // Output's folder, where to include the generated JSON files\n    outputFolder: `${appFolder}/assets/api`,\n    baseNav: '/api',\n    externals: {\n        // For instance\n        rxjs: ({ name }: { name: string }) => {\n            const urls = {\n                Subject: 'https://www.learnrxjs.io/learn-rxjs/subjects/subject',\n                BehaviorSubject:\n                    'https://www.learnrxjs.io/learn-rxjs/subjects/subject',\n                ReplaySubject:\n                    'https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject',\n                Observable: 'https://rxjs.dev/guide/observable',\n            }\n            if (!(name in urls)) {\n                console.warn(`Can not find URL for rxjs ${name} symbol`)\n            }\n            return urls[name]\n        },\n    },\n})\n</code-snippet>\n\nTo execute the script:\n\n`npx tsx gen-doc.ts`; `tsx` can be installed from <a href=\"https://www.npmjs.com/package/tsx\" target=\"_blank\">\nnpm</a>.\n\nA simple example in action can be found\n[here](https://github.com/w3nest/mkdocs-ts/blob/main/examples/ts-npm/.w3nest/doc.ts).\n\nSee also <a href=\"https://typedoc.org/\" target=\"_blank\">TypeDoc documentation</a> for available options.\n\n**Notes**\n\nThis parser supports a subset of the tags available in TypeDoc. Many tags are omitted because their meaning is\nimplied by the entity's declaration, *e.g.* `@interface`, `@public`, `@private`,\n`@property`, `@readonly`, `@virtual`.\n\nSome tags are related to grouping, such as `@group`, `@category`, `@categoryDescription`, and\n`@groupDescription`. Currently, entities are grouped based on the files they belong to, with the possibility of\nincluding documentation sections at the beginning of each file. Additional semantic grouping is not yet supported.\n\nIn practical terms, the essentials tags used are:\n[`@param`](https://typedoc.org/tags/param/), [`@returns`](https://typedoc.org/tags/returns/),\n[`@typeParams`](https://typedoc.org/tags/typeParam/), [`@module`](https://typedoc.org/tags/module/),\n[`@link`](https://typedoc.org/tags/link/).\n\n<note level=\"warning\" title=\"Important\">\n- The parser does not handle namespaces. This functionality needs to be implemented separately\n(namespaces can be treated as modules in all practical terms concerning documentation purposes).\n- Only documented and exported symbols are included in the API documentation.\n</note>\n\n**Externals links**\n\nURL to externals links can be provided using   if they are part of the project's\n`node_modules`.\n\nWhen external symbols are referenced:\n\n*  **In signatures**: The parser uses the   provider. The keys referenced the package name as\nincluded in the `node_modules`.\n*  **In documentation strings**: If `...` have not been resolved by TypeDoc, the parser tries to interpret\nthem as externals using . In this case the package name is provided explicitly using\n*e.g.* `` where `rxjs` is the package name.\n\n**Unnamed parameters**\n\nRegarding unnamed parameters:\n\n```javascript\n\n/** Foo documentation",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [
+        {
+            "name": "mkapi_python",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "code-api/MkApiBackends.mkapi_python",
+            "navPath": "@nav/api/code-api/MkApiBackends/mkapi_python",
+            "isLeaf": true
+        },
+        {
+            "name": "MkApiTypescript",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "code-api/MkApiBackends.MkApiTypescript",
+            "navPath": "@nav/api/code-api/MkApiBackends/MkApiTypescript",
+            "isLeaf": true
+        }
+    ],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}
