@@ -32,6 +32,7 @@
                     "rxjs",
                     "rx-vdom",
                     "mkdocs-ts",
+                    "@mkdocs-ts/notebook",
                     "@w3nest/webpm-client",
                     "mathjax",
                     "@w3nest/ui-tk/Badges",
@@ -42,10 +43,12 @@
         }
     },
     "dependencies": {
+        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748440689.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748440689.tgz",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748013292.tgz",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748440689.tgz",
         "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
@@ -84,6 +87,8 @@
     "webpm": {
         "kind": "webapp",
         "dependencies": {
+            "@mkdocs-ts/code-api": "^0.1.0",
+            "@mkdocs-ts/notebook": "^0.1.0",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
@@ -102,6 +107,7 @@
             "rxjs": "window['rxjs_APIv7']",
             "rx-vdom": "window['rx-vdom_APIv01']",
             "mkdocs-ts": "window['mkdocs-ts_APIv05']",
+            "@mkdocs-ts/notebook": "window['@mkdocs-ts/notebook_APIv01']",
             "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
             "mathjax": "window['mathjax_APIv3']",
             "@w3nest/ui-tk/Badges": "window['@w3nest/ui-tk_APIv01']['Badges']",
@@ -109,6 +115,8 @@
         }
     },
     "resolutions": {
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748013292.tgz"
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748440689.tgz",
+        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748440689.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748440689.tgz"
     }
 }

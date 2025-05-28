@@ -270,7 +270,7 @@ To make an `interpreter-cell` reactive, you need to include one or more reactive
 *  The captured outputs are wrapped within reactive variable as well (*i.e.* as `Observable`).
 
 
-The next cell is reactive (notice the <i class="fas fa-bolt></i> icon) as it captures `reactiveInput`
+The next cell is reactive (notice the <i class="fas fa-bolt"></i> icon) as it captures `reactiveInput`
 (an `Observable`) as input:
 
 <interpreter-cell interpreter="pyrun" language="python" captured-in="reactiveInput" captured-out="result">

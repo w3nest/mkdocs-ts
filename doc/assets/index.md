@@ -100,7 +100,8 @@ To begin using {{mkdocs-ts}}, consider the following resources:
 *  <cross-link target="tutorials">Tutorials</cross-link>: Ideal for newcomers, offering a step-by-step & 
    interactive introduction.
 
-*  <cross-link target="how-to">How-to</cross-link>: Detailed, task-oriented instructions for specific use cases. 
+*  <cross-link target="install">Install</cross-link>: Learn how to set up your project using either NPM or a 
+   CDN-based approach.
 
 *  <cross-link target="API">API Reference</cross-link>:  Comprehensive technical documentation for advanced users.
 

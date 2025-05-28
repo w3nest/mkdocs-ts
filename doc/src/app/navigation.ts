@@ -1,17 +1,10 @@
-import {
-    DefaultLayout,
-    installCodeApiModule,
-    Navigation,
-    MdWidgets,
-} from 'mkdocs-ts'
-import { firstValueFrom } from 'rxjs'
+import { DefaultLayout, Navigation } from 'mkdocs-ts'
 import { logo } from './logo'
-import { companionNodes$ } from './on-load'
-import { fromMd, placeholders } from './config.markdown'
+import { fromMd } from './config.markdown'
 
-import * as HowTo from './how-to'
+import * as Install from './install'
 import * as Tutorials from './tutorials'
-import { createRootContext } from './config.context'
+import * as Api from './api'
 
 export type AppNav = Navigation<
     DefaultLayout.NavLayout,
@@ -28,55 +21,8 @@ export const navigation: AppNav = {
         content: fromMd('index.md'),
     },
     routes: {
-        '/how-to': HowTo.navigation,
+        '/install': Install.navigation,
         '/tutorials': Tutorials.navigation,
-        '/api': apiNav(),
+        '/api': Api.navigation,
     },
-}
-
-async function apiNav(): Promise<AppNav> {
-    const CodeApiModule = await installCodeApiModule()
-    const context = createRootContext({
-        threadName: `CodeAPI`,
-        labels: ['CodeApi'],
-    })
-    // This is to preload for javascript snippets included in the API documentation, such that the `scrollTo` is
-    // working well.
-    await firstValueFrom(
-        MdWidgets.CodeSnippetView.fetchCmDependencies$('javascript'),
-    )
-    return CodeApiModule.codeApiEntryNode(
-        {
-            name: 'API',
-            header: {
-                icon: {
-                    tag: 'i' as const,
-                    class: `fas fa-code`,
-                },
-                actions: [
-                    DefaultLayout.splitCompanionAction({
-                        path: '/api',
-                        companionNodes$,
-                    }),
-                ],
-            },
-            entryModule: 'mkdocs-ts',
-            docBasePath: '../assets/api',
-            configuration: {
-                ...CodeApiModule.configurationTsTypedoc,
-                notebook: {
-                    options: {
-                        runAtStart: true,
-                        markdown: {
-                            placeholders,
-                        },
-                    },
-                },
-                mdParsingOptions: {
-                    placeholders,
-                },
-            },
-        },
-        context,
-    )
 }

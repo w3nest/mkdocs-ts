@@ -5,318 +5,309 @@
             "withClass": "mkapi-role-module"
         },
         "Notebook": {
-            "href": "@nav/api/Notebook",
+            "href": "@nav/api/notebook",
             "withClass": "mkapi-role-module"
         },
         "Notebook.Views": {
-            "href": "@nav/api/Notebook/Views",
+            "href": "@nav/api/notebook/Views",
             "withClass": "mkapi-role-module"
         },
         "notify": {
-            "href": "@nav/api/Notebook/Views.notify",
+            "href": "@nav/api/notebook/Views.notify",
             "withClass": "mkapi-role-function"
         },
         "Notebook.Views.Layouts": {
-            "href": "@nav/api/Notebook/Views/Layouts",
+            "href": "@nav/api/notebook/Views/Layouts",
             "withClass": "mkapi-role-module"
         },
-        "installNotebookModule": {
-            "href": "@nav/api/MainModule.installNotebookModule",
-            "withClass": "mkapi-role-function"
-        },
         "NotebookPage": {
-            "href": "@nav/api/Notebook.NotebookPage",
+            "href": "@nav/api/notebook.NotebookPage",
             "withClass": "mkapi-role-class"
         },
-        "install": {
-            "href": "@nav/api/Notebook/Installer.install",
-            "withClass": "mkapi-role-function"
-        },
         "NotebookViewParameters": {
-            "href": "@nav/api/Notebook.NotebookViewParameters",
+            "href": "@nav/api/notebook.NotebookViewParameters",
             "withClass": "mkapi-role-type-alias"
         },
         "JsCellView": {
-            "href": "@nav/api/Notebook.JsCellView",
+            "href": "@nav/api/notebook.JsCellView",
             "withClass": "mkapi-role-class"
         },
         "JsCellView.FromDomAttributes": {
-            "href": "@nav/api/Notebook.JsCellView.FromDomAttributes",
+            "href": "@nav/api/notebook.JsCellView.FromDomAttributes",
             "withClass": "mkapi-role-attribute"
         },
         "executeJs$": {
-            "href": "@nav/api/Notebook.executeJs$",
+            "href": "@nav/api/notebook.executeJs$",
             "withClass": "mkapi-role-function"
         },
         "MdCellView": {
-            "href": "@nav/api/Notebook.MdCellView",
+            "href": "@nav/api/notebook.MdCellView",
             "withClass": "mkapi-role-class"
         },
         "PyCellView": {
-            "href": "@nav/api/Notebook.PyCellView",
+            "href": "@nav/api/notebook.PyCellView",
             "withClass": "mkapi-role-class"
         },
         "PyCellView.FromDomAttributes": {
-            "href": "@nav/api/Notebook.PyCellView.FromDomAttributes",
+            "href": "@nav/api/notebook.PyCellView.FromDomAttributes",
             "withClass": "mkapi-role-attribute"
         },
         "InterpreterCellView": {
-            "href": "@nav/api/Notebook.InterpreterCellView",
+            "href": "@nav/api/notebook.InterpreterCellView",
             "withClass": "mkapi-role-class"
         },
         "InterpreterCellView.FromDomAttributes": {
-            "href": "@nav/api/Notebook.InterpreterCellView.FromDomAttributes",
+            "href": "@nav/api/notebook.InterpreterCellView.FromDomAttributes",
             "withClass": "mkapi-role-attribute"
         },
         "WorkerCellView": {
-            "href": "@nav/api/Notebook.WorkerCellView",
+            "href": "@nav/api/notebook.WorkerCellView",
             "withClass": "mkapi-role-class"
         },
         "WorkerCellView.FromDomAttributes": {
-            "href": "@nav/api/Notebook.WorkerCellView.FromDomAttributes",
+            "href": "@nav/api/notebook.WorkerCellView.FromDomAttributes",
             "withClass": "mkapi-role-attribute"
         },
         "executePy": {
-            "href": "@nav/api/Notebook.executePy",
+            "href": "@nav/api/notebook.executePy",
             "withClass": "mkapi-role-function"
         },
         "fixScopeInvalidVar": {
-            "href": "@nav/api/Notebook.fixScopeInvalidVar",
+            "href": "@nav/api/notebook.fixScopeInvalidVar",
             "withClass": "mkapi-role-function"
         },
         "InterpreterApi": {
-            "href": "@nav/api/Notebook.InterpreterApi",
+            "href": "@nav/api/notebook.InterpreterApi",
             "withClass": "mkapi-role-interface"
         },
         "display": {
-            "href": "@nav/api/Notebook.display",
+            "href": "@nav/api/notebook.display",
             "withClass": "mkapi-role-type-alias"
         },
         "DisplayFactory": {
-            "href": "@nav/api/Notebook.DisplayFactory",
+            "href": "@nav/api/notebook.DisplayFactory",
             "withClass": "mkapi-role-type-alias"
         },
         "Scope": {
-            "href": "@nav/api/Notebook.Scope",
+            "href": "@nav/api/notebook.Scope",
             "withClass": "mkapi-role-interface"
         },
         "Notebook.Views.Range": {
-            "href": "@nav/api/Notebook/Views.Range",
+            "href": "@nav/api/notebook/Views.Range",
             "withClass": "mkapi-role-class"
         },
         "DeportedOutputsView.FromDomAttributes": {
-            "href": "@nav/api/Notebook.DeportedOutputsView.FromDomAttributes",
+            "href": "@nav/api/notebook.DeportedOutputsView.FromDomAttributes",
             "withClass": "mkapi-role-attribute"
         },
         "CodeApi": {
-            "href": "@nav/api/CodeApi",
+            "href": "@nav/api/code-api",
             "withClass": "mkapi-role-module"
         },
         "HttpClientTrait": {
-            "href": "@nav/api/CodeApi.HttpClientTrait",
+            "href": "@nav/api/code-api.HttpClientTrait",
             "withClass": "mkapi-role-interface"
         },
         "codeApiEntryNode": {
-            "href": "@nav/api/CodeApi.codeApiEntryNode",
-            "withClass": "mkapi-role-function"
-        },
-        "installCodeApiModule": {
-            "href": "@nav/api/MainModule.installCodeApiModule",
+            "href": "@nav/api/code-api.codeApiEntryNode",
             "withClass": "mkapi-role-function"
         },
         "Navigation": {
-            "href": "@nav/api/MainModule.Navigation",
+            "href": "@nav/api/mkdocs-ts.Navigation",
             "withClass": "mkapi-role-type-alias"
         },
         "DynamicRoutes": {
-            "href": "@nav/api/MainModule.DynamicRoutes",
+            "href": "@nav/api/mkdocs-ts.DynamicRoutes",
             "withClass": "mkapi-role-type-alias"
         },
         "LazyRoutes": {
-            "href": "@nav/api/MainModule.LazyRoutes",
+            "href": "@nav/api/mkdocs-ts.LazyRoutes",
             "withClass": "mkapi-role-type-alias"
         },
         "LazyRoutesCb": {
-            "href": "@nav/api/MainModule.LazyRoutesCb",
+            "href": "@nav/api/mkdocs-ts.LazyRoutesCb",
             "withClass": "mkapi-role-type-alias"
         },
         "LazyRoutesCb$": {
-            "href": "@nav/api/MainModule.LazyRoutesCb$",
+            "href": "@nav/api/mkdocs-ts.LazyRoutesCb$",
             "withClass": "mkapi-role-type-alias"
         },
         "LazyRoutesReturn": {
-            "href": "@nav/api/MainModule.LazyRoutesReturn",
+            "href": "@nav/api/mkdocs-ts.LazyRoutesReturn",
             "withClass": ""
         },
         "NavNodeData": {
-            "href": "@nav/api/MainModule.NavNodeData",
+            "href": "@nav/api/mkdocs-ts.NavNodeData",
             "withClass": "mkapi-role-type-alias"
         },
         "Resolvable": {
-            "href": "@nav/api/MainModule.Resolvable",
+            "href": "@nav/api/mkdocs-ts.Resolvable",
             "withClass": "mkapi-role-type-alias"
         },
         "UnresolvedTarget": {
-            "href": "@nav/api/MainModule.UnresolvedTarget",
+            "href": "@nav/api/mkdocs-ts.UnresolvedTarget",
             "withClass": "mkapi-role-interface"
         },
         "AnyView": {
-            "href": "@nav/api/MainModule.AnyView",
+            "href": "@nav/api/mkdocs-ts.AnyView",
             "withClass": "mkapi-role-type-alias"
         },
         "CompositeLayout": {
-            "href": "@nav/api/MainModule.CompositeLayout",
+            "href": "@nav/api/mkdocs-ts.CompositeLayout",
             "withClass": "mkapi-role-class"
         },
         "Router": {
-            "href": "@nav/api/MainModule.Router",
+            "href": "@nav/api/mkdocs-ts.Router",
             "withClass": "mkapi-role-class"
         },
         "Router.target$": {
-            "href": "@nav/api/MainModule.Router.target$",
+            "href": "@nav/api/mkdocs-ts.Router.target$",
             "withClass": "mkapi-role-attribute"
         },
         "Router.siblings$": {
-            "href": "@nav/api/MainModule.Router.siblings$",
+            "href": "@nav/api/mkdocs-ts.Router.siblings$",
             "withClass": "mkapi-role-attribute"
         },
         "Router.explorerState": {
-            "href": "@nav/api/MainModule.Router.explorerState",
+            "href": "@nav/api/mkdocs-ts.Router.explorerState",
             "withClass": "mkapi-role-attribute"
         },
         "Router.getNav": {
-            "href": "@nav/api/MainModule.Router.getNav",
+            "href": "@nav/api/mkdocs-ts.Router.getNav",
             "withClass": "mkapi-role-method"
         },
         "Target": {
-            "href": "@nav/api/MainModule.Target",
+            "href": "@nav/api/mkdocs-ts.Target",
             "withClass": "mkapi-role-alias"
         },
         "StaticRoutes": {
-            "href": "@nav/api/MainModule.StaticRoutes",
+            "href": "@nav/api/mkdocs-ts.StaticRoutes",
             "withClass": "mkapi-role-type-alias"
         },
         "MockBrowser": {
-            "href": "@nav/api/MainModule.MockBrowser",
+            "href": "@nav/api/mkdocs-ts.MockBrowser",
             "withClass": "mkapi-role-class"
         },
         "DefaultLayout.Layout": {
-            "href": "@nav/api/MainModule/DefaultLayout.Layout",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.Layout",
             "withClass": "mkapi-role-class"
         },
         "DefaultLayout.handleInternalLinkClick": {
-            "href": "@nav/api/MainModule/DefaultLayout.handleInternalLinkClick",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.handleInternalLinkClick",
             "withClass": "mkapi-role-function"
         },
         "DefaultLayout.Layout.new": {
-            "href": "@nav/api/MainModule/DefaultLayout.Layout.newLayout",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.Layout.constructor",
             "withClass": "mkapi-role-constructor"
         },
         "fetchMd": {
-            "href": "@nav/api/MainModule.fetchMd",
+            "href": "@nav/api/mkdocs-ts.fetchMd",
             "withClass": "mkapi-role-function"
         },
         "parseMd": {
-            "href": "@nav/api/MainModule.parseMd",
+            "href": "@nav/api/mkdocs-ts.parseMd",
             "withClass": "mkapi-role-function"
         },
         "MdParsingOptions": {
-            "href": "@nav/api/MainModule.MdParsingOptions",
+            "href": "@nav/api/mkdocs-ts.MdParsingOptions",
             "withClass": "mkapi-role-interface"
         },
         "ViewGenerator": {
-            "href": "@nav/api/MainModule.ViewGenerator",
+            "href": "@nav/api/mkdocs-ts.ViewGenerator",
             "withClass": "mkapi-role-type-alias"
         },
         "replaceLinks": {
-            "href": "@nav/api/MainModule.replaceLinks",
+            "href": "@nav/api/mkdocs-ts.replaceLinks",
             "withClass": "mkapi-role-function"
         },
         "GlobalMarkdownViews": {
-            "href": "@nav/api/MainModule.GlobalMarkdownViews",
+            "href": "@nav/api/mkdocs-ts.GlobalMarkdownViews",
             "withClass": "mkapi-role-class"
         },
         "MdWidgets": {
-            "href": "@nav/api/MainModule/MdWidgets",
+            "href": "@nav/api/mkdocs-ts/MdWidgets",
             "withClass": "mkapi-role-module"
         },
         "NoteView": {
-            "href": "@nav/api/MainModule/MdWidgets.NoteView",
+            "href": "@nav/api/mkdocs-ts/MdWidgets.NoteView",
             "withClass": "mkapi-role-class"
         },
         "CodeSnippetView": {
-            "href": "@nav/api/MainModule/MdWidgets.CodeSnippetView",
+            "href": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView",
             "withClass": "mkapi-role-class"
         },
         "DefaultLayout.PageView": {
-            "href": "@nav/api/MainModule/DefaultLayout.PageView",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.PageView",
             "withClass": "mkapi-role-class"
         },
         "DefaultLayout.TopBannerSpec": {
-            "href": "@nav/api/MainModule/DefaultLayout.TopBannerSpec",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.TopBannerSpec",
             "withClass": "mkapi-role-class"
         },
         "DefaultLayout.BookmarksView": {
-            "href": "@nav/api/MainModule/DefaultLayout.BookmarksView",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.BookmarksView",
             "withClass": "mkapi-role-class"
         },
         "DefaultLayout.NavHeaderSpec": {
-            "href": "@nav/api/MainModule/DefaultLayout.NavHeaderSpec",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.NavHeaderSpec",
             "withClass": "mkapi-role-interface"
         },
         "DefaultLayout.NavLayout": {
-            "href": "@nav/api/MainModule/DefaultLayout.NavLayout",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.NavLayout",
             "withClass": "mkapi-role-type-alias"
         },
         "DefaultLayoutParams.sideNavHeader": {
-            "href": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.sideNavHeader",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.DefaultLayoutParams.sideNavHeader",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayoutParams.sideNavFooter": {
-            "href": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.sideNavFooter",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.DefaultLayoutParams.sideNavFooter",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayoutParams.bookmarks$": {
-            "href": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.bookmarks",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.DefaultLayoutParams.bookmarks",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayoutParams.displayOptions": {
-            "href": "@nav/api/MainModule/DefaultLayout.DefaultLayoutParams.displayOptions",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.DefaultLayoutParams.displayOptions",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayout.Layout.CssSelector": {
-            "href": "@nav/api/MainModule/DefaultLayout.Layout.CssSelector",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.Layout.CssSelector",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayout.NavHeaderView.CssSelector": {
-            "href": "@nav/api/MainModule/DefaultLayout.NavHeaderView.CssSelector",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.NavHeaderView.CssSelector",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayout.NavigationView.CssSelector": {
-            "href": "@nav/api/MainModule/DefaultLayout.NavigationView.CssSelector",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.NavigationView.CssSelector",
             "withClass": "mkapi-role-attribute"
         },
         "DefaultLayout.FavoritesView.CssSelector": {
-            "href": "@nav/api/MainModule/DefaultLayout.FavoritesView.CssSelector",
+            "href": "@nav/api/mkdocs-ts/DefaultLayout.FavoritesView.CssSelector",
             "withClass": "mkapi-role-attribute"
         },
         "MkApiTypescript": {
-            "href": "@nav/api/MkApiBackends/MkApiTypescript",
+            "href": "@nav/api/code-api/MkApiBackends/MkApiTypescript",
             "withClass": "mkapi-role-module"
         },
         "mkapi_python": {
-            "href": "@nav/api/MkApiBackends/mkapi_python",
+            "href": "@nav/api/code-api/MkApiBackends/mkapi_python",
             "withClass": "mkapi-role-module"
         },
         "pyrun_backend": {
-            "href": "@nav/api/Interpreters/pyrun_backend",
+            "href": "@nav/api/notebook/Interpreters/pyrun_backend",
             "withClass": "mkapi-role-module"
         }
     },
     "crossLinks": {
         "tutorials": "@nav/tutorials",
-        "how-to": "@nav/how-to",
+        "install": "@nav/install",
         "API": "@nav/api",
+        "api-mkdocs": "@nav/api/mkdocs-ts",
+        "api-notebook": "@nav/api/notebook",
+        "api-code-api": "@nav/api/code-api",
         "notebook": "@nav/tutorials/notebook",
         "notebook.python": "@nav/tutorials/notebook/python",
         "notebook.python.matplotlib": "@nav/tutorials/notebook/python.matplotlib",
@@ -366,6 +357,7 @@
         "worker-transferable": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API",
         "shared-array": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer",
         "reactivex": "https://reactivex.io/",
+        "rxjs": "https://rxjs.dev/",
         "mkdocs": "https://www.mkdocs.org/",
         "mkdocs-material": "https://squidfunk.github.io/mkdocs-material/"
     },
@@ -376,6 +368,8 @@
         "github-static-tests": "https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests",
         "tests.custom-layout": "https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/lib/custom-layout.test.ts",
         "static-tests.custom-layout": "https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests/custom-layout.ts",
-        "static-tests.composite-layout": "https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests/composite-layout.ts"
+        "static-tests.composite-layout": "https://github.com/w3nest/mkdocs-ts/tree/main/src/tests/static-tests/composite-layout.ts",
+        "ts-npm": "https://github.com/w3nest/mkdocs-ts/tree/main/examples/ts-npm",
+        "js-cdn": "https://github.com/w3nest/mkdocs-ts/tree/main/examples/js-cdn"
     }
 }

@@ -7,11 +7,21 @@ which can be inserted at a desired location within your app.
 <note level='warning' title="Important">
 This page focuses on the **rendering** aspect of API documentation. The rendering is based on structured models that
 represent your project's API.
-
-For details on generating these models, see <cross-link target="api-backend">API Documentation</cross-link>.
-
-For example, you can fetch the model for the `MainModule` of {{mkdocs-ts}}
+For example, you can fetch the model for the {{mkdocs-ts}} main module
 <a target="_blank" href="../assets/api/mkdocs-ts/MainModule.json">here</a>.
+
+There are two built-in backends for generating API data models:
+
+- **<api-link target="MkApiTypescript"></api-link>** – Parses **TypeScript** projects.
+
+- **<api-link target="mkapi_python"></api-link>** – Parses **Python** projects.
+
+Refer to their respective documentation for details on usage and configuration.
+
+Once the backend has successfully processed the project, it generates a set of `.json` files in the specified 
+output folder.
+
+
 </note>
 
 ## Requirements
@@ -38,22 +48,24 @@ display(MkDocs)
 
 ### Code API plugin
 
-To enable Code API pages, install the <api-link target='CodeApi'></api-link> plugin using
-<api-link target='installCodeApiModule'></api-link>:
+To enable Code API pages, install the <api-link target='CodeApi'></api-link> plugin:
 
 <js-cell>
-const ApiPlugin = await MkDocs.installCodeApiModule()
+const { ApiPlugin } = await webpm.install({
+    esm:[ `@mkdocs-ts/code-api#{{code-api-version}} as ApiPlugin`],
+    css: [
+        `@mkdocs-ts/code-api#{{code-api-version}}~assets/ts-typedoc.css`,
+    ]
+})
+display(ApiPlugin)
 </js-cell>
+
 
 In a typical scenario, API documentation data is pre-generated using a backend parser and hosted at specific URLs.
 However, for this tutorial, we'll mock the backend data and implement a mock HTTP client.
 
-Normally, API documentation data is generated in advance and hosted at a given URL.
-Here, we use mocked data for demonstration.
-
 <note level="hint"> 
-If you're working with **real** API data, you can **skip this section** and proceed to the 
-**Navigation** setup.
+If you're working with **real** API data, you can **skip this section**.
 </note>
 
 <note level="abstract" title="Mock client" expandable="true" mode="stateful">
@@ -180,11 +192,6 @@ class MockClient {
     fetchModule(modulePath){
         const assetPath = `${this.project.docBasePath}/${modulePath}.json`
         return rxjs.of(files[assetPath])
-    }
-    installCss() {
-        return webpm.install({
-            css: [this.configuration.css(this.project)],
-        })
     }
 }
 </js-cell>

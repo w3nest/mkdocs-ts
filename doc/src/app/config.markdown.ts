@@ -1,4 +1,6 @@
 import pkgJson from '../../package.json'
+import pkgJsonNotebook from '../../../plugins/notebook/package.json'
+import pkgJsonCodeApi from '../../../plugins/code-api/package.json'
 import { fromMarkdown, GlobalMarkdownViews } from 'mkdocs-ts'
 import { SplitApiButton } from './md-widgets'
 
@@ -86,6 +88,8 @@ Please refer to the tutorial section to learn about the multiple features propos
 export const placeholders = {
     '{{project}}': project.name,
     '{{mkdocs-version}}': pkgJson.version,
+    '{{notebook-version}}': pkgJsonNotebook.version,
+    '{{code-api-version}}': pkgJsonCodeApi.version,
     '{{pyodide-version}}': '0.27.2',
     '{{URL-example1}}': `/apps/@w3nest/js-playground/latest?content=${encodeURIComponent(example1)}`,
     '{{assetsBasePath}}': `../assets`,

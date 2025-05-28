@@ -1,12 +1,12 @@
 import { render } from 'rx-vdom'
 import { navigation } from './navigation'
-import { Router, DefaultLayout, installNotebookModule } from 'mkdocs-ts'
+import { Router, DefaultLayout } from 'mkdocs-ts'
 import { BehaviorSubject } from 'rxjs'
 import { createRootContext, inMemReporter } from './config.context'
 import { AuthBadge } from '@w3nest/ui-tk/Badges'
 import { Footer } from '@w3nest/ui-tk/Mkdocs'
 
-export const companionNodes$ = new BehaviorSubject<string[]>([])
+import { companionNodes$ } from './common'
 
 const ctx = createRootContext({
     threadName: 'App',
@@ -33,7 +33,7 @@ export const router = new Router(
     ctx,
 )
 
-const bookmarks$ = new BehaviorSubject(['/how-to', '/tutorials', '/api'])
+const bookmarks$ = new BehaviorSubject(['/install', '/tutorials', '/api'])
 
 const routerView = new DefaultLayout.LayoutWithCompanion(
     {
@@ -63,6 +63,6 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
 )
 
 document.body.appendChild(render(routerView))
-setTimeout(() => {
-    void installNotebookModule().then()
-}, 3000)
+// setTimeout(() => {
+//     void installNotebookModule(webpm).then()
+// }, 3000)

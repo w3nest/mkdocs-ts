@@ -14,14 +14,15 @@ included in its `node_modules` folder.
 Before diving into the details, let's install {{mkdocs-ts}}:
 
 <js-cell language='javascript'>
-const { MkDocs, rxjs } = await webpm.install({
+const { MkDocs, NotebookModule, rxjs } = await webpm.install({
     esm:[ 
         'mkdocs-ts#{{mkdocs-version}} as MkDocs',
+        `@mkdocs-ts/notebook#{{notebook-version}} as NotebookModule`,
         // rxjs is used later in this page
         'rxjs#^7.5.6 as rxjs'],
     css: [
         `mkdocs-ts#^{{mkdocs-version}}~assets/mkdocs-light.css`,
-        `mkdocs-ts#^{{mkdocs-version}}~assets/notebook.css`,
+        `@mkdocs-ts/notebook#{{notebook-version}}~assets/notebook.css`,
     ]
 })
 </js-cell>
@@ -52,8 +53,6 @@ const src =  `
 display(exportedModule.sayHello())
 </js-cell>
 `
-const NotebookModule = await MkDocs.installNotebookModule()
-
 // This is a dummy example,
 // in practice you may want to provide module from the node_modules
 const exportedModule = { 
@@ -101,7 +100,8 @@ display({
 
 This section explains how to install dependencies directly from a notebook cell using an online
 CDN (Content Delivery Network). Several solutions exist for this purpose, but here we focus on
-<ext-link target="webpm">WebPM</ext-link>, which is **integrated** into {{mkdocs-ts}} for seamless use.
+<ext-link target="webpm">WebPM</ext-link>.
+
 
 <note level="info" title="**Why WebPM?**">
 
@@ -117,9 +117,31 @@ More details on its API, available packages, publishing processes, are available
 <ext-link target="webpm">here</ext-link>.
 </note>
 
-In any JavaScript cell, you can dynamically install packages using the built-in `webpm` instance:
 
-Within any JavaScript cell, an instance of `webpm` is available, allowing you to install packages dynamically:
+<note level="warning" title="`webpm` instance">
+To provide the `webpm` client available to your pages, don't forget to provide it in the initial scope.
+For instance:
+
+<code-snippet language="javascript">
+import * as webpm from '@w3nest/webpm-client'
+import { NotebookPage } from '@mkdocs-ts/notebook'
+
+const notebookPage = new NotebookPage(
+    {
+        /*...*/
+        initialScope: {
+            const: {
+                webpm,
+            },
+            let: {},
+        },
+    }
+)
+</code-snippet>
+
+</note>
+
+The `webpm` instance allows to install packages dynamically:
 
 <code-snippet language='javascript'>
 await webpm.install({
@@ -152,17 +174,15 @@ The following sections demonstrate how to use `installWithUI` to install **ESM**
 The next example installs a low-code framework, but the same process applies to any ESM module available on WebPM.
 
 <js-cell>
-
-const env$ = new rxjs.ReplaySubject(1)
-
 const esmInstall = async () => {
-    const {VSF, Canvas} = await installWithUI({
-        esm:['@youwol/vsf-core#^0.3.3 as VSF', 
-             '@youwol/vsf-canvas#^0.3.1 as Canvas'],
+    const { JSConfetti } = await installWithUI({
+        esm:['js-confetti#^0.12.0 as JSConfetti'],
         display
         }
     )
-    env$.next({VSF, Canvas})
+    new JSConfetti().addConfetti({
+        emojis: ['🌈', '⚡️', '💥', '✨', '💫', '🌸']
+    })
 }
 
 display({
@@ -181,61 +201,8 @@ The view automatically collapses upon installation success, but you can re-expan
 *  **`webpm.install` vs `installWithUI`** - `installWithUI` introduces an additional `display` 
    parameter, a callback function responsible for rendering the installation view. In this example, we use 
    the cell’s built-in `display` function.
-
-*  **Reactivity Using `env$`** - The `env$` variable is a stream that will trigger the execution of the next cell
-   upon installation completion (since the next cell is **reactive** and referenced `env$`).
 </note>
 
-The next cell creates a low-code application that performs 3D re-meshing and visualization (you can play with 
-`edgeFactor`, *e.g.* setting `0.2`):
-
-<js-cell cell-id="vs-flow-0" reactive="true">
-const {VSF, Canvas} = env$
-
-let project = new VSF.Projects.ProjectState()
-const flow = "(of#of)>>(torusKnot#geom)>>(fromThree#convIn)>>(uniformRemeshing#remesh)>>(toThree#convOut)>>(viewer#viewer)"
-project = await project.with({
-    toolboxes:["@youwol/vsf-three", '@youwol/vsf-pmp', '@youwol/vsf-rxjs'],
-    workflow: {
-        branches:[flow],
-        configurations:{
-            remesh: { edgeFactor: 0.7 }
-        }
-    }
-})
-display(
-    Views.Layouts.viewPortOnly({
-        content: project.instancePool.inspector().getModule('viewer').html()
-    })
-)
-</js-cell>
-
-<note level='info' title="About VS-Flow">
-The example above showcases a **low-code application** built with the `vs-flow` library.  
-It generates a **3D torus knot**, applies **re-meshing** using the 
-<a href="https://www.pmp-library.org/" target="_blank">PMP</a> C++ library 
-(ported to <a href="https://webassembly.org/" target="_blank">WASM</a>), and renders the final visualization with 
-<a href="https://threejs.org/" target="_blank">three.js</a>.
-
-The following cell displays the associated **Directed Acyclic Graph (DAG)**:
-
-<js-cell cell-id="vs-flow-1" reactive="true">
-display({ 
-    tag: 'div', 
-    class: 'w-100',
-    style: { height: '300px' }, 
-    children:[
-        new Canvas.Renderer3DView({
-            project$: rxjs.of(project), workflowId: 'main'
-        })
-    ]
-})
-</js-cell>
-
-VS-Flow integrates seamlessly into {{mkdocs-ts}} notebook pages, leveraging the same  
-**reactive data-flow mechanism** that powers interactive cells. More details on this will be covered soon.
-
-</note>
 
 
 ### In-Browser Python modules

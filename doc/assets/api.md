@@ -1,16 +1,35 @@
-# API Documentation
 
-Welcome to the API documentation for the `{{project}}` project.
 
-The project consists of several independent modules:
+# 📘 API Documentation
 
-- [MainModule](@nav/api/MainModule): This module forms the core of the project, facilitating the creation of
-  hierarchical documents based on defined navigation structures.
-  The navigation can either be static, known in advance, or dynamic, subject to changes over time.
 
-- [CodeApi](@nav/api/CodeApi): This auxiliary module offers implementations to seamlessly integrate code API
-  documentation into your project. Notably, the pages under the 'API' node in the navigation are rendered using this
-  module.
+This section provides comprehensive API references for the {{mkdocs-ts}} core library,
 
-- [Backends](@nav/api/Backends): This module is responsible for aggregating data generators used for code
-  API documentation. The generated data are subsequently rendered by the [CodeApi](@nav/api/CodeApi) module.
+Explore what powers your docs under the hood:
+
+---
+
+### ✒️ <cross-link target='api-mkdocs'>MkDocs-TS</cross-link>
+
+The heart of the system — {{mkdocs-ts}} is responsible for turning your content into structured, navigable documentation.
+It supports both static and dynamic navigation trees, allowing you to build anything from simple guides to reactive, 
+app-like experiences.
+
+---
+
+### 📓 <cross-link target='api-notebook'>Plugin: Notebook</cross-link>
+
+Bring your docs to life.
+This plugin lets you embed interactive "notebook-style" pages directly into your documentation—perfect for tutorials, walkthroughs, or live demos.
+
+---
+
+### 🧾 <cross-link target='api-code-api'>Plugin: Code-API</cross-link>
+
+The Code-API plugin provides tools for integrating API documentation generated from your source code. 
+It powers all API-related pages in this documentation - be it TypeScript or Python libraries.
+
+---
+
+Want to dive deeper? Browse each module’s API docs for methods, types, and configuration options tailored to your project.
+

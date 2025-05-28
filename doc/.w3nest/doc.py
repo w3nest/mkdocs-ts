@@ -10,7 +10,14 @@ print("Generate python API documentation of 'MkApiPython'")
 
 NAME = "mkapi_python"
 GRIFFE_URL = "https://mkdocstrings.github.io/griffe/reference"
-DST = Path(__file__).parent.parent / "assets" / "api" / "mkdocs-ts" / "MkApiBackends"
+DST = (
+    Path(__file__).parent.parent
+    / "assets"
+    / "api"
+    / "code-api"
+    / "code-api"
+    / "MkApiBackends"
+)
 
 config = Configuration(
     base_nav=f"/api/MkApiBackends/mkapi_python",
@@ -29,7 +36,13 @@ config = Configuration(
 global_doc = cast(
     griffe.Module,
     griffe.load(
-        PROJECT / "src" / "mkapi-backends" / "mkapi_python" / "mkapi_python",
+        PROJECT
+        / "plugins"
+        / "code-api"
+        / "src"
+        / "mkapi-backends"
+        / "mkapi_python"
+        / "mkapi_python",
         submodules=True,
     ),
 )
@@ -39,10 +52,17 @@ generate_api(global_doc, config)
 print("Generate python API documentation of 'pyrun_backend'")
 
 NAME = "pyrun_backend"
-DST = Path(__file__).parent.parent / "assets" / "api" / "mkdocs-ts" / "Interpreters"
+DST = (
+    Path(__file__).parent.parent
+    / "assets"
+    / "api"
+    / "notebook"
+    / "notebook"
+    / "Interpreters"
+)
 
 config = Configuration(
-    base_nav=f"/api/Interpreters/pyrun_backend",
+    base_nav=f"/api/notebook/Interpreters/pyrun_backend",
     external_links={
         **std_links(),
         "fastapi.APIRouter": "https://fastapi.tiangolo.com/reference/apirouter/",
@@ -57,7 +77,13 @@ config = Configuration(
 global_doc = cast(
     griffe.Module,
     griffe.load(
-        PROJECT / "src" / "interpreters" / "pyrun_backend" / "pyrun_backend",
+        PROJECT
+        / "plugins"
+        / "notebook"
+        / "src"
+        / "interpreters"
+        / "pyrun_backend"
+        / "pyrun_backend",
         submodules=True,
     ),
 )

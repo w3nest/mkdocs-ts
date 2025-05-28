@@ -1,8 +1,10 @@
 import { AppNav } from '../../navigation'
 import { notebookPage } from '../../config.notebook'
+import { headerEmoji } from '../../common'
 
 export const navigation: AppNav = {
     name: 'Getting started',
+    header: headerEmoji('🚀'),
     layout: {
         content: ({ router }) => notebookPage('tutorials.basics.md', router),
     },

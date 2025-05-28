@@ -23,10 +23,19 @@ pkg_json_name = "package.json"
 pkg_json = parse_json(project_folder / pkg_json_name)
 pkg_json_mkdocs = parse_json(project_folder / ".." / pkg_json_name)
 
+pkg_json_notebook = parse_json(
+    project_folder / ".." / "plugins" / "notebook" / pkg_json_name
+)
+pkg_json_code_api = parse_json(
+    project_folder / ".." / "plugins" / "code-api" / pkg_json_name
+)
+
 externals_deps = {
     "rxjs": "^7.5.6",
     "rx-vdom": "^0.1.4",
     "mkdocs-ts": f"^{pkg_json_mkdocs['version'].replace('-wip', '')}",
+    "@mkdocs-ts/notebook": f"^{pkg_json_notebook['version'].replace('-wip', '')}",
+    "@mkdocs-ts/code-api": f"^{pkg_json_code_api['version'].replace('-wip', '')}",
     "@w3nest/webpm-client": "^0.1.5",
     "mathjax": "^3.1.4",
     "@w3nest/ui-tk": "^0.1.1",
@@ -55,6 +64,7 @@ config = ProjectConfig(
                 "rxjs",
                 "rx-vdom",
                 "mkdocs-ts",
+                "@mkdocs-ts/notebook",
                 "@w3nest/webpm-client",
                 "mathjax",
                 "@w3nest/ui-tk/Badges",

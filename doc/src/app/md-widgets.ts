@@ -1,5 +1,5 @@
 import { VirtualDOM } from 'rx-vdom'
-import { companionNodes$ } from './on-load'
+import { companionNodes$ } from './common'
 import { MdWidgets } from 'mkdocs-ts'
 import LinksDict from './links.json'
 

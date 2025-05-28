@@ -1,0 +1,49 @@
+{
+    "name": "@mkdocs-ts/doc",
+    "documentation": {
+        "sections": [
+            {
+                "content": "# @mkdocs-ts/doc\n\nDocumentation app for the project mkdocs-ts.\n\nThis library is part of the hybrid cloud/local ecosystem\n[YouWol](https://platform.youwol.com/apps/@youwol/platform/latest).\n\n## Links\n\n[Running app.](https://platform.youwol.com/apps/@mkdocs-ts/doc/latest)\n\n[Online user-guide](https://l.youwol.com/doc/@mkdocs-ts/doc)\n\n[Developers documentation](https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@mkdocs-ts/doc&tab=doc)\n\n[Package on npm](https://www.npmjs.com/package/@mkdocs-ts/doc)\n\n[Source on GitHub](https://github.com/mkdocs-ts/doc)\n\n# Installation, Build, Test\n\nTo install the required dependencies:\n\n ```shell\nyarn\n``` \n\n---\n\nTo build for development:\n\n ```shell\nyarn build:dev\n``` \n\nTo build for production:\n\n ```shell\nyarn build:prod\n``` \n\n---\n\n<!-- no specific test configuration documented -->\n\nTo run tests:\n\n ```shell\nyarn test\n``` \n\nCoverage can be evaluated using:\n\n ```shell\nyarn test-coverage\n``` \n\n---\n\nTo start the 'dev-server':\n\n ```shell\nyarn start\n``` \n\nIn order to use the dev-server within Py-YouWol and to serve resources in place of the usual CDN database,\nthe Py-YouWol configuration needs to be updated to include a  `WebpackDevServerSwitch`  within a\n `FlowSwitcherMiddleware` . For example:\n\n ```python\nfrom w3nest.app.environment import *\nfrom w3nest.ci.ts_frontend import WebpackDevServerSwitch\n\nConfiguration(\n    customization = Customization(\n        middlewares = [\n            FlowSwitcherMiddleware(\n                name = 'front-end dev-servers',\n                oneOf = [\n                    WebpackDevServerSwitch(packageName=\"@mkdocs-ts/doc\", port=3025),\n                ]\n            )\n        ]\n    )\n)\n``` \n\nAdditional information on the  `Configuration`  class can be found in the \"Configuration API\" page of the\n[Py-YouWol guide](https://l.youwol.com/doc/py-youwol).\n\nOnce Py-YouWol is running with the updated configuration,\nthe application can be accessed from [here](http://localhost:2000/apps/@mkdocs-ts/doc/latest)\n(providing py-youwol running using the default port  `2000` ).\n\n---\n\nTo generate code's documentation:\n\n ```shell\nyarn doc\n```",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "doc",
+    "navPath": "@nav/api/",
+    "attributes": [],
+    "types": [],
+    "callables": [],
+    "files": [
+        {
+            "name": "on-load.ts",
+            "path": "src/app/on-load.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}

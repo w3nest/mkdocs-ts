@@ -33,11 +33,18 @@ display(MkDocs)
 
 ### Notebook plugin
 
-To enable Notebook pages, install the <api-link target='Notebook'></api-link> plugin using
-<api-link target='installNotebookModule'></api-link>:
+To enable Notebook pages, install the <api-link target='Notebook'></api-link> plugin:
 
 <js-cell>
-const NotebookModule = await MkDocs.installNotebookModule()
+const versionNotebook = "{{notebook-version}}"
+const { NotebookModule } = await webpm.install({
+    esm:[ `@mkdocs-ts/notebook#${versionNotebook} as NotebookModule`],
+    css: [
+        `@mkdocs-ts/notebook#${versionNotebook}~assets/notebook.css`,
+    ]
+})
+display(MkDocs)
+
 </js-cell>
 
 
@@ -104,7 +111,7 @@ const app = new MkDocs.DefaultLayout.Layout({
 display(app)
 </js-cell>
 
-<cell-output cell-id="example0" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;">
+<cell-output cell-id="example0" full-screen="true" style="aspect-ratio: 1 / 1; min-height: 0px;" class="p-1 rounded border">
 </cell-output>
 
 Configuration options for a notebook page are defined within <api-link target="NotebookViewParameters"></api-link>. 
@@ -180,7 +187,7 @@ This function accommodates various types of data:
 * **`VirtualDOM`**: This represents the native reactive extension of DOM elements within a notebook page 
 (covered in the next section).
 
-* **`Observable`**: These are [RxJS](https://rxjs.dev/) observables, they hold value of data that changes over time.
+* **`Observable`**: These are <ext-link target="rxjs">RxJS</ext-link> observables, they hold value of data that changes over time.
 The output subscribes to it and displays the outgoing data (explained further in the 'Reactivity' section).
 
 * **`Unknown Data`**: This serves as a fallback if none of the previous rules apply.
