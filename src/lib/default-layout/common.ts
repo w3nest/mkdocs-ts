@@ -154,6 +154,9 @@ export interface NavHeaderSpec {
     actions?: ChildrenLike
 }
 
+/**
+ * Defines header of {@link Navigation} nodes, which determines how they are rendered in the navigation panel.
+ */
 export type NavHeader =
     | NavHeaderSpec
     | (({ router }: { router: Router }) => NavHeaderSpec)

@@ -27,14 +27,6 @@
  *
  * - {@link InMemoryReporter} (stores logs in memory).
  *
- * ## Plugins
- *
- * One plugin is included:
- *
- * - **Code API Module** ({@link CodeApiModule})
- *   - Installed using {@link installCodeApiModule}.
- *   - Enables automatic generation of pages from code API documentation.
- *
  * @module MainModule
  */
 // noinspection ES6UnusedImports Include for documentation

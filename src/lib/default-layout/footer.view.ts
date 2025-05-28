@@ -38,7 +38,7 @@ export class FooterWrapper implements VirtualDOM<'div'> {
  * An horizontal banner, usually included in footer, providing links to **Previous** & **Next**.
  * It is included in the default layout's footer when {@link DefaultLayoutParams.navFooter} is turned on.
  *
- * Regarding siblings look up, see {@link getSiblings$}.
+ * Regarding siblings look up, see {@link Router.siblings$}.
  */
 export class NavFooterView implements VirtualDOM<'div'> {
     /**

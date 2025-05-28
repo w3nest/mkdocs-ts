@@ -19,17 +19,18 @@
  * </note>
  *
  * The following example demonstrates how to generate API files for a TypeScript project using a TypeScript script
- * (for instance named `gen-doc.ts`):
+ * (for instance named `gen-doc.ts`, assuming `@mkdocs-ts/code-api` has been installed in `node_modules`):
  *
  * <code-snippet language="javascript">
- * import { generateApiFiles } from 'mkdocs-ts/src/mkapi-backends/mkapi-typescript'
+ * import { generateApiFiles } from './node_modules/@mkdocs-ts/code-api/src/mkapi-backends/mkapi-typescript'
  *
- * const appFolder = `${__dirname}/../`
+ * // appFolder is the folder of the documentation application
+ * const appFolder = `${__dirname}`
  *
  * generateApiFiles({
  *     // The project to document (expected here as the parent of the application folder).
  *     projectFolder: `${appFolder}/../`,
- *     // Output's folder.
+ *     // Output's folder, where to include the generated JSON files
  *     outputFolder: `${appFolder}/assets/api`,
  *     baseNav: '/api',
  *     externals: {
@@ -56,6 +57,9 @@
  *
  * `npx tsx gen-doc.ts`; `tsx` can be installed from <a href="https://www.npmjs.com/package/tsx" target="_blank">
  * npm</a>.
+ *
+ * A simple example in action can be found
+ * [here](https://github.com/w3nest/mkdocs-ts/blob/main/examples/ts-npm/.w3nest/doc.ts).
  *
  * See also <a href="https://typedoc.org/" target="_blank">TypeDoc documentation</a> for available options.
  *

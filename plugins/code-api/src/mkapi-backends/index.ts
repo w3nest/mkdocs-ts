@@ -2,7 +2,7 @@
  * Backends for parsing and generating API documentation from source code.
  *
  * These backends are responsible for converting a project's source files into structured API `.json` files.
- * Each generated file represents a **module** in the project, following the schema defined in {@link CodeApi.Module}.
+ * Each generated file represents a **module** in the project, following the schema defined in {@link Module}.
  *
  * ## Available Backends:
  *
@@ -16,3 +16,6 @@
  */
 export * as MkApiTypescript from './mkapi-typescript'
 export * as mkapi_python from './mkapi_python'
+// noinspection ES6UnusedImports Include for documentation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Module } from '../lib'
