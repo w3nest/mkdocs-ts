@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import {
     Entity,
     Attribute, // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -9,6 +9,7 @@ import {
 } from './models'
 import { BehaviorSubject } from 'rxjs'
 import { Router } from 'mkdocs-ts'
+import { faIconTyped } from './fa-icons'
 
 /**
  * Interface for entities included in {@link SummaryView}.
@@ -99,21 +100,22 @@ export class SummaryHeader implements VirtualDOM<'div'> {
 
     constructor({ expanded$ }: { expanded$: BehaviorSubject<boolean> }) {
         this.children = [
-            {
-                tag: 'i',
-                class: 'fas fa-eye',
-            },
+            faIconTyped('fa-eye'),
             { tag: 'div', class: 'mx-2' },
             { tag: 'div', innerText: 'Symbols' },
             { tag: 'div', class: 'flex-grow-1' },
             {
                 tag: 'button',
-                class: {
-                    source$: expanded$,
-                    vdomMap: (expanded) =>
-                        expanded ? 'fa-chevron-down' : 'fa-chevron-right',
-                    wrapper: (d) => `btn btn-sm btn-light fas ${d}`,
-                },
+                children: [
+                    child$({
+                        source$: expanded$,
+                        vdomMap: (expanded) =>
+                            expanded
+                                ? faIconTyped('fa-chevron-down')
+                                : faIconTyped('fa-chevron-right'),
+                    }),
+                ],
+                class: 'btn btn-sm btn-light',
                 onclick: () => {
                     expanded$.next(!expanded$.value)
                 },

@@ -14,7 +14,6 @@ const { MkDocs, RxVDom } = await webpm.install({
     esm: [`mkdocs-ts#${versionMkDocs} as MkDocs`, 'rx-vdom#^0.1.6 as RxVDom'],
     css: [
         'bootstrap#5.3.3~bootstrap.min.css',
-        'fontawesome#5.12.1~css/all.min.css',
         `mkdocs-ts#${versionMkDocs}~assets/mkdocs-light.css`,
     ],
     onEvent: (ev) => {

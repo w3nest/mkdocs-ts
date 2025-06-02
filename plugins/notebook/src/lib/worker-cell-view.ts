@@ -7,6 +7,7 @@ import { DropDownCaptureView } from './interpreter-cell-view'
 import { executeWorkersPool, executeWorkersPool$ } from './worker-execution'
 import type { WorkersPoolTypes } from '@w3nest/webpm-client'
 import { ContextTrait, Contextual } from 'mkdocs-ts'
+import { faIconTyped } from './fa-icons'
 
 /**
  * All attributes available for a 'worker' cell.
@@ -253,10 +254,7 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
             tag: 'div',
             class: 'd-flex align-items-center px-2',
             children: [
-                {
-                    tag: 'i',
-                    class: 'fas fa-cog',
-                },
+                faIconTyped('fa-cog'),
                 {
                     tag: 'i',
                     class: 'px-2',

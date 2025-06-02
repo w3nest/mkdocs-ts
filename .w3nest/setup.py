@@ -26,6 +26,9 @@ externals_deps = {
 }
 in_bundle_deps = {
     "prism-code-editor": "^4.0.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
 }
 dev_deps = {
     "conditional-type-checks": "^1.0.6",

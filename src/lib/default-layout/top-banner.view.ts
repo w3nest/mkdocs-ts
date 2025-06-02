@@ -211,7 +211,7 @@ export class TopBannerMinimized implements VirtualDOM<'div'> {
             },
             new ToggleSidePanelButton({
                 displayMode$: params.displayMode$,
-                icon: ' fa-sitemap',
+                icon: 'fa-list-ul',
             }),
             {
                 tag: 'div',

@@ -13,6 +13,7 @@ import { Output } from './state'
 import { parseStyle } from './display-utils'
 import { OutputMode } from './cell-views'
 import { parseMd } from 'mkdocs-ts'
+import { faIconTyped } from './fa-icons'
 
 /**
  * Represents deported outputs view.
@@ -181,7 +182,8 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                         { tag: 'div', class: 'flex-grow-1' },
                         {
                             tag: 'button',
-                            class: 'btn btn-sm btn-light fas fa-expand fv-pointer',
+                            class: 'btn btn-sm btn-light fv-pointer',
+                            children: [faIconTyped('fa-expand')],
                             onclick: () => {
                                 this.mode$.next('fullscreen')
                             },

@@ -31,6 +31,7 @@ import { createEditor } from 'prism-code-editor'
 import 'prism-code-editor/prism/languages/javascript'
 import 'prism-code-editor/prism/languages/python'
 import 'prism-code-editor/prism/languages/markdown'
+import { faIconTyped } from './fa-icons'
 
 /**
  * Accepted language.
@@ -300,11 +301,14 @@ export class CellHeaderView implements VirtualDOM<'div'> {
                     if (['success', 'pending', 'executing'].includes(s)) {
                         return { tag: 'div' }
                     }
-                    const classList =
-                        s === 'ready' ? 'fa-play' : 'fa-fast-forward'
                     return {
                         tag: 'button',
-                        class: `btn btn-sm btn-light fas text-success ${classList}`,
+                        class: `btn btn-sm btn-light text-success`,
+                        children: [
+                            s === 'ready'
+                                ? faIconTyped('fa-play')
+                                : faIconTyped('fa-fast-forward'),
+                        ],
                         onclick: () => this.state.execute(this.cellId),
                     }
                 },
@@ -358,35 +362,34 @@ export class CellTagsView implements VirtualDOM<'div'> {
             unknown: '?',
         }
         this.children = [
-            {
-                tag: 'i',
-                class: attr$({
-                    source$: params.cellStatus$,
-                    vdomMap: (status) => {
-                        switch (status) {
-                            case 'pending':
-                                return 'fas fa-clock me-1'
-                            case 'executing':
-                                return 'fas fa-cog fa-spin me-1'
-                            default:
-                                return ''
-                        }
-                    },
-                }),
-            },
-            {
-                tag: 'div',
-                class: params.cellAttributes.readOnly
-                    ? 'fas fa-lock me-1'
-                    : 'fas fa-pen me-1',
-            },
-            {
-                tag: 'div',
-                class: attr$({
-                    source$: params.reactive$,
-                    vdomMap: (reactive) => (reactive ? 'fas fa-bolt me-1' : ''),
-                }),
-            },
+            child$({
+                source$: params.cellStatus$,
+                vdomMap: (status) => {
+                    switch (status) {
+                        case 'pending':
+                            return faIconTyped('fa-clock', {
+                                withClass: 'me-1',
+                            })
+                        case 'executing':
+                            return faIconTyped('fa-cog', {
+                                withClass: 'me-1',
+                                spin: true,
+                            })
+                        default:
+                            return EmptyDiv
+                    }
+                },
+            }),
+            params.cellAttributes.readOnly
+                ? faIconTyped('fa-lock', { withClass: 'me-1' })
+                : faIconTyped('fa-pen', { withClass: 'me-1' }),
+            child$({
+                source$: params.reactive$,
+                vdomMap: (reactive) =>
+                    reactive
+                        ? faIconTyped('fa-bolt', { withClass: 'me-1' })
+                        : EmptyDiv,
+            }),
             {
                 tag: 'div',
                 class: 'text-secondary',

@@ -29,6 +29,7 @@ in_bundle_deps = {
     # webpm-client is only used for types w/ workers pool, it is not included in dev. deps to allow installation
     # in consuming projects
     "@w3nest/webpm-client": "^0.1.8",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
 }
 dev_deps = {}
 

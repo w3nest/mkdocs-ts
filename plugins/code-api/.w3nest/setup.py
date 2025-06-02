@@ -8,7 +8,6 @@ from w3nest.ci.ts_frontend import (
     RunTimeDeps,
     Bundles,
     MainModule,
-    AuxiliaryModule,
 )
 from w3nest.ci.ts_frontend.regular import generate_template
 from w3nest.utils import parse_json
@@ -23,7 +22,9 @@ externals_deps = {
     "rxjs": "^7.5.6",
     "@w3nest/http-clients": "^0.1.5",
 }
-in_bundle_deps = {}
+in_bundle_deps = {
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+}
 dev_deps = {}
 
 config = ProjectConfig(

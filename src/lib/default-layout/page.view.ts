@@ -33,6 +33,7 @@ import {
 } from './common'
 import { ContextTrait, NoContext } from '../context'
 import { AnyView } from '../navigation.node'
+import { faIconTyped } from './fa-icons'
 
 interface ContentTrait {
     layout: NavLayout
@@ -242,10 +243,7 @@ export class FooterView implements VirtualDOM<'div'> {
             tag: 'div' as const,
             class: 'd-flex align-items-center px-1 border rounded mx-2 my-1',
             children: [
-                {
-                    tag: 'i' as const,
-                    class: 'fas fa-code-branch',
-                },
+                faIconTyped('fa-code-branch'),
                 {
                     tag: 'a' as const,
                     class: 'mx-1',
@@ -267,7 +265,7 @@ export class FuturePageView implements VirtualDOM<'div'> {
             parseMd({
                 src: `
 <note level="hint">
-<i class="fas fa-spinner fa-spin"></i> The page is currently loading, and the content will update shortly. 
+<icon target="mkdocs/spinner#spin"></icon> The page is currently loading, and the content will update shortly. 
 In the meantime, feel free to explore other sections of the document.
 </note>                
                 `,

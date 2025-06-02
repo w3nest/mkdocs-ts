@@ -36,4 +36,10 @@ export function registerMdWidgets(MkDocs) {
             })
         },
     }
+
+    // Make the icon 'star' available, e.g. when parsing Markdown (`<icon target='star'></icon>`)
+    // or when using note (`<note icon='star'></note>`).
+    MkDocs.IconFactory.register({
+        star: { tag: 'div', innerText: '⭐' },
+    })
 }

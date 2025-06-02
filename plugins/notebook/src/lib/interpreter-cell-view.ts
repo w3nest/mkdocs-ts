@@ -21,6 +21,7 @@ import {
     executeInterpreter,
     executeInterpreter$,
 } from './interpreter-execution'
+import { faIconTyped } from './fa-icons'
 
 /**
  * Defines the request and response structure for the `/run` endpoint
@@ -334,10 +335,7 @@ export class InterpreterCellView implements VirtualDOM<'div'>, CellTrait {
             tag: 'div',
             class: 'd-flex align-items-center px-2',
             children: [
-                {
-                    tag: 'i',
-                    class: 'fas fa-network-wired',
-                },
+                faIconTyped('fa-network-wired'),
                 {
                     tag: 'i',
                     class: 'px-2',
@@ -397,8 +395,8 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
             return
         }
         const icons = {
-            in: 'fa-sign-in-alt',
-            out: 'fa-sign-out-alt',
+            in: faIconTyped('fa-sign-in-alt', { withClass: 'mx-1' }),
+            out: faIconTyped('fa-sign-out-alt', { withClass: 'mx-1' }),
         }
         const expanded$ = new BehaviorSubject(false)
         this.onblur = () => {
@@ -426,10 +424,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                               class: 'mx-1',
                           }
                         : undefined,
-                    {
-                        tag: 'i',
-                        class: `fas ${icons[params.mode]} mx-1`,
-                    },
+                    icons[params.mode],
                     params.mode === 'out'
                         ? {
                               tag: 'div',
@@ -441,10 +436,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                         tag: 'i',
                         class: 'mx-1',
                     },
-                    {
-                        tag: 'i',
-                        class: 'fas fa-caret-down',
-                    },
+                    faIconTyped('fa-caret-down'),
                 ],
                 onclick: (ev) => {
                     ev.stopPropagation()
@@ -468,10 +460,7 @@ export class DropDownCaptureView implements VirtualDOM<'div'> {
                     tag: 'div',
                     class: 'd-flex align-items-center',
                     children: [
-                        {
-                            tag: 'i',
-                            class: 'fas fa-dot-circle',
-                        },
+                        faIconTyped('fa-dot-circle'),
                         {
                             tag: 'i',
                             class: 'mx-1',

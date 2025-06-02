@@ -1,4 +1,5 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { faIconTyped } from './fa-icons'
 
 export class MkApiExtLink implements VirtualDOM<'a'> {
     public readonly tag = 'a'
@@ -14,11 +15,10 @@ export class MkApiExtLink implements VirtualDOM<'a'> {
                 tag: 'i',
                 innerText: elem.textContent ?? '?',
             },
-            {
-                tag: 'i',
-                class: 'fas fa-external-link-alt ps-1',
-                style: { fontSize: '0.6rem' },
-            },
+            faIconTyped('fa-external-link-alt', {
+                withClass: 'ps-1',
+                withStyle: { fontSize: '0.6rem' },
+            }),
         ]
     }
 }
@@ -39,11 +39,10 @@ export class MkApiApiLink implements VirtualDOM<'a'> {
                 innerText: elem.textContent ?? '',
                 class: `mkapi-semantic-flag mkapi-role-${semantic}`,
             },
-            {
-                tag: 'i',
-                class: 'fas fa-code ps-1',
-                style: { fontSize: '0.6rem' },
-            },
+            faIconTyped('fa-code', {
+                withClass: 'ps-1',
+                withStyle: { fontSize: '0.6rem' },
+            }),
         ]
     }
 }

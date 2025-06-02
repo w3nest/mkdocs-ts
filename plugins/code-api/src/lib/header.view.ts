@@ -23,6 +23,7 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
 
     constructor(params: {
         text?: string
+        icon?: AnyVirtualDOM
         tag: HeadingLevel
         withClass: string
         doc: Doc
@@ -46,7 +47,7 @@ export class HeaderView implements VirtualDOM<HeadingLevel> {
                     fontWeight: 'bolder',
                 },
                 class: `mkapi-semantic-flag mkapi-role-${semantic} ${this.withClass}`,
-                children: [{ tag: 'span', innerText: this.text }],
+                children: [params.icon, { tag: 'span', innerText: this.text }],
             },
             ...this.withChildren,
         ]

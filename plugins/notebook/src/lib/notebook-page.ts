@@ -10,6 +10,7 @@ import {
 } from 'mkdocs-ts'
 import { delay, filter, from, of, take } from 'rxjs'
 import { NotebookStateParameters, State } from './state'
+import { faIconTyped } from './fa-icons'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -155,10 +156,7 @@ export class NotebookSection implements VirtualDOM<'div'> {
         this.children = [
             child$({
                 source$,
-                untilFirst: {
-                    tag: 'i',
-                    class: 'fas fa-spinner fa-spin',
-                },
+                untilFirst: faIconTyped('fa-spinner', { spin: true }),
                 vdomMap: (src) => {
                     const start = Date.now()
                     const vdom = parseMd({

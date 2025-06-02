@@ -11,6 +11,7 @@ import { ReplaySubject } from 'rxjs'
 import { AnyNavNode, AnyView, NavNodePromise } from '../navigation.node'
 import { plugBoundingBoxObserver } from './common'
 import { Router } from '../router'
+import { faIconTyped } from './fa-icons'
 
 export class FooterWrapper implements VirtualDOM<'div'> {
     public readonly tag = 'div'
@@ -113,10 +114,10 @@ class NavFooterAnchorView implements VirtualDOM<'a'> {
             textAlign: direction === 'Previous' ? 'left' : 'right',
         }
         this.href = node.id
-        const icon: AnyVirtualDOM = {
-            tag: 'div',
-            class: `fas ${direction === 'Next' ? 'fa-chevron-right' : 'fa-chevron-left'} fa-2x`,
-        }
+        const icon =
+            direction === 'Next'
+                ? faIconTyped('fa-chevron-right')
+                : faIconTyped('fa-chevron-left')
         const text: AnyVirtualDOM = {
             tag: 'div',
             class: `d-flex flex-column mx-4`,
@@ -127,10 +128,7 @@ class NavFooterAnchorView implements VirtualDOM<'a'> {
                     class: 'mkdocs-text-4',
                 },
                 node instanceof NavNodePromise
-                    ? {
-                          tag: 'div',
-                          class: 'fas fa-spinner fa-spin',
-                      }
+                    ? faIconTyped('fa-spinner', { spin: true })
                     : {
                           tag: 'div',
                           innerText: node.name,

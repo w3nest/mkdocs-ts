@@ -31,6 +31,7 @@ import {
     NavLayout,
     handleInternalLinkClick,
 } from './common'
+import { faIconTyped } from './fa-icons'
 
 /**
  * Parameters for constructing {@link LayoutWithCompanion} layout.
@@ -308,15 +309,19 @@ export function splitCompanionAction({
     return new NavActionView({
         content: {
             tag: 'i',
-            class: attr$({
-                source$: companionNodes$.pipe(
-                    map((prefixes) =>
-                        prefixes.find((prefix) => path === prefix),
+            children: [
+                child$({
+                    source$: companionNodes$.pipe(
+                        map((prefixes) =>
+                            prefixes.find((prefix) => path === prefix),
+                        ),
                     ),
-                ),
-                vdomMap: (toggled) =>
-                    toggled ? 'fas fa-times' : 'fas fa-columns',
-            }),
+                    vdomMap: (toggled) =>
+                        toggled
+                            ? faIconTyped('fa-times')
+                            : faIconTyped('fa-columns'),
+                }),
+            ],
         },
         action: () => {
             const selected = companionNodes$.value.find(

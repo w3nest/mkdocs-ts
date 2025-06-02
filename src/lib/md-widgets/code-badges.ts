@@ -1,5 +1,6 @@
 import { ChildrenLike, VirtualDOM } from 'rx-vdom'
 import pkgJson from '../../../package.json'
+import { faIconTyped } from '../default-layout/fa-icons'
 
 const assetId = window.btoa(pkgJson.name)
 const baseIconPath = `/api/assets-gateway/webpm/resources/${assetId}/${pkgJson.version}/assets`
@@ -67,7 +68,7 @@ export class VersionBadge implements VirtualDOM<'div'> {
 
     constructor({ version }: { version: string }) {
         this.children = [
-            { tag: 'i', class: 'fas fa-bookmark', style: { width: '25px' } },
+            faIconTyped('fa-bookmark', { withStyle: { width: '25px' } }),
             {
                 tag: 'div',
                 class: 'mx-1',

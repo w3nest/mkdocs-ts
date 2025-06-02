@@ -11,6 +11,7 @@ import { AnyNavNode, AnyView, NavNodeResolved } from '../navigation.node'
 import { BehaviorSubject, map } from 'rxjs'
 import { Router } from '../router'
 import { NavHeader } from './common'
+import { faIconTyped } from './fa-icons'
 
 export class NavActionView implements VirtualDOM<'button'> {
     /**
@@ -62,10 +63,8 @@ export class HandlerView implements VirtualDOM<'div'> {
     }) {
         Object.assign(this, params)
         this.children = [
-            {
-                tag: 'i',
-                class: 'fas fa-chevron-right text-center',
-                style: attr$({
+            faIconTyped('fa-chevron-right', {
+                withStyle: attr$({
                     source$: this.expandedNodes$,
                     vdomMap: (nodes) => {
                         return nodes.includes(this.node.id)
@@ -81,7 +80,7 @@ export class HandlerView implements VirtualDOM<'div'> {
                         transition: 'transform 0.3s ease 0s',
                     }),
                 }),
-            },
+            }),
         ]
 
         this.onclick = (ev) => {
@@ -109,11 +108,17 @@ function bookmarkView({
     return new NavActionView({
         content: {
             tag: 'i',
-            class: attr$({
-                source$: bookmarks$.pipe(map((ids) => ids.includes(node.id))),
-                vdomMap: (toggled) =>
-                    toggled ? 'fas fa-bookmark' : 'far fa-bookmark',
-            }),
+            children: [
+                child$({
+                    source$: bookmarks$.pipe(
+                        map((ids) => ids.includes(node.id)),
+                    ),
+                    vdomMap: (toggled) =>
+                        toggled
+                            ? faIconTyped('fa-bookmark')
+                            : faIconTyped('far-bookmark'),
+                }),
+            ],
         },
         action: () => {
             const selected = bookmarks$.value.includes(node.href)

@@ -7,26 +7,27 @@ import {
     RxHTMLElement,
     VirtualDOM,
 } from 'rx-vdom'
-import { parseMd, MdParsingOptions } from '../markdown'
+import { parseMd, MdParsingOptions, IconFactory } from '../markdown'
 import { Router } from '../router'
 import { BehaviorSubject } from 'rxjs'
+import { faIconTyped } from '../default-layout/fa-icons'
 
 /**
  * Icons factory, class refers to fontawesome v5 icons.
  */
 export const icons = {
-    note: 'fas fa-pen-fancy',
-    abstract: 'fas fa-file-alt',
-    info: 'fas fa-info-circle',
-    hint: 'fas fa-fire',
-    success: 'fas fa-check',
-    question: 'fas fa-question-circle',
-    warning: 'fas fa-exclamation-triangle',
-    failure: 'fas fa-times-circle',
-    danger: 'fas fa-bolt',
-    bug: 'fas fa-bug',
-    example: 'fas fa-flask',
-    quote: 'fas fa-quote-right',
+    note: faIconTyped('fa-pen-fancy'),
+    abstract: faIconTyped('fa-file-alt'),
+    info: faIconTyped('fa-info-circle'),
+    hint: faIconTyped('fa-fire'),
+    success: faIconTyped('fa-check'),
+    question: faIconTyped('fa-question-circle'),
+    warning: faIconTyped('fa-exclamation-triangle'),
+    failure: faIconTyped('fa-times-circle'),
+    danger: faIconTyped('fa-bolt'),
+    bug: faIconTyped('fa-bug'),
+    example: faIconTyped('fa-flask'),
+    quote: faIconTyped('fa-quote-right'),
 }
 /**
  * Note level in {@link NoteView}.
@@ -118,9 +119,12 @@ export class NoteView implements VirtualDOM<'div'> {
 
     public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void
     /**
+     * Initializes the instance.
+     *
      * @param params
      * @param params.level Level of the note.
      * @param params.icon If provided, overrides the default icon associated to the given level.
+     *     If a `string` is provided, it is used as key to retrieve the actual icon from {@link IconFactory}.
      * @param params.label Label to display. If none is provided, it uses the level as default value.
      * @param params.content Text content.
      * @param params.expandable Whether the note is expandable. Expandable note are collapsed by default.
@@ -278,13 +282,16 @@ class NoteHeaderView implements VirtualDOM<'div'> {
             this.expandable
                 ? {
                       tag: 'button',
-                      class: attr$({
-                          source$: this.expanded$,
-                          vdomMap: (expanded): string =>
-                              expanded ? 'fa-chevron-down' : 'fa-chevron-right',
-                          wrapper: (d) =>
-                              `${d} btn btn-sm mkdocs-hover-bg-${this.level} fas`,
-                      }),
+                      class: `btn btn-sm mkdocs-hover-bg-${this.level}`,
+                      children: [
+                          child$({
+                              source$: this.expanded$,
+                              vdomMap: (expanded) =>
+                                  expanded
+                                      ? faIconTyped('fa-chevron-down')
+                                      : faIconTyped('fa-chevron-right'),
+                          }),
+                      ],
                       onclick: () => {
                           this.expanded$.next(!this.expanded$.value)
                       },
@@ -301,13 +308,25 @@ function iconFactory(
     if (!icon) {
         return {
             tag: 'i',
-            class: `mkdocs-text-${level} ${icons[level]}`,
+            class: `mkdocs-text-${level}`,
+            children: [icons[level]],
+        }
+    }
+    // Next block is deprecated
+    if (
+        typeof icon === 'string' &&
+        ['fas', 'fab', 'far'].includes(icon.split(' ')[0])
+    ) {
+        return {
+            tag: 'i',
+            class: `mkdocs-text-${level} ${icon}`,
         }
     }
     if (typeof icon === 'string') {
         return {
-            tag: 'i',
-            class: `mkdocs-text-${level} ${icon}`,
+            tag: 'div',
+            class: `mkdocs-text-${level}`,
+            children: [IconFactory.get(icon)],
         }
     }
     return {

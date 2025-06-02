@@ -3,7 +3,7 @@
  *
  */
 import { parse, setOptions, Renderer } from 'marked'
-import { render, VirtualDOM } from 'rx-vdom'
+import { AttributeLike, CSSAttribute, render, VirtualDOM } from 'rx-vdom'
 import { headingPrefixId, type Router } from './router'
 import { CodeSnippetView, NoteView, CodeBadgesView } from './md-widgets'
 import { AnyView } from './navigation.node'
@@ -13,7 +13,8 @@ import {
     ExtLink,
     GitHubLink,
 } from './md-widgets/links.view'
-
+import type { IconDefinition } from '@fortawesome/fontawesome-common-types'
+import { faIconTyped } from './default-layout/fa-icons'
 /**
  * Type definition for custom view generators.
  *
@@ -190,6 +191,10 @@ export class GlobalMarkdownViews {
          * Transforms a `<github-link target='...'></github-link>`  element into {@link GitHubLink}.
          */
         'github-link': (elem: HTMLElement) => GitHubLink.fromHTMLElement(elem),
+        /**
+         * Transforms a `<icon target='...'></icon>` element into an icon from {@link IconFactory}.
+         */
+        icon: (elem: HTMLElement) => IconFactory.fromHTMLElement(elem),
     }
 }
 
@@ -518,4 +523,123 @@ function fixedMarkedParseCustomViews({
     })
 
     return { div: divResult, replacedViews: contents }
+}
+
+/**
+ * A registry for managing reusable icon views.
+ *
+ * The `IconFactory` class allows registering and retrieving representations of icons
+ * under unique string identifiers.
+ */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class IconFactory {
+    private static icons: Record<string, AnyView> = {
+        'mkdocs/spinner#spin': faIconTyped('fa-spinner', { spin: true }),
+    }
+
+    /**
+     * Registers one or more icons to the internal icon registry.
+     *
+     * If an icon with the same key already exists, it will be overwritten.
+     *
+     * @param icons A record of icon IDs mapped to their corresponding views.
+     */
+    static register(icons: Record<string, AnyView>) {
+        IconFactory.icons = {
+            ...IconFactory.icons,
+            ...icons,
+        }
+    }
+
+    /**
+     * Retrieves a registered icon view by its identifier.
+     *
+     * @param id The identifier of the icon to retrieve.
+     * @returns The corresponding view.
+     * @throws Will throw an error if the requested icon has not been registered.
+     */
+    static get(id: string): AnyView {
+        if (!(id in IconFactory.icons)) {
+            throw Error(
+                `Icon '${id}' not registered. Make sure it was registered via IconFactory.register() before use.`,
+            )
+        }
+        return IconFactory.icons[id]
+    }
+
+    /**
+     * Creates an icon view from a given HTML element.
+     * The element should include a `target` attribute used to resolve icon's ID.
+     *
+     * @param elem The original HTMLElement parsed from Markdown or the DOM.
+     * @returns The corresponding icon's view.
+     */
+    static fromHTMLElement(elem: HTMLElement): AnyView {
+        const target = elem.getAttribute('target')
+        if (!target) {
+            throw Error(
+                `The provided HTML element does not feature a valid target property`,
+            )
+        }
+        return IconFactory.get(target)
+    }
+}
+
+/**
+ * Options for {@link faIcon}.
+ */
+export interface FaIconOptions {
+    /**
+     * If `true`, applies a spinning animation class to the icon.
+     */
+    spin?: boolean
+    /**
+     * Additional CSS class or class binding to apply.
+     */
+    withClass?: AttributeLike<string>
+    /**
+     * Optional CSS styles to apply to the wrapper element.
+     */
+    withStyle?: AttributeLike<CSSAttribute>
+}
+/**
+ * Generates a virtual DOM representation of a Font Awesome SVG icon.
+ *
+ * This utility wraps a Font Awesome icon definition into a custom virtual DOM structure,
+ * with optional styling and spin animation.
+ *
+ * **Example**
+ *
+ * <code-snippet language='js'>
+ * import { faCode } from '@fortawesome/free-solid-svg-icons/faCode'
+ *
+ * const view = faIcon(faCode)
+ * </code-snippet>
+ *
+ * @param faIconSpec A Font Awesome icon tuple (`[width, height, ligatures, unicode, string | string[]]`).
+ * @param options Optional styling and behavior configuration.
+ * @returns A virtual DOM object representing the styled icon.
+ */
+export function faIcon(
+    faIconSpec: IconDefinition,
+    options?: FaIconOptions,
+): VirtualDOM<'i'> {
+    const icon = faIconSpec.icon
+    let svgClass = 'mkdocs-faIcon '
+    if (options?.spin) {
+        svgClass += 'mkdocs-spin'
+    }
+    const path =
+        typeof icon[4] === 'string'
+            ? `<path d="${icon[4]}"/>`
+            : icon[4].reduce((acc, p) => {
+                  return `${acc}\n<path d="${p}"/>`
+              })
+    const svg = `<svg class="${svgClass}" viewBox="0 0 ${String(icon[0])} ${String(icon[1])}">${path}</svg>`
+    return {
+        tag: 'i',
+        class: options?.withClass ?? '',
+        innerHTML: svg,
+        style: options?.withStyle ?? {},
+    }
 }

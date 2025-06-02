@@ -1,8 +1,9 @@
-import { ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, type Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
 import { Documentation, DocumentationSection } from './models'
 import { MkApiApiLink, MkApiExtLink } from './md-widgets'
+import { faIconTyped } from './fa-icons'
 
 /**
  * View for a {@link Documentation}.
@@ -83,18 +84,16 @@ export class SectionHeader implements VirtualDOM<'div'> {
         'mkapi-section-header w-100 p-2 my-3 d-flex align-items-center text-dark border-bottom'
 
     constructor(section: DocumentationSection) {
-        const factory: Record<string, string> = {
-            warning: 'fas fa-exclamation fv-text-focus',
-            example: 'fas fa-code fv-text-success',
-            todos: 'fas fa-forward fv-text-success',
+        const factory: Record<string, AnyVirtualDOM | undefined> = {
+            warning: faIconTyped('fa-exclamation', {
+                withClass: 'fv-text-focus',
+            }),
+            example: faIconTyped('fa-code', { withClass: 'fv-text-success' }),
+            todos: faIconTyped('fa-forward', { withClass: 'fv-text-success' }),
+            info: faIconTyped('fa-info', { withClass: 'fv-text-success' }),
         }
         this.children = [
-            {
-                tag: 'div',
-                class:
-                    factory[section.semantic.role] ||
-                    'fas fa-info fv-text-success',
-            },
+            factory[section.semantic.role] ?? factory.info,
             { tag: 'div', class: 'mx-2' },
             {
                 tag: 'div',

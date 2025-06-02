@@ -1,6 +1,6 @@
-import { GlobalMarkdownViews, MdWidgets } from 'mkdocs-ts'
+import { GlobalMarkdownViews, MdWidgets, IconFactory, faIcon } from 'mkdocs-ts'
 import { TRexView } from './trex.view'
-
+import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
 /**
  * Registers custom Markdown widgets and configuration for use within MkDocs-TS-rendered Markdown content.
  *
@@ -68,4 +68,10 @@ export function registerMdWidgets() {
             })
         },
     }
+
+    // Make the icon 'star' available, e.g. when parsing Markdown (`<icon target='star'></icon>`)
+    // or when using note (`<note icon='star'></note>`).
+    IconFactory.register({
+        star: faIcon(faStar),
+    })
 }

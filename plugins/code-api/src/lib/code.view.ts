@@ -1,9 +1,10 @@
-import { attr$, child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { child$, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { parseMd, type Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
 import { Code, Entity, Project } from './models'
 import { DeclarationView } from './declaration.view'
+import { faIconTyped } from './fa-icons'
 
 class CodeHeaderView implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mkdocs-CodeHeaderView'
@@ -30,10 +31,7 @@ class CodeHeaderView implements VirtualDOM<'div'> {
         this.class += ` mkapi-role-${params.parent.semantic.role}`
         const path = this.code.filePath
         this.children = [
-            {
-                tag: 'i',
-                class: 'fas fa-code',
-            },
+            faIconTyped('fa-code'),
             {
                 tag: 'div',
                 class: 'mx-2',
@@ -59,12 +57,17 @@ class CodeHeaderView implements VirtualDOM<'div'> {
             },
             {
                 tag: 'div',
-                class: attr$({
-                    source$: this.expanded$,
-                    vdomMap: (expanded): string =>
-                        expanded ? 'fa-chevron-down' : 'fa-chevron-right',
-                    wrapper: (d) => `fas fv-pointer ${d}`,
-                }),
+                class: 'fv-pointer',
+                children: [
+                    child$({
+                        source$: this.expanded$,
+                        vdomMap: (expanded) => {
+                            return expanded
+                                ? faIconTyped('fa-chevron-down')
+                                : faIconTyped('fa-chevron-right')
+                        },
+                    }),
+                ],
                 onclick: () => {
                     this.expanded$.next(!this.expanded$.value)
                 },

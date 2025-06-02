@@ -18,7 +18,7 @@ Communicate clearly with visually styled notes:
 
 <note level="warning" title="Warning">Draw attention to potential issues with a warning.</note>
 
-<note level="example" title="Customizable" icon="fas fa-rocket" expandable="true">
+<note level="example" title="Customizable" icon="star" expandable="true">
 Notes are highly customizable—add icons, make them collapsible, or choose from multiple styles.
 </note>
 

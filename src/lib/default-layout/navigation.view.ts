@@ -9,6 +9,7 @@ import { DisplayOptions, NavHeader } from './common'
 import { NavHeaderView } from './nav-header.view'
 import { BehaviorSubject } from 'rxjs'
 import { NavNodePromise } from '../navigation.node'
+import { faIconTyped } from './fa-icons'
 
 /**
  * Represents the navigation view of the application, displaying a hierarchical structure of navigation nodes.
@@ -59,10 +60,7 @@ export class NavigationView implements VirtualDOM<'div'> {
                 state: this.router.explorerState,
                 headerView: (_, node) => {
                     if (node instanceof NavNodePromise) {
-                        return {
-                            tag: 'i' as const,
-                            class: 'fas fa-spinner fa-spin',
-                        }
+                        return faIconTyped('fa-spinner', { spin: true })
                     }
                     if (node.href === '/') {
                         return EmptyDiv

@@ -18,6 +18,7 @@ import { TocWrapperView } from './toc.view'
 import { AnyView } from '../navigation.node'
 import { NavigationView } from './navigation.view'
 import { LayoutObserver } from './common'
+import { FaIconsList, faIconTyped } from './fa-icons'
 
 function slidingStyle({
     mode,
@@ -70,7 +71,7 @@ export class ToggleSidePanelButton implements VirtualDOM<'div'> {
     constructor(params: {
         displayMode$: BehaviorSubject<DisplayMode | 'none'>
         visible$?: Observable<boolean>
-        icon: string
+        icon: FaIconsList
     }) {
         const classBase = ToggleSidePanelButton.CssSelector
         this.class = params.visible$
@@ -99,12 +100,7 @@ export class ToggleSidePanelButton implements VirtualDOM<'div'> {
                     return `btn btn-sm border ${c}`
                 },
             }),
-            children: [
-                {
-                    tag: 'i',
-                    class: `fas ${params.icon}`,
-                },
-            ],
+            children: [faIconTyped(params.icon)],
             onclick: () => {
                 if (params.displayMode$.value === 'hidden') {
                     params.displayMode$.next('expanded')
@@ -149,7 +145,7 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
     constructor(
         params: {
             items: AnyView[]
-            toggleIcon?: string
+            toggleIcon?: FaIconsList
             visible$?: Observable<boolean>
             onDisplayed?: (elem: RxHTMLElement<'div'>) => void
         } & Pick<
@@ -186,8 +182,8 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
                     params.toggleIcon
                         ? new ToggleSidePanelButton({
                               displayMode$: params.displayMode$,
-                              icon: params.toggleIcon,
                               visible$: params.visible$,
+                              icon: params.toggleIcon,
                           })
                         : undefined,
                     ...params.items,

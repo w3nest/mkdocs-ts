@@ -1,4 +1,5 @@
 import { AnyVirtualDOM, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
+import { faIconTyped } from '../default-layout/fa-icons'
 
 /**
  * A function that maps a string target (link identifier) to
@@ -125,11 +126,9 @@ export class ApiLink {
     /**
      * Icon representing API links, shown alongside the label.
      */
-    static readonly icon: AnyVirtualDOM = {
-        tag: 'i',
-        class: 'fas fa-code',
-        style: { fontSize: stdIconFontSize },
-    }
+    static readonly icon: AnyVirtualDOM = faIconTyped('fa-code', {
+        withStyle: { fontSize: stdIconFontSize },
+    })
     /**
      * Creates the view from a given HTML element.
      * The element should include a `target` attribute used to resolve link details via the mapper.
@@ -175,11 +174,9 @@ export class ExtLink {
     /**
      * Icon representing external links, shown alongside the label.
      */
-    static readonly icon: AnyVirtualDOM = {
-        tag: 'i',
-        class: 'fas fa-external-link-alt',
-        style: { fontSize: stdIconFontSize },
-    }
+    static readonly icon: AnyVirtualDOM = faIconTyped('fa-external-link-alt', {
+        withStyle: { fontSize: stdIconFontSize },
+    })
     /**
      * Constructor from HTML element as defined in the Markdown source.
      *
@@ -221,11 +218,9 @@ export class GitHubLink {
     /**
      * Icon representing GitHub links, shown alongside the label.
      */
-    static readonly icon: AnyVirtualDOM = {
-        tag: 'i',
-        class: 'fab fa-github',
-        style: { fontSize: '0.8rem' },
-    }
+    static readonly icon: AnyVirtualDOM = faIconTyped('fab-github', {
+        withStyle: { fontSize: '0.8rem' },
+    })
     /**
      * Creates the view from a given HTML element.
      * The element should include a `target` attribute used to resolve link details via the mapper.
@@ -268,11 +263,9 @@ export class CrossLink {
     /**
      * Icon representing cross links, shown alongside the label.
      */
-    static readonly icon: AnyVirtualDOM = {
-        tag: 'i',
-        class: 'fas fa-book-open',
-        style: { fontSize: stdIconFontSize },
-    }
+    static readonly icon: AnyVirtualDOM = faIconTyped('fa-book-open', {
+        withStyle: { fontSize: stdIconFontSize },
+    })
     /**
      * Creates the view from a given HTML element.
      * The element should include a `target` attribute used to resolve link details via the mapper.
