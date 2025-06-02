@@ -4,7 +4,7 @@ import pkgJsonCodeApi from '../../../../plugins/code-api/package.json'
 import { fromMd, placeholders } from '../config.markdown'
 import { installNotebookModule } from '../config.notebook'
 import { AppNav } from '../navigation'
-
+import type * as CodeApiModule from '@mkdocs-ts/code-api'
 import * as webpm from '@w3nest/webpm-client'
 import { createRootContext } from '../config.context'
 import { companionNodes$ } from '../common'
@@ -34,12 +34,14 @@ export const navigation: AppNav = {
 }
 
 export async function installCodeApiModule() {
-    const version = pkgJsonCodeApi['version']
-    const { Notebook } = (await webpm.install({
-        esm: [`@mkdocs-ts/code-api#${version} as Notebook`],
+    const version = pkgJsonCodeApi.version
+    const { CodeApi } = await webpm.install<{
+        CodeApi: typeof CodeApiModule
+    }>({
+        esm: [`@mkdocs-ts/code-api#${version} as CodeApi`],
         css: [`@mkdocs-ts/code-api#${version}~assets/ts-typedoc.css`],
-    })) as any
-    return Notebook
+    })
+    return CodeApi
 }
 
 async function apiNav(
@@ -77,7 +79,7 @@ async function apiNav(
                 }: {
                     router: Router
                     src: string
-                    mdViews: { [k: string]: ViewGenerator }
+                    mdViews: Record<string, ViewGenerator>
                 }) => {
                     return new NotebookModule.NotebookSection({
                         src,

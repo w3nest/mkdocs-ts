@@ -4,7 +4,6 @@ import { notebookPage } from '../config.notebook'
 
 import * as GettingStarted from './getting-started'
 import * as Notebook from './notebook'
-import { AnyVirtualDOM } from 'rx-vdom'
 import { headerEmoji } from '../common'
 
 export const navigation: AppNav = {

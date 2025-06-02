@@ -18,7 +18,7 @@ console.log('In memory logs reporter', inMemReporter)
 const footer = new Footer({
     license: 'MIT',
     copyrights: [
-        { year: '2021', holder: 'YouWol' },
+        { year: '2021-2024', holder: 'YouWol' },
         { year: '2025', holder: 'Guillaume Reinisch' },
     ],
     github: 'https://github.com/w3nest/mkdocs-ts',
@@ -63,6 +63,3 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
 )
 
 document.body.appendChild(render(routerView))
-// setTimeout(() => {
-//     void installNotebookModule(webpm).then()
-// }, 3000)

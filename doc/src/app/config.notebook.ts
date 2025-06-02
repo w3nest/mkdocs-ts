@@ -3,6 +3,7 @@ import { createRootContext } from './config.context'
 import { CSS3DModule } from './tutorials/getting-started/css-3d-renderer'
 import { placeholders, url } from './config.markdown'
 
+import type * as NotebookModule from '@mkdocs-ts/notebook'
 import pkgJsonNotebook from '../../../plugins/notebook/package.json'
 import * as webpm from '@w3nest/webpm-client'
 
@@ -16,13 +17,15 @@ export const notebookOptions = {
         placeholders,
     },
 }
-export const notebookVersion = pkgJsonNotebook['version']
+export const notebookVersion = pkgJsonNotebook.version
 
 export async function installNotebookModule() {
-    const { Notebook } = (await webpm.install({
+    const { Notebook } = await webpm.install<{
+        Notebook: typeof NotebookModule
+    }>({
         esm: [`@mkdocs-ts/notebook#${notebookVersion} as Notebook`],
         css: [`@mkdocs-ts/notebook#${notebookVersion}~assets/notebook.css`],
-    })) as any
+    })
     return Notebook
 }
 
