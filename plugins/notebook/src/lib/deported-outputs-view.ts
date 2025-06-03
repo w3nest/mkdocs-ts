@@ -216,7 +216,8 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                           left: '0vw',
                           width: '100vw',
                           height: '100vh',
-                          zIndex: 10,
+                          // 0 -> 100 for the page, 100 -> 200 for the side panels, modal above all.
+                          zIndex: 200,
                           backdropFilter: 'blur(3px)',
                       }
             },
