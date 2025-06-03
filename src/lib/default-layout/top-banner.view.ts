@@ -12,10 +12,12 @@ import {
 import {
     BehaviorSubject,
     combineLatest,
+    debounceTime,
     distinctUntilChanged,
     map,
     Observable,
     ReplaySubject,
+    scan,
 } from 'rxjs'
 import { Router } from '../router'
 import { NavNodeResolved } from '../navigation.node'
@@ -89,21 +91,45 @@ export class EmptyTopBanner implements VirtualDOM<'div'> {
 export function topOnlyBanner({
     pageScrollTop$,
     banner,
+    threshold,
 }: {
     pageScrollTop$: Observable<number>
     banner: AnyVirtualDOM
+    threshold?: number
 }): AnyVirtualDOM {
+    threshold = threshold ?? 100
+    const visibility$ = pageScrollTop$.pipe(
+        debounceTime(10),
+        scan(
+            (prev, curr) => {
+                const opacity = (threshold - curr) / threshold
+                if (prev.visible) {
+                    return {
+                        scrollTop: curr,
+                        visible: curr < threshold,
+                        opacity,
+                    }
+                } else {
+                    return { scrollTop: curr, visible: curr < 10, opacity }
+                }
+            },
+            { scrollTop: 0, visible: true, opacity: 1 },
+        ),
+        distinctUntilChanged(),
+    )
+
     return {
         tag: 'div',
         class: 'w-100',
+        style: attr$({
+            source$: visibility$,
+            vdomMap: ({ opacity }) => ({ opacity }),
+        }),
         children: [
             child$({
-                source$: pageScrollTop$.pipe(
-                    map((t) => (t < 10 ? 'visible' : 'hidden')),
-                    distinctUntilChanged(),
-                ),
-                vdomMap: (mode) => {
-                    return mode === 'hidden' ? EmptyDiv : banner
+                source$: visibility$,
+                vdomMap: ({ visible }) => {
+                    return visible ? banner : EmptyDiv
                 },
             }),
         ],
@@ -126,7 +152,7 @@ export class TopBanner implements VirtualDOM<'div'> {
      */
     static readonly CssSelector = 'mkdocs-TopBanner'
     public readonly tag = 'div'
-    public readonly class = `${TopBanner.CssSelector} mkdocs-bg-5 mkdocs-text-5 border-bottom`
+    public readonly class = TopBanner.CssSelector
     public readonly children: ChildrenLike
     public readonly boundingBox$ = new ReplaySubject<DOMRect>(1)
     public readonly connectedCallback: (element: RxHTMLElement<'div'>) => void
@@ -195,7 +221,7 @@ export class TopBannerMinimized implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mkdocs-TopBannerMinimized'
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class = `${TopBannerMinimized.CssSelector} d-flex  justify-content-center py-1`
+    public readonly class = `${TopBannerMinimized.CssSelector} mkdocs-bg-5 mkdocs-text-5 border-bottom d-flex  justify-content-center py-1`
     public readonly style = {
         cursor: 'pointer',
     }
@@ -246,7 +272,7 @@ export class TopBannerExpanded implements VirtualDOM<'div'> {
     static readonly CssSelector = 'mkdocs-TopBannerExpanded'
     public readonly tag = 'div'
     public readonly children: ChildrenLike
-    public readonly class = `${TopBannerExpanded.CssSelector} d-flex justify-content-center py-1`
+    public readonly class = `${TopBannerExpanded.CssSelector} mkdocs-bg-5 mkdocs-text-5 border-bottom d-flex justify-content-center py-1`
 
     constructor({
         router,
