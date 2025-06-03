@@ -35,6 +35,8 @@ export const router = new Router(
 
 const bookmarks$ = new BehaviorSubject(['/install', '/tutorials', '/api'])
 
+// This is to place the app top banner & side panels above those from the tutorials.
+const panelsZIndex = 101
 const routerView = new DefaultLayout.LayoutWithCompanion(
     {
         router,
@@ -49,13 +51,13 @@ const routerView = new DefaultLayout.LayoutWithCompanion(
                 router,
             }),
             badge: new AuthBadge(),
-            // This is to place the app top banner above those from the tutorials.
-            zIndex: 101,
+            zIndex: panelsZIndex,
         },
         footer,
         navFooter: true,
         displayOptions: {
             pageVertPadding: '3rem',
+            sidePanelsZIndex: panelsZIndex,
         },
         companionNodes$,
     },
