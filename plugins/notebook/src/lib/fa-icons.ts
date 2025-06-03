@@ -13,7 +13,7 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay'
 import { faFastForward } from '@fortawesome/free-solid-svg-icons/faFastForward'
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons/faSignInAlt'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
-import { AnyVirtualDOM, AttributeLike, CSSAttribute } from 'rx-vdom'
+import { AnyVirtualDOM } from 'rx-vdom'
 
 const icons = {
     'fa-clock': faClock,
