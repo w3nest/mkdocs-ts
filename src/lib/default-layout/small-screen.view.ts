@@ -150,7 +150,10 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
             onDisplayed?: (elem: RxHTMLElement<'div'>) => void
         } & Pick<
             ExpandableParams,
-            'layoutObserver' | 'displayMode$' | 'boundingBox$'
+            | 'layoutObserver'
+            | 'displayMode$'
+            | 'boundingBox$'
+            | 'displayOptions'
         >,
     ) {
         this.style = attr$({
@@ -161,7 +164,7 @@ export class ExpandableBaseColumn implements VirtualDOM<'div'> {
                     overflow: 'visible',
                     position: 'sticky',
                     top: `${String(topBanner.height)}px`,
-                    zIndex: 10,
+                    zIndex: params.displayOptions.sidePanelsZIndex,
                 }
             },
         })

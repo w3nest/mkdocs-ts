@@ -81,6 +81,10 @@ export type DisplayOptions<
      */
     navMaxWidth: number
     /**
+     * Z-Index for the navigation & TOC panels.
+     */
+    sidePanelsZIndex: number
+    /**
      * Page's width.
      */
     pageWidth: string
@@ -114,6 +118,7 @@ export const defaultDisplayOptions: DisplayOptions = {
     toggleNavWidth: 1300,
     navMaxWidth: 500,
     navMinWidth: 300,
+    sidePanelsZIndex: 100,
     pageWidth: '35rem',
     translationTime: 400,
     pageVertPadding: '3rem',

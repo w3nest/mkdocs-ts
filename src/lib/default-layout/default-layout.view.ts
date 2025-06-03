@@ -192,6 +192,7 @@ export class Layout implements VirtualDOM<'div'> {
             navView,
             this.displayModeNav$,
             navigationBoundingBox$,
+            this.displayOptions.sidePanelsZIndex,
             ExpandableNavColumn,
         )
 
@@ -205,6 +206,7 @@ export class Layout implements VirtualDOM<'div'> {
             tocView,
             this.displayModeToc$,
             tocBoundingBox$,
+            this.displayOptions.sidePanelsZIndex,
             ExpandableTocColumn,
         )
 
@@ -253,6 +255,7 @@ export class Layout implements VirtualDOM<'div'> {
         content: T,
         displayMode$: BehaviorSubject<DisplayMode>,
         bbox$: Subject<BBox>,
+        zIndex: number,
         Expandable: new (
             p: ExpandableParams<T>,
         ) => T extends TocWrapperView
@@ -266,6 +269,7 @@ export class Layout implements VirtualDOM<'div'> {
             content,
             this.layoutObserver,
             bbox$,
+            zIndex,
         )
         const expandable = new Expandable({
             content,
@@ -320,7 +324,11 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
     public readonly content: AnyVirtualDOM
 
-    constructor(params: { content: AnyView; layoutObserver: LayoutObserver }) {
+    constructor(params: {
+        content: AnyView
+        layoutObserver: LayoutObserver
+        zIndex: number
+    }) {
         Object.assign(this, params)
         this.style = attr$({
             source$: params.layoutObserver.boxes$,
@@ -331,6 +339,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
                     top: `${String(topBanner.height)}px`,
                     minWidth: 'fit-content',
                     overflow: 'visible',
+                    zIndex: params.zIndex,
                 }
             },
         })
@@ -355,6 +364,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
         content: AnyView,
         layoutObserver: LayoutObserver,
         bbox$: Subject<BBox>,
+        zIndex: number,
     ) {
         return {
             tag: 'div' as const,
@@ -363,6 +373,7 @@ export class StickyColumnContainer implements VirtualDOM<'div'> {
                 new StickyColumnContainer({
                     content,
                     layoutObserver,
+                    zIndex,
                 }),
             ],
             connectedCallback: (e: RxHTMLElement<'div'>) => {
