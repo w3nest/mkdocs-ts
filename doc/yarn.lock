@@ -481,6 +481,32 @@
     "@eslint/core" "^0.13.0"
     levn "^0.4.1"
 
+"@fortawesome/fontawesome-common-types@6.7.2":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.7.2.tgz#7123d74b0c1e726794aed1184795dbce12186470"
+  integrity sha512-Zs+YeHUC5fkt7Mg1l6XTniei3k4bwG/yo3iFUtZWd/pMx9g3fdvkSK9E0FOC+++phXOka78uJcYb8JaFkW52Xg==
+
+"@fortawesome/free-brands-svg-icons@^6.7.2":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-6.7.2.tgz#4ebee8098f31da5446dda81edc344025eb59b27e"
+  integrity sha512-zu0evbcRTgjKfrr77/2XX+bU+kuGfjm0LbajJHVIgBWNIDzrhpRxiCPNT8DW5AdmSsq7Mcf9D1bH0aSeSUSM+Q==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "6.7.2"
+
+"@fortawesome/free-regular-svg-icons@^6.7.2":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-6.7.2.tgz#f1651e55e6651a15589b0569516208f9c65f96db"
+  integrity sha512-7Z/ur0gvCMW8G93dXIQOkQqHo2M5HLhYrRVC0//fakJXxcF1VmMPsxnG6Ee8qEylA8b8Q3peQXWMNZ62lYF28g==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "6.7.2"
+
+"@fortawesome/free-solid-svg-icons@^6.7.2":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-6.7.2.tgz#fe25883b5eb8464a82918599950d283c465b57f6"
+  integrity sha512-GsBrnOzU8uj0LECDfD5zomZJIjrPhIlWU82AHwa2s40FKH+kcxQaBvBo3Z4TxyZHIyX8XTDxsyA33/Vx9eFuQA==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "6.7.2"
+
 "@gerrit0/mini-shiki@^1.24.0":
   version "1.27.2"
   resolved "https://registry.yarnpkg.com/@gerrit0/mini-shiki/-/mini-shiki-1.27.2.tgz#cf2a9fcb08a6581c78fc94821f0c854ec4b9f899"
@@ -799,23 +825,27 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
-"@mkdocs-ts/code-api@file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748440689.tgz":
-  version "0.1.0-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748440689.tgz#b8743d78717eb5bae444435ab8f1de5066cdc20f"
+"@mkdocs-ts/code-api@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.1.0.tgz#d26636ea39d3a32212fa635bfb8a412deee1e6ab"
+  integrity sha512-C0GBUb116xU6EPukU5D/ZR8LHt4HCuvwbng5VSglTYZPMvvuIqRZZ2OYV20dz/+6Ja8cPnuPDFZ3gbK3AvDxYg==
   dependencies:
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
-    mkdocs-ts "file:../../../../../../.cache/yarn/v6/.tmp/a20c64fa67326e63ea1eaaa001c24c7a/.local-dependencies/mkdocs-ts-0.5.0-wip-1748332519.tgz"
+    mkdocs-ts "^0.5.0"
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
 
-"@mkdocs-ts/notebook@file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748440689.tgz":
-  version "0.1.0-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748440689.tgz#e7e4c0386c2e695a0c136c6bef4f9197659b6a3c"
+"@mkdocs-ts/notebook@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.0.tgz#4121f04da8e805df569aabb9877d3f446bce2cf3"
+  integrity sha512-srbePGou9Ca6et7XbJQe9jeLfg9lCwsXp1FbHQ99pg0ELTIN8eZmMbHGopOBBPXn2jwYpwPZ2+i0JZTXpD8iVg==
   dependencies:
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/rx-tree-views" "^0.2.0"
     "@w3nest/webpm-client" "^0.1.8"
     esprima "^4.0.1"
-    mkdocs-ts "file:../../../../../../.cache/yarn/v6/.tmp/bbf5402d0cf17af198216cb1fdab6927/.local-dependencies/mkdocs-ts-0.5.0-wip-1748266744.tgz"
+    mkdocs-ts "^0.5.0"
     prism-code-editor "^4.0.0"
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
@@ -4387,10 +4417,14 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-"mkdocs-ts@file:../../../../../.cache/yarn/v6/.tmp/24d77204b99a1a8d7c95e74d9571cd7b/.local-dependencies/mkdocs-ts-0.5.0-wip-1748332519.tgz", "mkdocs-ts@file:../../../../../.cache/yarn/v6/.tmp/532969dbe5cf99346408b7e3ba811c78/.local-dependencies/mkdocs-ts-0.5.0-wip-1748266744.tgz", "mkdocs-ts@file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748440689.tgz":
-  version "0.5.0-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748440689.tgz#6f7b85c2e4c404c31ecf2d4a2d87776e41991cc2"
+mkdocs-ts@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.5.0.tgz#171abf37e18ede39594bca51ecf8db098455d4e8"
+  integrity sha512-vMUfF9+wFBvxuG+a5O4ZMs/lG464euIdQulcMtQyX1xpSAkgolSOw+AoHI01OEAdj6cH7+8vizNzsUZdKQIn2g==
   dependencies:
+    "@fortawesome/free-brands-svg-icons" "^6.7.2"
+    "@fortawesome/free-regular-svg-icons" "^6.7.2"
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/rx-tree-views" "^0.2.0"
     marked "^4.2.3"
     prism-code-editor "^4.0.0"

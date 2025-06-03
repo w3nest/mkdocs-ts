@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/doc",
     "description": "Documentation app for the project mkdocs-ts.",
-    "version": "0.5.0-wip",
+    "version": "0.5.0",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/doc#README.md",
     "main": "./dist/@mkdocs-ts/doc.js",
@@ -43,12 +43,12 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748440689.tgz",
-        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748440689.tgz",
+        "@mkdocs-ts/code-api": "^0.1.0",
+        "@mkdocs-ts/notebook": "^0.1.0",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748440689.tgz",
+        "mkdocs-ts": "^0.5.0",
         "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
@@ -113,10 +113,5 @@
             "@w3nest/ui-tk/Badges": "window['@w3nest/ui-tk_APIv01']['Badges']",
             "@w3nest/ui-tk/Mkdocs": "window['@w3nest/ui-tk_APIv01']['Mkdocs']"
         }
-    },
-    "resolutions": {
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748440689.tgz",
-        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748440689.tgz",
-        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748440689.tgz"
     }
 }
