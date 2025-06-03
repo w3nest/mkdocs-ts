@@ -476,6 +476,10 @@ export class LayoutObserver {
                 }
             }),
             shareReplay({ bufferSize: 1, refCount: true }),
+            distinctUntilChanged(
+                (prev, curr) =>
+                    prev.height === curr.height && prev.top === curr.top,
+            ),
         )
 
         if (this.displayModeOptions.forceNavDisplayMode) {
