@@ -21,7 +21,6 @@ await install({
         'bootstrap#5.3.3~bootstrap.min.css',
         'fontawesome#5.12.1~css/all.min.css',
         `mkdocs-ts#${version}~assets/mkdocs-light.css`,
-        `mkdocs-ts#${version}~assets/ts-typedoc.css`,
     ],
     onEvent: (ev) => {
         loadingScreen.next(ev)
