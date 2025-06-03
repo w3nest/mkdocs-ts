@@ -733,10 +733,10 @@
                     "navPath": "@nav/api/mkdocs-ts/.GlobalMarkdownViews.factory",
                     "code": {
                         "filePath": "src/lib/markdown.ts",
-                        "declaration": "static factory: Record<string, ViewGenerator> = {\n        /**\n         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.\n         */\n        'code-snippet': (elem: HTMLElement) =>\n            CodeSnippetView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<note></note>`  element into {@link NoteView}.\n         */\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        /**\n         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.\n         */\n        'code-badges': (elem: HTMLElement) =>\n            CodeBadgesView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<ext-link target='...'></ext-link>`  element into {@link ExtLink}.\n         */\n        'ext-link': (elem: HTMLElement) => ExtLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<cross-link target='...'></cross-link>`  element into {@link CrossLink}.\n         */\n        'cross-link': (elem: HTMLElement) => CrossLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<api-link target='...'></api-link>`  element into {@link ApiLink}.\n         */\n        'api-link': (elem: HTMLElement) => ApiLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<github-link target='...'></github-link>`  element into {@link GitHubLink}.\n         */\n        'github-link': (elem: HTMLElement) => GitHubLink.fromHTMLElement(elem),\n    }",
+                        "declaration": "static factory: Record<string, ViewGenerator> = {\n        /**\n         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.\n         */\n        'code-snippet': (elem: HTMLElement) =>\n            CodeSnippetView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<note></note>`  element into {@link NoteView}.\n         */\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        /**\n         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.\n         */\n        'code-badges': (elem: HTMLElement) =>\n            CodeBadgesView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<ext-link target='...'></ext-link>`  element into {@link ExtLink}.\n         */\n        'ext-link': (elem: HTMLElement) => ExtLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<cross-link target='...'></cross-link>`  element into {@link CrossLink}.\n         */\n        'cross-link': (elem: HTMLElement) => CrossLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<api-link target='...'></api-link>`  element into {@link ApiLink}.\n         */\n        'api-link': (elem: HTMLElement) => ApiLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<github-link target='...'></github-link>`  element into {@link GitHubLink}.\n         */\n        'github-link': (elem: HTMLElement) => GitHubLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<icon target='...'></icon>` element into an icon from {@link IconFactory}.\n         */\n        icon: (elem: HTMLElement) => IconFactory.fromHTMLElement(elem),\n    }",
                         "implementation": "",
-                        "startLine": 162,
-                        "endLine": 163,
+                        "startLine": 163,
+                        "endLine": 164,
                         "references": {
                             "factory": "@nav/api/mkdocs-ts/.GlobalMarkdownViews.factory",
                             "ViewGenerator": "@nav/api/mkdocs-ts/.ViewGenerator",
@@ -749,12 +749,218 @@
             "code": {
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export class GlobalMarkdownViews",
-                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * A static factory object containing pre-defined Markdown inline views.\n     *\n     * See {@link MdWidgets} regarding implementations.\n     */\n    static factory: Record<string, ViewGenerator> = {\n        /**\n         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.\n         */\n        'code-snippet': (elem: HTMLElement) =>\n            CodeSnippetView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<note></note>`  element into {@link NoteView}.\n         */\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        /**\n         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.\n         */\n        'code-badges': (elem: HTMLElement) =>\n            CodeBadgesView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<ext-link target='...'></ext-link>`  element into {@link ExtLink}.\n         */\n        'ext-link': (elem: HTMLElement) => ExtLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<cross-link target='...'></cross-link>`  element into {@link CrossLink}.\n         */\n        'cross-link': (elem: HTMLElement) => CrossLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<api-link target='...'></api-link>`  element into {@link ApiLink}.\n         */\n        'api-link': (elem: HTMLElement) => ApiLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<github-link target='...'></github-link>`  element into {@link GitHubLink}.\n         */\n        'github-link': (elem: HTMLElement) => GitHubLink.fromHTMLElement(elem),\n    }\n}",
-                "startLine": 156,
-                "endLine": 195,
+                "implementation": "export class GlobalMarkdownViews {\n    /**\n     * A static factory object containing pre-defined Markdown inline views.\n     *\n     * See {@link MdWidgets} regarding implementations.\n     */\n    static factory: Record<string, ViewGenerator> = {\n        /**\n         * Transforms a `<code-snippet></code-snippet>` element into {@link CodeSnippetView}.\n         */\n        'code-snippet': (elem: HTMLElement) =>\n            CodeSnippetView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<note></note>`  element into {@link NoteView}.\n         */\n        note: (...args) => NoteView.fromHTMLElement(...args),\n        /**\n         * Transforms a `<code-badges></code-badges>`  element into {@link CodeBadgesView}.\n         */\n        'code-badges': (elem: HTMLElement) =>\n            CodeBadgesView.fromHTMLElement(elem),\n        /**\n         * Transforms a `<ext-link target='...'></ext-link>`  element into {@link ExtLink}.\n         */\n        'ext-link': (elem: HTMLElement) => ExtLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<cross-link target='...'></cross-link>`  element into {@link CrossLink}.\n         */\n        'cross-link': (elem: HTMLElement) => CrossLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<api-link target='...'></api-link>`  element into {@link ApiLink}.\n         */\n        'api-link': (elem: HTMLElement) => ApiLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<github-link target='...'></github-link>`  element into {@link GitHubLink}.\n         */\n        'github-link': (elem: HTMLElement) => GitHubLink.fromHTMLElement(elem),\n        /**\n         * Transforms a `<icon target='...'></icon>` element into an icon from {@link IconFactory}.\n         */\n        icon: (elem: HTMLElement) => IconFactory.fromHTMLElement(elem),\n    }\n}",
+                "startLine": 157,
+                "endLine": 200,
                 "references": {
                     "GlobalMarkdownViews": "@nav/api/mkdocs-ts/.GlobalMarkdownViews",
                     "ViewGenerator": "@nav/api/mkdocs-ts/.ViewGenerator",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "IconFactory",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "A registry for managing reusable icon views.\n\nThe  `IconFactory`  class allows registering and retrieving representations of icons\nunder unique string identifiers.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "IconFactory",
+            "navPath": "@nav/api/mkdocs-ts/.IconFactory",
+            "attributes": [],
+            "callables": [
+                {
+                    "name": "fromHTMLElement",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Creates an icon view from a given HTML element.\nThe element should include a  `target`  attribute used to resolve icon's ID.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **elem**: The original HTMLElement parsed from Markdown or the DOM.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "The corresponding icon's view.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "IconFactory.fromHTMLElement",
+                    "navPath": "@nav/api/mkdocs-ts/.IconFactory.fromHTMLElement",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "static fromHTMLElement(elem: HTMLElement): AnyView",
+                        "implementation": "static fromHTMLElement(elem: HTMLElement): AnyView {\n    const target = elem.getAttribute('target')\n    if (!target) {\n        throw Error(\n            `The provided HTML element does not feature a valid target property`,\n        )\n    }\n    return IconFactory.get(target)\n}",
+                        "startLine": 577,
+                        "endLine": 586,
+                        "references": {
+                            "fromHTMLElement": "@nav/api/mkdocs-ts/.IconFactory.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "AnyView": "@nav/api/mkdocs-ts/.AnyView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "get",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Retrieves a registered icon view by its identifier.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **id**: The identifier of the icon to retrieve.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Returns",
+                                "content": "The corresponding view.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "returns",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "IconFactory.get",
+                    "navPath": "@nav/api/mkdocs-ts/.IconFactory.get",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "static get(id: string): AnyView",
+                        "implementation": "static get(id: string): AnyView {\n    if (!(id in IconFactory.icons)) {\n        throw Error(\n            `Icon '${id}' not registered. Make sure it was registered via IconFactory.register() before use.`,\n        )\n    }\n    return IconFactory.icons[id]\n}",
+                        "startLine": 561,
+                        "endLine": 569,
+                        "references": {
+                            "get": "@nav/api/mkdocs-ts/.IconFactory.get",
+                            "AnyView": "@nav/api/mkdocs-ts/.AnyView"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                },
+                {
+                    "name": "register",
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Registers one or more icons to the internal icon registry.\n\nIf an icon with the same key already exists, it will be overwritten.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            },
+                            {
+                                "title": "Arguments",
+                                "content": "\n*  **icons**: A record of icon IDs mapped to their corresponding views.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "arguments",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "IconFactory.register",
+                    "navPath": "@nav/api/mkdocs-ts/.IconFactory.register",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "static register(icons: Record<string, AnyView>)",
+                        "implementation": "static register(icons: Record<string, AnyView>) {\n    IconFactory.icons = {\n        ...IconFactory.icons,\n        ...icons,\n    }\n}",
+                        "startLine": 547,
+                        "endLine": 553,
+                        "references": {
+                            "register": "@nav/api/mkdocs-ts/.IconFactory.register",
+                            "AnyView": "@nav/api/mkdocs-ts/.AnyView",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                        }
+                    },
+                    "semantic": {
+                        "role": "method",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    }
+                }
+            ],
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export class IconFactory",
+                "implementation": "export class IconFactory {\n    private static icons: Record<string, AnyView> = {\n        'mkdocs/spinner#spin': faIconTyped('fa-spinner', { spin: true }),\n    }\n\n    /**\n     * Registers one or more icons to the internal icon registry.\n     *\n     * If an icon with the same key already exists, it will be overwritten.\n     *\n     * @param icons A record of icon IDs mapped to their corresponding views.\n     */\n    static register(icons: Record<string, AnyView>) {\n        IconFactory.icons = {\n            ...IconFactory.icons,\n            ...icons,\n        }\n    }\n\n    /**\n     * Retrieves a registered icon view by its identifier.\n     *\n     * @param id The identifier of the icon to retrieve.\n     * @returns The corresponding view.\n     * @throws Will throw an error if the requested icon has not been registered.\n     */\n    static get(id: string): AnyView {\n        if (!(id in IconFactory.icons)) {\n            throw Error(\n                `Icon '${id}' not registered. Make sure it was registered via IconFactory.register() before use.`,\n            )\n        }\n        return IconFactory.icons[id]\n    }\n\n    /**\n     * Creates an icon view from a given HTML element.\n     * The element should include a `target` attribute used to resolve icon's ID.\n     *\n     * @param elem The original HTMLElement parsed from Markdown or the DOM.\n     * @returns The corresponding icon's view.\n     */\n    static fromHTMLElement(elem: HTMLElement): AnyView {\n        const target = elem.getAttribute('target')\n        if (!target) {\n            throw Error(\n                `The provided HTML element does not feature a valid target property`,\n            )\n        }\n        return IconFactory.get(target)\n    }\n}",
+                "startLine": 535,
+                "endLine": 587,
+                "references": {
+                    "IconFactory": "@nav/api/mkdocs-ts/.IconFactory",
+                    "AnyView": "@nav/api/mkdocs-ts/.AnyView",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
@@ -3283,6 +3489,154 @@
             }
         },
         {
+            "name": "FaIconOptions",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Options for  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.faIcon\" semantic=\"function\">faIcon</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "FaIconOptions",
+            "navPath": "@nav/api/mkdocs-ts/.FaIconOptions",
+            "attributes": [
+                {
+                    "name": "spin",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "If  `true` , applies a spinning animation class to the icon.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "FaIconOptions.spin",
+                    "navPath": "@nav/api/mkdocs-ts/.FaIconOptions.spin",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "spin?: boolean",
+                        "implementation": "",
+                        "startLine": 595,
+                        "endLine": 596,
+                        "references": {
+                            "spin": "@nav/api/mkdocs-ts/.FaIconOptions.spin"
+                        }
+                    }
+                },
+                {
+                    "name": "withClass",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Additional CSS class or class binding to apply.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "FaIconOptions.withClass",
+                    "navPath": "@nav/api/mkdocs-ts/.FaIconOptions.withClass",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "withClass?: AttributeLike<string>",
+                        "implementation": "",
+                        "startLine": 599,
+                        "endLine": 600,
+                        "references": {
+                            "withClass": "@nav/api/mkdocs-ts/.FaIconOptions.withClass",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
+                        }
+                    }
+                },
+                {
+                    "name": "withStyle",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Optional CSS styles to apply to the wrapper element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "FaIconOptions.withStyle",
+                    "navPath": "@nav/api/mkdocs-ts/.FaIconOptions.withStyle",
+                    "code": {
+                        "filePath": "src/lib/markdown.ts",
+                        "declaration": "withStyle?: AttributeLike<CSSAttribute>",
+                        "implementation": "",
+                        "startLine": 603,
+                        "endLine": 604,
+                        "references": {
+                            "withStyle": "@nav/api/mkdocs-ts/.FaIconOptions.withStyle",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export interface FaIconOptions",
+                "implementation": "export interface FaIconOptions {\n    /**\n     * If `true`, applies a spinning animation class to the icon.\n     */\n    spin?: boolean\n    /**\n     * Additional CSS class or class binding to apply.\n     */\n    withClass?: AttributeLike<string>\n    /**\n     * Optional CSS styles to apply to the wrapper element.\n     */\n    withStyle?: AttributeLike<CSSAttribute>\n}",
+                "startLine": 591,
+                "endLine": 605,
+                "references": {
+                    "FaIconOptions": "@nav/api/mkdocs-ts/.FaIconOptions",
+                    "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                }
+            },
+            "semantic": {
+                "role": "interface",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "MdParsingOptions",
             "documentation": {
                 "sections": [
@@ -3329,8 +3683,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "latex?: boolean",
                         "implementation": "",
-                        "startLine": 134,
-                        "endLine": 135,
+                        "startLine": 135,
+                        "endLine": 136,
                         "references": {
                             "latex": "@nav/api/mkdocs-ts/.MdParsingOptions.latex"
                         }
@@ -3364,8 +3718,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "onRendered?: (elem: HTMLElement) => void",
                         "implementation": "",
-                        "startLine": 141,
-                        "endLine": 142,
+                        "startLine": 142,
+                        "endLine": 143,
                         "references": {
                             "onRendered": "@nav/api/mkdocs-ts/.MdParsingOptions.onRendered",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
@@ -3400,8 +3754,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "placeholders?: Record<string, string>",
                         "implementation": "",
-                        "startLine": 42,
-                        "endLine": 43,
+                        "startLine": 43,
+                        "endLine": 44,
                         "references": {
                             "placeholders": "@nav/api/mkdocs-ts/.MdParsingOptions.placeholders",
                             "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
@@ -3436,8 +3790,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "preprocessing?: (text: string) => string",
                         "implementation": "",
-                        "startLine": 48,
-                        "endLine": 49,
+                        "startLine": 49,
+                        "endLine": 50,
                         "references": {
                             "preprocessing": "@nav/api/mkdocs-ts/.MdParsingOptions.preprocessing"
                         }
@@ -3471,8 +3825,8 @@
                         "filePath": "src/lib/markdown.ts",
                         "declaration": "views?: Record<string, ViewGenerator>",
                         "implementation": "",
-                        "startLine": 88,
-                        "endLine": 89,
+                        "startLine": 89,
+                        "endLine": 90,
                         "references": {
                             "views": "@nav/api/mkdocs-ts/.MdParsingOptions.views",
                             "ViewGenerator": "@nav/api/mkdocs-ts/.ViewGenerator",
@@ -3486,8 +3840,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export interface MdParsingOptions",
                 "implementation": "export interface MdParsingOptions {\n    /**\n     * Defines placeholders for preprocessing. Any occurrence of a key in the source\n     * will be replaced with its corresponding value.\n     */\n    placeholders?: Record<string, string>\n    /**\n     * Preprocessing callback to transform the source before parsing.\n     * @param text The original Markdown content.\n     * @returns The transformed content.\n     */\n    preprocessing?: (text: string) => string\n    /**\n     * Custom view generators for specific HTML elements referenced in the Markdown source.\n     * These allow dynamically replacing custom DOM elements with JavaScript-generated content.\n     *\n     * **Example**:\n     *\n     * <js-cell>\n     * const { rxjs, MkDocs } = await webpm.install({esm:[\n     *     'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n     *     'rxjs#^7.5.6 as rxjs']\n     * })\n     * const clockView = (elem) => {\n     *     // elem is the corresponding DOM element included in the MD source.\n     *     // use `elem.getAttribute` or `elem.textContent` to retrieve inputs.\n     *     const period = parseInt(elem.getAttribute('period') ?? '1000')\n     *     return {\n     *         tag: 'div',\n     *         innerText: {\n     *             source$: rxjs.timer(period, 0),\n     *             vdomMap: () => new Date().toLocaleTimeString()\n     *         }\n     *     }\n     * }\n     * const parsed = MkDocs.parseMd({\n     *     src:`\n     * **The custom view**:\n     * <clock period='1000'></clock>\n     * `,\n     *     views: {\n     *         'clock': clockView\n     *     }\n     * })\n     * display(parsed)\n     * </js-cell>\n     *\n     * <note level=\"hint\">\n     *  Custom views specified here are in addition to globally registered ones in {@link GlobalMarkdownViews}.\n     * </note>\n     */\n    views?: Record<string, ViewGenerator>\n\n    /**\n     * Enables LaTeX equation parsing. Requires `MathJax` to be loaded before parsing.\n     *\n     * **Example**\n     *\n     * <js-cell>\n     * const { MkDocs } = await webpm.install({esm: [\n     *     'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n     *     'mathjax#^3.1.4'\n     * ]})\n     * const parsed = MkDocs.parseMd({\n     *     src:`\n     * This is a latex equation:\n     * $$\n     * E = mc^2\n     * $$\n     * `,\n     *     latex: true\n     * })\n     * display(parsed)\n     * </js-cell>\n     *\n     * <note level='warning' text='Delimiters'>\n     * `MathJax` is configured by default using\n     * - Block equations: `$$ ... $$`\n     * - Inline equations: `\\( ... \\)`\n     *\n     *  Since Markdown escape backslashes, inline equations should be written as `\\\\(` and `\\\\)`.\n     *  If Markdown is inside JavaScript (which also escapes backslashes), it becomes `\\\\\\\\(` and `\\\\\\\\)`.\n     *\n     *  To use `$` for inline equations instead, configure MathJax **before** loading it:\n     *\n     * <code-snippet language='javascript'>\n     * window.MathJax = {\n     *     tex: { inlineMath: [ ['$', '$'] ],\n     *     },\n     * }\n     * </code-snippet>\n     *\n     * More details\n     * <a target='_blank' href='https://docs.mathjax.org/en/latest/input/tex/delimiters.html'>here </a>.\n     *\n     * </note>\n     */\n    latex?: boolean\n\n    /**\n     * Callback triggered when the view has been added to the DOM.\n     *\n     * @param elem The rendered element.\n     */\n    onRendered?: (elem: HTMLElement) => void\n}",
-                "startLine": 37,
-                "endLine": 143,
+                "startLine": 38,
+                "endLine": 144,
                 "references": {
                     "MdParsingOptions": "@nav/api/mkdocs-ts/.MdParsingOptions",
                     "ViewGenerator": "@nav/api/mkdocs-ts/.ViewGenerator",
@@ -4978,8 +5332,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export type ViewGenerator = (\n    elem: HTMLElement,\n    options: { router?: Router } & MdParsingOptions,\n) => AnyView",
                 "implementation": "",
-                "startLine": 29,
-                "endLine": 30,
+                "startLine": 30,
+                "endLine": 31,
                 "references": {
                     "ViewGenerator": "@nav/api/mkdocs-ts/.ViewGenerator",
                     "Router": "@nav/api/mkdocs-ts/.Router",
@@ -5096,6 +5450,65 @@
             }
         },
         {
+            "name": "faIcon",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Generates a virtual DOM representation of a Font Awesome SVG icon.\n\nThis utility wraps a Font Awesome icon definition into a custom virtual DOM structure,\nwith optional styling and spin animation.\n\n**Example**\n\n<code-snippet language='js'>\nimport { faCode } from '@fortawesome/free-solid-svg-icons/faCode'\n\nconst view = faIcon(faCode)\n</code-snippet>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **faIconSpec**: A Font Awesome icon tuple ( `[width, height, ligatures, unicode, string | string[]]` ).\n*  **options**: Optional styling and behavior configuration.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Returns",
+                        "content": "A virtual DOM object representing the styled icon.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "returns",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "faIcon",
+            "navPath": "@nav/api/mkdocs-ts/.faIcon",
+            "code": {
+                "filePath": "src/lib/markdown.ts",
+                "declaration": "export function faIcon(\n    faIconSpec: IconDefinition,\n    options?: FaIconOptions,\n): VirtualDOM<'i'>",
+                "implementation": "export function faIcon(\n    faIconSpec: IconDefinition,\n    options?: FaIconOptions,\n): VirtualDOM<'i'> {\n    const icon = faIconSpec.icon\n    let svgClass = 'mkdocs-faIcon '\n    if (options?.spin) {\n        svgClass += 'mkdocs-spin'\n    }\n    const path =\n        typeof icon[4] === 'string'\n            ? `<path d=\"${icon[4]}\"/>`\n            : icon[4].reduce((acc, p) => {\n                  return `${acc}\\n<path d=\"${p}\"/>`\n              })\n    const svg = `<svg class=\"${svgClass}\" viewBox=\"0 0 ${String(icon[0])} ${String(icon[1])}\">${path}</svg>`\n    return {\n        tag: 'i',\n        class: options?.withClass ?? '',\n        innerHTML: svg,\n        style: options?.withStyle ?? {},\n    }\n}",
+                "startLine": 623,
+                "endLine": 646,
+                "references": {
+                    "faIcon": "@nav/api/mkdocs-ts/.faIcon",
+                    "FaIconOptions": "@nav/api/mkdocs-ts/.FaIconOptions",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
             "name": "isContextTrait",
             "documentation": {
                 "sections": [
@@ -5197,8 +5610,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function parseMd({\n    src,\n    router,\n    views,\n    placeholders,\n    preprocessing,\n    latex,\n    onRendered,\n}: {\n    src: string\n    router?: Router\n} & MdParsingOptions): VirtualDOM<'div'>",
                 "implementation": "export function parseMd({\n    src,\n    router,\n    views,\n    placeholders,\n    preprocessing,\n    latex,\n    onRendered,\n}: {\n    src: string\n    router?: Router\n} & MdParsingOptions): VirtualDOM<'div'> {\n    src = preprocessing?.(src) ?? src\n    if (placeholders && Object.keys(placeholders).length > 0) {\n        const regex = new RegExp(Object.keys(placeholders).join('|'), 'g')\n        src = src.replace(regex, (match) => placeholders[match])\n    }\n    views = { ...views, ...GlobalMarkdownViews.factory }\n    const { div, replacedViews } = fixedMarkedParseCustomViews({\n        input: src,\n        views: views,\n    })\n\n    // @ts-expect-error Need to find a better way\n    if (latex && window.MathJax) {\n        // eslint-disable-next-line\n        window['MathJax'].typeset([div])\n    }\n\n    const options = {\n        router,\n        preprocessing,\n        placeholders,\n        latex,\n        views,\n        onRendered,\n    }\n    const viewsTagUpperCase: Record<\n        Uppercase<string>,\n        ViewGenerator\n    > = Object.entries(views).reduce(\n        (acc, [k, v]) => ({ ...acc, [k.toUpperCase()]: v }),\n        {},\n    )\n    Object.entries(replacedViews).forEach(([k, content]: [string, string]) => {\n        const elem = div.querySelector(`#${k}`)\n        if (!elem || !(elem instanceof HTMLElement)) {\n            return\n        }\n        elem.textContent = content\n        if (!((elem.tagName as Uppercase<string>) in viewsTagUpperCase)) {\n            return\n        }\n        const factory = viewsTagUpperCase[elem.tagName as Uppercase<string>]\n        const replacedView = factory(elem, options)\n        elem.parentNode?.replaceChild(\n            replacedView instanceof HTMLElement\n                ? replacedView\n                : render(replacedView),\n            elem,\n        )\n    })\n\n    return {\n        tag: 'div',\n        children: [div],\n        connectedCallback: (elem) => {\n            if (onRendered) {\n                onRendered(elem)\n            }\n        },\n    }\n}",
-                "startLine": 249,
-                "endLine": 322,
+                "startLine": 254,
+                "endLine": 327,
                 "references": {
                     "parseMd": "@nav/api/mkdocs-ts/.parseMd",
                     "Router": "@nav/api/mkdocs-ts/.Router",
@@ -5246,8 +5659,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export async function parseMdFromUrl(\n    params: {\n        url: string\n        router?: Router\n    } & MdParsingOptions,\n)",
                 "implementation": "export async function parseMdFromUrl(\n    params: {\n        url: string\n        router?: Router\n    } & MdParsingOptions,\n) {\n    const resp = await fetch(params.url)\n    return parseMd({\n        src: await resp.text(),\n        router: params.router,\n        ...params,\n    })\n}",
-                "startLine": 228,
-                "endLine": 241,
+                "startLine": 233,
+                "endLine": 246,
                 "references": {
                     "parseMdFromUrl": "@nav/api/mkdocs-ts/.parseMdFromUrl",
                     "Router": "@nav/api/mkdocs-ts/.Router",
@@ -5343,8 +5756,8 @@
                 "filePath": "src/lib/markdown.ts",
                 "declaration": "export function removeEscapedText(src: string): {\n    escapedContent: string\n    replaced: Record<string, string>\n}",
                 "implementation": "export function removeEscapedText(src: string): {\n    escapedContent: string\n    replaced: Record<string, string>\n} {\n    let escapedContent = src // Initialize the escaped content with the source text\n    const replaced = {} // Initialize an object to store the replaced escaped elements\n\n    // Regular expression patterns to match escaped parts\n    const tripleBackquotePattern = /```([\\s\\S]*?)```/g\n\n    // Replace triple back-quote escaped parts\n    escapedContent = escapedContent.replace(tripleBackquotePattern, (match) => {\n        const id = `__ESCAPED_${String(Object.keys(replaced).length)}` // Generate a unique ID\n        replaced[id] = match // Store the escaped part in the replaced object\n        return id // Replace the escaped part with the unique ID\n    })\n\n    // Regular expression pattern to match single back-quoted escaped parts spanning multiple lines\n    const multilineBackquotePattern = /`([\\s\\S]*?)`/g\n\n    // Replace single back-quote escaped parts\n    escapedContent = escapedContent.replace(\n        multilineBackquotePattern,\n        (match) => {\n            const id = `__ESCAPED_${String(Object.keys(replaced).length)}` // Generate a unique ID\n            replaced[id] = match // Store the escaped part in the replaced object\n            return id // Replace the escaped part with the unique ID\n        },\n    )\n\n    return { escapedContent, replaced }\n}",
-                "startLine": 436,
-                "endLine": 468,
+                "startLine": 441,
+                "endLine": 473,
                 "references": {
                     "removeEscapedText": "@nav/api/mkdocs-ts/.removeEscapedText",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
