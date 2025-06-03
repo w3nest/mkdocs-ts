@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/code-api",
     "description": "Code API plugins for mkdocs-ts.",
-    "version": "0.1.0-wip",
+    "version": "0.1.0",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/code-api#README.md",
     "main": "./dist/@mkdocs-ts/code-api.js",
@@ -38,8 +38,9 @@
         }
     },
     "dependencies": {
+        "@fortawesome/free-solid-svg-icons": "^6.7.2",
         "@w3nest/http-clients": "^0.1.5",
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748332519.tgz",
+        "mkdocs-ts": "^0.5.0",
         "rx-vdom": "^0.1.3",
         "rxjs": "^7.5.6"
     },
@@ -88,8 +89,5 @@
             "rxjs": "rxjs_APIv7",
             "@w3nest/http-clients": "@w3nest/http-clients_APIv01"
         }
-    },
-    "resolutions": {
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748332519.tgz"
     }
 }
