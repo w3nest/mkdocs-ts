@@ -7,7 +7,13 @@ const jestConfig: Config = {
     testRunner: 'jest-circus',
     testEnvironment: 'jsdom',
     reporters,
-    modulePathIgnorePatterns: ['<rootDir>/.w3nest', '<rootDir>/dist'],
+    modulePathIgnorePatterns: [
+        '<rootDir>/.w3nest',
+        '<rootDir>/dist',
+        '<rootDir>/doc',
+        '<rootDir>/plugins',
+        '<rootDir>/examples',
+    ],
     testPathIgnorePatterns: ['plugins'],
 }
 export default jestConfig
