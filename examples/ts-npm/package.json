@@ -34,9 +34,9 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748433899.tgz",
-        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748433899.tgz",
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748433899.tgz",
+        "@mkdocs-ts/code-api": "0.1.0",
+        "@mkdocs-ts/notebook": "0.1.0",
+        "mkdocs-ts": "0.5.0",
         "rx-vdom": "^0.1.6"
     },
     "devDependencies": {
@@ -81,11 +81,5 @@
         "main": "./app/main.ts",
         "additionalEntries": {},
         "externals": {}
-    },
-    "resolutions": {
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.0-wip-1748433899.tgz",
-        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.1.0-wip-1748433899.tgz",
-        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.0-wip-1748433899.tgz",
-        "@w3nest/webpm-client": "file:.local-dependencies/w3nest-webpm-client-0.1.9-wip-1748433899.tgz"
     }
 }

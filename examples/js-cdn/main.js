@@ -1,9 +1,9 @@
 import { registerMdWidgets } from './markdown.config.js'
 
 const webpm = window.webpm
-const versionMkDocs = '0.5.0-wip'
-const versionNotebook = '0.1.0-wip'
-const versionCodeApi = '0.1.0-wip'
+const versionMkDocs = '0.5.0'
+const versionNotebook = '0.1.0'
+const versionCodeApi = '0.1.0'
 
 const loadingScreen = new webpm.LoadingScreen({
     name: 'Demo JavaScript + CDN',
