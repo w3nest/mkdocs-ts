@@ -106,21 +106,50 @@ export class CodeView implements VirtualDOM<'div'> {
         const declarationView = new DeclarationView({
             code: this.code,
             parent: params.parent,
+            rootModulesNav: this.project.rootModulesNav,
         })
         if (this.code.implementation === undefined) {
             this.children = [declarationView]
             return
         }
         const implementation = this.code.implementation
+        const implementationView = implementation
+            ? new ImplementationView(params)
+            : undefined
         this.children = [
             declarationView,
             { tag: 'div', class: 'my-1' },
+            implementationView,
+        ]
+    }
+}
+
+/**
+ * View for the implementation of a {@link Code}.
+ */
+export class ImplementationView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
+    public readonly children: ChildrenLike
+    public readonly expanded$ = new BehaviorSubject(false)
+    constructor(params: {
+        code: Code
+        parent: Entity
+        router: Router
+        configuration: Configuration
+        project: Project
+    }) {
+        const implementation = params.code.implementation
+        if (!implementation) {
+            this.children = []
+            return
+        }
+        this.children = [
             new CodeHeaderView({
-                code: this.code,
+                code: params.code,
                 parent: params.parent,
                 expanded$: this.expanded$,
-                configuration: this.configuration,
-                project: this.project,
+                configuration: params.configuration,
+                project: params.project,
             }),
             child$({
                 source$: this.expanded$,
@@ -140,7 +169,7 @@ export class CodeView implements VirtualDOM<'div'> {
 <code-snippet language="javascript">
 ${implementation}
 </code-snippet>`,
-                                router: this.router,
+                                router: params.router,
                             }),
                         ],
                     }
