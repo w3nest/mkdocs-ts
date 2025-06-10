@@ -63,7 +63,10 @@ export async function apiNav(): Promise<AppNav> {
         name: 'API',
         header: header('./assets/api.svg'),
         entryModule: 'ex-ts-npm',
-        docBasePath: `../assets/api`,
+        dataFolder: `../assets/api`,
+        rootModulesNav: {
+            'ex-ts-npm': '@nav/api',
+        },
         configuration: CodeApiModule.configurationTsTypedoc,
     })
 }

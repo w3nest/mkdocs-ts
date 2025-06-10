@@ -84,7 +84,10 @@ export async function apiNav() {
         name: 'API',
         header: header('./assets/api.svg'),
         entryModule: 'ex-ts-npm',
-        docBasePath: `../assets/api`,
+        dataFolder: `../assets/api`,
+        rootModulesNav: {
+            'ex-ts-npm': '@nav/api',
+        },
         configuration: CodeApiModule.configurationTsTypedoc,
     })
 }

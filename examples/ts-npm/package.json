@@ -34,9 +34,9 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "0.1.0",
-        "@mkdocs-ts/notebook": "0.1.0",
-        "mkdocs-ts": "0.5.0",
+        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749567798.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.1-wip-1749567798.tgz",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.1-wip-1749567798.tgz",
         "rx-vdom": "^0.1.6"
     },
     "devDependencies": {
@@ -81,5 +81,10 @@
         "main": "./app/main.ts",
         "additionalEntries": {},
         "externals": {}
+    },
+    "resolutions": {
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.1-wip-1749567798.tgz",
+        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749567798.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.1-wip-1749567798.tgz"
     }
 }

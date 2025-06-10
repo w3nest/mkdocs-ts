@@ -15,7 +15,7 @@
         ]
     },
     "path": "ex-ts-npm",
-    "navPath": "@nav/api/",
+    "navPath": "@nav[ex-ts-npm]",
     "attributes": [
         {
             "name": "navigation",
@@ -40,7 +40,7 @@
                 ]
             },
             "path": "navigation",
-            "navPath": "@nav/api/.navigation",
+            "navPath": "@nav[ex-ts-npm].navigation",
             "code": {
                 "filePath": "src/app/main.ts",
                 "declaration": "navigation: AppNav = {\n    name: 'Demo TS + NPM',\n    layout: './README.md',\n    header: header('./assets/favicon.svg'),\n    routes: {\n        '/markdown': {\n            name: 'Markdown',\n            layout: './assets/markdown.md',\n            header: header('./assets/md.svg'),\n        },\n        '/notebook': {\n            name: 'Notebook',\n            layout: async ({ router }) => {\n                // The notebook plugin is only loaded when navigating to this page.\n                const NotebookModule = await import('@mkdocs-ts/notebook')\n                return new NotebookModule.NotebookPage({\n                    url: './assets/notebook.md',\n                    router,\n                })\n            },\n            header: header('./assets/notebook.svg'),\n        },\n        '/api': apiNav(),\n    },\n}",
@@ -48,8 +48,8 @@
                 "startLine": 28,
                 "endLine": 29,
                 "references": {
-                    "navigation": "@nav/api/.navigation",
-                    "AppNav": "@nav/api/.AppNav"
+                    "navigation": "@nav[ex-ts-npm].navigation",
+                    "AppNav": "@nav[ex-ts-npm].AppNav"
                 }
             }
         }
@@ -60,7 +60,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "State regarding TRex animation (see  <mkapi-api-link nav=\"@nav/api/.TRexView\" semantic=\"class\">TRexView</mkapi-api-link> ).",
+                        "content": "State regarding TRex animation (see  <mkapi-api-link nav=\"@nav[ex-ts-npm].TRexView\" semantic=\"class\">TRexView</mkapi-api-link> ).",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -72,7 +72,7 @@
                 ]
             },
             "path": "TRexState",
-            "navPath": "@nav/api/.TRexState",
+            "navPath": "@nav[ex-ts-npm].TRexState",
             "attributes": [],
             "callables": [],
             "code": {
@@ -82,7 +82,7 @@
                 "startLine": 15,
                 "endLine": 46,
                 "references": {
-                    "TRexState": "@nav/api/.TRexState"
+                    "TRexState": "@nav[ex-ts-npm].TRexState"
                 }
             },
             "semantic": {
@@ -109,7 +109,7 @@
                 ]
             },
             "path": "TRexView",
-            "navPath": "@nav/api/.TRexView",
+            "navPath": "@nav[ex-ts-npm].TRexView",
             "attributes": [
                 {
                     "name": "children",
@@ -134,7 +134,7 @@
                         ]
                     },
                     "path": "TRexView.children",
-                    "navPath": "@nav/api/.TRexView.children",
+                    "navPath": "@nav[ex-ts-npm].TRexView.children",
                     "code": {
                         "filePath": "src/app/trex.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
@@ -142,7 +142,7 @@
                         "startLine": 53,
                         "endLine": 54,
                         "references": {
-                            "children": "@nav/api/.TRexView.children",
+                            "children": "@nav[ex-ts-npm].TRexView.children",
                             "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike"
                         }
                     }
@@ -170,7 +170,7 @@
                         ]
                     },
                     "path": "TRexView.tag",
-                    "navPath": "@nav/api/.TRexView.tag",
+                    "navPath": "@nav[ex-ts-npm].TRexView.tag",
                     "code": {
                         "filePath": "src/app/trex.view.ts",
                         "declaration": "public readonly tag = 'div'",
@@ -178,7 +178,7 @@
                         "startLine": 52,
                         "endLine": 53,
                         "references": {
-                            "tag": "@nav/api/.TRexView.tag"
+                            "tag": "@nav[ex-ts-npm].TRexView.tag"
                         }
                     }
                 }
@@ -191,7 +191,7 @@
                 "startLine": 51,
                 "endLine": 83,
                 "references": {
-                    "TRexView": "@nav/api/.TRexView",
+                    "TRexView": "@nav[ex-ts-npm].TRexView",
                     "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
@@ -220,7 +220,7 @@
                 ]
             },
             "path": "AppNav",
-            "navPath": "@nav/api/.AppNav",
+            "navPath": "@nav[ex-ts-npm].AppNav",
             "attributes": [],
             "callables": [],
             "code": {
@@ -230,7 +230,7 @@
                 "startLine": 21,
                 "endLine": 22,
                 "references": {
-                    "AppNav": "@nav/api/.AppNav",
+                    "AppNav": "@nav[ex-ts-npm].AppNav",
                     "Navigation": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Navigation",
                     "DefaultLayout.NavLayout": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
                     "DefaultLayout.NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
@@ -273,16 +273,16 @@
                 ]
             },
             "path": "apiNav",
-            "navPath": "@nav/api/.apiNav",
+            "navPath": "@nav[ex-ts-npm].apiNav",
             "code": {
                 "filePath": "src/app/main.ts",
                 "declaration": "export async function apiNav(): Promise<AppNav>",
-                "implementation": "export async function apiNav(): Promise<AppNav> {\n    // The code-api plugin is asynchronously loaded here, it does not prevent the remaining navigation nodes to resolve.\n    const CodeApiModule = await import('@mkdocs-ts/code-api')\n    return CodeApiModule.codeApiEntryNode({\n        name: 'API',\n        header: header('./assets/api.svg'),\n        entryModule: 'ex-ts-npm',\n        docBasePath: `../assets/api`,\n        configuration: CodeApiModule.configurationTsTypedoc,\n    })\n}",
+                "implementation": "export async function apiNav(): Promise<AppNav> {\n    // The code-api plugin is asynchronously loaded here, it does not prevent the remaining navigation nodes to resolve.\n    const CodeApiModule = await import('@mkdocs-ts/code-api')\n    return CodeApiModule.codeApiEntryNode({\n        name: 'API',\n        header: header('./assets/api.svg'),\n        entryModule: 'ex-ts-npm',\n        dataFolder: `../assets/api`,\n        rootModulesNav: {\n            'ex-ts-npm': '@nav/api',\n        },\n        configuration: CodeApiModule.configurationTsTypedoc,\n    })\n}",
                 "startLine": 59,
-                "endLine": 70,
+                "endLine": 73,
                 "references": {
-                    "apiNav": "@nav/api/.apiNav",
-                    "AppNav": "@nav/api/.AppNav"
+                    "apiNav": "@nav[ex-ts-npm].apiNav",
+                    "AppNav": "@nav[ex-ts-npm].AppNav"
                 }
             },
             "semantic": {
@@ -331,7 +331,7 @@
                 ]
             },
             "path": "header",
-            "navPath": "@nav/api/.header",
+            "navPath": "@nav[ex-ts-npm].header",
             "code": {
                 "filePath": "src/app/main.ts",
                 "declaration": "export function header(url: string): DefaultLayout.NavHeader",
@@ -339,7 +339,7 @@
                 "startLine": 12,
                 "endLine": 17,
                 "references": {
-                    "header": "@nav/api/.header",
+                    "header": "@nav[ex-ts-npm].header",
                     "NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
                 }
             },

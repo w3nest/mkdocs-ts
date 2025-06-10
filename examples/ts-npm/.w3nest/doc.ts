@@ -21,6 +21,5 @@ const externals: any = {
 generateApiFiles({
     projectFolder: `${__dirname}/..`,
     outputFolder: `${__dirname}/../assets/api`,
-    baseNav: '/api',
     externals,
 })

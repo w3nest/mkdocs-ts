@@ -825,23 +825,23 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
-"@mkdocs-ts/code-api@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.1.0.tgz#d26636ea39d3a32212fa635bfb8a412deee1e6ab"
-  integrity sha512-C0GBUb116xU6EPukU5D/ZR8LHt4HCuvwbng5VSglTYZPMvvuIqRZZ2OYV20dz/+6Ja8cPnuPDFZ3gbK3AvDxYg==
+"@mkdocs-ts/code-api@file:../../../../../../.cache/yarn/v6/.tmp/e8ddb86945569a87586cacf541c77da5/.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749559738.tgz", "@mkdocs-ts/code-api@file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749567798.tgz":
+  version "0.2.0-wip"
+  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749567798.tgz#bad240f2a62e815157b18c823a29d16155f1cf49"
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
+    "@w3nest/webpm-client" "^0.1.5"
     mkdocs-ts "^0.5.0"
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
 
-"@mkdocs-ts/notebook@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.0.tgz#4121f04da8e805df569aabb9877d3f446bce2cf3"
-  integrity sha512-srbePGou9Ca6et7XbJQe9jeLfg9lCwsXp1FbHQ99pg0ELTIN8eZmMbHGopOBBPXn2jwYpwPZ2+i0JZTXpD8iVg==
+"@mkdocs-ts/notebook@file:.local-dependencies/mkdocs-ts-notebook-0.1.1-wip-1749567798.tgz":
+  version "0.1.1-wip"
+  resolved "file:.local-dependencies/mkdocs-ts-notebook-0.1.1-wip-1749567798.tgz#112c04b7a91755521c335ab421ef6694acf4c5bc"
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
+    "@mkdocs-ts/code-api" "file:../../../../../../.cache/yarn/v6/.tmp/e8ddb86945569a87586cacf541c77da5/.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749559738.tgz"
     "@w3nest/rx-tree-views" "^0.2.0"
     "@w3nest/webpm-client" "^0.1.8"
     esprima "^4.0.1"
@@ -1400,9 +1400,10 @@
     rx-vdom "^0.1.0"
     rxjs "^7.5.6"
 
-"@w3nest/webpm-client@^0.1.8":
+"@w3nest/webpm-client@^0.1.5", "@w3nest/webpm-client@^0.1.8":
   version "0.1.9"
-  resolved "file:.local-dependencies/w3nest-webpm-client-0.1.9-1748939541.tgz#18fd95d450b6777eb2612b69b810f9d58b798178"
+  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.9.tgz#153ce2d955ceb0da86f0e4c5b74d72cce1d77303"
+  integrity sha512-EWsJdXPeEHmBBL4/OKpytCaOuDNdAmBKCWnnnIkFrlxV67rkwIyiae+aDA2/FA6j1Zr9tMMZoob+kT8jgFoBRQ==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     rx-vdom "^0.1.3"
@@ -4392,9 +4393,9 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@0.5.0, mkdocs-ts@^0.5.0:
-  version "0.5.0"
-  resolved "file:.local-dependencies/mkdocs-ts-0.5.0-1748939541.tgz#27bc4306b0414e67e07860440b7ed0800773b476"
+mkdocs-ts@^0.5.0, "mkdocs-ts@file:.local-dependencies/mkdocs-ts-0.5.1-wip-1749567798.tgz":
+  version "0.5.1-wip"
+  resolved "file:.local-dependencies/mkdocs-ts-0.5.1-wip-1749567798.tgz#9dff79be6302a9e808d2eacfe0a69f7041fbcc62"
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^6.7.2"
     "@fortawesome/free-regular-svg-icons" "^6.7.2"
