@@ -98,9 +98,11 @@ export class DeclarationView implements VirtualDOM<'div'> {
     constructor({
         code,
         parent,
+        rootModulesNav,
     }: {
         code: Pick<Code, 'references' | 'declaration'>
         parent: Pick<Entity, 'semantic'>
+        rootModulesNav: Record<string, string>
     }) {
         this.class += ` mkapi-role-${parent.semantic.role}`
         const nonNullReferences = Object.entries(code.references).reduce(
@@ -108,6 +110,9 @@ export class DeclarationView implements VirtualDOM<'div'> {
                 if (!v) {
                     return acc
                 }
+                Object.entries(rootModulesNav).forEach(([k_, v_]) => {
+                    v = v.replace(`@nav[${k_}]`, v_)
+                })
                 return { ...acc, [k]: v }
             },
             {},

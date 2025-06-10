@@ -54,6 +54,7 @@ export class CallableView implements VirtualDOM<'div'> {
                 documentation: this.callable.documentation,
                 router: this.router,
                 configuration: this.configuration,
+                project: this.project,
             }),
         ]
     }

@@ -93,6 +93,7 @@ export class ModuleView implements VirtualDOM<'div'> {
                         documentation: this.module.documentation,
                         router: this.router,
                         configuration: this.configuration,
+                        project: this.project,
                     }),
                 ],
             },
@@ -131,6 +132,7 @@ export class ModuleView implements VirtualDOM<'div'> {
                                   documentation: fileDoc.documentation,
                                   router: this.router,
                                   configuration: this.configuration,
+                                  project: this.project,
                               })
                             : undefined,
                         {

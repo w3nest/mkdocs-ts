@@ -1,5 +1,5 @@
 """
-Python version of the target TypeScript [models](@nav/api/CodeApi.models.ts).
+Python equivalent of the TypeScript's :ext:`models<code-api-models>`.
 """
 
 # pylint: disable=invalid-name

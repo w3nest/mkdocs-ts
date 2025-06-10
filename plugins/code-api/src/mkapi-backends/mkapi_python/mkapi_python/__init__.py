@@ -27,7 +27,6 @@ print(f"Generate python API files for python module {NAME}")
 
 # Set up the configuration
 config = Configuration(
-    base_nav="/api",
     external_links=std_links(),
     out=DST,
 )

@@ -32,7 +32,6 @@
  *     projectFolder: `${appFolder}/../`,
  *     // Output's folder, where to include the generated JSON files
  *     outputFolder: `${appFolder}/assets/api`,
- *     baseNav: '/api',
  *     externals: {
  *         // For instance
  *         rxjs: ({ name }: { name: string }) => {

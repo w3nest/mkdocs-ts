@@ -1,7 +1,7 @@
 import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
 import { parseMd, type Router } from 'mkdocs-ts'
 import { Configuration } from './configurations'
-import { Documentation, DocumentationSection } from './models'
+import { Documentation, DocumentationSection, Project } from './models'
 import { MkApiApiLink, MkApiExtLink } from './md-widgets'
 import { faIconTyped } from './fa-icons'
 
@@ -16,6 +16,7 @@ export class DocumentationView implements VirtualDOM<'div'> {
     public readonly documentation: Documentation
     public readonly router: Router
     public readonly configuration: Configuration
+    public readonly project: Project
     public readonly tag = 'div'
     public readonly class = `${DocumentationView.CssSelector} mkapi-doc`
     public readonly children: ChildrenLike
@@ -23,6 +24,7 @@ export class DocumentationView implements VirtualDOM<'div'> {
         documentation: Documentation
         router: Router
         configuration: Configuration
+        project: Project
     }) {
         Object.assign(this, params)
 
@@ -31,6 +33,7 @@ export class DocumentationView implements VirtualDOM<'div'> {
                 section,
                 router: this.router,
                 configuration: this.configuration,
+                project: this.project,
             })
         })
     }
@@ -45,18 +48,20 @@ export class SectionView implements VirtualDOM<'div'> {
         section,
         router,
         configuration,
+        project,
     }: {
         section: DocumentationSection
         router: Router
         configuration: Configuration
+        project: Project
     }) {
         const views = {
             ...(configuration.mdParsingOptions?.views ?? {}),
             'mkapi-ext-link': (elem: HTMLElement) => {
-                return new MkApiExtLink(elem)
+                return new MkApiExtLink(elem, project)
             },
             'mkapi-api-link': (elem: HTMLElement) => {
-                return new MkApiApiLink(elem)
+                return new MkApiApiLink(elem, project)
             },
         }
         this.children = [

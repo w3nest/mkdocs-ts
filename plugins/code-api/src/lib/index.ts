@@ -83,7 +83,7 @@ export class HttpClient implements HttpClientTrait {
     }
 
     fetchModule(modulePath: string): Observable<Module> {
-        const assetPath = `${this.project.docBasePath}/${modulePath}.json`
+        const assetPath = `${this.project.dataFolder}/${modulePath}.json`
         if (assetPath in this.cache) {
             return of(this.cache[assetPath])
         }
@@ -168,9 +168,9 @@ export const docNavigation = <TLayout, THeader>(
     ctx?: ContextTrait,
 ): Observable<LazyRoutes<TLayout, THeader>> => {
     if (modulePath === '/') {
-        modulePath = project.name
-    } else if (!modulePath.startsWith(project.name)) {
-        modulePath = `/${project.name}${modulePath}`
+        modulePath = project.entryModule
+    } else if (!modulePath.startsWith(project.entryModule)) {
+        modulePath = `/${project.entryModule}${modulePath}`
     }
     return httpClient.fetchModule(modulePath).pipe(
         map((module) => {
@@ -216,10 +216,14 @@ export const docNavigation = <TLayout, THeader>(
  * @param params Configuration options for the API documentation root node.
  * @param params.name The name of the project (displayed in the navigation).
  * @param params.header The navigation header associated with the root node.
- * @param params.docBasePath The base URL or root directory containing the API data models (`.json` files).
+ * @param params.dataFolder The base URL of the root directory containing the API data models (`.json` files).
  *   These models are generated using the {@link MkApiBackends}.
  * @param params.entryModule The root module from which the documentation hierarchy starts. Its associated `json` data
- * should be located at `${docBasePath}/${docBasePath}.json`.
+ *   should be located at `${dataFolder}/${entryModule}.json`.
+ * @param params.rootModulesNav See {@link Project.rootModulesNav}.
+     <note level="warning">
+     It should at least includes one item: the root navigation path corresponding to `entryModule`.
+     </note>
  * @param params.configuration Configuration settings for the navigation and layout.
  * @param params.httpClient A custom HTTP client for retrieving API documentation resources.
  *   If not provided, a default {@link HttpClient} instance is used.
@@ -234,8 +238,9 @@ export function codeApiEntryNode<TLayout, THeader>(
     params: {
         name: string
         header: DefaultLayout.NavHeader
-        docBasePath: string
+        dataFolder: string
         entryModule: string
+        rootModulesNav: Record<string, string>
         configuration: Configuration<TLayout, THeader>
         httpClient?: ({
             project,
@@ -248,8 +253,9 @@ export function codeApiEntryNode<TLayout, THeader>(
     ctx?: ContextTrait,
 ): Navigation<TLayout, THeader> {
     const project = {
-        name: params.entryModule,
-        docBasePath: params.docBasePath,
+        entryModule: params.entryModule,
+        dataFolder: params.dataFolder,
+        rootModulesNav: params.rootModulesNav,
     }
     const configuration = params.configuration
     const httpClient =
@@ -267,7 +273,7 @@ export function codeApiEntryNode<TLayout, THeader>(
                 content: ({ router }: { router: Router }) => {
                     return moduleView(
                         {
-                            path: project.name,
+                            path: project.entryModule,
                             router,
                             configuration,
                             project,

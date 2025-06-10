@@ -53,6 +53,7 @@ describe('Declarations rendering', () => {
                     relations: {},
                 },
             },
+            rootModulesNav: {},
         })
         document.body.append(render(view))
         const anchor = document.querySelector<HTMLAnchorElement>('a')
@@ -80,6 +81,7 @@ describe('Declarations rendering', () => {
                     relations: {},
                 },
             },
+            rootModulesNav: {},
         })
         document.body.append(render(view))
         const anchors = document.querySelectorAll<HTMLAnchorElement>('a')

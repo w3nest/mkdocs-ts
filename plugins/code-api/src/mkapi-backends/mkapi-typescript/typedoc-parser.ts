@@ -193,10 +193,6 @@ export interface ApiInputs {
      */
     outputFolder: string
     /**
-     * The base path of the API node in the navigation (*e.g.* `/api`).
-     */
-    baseNav: string
-    /**
      * URL to documentation for symbols referenced in external libraries (*i.e.* within `node_modules`).
      */
     externals?: ExternalsUrl
@@ -219,7 +215,7 @@ export interface ApiInputs {
  * @param params Input parameters.
  */
 export function generateApiFiles(params: ApiInputs) {
-    const { baseNav, externals, extraDeclarationReferences } = params
+    const { externals, extraDeclarationReferences } = params
     const projectFolder = path.resolve(params.projectFolder)
     const outputFolder = path.resolve(params.outputFolder)
     const projectPackageJson = fs.readFileSync(
@@ -236,8 +232,8 @@ export function generateApiFiles(params: ApiInputs) {
         writeFolder: string,
     ) {
         const doc = parseModule({
-            baseNav,
             typedocNode,
+            project,
             modulePath,
             tsInputs: tsInputs,
             externals,
@@ -288,18 +284,18 @@ const secondLevelKinds = [
 ]
 
 export function generateNavigationPathsInModule(
-    basePath: string,
+    project: string,
     module: string,
     elem: TypedocNode,
 ): Record<string, string> {
-    const toNav = (p: string) => `@nav${p.replace('//', '/')}`
-    paths[elem.id] = toNav(`${basePath}/${module}`)
+    const toNav = (p: string) => `@nav[${project}]${p.replace('//', '/')}`
+    paths[elem.id] = toNav(module)
 
     for (const child of elem.children ?? []) {
         if (zeroOrderLevelKinds.includes(child.kind)) {
-            paths[child.id] = toNav(`${basePath}/${module}/${child.name}`)
+            paths[child.id] = toNav(`${module}/${child.name}`)
             generateNavigationPathsInModule(
-                basePath,
+                project,
                 `${module}/${child.name}`,
                 child,
             )
@@ -307,20 +303,18 @@ export function generateNavigationPathsInModule(
             continue
         }
         if (firstLevelKinds.includes(child.kind)) {
-            paths[child.id] = toNav(`${basePath}/${module}.${child.name}`)
+            paths[child.id] = toNav(`${module}.${child.name}`)
             const children = find_children<TypedocNode>(
                 child,
                 (n: TypedocNode) => secondLevelKinds.includes(n.kind),
             )
             children.forEach((c) => {
-                paths[c.id] = toNav(
-                    `${basePath}/${module}.${child.name}.${c.name}`,
-                )
+                paths[c.id] = toNav(`${module}.${child.name}.${c.name}`)
             })
             // noinspection ContinueStatementJS
             continue
         }
-        generateNavigationPathsInModule(basePath, module, child)
+        generateNavigationPathsInModule(project, module, child)
     }
     return paths
 }
@@ -337,22 +331,22 @@ export function generateNavigationPathsInModule(
  */
 export function parseModule({
     typedocNode,
+    project,
     modulePath,
     tsInputs,
-    baseNav,
     externals,
     extraDeclarationReferences,
 }: {
     typedocNode: TypedocNode
     modulePath: string
     tsInputs: TsSrcElements
-    baseNav: string
+    project: string
     externals?: ExternalsUrl
     extraDeclarationReferences?: ExtraDeclarationReferences
 }): Module {
     const symbolIdMap: Record<number, TypedocNode> = {}
     const parentSymbolIdMap: Record<number, TypedocNode> = {}
-    const navMap = generateNavigationPathsInModule(baseNav, '', typedocNode)
+    const navMap = generateNavigationPathsInModule(project, '', typedocNode)
     function constructSymbolsMap(elem: TypedocNode, parentId: number | null) {
         symbolIdMap[elem.id] = elem
         if (parentId) {

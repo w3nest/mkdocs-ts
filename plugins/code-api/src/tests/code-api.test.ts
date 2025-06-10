@@ -1,20 +1,6 @@
-import {
-    Navigation,
-    Router,
-    DefaultLayout,
-    parseMd,
-    headingId,
-} from 'mkdocs-ts'
-import { BehaviorSubject, firstValueFrom, from, Observable, of } from 'rxjs'
-import {
-    codeApiEntryNode,
-    configurationTsTypedoc,
-    HttpClientTrait,
-    Module,
-    ModuleView,
-    Project,
-} from '../lib'
-import fs from 'fs'
+import { Navigation, Router, DefaultLayout } from 'mkdocs-ts'
+import { BehaviorSubject, firstValueFrom } from 'rxjs'
+import { codeApiEntryNode, configurationTsTypedoc, ModuleView } from '../lib'
 import { mockMissingUIComponents, navigateAndAssert } from './utils'
 import { render } from 'rx-vdom'
 import { HeaderView } from '../lib/header.view'
@@ -23,29 +9,10 @@ import { MockClient } from './http-client'
 type TLayout = DefaultLayout.NavLayout
 type THeader = DefaultLayout.NavHeader
 
-class TestHttpClient implements HttpClientTrait {
-    public readonly project: Project
-    constructor(params: { project: Project }) {
-        Object.assign(this, params)
-    }
-
-    fetchModule(modulePath: string): Observable<Module> {
-        const assetPath = `${this.project.docBasePath}/${modulePath}.json`
-        const content = fs.readFileSync(assetPath, 'utf8')
-        return of(JSON.parse(content) as unknown as Module)
-    }
-    installCss(): Promise<unknown> {
-        return Promise.resolve()
-    }
-}
 describe('Typescript/Typedoc documentation', () => {
     let router: Router<TLayout, THeader>
     beforeAll(() => {
         mockMissingUIComponents()
-
-        // Dependencies.parseMd = parseMd
-        // Dependencies.DefaultLayout = DefaultLayout
-        // Dependencies.headingId = headingId
 
         const navigation: Navigation<
             DefaultLayout.NavLayout,
@@ -64,7 +31,8 @@ describe('Typescript/Typedoc documentation', () => {
                             icon: { tag: 'div', class: 'fas fa-box-open' },
                         },
                         entryModule: 'Foo',
-                        docBasePath: 'assets/api',
+                        dataFolder: 'assets/api',
+                        rootModulesNav: { Foo: '/api' },
                         httpClient: ({ project, configuration }) =>
                             new MockClient({ project, configuration }),
                         configuration: {

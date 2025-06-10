@@ -123,7 +123,7 @@ export class MockClient {
         this.project = project
     }
     fetchModule(modulePath) {
-        const assetPath = `${this.project.docBasePath}/${modulePath}.json`
+        const assetPath = `${this.project.dataFolder}/${modulePath}.json`
         return of(files[assetPath])
     }
     installCss() {

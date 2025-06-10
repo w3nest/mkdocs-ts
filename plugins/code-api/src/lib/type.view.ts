@@ -59,6 +59,7 @@ export class TypeView implements VirtualDOM<'div'> {
                 documentation: this.type.documentation,
                 router: this.router,
                 configuration: this.configuration,
+                project: this.project,
             }),
             ...this.type.attributes.map((attr) => {
                 return {

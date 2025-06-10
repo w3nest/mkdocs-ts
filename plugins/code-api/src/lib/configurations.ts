@@ -96,7 +96,7 @@ export const configurationDefault: Configuration = {
         path: string
         startLine: number
     }) => {
-        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`
+        return `https://github.com/${project.entryModule}/tree/main/src/${path}#L${String(startLine)}`
     },
     externalTypes: {},
     navNode: ({ name, header, layout }) => ({
