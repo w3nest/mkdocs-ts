@@ -43,10 +43,10 @@
             "navPath": "@nav/api/code-api/.configurationDefault",
             "code": {
                 "filePath": "src/lib/configurations.ts",
-                "declaration": "configurationDefault: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`\n    },\n    externalTypes: {},\n    navNode: ({ name, header, layout }) => ({\n        name,\n        header,\n        layout,\n    }),\n}",
+                "declaration": "configurationDefault: Configuration = {\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => {\n        return `https://github.com/${project.name}/tree/main/src/${path}#L${String(startLine)}`\n    },\n    externalTypes: {},\n    rootModulesNav: {},\n    navNode: ({ name, header, layout }) => ({\n        name,\n        header,\n        layout,\n    }),\n}",
                 "implementation": "",
-                "startLine": 89,
-                "endLine": 90,
+                "startLine": 91,
+                "endLine": 92,
                 "references": {
                     "configurationDefault": "@nav/api/code-api/.configurationDefault",
                     "Configuration": "@nav/api/code-api/.Configuration"
@@ -81,8 +81,8 @@
                 "filePath": "src/lib/configurations.ts",
                 "declaration": "configurationPython: Configuration = configurationDefault",
                 "implementation": "",
-                "startLine": 117,
-                "endLine": 118,
+                "startLine": 120,
+                "endLine": 121,
                 "references": {
                     "configurationPython": "@nav/api/code-api/.configurationPython",
                     "Configuration": "@nav/api/code-api/.Configuration"
@@ -117,8 +117,8 @@
                 "filePath": "src/lib/configurations.ts",
                 "declaration": "configurationTsTypedoc: Configuration = configurationDefault",
                 "implementation": "",
-                "startLine": 112,
-                "endLine": 113,
+                "startLine": 115,
+                "endLine": 116,
                 "references": {
                     "configurationTsTypedoc": "@nav/api/code-api/.configurationTsTypedoc",
                     "Configuration": "@nav/api/code-api/.Configuration"
@@ -701,9 +701,9 @@
             "code": {
                 "filePath": "src/lib/code.view.ts",
                 "declaration": "export class CodeView implements VirtualDOM<'div'>",
-                "implementation": "export class CodeView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeView'\n    public readonly router: Router\n    public readonly code: Code\n    public readonly configuration: Configuration\n    public readonly project: Project\n\n    public readonly tag = 'div'\n    public readonly class = `${CodeView.CssSelector} fv-border-primary rounded`\n    public readonly style = {\n        fontSize: '0.9em',\n    }\n    public readonly children: ChildrenLike\n    public readonly expanded$ = new BehaviorSubject(false)\n    constructor(params: {\n        code: Code\n        parent: Entity\n        router: Router\n        configuration: Configuration\n        project: Project\n    }) {\n        Object.assign(this, params)\n        const declarationView = new DeclarationView({\n            code: this.code,\n            parent: params.parent,\n        })\n        if (this.code.implementation === undefined) {\n            this.children = [declarationView]\n            return\n        }\n        const implementation = this.code.implementation\n        this.children = [\n            declarationView,\n            { tag: 'div', class: 'my-1' },\n            new CodeHeaderView({\n                code: this.code,\n                parent: params.parent,\n                expanded$: this.expanded$,\n                configuration: this.configuration,\n                project: this.project,\n            }),\n            child$({\n                source$: this.expanded$,\n                vdomMap: (expanded) => {\n                    if (!expanded) {\n                        return { tag: 'div' }\n                    }\n                    return {\n                        tag: 'div',\n                        class: 'ms-1 me-1 mt-1 code-api-snippet ',\n                        style: {\n                            fontSize: '0.8em',\n                        },\n                        children: [\n                            parseMd({\n                                src: `\n<code-snippet language=\"javascript\">\n${implementation}\n</code-snippet>`,\n                                router: this.router,\n                            }),\n                        ],\n                    }\n                },\n            }),\n        ]\n    }\n}",
+                "implementation": "export class CodeView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-CodeView'\n    public readonly router: Router\n    public readonly code: Code\n    public readonly configuration: Configuration\n    public readonly project: Project\n\n    public readonly tag = 'div'\n    public readonly class = `${CodeView.CssSelector} fv-border-primary rounded`\n    public readonly style = {\n        fontSize: '0.9em',\n    }\n    public readonly children: ChildrenLike\n    public readonly expanded$ = new BehaviorSubject(false)\n    constructor(params: {\n        code: Code\n        parent: Entity\n        router: Router\n        configuration: Configuration\n        project: Project\n    }) {\n        Object.assign(this, params)\n        const declarationView = new DeclarationView({\n            code: this.code,\n            parent: params.parent,\n            rootModulesNav: this.configuration.rootModulesNav,\n        })\n        if (this.code.implementation === undefined) {\n            this.children = [declarationView]\n            return\n        }\n        const implementation = this.code.implementation\n        const implementationView = implementation\n            ? new ImplementationView(params)\n            : undefined\n        this.children = [\n            declarationView,\n            { tag: 'div', class: 'my-1' },\n            implementationView,\n        ]\n    }\n}",
                 "startLine": 81,
-                "endLine": 152,
+                "endLine": 126,
                 "references": {
                     "CodeView": "@nav/api/code-api/.CodeView",
                     "Code": "@nav/api/code-api/.Code",
@@ -770,8 +770,8 @@
                         "filePath": "src/lib/declaration.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
                         "implementation": "",
-                        "startLine": 96,
-                        "endLine": 97,
+                        "startLine": 97,
+                        "endLine": 98,
                         "references": {
                             "children": "@nav/api/code-api/.DeclarationView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
@@ -806,8 +806,8 @@
                         "filePath": "src/lib/declaration.view.ts",
                         "declaration": "public readonly class = `${DeclarationView.CssSelector} mkapi-declaration mkapi-semantic-color p-2 rounded`",
                         "implementation": "",
-                        "startLine": 97,
-                        "endLine": 98,
+                        "startLine": 98,
+                        "endLine": 99,
                         "references": {
                             "class": "@nav/api/code-api/.DeclarationView.class"
                         }
@@ -841,8 +841,8 @@
                         "filePath": "src/lib/declaration.view.ts",
                         "declaration": "public readonly tag = 'div'",
                         "implementation": "",
-                        "startLine": 95,
-                        "endLine": 96,
+                        "startLine": 96,
+                        "endLine": 97,
                         "references": {
                             "tag": "@nav/api/code-api/.DeclarationView.tag"
                         }
@@ -876,8 +876,8 @@
                         "filePath": "src/lib/declaration.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-DeclarationView'",
                         "implementation": "",
-                        "startLine": 94,
-                        "endLine": 95,
+                        "startLine": 95,
+                        "endLine": 96,
                         "references": {
                             "CssSelector": "@nav/api/code-api/.DeclarationView.CssSelector"
                         }
@@ -888,14 +888,15 @@
             "code": {
                 "filePath": "src/lib/declaration.view.ts",
                 "declaration": "export class DeclarationView implements VirtualDOM<'div'>",
-                "implementation": "export class DeclarationView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-DeclarationView'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${DeclarationView.CssSelector} mkapi-declaration mkapi-semantic-color p-2 rounded`\n    constructor({\n        code,\n        parent,\n    }: {\n        code: Pick<Code, 'references' | 'declaration'>\n        parent: Pick<Entity, 'semantic'>\n    }) {\n        this.class += ` mkapi-role-${parent.semantic.role}`\n        const nonNullReferences = Object.entries(code.references).reduce(\n            (acc, [k, v]) => {\n                if (!v) {\n                    return acc\n                }\n                return { ...acc, [k]: v }\n            },\n            {},\n        )\n        const declaration = processDeclaration(\n            code.declaration,\n            nonNullReferences,\n            (k: string, v: string) => `<a target='_blank' href='${v}'>${k}</a>`,\n        )\n\n        this.children = [\n            {\n                tag: 'pre',\n                class: 'py-0 my-0',\n                innerHTML: declaration,\n            },\n        ]\n    }\n}",
-                "startLine": 90,
-                "endLine": 130,
+                "implementation": "export class DeclarationView implements VirtualDOM<'div'> {\n    /**\n     * Component's class name for CSS query.\n     */\n    static readonly CssSelector = 'mkdocs-DeclarationView'\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly class = `${DeclarationView.CssSelector} mkapi-declaration mkapi-semantic-color p-2 rounded`\n    constructor({\n        code,\n        parent,\n        rootModulesNav,\n    }: {\n        code: Pick<Code, 'references' | 'declaration'>\n        parent: Pick<Entity, 'semantic'>\n        rootModulesNav: Record<string, string>\n    }) {\n        this.class += ` mkapi-role-${parent.semantic.role}`\n        const nonNullReferences = Object.entries(code.references).reduce(\n            (acc, [k, v]) => {\n                if (!v) {\n                    return acc\n                }\n                Object.entries(rootModulesNav).forEach(([k_, v_]) => {\n                    v = v.replace(`@nav[${k_}]`, v_)\n                })\n                return { ...acc, [k]: v }\n            },\n            {},\n        )\n        const declaration = processDeclaration(\n            code.declaration,\n            nonNullReferences,\n            (k: string, v: string) => `<a target='_blank' href='${v}'>${k}</a>`,\n        )\n\n        this.children = [\n            {\n                tag: 'pre',\n                class: 'py-0 my-0',\n                innerHTML: declaration,\n            },\n        ]\n    }\n}",
+                "startLine": 91,
+                "endLine": 136,
                 "references": {
                     "DeclarationView": "@nav/api/code-api/.DeclarationView",
                     "Code": "@nav/api/code-api/.Code",
                     "Entity": "@nav/api/code-api/.Entity",
                     "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
@@ -1264,7 +1265,7 @@
                     "code": {
                         "filePath": "src/lib/index.ts",
                         "declaration": "fetchModule(modulePath: string): Observable<Module>",
-                        "implementation": "fetchModule(modulePath: string): Observable<Module> {\n    const assetPath = `${this.project.docBasePath}/${modulePath}.json`\n    if (assetPath in this.cache) {\n        return of(this.cache[assetPath])\n    }\n    return request$<Module>(new Request(assetPath)).pipe(\n        raiseHTTPErrors(),\n        tap((m) => (this.cache[assetPath] = m)),\n    )\n}",
+                        "implementation": "fetchModule(modulePath: string): Observable<Module> {\n    const assetPath = `${this.project.dataFolder}/${modulePath}.json`\n    if (assetPath in this.cache) {\n        return of(this.cache[assetPath])\n    }\n    return request$<Module>(new Request(assetPath)).pipe(\n        raiseHTTPErrors(),\n        tap((m) => (this.cache[assetPath] = m)),\n    )\n}",
                         "startLine": 85,
                         "endLine": 95,
                         "references": {
@@ -1284,7 +1285,7 @@
             "code": {
                 "filePath": "src/lib/index.ts",
                 "declaration": "export class HttpClient implements HttpClientTrait",
-                "implementation": "export class HttpClient implements HttpClientTrait {\n    public readonly cache: Record<string, Module> = {}\n    /**\n     * The configuration, usually forwarded from {@link codeApiEntryNode}.\n     */\n    public readonly configuration: Configuration<unknown, unknown>\n    /**\n     * The project, usually forwarded from {@link codeApiEntryNode}.\n     */\n    public readonly project: Project\n\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.configuration See {@link HttpClient.configuration}.\n     * @param params.project See {@link HttpClient.project}.\n     */\n    constructor(params: {\n        configuration: Configuration<unknown, unknown>\n        project: Project\n    }) {\n        Object.assign(this, params)\n    }\n\n    fetchModule(modulePath: string): Observable<Module> {\n        const assetPath = `${this.project.docBasePath}/${modulePath}.json`\n        if (assetPath in this.cache) {\n            return of(this.cache[assetPath])\n        }\n        return request$<Module>(new Request(assetPath)).pipe(\n            raiseHTTPErrors(),\n            tap((m) => (this.cache[assetPath] = m)),\n        )\n    }\n}",
+                "implementation": "export class HttpClient implements HttpClientTrait {\n    public readonly cache: Record<string, Module> = {}\n    /**\n     * The configuration, usually forwarded from {@link codeApiEntryNode}.\n     */\n    public readonly configuration: Configuration<unknown, unknown>\n    /**\n     * The project, usually forwarded from {@link codeApiEntryNode}.\n     */\n    public readonly project: Project\n\n    /**\n     * Initialize a new instance.\n     *\n     * @param params\n     * @param params.configuration See {@link HttpClient.configuration}.\n     * @param params.project See {@link HttpClient.project}.\n     */\n    constructor(params: {\n        configuration: Configuration<unknown, unknown>\n        project: Project\n    }) {\n        Object.assign(this, params)\n    }\n\n    fetchModule(modulePath: string): Observable<Module> {\n        const assetPath = `${this.project.dataFolder}/${modulePath}.json`\n        if (assetPath in this.cache) {\n            return of(this.cache[assetPath])\n        }\n        return request$<Module>(new Request(assetPath)).pipe(\n            raiseHTTPErrors(),\n            tap((m) => (this.cache[assetPath] = m)),\n        )\n    }\n}",
                 "startLine": 60,
                 "endLine": 96,
                 "references": {
@@ -1296,6 +1297,123 @@
                     "HttpClientTrait": "@nav/api/code-api/.HttpClientTrait",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
                     "Observable": "https://rxjs.dev/guide/observable"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "ImplementationView",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "View for the implementation of a  <mkapi-api-link nav=\"@nav/api/code-api/.Code\" semantic=\"interface\">Code</mkapi-api-link> .",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "ImplementationView",
+            "navPath": "@nav/api/code-api/.ImplementationView",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ImplementationView.children",
+                    "navPath": "@nav/api/code-api/.ImplementationView.children",
+                    "code": {
+                        "filePath": "src/lib/code.view.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 132,
+                        "endLine": 133,
+                        "references": {
+                            "children": "@nav/api/code-api/.ImplementationView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "ImplementationView.tag",
+                    "navPath": "@nav/api/code-api/.ImplementationView.tag",
+                    "code": {
+                        "filePath": "src/lib/code.view.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 131,
+                        "endLine": 132,
+                        "references": {
+                            "tag": "@nav/api/code-api/.ImplementationView.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/code.view.ts",
+                "declaration": "export class ImplementationView implements VirtualDOM<'div'>",
+                "implementation": "export class ImplementationView implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    public readonly children: ChildrenLike\n    public readonly expanded$ = new BehaviorSubject(false)\n    constructor(params: {\n        code: Code\n        parent: Entity\n        router: Router\n        configuration: Configuration\n        project: Project\n    }) {\n        const implementation = params.code.implementation\n        this.children = [\n            new CodeHeaderView({\n                code: params.code,\n                parent: params.parent,\n                expanded$: this.expanded$,\n                configuration: params.configuration,\n                project: params.project,\n            }),\n            child$({\n                source$: this.expanded$,\n                vdomMap: (expanded) => {\n                    if (!expanded) {\n                        return { tag: 'div' }\n                    }\n                    return {\n                        tag: 'div',\n                        class: 'ms-1 me-1 mt-1 code-api-snippet ',\n                        style: {\n                            fontSize: '0.8em',\n                        },\n                        children: [\n                            parseMd({\n                                src: `\n<code-snippet language=\"javascript\">\n${implementation}\n</code-snippet>`,\n                                router: params.router,\n                            }),\n                        ],\n                    }\n                },\n            }),\n        ]\n    }\n}",
+                "startLine": 130,
+                "endLine": 177,
+                "references": {
+                    "ImplementationView": "@nav/api/code-api/.ImplementationView",
+                    "Code": "@nav/api/code-api/.Code",
+                    "Configuration": "@nav/api/code-api/.Configuration",
+                    "Entity": "@nav/api/code-api/.Entity",
+                    "Project": "@nav/api/code-api/.Project",
+                    "Router": "?nav=/api/mkdocs-ts.Router",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -3060,15 +3178,15 @@
             "code": {
                 "filePath": "src/lib/configurations.ts",
                 "declaration": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n>",
-                "implementation": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n> {\n    /**\n     * Parsing options for Markdown.\n     */\n    mdParsingOptions?: MdParsingOptions\n\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: Record<string, string>\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If provided, documentation sections are generated using this function.\n     * It enables for instance to use the **Notebook** plugin to include coding cells in the API documentation.\n     */\n    sectionView?: (p: {\n        router: Router\n        src: string\n        mdViews: Record<string, ViewGenerator>\n    }) => AnyView\n\n    navNode: ({\n        name,\n        header,\n        layout,\n    }: {\n        name: string\n        header: DefaultLayout.NavHeader\n        layout: NavLayout\n    }) => NavNodeData<TLayout, THeader>\n}",
+                "implementation": "export interface Configuration<\n    TLayout = DefaultLayout.NavLayout,\n    THeader = DefaultLayout.NavHeader,\n> {\n    /**\n     * Parsing options for Markdown.\n     */\n    mdParsingOptions?: MdParsingOptions\n\n    /**\n     * External types to link in the documentation, where keys are symbol path and values associated URL.\n     */\n    externalTypes: Record<string, string>\n    /**\n     * Define the code url from repo for a file in the project (located at `path`) and a starting line (`startLine`).\n     */\n    codeUrl: ({\n        project,\n        path,\n        startLine,\n    }: {\n        project: Project\n        path: string\n        startLine: number\n    }) => string\n\n    /**\n     * If provided, documentation sections are generated using this function.\n     * It enables for instance to use the **Notebook** plugin to include coding cells in the API documentation.\n     */\n    sectionView?: (p: {\n        router: Router\n        src: string\n        mdViews: Record<string, ViewGenerator>\n    }) => AnyView\n\n    navNode: ({\n        name,\n        header,\n        layout,\n    }: {\n        name: string\n        header: DefaultLayout.NavHeader\n        layout: NavLayout\n    }) => NavNodeData<TLayout, THeader>\n\n    rootModulesNav: Record<string, string>\n}",
                 "startLine": 39,
-                "endLine": 85,
+                "endLine": 87,
                 "references": {
                     "Configuration": "@nav/api/code-api/.Configuration",
                     "Project": "@nav/api/code-api/.Project",
                     "NavLayout": "@nav/api/code-api/.NavLayout",
-                    "TLayout": "@nav/api/notebook/Views/Layouts.SuperposedLayout.all",
-                    "THeader": "@nav/api/notebook/Views/Layouts.SuperposedLayout.animation",
+                    "TLayout": "@nav/api/notebook/Views/Layouts.SuperposedLayout.borderLeft",
+                    "THeader": "@nav/api/notebook/Views/Layouts.SuperposedLayout.borderRadius",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
                     "MdParsingOptions": "?nav=/api/mkdocs-ts.MdParsingOptions",
                     "NavHeader": "?nav=/api/mkdocs-ts/DefaultLayout.NavHeader",
@@ -3966,7 +4084,7 @@
             "navPath": "@nav/api/code-api/.Project",
             "attributes": [
                 {
-                    "name": "docBasePath",
+                    "name": "dataFolder",
                     "semantic": {
                         "role": "attribute",
                         "labels": [],
@@ -3976,7 +4094,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "The base path of the corresponding node in the documentation.",
+                                "content": "The URL of the root folder including the JSON API data models.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -3987,16 +4105,16 @@
                             }
                         ]
                     },
-                    "path": "Project.docBasePath",
-                    "navPath": "@nav/api/code-api/.Project.docBasePath",
+                    "path": "Project.dataFolder",
+                    "navPath": "@nav/api/code-api/.Project.dataFolder",
                     "code": {
                         "filePath": "src/lib/models.ts",
-                        "declaration": "docBasePath: string",
+                        "declaration": "dataFolder: string",
                         "implementation": "",
                         "startLine": 217,
                         "endLine": 218,
                         "references": {
-                            "docBasePath": "@nav/api/code-api/.Project.docBasePath"
+                            "dataFolder": "@nav/api/code-api/.Project.dataFolder"
                         }
                     }
                 },
@@ -4040,7 +4158,7 @@
             "code": {
                 "filePath": "src/lib/models.ts",
                 "declaration": "export interface Project",
-                "implementation": "export interface Project {\n    /**\n     * Its name.\n     */\n    name: string\n    /**\n     * The base path of the corresponding node in the documentation.\n     */\n    docBasePath: string\n}",
+                "implementation": "export interface Project {\n    /**\n     * Its name.\n     */\n    name: string\n    /**\n     * The URL of the root folder including the JSON API data models.\n     */\n    dataFolder: string\n}",
                 "startLine": 209,
                 "endLine": 219,
                 "references": {
@@ -4821,7 +4939,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **params**: Configuration options for the API documentation root node.\n*  **configuration**: Configuration settings for the navigation and layout.\n*  **docBasePath**: The base URL or root directory containing the API data models ( `.json`  files).\n  These models are generated using the  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends\" semantic=\"module\">MkApiBackends</mkapi-api-link> .\n*  **entryModule**: The root module from which the documentation hierarchy starts. Its associated  `json`  data\nshould be located at  `${docBasePath}/${docBasePath}.json` .\n*  **header**: The navigation header associated with the root node.\n*  **httpClient**: A custom HTTP client for retrieving API documentation resources.\n  If not provided, a default  <mkapi-api-link nav=\"@nav/api/code-api/.HttpClient\" semantic=\"class\">HttpClient</mkapi-api-link>  instance is used.\n*  **name**: The name of the project (displayed in the navigation).\n*  **ctx**: Execution context used for logging and tracing.",
+                        "content": "\n*  **params**: Configuration options for the API documentation root node.\n*  **configuration**: Configuration settings for the navigation and layout.\n*  **dataFolder**: The base URL of the root directory containing the API data models ( `.json`  files).\n  These models are generated using the  <mkapi-api-link nav=\"@nav/api/code-api/MkApiBackends\" semantic=\"module\">MkApiBackends</mkapi-api-link> .\n*  **entryModule**: The root module from which the documentation hierarchy starts. Its associated  `json`  data\nshould be located at  `${docBasePath}/${docBasePath}.json` .\n*  **header**: The navigation header associated with the root node.\n*  **httpClient**: A custom HTTP client for retrieving API documentation resources.\n  If not provided, a default  <mkapi-api-link nav=\"@nav/api/code-api/.HttpClient\" semantic=\"class\">HttpClient</mkapi-api-link>  instance is used.\n*  **name**: The name of the project (displayed in the navigation).\n*  **ctx**: Execution context used for logging and tracing.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -4858,8 +4976,8 @@
             "navPath": "@nav/api/code-api/.codeApiEntryNode",
             "code": {
                 "filePath": "src/lib/index.ts",
-                "declaration": "export function codeApiEntryNode<TLayout, THeader>(\n    params: {\n        name: string\n        header: DefaultLayout.NavHeader\n        docBasePath: string\n        entryModule: string\n        configuration: Configuration<TLayout, THeader>\n        httpClient?: ({\n            project,\n            configuration,\n        }: {\n            project: Project\n            configuration: Configuration<TLayout, THeader>\n        }) => HttpClientTrait\n    },\n    ctx?: ContextTrait,\n): Navigation<TLayout, THeader>",
-                "implementation": "export function codeApiEntryNode<TLayout, THeader>(\n    params: {\n        name: string\n        header: DefaultLayout.NavHeader\n        docBasePath: string\n        entryModule: string\n        configuration: Configuration<TLayout, THeader>\n        httpClient?: ({\n            project,\n            configuration,\n        }: {\n            project: Project\n            configuration: Configuration<TLayout, THeader>\n        }) => HttpClientTrait\n    },\n    ctx?: ContextTrait,\n): Navigation<TLayout, THeader> {\n    const project = {\n        name: params.entryModule,\n        docBasePath: params.docBasePath,\n    }\n    const configuration = params.configuration\n    const httpClient =\n        params.httpClient?.({ configuration, project }) ??\n        new HttpClient({\n            project,\n            configuration,\n        })\n    return {\n        ...configuration.navNode({\n            name: params.name,\n            header: params.header,\n            layout: {\n                toc,\n                content: ({ router }: { router: Router }) => {\n                    return moduleView(\n                        {\n                            path: project.name,\n                            router,\n                            configuration,\n                            project,\n                            httpClient,\n                        },\n                        ctx,\n                    )\n                },\n            },\n        }),\n        routes: ({ router, path }: { router: Router; path: string }) =>\n            docNavigation(\n                {\n                    modulePath: path,\n                    router,\n                    project,\n                    configuration,\n                    httpClient,\n                },\n                ctx,\n            ),\n    }\n}",
+                "declaration": "export function codeApiEntryNode<TLayout, THeader>(\n    params: {\n        name: string\n        header: DefaultLayout.NavHeader\n        dataFolder: string\n        entryModule: string\n        configuration: Configuration<TLayout, THeader>\n        httpClient?: ({\n            project,\n            configuration,\n        }: {\n            project: Project\n            configuration: Configuration<TLayout, THeader>\n        }) => HttpClientTrait\n    },\n    ctx?: ContextTrait,\n): Navigation<TLayout, THeader>",
+                "implementation": "export function codeApiEntryNode<TLayout, THeader>(\n    params: {\n        name: string\n        header: DefaultLayout.NavHeader\n        dataFolder: string\n        entryModule: string\n        configuration: Configuration<TLayout, THeader>\n        httpClient?: ({\n            project,\n            configuration,\n        }: {\n            project: Project\n            configuration: Configuration<TLayout, THeader>\n        }) => HttpClientTrait\n    },\n    ctx?: ContextTrait,\n): Navigation<TLayout, THeader> {\n    const project = {\n        name: params.entryModule,\n        dataFolder: params.dataFolder,\n    }\n    const configuration = params.configuration\n    const httpClient =\n        params.httpClient?.({ configuration, project }) ??\n        new HttpClient({\n            project,\n            configuration,\n        })\n    return {\n        ...configuration.navNode({\n            name: params.name,\n            header: params.header,\n            layout: {\n                toc,\n                content: ({ router }: { router: Router }) => {\n                    return moduleView(\n                        {\n                            path: project.name,\n                            router,\n                            configuration,\n                            project,\n                            httpClient,\n                        },\n                        ctx,\n                    )\n                },\n            },\n        }),\n        routes: ({ router, path }: { router: Router; path: string }) =>\n            docNavigation(\n                {\n                    modulePath: path,\n                    router,\n                    project,\n                    configuration,\n                    httpClient,\n                },\n                ctx,\n            ),\n    }\n}",
                 "startLine": 233,
                 "endLine": 294,
                 "references": {

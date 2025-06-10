@@ -92,12 +92,12 @@ const files = {
             }]
         },
         "path": "Foo",
-        "navPath": "@nav/api/Foo",
+        "navPath": "@nav[Foo]/Foo",
         children: [{
             "name": "Bar",
             "semantic": { "role": "module" },
             "path": "Foo.Bar",
-            "navPath": "@nav/api/Bar",
+            "navPath": "@nav[Foo]/Bar",
             "isLeaf": true
         }],
         files: srcFiles,       
@@ -113,7 +113,7 @@ const files = {
                 ]
               },
              "path": "Foo.foo",
-             "navPath": "@nav/api.foo",
+             "navPath": "@nav[Foo].foo",
              "code": {
                  "filePath": "src/lib/index.ts",
                  "declaration": "export function foo(): Result",
@@ -121,8 +121,8 @@ const files = {
                  "startLine": 1,
                  "endLine": 3,
                  "references": {
-                     "foo": "@nav/api.foo",
-                     "Result": "@nav/api/Bar.Result"
+                     "foo": "@nav[Foo].foo",
+                     "Result": "@nav[Foo]/Bar.Result"
                  }
              },
              "semantic": { "role": "function" }
@@ -138,7 +138,7 @@ const files = {
                 }]
             },
             path: "Foo.Bar",
-            navPath: "@nav/api/Foo/Bar",
+            navPath: "@nav[Foo]/Foo/Bar",
             children: [],
             files: srcFiles,
             attributes: [],
@@ -147,7 +147,7 @@ const files = {
                  "documentation": {
                      "sections": [
                          {
-                            "content": "An alias for result. See [foo](@nav/api.foo).",
+                            "content": "An alias for result. See <mkapi-api-link nav='@nav[Foo].foo' semantic='function'>foo</mkapi-api-link>.",
                             "contentType": "markdown", 
                             "semantic": { "role": "" }
                          }
@@ -156,7 +156,7 @@ const files = {
                  attributes: [],
                  callables: [],
                  "path": "Foo.Bar.Result",
-                 "navPath": "@nav/api/Bar.Result",
+                 "navPath": "@nav[Foo]/Bar.Result",
                  "code": {
                      "filePath": "src/lib/index.ts",
                      "declaration": "export type Result = number",
@@ -164,7 +164,7 @@ const files = {
                      "startLine": 1,
                      "endLine": 1,
                      "references": {
-                         "Result": "@nav/api/Bar.Result"
+                         "Result": "@nav[Foo]/Bar.Result"
                      }
                  },
                  "semantic": { "role": "type-alias" }
@@ -190,12 +190,12 @@ class MockClient {
         this.project = project
     }
     fetchModule(modulePath){
-        const assetPath = `${this.project.docBasePath}/${modulePath}.json`
+        const assetPath = `${this.project.dataFolder}/${modulePath}.json`
         return rxjs.of(files[assetPath])
     }
 }
 </js-cell>
-
+http://localhost:2000/apps/@mkdocs-ts/doc/0.5.1-wip/dist/@nav[
 </note>
 
 ## Navigation & App
@@ -213,7 +213,10 @@ const apiNode = ApiPlugin.codeApiEntryNode({
         icon: { tag: 'i', class: `fas fa-code` }
     },
     entryModule: 'Foo',
-    docBasePath: 'assets/api',
+    dataFolder: 'assets/api',
+    rootModulesNav: {
+        'Foo': '@nav/api'
+    },
     configuration: ApiPlugin.configurationTsTypedoc,
     // This next parameter is not required in usual setup
     httpClient: ({project, configuration}) => new MockClient({project, configuration}) 

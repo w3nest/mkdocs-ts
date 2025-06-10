@@ -3,7 +3,7 @@
     "documentation": {
         "sections": [
             {
-                "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.parseMd\" semantic=\"function\">parseMd</mkapi-api-link>  function. Widgets are referenced within  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> ,\nwhich maps  `tag-name -> implementation`  to enable seamless integration into Markdown content.\n\nEach widget provides a static  `fromHTMLElement`  method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView\" semantic=\"class\">CodeSnippetView</mkapi-api-link> \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView\" semantic=\"class\">CodeBadgesView</mkapi-api-link> \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.ExtLink\" semantic=\"class\">ExtLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.ApiLink\" semantic=\"class\">ApiLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.GitHubLink\" semantic=\"class\">GitHubLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CrossLink\" semantic=\"class\">CrossLink</mkapi-api-link> ,\n\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n\n<api-link target=\"MdWidgets\"></api-link>\n\n<cross-link target=\"API\">API</cross-link>\n\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n\n</md-cell>\n\n---\n\n## New Widgets\n\nTo extend the functionality of  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.parseMd\" semantic=\"function\">parseMd</mkapi-api-link> , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link>  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view  `custom-view-example`  instantiated with  `improbabilityFactor=5` :\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
+                "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  <mkapi-api-link nav=\"@nav[mkdocs-ts].parseMd\" semantic=\"function\">parseMd</mkapi-api-link>  function. Widgets are referenced within  <mkapi-api-link nav=\"@nav[mkdocs-ts].GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> ,\nwhich maps  `tag-name -> implementation`  to enable seamless integration into Markdown content.\n\nEach widget provides a static  `fromHTMLElement`  method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n###  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeSnippetView\" semantic=\"class\">CodeSnippetView</mkapi-api-link> \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeBadgesView\" semantic=\"class\">CodeBadgesView</mkapi-api-link> \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n###  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.ExtLink\" semantic=\"class\">ExtLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.ApiLink\" semantic=\"class\">ApiLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.GitHubLink\" semantic=\"class\">GitHubLink</mkapi-api-link> ,  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CrossLink\" semantic=\"class\">CrossLink</mkapi-api-link> ,\n\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n\n<api-link target=\"MdWidgets\"></api-link>\n\n<cross-link target=\"API\">API</cross-link>\n\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n\n</md-cell>\n\n---\n\n## New Widgets\n\nTo extend the functionality of  <mkapi-api-link nav=\"@nav[mkdocs-ts].parseMd\" semantic=\"function\">parseMd</mkapi-api-link> , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  <mkapi-api-link nav=\"@nav[mkdocs-ts].GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link>  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view  `custom-view-example`  instantiated with  `improbabilityFactor=5` :\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
                 "contentType": "markdown",
                 "semantic": {
                     "role": "",
@@ -15,7 +15,7 @@
         ]
     },
     "path": "mkdocs-ts/MdWidgets",
-    "navPath": "@nav/api/mkdocs-ts/",
+    "navPath": "@nav[mkdocs-ts]",
     "attributes": [
         {
             "name": "icons",
@@ -40,7 +40,7 @@
                 ]
             },
             "path": "icons",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.icons",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.icons",
             "code": {
                 "filePath": "src/lib/md-widgets/note.view.ts",
                 "declaration": "icons = {\n    note: faIconTyped('fa-pen-fancy'),\n    abstract: faIconTyped('fa-file-alt'),\n    info: faIconTyped('fa-info-circle'),\n    hint: faIconTyped('fa-fire'),\n    success: faIconTyped('fa-check'),\n    question: faIconTyped('fa-question-circle'),\n    warning: faIconTyped('fa-exclamation-triangle'),\n    failure: faIconTyped('fa-times-circle'),\n    danger: faIconTyped('fa-bolt'),\n    bug: faIconTyped('fa-bug'),\n    example: faIconTyped('fa-flask'),\n    quote: faIconTyped('fa-quote-right'),\n}",
@@ -48,7 +48,7 @@
                 "startLine": 18,
                 "endLine": 19,
                 "references": {
-                    "icons": "@nav/api/mkdocs-ts/MdWidgets.icons",
+                    "icons": "@nav[mkdocs-ts]/MdWidgets.icons",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                 }
             }
@@ -60,7 +60,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Link component for referencing API entities (such as modules, classes, methods, etc):\n\n<md-cell>\n<api-link target=\"MdWidgets\"></api-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.ApiLink.Mapper\" semantic=\"attribute\">ApiLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "content": "Link component for referencing API entities (such as modules, classes, methods, etc):\n\n<md-cell>\n<api-link target=\"MdWidgets\"></api-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.ApiLink.Mapper\" semantic=\"attribute\">ApiLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -72,7 +72,7 @@
                 ]
             },
             "path": "ApiLink",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.ApiLink",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.ApiLink",
             "attributes": [
                 {
                     "name": "icon",
@@ -97,7 +97,7 @@
                         ]
                     },
                     "path": "ApiLink.icon",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.ApiLink.icon",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.ApiLink.icon",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static readonly icon: AnyVirtualDOM = faIconTyped('fa-code', {\n        withStyle: { fontSize: stdIconFontSize },\n    })",
@@ -105,7 +105,7 @@
                         "startLine": 129,
                         "endLine": 130,
                         "references": {
-                            "icon": "@nav/api/mkdocs-ts/MdWidgets.ApiLink.icon",
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.ApiLink.icon",
                             "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
@@ -133,7 +133,7 @@
                         ]
                     },
                     "path": "ApiLink.Mapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.ApiLink.Mapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.ApiLink.Mapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static Mapper: LinkMapper",
@@ -141,8 +141,8 @@
                         "startLine": 124,
                         "endLine": 125,
                         "references": {
-                            "Mapper": "@nav/api/mkdocs-ts/MdWidgets.ApiLink.Mapper",
-                            "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper"
+                            "Mapper": "@nav[mkdocs-ts]/MdWidgets.ApiLink.Mapper",
+                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
                         }
                     }
                 }
@@ -187,7 +187,7 @@
                         ]
                     },
                     "path": "ApiLink.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.ApiLink.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.ApiLink.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static fromHTMLElement(elem: HTMLElement): LinkView",
@@ -195,9 +195,9 @@
                         "startLine": 139,
                         "endLine": 148,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.ApiLink.fromHTMLElement",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.ApiLink.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView"
+                            "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
                     "semantic": {
@@ -215,9 +215,9 @@
                 "startLine": 115,
                 "endLine": 149,
                 "references": {
-                    "ApiLink": "@nav/api/mkdocs-ts/MdWidgets.ApiLink",
-                    "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
-                    "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
+                    "ApiLink": "@nav[mkdocs-ts]/MdWidgets.ApiLink",
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
@@ -234,7 +234,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents usual code badges view (NPM, PyPI, GitHub, ...).\n\nThis view is registered in  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-badge` , see  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.fromHTMLElement\" semantic=\"method\">CodeBadgesView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>",
+                        "content": "Represents usual code badges view (NPM, PyPI, GitHub, ...).\n\nThis view is registered in  <mkapi-api-link nav=\"@nav[mkdocs-ts].GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-badge` , see  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.fromHTMLElement\" semantic=\"method\">CodeBadgesView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -246,7 +246,7 @@
                 ]
             },
             "path": "CodeBadgesView",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView",
             "attributes": [
                 {
                     "name": "children",
@@ -271,7 +271,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.children",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.children",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.children",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "public readonly children: ChildrenLike",
@@ -279,7 +279,7 @@
                         "startLine": 101,
                         "endLine": 102,
                         "references": {
-                            "children": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.children",
+                            "children": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
                         }
                     }
@@ -307,7 +307,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.class",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.class",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.class",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "public readonly class = `${CodeBadgesView.CssSelector} d-flex align-items-center flex-wrap`",
@@ -315,7 +315,7 @@
                         "startLine": 100,
                         "endLine": 101,
                         "references": {
-                            "class": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.class"
+                            "class": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.class"
                         }
                     }
                 },
@@ -342,7 +342,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.tag",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.tag",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.tag",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "public readonly tag = 'div'",
@@ -350,7 +350,7 @@
                         "startLine": 99,
                         "endLine": 100,
                         "references": {
-                            "tag": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.tag"
                         }
                     }
                 },
@@ -377,7 +377,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.CssSelector",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.CssSelector",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.CssSelector",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeBadgesView'",
@@ -385,7 +385,7 @@
                         "startLine": 97,
                         "endLine": 98,
                         "references": {
-                            "CssSelector": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.CssSelector"
+                            "CssSelector": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.CssSelector"
                         }
                     }
                 }
@@ -419,7 +419,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.constructor",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.constructor",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.constructor",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "constructor({\n    github,\n    npm,\n    pypi,\n    version,\n    license,\n}: {\n    github?: string\n    npm?: string\n    pypi?: string\n    version?: string\n    license?: string\n})",
@@ -427,7 +427,7 @@
                         "startLine": 142,
                         "endLine": 187,
                         "references": {
-                            "CodeBadgesView": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView"
+                            "CodeBadgesView": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView"
                         }
                     },
                     "semantic": {
@@ -465,7 +465,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.attributeMapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.attributeMapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.attributeMapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        license: element.getAttribute('license') ?? undefined,\n        version: element.getAttribute('version') ?? undefined,\n        npm: element.getAttribute('npm') ?? undefined,\n        pypi: element.getAttribute('pypi') ?? undefined,\n        github: element.getAttribute('github') ?? undefined,\n    })",
@@ -473,7 +473,7 @@
                         "startLine": 108,
                         "endLine": 109,
                         "references": {
-                            "attributeMapper": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.attributeMapper",
+                            "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.attributeMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     },
@@ -489,7 +489,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.attributeMapper\" semantic=\"method\">CodeBadgesView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
+                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.attributeMapper\" semantic=\"method\">CodeBadgesView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -512,7 +512,7 @@
                         ]
                     },
                     "path": "CodeBadgesView.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-badges.ts",
                         "declaration": "static fromHTMLElement(element: HTMLElement)",
@@ -520,9 +520,9 @@
                         "startLine": 123,
                         "endLine": 128,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView.fromHTMLElement",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "CodeBadgesView": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView"
+                            "CodeBadgesView": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView"
                         }
                     },
                     "semantic": {
@@ -540,7 +540,7 @@
                 "startLine": 93,
                 "endLine": 188,
                 "references": {
-                    "CodeBadgesView": "@nav/api/mkdocs-ts/MdWidgets.CodeBadgesView",
+                    "CodeBadgesView": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
@@ -558,7 +558,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a code snippet view.\n\nThis view is registered in  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-snippet` , see  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.fromHTMLElement\" semantic=\"method\">CodeSnippetView.fromHTMLElement</mkapi-api-link> .\n\nThe language supported are defined by  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeLanguage\" semantic=\"type-alias\">CodeLanguage</mkapi-api-link> .\n\n## Examples\n\n<note level=\"example\" title=\"Javascript\" expandable=\"true\" mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n</note>\n\n\n<note level=\"example\" expandable=\"true\" title=\"Python\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"python\" highlightedLines=\"8\">\ndef compute(improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency ):\n    print(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"HTML\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"html\" highlightedLines=\"11-25\">\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Computation</title>\n</head>\n<body>\n    <h1>Ultimate Computation Example</h1>\n    <p>Provide your parameters and compute the result!</p>\n\n    <form id=\"computation-form\">\n        <label for=\"improbabilityFactor\">Improbability Factor:</label>\n        <input type=\"number\" id=\"improbabilityFactor\" value=\"3\"><br>\n\n        <label for=\"babelFishCount\">Babel Fish Count:</label>\n        <input type=\"number\" id=\"babelFishCount\" value=\"1\"><br>\n\n        <label for=\"vogonPoetryExposure\">Vogon Poetry Exposure:</label>\n        <input type=\"number\" id=\"vogonPoetryExposure\" value=\"250\"><br>\n\n        <label for=\"towelAbsorbency\">Towel Absorbency:</label>\n        <input type=\"number\" id=\"towelAbsorbency\" value=\"2\"><br>\n\n        <button type=\"button\" id=\"compute-button\">Compute</button>\n    </form>\n</body>\n</html>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"XML\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"xml\">\n<Computation>\n    <Parameters>\n        <ImprobabilityFactor>3</ImprobabilityFactor>\n        <BabelFishCount>1</BabelFishCount>\n        <VogonPoetryExposure>250</VogonPoetryExposure>\n        <TowelAbsorbency>2</TowelAbsorbency>\n    </Parameters>\n    <Result>42</Result>\n    <Log>Computation complete! The result is always 42, but you knew that already.</Log>\n</Computation>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"CSS\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"css\">\n.computation-container {\n   display: flex;\n   flex-direction: column;\n    align-items: center;\n  justify-content: center;\n  font-family: 'Courier New', Courier, monospace;\n  background-color: #f0f8ff;\n  border: 2px dashed #42a5f5;\n  padding: 20px;\n  margin: 20px;\n  border-radius: 8px;\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n}\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"YAML\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"yaml\">\ncomputation:\n  improbabilityFactor: 3       # A number too high might summon a whale and a bowl of petunias.\n  babelFishCount: 1            # Keep it to one, unless you enjoy linguistic chaos.\n  vogonPoetryExposure: 250     # Measured in verses endured. 1000+ is not recommended.\n  towelAbsorbency: 2           # Towel quality. Higher is better for intergalactic travel.\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"Markdown\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"markdown\">\n## Computation\n\nHere is a summary of the parameters:\n\n-  improbabilityFactor: 3\n-  babelFishCount: 1\n-  vogonPoetryExposure: 250\n-  towelAbsorbency: 2\n</code-snippet>\n</md-cell>\n</note>",
+                        "content": "Represents a code snippet view.\n\nThis view is registered in  <mkapi-api-link nav=\"@nav[mkdocs-ts].GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `code-snippet` , see  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.fromHTMLElement\" semantic=\"method\">CodeSnippetView.fromHTMLElement</mkapi-api-link> .\n\nThe language supported are defined by  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeLanguage\" semantic=\"type-alias\">CodeLanguage</mkapi-api-link> .\n\n## Examples\n\n<note level=\"example\" title=\"Javascript\" expandable=\"true\" mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n</note>\n\n\n<note level=\"example\" expandable=\"true\" title=\"Python\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"python\" highlightedLines=\"8\">\ndef compute(improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency ):\n    print(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"HTML\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"html\" highlightedLines=\"11-25\">\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Computation</title>\n</head>\n<body>\n    <h1>Ultimate Computation Example</h1>\n    <p>Provide your parameters and compute the result!</p>\n\n    <form id=\"computation-form\">\n        <label for=\"improbabilityFactor\">Improbability Factor:</label>\n        <input type=\"number\" id=\"improbabilityFactor\" value=\"3\"><br>\n\n        <label for=\"babelFishCount\">Babel Fish Count:</label>\n        <input type=\"number\" id=\"babelFishCount\" value=\"1\"><br>\n\n        <label for=\"vogonPoetryExposure\">Vogon Poetry Exposure:</label>\n        <input type=\"number\" id=\"vogonPoetryExposure\" value=\"250\"><br>\n\n        <label for=\"towelAbsorbency\">Towel Absorbency:</label>\n        <input type=\"number\" id=\"towelAbsorbency\" value=\"2\"><br>\n\n        <button type=\"button\" id=\"compute-button\">Compute</button>\n    </form>\n</body>\n</html>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"XML\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"xml\">\n<Computation>\n    <Parameters>\n        <ImprobabilityFactor>3</ImprobabilityFactor>\n        <BabelFishCount>1</BabelFishCount>\n        <VogonPoetryExposure>250</VogonPoetryExposure>\n        <TowelAbsorbency>2</TowelAbsorbency>\n    </Parameters>\n    <Result>42</Result>\n    <Log>Computation complete! The result is always 42, but you knew that already.</Log>\n</Computation>\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"CSS\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"css\">\n.computation-container {\n   display: flex;\n   flex-direction: column;\n    align-items: center;\n  justify-content: center;\n  font-family: 'Courier New', Courier, monospace;\n  background-color: #f0f8ff;\n  border: 2px dashed #42a5f5;\n  padding: 20px;\n  margin: 20px;\n  border-radius: 8px;\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n}\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"YAML\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"yaml\">\ncomputation:\n  improbabilityFactor: 3       # A number too high might summon a whale and a bowl of petunias.\n  babelFishCount: 1            # Keep it to one, unless you enjoy linguistic chaos.\n  vogonPoetryExposure: 250     # Measured in verses endured. 1000+ is not recommended.\n  towelAbsorbency: 2           # Towel quality. Higher is better for intergalactic travel.\n</code-snippet>\n</md-cell>\n</note>\n\n<note level=\"example\" expandable=\"true\" title=\"Markdown\"  mode=\"stateless\">\n<md-cell>\n<code-snippet language=\"markdown\">\n## Computation\n\nHere is a summary of the parameters:\n\n-  improbabilityFactor: 3\n-  babelFishCount: 1\n-  vogonPoetryExposure: 250\n-  towelAbsorbency: 2\n</code-snippet>\n</md-cell>\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -570,7 +570,7 @@
                 ]
             },
             "path": "CodeSnippetView",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView",
             "attributes": [
                 {
                     "name": "children",
@@ -595,7 +595,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.children",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.children",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.children",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
@@ -603,7 +603,7 @@
                         "startLine": 213,
                         "endLine": 214,
                         "references": {
-                            "children": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.children",
+                            "children": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
                         }
                     }
@@ -631,7 +631,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.class",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.class",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.class",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly class = `mkdocs-CodeSnippetView w-100 overflow-auto mb-3 mkdocs-resize-observer`",
@@ -639,7 +639,7 @@
                         "startLine": 203,
                         "endLine": 204,
                         "references": {
-                            "class": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.class"
+                            "class": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.class"
                         }
                     }
                 },
@@ -666,7 +666,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.style",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.style",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.style",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly style = {\n        fontSize: '0.8rem',\n    }",
@@ -674,7 +674,7 @@
                         "startLine": 207,
                         "endLine": 208,
                         "references": {
-                            "style": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.style"
+                            "style": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.style"
                         }
                     }
                 },
@@ -701,7 +701,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.tag",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.tag",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.tag",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "public readonly tag = 'div'",
@@ -709,7 +709,7 @@
                         "startLine": 198,
                         "endLine": 199,
                         "references": {
-                            "tag": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.tag"
                         }
                     }
                 },
@@ -736,7 +736,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.CssSelector",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.CssSelector",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.CssSelector",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-CodeSnippetView'",
@@ -744,7 +744,7 @@
                         "startLine": 190,
                         "endLine": 191,
                         "references": {
-                            "CssSelector": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.CssSelector"
+                            "CssSelector": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.CssSelector"
                         }
                     }
                 }
@@ -778,7 +778,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.constructor",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.constructor",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.constructor",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "constructor({\n    language,\n    content,\n    highlightedLines,\n    lineNumbers,\n}: {\n    language: CodeLanguage\n    highlightedLines?: string\n    lineNumbers?: boolean\n    content: string\n})",
@@ -786,8 +786,8 @@
                         "startLine": 259,
                         "endLine": 310,
                         "references": {
-                            "CodeSnippetView": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView",
-                            "CodeLanguage": "@nav/api/mkdocs-ts/MdWidgets.CodeLanguage"
+                            "CodeSnippetView": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView",
+                            "CodeLanguage": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage"
                         }
                     },
                     "semantic": {
@@ -825,7 +825,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.attributeMapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.attributeMapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.attributeMapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        language: (element.getAttribute('language') ??\n            'unknown') as CodeLanguage,\n        highlightedLines: element.getAttribute('highlightedLines') ?? undefined,\n        lineNumbers:\n            element.getAttribute('lineNumbers') &&\n            element.getAttribute('lineNumbers') == 'true'\n                ? true\n                : false,\n        content: element.textContent ?? '',\n    })",
@@ -833,9 +833,9 @@
                         "startLine": 226,
                         "endLine": 227,
                         "references": {
-                            "attributeMapper": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.attributeMapper",
+                            "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.attributeMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "CodeLanguage": "@nav/api/mkdocs-ts/MdWidgets.CodeLanguage"
+                            "CodeLanguage": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage"
                         }
                     },
                     "semantic": {
@@ -850,7 +850,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Construct an instance of CodeSnippetView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.attributeMapper\" semantic=\"method\">CodeSnippetView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
+                                "content": "Construct an instance of CodeSnippetView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.attributeMapper\" semantic=\"method\">CodeSnippetView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -873,7 +873,7 @@
                         ]
                     },
                     "path": "CodeSnippetView.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/code-snippet.view.ts",
                         "declaration": "static fromHTMLElement(element: HTMLElement)",
@@ -881,9 +881,9 @@
                         "startLine": 244,
                         "endLine": 249,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView.fromHTMLElement",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "CodeSnippetView": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView"
+                            "CodeSnippetView": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView"
                         }
                     },
                     "semantic": {
@@ -901,9 +901,9 @@
                 "startLine": 186,
                 "endLine": 311,
                 "references": {
-                    "CodeSnippetView": "@nav/api/mkdocs-ts/MdWidgets.CodeSnippetView",
-                    "CodeLanguage": "@nav/api/mkdocs-ts/MdWidgets.CodeLanguage",
-                    "CodeMirrorEditor": "@nav/api/mkdocs-ts/MdWidgets.CodeMirrorEditor",
+                    "CodeSnippetView": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView",
+                    "CodeLanguage": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage",
+                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
@@ -922,7 +922,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Link component for cross-links:\n\n<md-cell>\n<cross-link target=\"API\">API</cross-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.CrossLink.Mapper\" semantic=\"attribute\">CrossLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "content": "Link component for cross-links:\n\n<md-cell>\n<cross-link target=\"API\">API</cross-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.CrossLink.Mapper\" semantic=\"attribute\">CrossLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -934,7 +934,7 @@
                 ]
             },
             "path": "CrossLink",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.CrossLink",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.CrossLink",
             "attributes": [
                 {
                     "name": "icon",
@@ -959,7 +959,7 @@
                         ]
                     },
                     "path": "CrossLink.icon",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CrossLink.icon",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CrossLink.icon",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static readonly icon: AnyVirtualDOM = faIconTyped('fa-book-open', {\n        withStyle: { fontSize: stdIconFontSize },\n    })",
@@ -967,7 +967,7 @@
                         "startLine": 266,
                         "endLine": 267,
                         "references": {
-                            "icon": "@nav/api/mkdocs-ts/MdWidgets.CrossLink.icon",
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.CrossLink.icon",
                             "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
@@ -995,7 +995,7 @@
                         ]
                     },
                     "path": "CrossLink.Mapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CrossLink.Mapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CrossLink.Mapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static Mapper: LinkMapper",
@@ -1003,8 +1003,8 @@
                         "startLine": 262,
                         "endLine": 263,
                         "references": {
-                            "Mapper": "@nav/api/mkdocs-ts/MdWidgets.CrossLink.Mapper",
-                            "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper"
+                            "Mapper": "@nav[mkdocs-ts]/MdWidgets.CrossLink.Mapper",
+                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
                         }
                     }
                 }
@@ -1049,7 +1049,7 @@
                         ]
                     },
                     "path": "CrossLink.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.CrossLink.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.CrossLink.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static fromHTMLElement(elem: HTMLElement): LinkView",
@@ -1057,9 +1057,9 @@
                         "startLine": 276,
                         "endLine": 284,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.CrossLink.fromHTMLElement",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.CrossLink.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView"
+                            "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
                     "semantic": {
@@ -1077,9 +1077,9 @@
                 "startLine": 253,
                 "endLine": 285,
                 "references": {
-                    "CrossLink": "@nav/api/mkdocs-ts/MdWidgets.CrossLink",
-                    "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
-                    "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
+                    "CrossLink": "@nav[mkdocs-ts]/MdWidgets.CrossLink",
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
@@ -1096,7 +1096,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Link component for external resources:\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n</md-cell>\n\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.ExtLink.Mapper\" semantic=\"attribute\">ExtLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "content": "Link component for external resources:\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n</md-cell>\n\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.ExtLink.Mapper\" semantic=\"attribute\">ExtLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1108,7 +1108,7 @@
                 ]
             },
             "path": "ExtLink",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.ExtLink",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.ExtLink",
             "attributes": [
                 {
                     "name": "icon",
@@ -1133,7 +1133,7 @@
                         ]
                     },
                     "path": "ExtLink.icon",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.ExtLink.icon",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.ExtLink.icon",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static readonly icon: AnyVirtualDOM = faIconTyped('fa-external-link-alt', {\n        withStyle: { fontSize: stdIconFontSize },\n    })",
@@ -1141,7 +1141,7 @@
                         "startLine": 177,
                         "endLine": 178,
                         "references": {
-                            "icon": "@nav/api/mkdocs-ts/MdWidgets.ExtLink.icon",
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.ExtLink.icon",
                             "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
@@ -1169,7 +1169,7 @@
                         ]
                     },
                     "path": "ExtLink.Mapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.ExtLink.Mapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.ExtLink.Mapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static Mapper: LinkMapper",
@@ -1177,8 +1177,8 @@
                         "startLine": 173,
                         "endLine": 174,
                         "references": {
-                            "Mapper": "@nav/api/mkdocs-ts/MdWidgets.ExtLink.Mapper",
-                            "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper"
+                            "Mapper": "@nav[mkdocs-ts]/MdWidgets.ExtLink.Mapper",
+                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
                         }
                     }
                 }
@@ -1223,7 +1223,7 @@
                         ]
                     },
                     "path": "ExtLink.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.ExtLink.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.ExtLink.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static fromHTMLElement(elem: HTMLElement): LinkView",
@@ -1231,9 +1231,9 @@
                         "startLine": 186,
                         "endLine": 194,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.ExtLink.fromHTMLElement",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.ExtLink.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView"
+                            "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
                     "semantic": {
@@ -1251,9 +1251,9 @@
                 "startLine": 164,
                 "endLine": 195,
                 "references": {
-                    "ExtLink": "@nav/api/mkdocs-ts/MdWidgets.ExtLink",
-                    "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
-                    "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
+                    "ExtLink": "@nav[mkdocs-ts]/MdWidgets.ExtLink",
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
@@ -1270,7 +1270,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Link component for GitHub resources:\n\n<md-cell>\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.GitHubLink.Mapper\" semantic=\"attribute\">GitHubLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
+                        "content": "Link component for GitHub resources:\n\n<md-cell>\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n</md-cell>\n\n<note level=\"warning\">\nIt requires the consumer-provided  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.GitHubLink.Mapper\" semantic=\"attribute\">GitHubLink.Mapper</mkapi-api-link>  implementation that resolves the  `target`  attribute\nof an HTML element into a valid specification.\n</note>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1282,7 +1282,7 @@
                 ]
             },
             "path": "GitHubLink",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.GitHubLink",
             "attributes": [
                 {
                     "name": "icon",
@@ -1307,7 +1307,7 @@
                         ]
                     },
                     "path": "GitHubLink.icon",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink.icon",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.icon",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static readonly icon: AnyVirtualDOM = faIconTyped('fab-github', {\n        withStyle: { fontSize: '0.8rem' },\n    })",
@@ -1315,7 +1315,7 @@
                         "startLine": 221,
                         "endLine": 222,
                         "references": {
-                            "icon": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink.icon",
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.icon",
                             "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
@@ -1343,7 +1343,7 @@
                         ]
                     },
                     "path": "GitHubLink.Mapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink.Mapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.Mapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static Mapper: LinkMapper",
@@ -1351,8 +1351,8 @@
                         "startLine": 217,
                         "endLine": 218,
                         "references": {
-                            "Mapper": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink.Mapper",
-                            "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper"
+                            "Mapper": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.Mapper",
+                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
                         }
                     }
                 }
@@ -1397,7 +1397,7 @@
                         ]
                     },
                     "path": "GitHubLink.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "static fromHTMLElement(elem: HTMLElement): LinkView",
@@ -1405,9 +1405,9 @@
                         "startLine": 231,
                         "endLine": 239,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink.fromHTMLElement",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.fromHTMLElement",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView"
+                            "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
                     "semantic": {
@@ -1425,9 +1425,9 @@
                 "startLine": 208,
                 "endLine": 240,
                 "references": {
-                    "GitHubLink": "@nav/api/mkdocs-ts/MdWidgets.GitHubLink",
-                    "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
-                    "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
+                    "GitHubLink": "@nav[mkdocs-ts]/MdWidgets.GitHubLink",
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
@@ -1456,7 +1456,7 @@
                 ]
             },
             "path": "LinkView",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkView",
             "attributes": [
                 {
                     "name": "children",
@@ -1481,7 +1481,7 @@
                         ]
                     },
                     "path": "LinkView.children",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkView.children",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkView.children",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
@@ -1489,7 +1489,7 @@
                         "startLine": 27,
                         "endLine": 28,
                         "references": {
-                            "children": "@nav/api/mkdocs-ts/MdWidgets.LinkView.children",
+                            "children": "@nav[mkdocs-ts]/MdWidgets.LinkView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
                         }
                     }
@@ -1517,7 +1517,7 @@
                         ]
                     },
                     "path": "LinkView.href",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkView.href",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkView.href",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "public readonly href: string",
@@ -1525,7 +1525,7 @@
                         "startLine": 28,
                         "endLine": 29,
                         "references": {
-                            "href": "@nav/api/mkdocs-ts/MdWidgets.LinkView.href"
+                            "href": "@nav[mkdocs-ts]/MdWidgets.LinkView.href"
                         }
                     }
                 },
@@ -1552,7 +1552,7 @@
                         ]
                     },
                     "path": "LinkView.tag",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkView.tag",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkView.tag",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "public readonly tag = 'a'",
@@ -1560,7 +1560,7 @@
                         "startLine": 26,
                         "endLine": 27,
                         "references": {
-                            "tag": "@nav/api/mkdocs-ts/MdWidgets.LinkView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.LinkView.tag"
                         }
                     }
                 },
@@ -1587,7 +1587,7 @@
                         ]
                     },
                     "path": "LinkView.target",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkView.target",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkView.target",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "public readonly target: string",
@@ -1595,7 +1595,7 @@
                         "startLine": 29,
                         "endLine": 30,
                         "references": {
-                            "target": "@nav/api/mkdocs-ts/MdWidgets.LinkView.target"
+                            "target": "@nav[mkdocs-ts]/MdWidgets.LinkView.target"
                         }
                     }
                 }
@@ -1629,7 +1629,7 @@
                         ]
                     },
                     "path": "LinkView.constructor",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkView.constructor",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkView.constructor",
                     "code": {
                         "filePath": "src/lib/md-widgets/links.view.ts",
                         "declaration": "constructor({\n    elem,\n    icon,\n    mapper,\n    newTab,\n    classPrefix,\n}: {\n    elem: HTMLElement\n    icon: AnyVirtualDOM\n    mapper?: LinkMapper\n    newTab: boolean\n    classPrefix?: string\n})",
@@ -1637,8 +1637,8 @@
                         "startLine": 41,
                         "endLine": 98,
                         "references": {
-                            "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
-                            "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
+                            "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
+                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
@@ -1658,8 +1658,8 @@
                 "startLine": 25,
                 "endLine": 99,
                 "references": {
-                    "LinkView": "@nav/api/mkdocs-ts/MdWidgets.LinkView",
-                    "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
@@ -1678,7 +1678,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Represents a note.\n\nThis view is registered in  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `note` , see  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.NoteView.fromHTMLElement\" semantic=\"method\">NoteView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n### Basics\n\nA note is defined providing a  `level`  attribute and a text content:\n\n<md-cell>\n<note level='info'>\nThis is a note with no option beside  `level` .\n</note>\n</md-cell>\n\nAvailable levels are defined by  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.NoteLevel\" semantic=\"type-alias\">NoteLevel</mkapi-api-link>  and illustrated in section **Available Levels**.\n\nThere are multiple options that can be provided, *e.g.*\n\n<md-cell>\n<note level='info' icon='fas fa-star' title='Custom label' expandable='true'>\nThis is a note with multiple options defined:\n*   `icon` : Overrides the default icon for the level.\n*   `title` : Overrides the default title for the level.\n*   `expandable` : Makes the note expandable.\n\n<note level=\"hint\">\nThe additional option  `mode`  is available for expandable notes.\n</note>\n</note>\n</md-cell>\n\nSee  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.NoteView.attributeMapper\" semantic=\"method\">NoteView.attributeMapper</mkapi-api-link>  for the list of available options.\n\n### Available Levels\n\n<js-cell>\nconst { MkDocs } = await webpm.install({\n    esm:['mkdocs-ts#{{mkdocs-version}} as MkDocs']\n})\nconst src =  `\n<note level=\"{{level}}\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note> ` \n\nconst levels = ['note', 'abstract', 'info', 'hint', 'success', 'question',\n                'warning', 'failure', 'danger', 'bug', 'example', 'quote']\n\nlevels.forEach((level)=> {\n    display(MkDocs.parseMd({src:src.replace('{{level}}', level)}))\n})\n</js-cell>",
+                        "content": "Represents a note.\n\nThis view is registered in  <mkapi-api-link nav=\"@nav[mkdocs-ts].GlobalMarkdownViews\" semantic=\"class\">GlobalMarkdownViews</mkapi-api-link> : it can be instantiated from Markdown with an HTMLElement\nusing the tag  `note` , see  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.NoteView.fromHTMLElement\" semantic=\"method\">NoteView.fromHTMLElement</mkapi-api-link> .\n\n## Examples\n\n### Basics\n\nA note is defined providing a  `level`  attribute and a text content:\n\n<md-cell>\n<note level='info'>\nThis is a note with no option beside  `level` .\n</note>\n</md-cell>\n\nAvailable levels are defined by  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.NoteLevel\" semantic=\"type-alias\">NoteLevel</mkapi-api-link>  and illustrated in section **Available Levels**.\n\nThere are multiple options that can be provided, *e.g.*\n\n<md-cell>\n<note level='info' icon='fas fa-star' title='Custom label' expandable='true'>\nThis is a note with multiple options defined:\n*   `icon` : Overrides the default icon for the level.\n*   `title` : Overrides the default title for the level.\n*   `expandable` : Makes the note expandable.\n\n<note level=\"hint\">\nThe additional option  `mode`  is available for expandable notes.\n</note>\n</note>\n</md-cell>\n\nSee  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.NoteView.attributeMapper\" semantic=\"method\">NoteView.attributeMapper</mkapi-api-link>  for the list of available options.\n\n### Available Levels\n\n<js-cell>\nconst { MkDocs } = await webpm.install({\n    esm:['mkdocs-ts#{{mkdocs-version}} as MkDocs']\n})\nconst src =  `\n<note level=\"{{level}}\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note> ` \n\nconst levels = ['note', 'abstract', 'info', 'hint', 'success', 'question',\n                'warning', 'failure', 'danger', 'bug', 'example', 'quote']\n\nlevels.forEach((level)=> {\n    display(MkDocs.parseMd({src:src.replace('{{level}}', level)}))\n})\n</js-cell>",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -1690,7 +1690,7 @@
                 ]
             },
             "path": "NoteView",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView",
             "attributes": [
                 {
                     "name": "children",
@@ -1715,7 +1715,7 @@
                         ]
                     },
                     "path": "NoteView.children",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.children",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.children",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly children: ChildrenLike",
@@ -1723,7 +1723,7 @@
                         "startLine": 109,
                         "endLine": 110,
                         "references": {
-                            "children": "@nav/api/mkdocs-ts/MdWidgets.NoteView.children",
+                            "children": "@nav[mkdocs-ts]/MdWidgets.NoteView.children",
                             "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
                         }
                     }
@@ -1751,7 +1751,7 @@
                         ]
                     },
                     "path": "NoteView.class",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.class",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.class",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly class: string = `${NoteView.CssSelector} border rounded text-justify`",
@@ -1759,7 +1759,7 @@
                         "startLine": 108,
                         "endLine": 109,
                         "references": {
-                            "class": "@nav/api/mkdocs-ts/MdWidgets.NoteView.class"
+                            "class": "@nav[mkdocs-ts]/MdWidgets.NoteView.class"
                         }
                     }
                 },
@@ -1786,7 +1786,7 @@
                         ]
                     },
                     "path": "NoteView.connectedCallback",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.connectedCallback",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.connectedCallback",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly connectedCallback: (elem: RxHTMLElement<'div'>) => void",
@@ -1794,7 +1794,7 @@
                         "startLine": 120,
                         "endLine": 121,
                         "references": {
-                            "connectedCallback": "@nav/api/mkdocs-ts/MdWidgets.NoteView.connectedCallback",
+                            "connectedCallback": "@nav[mkdocs-ts]/MdWidgets.NoteView.connectedCallback",
                             "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement"
                         }
                     }
@@ -1822,7 +1822,7 @@
                         ]
                     },
                     "path": "NoteView.tag",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.tag",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.tag",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "public readonly tag = 'div'",
@@ -1830,7 +1830,7 @@
                         "startLine": 107,
                         "endLine": 108,
                         "references": {
-                            "tag": "@nav/api/mkdocs-ts/MdWidgets.NoteView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.NoteView.tag"
                         }
                     }
                 },
@@ -1857,7 +1857,7 @@
                         ]
                     },
                     "path": "NoteView.CssSelector",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.CssSelector",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.CssSelector",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "static readonly CssSelector = 'mkdocs-NoteView'",
@@ -1865,7 +1865,7 @@
                         "startLine": 105,
                         "endLine": 106,
                         "references": {
-                            "CssSelector": "@nav/api/mkdocs-ts/MdWidgets.NoteView.CssSelector"
+                            "CssSelector": "@nav[mkdocs-ts]/MdWidgets.NoteView.CssSelector"
                         }
                     }
                 }
@@ -1887,7 +1887,7 @@
                             },
                             {
                                 "title": "Arguments",
-                                "content": "\n*  **content**: Text content.\n*  **expandable**: Whether the note is expandable. Expandable note are collapsed by default.\nDefault to  `false` ,\n*  **icon**: If provided, overrides the default icon associated to the given level.\n    If a  `string`  is provided, it is used as key to retrieve the actual icon from  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/.IconFactory\" semantic=\"class\">IconFactory</mkapi-api-link> .\n*  **label**: Label to display. If none is provided, it uses the level as default value.\n*  **level**: Level of the note.\n*  **mode**: See  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.ExpandableMode\" semantic=\"type-alias\">ExpandableMode</mkapi-api-link> .\n*  **parsingArgs**: Parsing options used to parse the content in MarkDown.",
+                                "content": "\n*  **content**: Text content.\n*  **expandable**: Whether the note is expandable. Expandable note are collapsed by default.\nDefault to  `false` ,\n*  **icon**: If provided, overrides the default icon associated to the given level.\n    If a  `string`  is provided, it is used as key to retrieve the actual icon from  <mkapi-api-link nav=\"@nav[mkdocs-ts].IconFactory\" semantic=\"class\">IconFactory</mkapi-api-link> .\n*  **label**: Label to display. If none is provided, it uses the level as default value.\n*  **level**: Level of the note.\n*  **mode**: See  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.ExpandableMode\" semantic=\"type-alias\">ExpandableMode</mkapi-api-link> .\n*  **parsingArgs**: Parsing options used to parse the content in MarkDown.",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "arguments",
@@ -1899,7 +1899,7 @@
                         ]
                     },
                     "path": "NoteView.constructor",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.constructor",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.constructor",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "constructor(params: {\n    level: NoteLevel\n    icon?: string | AnyVirtualDOM\n    label?: string | AnyVirtualDOM\n    content: string | AnyVirtualDOM\n    expandable?: boolean\n    mode?: ExpandableMode\n    parsingArgs: { router?: Router } & MdParsingOptions\n})",
@@ -1907,10 +1907,10 @@
                         "startLine": 135,
                         "endLine": 204,
                         "references": {
-                            "NoteView": "@nav/api/mkdocs-ts/MdWidgets.NoteView",
-                            "ExpandableMode": "@nav/api/mkdocs-ts/MdWidgets.ExpandableMode",
-                            "Router": "@nav/api/mkdocs-ts/.Router",
-                            "MdParsingOptions": "@nav/api/mkdocs-ts/.MdParsingOptions",
+                            "NoteView": "@nav[mkdocs-ts]/MdWidgets.NoteView",
+                            "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode",
+                            "Router": "@nav[mkdocs-ts].Router",
+                            "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
                             "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     },
@@ -1949,7 +1949,7 @@
                         ]
                     },
                     "path": "NoteView.attributeMapper",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.attributeMapper",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.attributeMapper",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "static attributeMapper = (element: HTMLElement) => ({\n        level: element.getAttribute('level') as NoteLevel,\n        label:\n            element.getAttribute('title') ??\n            element.getAttribute('label') ??\n            undefined,\n        content: element.textContent ?? '',\n        expandable: element.getAttribute('expandable')\n            ? element.getAttribute('expandable') === 'true'\n            : false,\n        mode:\n            (element.getAttribute('mode') as ExpandableMode | null) ??\n            'stateful',\n        icon: element.getAttribute('icon') ?? undefined,\n    })",
@@ -1957,9 +1957,9 @@
                         "startLine": 210,
                         "endLine": 211,
                         "references": {
-                            "attributeMapper": "@nav/api/mkdocs-ts/MdWidgets.NoteView.attributeMapper",
+                            "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.NoteView.attributeMapper",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "ExpandableMode": "@nav/api/mkdocs-ts/MdWidgets.ExpandableMode"
+                            "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode"
                         }
                     },
                     "semantic": {
@@ -1974,7 +1974,7 @@
                     "documentation": {
                         "sections": [
                             {
-                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.NoteView.attributeMapper\" semantic=\"method\">NoteView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
+                                "content": "Construct an instance of NoteView from an  `HTMLElement` .\n\nSee  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.NoteView.attributeMapper\" semantic=\"method\">NoteView.attributeMapper</mkapi-api-link>  for details on the attributes conversion from the  `HTMLElement` .",
                                 "contentType": "markdown",
                                 "semantic": {
                                     "role": "",
@@ -1997,7 +1997,7 @@
                         ]
                     },
                     "path": "NoteView.fromHTMLElement",
-                    "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteView.fromHTMLElement",
+                    "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteView.fromHTMLElement",
                     "code": {
                         "filePath": "src/lib/md-widgets/note.view.ts",
                         "declaration": "static fromHTMLElement(\n    element: HTMLElement,\n    parsingArgs: { router?: Router } & MdParsingOptions,\n)",
@@ -2005,11 +2005,11 @@
                         "startLine": 234,
                         "endLine": 243,
                         "references": {
-                            "fromHTMLElement": "@nav/api/mkdocs-ts/MdWidgets.NoteView.fromHTMLElement",
-                            "Router": "@nav/api/mkdocs-ts/.Router",
-                            "MdParsingOptions": "@nav/api/mkdocs-ts/.MdParsingOptions",
+                            "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.NoteView.fromHTMLElement",
+                            "Router": "@nav[mkdocs-ts].Router",
+                            "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
                             "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "NoteView": "@nav/api/mkdocs-ts/MdWidgets.NoteView"
+                            "NoteView": "@nav[mkdocs-ts]/MdWidgets.NoteView"
                         }
                     },
                     "semantic": {
@@ -2027,10 +2027,10 @@
                 "startLine": 101,
                 "endLine": 244,
                 "references": {
-                    "NoteView": "@nav/api/mkdocs-ts/MdWidgets.NoteView",
-                    "ExpandableMode": "@nav/api/mkdocs-ts/MdWidgets.ExpandableMode",
-                    "Router": "@nav/api/mkdocs-ts/.Router",
-                    "MdParsingOptions": "@nav/api/mkdocs-ts/.MdParsingOptions",
+                    "NoteView": "@nav[mkdocs-ts]/MdWidgets.NoteView",
+                    "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode",
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
                     "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
                     "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
                     "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
@@ -2063,7 +2063,7 @@
                 ]
             },
             "path": "CodeMirror",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeMirror",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeMirror",
             "attributes": [],
             "callables": [],
             "code": {
@@ -2073,8 +2073,8 @@
                 "startLine": 21,
                 "endLine": 27,
                 "references": {
-                    "CodeMirror": "@nav/api/mkdocs-ts/MdWidgets.CodeMirror",
-                    "CodeMirrorEditor": "@nav/api/mkdocs-ts/MdWidgets.CodeMirrorEditor",
+                    "CodeMirror": "@nav[mkdocs-ts]/MdWidgets.CodeMirror",
+                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
@@ -2103,7 +2103,7 @@
                 ]
             },
             "path": "CodeMirrorEditor",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeMirrorEditor",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor",
             "attributes": [],
             "callables": [],
             "code": {
@@ -2113,7 +2113,7 @@
                 "startLine": 12,
                 "endLine": 17,
                 "references": {
-                    "CodeMirrorEditor": "@nav/api/mkdocs-ts/MdWidgets.CodeMirrorEditor"
+                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor"
                 }
             },
             "semantic": {
@@ -2140,7 +2140,7 @@
                 ]
             },
             "path": "CodeLanguage",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.CodeLanguage",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage",
             "attributes": [],
             "callables": [],
             "code": {
@@ -2150,7 +2150,7 @@
                 "startLine": 317,
                 "endLine": 318,
                 "references": {
-                    "CodeLanguage": "@nav/api/mkdocs-ts/MdWidgets.CodeLanguage"
+                    "CodeLanguage": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage"
                 }
             },
             "semantic": {
@@ -2177,7 +2177,7 @@
                 ]
             },
             "path": "ExpandableMode",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.ExpandableMode",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode",
             "attributes": [],
             "callables": [],
             "code": {
@@ -2187,7 +2187,7 @@
                 "startLine": 43,
                 "endLine": 44,
                 "references": {
-                    "ExpandableMode": "@nav/api/mkdocs-ts/MdWidgets.ExpandableMode"
+                    "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode"
                 }
             },
             "semantic": {
@@ -2214,7 +2214,7 @@
                 ]
             },
             "path": "LinkMapper",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
             "attributes": [],
             "callables": [],
             "code": {
@@ -2224,7 +2224,7 @@
                 "startLine": 10,
                 "endLine": 11,
                 "references": {
-                    "LinkMapper": "@nav/api/mkdocs-ts/MdWidgets.LinkMapper",
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
                     "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                     "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                 }
@@ -2241,7 +2241,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Note level in  <mkapi-api-link nav=\"@nav/api/mkdocs-ts/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> .",
+                        "content": "Note level in  <mkapi-api-link nav=\"@nav[mkdocs-ts]/MdWidgets.NoteView\" semantic=\"class\">NoteView</mkapi-api-link> .",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -2253,7 +2253,7 @@
                 ]
             },
             "path": "NoteLevel",
-            "navPath": "@nav/api/mkdocs-ts/MdWidgets.NoteLevel",
+            "navPath": "@nav[mkdocs-ts]/MdWidgets.NoteLevel",
             "attributes": [],
             "callables": [],
             "code": {
@@ -2263,8 +2263,8 @@
                 "startLine": 35,
                 "endLine": 36,
                 "references": {
-                    "NoteLevel": "@nav/api/mkdocs-ts/MdWidgets.NoteLevel",
-                    "icons": "@nav/api/mkdocs-ts/MdWidgets.icons"
+                    "NoteLevel": "@nav[mkdocs-ts]/MdWidgets.NoteLevel",
+                    "icons": "@nav[mkdocs-ts]/MdWidgets.icons"
                 }
             },
             "semantic": {

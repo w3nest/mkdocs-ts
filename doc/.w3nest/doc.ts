@@ -51,49 +51,10 @@ const externals: any = {
         }
         return urls[name]
     },
-    'mkdocs-ts': ({ name }: { name: string }) => {
-        const urls = {
-            Router: '?nav=/api/mkdocs-ts.Router',
-            Navigation: '?nav=/api/mkdocs-ts.Navigation',
-            NavNodeData: '?nav=/api/mkdocs-ts.NavNodeData',
-            ContextTrait: '?nav=/api/mkdocs-ts.ContextTrait',
-            MdParsingOptions: '?nav=/api/mkdocs-ts.MdParsingOptions',
-            ViewGenerator: '?nav=/api/mkdocs-ts.ViewGenerator',
-            AnyView: '?nav=/api/mkdocs-ts.AnyView',
-            ClientTocView: '?nav=/api/mkdocs-ts/DefaultLayout.ClientTocView',
-            NavLayoutView: '?nav=/api/mkdocs-ts/DefaultLayout.NavLayoutView',
-            NavLayout: '?nav=/api/mkdocs-ts/DefaultLayout.NavLayout',
-            'DefaultLayout.NavLayout':
-                '?nav=/api/mkdocs-ts/DefaultLayout.NavLayout',
-            NavHeader: '?nav=/api/mkdocs-ts/DefaultLayout.NavHeader',
-            'DefaultLayout.NavHeader':
-                '?nav=/api/mkdocs-ts/DefaultLayout.NavHeader',
-        }
-
-        if (!(name in urls)) {
-            console.warn(`Can not find URL for mkdocs-ts's '${name}' symbol`)
-        }
-        return urls[name]
-    },
 }
 
 generateApiFiles({
     projectFolder: `${__dirname}/../../`,
     outputFolder: `${__dirname}/../assets/api/mkdocs-ts`,
-    baseNav: '/api/mkdocs-ts',
-    externals,
-})
-
-generateApiFiles({
-    projectFolder: `${__dirname}/../../plugins/notebook`,
-    outputFolder: `${__dirname}/../assets/api/notebook`,
-    baseNav: '/api/notebook',
-    externals,
-})
-
-generateApiFiles({
-    projectFolder: `${__dirname}/../../plugins/code-api`,
-    outputFolder: `${__dirname}/../assets/api/code-api`,
-    baseNav: '/api/code-api',
     externals,
 })

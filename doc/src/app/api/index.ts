@@ -9,6 +9,9 @@ import * as webpm from '@w3nest/webpm-client'
 import { createRootContext } from '../config.context'
 import { companionNodes$ } from '../common'
 
+import { apiNav as NavCodeApi } from '@mkdocs-ts/code-api/Doc'
+import { apiNav as NavNotebook } from '@mkdocs-ts/notebook/Doc'
+
 export const navigation: AppNav = {
     name: 'API',
     header: {
@@ -27,9 +30,19 @@ export const navigation: AppNav = {
         content: fromMd('api.md'),
     },
     routes: {
-        '/mkdocs-ts': apiNav('mkdocs-ts'),
-        '/notebook': apiNav('notebook'),
-        '/code-api': apiNav('code-api'),
+        '/mkdocs-ts': apiNav(),
+        '/notebook': NavNotebook({
+            rootModulesNav: {
+                self: '@nav/api/notebook',
+                'mkdocs-ts': '@nav/api/mkdocs-ts',
+            },
+        }),
+        '/code-api': NavCodeApi({
+            rootModulesNav: {
+                self: '@nav/api/code-api',
+                'mkdocs-ts': '@nav/api/mkdocs-ts',
+            },
+        }),
     },
 }
 
@@ -44,13 +57,11 @@ export async function installCodeApiModule() {
     return CodeApi
 }
 
-async function apiNav(
-    module: 'mkdocs-ts' | 'notebook' | 'code-api',
-): Promise<AppNav> {
+async function apiNav(): Promise<AppNav> {
     const CodeApiModule = await installCodeApiModule()
 
     const NotebookModule = await installNotebookModule()
-
+    const module = 'mkdocs-ts'
     const context = createRootContext({
         threadName: `CodeAPI`,
         labels: ['CodeApi'],
@@ -58,18 +69,18 @@ async function apiNav(
 
     return CodeApiModule.codeApiEntryNode(
         {
-            name: module === 'mkdocs-ts' ? module : `Plugin ${module}`,
+            name: module,
             header: {
                 icon: {
                     tag: 'i' as const,
-                    class:
-                        module === 'mkdocs-ts'
-                            ? 'fas fa-code'
-                            : `fas fa-puzzle-piece`,
+                    class: 'fas fa-code',
                 },
             },
             entryModule: module,
-            docBasePath: `../assets/api/${module}`,
+            dataFolder: `../assets/api/${module}`,
+            rootModulesNav: {
+                'mkdocs-ts': '@nav/api/mkdocs-ts',
+            },
             configuration: {
                 ...CodeApiModule.configurationTsTypedoc,
                 sectionView: ({

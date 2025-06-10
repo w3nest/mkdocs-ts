@@ -64,7 +64,8 @@ config = ProjectConfig(
                 "rxjs",
                 "rx-vdom",
                 "mkdocs-ts",
-                "@mkdocs-ts/notebook",
+                "@mkdocs-ts/code-api/Doc",
+                "@mkdocs-ts/notebook/Doc",
                 "@w3nest/webpm-client",
                 "mathjax",
                 "@w3nest/ui-tk/Badges",
@@ -75,7 +76,7 @@ config = ProjectConfig(
     userGuide=True,
     devServer=DevServer(port=3025),
     inPackageJson={
-        "scripts": {"doc": "npx tsx .w3nest/doc.ts && python .w3nest/doc.py"},
+        "scripts": {"doc": "npx tsx .w3nest/doc.ts"},
     },
 )
 
