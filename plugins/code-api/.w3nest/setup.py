@@ -1,7 +1,9 @@
+import re
 from shutil import copyfile
 from pathlib import Path
 
 from w3nest.ci.ts_frontend import (
+    AuxiliaryModule,
     ProjectConfig,
     PackageType,
     Dependencies,
@@ -21,6 +23,7 @@ externals_deps = {
     "rx-vdom": "^0.1.3",
     "rxjs": "^7.5.6",
     "@w3nest/http-clients": "^0.1.5",
+    "@w3nest/webpm-client": "^0.1.5",
 }
 in_bundle_deps = {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -44,7 +47,22 @@ config = ProjectConfig(
             loadDependencies=["mkdocs-ts", "rx-vdom", "rxjs", "@w3nest/http-clients"],
             aliases=[],
         ),
+        auxiliaryModules=[
+            AuxiliaryModule(
+                name="Doc",
+                entryFile="./doc/index.ts",
+                loadDependencies=[
+                    "mkdocs-ts",
+                    "@w3nest/webpm-client",
+                ],
+            )
+        ],
     ),
+    inPackageJson={
+        "scripts": {
+            "doc": "(cd .w3nest && npx tsx doc.ts && python doc.py)",
+        }
+    },
 )
 template_folder = project_folder / ".w3nest" / ".template"
 generate_template(config=config, dst_folder=template_folder)
@@ -60,3 +78,17 @@ files = [
 ]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)
+
+doc_index_ts = project_folder / "src" / "doc" / "index.ts"
+
+with open(doc_index_ts, "r") as file:
+    content = file.read()
+
+content = re.sub(
+    r"(const\s+libraryVersion\s*=\s*')[^']+(')",
+    lambda m: f"{m.group(1)}{pkg_json["version"]}{m.group(2)}",
+    content,
+)
+
+with open(doc_index_ts, "w") as file:
+    file.write(content)

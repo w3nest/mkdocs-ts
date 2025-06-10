@@ -19,7 +19,7 @@
         "lint-eslint-check": "eslint ./src",
         "test": "jest -i",
         "test-coverage": "jest -i --collect-coverage",
-        "doc": "typedoc",
+        "doc": "(cd .w3nest && npx tsx doc.ts && python doc.py)",
         "publish-npm-public": "yarn build:prod && yarn test-coverage && yarn publish --access public"
     },
     "exports": {
@@ -35,11 +35,23 @@
                 ],
                 "aliases": []
             }
+        },
+        "./Doc": {
+            "default": "./dist/Doc.js",
+            "types": "./src/doc/index.ts",
+            "webpm": {
+                "dependencies": [
+                    "mkdocs-ts",
+                    "@w3nest/webpm-client"
+                ],
+                "aliases": []
+            }
         }
     },
     "dependencies": {
         "@fortawesome/free-solid-svg-icons": "^6.7.2",
         "@w3nest/http-clients": "^0.1.5",
+        "@w3nest/webpm-client": "^0.1.5",
         "mkdocs-ts": "^0.5.0",
         "rx-vdom": "^0.1.3",
         "rxjs": "^7.5.6"
@@ -73,6 +85,7 @@
         "kind": "esm",
         "dependencies": {
             "@w3nest/http-clients": "^0.1.5",
+            "@w3nest/webpm-client": "^0.1.5",
             "mkdocs-ts": "^0.5.0",
             "rx-vdom": "^0.1.3",
             "rxjs": "^7.5.6"
@@ -80,14 +93,27 @@
     },
     "webpack": {
         "root": "src",
-        "apiVersion": "01",
+        "apiVersion": "02",
         "main": "./index.ts",
-        "additionalEntries": {},
+        "additionalEntries": {
+            "Doc": "./doc/index.ts"
+        },
         "externals": {
-            "mkdocs-ts": "mkdocs-ts_APIv05",
-            "rx-vdom": "rx-vdom_APIv01",
-            "rxjs": "rxjs_APIv7",
-            "@w3nest/http-clients": "@w3nest/http-clients_APIv01"
+            "mkdocs-ts": [
+                "mkdocs-ts_APIv05"
+            ],
+            "rx-vdom": [
+                "rx-vdom_APIv01"
+            ],
+            "rxjs": [
+                "rxjs_APIv7"
+            ],
+            "@w3nest/http-clients": [
+                "@w3nest/http-clients_APIv01"
+            ],
+            "@w3nest/webpm-client": [
+                "@w3nest/webpm-client_APIv01"
+            ]
         }
     }
 }

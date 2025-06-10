@@ -1199,6 +1199,16 @@
     rx-vdom "^0.1.0"
     rxjs "^7.5.6"
 
+"@w3nest/webpm-client@^0.1.5":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.9.tgz#153ce2d955ceb0da86f0e4c5b74d72cce1d77303"
+  integrity sha512-EWsJdXPeEHmBBL4/OKpytCaOuDNdAmBKCWnnnIkFrlxV67rkwIyiae+aDA2/FA6j1Zr9tMMZoob+kT8jgFoBRQ==
+  dependencies:
+    "@w3nest/http-clients" "^0.1.5"
+    rx-vdom "^0.1.3"
+    rxjs "^7.5.6"
+    semver "^7.3.4"
+
 "@webassemblyjs/ast@1.14.1", "@webassemblyjs/ast@^1.14.1":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.14.1.tgz#a9f6a07f2b03c95c8d38c4536a1fdfb521ff55b6"
