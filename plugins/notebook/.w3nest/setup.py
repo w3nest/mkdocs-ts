@@ -23,12 +23,11 @@ externals_deps = {
     "rxjs": "^7.5.6",
     "@w3nest/rx-tree-views": "^0.2.0",
     "esprima": "^4.0.1",
+    "@w3nest/webpm-client": "^0.1.8",
+    "@mkdocs-ts/code-api": "^0.2.0",
 }
 in_bundle_deps = {
     "prism-code-editor": "^4.0.0",
-    # webpm-client is only used for types w/ workers pool, it is not included in dev. deps to allow installation
-    # in consuming projects
-    "@w3nest/webpm-client": "^0.1.8",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
 }
 dev_deps = {}
@@ -57,7 +56,23 @@ config = ProjectConfig(
             ],
             aliases=[],
         ),
+        auxiliaryModules=[
+            AuxiliaryModule(
+                name="Doc",
+                entryFile="./doc/index.ts",
+                loadDependencies=[
+                    "mkdocs-ts",
+                    "@mkdocs-ts/code-api",
+                    "@w3nest/webpm-client",
+                ],
+            )
+        ],
     ),
+    inPackageJson={
+        "scripts": {
+            "doc": "(cd .w3nest && npx tsx doc.ts && python doc.py)",
+        }
+    },
 )
 template_folder = project_folder / ".w3nest" / ".template"
 generate_template(config=config, dst_folder=template_folder)

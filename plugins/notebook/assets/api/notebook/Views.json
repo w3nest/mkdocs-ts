@@ -1,0 +1,998 @@
+{
+    "name": "Views",
+    "documentation": {
+        "sections": [
+            {
+                "content": "This module provides a collection of lightweight UI components designed for use within a notebook page.\n\nFor layout-specific elements, refer to the  <mkapi-api-link nav=\"@nav[notebook]/Views/Layouts\" semantic=\"module\">Layouts</mkapi-api-link>  submodule.\n\n## Quick Overview\n\n###  <mkapi-api-link nav=\"@nav[notebook]/Views.Select\" semantic=\"class\">Select</mkapi-api-link> \n\nThe  `Select`  component provides a **selectable list** with customizable display names.\n\n<js-cell>\nlet select = new Views.Select({\n    items: {foo:42, bar:84},\n    selected: 'foo',\n    displayedNames: { 'foo': 'Foo', 'bar': 'Bar'}\n})\ndisplay(select)\ndisplay(select.value$)\n</js-cell>\n\n###  <mkapi-api-link nav=\"@nav[notebook]/Views.Range\" semantic=\"class\">Range</mkapi-api-link> \n\nThe  `Range`  component creates an **interactive slider** for numeric input.\n\n<js-cell>\nlet range = new Views.Range()\ndisplay(range)\ndisplay(range.value$)\n</js-cell>\n\n###  <mkapi-api-link nav=\"@nav[notebook]/Views.Text\" semantic=\"class\">Text</mkapi-api-link> \n\nThe  `Text`  component supports **Markdown formatting** and **LaTeX expressions** for mathematical notation.\n\n<js-cell>\ndisplay(new Views.Text('**a simple example**'))\ndisplay(new Views.Text(String.raw `**including latex inlined**: \\(ax^2 + bx + c = 0\\)` ))\ndisplay(new Views.Text(String.raw `**including latex block**: $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$$` ))\n</js-cell>\n\n###  <mkapi-api-link nav=\"@nav[notebook]/Views.notify\" semantic=\"function\">Notification</mkapi-api-link> \n\nThe  `notify`  function enables notification:\n\n<js-cell>\nconst notification = {\n    tag: 'div',\n    class: 'p-3',\n    innerText: 'A notification...'\n}\ndisplay({\n    tag: 'button',\n    class: 'btn btn-sm btn-primary',\n    innerText: 'Notify',\n    onclick: ()=> {\n        Views.notify({content:notification, level:'info', duration:3000})\n    }\n})\n</js-cell>",
+                "contentType": "markdown",
+                "semantic": {
+                    "role": "",
+                    "labels": [],
+                    "attributes": {},
+                    "relations": {}
+                }
+            }
+        ]
+    },
+    "path": "notebook/Views",
+    "navPath": "@nav[notebook]",
+    "attributes": [],
+    "types": [
+        {
+            "name": "Range",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a range view.\n\n<js-cell>\nlet range = new Views.Range()\ndisplay(range)\ndisplay(range.value$)\n</js-cell>\n\nTo set up min, max and step:\n<js-cell>\ndisplay(new Views.Range({min:0, max:100, step: 1}))\n</js-cell>\n\nThe range can optionally **not** emit while dragging:\n<js-cell>\nrange = new Views.Range({emitDrag: false})\ndisplay(range)\n</js-cell>\n\n<note level='info'>\nWhen emitting on drag, it may be relevant to debounce the values, *e.g.*:\n\n `range.value$.pipe(rxjs.debounceTime(100))` .\n\n</note>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Range",
+            "navPath": "@nav[notebook]/Views.Range",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.children",
+                    "navPath": "@nav[notebook]/Views.Range.children",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 37,
+                        "endLine": 38,
+                        "references": {
+                            "children": "@nav[notebook]/Views.Range.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Classes associated to the view.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.class",
+                    "navPath": "@nav[notebook]/Views.Range.class",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly class = 'mknb-Range d-flex'",
+                        "implementation": "",
+                        "startLine": 36,
+                        "endLine": 37,
+                        "references": {
+                            "class": "@nav[notebook]/Views.Range.class"
+                        }
+                    }
+                },
+                {
+                    "name": "emitDrag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "If  `true` , data are emitted in  `value$`  while dragging the slider.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.emitDrag",
+                    "navPath": "@nav[notebook]/Views.Range.emitDrag",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly emitDrag: boolean = true",
+                        "implementation": "",
+                        "startLine": 58,
+                        "endLine": 59,
+                        "references": {
+                            "emitDrag": "@nav[notebook]/Views.Range.emitDrag"
+                        }
+                    }
+                },
+                {
+                    "name": "max",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Maximum value.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.max",
+                    "navPath": "@nav[notebook]/Views.Range.max",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly max: number = 1",
+                        "implementation": "",
+                        "startLine": 50,
+                        "endLine": 51,
+                        "references": {
+                            "max": "@nav[notebook]/Views.Range.max"
+                        }
+                    }
+                },
+                {
+                    "name": "min",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Minimum value.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.min",
+                    "navPath": "@nav[notebook]/Views.Range.min",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly min: number = 0",
+                        "implementation": "",
+                        "startLine": 46,
+                        "endLine": 47,
+                        "references": {
+                            "min": "@nav[notebook]/Views.Range.min"
+                        }
+                    }
+                },
+                {
+                    "name": "step",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Step.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.step",
+                    "navPath": "@nav[notebook]/Views.Range.step",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly step = 0.01",
+                        "implementation": "",
+                        "startLine": 54,
+                        "endLine": 55,
+                        "references": {
+                            "step": "@nav[notebook]/Views.Range.step"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Style attributes.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.style",
+                    "navPath": "@nav[notebook]/Views.Range.style",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly style = {\n        fontSize: 'small',\n    }",
+                        "implementation": "",
+                        "startLine": 63,
+                        "endLine": 64,
+                        "references": {
+                            "style": "@nav[notebook]/Views.Range.style"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.tag",
+                    "navPath": "@nav[notebook]/Views.Range.tag",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 32,
+                        "endLine": 33,
+                        "references": {
+                            "tag": "@nav[notebook]/Views.Range.tag"
+                        }
+                    }
+                },
+                {
+                    "name": "value",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Default value.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Range.value",
+                    "navPath": "@nav[notebook]/Views.Range.value",
+                    "code": {
+                        "filePath": "src/lib/views/range.ts",
+                        "declaration": "public readonly value: number = 0.5",
+                        "implementation": "",
+                        "startLine": 42,
+                        "endLine": 43,
+                        "references": {
+                            "value": "@nav[notebook]/Views.Range.value"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/views/range.ts",
+                "declaration": "export class Range implements VirtualDOM<'div'>",
+                "implementation": "export class Range implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = 'mknb-Range d-flex'\n    public readonly children: ChildrenLike\n    public readonly value$: Subject<number>\n    /**\n     * Default value.\n     */\n    public readonly value: number = 0.5\n    /**\n     * Minimum value.\n     */\n    public readonly min: number = 0\n    /**\n     * Maximum value.\n     */\n    public readonly max: number = 1\n    /**\n     * Step.\n     */\n    public readonly step = 0.01\n    /**\n     * If `true`, data are emitted in `value$` while dragging the slider.\n     */\n    public readonly emitDrag: boolean = true\n\n    /**\n     * Style attributes.\n     */\n    public readonly style = {\n        fontSize: 'small',\n    }\n    constructor(\n        params: {\n            min?: number\n            max?: number\n            step?: number\n            value?: number\n            value$?: Subject<number>\n            emitDrag?: boolean\n        } = {},\n    ) {\n        Object.assign(this, params)\n        if (!params.value) {\n            this.value = (1 / 2) * (this.max - this.min)\n        }\n        if (!params.value$) {\n            this.value$ = new BehaviorSubject(this.value)\n        }\n        const getValue = (from: string) => {\n            const v = parseFloat(from)\n            if (v < this.min) {\n                return this.min\n            }\n            if (v > this.max) {\n                return this.max\n            }\n            return v\n        }\n        const options = {\n            min: String(this.min),\n            max: String(this.max),\n            step: String(this.step),\n        }\n        this.children = [\n            {\n                tag: 'input',\n                class: 'form-control',\n                type: 'number',\n                ...options,\n                style: {\n                    width: 'fit-content',\n                },\n                value: attr$({\n                    source$: this.value$,\n                    vdomMap: (v) => String(v),\n                }),\n                onchange: (ev: InputEvent & { target: HTMLInputElement }) => {\n                    this.value$.next(getValue(ev.target.value))\n                },\n            },\n            { tag: 'i', class: 'mx-1' },\n            {\n                tag: 'input',\n                class: 'form-range my-auto',\n                type: 'range',\n                ...options,\n                value: attr$({\n                    source$: this.value$,\n                    vdomMap: (v) => String(v),\n                }),\n                onchange: (ev: InputEvent & { target: HTMLInputElement }) => {\n                    this.value$.next(getValue(ev.target.value))\n                },\n                oninput: (ev: InputEvent & { target: HTMLInputElement }) => {\n                    if (this.emitDrag) {\n                        this.value$.next(getValue(ev.target.value))\n                    }\n                },\n            },\n        ]\n    }\n}",
+                "startLine": 31,
+                "endLine": 137,
+                "references": {
+                    "Range": "@nav[notebook]/Views.Range",
+                    "Subject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Select",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a selectable view.\n\n<js-cell>\nlet select = new Views.Select({\n    items: {foo:42, bar:84},\n    selected: 'foo',\n    displayedNames: { 'foo': 'Foo', 'bar': 'Bar'}\n})\ndisplay(select)\ndisplay(select.value$)\n</js-cell>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Select",
+            "navPath": "@nav[notebook]/Views.Select",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Select.children",
+                    "navPath": "@nav[notebook]/Views.Select.children",
+                    "code": {
+                        "filePath": "src/lib/views/select.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 24,
+                        "endLine": 25,
+                        "references": {
+                            "children": "@nav[notebook]/Views.Select.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Classes associated to the view.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Select.class",
+                    "navPath": "@nav[notebook]/Views.Select.class",
+                    "code": {
+                        "filePath": "src/lib/views/select.ts",
+                        "declaration": "public readonly class = 'mknb-DropDown dropdown'",
+                        "implementation": "",
+                        "startLine": 23,
+                        "endLine": 24,
+                        "references": {
+                            "class": "@nav[notebook]/Views.Select.class"
+                        }
+                    }
+                },
+                {
+                    "name": "itemId$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable on the current item's ID.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Select.itemId$",
+                    "navPath": "@nav[notebook]/Views.Select.itemId$",
+                    "code": {
+                        "filePath": "src/lib/views/select.ts",
+                        "declaration": "public readonly itemId$: BehaviorSubject<string>",
+                        "implementation": "",
+                        "startLine": 32,
+                        "endLine": 33,
+                        "references": {
+                            "itemId$": "@nav[notebook]/Views.Select.itemId$",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Select.tag",
+                    "navPath": "@nav[notebook]/Views.Select.tag",
+                    "code": {
+                        "filePath": "src/lib/views/select.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 19,
+                        "endLine": 20,
+                        "references": {
+                            "tag": "@nav[notebook]/Views.Select.tag"
+                        }
+                    }
+                },
+                {
+                    "name": "value$",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Observable on the current value.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Select.value$",
+                    "navPath": "@nav[notebook]/Views.Select.value$",
+                    "code": {
+                        "filePath": "src/lib/views/select.ts",
+                        "declaration": "public readonly value$: BehaviorSubject<unknown>",
+                        "implementation": "",
+                        "startLine": 28,
+                        "endLine": 29,
+                        "references": {
+                            "value$": "@nav[notebook]/Views.Select.value$",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/views/select.ts",
+                "declaration": "export class Select implements VirtualDOM<'div'>",
+                "implementation": "export class Select implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     */\n    public readonly class = 'mknb-DropDown dropdown'\n    public readonly children: ChildrenLike\n    /**\n     * Observable on the current value.\n     */\n    public readonly value$: BehaviorSubject<unknown>\n    /**\n     * Observable on the current item's ID.\n     */\n    public readonly itemId$: BehaviorSubject<string>\n\n    /**\n     *\n     * @param params\n     * @param params.items Dictionary itemId -> values.\n     * @param params.selected Initial item ID selected.\n     * @param params.displayedNames Dictionary itemId -> displayed names.\n     */\n    constructor(params: {\n        items: Record<string, unknown>\n        selected: string\n        displayedNames?: Record<string, unknown>\n    }) {\n        Object.assign(this, params)\n        this.value$ = new BehaviorSubject(params.items[params.selected])\n        this.itemId$ = new BehaviorSubject(params.selected)\n        const displayedNames: Record<string, string> =\n            params.displayedNames ??\n            Object.keys(params.items).reduce(\n                (acc, e) => ({ ...acc, [e]: e }),\n                {},\n            )\n        this.children = [\n            {\n                tag: 'select',\n                class: 'form-select',\n                onchange: (ev: MouseEvent) => {\n                    if (!ev.target || !('value' in ev.target)) {\n                        return\n                    }\n                    const key = ev.target.value as string\n                    this.value$.next(params.items[key])\n                    this.itemId$.next(key)\n                },\n                children: Object.entries(params.items).map(([key, val]) => {\n                    return {\n                        tag: 'option',\n                        innerText: displayedNames[key],\n                        selected: attr$({\n                            source$: this.itemId$,\n                            vdomMap: (id) => {\n                                return id === key\n                            },\n                        }),\n                        value: key,\n                        onclick: () => {\n                            this.value$.next(val)\n                            this.itemId$.next(key)\n                        },\n                    }\n                }),\n            },\n        ]\n    }\n}",
+                "startLine": 18,
+                "endLine": 88,
+                "references": {
+                    "Select": "@nav[notebook]/Views.Select",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        },
+        {
+            "name": "Text",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Represents a text view.\n\nThe text provided is interpreted as MarkDown and can include latex equations.\n\n<js-cell>\ndisplay(new Views.Text('**a simple example**'))\ndisplay(new Views.Text(String.raw `**including latex inlined**: \\(ax^2 + bx + c = 0\\)` ))\ndisplay(new Views.Text(String.raw `**including latex block**: $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$$` ))\n</js-cell>\n\nFine-tuning of element's class & style is also possible.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "Text",
+            "navPath": "@nav[notebook]/Views.Text",
+            "attributes": [
+                {
+                    "name": "children",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Children of the element.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Text.children",
+                    "navPath": "@nav[notebook]/Views.Text.children",
+                    "code": {
+                        "filePath": "src/lib/views/text.ts",
+                        "declaration": "public readonly children: ChildrenLike",
+                        "implementation": "",
+                        "startLine": 24,
+                        "endLine": 25,
+                        "references": {
+                            "children": "@nav[notebook]/Views.Text.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                        }
+                    }
+                },
+                {
+                    "name": "class",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Classes associated to the view.\nCan be completed from constructor.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Text.class",
+                    "navPath": "@nav[notebook]/Views.Text.class",
+                    "code": {
+                        "filePath": "src/lib/views/text.ts",
+                        "declaration": "public readonly class: string = 'mknb-Text'",
+                        "implementation": "",
+                        "startLine": 23,
+                        "endLine": 24,
+                        "references": {
+                            "class": "@nav[notebook]/Views.Text.class"
+                        }
+                    }
+                },
+                {
+                    "name": "connectedCallback",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Lifecycle hook called just after the element has been attached to the document's DOM.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Text.connectedCallback",
+                    "navPath": "@nav[notebook]/Views.Text.connectedCallback",
+                    "code": {
+                        "filePath": "src/lib/views/text.ts",
+                        "declaration": "connectedCallback: (e: HTMLElement) => void",
+                        "implementation": "",
+                        "startLine": 32,
+                        "endLine": 33,
+                        "references": {
+                            "connectedCallback": "@nav[notebook]/Views.Text.connectedCallback",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                        }
+                    }
+                },
+                {
+                    "name": "style",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "Style elements.\nCan be completed from constructor.",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Text.style",
+                    "navPath": "@nav[notebook]/Views.Text.style",
+                    "code": {
+                        "filePath": "src/lib/views/text.ts",
+                        "declaration": "public readonly style = {}",
+                        "implementation": "",
+                        "startLine": 30,
+                        "endLine": 31,
+                        "references": {
+                            "style": "@nav[notebook]/Views.Text.style"
+                        }
+                    }
+                },
+                {
+                    "name": "tag",
+                    "semantic": {
+                        "role": "attribute",
+                        "labels": [],
+                        "attributes": {},
+                        "relations": {}
+                    },
+                    "documentation": {
+                        "sections": [
+                            {
+                                "content": "The tag of the element, equivalent to the  `tagName`  property of  `HTMLElement` .",
+                                "contentType": "markdown",
+                                "semantic": {
+                                    "role": "",
+                                    "labels": [],
+                                    "attributes": {},
+                                    "relations": {}
+                                }
+                            }
+                        ]
+                    },
+                    "path": "Text.tag",
+                    "navPath": "@nav[notebook]/Views.Text.tag",
+                    "code": {
+                        "filePath": "src/lib/views/text.ts",
+                        "declaration": "public readonly tag = 'div'",
+                        "implementation": "",
+                        "startLine": 18,
+                        "endLine": 19,
+                        "references": {
+                            "tag": "@nav[notebook]/Views.Text.tag"
+                        }
+                    }
+                }
+            ],
+            "callables": [],
+            "code": {
+                "filePath": "src/lib/views/text.ts",
+                "declaration": "export class Text implements VirtualDOM<'div'>",
+                "implementation": "export class Text implements VirtualDOM<'div'> {\n    public readonly tag = 'div'\n    /**\n     * Classes associated to the view.\n     * Can be completed from constructor.\n     */\n    public readonly class: string = 'mknb-Text'\n    public readonly children: ChildrenLike\n\n    /**\n     * Style elements.\n     * Can be completed from constructor.\n     */\n    public readonly style = {}\n\n    connectedCallback: (e: HTMLElement) => void\n\n    /**\n     *\n     * @param text Text to be displayed, can include Latex equation.\n     * @param options Style & class attributes to append to the defaults.\n     */\n    constructor(\n        text: string,\n        options: {\n            style?: CSSAttribute\n            class?: string\n        } = { style: {}, class: '' },\n    ) {\n        this.style = options.style ?? {}\n        this.class = `${this.class} ${options.class ?? ''}`\n        const div = parseMd({\n            src: text.replace(/\\\\[()]/g, (match) => {\n                return '\\\\' + match\n            }),\n            latex: true,\n        })\n        this.children = [div]\n    }\n}",
+                "startLine": 17,
+                "endLine": 57,
+                "references": {
+                    "Text": "@nav[notebook]/Views.Text",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                }
+            },
+            "semantic": {
+                "role": "class",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "callables": [
+        {
+            "name": "notify",
+            "documentation": {
+                "sections": [
+                    {
+                        "content": "Displays a notification on the screen with the given content.\nNotifications are added to a central container and can be dismissed manually or automatically.\n\n**Behavior**\n\n- If no notification container exists, it creates one at the top-center of the screen.\n- Appends the new notification to the container.\n- Includes a \"close\" button for manual dismissal.\n- Removes the notification automatically when:\n  -  `done$`  emits a value.\n  - The optional  `duration`  timer expires.\n\n**Example**\n\n<js-cell>\nconst { rxjs } = await webpm.install({ esm: [\"rxjs#^7.5.6 as rxjs\"] })\nconst notification = {\n    tag: 'div',\n    class: 'p-3',\n    innerText: 'A notification...'\n}\ndisplay({\n    tag: 'button',\n    class: 'btn btn-sm btn-primary',\n    innerText: 'Notify',\n    onclick: ()=> {\n        Views.notify({\n             content:notification,\n             level: 'warning',\n             duration: 3000\n        })\n        Views.notify({\n             content:notification,\n             level: 'info',\n             done$: rxjs.timer(2000, 0)\n        })\n    }\n})\n</js-cell>",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    },
+                    {
+                        "title": "Arguments",
+                        "content": "\n*  **content**: The content to display in the notification.\n*  **done$**: Optional observable that, when emitting, removes the notification.\n*  **duration**: Optional duration in milliseconds after which the notification will automatically disappear.",
+                        "contentType": "markdown",
+                        "semantic": {
+                            "role": "arguments",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        }
+                    }
+                ]
+            },
+            "path": "notify",
+            "navPath": "@nav[notebook]/Views.notify",
+            "code": {
+                "filePath": "src/lib/views/notification.view.ts",
+                "declaration": "export function notify({\n    content,\n    done$,\n    duration,\n    level,\n}: {\n    content: AnyView\n    level: MdWidgets.NoteLevel | Observable<MdWidgets.NoteLevel>\n    done$?: Observable<unknown>\n    duration?: number\n})",
+                "implementation": "export function notify({\n    content,\n    done$,\n    duration,\n    level,\n}: {\n    content: AnyView\n    level: MdWidgets.NoteLevel | Observable<MdWidgets.NoteLevel>\n    done$?: Observable<unknown>\n    duration?: number\n}) {\n    let notif: HTMLElement\n    const level$ = level instanceof Observable ? level : of(level)\n    const containerId = 'notification-container'\n    let container = document.getElementById(containerId)\n    if (!container) {\n        container = render({\n            tag: 'div',\n            id: containerId,\n            class: 'overflow-auto',\n            style: {\n                fontSize: 'medium',\n                position: 'fixed',\n                maxHeight: 'calc(100vh - 10px)',\n                maxWidth: '75vw',\n                top: '0px',\n                left: '50vw',\n                transform: 'translateX(-50%)',\n                // To be above the top banner (in 100...199)\n                zIndex: 200,\n                display: 'flex',\n                flexDirection: 'column',\n                alignItems: 'center',\n            },\n            connectedCallback: (elem) => (container = elem),\n        })\n        document.body.appendChild(container)\n    }\n    const closeBtn: AnyVirtualDOM = {\n        tag: 'button',\n        class: 'btn btn-sm btn-primary',\n        style: { width: 'fit-content' },\n        innerText: 'close',\n        onclick: () => {\n            notif.remove()\n        },\n    }\n    const wrapped: AnyVirtualDOM = {\n        tag: 'div',\n        class: attr$({\n            source$: level$,\n            vdomMap: (level) => {\n                return `mkdocs-bg-${level} border rounded p-3 my-1 w-100`\n            },\n        }),\n        children: [content, closeBtn],\n        connectedCallback: (elem) => (notif = elem),\n    }\n    container.appendChild(render(wrapped))\n    if (done$) {\n        done$.pipe(take(1)).subscribe(() => {\n            notif.remove()\n        })\n    }\n    if (duration) {\n        setTimeout(() => {\n            notif.remove()\n        }, duration)\n    }\n}",
+                "startLine": 52,
+                "endLine": 122,
+                "references": {
+                    "notify": "@nav[notebook]/Views.notify",
+                    "AnyView": "@nav[mkdocs-ts].AnyView",
+                    "Observable": "https://rxjs.dev/guide/observable"
+                }
+            },
+            "semantic": {
+                "role": "function",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            }
+        }
+    ],
+    "files": [
+        {
+            "name": "index.ts",
+            "path": "src/lib/views/layouts/index.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "This module defines various layout components designed for structuring content within a notebook page.\n\n\n## Quick Overview\n\n### \n\nThe `SideNavLayout` component creates a **navigation sidebar** alongside the main content area.\nBelow is an example with three navigation options: **Home**, **About**, and **Contact**.\n\n<js-cell>\nconst sideNavClass = 'h-100 bg-dark text-light p-2 px-5'\nconst sideNavHome = {\n    icon: 'fas fa-home',\n    content: { tag: 'div', innerText: 'Home', class: sideNavClass },\n}\nconst sideNavAbout = {\n    icon: 'fas fa-info',\n    content: { tag: 'div', innerText: 'About', class: sideNavClass },\n}\nconst sideNavContact = {\n    icon: 'fas fa-envelope',\n    content: { tag: 'div', innerText: 'Contact', class: sideNavClass },\n}\nconst sideNav = {\n    home: sideNavHome,\n    about: sideNavAbout,\n    contact: sideNavContact,\n}\nconst sideNavLayout = Views.Layouts.sideNav({\n    sideNavElements: sideNav,\n    content: { tag: 'div', innerText: 'Main content', class:'p-2 w-100 h-100 bg-light rounded border' },\n})\ndisplay(sideNavLayout)\n</js-cell>\n\n### \n\nThe `SingleLayout` provides a simple **full-width container** for displaying content.\n\n<js-cell>\nconst content = {\n    tag:'div',\n    class: 'p-2 w-100 h-100 bg-light border rounded',\n    innerText: 'Main Content'\n}\nconst singleLayout = Views.Layouts.single({\n   content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content'\n    }\n})\ndisplay(singleLayout)\n</js-cell>\n\n### \n\nThe `SuperposedLayout` allows **layered positioning** of content at the corners of the viewport.\nThis can be useful for **notifications**, **floating toolbars**, or **overlays**.\n\n<js-cell>\nconst classCorners = 'p-2 w-100 h-100 bg-dark text-light border rounded'\nconst topLeft = { tag:'div', class: classCorners, innerText: 'Top-Left' }\nconst topRight = { tag:'div', class: classCorners, innerText: 'Top-Right' }\nconst bottomLeft = { tag:'div', class: classCorners, innerText: 'Bottom-Left' }\nconst bottomRight = { tag:'div', class: classCorners, innerText: 'Bottom-Right' }\n\nconst superposedLayout = Views.Layouts.superposed({\n    content:{ tag:'div', class: 'p-2 w-100 h-100 bg-light border rounded'},\n    topLeft, topRight, bottomLeft, bottomRight\n})\ndisplay(superposedLayout)\n</js-cell>\n\n### \n\nThe `ViewPortOnlyLayout` renders content **only when visible in the viewport**, making it ideal for dynamic loading.\nThis example **displays an alert when the layout is added or removed** to/from the viewport.\n\n<js-cell>\nconst viewPortOnlyLayout = Views.Layouts.viewPortOnly({\n    content:{\n        tag:'div',\n        class: 'p-2 w-100 h-100 bg-light border rounded',\n        innerText: 'Main Content',\n        connectedCallback: () => alert(\"viewPortOnly layout added\"),\n        disconnectedCallback: () => alert(\"viewPortOnly layout removed\"),\n    }\n})\ndisplay(viewPortOnlyLayout)\n</js-cell>",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "range.ts",
+            "path": "src/lib/views/range.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "select.ts",
+            "path": "src/lib/views/select.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "text.ts",
+            "path": "src/lib/views/text.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "constants.ts",
+            "path": "src/lib/views/constants.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "notification.view.ts",
+            "path": "src/lib/views/notification.view.ts",
+            "documentation": {
+                "sections": [
+                    {
+                        "semantic": {
+                            "role": "",
+                            "labels": [],
+                            "attributes": {},
+                            "relations": {}
+                        },
+                        "content": "",
+                        "contentType": "markdown"
+                    }
+                ]
+            }
+        }
+    ],
+    "children": [
+        {
+            "name": "Layouts",
+            "semantic": {
+                "role": "module",
+                "labels": [],
+                "attributes": {},
+                "relations": {}
+            },
+            "path": "notebook/Views.Layouts",
+            "navPath": "@nav[notebook]/Views/Layouts",
+            "isLeaf": true
+        }
+    ],
+    "semantic": {
+        "role": "module",
+        "labels": [],
+        "attributes": {},
+        "relations": {}
+    }
+}
