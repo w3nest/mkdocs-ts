@@ -908,7 +908,7 @@ def replace_links(text: str, parent: str, project: Project) -> str:
             if not nav:
                 DocReporter.add_sphinx_link_unresolved(parent, match.group(0), [])
                 return label
-            return f"[{label}]({nav})"
+            return f"<mkapi-ext-link href='{nav}' >{label}</mkapi-ext-link>"
 
         candidates = get_cross_link_candidates(
             link_type=tag,

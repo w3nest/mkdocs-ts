@@ -42,7 +42,8 @@ generate_api(griffe_ast, config)
 **Installation**
 
 To install `mkapi_python`:
-*  Open a terminal in the folder `node_modules/mkdocs-ts/src/mkapi_backends/mkapi_python`
+*  Install `@mkdocs-ts/code-api` in the `node_modules` of your project (using e.g. `npm` or `yarn`).
+*  Open a terminal in the folder `node_modules/@mkdocs-ts/code-api/src/mkapi-backends/mkapi_python`.
 *  Run `pip install .`
 
 
