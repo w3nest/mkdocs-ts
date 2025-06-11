@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/code-api",
     "description": "Code API plugins for mkdocs-ts.",
-    "version": "0.2.0-wip",
+    "version": "0.2.0",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/code-api#README.md",
     "main": "./dist/@mkdocs-ts/code-api.js",
