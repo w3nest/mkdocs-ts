@@ -44,10 +44,15 @@ designed to be dynamic—enabling reactive, component-based documentation direct
    Get full type safety, rich IDE support, and confident scaling.  {{mkdocs-ts}} leverages the TypeScript compiler 
    for error detection, parameter validation, and smarter development workflows.
 
-*  **Modular by Design**
+*  **Extensible via Plugins**
   
    Extend your project with purpose-built plugins. See for instance our **Notebook plugin** 
    for interactive documents, or **Code-API plugin** for integrated API documentation.
+
+*  **Modular by Design**
+   
+   Every navigation node can be lazy-loaded as its own JavaScript module. This modular approach encourages reuse across
+   projects, supports DRY (Don’t Repeat Yourself) principles, and keeps your architecture flexible and maintainable.
 
 ---
 
@@ -68,7 +73,7 @@ and interactive storytelling.
 - **Multiple Cell Types**  
   Write and run JavaScript, Python (in-browser via Pyodide), Web Workers, and more — all within your app.  
   Hosting with <ext-link target="w3nest">w3nest</ext-link>? Unlock even more possibilities with custom interpreters 
-  for a variety of languages.
+  for a variety of languages running in a controlled environment.
 
 - **Reactive Execution Model**  
   Build dynamic, reactive notebooks where cells automatically update based on changes — powered by the robustness of 
