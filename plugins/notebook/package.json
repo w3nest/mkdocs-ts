@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/notebook",
     "description": "Notebook plugins for mkdocs-ts.",
-    "version": "0.1.1-wip",
+    "version": "0.1.1",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/notebook#README.md",
     "main": "./dist/@mkdocs-ts/notebook.js",
@@ -53,7 +53,7 @@
     },
     "dependencies": {
         "@fortawesome/free-solid-svg-icons": "^6.7.2",
-        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749559738.tgz",
+        "@mkdocs-ts/code-api": "^0.2.0",
         "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/webpm-client": "^0.1.8",
         "esprima": "^4.0.1",
@@ -132,8 +132,5 @@
                 "@w3nest/webpm-client_APIv01"
             ]
         }
-    },
-    "resolutions": {
-        "@mkdocs-ts/code-api": "file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749559738.tgz"
     }
 }

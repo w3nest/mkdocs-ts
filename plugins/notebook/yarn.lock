@@ -800,9 +800,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mkdocs-ts/code-api@file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749559738.tgz":
-  version "0.2.0-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.2.0-wip-1749559738.tgz#b7c80442035d5df8dd6c165eaee2056699b63d44"
+"@mkdocs-ts/code-api@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.2.0.tgz#c84077e2a6d81006fc61a31624a75639c930a76c"
+  integrity sha512-N682o7Ehz6Pm8aBlPVXW6uaR9g+qUwuicAdlkdiTRc3MYgOhV4ajT6qPdJTKPO8/AXu1/b9+ObgxeG57WMuyJw==
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
