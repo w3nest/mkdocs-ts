@@ -9,7 +9,6 @@ import { ContextTrait, NoContext, Router } from 'mkdocs-ts'
 import { separatorView, ySeparatorView5 } from './utils'
 import { Entity, Module, Project } from './models'
 import { SummaryView } from './summary.view'
-import { faIconTyped } from './fa-icons'
 
 /**
  * View for a {@link Module}.
@@ -115,18 +114,23 @@ export class ModuleView implements VirtualDOM<'div'> {
                 return {
                     tag: 'div' as const,
                     children: [
-                        { tag: 'div', class: 'my-2' },
+                        { tag: 'div', class: 'my-5' },
                         new HeaderView({
                             tag: 'h2',
-                            icon: faIconTyped('fa-file', { withClass: 'me-1' }),
-                            withClass: 'doc-file-name mt-3 mb-2',
+                            withClass: 'doc-file-name',
                             doc: {
                                 name: file.split('/').slice(-1)[0],
-                                semantic: undefined,
+                                semantic: {
+                                    role: 'file',
+                                    labels: [],
+                                    attributes: {},
+                                    relations: {},
+                                },
                                 path: file.split('/').slice(-1)[0],
                             },
                             relativeToPath: module.path,
                         }),
+                        { tag: 'div', class: 'my-3' },
                         fileDoc?.documentation
                             ? new DocumentationView({
                                   documentation: fileDoc.documentation,

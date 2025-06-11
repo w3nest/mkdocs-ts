@@ -7,6 +7,7 @@
     --doc-symbol-constructor-fg-color: #4f02d3;
     --doc-symbol-class-fg-color: #0550ae;
     --doc-symbol-module-fg-color: #5cad0f;
+    --doc-symbol-file-fg-color: #505050;
     --doc-symbol-type-alias-fg-color: #ae7305;
     --doc-symbol-interface-fg-color: #aeab05;
 
@@ -15,6 +16,7 @@
     --doc-symbol-method-bg-color: #8250df1a;
     --doc-symbol-constructor-bg-color: #4f02d31a;
     --doc-symbol-class-bg-color: #0550ae1a;
+    --doc-symbol-file-bg-color: #5050501a;
     --doc-symbol-module-bg-color: #5cad0f1a;
     --doc-symbol-type-alias-bg-color: #ae6a051a;
     --doc-symbol-interface-bg-color: #aeab051a;
@@ -25,6 +27,7 @@
     --doc-symbol-method-fg-color: #d2a8ff;
     --doc-symbol-constructor-fg-color: #605bfc;
     --doc-symbol-class-fg-color: #79c0ff;
+    --doc-symbol-file-fg-color: #a8a8a8;
     --doc-symbol-module-fg-color: #baff79;
     --doc-symbol-type-alias-fg-color: #fca409;
     --doc-symbol-interface-fg-color: #fcdc09;
@@ -34,6 +37,7 @@
     --doc-symbol-constructor-bg-color: #605bfc1a;
     --doc-symbol-method-bg-color: #d2a8ff1a;
     --doc-symbol-class-bg-color: #79c0ff1a;
+    --doc-symbol-file-bg-color: #a8a8a81a;
     --doc-symbol-module-bg-color: #baff791a;
     --doc-symbol-type-alias-bg-color: #fca4091a;
     --doc-symbol-interface-bg-color: #fcdc091a;
@@ -66,6 +70,21 @@ Module
 }
 .mkapi-semantic-border-color.mkapi-role-module {
     border-color: var(--doc-symbol-module-fg-color);
+}
+/**
+File
+ */
+.mkapi-semantic-flag.mkapi-role-file::before {
+    content: 'file';
+    color: var(--doc-symbol-file-fg-color);
+    background-color: var(--doc-symbol-file-bg-color);
+}
+.mkapi-semantic-color.mkapi-role-file {
+    color: var(--doc-symbol-file-fg-color);
+    background-color: var(--doc-symbol-file-bg-color);
+}
+.mkapi-semantic-border-color.mkapi-role-file {
+    border-color: var(--doc-symbol-file-fg-color);
 }
 /**
 Class
