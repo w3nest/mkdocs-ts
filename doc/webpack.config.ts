@@ -110,10 +110,7 @@ const webpackConfigSubModules: webpack.Configuration[] = Object.entries(
     output: {
         ...base.output,
         library: {
-            root: [
-                `${pkgJson.name}_APIv${WP_INPUTS.apiVersion}`,
-                ...k.split('/'),
-            ],
+            root: [`${pkgJson.name}_APIv${WP_INPUTS.apiVersion}/${k}`],
             amd: '[name]',
             commonjs: '[name]',
         },

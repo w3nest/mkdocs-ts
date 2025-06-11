@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/doc",
     "description": "Documentation app for the project mkdocs-ts.",
-    "version": "0.5.1-wip",
+    "version": "0.5.1",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/doc#README.md",
     "main": "./dist/@mkdocs-ts/doc.js",
@@ -19,7 +19,7 @@
         "lint-eslint-check": "eslint ./src",
         "test": "jest -i",
         "test-coverage": "jest -i --collect-coverage",
-        "doc": "npx tsx .w3nest/doc.ts && python .w3nest/doc.py",
+        "doc": "npx tsx .w3nest/doc.ts",
         "publish-npm-public": "yarn build:prod && yarn test-coverage && yarn publish --access public",
         "start": "webpack serve --mode development"
     },
@@ -32,7 +32,8 @@
                     "rxjs",
                     "rx-vdom",
                     "mkdocs-ts",
-                    "@mkdocs-ts/notebook",
+                    "@mkdocs-ts/code-api/Doc",
+                    "@mkdocs-ts/notebook/Doc",
                     "@w3nest/webpm-client",
                     "mathjax",
                     "@w3nest/ui-tk/Badges",
@@ -43,12 +44,12 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "^0.1.0",
-        "@mkdocs-ts/notebook": "^0.1.0",
+        "@mkdocs-ts/code-api": "^0.2.0",
+        "@mkdocs-ts/notebook": "^0.1.1",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "^0.5.0",
+        "mkdocs-ts": "^0.5.1",
         "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
@@ -87,12 +88,12 @@
     "webpm": {
         "kind": "webapp",
         "dependencies": {
-            "@mkdocs-ts/code-api": "^0.1.0",
-            "@mkdocs-ts/notebook": "^0.1.0",
+            "@mkdocs-ts/code-api": "^0.2.0",
+            "@mkdocs-ts/notebook": "^0.1.1",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
-            "mkdocs-ts": "^0.5.0",
+            "mkdocs-ts": "^0.5.1",
             "rx-vdom": "^0.1.4",
             "rxjs": "^7.5.6"
         },
@@ -107,11 +108,12 @@
             "rxjs": "window['rxjs_APIv7']",
             "rx-vdom": "window['rx-vdom_APIv01']",
             "mkdocs-ts": "window['mkdocs-ts_APIv05']",
-            "@mkdocs-ts/notebook": "window['@mkdocs-ts/notebook_APIv01']",
+            "@mkdocs-ts/code-api/Doc": "window['@mkdocs-ts/code-api_APIv02/Doc']",
+            "@mkdocs-ts/notebook/Doc": "window['@mkdocs-ts/notebook_APIv01/Doc']",
             "@w3nest/webpm-client": "window['@w3nest/webpm-client_APIv01']",
             "mathjax": "window['mathjax_APIv3']",
-            "@w3nest/ui-tk/Badges": "window['@w3nest/ui-tk_APIv01']['Badges']",
-            "@w3nest/ui-tk/Mkdocs": "window['@w3nest/ui-tk_APIv01']['Mkdocs']"
+            "@w3nest/ui-tk/Badges": "window['@w3nest/ui-tk_APIv01/Badges']",
+            "@w3nest/ui-tk/Mkdocs": "window['@w3nest/ui-tk_APIv01/Mkdocs']"
         }
     }
 }
