@@ -23,8 +23,8 @@ export async function installNotebookModule() {
     const { Notebook } = await webpm.install<{
         Notebook: typeof NotebookModule
     }>({
-        esm: [`@mkdocs-ts/notebook#${notebookVersion} as Notebook`],
-        css: [`@mkdocs-ts/notebook#${notebookVersion}~assets/notebook.css`],
+        esm: [`@mkdocs-ts/notebook#^${notebookVersion} as Notebook`],
+        css: [`@mkdocs-ts/notebook#^${notebookVersion}~assets/notebook.css`],
     })
     return Notebook
 }
