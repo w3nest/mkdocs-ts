@@ -1,3 +1,4 @@
+import re
 from shutil import copyfile
 from pathlib import Path
 
@@ -16,15 +17,17 @@ from w3nest.utils import parse_json
 project_folder = Path(__file__).parent.parent
 
 pkg_json = parse_json(project_folder / "package.json")
+code_api_pkg_json = parse_json(project_folder / ".." / "code-api" / "package.json")
+mkdocs_pkg_json = parse_json(project_folder / ".." / ".." / "package.json")
 
 externals_deps = {
-    "mkdocs-ts": "^0.5.0",
+    "mkdocs-ts": f"^{mkdocs_pkg_json['version']}",
     "rx-vdom": "^0.1.3",
     "rxjs": "^7.5.6",
     "@w3nest/rx-tree-views": "^0.2.0",
     "esprima": "^4.0.1",
     "@w3nest/webpm-client": "^0.1.8",
-    "@mkdocs-ts/code-api": "^0.2.0",
+    "@mkdocs-ts/code-api": f"^{code_api_pkg_json['version']}",
 }
 in_bundle_deps = {
     "prism-code-editor": "^4.0.0",
@@ -88,3 +91,27 @@ files = [
 ]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)
+
+
+doc_index_ts = project_folder / "src" / "doc" / "index.ts"
+
+with open(doc_index_ts, "r") as file:
+    content = file.read()
+
+content = re.sub(
+    r"(const\s+notebookVersion\s*=\s*')[^']+(')",
+    lambda m: f"{m.group(1)}{pkg_json["version"]}{m.group(2)}",
+    content,
+)
+content = re.sub(
+    r"(const\s+codeApiVersion\s*=\s*')[^']+(')",
+    lambda m: f"{m.group(1)}{code_api_pkg_json["version"]}{m.group(2)}",
+    content,
+)
+content = re.sub(
+    r"(const\s+mkdocsVersion\s*=\s*')[^']+(')",
+    lambda m: f"{m.group(1)}{mkdocs_pkg_json["version"]}{m.group(2)}",
+    content,
+)
+with open(doc_index_ts, "w") as file:
+    file.write(content)

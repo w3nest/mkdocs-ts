@@ -4,11 +4,11 @@ import { Navigation, DefaultLayout, Router, ViewGenerator } from 'mkdocs-ts'
 import * as NotebookModule from '..'
 
 // Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const notebookVersion = '0.1.1-wip'
+const notebookVersion = '0.1.2-wip'
 // Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const codeApiVersion = '0.2.0-wip'
+const codeApiVersion = '0.2.0'
 // Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const mkdocsVersion = '0.5.1-wip'
+const mkdocsVersion = '0.5.1'
 
 const baseUrl = webpm.getUrlBase('@mkdocs-ts/notebook', notebookVersion)
 
