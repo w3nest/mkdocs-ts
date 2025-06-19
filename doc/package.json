@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/doc",
     "description": "Documentation app for the project mkdocs-ts.",
-    "version": "0.5.1",
+    "version": "0.5.2-wip",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/doc#README.md",
     "main": "./dist/@mkdocs-ts/doc.js",
