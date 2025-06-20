@@ -5581,7 +5581,7 @@
             "documentation": {
                 "sections": [
                     {
-                        "content": "Intercepts and handles internal link clicks for in-app navigation ( `href`  starting with  `@nav` ).\n\nThis function is typically used in an  `onclick`  handler on a top-level container element,\nallowing it to catch and manage anchor clicks from any of its child elements.",
+                        "content": "Intercepts and handles internal anchor ( `<a>` ) clicks intended for in-app navigation\nusing the  `@nav`  or  `@nav[alias]`  syntax.\n\nThis function is typically used in a global click event handler attached to a container element\n(e.g.,  `document.body` ) to enable single-page navigation without full page reloads.\n\nWhen an anchor element with an  `href`  starting with  `@nav`  is clicked:\n- The default browser navigation is prevented.\n- The link's  `href`  is resolved using the application's registered path aliases (if any).\n- The resolved navigation path is passed to the router for handling.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "",
@@ -5592,7 +5592,7 @@
                     },
                     {
                         "title": "Arguments",
-                        "content": "\n*  **event**: The click event triggered on the document.\n*  **router**: The application's router instance.",
+                        "content": "\n*  **event**: The mouse event triggered by a user click.\n*  **router**: The application's router instance used to resolve and dispatch navigation.",
                         "contentType": "markdown",
                         "semantic": {
                             "role": "arguments",
@@ -5608,9 +5608,9 @@
             "code": {
                 "filePath": "src/lib/default-layout/common.ts",
                 "declaration": "export function handleInternalLinkClick({\n    event,\n    router,\n}: {\n    event: MouseEvent\n    router: Router\n})",
-                "implementation": "export function handleInternalLinkClick({\n    event,\n    router,\n}: {\n    event: MouseEvent\n    router: Router\n}) {\n    const target = event.target as HTMLElement\n    const anchor = target.closest('a')\n    if (anchor) {\n        const baseURI = document.head.baseURI.split('?')[0]\n        const href = anchor.href.replace(baseURI, '')\n        if (href.startsWith('@nav')) {\n            event.preventDefault()\n            event.stopPropagation()\n            router.fireNavigateTo(href.replace('@nav', '?nav='))\n        }\n    }\n}",
-                "startLine": 595,
-                "endLine": 614,
+                "implementation": "export function handleInternalLinkClick({\n    event,\n    router,\n}: {\n    event: MouseEvent\n    router: Router\n}) {\n    const target = event.target\n    if (!(target instanceof HTMLElement)) {\n        return\n    }\n    const anchor = target.closest('a')\n    if (anchor) {\n        if (anchor.href.includes('@nav')) {\n            event.preventDefault()\n            event.stopPropagation()\n            const resolvedHRef = router.resolveHRef(anchor.href)\n            router.fireNavigateTo(resolvedHRef)\n        }\n    }\n}",
+                "startLine": 601,
+                "endLine": 622,
                 "references": {
                     "handleInternalLinkClick": "@nav[mkdocs-ts]/DefaultLayout.handleInternalLinkClick",
                     "Router": "@nav[mkdocs-ts].Router",
