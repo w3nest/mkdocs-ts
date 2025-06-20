@@ -837,17 +837,17 @@
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
 
-"@mkdocs-ts/notebook@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.1.tgz#e2fc95e745737630623b5d71e06d32f98e38b986"
-  integrity sha512-dxoE5L4aOnsS5LkKIeorNIl//7Ham8fRzXq04lr8RxSgxrRHKKApc/w+RVJM+hvlQsZRo9PS6xpg4fs4eelOwQ==
+"@mkdocs-ts/notebook@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.2.tgz#78d0591b398adb9e3c81760e49199d25bd74b8d6"
+  integrity sha512-f0LPrm8CjzFZBQ93L9i0rAq2TR5uZXjx9rWAymaC2fHV6WtxlgH9O3aQlE1lKTKUT5FbpYtZ0P80yrhDMn7zlw==
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@mkdocs-ts/code-api" "^0.2.0"
     "@w3nest/rx-tree-views" "^0.2.0"
     "@w3nest/webpm-client" "^0.1.8"
     esprima "^4.0.1"
-    mkdocs-ts "^0.5.0"
+    mkdocs-ts "^0.5.1"
     prism-code-editor "^4.0.0"
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
@@ -4419,10 +4419,9 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@^0.5.0, mkdocs-ts@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.5.1.tgz#95324a93aae477900131b3cf72becb8bb087924b"
-  integrity sha512-DzivYZnDr0nE6EkNdS/dH7RDfW9DxKJbxE0qQzz3ZwTlbNKe00vNKZaR/vrXq1/x0sMV4V29oCN8r0sFzc9rvw==
+mkdocs-ts@^0.5.0, mkdocs-ts@^0.5.1, "mkdocs-ts@file:.local-dependencies/mkdocs-ts-0.5.2-wip-1750407139.tgz":
+  version "0.5.2-wip"
+  resolved "file:.local-dependencies/mkdocs-ts-0.5.2-wip-1750407139.tgz#1fa21a2b1cf4d802f381b968b0f9f2a64d5190d6"
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^6.7.2"
     "@fortawesome/free-regular-svg-icons" "^6.7.2"
