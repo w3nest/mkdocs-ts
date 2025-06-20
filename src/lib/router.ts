@@ -159,9 +159,23 @@ export type Redirect = (
 ) => Promise<UrlTarget | undefined>
 
 /**
+ * A valid target path for a path alias.
+ * Must be either:
+ * - an internal navigation path starting with `@nav/`, or
+ * - an absolute external URL (starting with `http://` or `https://`).
+ */
+export type PathAliasValue =
+    | `@nav/${string}`
+    | `https://${string}`
+    | `http://${string}`
+/**
  * Represents the router of the application.
  */
-export class Router<TLayout = unknown, THeader = unknown> {
+export class Router<
+    TLayout = unknown,
+    THeader = unknown,
+    TPathAliasKeys extends string = string,
+> {
     /**
      * The base path on which the router is defined.
      *
@@ -250,6 +264,35 @@ export class Router<TLayout = unknown, THeader = unknown> {
      */
     public readonly userStore?: unknown
 
+    /**
+     * Defines path aliases for cleaner and more maintainable navigation references.
+     *
+     * Path aliases let you assign shorthand identifiers to base navigation paths, reducing duplication
+     * and improving clarity—especially when working with modular or deeply nested documentation.
+     *
+     * For example, given the alias mapping (see {@link PathAliasValue} for accepted values format):
+     *
+     * ```ts
+     * {
+     *   utils: '@nav/api/utils',
+     *   core: '@nav/api/core'
+     * }
+     * ```
+     *
+     * You can reference paths in your Markdown or views using the compact syntax:
+     *
+     * ```html
+     * <a href="@nav[utils]/formatting">Formatting Utilities</a>
+     * ```
+     *
+     * The `@nav[utils]/formatting` href will be automatically expanded to
+     * `?nav=/api/utils/formatting` when processed via {@link Router.resolveHRef}.
+     *
+     * This is especially useful for reusing shared modules across projects,
+     * and helps centralize updates to common paths.
+     */
+    public readonly pathAliases: Record<TPathAliasKeys, PathAliasValue>
+
     private navUpdates: Record<string, LazyRoutesCb<TLayout, THeader>> = {}
     private navResolved: Record<string, Navigation<TLayout, THeader>> = {}
 
@@ -270,6 +313,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
      * @param params See corresponding documentation in the class's attributes.
      * @param params.navigation See {@link Router.navigation}.
      * @param params.basePath Deprecated should not be used.
+     * @param params.pathAliases See {@link Router.pathAliases}.
      * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.
      * @param params.redirects See {@link Router.redirects}.
      * @param params.browserClient See {@link BrowserInterface}.
@@ -281,6 +325,7 @@ export class Router<TLayout = unknown, THeader = unknown> {
         params: {
             navigation: Navigation<TLayout, THeader>
             basePath?: string
+            pathAliases?: Record<TPathAliasKeys, PathAliasValue>
             retryNavPeriod?: number
             redirects?: Redirect[]
             browserClient?: (
@@ -297,6 +342,8 @@ export class Router<TLayout = unknown, THeader = unknown> {
     ) {
         Object.assign(this, params)
         this.context = ctx
+        this.pathAliases =
+            params.pathAliases ?? ({} as Record<TPathAliasKeys, PathAliasValue>)
         const context = this.ctx().start('new Router', ['Router'])
         this.basePath = this.basePath || document.location.pathname
         this.browserClient = params.browserClient
@@ -374,6 +421,51 @@ export class Router<TLayout = unknown, THeader = unknown> {
             this.scrollTo(t.sectionId)
         })
         context.exit()
+    }
+
+    /**
+     * Resolves a custom `@nav[...]` or `@nav/...` style hyperlink into a routable URL understood by the application.
+     *
+     * This method is typically used to transform internal navigation references—possibly containing registered
+     * path aliases—into query-based URLs used for routing.
+     *
+     * - If the `href` starts with `@nav[alias]`, the corresponding alias will be resolved via `pathAliases`.
+     * - If the `href` starts with `@nav`, but no alias is used, the method replaces `@nav` with `?nav=`.
+     * - If the `href` does not start with `@nav`, it is returned unchanged.
+     *
+     * This is useful for writing clean, abstracted links in markdown or HTML that resolve at runtime
+     * to actual application routes.
+     *
+     * @param href - The raw hyperlink string to be resolved.
+     *
+     * @returns The transformed `href` that the router can understand, including any alias substitution.
+     */
+    resolveHRef(href: string): string {
+        const baseURI = document.head.baseURI.split('?')[0]
+        const hrefSanitized = href.replace(baseURI, '')
+
+        if (!hrefSanitized.startsWith('@nav')) {
+            return href
+        }
+        const aliasMatch = /^@nav\[([^\]]+)\]/.exec(hrefSanitized)
+        if (aliasMatch) {
+            const aliasKey = aliasMatch[1]
+            const basePath = this.pathAliases[aliasKey] as undefined | string
+            if (!basePath) {
+                console.error(
+                    `[mkdocs-ts] Navigation alias "${aliasKey}" is not registered. `,
+                )
+                return href
+            }
+            if (basePath.startsWith('@nav')) {
+                return hrefSanitized
+                    .replace(`@nav[${aliasKey}]`, basePath)
+                    .replace('@nav', '?nav=')
+            }
+            // External link (http/https)
+            return basePath
+        }
+        return hrefSanitized.replace('@nav', '?nav=')
     }
 
     ctx(ctx?: ContextTrait) {

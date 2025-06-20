@@ -583,14 +583,20 @@ export class LayoutObserver {
 }
 
 /**
- * Intercepts and handles internal link clicks for in-app navigation (`href` starting with `@nav`).
+ * Intercepts and handles internal anchor (`<a>`) clicks intended for in-app navigation
+ * using the `@nav` or `@nav[alias]` syntax.
  *
- * This function is typically used in an `onclick` handler on a top-level container element,
- * allowing it to catch and manage anchor clicks from any of its child elements.
+ * This function is typically used in a global click event handler attached to a container element
+ * (e.g., `document.body`) to enable single-page navigation without full page reloads.
  *
- * @param _p
- * @param _p.event The click event triggered on the document.
- * @param _p.router The application's router instance.
+ * When an anchor element with an `href` starting with `@nav` is clicked:
+ * - The default browser navigation is prevented.
+ * - The link's `href` is resolved using the application's registered path aliases (if any).
+ * - The resolved navigation path is passed to the router for handling.
+ *
+ * @param _p - The handler input parameters.
+ * @param _p.event - The mouse event triggered by a user click.
+ * @param _p.router - The application's router instance used to resolve and dispatch navigation.
  */
 export function handleInternalLinkClick({
     event,
@@ -599,15 +605,17 @@ export function handleInternalLinkClick({
     event: MouseEvent
     router: Router
 }) {
-    const target = event.target as HTMLElement
+    const target = event.target
+    if (!(target instanceof HTMLElement)) {
+        return
+    }
     const anchor = target.closest('a')
     if (anchor) {
-        const baseURI = document.head.baseURI.split('?')[0]
-        const href = anchor.href.replace(baseURI, '')
-        if (href.startsWith('@nav')) {
+        if (anchor.href.includes('@nav')) {
             event.preventDefault()
             event.stopPropagation()
-            router.fireNavigateTo(href.replace('@nav', '?nav='))
+            const resolvedHRef = router.resolveHRef(anchor.href)
+            router.fireNavigateTo(resolvedHRef)
         }
     }
 }
