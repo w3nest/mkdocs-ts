@@ -2,19 +2,13 @@ import type * as CodeApiModule from '@mkdocs-ts/code-api'
 import * as webpm from '@w3nest/webpm-client'
 import { Navigation, DefaultLayout, Router, ViewGenerator } from 'mkdocs-ts'
 import * as NotebookModule from '..'
+import * as pkJson from '../../package.json'
 
-// Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const notebookVersion = '0.1.2'
-// Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const codeApiVersion = '0.2.0'
-// Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const mkdocsVersion = '0.5.1'
-
-const baseUrl = webpm.getUrlBase('@mkdocs-ts/notebook', notebookVersion)
+const baseUrl = webpm.getUrlBase('@mkdocs-ts/notebook', pkJson.version)
 
 const placeholders = {
-    '{{mkdocs-version}}': mkdocsVersion,
-    '{{notebook-version}}': notebookVersion,
+    '{{mkdocs-version}}': pkJson.webpm.dependencies['mkdocs-ts'],
+    '{{notebook-version}}': pkJson.version,
 }
 
 export const notebookOptions = {
@@ -32,8 +26,8 @@ export async function installNotebookModule() {
     const { Notebook } = await webpm.install<{
         Notebook: typeof NotebookModule
     }>({
-        esm: [`@mkdocs-ts/notebook#${notebookVersion} as Notebook`],
-        css: [`@mkdocs-ts/notebook#${notebookVersion}~assets/notebook.css`],
+        esm: [`@mkdocs-ts/notebook#${pkJson.version} as Notebook`],
+        css: [`@mkdocs-ts/notebook#${pkJson.version}~assets/notebook.css`],
     })
     return Notebook
 }
@@ -56,6 +50,7 @@ export const notebookPage = async (target: string, router: Router) => {
 }
 
 export async function installCodeApiModule() {
+    const codeApiVersion = pkJson.webpm.dependencies['@mkdocs-ts/code-api']
     const { CodeApi } = await webpm.install<{
         CodeApi: typeof CodeApiModule
     }>({
