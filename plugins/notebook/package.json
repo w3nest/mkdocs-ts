@@ -44,7 +44,6 @@
             "webpm": {
                 "dependencies": [
                     "mkdocs-ts",
-                    "@mkdocs-ts/code-api",
                     "@w3nest/webpm-client"
                 ],
                 "aliases": []
@@ -57,7 +56,7 @@
         "@w3nest/rx-tree-views": "^0.2.0",
         "@w3nest/webpm-client": "^0.1.8",
         "esprima": "^4.0.1",
-        "mkdocs-ts": "^0.5.1",
+        "mkdocs-ts": "^0.5.2",
         "prism-code-editor": "^4.0.0",
         "rx-vdom": "^0.1.3",
         "rxjs": "^7.5.6"
@@ -94,7 +93,7 @@
             "@w3nest/rx-tree-views": "^0.2.0",
             "@w3nest/webpm-client": "^0.1.8",
             "esprima": "^4.0.1",
-            "mkdocs-ts": "^0.5.1",
+            "mkdocs-ts": "^0.5.2",
             "rx-vdom": "^0.1.3",
             "rxjs": "^7.5.6"
         }
@@ -124,9 +123,6 @@
             ],
             "esprima": [
                 "esprima_APIv4"
-            ],
-            "@mkdocs-ts/code-api": [
-                "@mkdocs-ts/code-api_APIv02"
             ],
             "@w3nest/webpm-client": [
                 "@w3nest/webpm-client_APIv01"
