@@ -1,9 +1,9 @@
 import type * as CodeApiModule from '@mkdocs-ts/code-api'
 import * as webpm from '@w3nest/webpm-client'
 import { Navigation, DefaultLayout } from 'mkdocs-ts'
+import * as pkJson from '../../package.json'
 
-// Keep the variable name & declaration format: its is dynamically replaced when running the `setup` step
-const libraryVersion = '0.2.0'
+const libraryVersion = pkJson.version
 
 export async function installCodeApiModule() {
     const { CodeApi } = await webpm.install<{

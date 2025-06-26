@@ -78,17 +78,3 @@ files = [
 ]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)
-
-doc_index_ts = project_folder / "src" / "doc" / "index.ts"
-
-with open(doc_index_ts, "r") as file:
-    content = file.read()
-
-content = re.sub(
-    r"(const\s+libraryVersion\s*=\s*')[^']+(')",
-    lambda m: f"{m.group(1)}{pkg_json["version"]}{m.group(2)}",
-    content,
-)
-
-with open(doc_index_ts, "w") as file:
-    file.write(content)
