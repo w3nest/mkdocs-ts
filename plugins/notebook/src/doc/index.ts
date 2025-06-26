@@ -2,7 +2,7 @@ import type * as CodeApiModule from '@mkdocs-ts/code-api'
 import * as webpm from '@w3nest/webpm-client'
 import { Navigation, DefaultLayout, Router, ViewGenerator } from 'mkdocs-ts'
 import * as NotebookModule from '..'
-import * as pkJson from '../../package.json'
+import pkJson from '../../package.json'
 
 const baseUrl = webpm.getUrlBase('@mkdocs-ts/notebook', pkJson.version)
 
