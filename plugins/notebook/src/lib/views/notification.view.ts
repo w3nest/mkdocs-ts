@@ -77,8 +77,8 @@ export function notify({
                 top: '0px',
                 left: '50vw',
                 transform: 'translateX(-50%)',
-                // To be above the top banner (in 100...199)
-                zIndex: 200,
+                // Modals are above 1000
+                zIndex: 2000,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
