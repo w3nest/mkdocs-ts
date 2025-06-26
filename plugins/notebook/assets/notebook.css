@@ -1,15 +1,12 @@
 @import 'prism-code-editor/layout.css';
 @import 'prism-code-editor/themes/night-owl-light.css';
 
-.pce-line.active-line:after {
+.mknb-CellView .pce-line.active-line:after {
     border: none !important;
     background: none !important;
 }
-.prism-code-editor {
+.mknb-CellView .prism-code-editor {
     background: none !important;
-}
-.mknb-CellView .CodeMirror {
-    background-color: rgba(0, 0, 0, 0);
 }
 
 .mknb-NotebookPage p {
