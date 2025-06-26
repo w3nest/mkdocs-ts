@@ -6,6 +6,7 @@ import {
     Module,
     Type,
     ChildModule,
+    Project,
 } from './models'
 import { BehaviorSubject } from 'rxjs'
 import { Router } from 'mkdocs-ts'
@@ -36,7 +37,11 @@ export class SummaryView implements VirtualDOM<'div'> {
      * @param params.target The target {@link Module} or {@link Type}.
      * @param params.router The router instance.
      */
-    constructor(params: { target: Module | Type; router: Router }) {
+    constructor(params: {
+        target: Module | Type
+        router: Router
+        project: Project
+    }) {
         const attributes = params.target.attributes
         const callables = params.target.callables
         const modules = 'types' in params.target ? params.target.children : []
@@ -73,6 +78,7 @@ export class SummaryView implements VirtualDOM<'div'> {
                                       title: k,
                                       targets: v,
                                       router: params.router,
+                                      project: params.project,
                                   })
                               })
                             : [],
@@ -139,6 +145,7 @@ export class SummaryLinksSection implements VirtualDOM<'div'> {
         title: string
         targets: EntityForSummary[]
         router: Router
+        project: Project
     }) {
         if (params.targets.length === 0) {
             return
@@ -160,6 +167,7 @@ export class SummaryLinksSection implements VirtualDOM<'div'> {
                         new SummaryLink({
                             target,
                             router: params.router,
+                            project: params.project,
                         }),
                 ),
             },
@@ -185,8 +193,16 @@ export class SummaryLink implements VirtualDOM<'a'> {
     public readonly href: string
     public readonly onclick: (ev: MouseEvent) => void
 
-    constructor(params: { target: EntityForSummary; router: Router }) {
-        this.href = params.target.navPath.replace('@nav', '')
+    constructor(params: {
+        target: EntityForSummary
+        router: Router
+        project: Project
+    }) {
+        let href = params.target.navPath
+        Object.entries(params.project.rootModulesNav).forEach(([k_, v_]) => {
+            href = href.replace(`@nav[${k_}]`, v_)
+        })
+        this.href = href.replace('@nav', '')
         const path = this.href.split('.')[0]
         const sectionId = this.href.split('.').slice(1).join('.')
         this.innerText = params.target.name

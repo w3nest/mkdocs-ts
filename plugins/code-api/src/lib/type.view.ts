@@ -53,6 +53,7 @@ export class TypeView implements VirtualDOM<'div'> {
             new SummaryView({
                 target: this.type,
                 router: this.router,
+                project: this.project,
             }),
             { tag: 'div', class: 'mt-3' },
             new DocumentationView({

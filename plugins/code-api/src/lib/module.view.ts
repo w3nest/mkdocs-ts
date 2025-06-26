@@ -83,6 +83,7 @@ export class ModuleView implements VirtualDOM<'div'> {
             new SummaryView({
                 target: this.module,
                 router: this.router,
+                project: this.project,
             }),
             separatorView,
             {
