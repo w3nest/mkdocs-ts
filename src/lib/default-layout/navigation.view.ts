@@ -52,7 +52,7 @@ export class NavigationView implements VirtualDOM<'div'> {
     }) {
         Object.assign(this, params)
         this.style = {
-            minWidth: `${String(params.displayOptions.navMinWidth)}px`,
+            minWidth: params.displayOptions.navMinWidth,
         }
         this.children = [
             new ImmutableTree.View({

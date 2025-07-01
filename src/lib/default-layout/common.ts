@@ -73,9 +73,9 @@ export type DisplayOptions<
      */
     tocMaxWidth: number
     /**
-     * Minimum width for the navigation panel in pixel.
+     * Minimum width for the navigation panel in CSS unit (e.g. `25rem`).
      */
-    navMinWidth: number
+    navMinWidth: string
     /**
      * Maximum width for the navigation panel in pixel.
      */
@@ -117,7 +117,7 @@ export const defaultDisplayOptions: DisplayOptions = {
     tocMaxWidth: 400,
     toggleNavWidth: 1300,
     navMaxWidth: 500,
-    navMinWidth: 300,
+    navMinWidth: '25rem',
     sidePanelsZIndex: 100,
     pageWidth: '35rem',
     translationTime: 400,
