@@ -154,6 +154,10 @@ export interface NavHeaderSpec {
      */
     icon?: ChildLike
     /**
+     * If provided, use this definition to render the node's name, instead just displaying the name.
+     */
+    name?: ChildLike
+    /**
      * Optional actions, inserted after the node's name.
      */
     actions?: ChildrenLike

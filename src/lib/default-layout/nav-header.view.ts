@@ -229,7 +229,11 @@ export class NavHeaderView implements VirtualDOM<'a'> {
                         selected.id === node.id ? 'font-weight-bold' : '',
                     wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,
                 }),
-                innerText: node.name,
+                children: [
+                    header?.name
+                        ? header.name
+                        : { tag: 'div', innerText: node.name },
+                ],
             },
             sep(1),
             bookmark
