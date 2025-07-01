@@ -32,7 +32,7 @@
                     "rx-vdom",
                     "rxjs",
                     "rxjs/fetch",
-                    "@w3nest/rx-tree-views",
+                    "@w3nest/ui-tk/Trees",
                     "esprima"
                 ],
                 "aliases": []
@@ -53,7 +53,7 @@
     "dependencies": {
         "@fortawesome/free-solid-svg-icons": "^6.7.2",
         "@mkdocs-ts/code-api": "^0.2.0",
-        "@w3nest/rx-tree-views": "^0.2.0",
+        "@w3nest/ui-tk": "^0.1.7",
         "@w3nest/webpm-client": "^0.1.8",
         "esprima": "^4.0.1",
         "mkdocs-ts": "^0.5.2",
@@ -90,7 +90,7 @@
         "kind": "esm",
         "dependencies": {
             "@mkdocs-ts/code-api": "^0.2.0",
-            "@w3nest/rx-tree-views": "^0.2.0",
+            "@w3nest/ui-tk": "^0.1.7",
             "@w3nest/webpm-client": "^0.1.8",
             "esprima": "^4.0.1",
             "mkdocs-ts": "^0.5.2",
@@ -118,8 +118,8 @@
             "rxjs/fetch": [
                 "rxjs_APIv7/fetch"
             ],
-            "@w3nest/rx-tree-views": [
-                "@w3nest/rx-tree-views_APIv02"
+            "@w3nest/ui-tk/Trees": [
+                "@w3nest/ui-tk_APIv01/Trees"
             ],
             "esprima": [
                 "esprima_APIv4"

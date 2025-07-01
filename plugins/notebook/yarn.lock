@@ -481,6 +481,26 @@
     "@eslint/core" "^0.13.0"
     levn "^0.4.1"
 
+"@floating-ui/core@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.7.2.tgz#3d1c35263950b314b6d5a72c8bfb9e3c1551aefd"
+  integrity sha512-wNB5ooIKHQc+Kui96jE/n69rHFWAVoxn5CAzL1Xdd8FG03cgY3MLO+GF9U3W737fYDSgPWA6MReKhBQBop6Pcw==
+  dependencies:
+    "@floating-ui/utils" "^0.2.10"
+
+"@floating-ui/dom@^1.6.3":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.7.2.tgz#3540b051cf5ce0d4f4db5fb2507a76e8ea5b4a45"
+  integrity sha512-7cfaOQuCS27HD7DX+6ib2OrnW+b4ZBwDNnCcT0uTyidcmyWb03FnQqJybDBoCnpdxwBSfA94UAYlRCt7mV+TbA==
+  dependencies:
+    "@floating-ui/core" "^1.7.2"
+    "@floating-ui/utils" "^0.2.10"
+
+"@floating-ui/utils@^0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.10.tgz#a2a1e3812d14525f725d011a73eceb41fef5bc1c"
+  integrity sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==
+
 "@fortawesome/fontawesome-common-types@6.7.2":
   version "6.7.2"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.7.2.tgz#7123d74b0c1e726794aed1184795dbce12186470"
@@ -1226,6 +1246,13 @@
   dependencies:
     rxjs "^7.5.6"
 
+"@w3nest/http-clients@^0.1.7":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@w3nest/http-clients/-/http-clients-0.1.8.tgz#55a07fcd642500480ea736aac92457767d1f5e26"
+  integrity sha512-4WiyYMkw212BJ4/a89rFU+xjXaDWrHQXPRVl3PK5EYCDbR6/FHaA6xM6zdLjTOzOeS+4n0Kq9epjamhFRLCBlg==
+  dependencies:
+    rxjs "^7.5.6"
+
 "@w3nest/rx-tree-views@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@w3nest/rx-tree-views/-/rx-tree-views-0.2.0.tgz#3ed28824dfd594f03f527cff2d0bcaaa0c604dc4"
@@ -1234,10 +1261,33 @@
     rx-vdom "^0.1.0"
     rxjs "^7.5.6"
 
+"@w3nest/ui-tk@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@w3nest/ui-tk/-/ui-tk-0.1.7.tgz#f644a4a68aacdc34bd3a9b876ade40091b18a407"
+  integrity sha512-My9yBds0fUp4UoC6bD/qQN8NleuJ3+7lnNjGVr9ZY24gDT4D2mkv/3+8HsLxYPOOJXOoCBUB0EyythDgEj1zgQ==
+  dependencies:
+    "@floating-ui/dom" "^1.6.3"
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
+    "@w3nest/http-clients" "^0.1.7"
+    "@w3nest/webpm-client" "^0.1.9"
+    mkdocs-ts "^0.5.1"
+    rx-vdom "^0.1.3"
+    rxjs "^7.8.1"
+
 "@w3nest/webpm-client@^0.1.5", "@w3nest/webpm-client@^0.1.8":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.10.tgz#dc59cdd05e5d290a9c2cc952637d3c91bf23a033"
   integrity sha512-cMC2U2dVOjWn3FUY2Da3NFm5tzME0ZwsA4weq4ijlt6KEYLU+O8Ig3xLABLOkNpD06ECQjRIvYJo3h/M+keiAg==
+  dependencies:
+    "@w3nest/http-clients" "^0.1.5"
+    rx-vdom "^0.1.3"
+    rxjs "^7.5.6"
+    semver "^7.3.4"
+
+"@w3nest/webpm-client@^0.1.9":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.11.tgz#33972be1063d3078e1f8404eff6547bbad40a21b"
+  integrity sha512-Wuyrvcas4KEIXO1QuUT62Rn7N7l8kUvk78/OcAk/7qjLSN5xaWcn/tbC2iN7Holka3YzHlrkN6QePrkGjV/0Sg==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     rx-vdom "^0.1.3"
@@ -3545,7 +3595,7 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@^0.5.0, mkdocs-ts@^0.5.2:
+mkdocs-ts@^0.5.0, mkdocs-ts@^0.5.1, mkdocs-ts@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.5.2.tgz#1f9e2925197b3ba1d8d99f85123b09b463ca9359"
   integrity sha512-6pJTjO448Ny31OgJG2y1U4KxPHVcgjrZ7ZGHBDlki6+MCmT4ETXV43UZaXSrSEZcBuBSZTNFliCDdDznY1TAEg==
@@ -3973,7 +4023,7 @@ rx-vdom@^0.1.0, rx-vdom@^0.1.3:
     csstype "^2.6.0"
     json5 "^2.2.3"
 
-rxjs@^7.5.6:
+rxjs@^7.5.6, rxjs@^7.8.1:
   version "7.8.2"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.2.tgz#955bc473ed8af11a002a2be52071bf475638607b"
   integrity sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==

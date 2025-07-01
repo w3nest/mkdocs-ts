@@ -26,7 +26,7 @@ import { CellStatus, ExecCellError, Output, State } from './state'
 import { CellCommonAttributes } from './notebook-page'
 import { MdCellAttributes } from './md-cell-view'
 import { JsCellAttributes } from './js-cell-view'
-import { ObjectJs } from '@w3nest/rx-tree-views'
+import { ObjectJs } from '@w3nest/ui-tk/Trees'
 import { createEditor } from 'prism-code-editor'
 import 'prism-code-editor/prism/languages/javascript'
 import 'prism-code-editor/prism/languages/python'
@@ -496,7 +496,9 @@ export class ErrorView implements VirtualDOM<'div'> {
         const scopeIn = (): AnyVirtualDOM => {
             return {
                 tag: 'div',
-                class: 'cm-s-default',
+                style: {
+                    fontSize: '0.8rem',
+                },
                 children: [
                     {
                         tag: 'div',

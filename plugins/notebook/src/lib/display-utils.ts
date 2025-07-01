@@ -1,5 +1,5 @@
 import { AnyVirtualDOM, child$, CSSAttribute, RxChild } from 'rx-vdom'
-import { ObjectJs } from '@w3nest/rx-tree-views'
+import { ObjectJs } from '@w3nest/ui-tk/Trees'
 import { Observable, Subject } from 'rxjs'
 import { Output } from './state'
 
@@ -119,7 +119,9 @@ export function rawView(element: unknown): AnyVirtualDOM {
     const state = new ObjectJs.State({ title: '', data: element })
     return {
         tag: 'div' as const,
-        class: 'cm-s-default',
+        style: {
+            fontSize: '0.8rem',
+        },
         children: [new ObjectJs.View({ state })],
     }
 }
