@@ -17,12 +17,12 @@ Before diving into the details, let's install {{mkdocs-ts}}:
 const { MkDocs, NotebookModule, rxjs } = await webpm.install({
     esm:[ 
         'mkdocs-ts#{{mkdocs-version}} as MkDocs',
-        `@mkdocs-ts/notebook#{{notebook-version}} as NotebookModule`,
+        `@mkdocs-ts/notebook#^{{notebook-version}} as NotebookModule`,
         // rxjs is used later in this page
         'rxjs#^7.5.6 as rxjs'],
     css: [
         `mkdocs-ts#^{{mkdocs-version}}~assets/mkdocs-light.css`,
-        `@mkdocs-ts/notebook#{{notebook-version}}~assets/notebook.css`,
+        `@mkdocs-ts/notebook#^{{notebook-version}}~assets/notebook.css`,
     ]
 })
 </js-cell>

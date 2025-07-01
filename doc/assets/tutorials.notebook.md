@@ -38,9 +38,9 @@ To enable Notebook pages, install the <api-link target='Notebook'></api-link> pl
 <js-cell>
 const versionNotebook = "{{notebook-version}}"
 const { NotebookModule } = await webpm.install({
-    esm:[ `@mkdocs-ts/notebook#${versionNotebook} as NotebookModule`],
+    esm:[ `@mkdocs-ts/notebook#^${versionNotebook} as NotebookModule`],
     css: [
-        `@mkdocs-ts/notebook#${versionNotebook}~assets/notebook.css`,
+        `@mkdocs-ts/notebook#^${versionNotebook}~assets/notebook.css`,
     ]
 })
 display(MkDocs)
