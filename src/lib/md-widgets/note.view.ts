@@ -112,7 +112,7 @@ export class NoteView implements VirtualDOM<'div'> {
     public readonly icon?: string | AnyVirtualDOM
     public readonly label: string | AnyVirtualDOM
     public readonly content: string | AnyVirtualDOM
-    public readonly parsingArgs: { router: Router } & MdParsingOptions
+    public readonly parsingArgs: { router?: Router } & MdParsingOptions = {}
     public readonly expandable: boolean = false
     public readonly expanded$ = new BehaviorSubject(false)
     public readonly mode: ExpandableMode = 'stateful'
@@ -139,7 +139,7 @@ export class NoteView implements VirtualDOM<'div'> {
         content: string | AnyVirtualDOM
         expandable?: boolean
         mode?: ExpandableMode
-        parsingArgs: { router?: Router } & MdParsingOptions
+        parsingArgs?: { router?: Router } & MdParsingOptions
     }) {
         Object.assign(this, params)
         const defaultLabels: Record<NoteLevel, string> = {
