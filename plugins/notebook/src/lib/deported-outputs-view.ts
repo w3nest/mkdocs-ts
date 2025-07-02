@@ -60,7 +60,10 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
         fullScreen: (e: HTMLElement) =>
             e.getAttribute('full-screen') === 'true',
         style: (e: HTMLElement) => parseStyle(e.getAttribute('style') ?? ''),
+        defaultStyle: (e: HTMLElement) =>
+            parseStyle(e.getAttribute('defaultStyle') ?? ''),
         class: (e: HTMLElement) => e.getAttribute('class') ?? '',
+        defaultClass: (e: HTMLElement) => e.getAttribute('defaultClass') ?? '',
         inlined: (e: HTMLElement) => e.getAttribute('inlined') === 'true',
     }
 
@@ -88,6 +91,10 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
             cellId: DeportedOutputsView.FromDomAttributes.cellId(elem),
             defaultContent:
                 DeportedOutputsView.FromDomAttributes.defaultContent(elem),
+            defaultStyle:
+                DeportedOutputsView.FromDomAttributes.defaultStyle(elem),
+            defaultClass:
+                DeportedOutputsView.FromDomAttributes.defaultClass(elem),
             style: DeportedOutputsView.FromDomAttributes.style(elem),
             class: DeportedOutputsView.FromDomAttributes.class(elem),
             inlined: DeportedOutputsView.FromDomAttributes.inlined(elem),
@@ -101,6 +108,8 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
      * @param params
      * @param params.defaultContent The default content (as Markdown) displayed before an output is emitted from
      * `output$`.
+     * @param params.defaultStyle The default style to use before an output is emitted from `output$`.
+     * @param params.defaultClass The default class to use before an output is emitted from `output$`.
      * @param params.output$ Observable over the outputs to display.
      * @param params.fullScreen Whether to add a menu to allow expanding the output.
      * @param params.style Style to apply to this element. It does not apply to the `defaultContent` view.
@@ -110,6 +119,8 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
      */
     constructor(params: {
         defaultContent: string
+        defaultStyle?: CSSAttribute
+        defaultClass?: string
         output$: Observable<Output>
         fullScreen?: boolean
         style?: CSSAttribute
@@ -134,6 +145,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                 backgroundColor: 'rgb(255,255,255)',
                 ...(outputs.length === 0 ? {} : params.style),
             }),
+            untilFirst: params.defaultStyle ?? {},
         })
         const class$: AttributeLike<string> = attr$({
             source$: combineLatest([this.mode$, outputs$]),
@@ -141,7 +153,10 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
                 if (outputs.length === 0) {
                     return ''
                 }
-                const fwdClass = params.class ?? ''
+                const fwdClass =
+                    outputs$.value.length === 0
+                        ? (params.defaultClass ?? '')
+                        : (params.class ?? '')
                 return mode === 'normal'
                     ? fwdClass
                     : `p-2 border rounded h-75 w-75 mx-auto ${fwdClass} overflow-auto`
