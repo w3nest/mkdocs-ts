@@ -21,12 +21,11 @@ import {
     mergeMap,
     Observable,
     Subject,
-    switchMap,
-    timer,
     combineLatest,
     of,
     take,
     map,
+    shareReplay,
 } from 'rxjs'
 import {
     ClientTocView,
@@ -95,7 +94,7 @@ export class TOCView implements VirtualDOM<'div'> {
      * The maximum heading depth considered for the TOC.
      * If set, headings beyond this depth are ignored.
      */
-    public readonly maxHeadingDepth?: number = 2
+    public readonly maxHeadingsDepth?: number = 2
     /**
      * An observable tracking the index of the first visible heading on the page.
      * This is updated dynamically as the user scrolls.
@@ -128,11 +127,11 @@ export class TOCView implements VirtualDOM<'div'> {
             return Array.from(
                 this.html.querySelectorAll<HTMLElement>(queryHeadings),
             ).filter((e) => {
-                if (this.maxHeadingDepth === undefined) {
+                if (this.maxHeadingsDepth === undefined) {
                     return true
                 }
                 const startContentDepth = 2
-                const maxDepth = startContentDepth + this.maxHeadingDepth
+                const maxDepth = startContentDepth + this.maxHeadingsDepth
                 return isWithinDepth(e, params.html, maxDepth)
             })
         }
@@ -141,46 +140,54 @@ export class TOCView implements VirtualDOM<'div'> {
 
         const allMutations$ = new Subject<MutationRecord[]>()
 
+        const subHeadings = allMutations$
+            .pipe(
+                filter((mutationsList) => {
+                    return mutationsList.some((mut) => {
+                        if (mut.type === 'childList') {
+                            const nodes = [
+                                ...mut.addedNodes,
+                                ...mut.removedNodes,
+                            ]
+                            return nodes.some(
+                                (node) =>
+                                    node instanceof HTMLElement &&
+                                    (node.tagName.startsWith('H') ||
+                                        node.querySelector(
+                                            'h1,h2,h3,h4,h5,h6',
+                                        )),
+                            )
+                        }
+                        if (
+                            mut.type === 'attributes' &&
+                            mut.target instanceof HTMLElement
+                        ) {
+                            return mut.target.tagName.startsWith('H')
+                        }
+
+                        return false
+                    })
+                }),
+                debounceTime(debounceTimeToc),
+                shareReplay({ bufferSize: 1, refCount: true }),
+            )
+            .subscribe(() => {
+                const headings = headingsArray()
+                headings$.next(headings)
+            })
+
         const observer = new MutationObserver((mutationsList) => {
             allMutations$.next(mutationsList)
         })
-
-        const headingsMutation$ = allMutations$.pipe(
-            filter((mutationsList) => {
-                const addedNodes: Node[] = mutationsList
-                    .map((mut) =>
-                        mut.type === 'childList'
-                            ? [...mut.addedNodes, ...mut.removedNodes]
-                            : [],
-                    )
-                    .flat()
-                return (
-                    addedNodes
-                        .filter((node) => node instanceof HTMLElement)
-                        .find((node) => node.tagName.startsWith('H')) !==
-                    undefined
-                )
-            }),
-            debounceTime(debounceTimeToc),
-        )
-
         this.connectedCallback = (elem) => {
-            timer(1000, -1).subscribe(() => {
-                headings$.next(headingsArray())
-            })
             observer.observe(this.html, { childList: true, subtree: true })
             elem.ownSubscriptions(
                 this.router.htmlUpdated$.subscribe(() => {
                     headings$.next(headingsArray())
                 }),
+                subHeadings,
             )
-            elem.ownSubscriptions(
-                timer(1000, -1)
-                    .pipe(switchMap(() => headingsMutation$))
-                    .subscribe(() => {
-                        headings$.next(headingsArray())
-                    }),
-            )
+            elem.ownSubscriptions()
         }
         this.disconnectedCallback = () => {
             observer.disconnect()
