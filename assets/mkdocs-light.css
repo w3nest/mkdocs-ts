@@ -830,8 +830,8 @@
     scrollbar-width: thin;
 }
 
-.CodeMirror {
-    height: auto !important;
+.mkdocs-no-p-margin p {
+    margin: 0px;
 }
 
 .mkdocs-NavigationView {
