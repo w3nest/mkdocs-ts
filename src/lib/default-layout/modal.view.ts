@@ -73,7 +73,7 @@ export function popupModal({
         children: [
             {
                 tag: 'div',
-                class: `p-2 border rounded mx-auto d-flex flex-column justify-content-center overflow-auto`,
+                class: `border rounded mx-auto d-flex flex-column justify-content-center overflow-auto`,
                 children: [content],
                 style: {
                     maxHeight: maxHeight,
