@@ -550,21 +550,29 @@ export function parseFile({
     path: string
     projectGlobals: ProjectGlobals
 }): File {
-    const symbols = projectGlobals.tsInputs
-    const comment = symbols[path].comment
     return {
         name: Path.basename(path),
         path: path,
         documentation: {
-            sections: [
-                {
-                    semantic: noSemantic,
-                    content: comment ?? '',
-                    contentType: 'markdown',
-                },
-            ],
+            sections: [],
         },
     }
+    // Not working: typedoc do not provide hints for file documentation
+    // const symbols = projectGlobals.tsInputs
+    // const comment = symbols[path].comment
+    // return {
+    //     name: Path.basename(path),
+    //     path: path,
+    //     documentation: {
+    //         sections: [
+    //             {
+    //                 semantic: noSemantic,
+    //                 content: comment ?? '',
+    //                 contentType: 'markdown',
+    //             },
+    //         ],
+    //     },
+    // }
 }
 
 /**
@@ -1211,6 +1219,11 @@ function gather_symbol_references(
     const extra = projectGlobals.extraDeclarationReferences
     if (path in extra) {
         Object.entries(extra[path]).forEach(([k, v]) => {
+            result[k] = v
+        })
+    }
+    if ('*' in extra) {
+        Object.entries(extra['*']).forEach(([k, v]) => {
             result[k] = v
         })
     }
