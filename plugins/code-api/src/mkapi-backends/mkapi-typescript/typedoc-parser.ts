@@ -448,7 +448,12 @@ export function parseModule({
         )
         .filter((func) => func !== undefined)
     const globals = children
-        .filter((child) => child.kind === TYPEDOC_KINDS.VARIABLE)
+        .filter(
+            (child) =>
+                child.kind === TYPEDOC_KINDS.VARIABLE ||
+                // next condition targets functions declared as globals
+                (child.kind === TYPEDOC_KINDS.FUNCTION && child.comment),
+        )
         .filter((attr) => attr.comment)
         .map((attr) => attr as unknown as TypedocNode & SymbolTrait)
         .map((attr) =>
