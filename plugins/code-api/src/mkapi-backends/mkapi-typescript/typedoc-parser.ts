@@ -398,20 +398,22 @@ export function parseModule({
         throw new Error(`Module not found: ${parts.join('.')}`)
     }
 
-    const module = getModuleRec(typedocNode, modulePath.split('/').slice(1))
+    const moduleNode = getModuleRec(typedocNode, modulePath.split('/').slice(1))
 
     if (
         ![
             TYPEDOC_KINDS.MODULE,
             TYPEDOC_KINDS.PROJECT,
             TYPEDOC_KINDS.ENTRY_MODULE,
-        ].includes(module.kind)
+        ].includes(moduleNode.kind)
     ) {
-        throw new Error(`Kind of module not knows (got ${String(module.kind)})`)
+        throw new Error(
+            `Kind of module not knows (got ${String(moduleNode.kind)})`,
+        )
     }
 
     const path = modulePath
-    const children = module.children ?? []
+    const children = moduleNode.children ?? []
     const subModules = children.filter((child) =>
         [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(child.kind),
     )
@@ -454,21 +456,21 @@ export function parseModule({
                 typedocNode: attr,
                 projectGlobals,
                 parentPath: path,
-                parentElement: module,
+                parentElement: moduleNode,
             }),
         )
         .filter((attr) => attr !== undefined)
 
-    const docSrc = module.comment
-        ? module.comment.summary
-        : hasProjectTrait(module)
-          ? module.readme
+    const docSrc = moduleNode.comment
+        ? moduleNode.comment.summary
+        : hasProjectTrait(moduleNode)
+          ? moduleNode.readme
           : undefined
     const documentation = docSrc
         ? parseDocumentation({
               semantic: noSemantic,
               typedocNode: docSrc,
-              parent: module,
+              parent: moduleNode,
               projectGlobals,
           })
         : noDoc
@@ -480,7 +482,7 @@ export function parseModule({
     ].map((file) => parseFile({ path: file, projectGlobals }))
 
     return {
-        name: module.name,
+        name: moduleNode.name,
         documentation,
         path: modulePath,
         navPath: typedocNode.id in navMap ? navMap[typedocNode.id] : '',
