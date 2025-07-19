@@ -1,4 +1,4 @@
-import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from 'rx-vdom'
+import { AnyVirtualDOM, ChildrenLike, CSSAttribute, VirtualDOM } from 'rx-vdom'
 import { layoutStyleBase } from './common'
 
 /**
@@ -11,20 +11,24 @@ export interface SuperposedArguments {
     content: AnyVirtualDOM
     /**
      * An optional overlay to be displayed in the top-left corner.
+     * If `parentStyle` is provided, it is applied to the parent container (with `absolute` positioning).
      */
-    topLeft?: AnyVirtualDOM
+    topLeft?: AnyVirtualDOM & { parentStyle?: CSSAttribute }
     /**
      * An optional overlay to be displayed in the top-right corner.
+     * If `parentStyle` is provided, it is applied to the parent container (with `absolute` positioning).
      */
-    topRight?: AnyVirtualDOM
+    topRight?: AnyVirtualDOM & { parentStyle?: CSSAttribute }
     /**
      * An optional overlay to be displayed in the bottom-left corner.
+     * If `parentStyle` is provided, it is applied to the parent container (with `absolute` positioning).
      */
-    bottomLeft?: AnyVirtualDOM
+    bottomLeft?: AnyVirtualDOM & { parentStyle?: CSSAttribute }
     /**
      * An optional overlay to be displayed in the bottom-right corner.
+     * If `parentStyle` is provided, it is applied to the parent container (with `absolute` positioning).
      */
-    bottomRight?: AnyVirtualDOM
+    bottomRight?: AnyVirtualDOM & { parentStyle?: CSSAttribute }
 }
 
 /**
@@ -107,13 +111,14 @@ export class SuperposedLayout implements VirtualDOM<'div'> {
     }
 
     private createOverlay(
-        cornerView: AnyVirtualDOM,
+        cornerView: AnyVirtualDOM & { parentStyle?: CSSAttribute },
         position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right',
     ) {
         const style = {
             position: 'absolute' as const,
             [position.includes('top') ? 'top' : 'bottom']: '10px',
             [position.includes('left') ? 'left' : 'right']: '10px',
+            ...(cornerView.parentStyle ?? {}),
         }
         return {
             tag: 'div' as const,
