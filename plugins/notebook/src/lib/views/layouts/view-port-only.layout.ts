@@ -56,7 +56,7 @@ function isElementInViewport(element: HTMLElement, s$: Subject<boolean>) {
  */
 export class ViewPortOnlyLayout implements VirtualDOM<'div'> {
     public readonly tag = 'div'
-    public readonly style = layoutStyleBase
+    public readonly class = 'h-100 w-100'
     public readonly children: ChildrenLike = []
     public readonly content: AnyVirtualDOM
     public readonly connectedCallback: (element: HTMLElement) => void
