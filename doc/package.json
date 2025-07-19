@@ -44,12 +44,12 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "^0.2.0",
-        "@mkdocs-ts/notebook": "^0.1.2",
+        "@mkdocs-ts/code-api": "^0.2.1",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1751363318.tgz",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "^0.5.2",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.3-wip-1751363318.tgz",
         "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
@@ -88,12 +88,12 @@
     "webpm": {
         "kind": "webapp",
         "dependencies": {
-            "@mkdocs-ts/code-api": "^0.2.0",
-            "@mkdocs-ts/notebook": "^0.1.2",
+            "@mkdocs-ts/code-api": "^0.2.1",
+            "@mkdocs-ts/notebook": "^0.1.4",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
-            "mkdocs-ts": "^0.5.2",
+            "mkdocs-ts": "^0.5.3",
             "rx-vdom": "^0.1.4",
             "rxjs": "^7.5.6"
         },
@@ -133,5 +133,9 @@
                 "@w3nest/ui-tk_APIv01/Mkdocs"
             ]
         }
+    },
+    "resolutions": {
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.3-wip-1751363318.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1751363318.tgz"
     }
 }

@@ -61,7 +61,8 @@ config = ProjectConfig(
     inPackageJson={
         "scripts": {
             "doc": "(cd .w3nest && npx tsx doc.ts && python doc.py)",
-        }
+        },
+        "files": ["dist", "assets", "src/mkapi-backends"],
     },
 )
 template_folder = project_folder / ".w3nest" / ".template"
@@ -70,7 +71,6 @@ generate_template(config=config, dst_folder=template_folder)
 files = [
     "README.md",
     "package.json",
-    ".npmignore",
     # ".prettierignore", Exclude 'src/backends'
     # "tsconfig.json", Add strict null checks
     "jest.config.ts",

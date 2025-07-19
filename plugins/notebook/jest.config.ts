@@ -5,5 +5,6 @@ const jestConfig: Config = {
     testRunner: 'jest-circus',
     testEnvironment: 'jsdom',
     modulePathIgnorePatterns: ['<rootDir>/.w3nest', '<rootDir>/dist'],
+    coverageDirectory: 'tooling/jest',
 }
 export default jestConfig

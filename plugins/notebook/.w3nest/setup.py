@@ -80,7 +80,6 @@ generate_template(config=config, dst_folder=template_folder)
 files = [
     "README.md",
     "package.json",
-    ".npmignore",
     # ".prettierignore", Exclude 'src/interpreters'
     # "tsconfig.json", Add strict null checks
     "jest.config.ts",

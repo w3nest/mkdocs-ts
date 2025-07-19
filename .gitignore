@@ -14,3 +14,5 @@ build/
 .local-dependencies
 .vscode
 .mypy_cache
+tooling/
+assets/api

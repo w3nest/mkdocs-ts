@@ -5,7 +5,11 @@
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/code-api#README.md",
     "main": "./dist/@mkdocs-ts/code-api.js",
-    "types": "src/index.ts",
+    "files": [
+        "dist",
+        "assets",
+        "src/mkapi-backends"
+    ],
     "scripts": {
         "clean": "del-cli dist",
         "setup": "python .w3nest/setup.py",
@@ -25,7 +29,7 @@
     "exports": {
         ".": {
             "default": "./dist/@mkdocs-ts/code-api.js",
-            "types": "./src/index.ts",
+            "types": "./dist/src/index.d.ts",
             "webpm": {
                 "dependencies": [
                     "mkdocs-ts",
@@ -38,7 +42,7 @@
         },
         "./Doc": {
             "default": "./dist/Doc.js",
-            "types": "./src/doc/index.ts",
+            "types": "./dist/src/doc/index.d.ts",
             "webpm": {
                 "dependencies": [
                     "mkdocs-ts",

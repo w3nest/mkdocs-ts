@@ -5,7 +5,10 @@
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts#README.md",
     "main": "./dist/mkdocs-ts.js",
-    "types": "src/index.ts",
+    "files": [
+        "dist/src",
+        "assets"
+    ],
     "scripts": {
         "clean": "del-cli dist",
         "setup": "python .w3nest/setup.py",
@@ -27,7 +30,7 @@
     "exports": {
         ".": {
             "default": "./dist/mkdocs-ts.js",
-            "types": "./src/index.ts",
+            "types": "./dist/src/index.d.ts",
             "webpm": {
                 "dependencies": [
                     "rx-vdom",
