@@ -2,6 +2,7 @@
 module.exports = {
     entryPoints: ['./src/index.ts'],
     exclude: ['src/tests'],
-    out: 'dist/docs',
+    out: 'tooling/typedoc-html',
     theme: 'default',
+    categorizeByGroup: false,
 }

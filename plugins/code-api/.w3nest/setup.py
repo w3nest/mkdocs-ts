@@ -74,6 +74,7 @@ files = [
     # ".prettierignore", Exclude 'src/backends'
     # "tsconfig.json", Add strict null checks
     "jest.config.ts",
+    "typedoc.js",
     "webpack.config.ts",
 ]
 for file in files:
