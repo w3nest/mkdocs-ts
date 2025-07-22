@@ -5,7 +5,10 @@
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/doc#README.md",
     "main": "./dist/@mkdocs-ts/doc.js",
-    "types": "src/index.ts",
+    "files": [
+        "dist/src",
+        "assets"
+    ],
     "scripts": {
         "clean": "del-cli dist",
         "setup": "python .w3nest/setup.py",
@@ -26,7 +29,7 @@
     "exports": {
         ".": {
             "default": "./dist/@mkdocs-ts/doc.js",
-            "types": "./src/app/main.ts",
+            "types": "./dist/src/app/main.d.ts",
             "webpm": {
                 "dependencies": [
                     "rxjs",
@@ -44,12 +47,12 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "^0.2.1",
-        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1751363318.tgz",
+        "@mkdocs-ts/code-api": "^0.2.2",
+        "@mkdocs-ts/notebook": "^0.1.4",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.3-wip-1751363318.tgz",
+        "mkdocs-ts": "^0.5.3",
         "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
@@ -88,7 +91,7 @@
     "webpm": {
         "kind": "webapp",
         "dependencies": {
-            "@mkdocs-ts/code-api": "^0.2.1",
+            "@mkdocs-ts/code-api": "^0.2.2",
             "@mkdocs-ts/notebook": "^0.1.4",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
@@ -133,9 +136,5 @@
                 "@w3nest/ui-tk_APIv01/Mkdocs"
             ]
         }
-    },
-    "resolutions": {
-        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.3-wip-1751363318.tgz",
-        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1751363318.tgz"
     }
 }

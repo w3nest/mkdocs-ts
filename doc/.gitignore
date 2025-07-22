@@ -1,11 +1,8 @@
 node_modules
 **/node_modules/**/*
 dist/
-coverage/
-junit.xml
+tooling/
 webpm.zip
 __pycache__
 *.iml
 .w3nest/.template
-.env
-/src/tests/**/result.zip

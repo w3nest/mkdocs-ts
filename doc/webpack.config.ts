@@ -77,7 +77,7 @@ const webpackConfigApp: webpack.Configuration = {
         }),
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
-            reportFilename: './bundle-analysis.html',
+            reportFilename: '../tooling/bundle-analyzer/bundle-analysis.html',
             openAnalyzer: false,
         }),
     ],
@@ -117,7 +117,7 @@ const webpackConfigSubModules: webpack.Configuration[] = Object.entries(
     plugins: [
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
-            reportFilename: `./bundle-analysis-${k}.html`,
+            reportFilename: `../tooling/bundle-analyzer/bundle-analysis-${k}.html`,
             openAnalyzer: false,
         }),
     ],

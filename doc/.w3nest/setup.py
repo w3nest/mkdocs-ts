@@ -86,8 +86,8 @@ generate_template(config=config, dst_folder=template_folder)
 files = [
     "README.md",
     ".gitignore",
-    ".npmignore",
     ".prettierignore",
+    "typedoc.js",
     pkg_json_name,
     "webpack.config.ts",
 ]
