@@ -51,8 +51,8 @@ export async function installCodeApiModule() {
     const { CodeApi } = await webpm.install<{
         CodeApi: typeof CodeApiModule
     }>({
-        esm: [`@mkdocs-ts/code-api#${version} as CodeApi`],
-        css: [`@mkdocs-ts/code-api#${version}~assets/ts-typedoc.css`],
+        esm: [`@mkdocs-ts/code-api#^${version} as CodeApi`],
+        css: [`@mkdocs-ts/code-api#^${version}~assets/ts-typedoc.css`],
     })
     return CodeApi
 }
