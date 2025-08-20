@@ -371,21 +371,22 @@ export function parseModule({
     }
 
     function getModuleRec(fromElem: TypedocNode, parts: string[]): TypedocNode {
-        if (parts.length === 0) {
-            return fromElem
-        }
-        if (
-            parts.length === 1 &&
-            fromElem.name === parts[0] &&
-            [TYPEDOC_KINDS.PROJECT, TYPEDOC_KINDS.MODULE].includes(
-                fromElem.kind,
-            )
-        ) {
-            return fromElem
-        }
         const modules = (fromElem.children ?? []).filter((c) =>
             [TYPEDOC_KINDS.MODULE, TYPEDOC_KINDS.ENTRY_MODULE].includes(c.kind),
         )
+        if (parts.length === 0) {
+            return fromElem
+        }
+        if (parts.length === 1) {
+            if (fromElem.name === parts[0]) {
+                return fromElem
+            }
+            const target = modules.find((m) => m.name === parts[0])
+            if (target) {
+                return target
+            }
+            throw new Error(`Module not found: ${parts.join('.')}`)
+        }
         const targetPath = pathLib.join(...parts)
         const children: [number, TypedocNode][] = modules
             .filter((c) => targetPath.startsWith(c.name))
