@@ -2,20 +2,9 @@
 
 Code API plugins for mkdocs-ts.
 
-This library is part of the hybrid cloud/local ecosystem
-[YouWol](https://platform.youwol.com/apps/@youwol/platform/latest).
+<!-- no links provided -->
 
-## Links
-
-<!-- no user guide provided -->
-
-[Developers documentation](https://platform.youwol.com/apps/@youwol/cdn-explorer/latest?package=@mkdocs-ts/code-api&tab=doc)
-
-[Package on npm](https://www.npmjs.com/package/@mkdocs-ts/code-api)
-
-[Source on GitHub](https://github.com/mkdocs-ts/code-api)
-
-# Installation, Build, Test
+## Installation, Build, Test
 
 To install the required dependencies:
 
@@ -47,7 +36,7 @@ To run tests:
 yarn test
 ```
 
-Coverage can be evaluated using:
+To measure test coverage:
 
 ```shell
 yarn test-coverage

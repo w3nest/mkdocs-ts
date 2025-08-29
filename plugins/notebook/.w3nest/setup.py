@@ -84,6 +84,7 @@ files = [
     # "tsconfig.json", Add strict null checks
     "jest.config.ts",
     "webpack.config.ts",
+    "typedoc.js",
 ]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)

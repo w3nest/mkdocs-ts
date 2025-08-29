@@ -1,0 +1,9 @@
+node_modules
+**/node_modules/**/*
+dist/
+tooling/
+webpm.zip
+__pycache__
+*.iml
+.w3nest/.template
+assets/api

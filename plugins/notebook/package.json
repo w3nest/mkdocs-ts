@@ -6,7 +6,7 @@
     "homepage": "https://github.com/mkdocs-ts/notebook#README.md",
     "main": "./dist/@mkdocs-ts/notebook.js",
     "files": [
-        "dist/src",
+        "dist",
         "assets"
     ],
     "scripts": {
@@ -14,8 +14,9 @@
         "setup": "python .w3nest/setup.py",
         "build": "yarn build:prod",
         "pre-build": "yarn clean",
-        "build:dev": "yarn pre-build && webpack --mode development",
-        "build:prod": "yarn pre-build && webpack --mode production",
+        "post-build": "del-cli dist/src/tests",
+        "build:dev": "yarn pre-build && webpack --mode development && yarn post-build",
+        "build:prod": "yarn pre-build && webpack --mode production && yarn post-build",
         "lint-check": "yarn lint-prettier-check && yarn lint-eslint-check",
         "lint-prettier-check": "prettier --check ./src",
         "lint-prettier-write": "prettier --write ./src",
@@ -118,17 +119,17 @@
             "rxjs": [
                 "rxjs_APIv7"
             ],
-            "rxjs/fetch": [
-                "rxjs_APIv7/fetch"
-            ],
-            "@w3nest/ui-tk/Trees": [
-                "@w3nest/ui-tk_APIv01/Trees"
+            "@w3nest/ui-tk": [
+                "@w3nest/ui-tk_APIv01"
             ],
             "esprima": [
                 "esprima_APIv4"
             ],
             "@w3nest/webpm-client": [
                 "@w3nest/webpm-client_APIv01"
+            ],
+            "@mkdocs-ts/code-api": [
+                "@mkdocs-ts/code-api_APIv02"
             ]
         }
     }

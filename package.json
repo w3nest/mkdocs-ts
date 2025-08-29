@@ -6,7 +6,7 @@
     "homepage": "https://github.com/mkdocs-ts#README.md",
     "main": "./dist/mkdocs-ts.js",
     "files": [
-        "dist/src",
+        "dist",
         "assets"
     ],
     "scripts": {
@@ -14,8 +14,9 @@
         "setup": "python .w3nest/setup.py",
         "build": "yarn build:prod",
         "pre-build": "yarn clean",
-        "build:dev": "yarn pre-build && webpack --mode development",
-        "build:prod": "yarn pre-build && webpack --mode production && yarn build-css",
+        "post-build": "del-cli dist/src/tests",
+        "build:dev": "yarn pre-build && webpack --mode development && yarn post-build",
+        "build:prod": "yarn pre-build && webpack --mode production && yarn build-css && yarn post-build",
         "lint-check": "yarn lint-prettier-check && yarn lint-eslint-check",
         "lint-prettier-check": "prettier --check ./src",
         "lint-prettier-write": "prettier --write ./src",
@@ -112,17 +113,8 @@
             "@w3nest/rx-tree-views": [
                 "@w3nest/rx-tree-views_APIv02"
             ],
-            "prismjs/components/prism-core": [
-                "prismjs_APIv1/components/prism-core"
-            ],
-            "prismjs/plugins/autoloader/prism-autoloader": [
-                "prismjs_APIv1/plugins/autoloader/prism-autoloader"
-            ],
-            "prismjs/plugins/line-numbers/prism-line-numbers": [
-                "prismjs_APIv1/plugins/line-numbers/prism-line-numbers"
-            ],
-            "prismjs/plugins/line-highlight/prism-line-highlight": [
-                "prismjs_APIv1/plugins/line-highlight/prism-line-highlight"
+            "prismjs": [
+                "prismjs_APIv1"
             ]
         }
     }
