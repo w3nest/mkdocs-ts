@@ -60,7 +60,6 @@ generate_template(config=config, dst_folder=template_folder)
 files = [
     # "README.md", Custom README
     ".gitignore",
-    ".npmignore",
     ".prettierignore",
     "package.json",
     "jest.config.ts",

@@ -142,8 +142,7 @@
                         "startLine": 53,
                         "endLine": 54,
                         "references": {
-                            "children": "@nav[ex-ts-npm].TRexView.children",
-                            "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                            "children": "@nav[ex-ts-npm].TRexView.children"
                         }
                     }
                 },
@@ -191,9 +190,7 @@
                 "startLine": 51,
                 "endLine": 83,
                 "references": {
-                    "TRexView": "@nav[ex-ts-npm].TRexView",
-                    "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike",
-                    "VirtualDOM": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                    "TRexView": "@nav[ex-ts-npm].TRexView"
                 }
             },
             "semantic": {
@@ -230,10 +227,7 @@
                 "startLine": 21,
                 "endLine": 22,
                 "references": {
-                    "AppNav": "@nav[ex-ts-npm].AppNav",
-                    "Navigation": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Navigation",
-                    "DefaultLayout.NavLayout": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
-                    "DefaultLayout.NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
+                    "AppNav": "@nav[ex-ts-npm].AppNav"
                 }
             },
             "semantic": {
@@ -339,8 +333,7 @@
                 "startLine": 12,
                 "endLine": 17,
                 "references": {
-                    "header": "@nav[ex-ts-npm].header",
-                    "NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
+                    "header": "@nav[ex-ts-npm].header"
                 }
             },
             "semantic": {
@@ -356,36 +349,14 @@
             "name": "trex.view.ts",
             "path": "src/app/trex.view.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "main.ts",
             "path": "src/app/main.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         }
     ],
