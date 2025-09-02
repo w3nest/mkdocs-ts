@@ -48,7 +48,8 @@
                 "startLine": 18,
                 "endLine": 19,
                 "references": {
-                    "icons": "@nav[mkdocs-ts]/MdWidgets.icons"
+                    "icons": "@nav[mkdocs-ts]/MdWidgets.icons",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                 }
             }
         }
@@ -104,7 +105,8 @@
                         "startLine": 128,
                         "endLine": 129,
                         "references": {
-                            "icon": "@nav[mkdocs-ts]/MdWidgets.ApiLink.icon"
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.ApiLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
                 },
@@ -194,6 +196,7 @@
                         "endLine": 147,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.ApiLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
@@ -214,7 +217,9 @@
                 "references": {
                     "ApiLink": "@nav[mkdocs-ts]/MdWidgets.ApiLink",
                     "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
-                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -274,7 +279,9 @@
                         "startLine": 101,
                         "endLine": 102,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.children"
+                            "children": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -344,7 +351,8 @@
                         "startLine": 99,
                         "endLine": 100,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -467,7 +475,8 @@
                         "startLine": 108,
                         "endLine": 109,
                         "references": {
-                            "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.attributeMapper"
+                            "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.attributeMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     },
                     "semantic": {
@@ -514,6 +523,7 @@
                         "endLine": 128,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "CodeBadgesView": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView"
                         }
                     },
@@ -532,7 +542,12 @@
                 "startLine": 93,
                 "endLine": 188,
                 "references": {
-                    "CodeBadgesView": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView"
+                    "CodeBadgesView": "@nav[mkdocs-ts]/MdWidgets.CodeBadgesView",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -592,7 +607,9 @@
                         "startLine": 213,
                         "endLine": 214,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.children"
+                            "children": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -697,7 +714,8 @@
                         "startLine": 198,
                         "endLine": 199,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -822,6 +840,7 @@
                         "endLine": 227,
                         "references": {
                             "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.attributeMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "CodeLanguage": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage"
                         }
                     },
@@ -869,6 +888,7 @@
                         "endLine": 249,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "CodeSnippetView": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView"
                         }
                     },
@@ -889,7 +909,13 @@
                 "references": {
                     "CodeSnippetView": "@nav[mkdocs-ts]/MdWidgets.CodeSnippetView",
                     "CodeLanguage": "@nav[mkdocs-ts]/MdWidgets.CodeLanguage",
-                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor"
+                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -949,7 +975,8 @@
                         "startLine": 265,
                         "endLine": 266,
                         "references": {
-                            "icon": "@nav[mkdocs-ts]/MdWidgets.CrossLink.icon"
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.CrossLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
                 },
@@ -1039,6 +1066,7 @@
                         "endLine": 283,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.CrossLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
@@ -1059,7 +1087,9 @@
                 "references": {
                     "CrossLink": "@nav[mkdocs-ts]/MdWidgets.CrossLink",
                     "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
-                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -1119,7 +1149,8 @@
                         "startLine": 176,
                         "endLine": 177,
                         "references": {
-                            "icon": "@nav[mkdocs-ts]/MdWidgets.ExtLink.icon"
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.ExtLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
                 },
@@ -1209,6 +1240,7 @@
                         "endLine": 193,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.ExtLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
@@ -1229,7 +1261,9 @@
                 "references": {
                     "ExtLink": "@nav[mkdocs-ts]/MdWidgets.ExtLink",
                     "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
-                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -1289,7 +1323,8 @@
                         "startLine": 220,
                         "endLine": 221,
                         "references": {
-                            "icon": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.icon"
+                            "icon": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.icon",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     }
                 },
@@ -1379,6 +1414,7 @@
                         "endLine": 238,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.GitHubLink.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
                         }
                     },
@@ -1399,7 +1435,9 @@
                 "references": {
                     "GitHubLink": "@nav[mkdocs-ts]/MdWidgets.GitHubLink",
                     "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
-                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView"
+                    "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -1459,7 +1497,9 @@
                         "startLine": 27,
                         "endLine": 28,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/MdWidgets.LinkView.children"
+                            "children": "@nav[mkdocs-ts]/MdWidgets.LinkView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -1529,7 +1569,8 @@
                         "startLine": 26,
                         "endLine": 27,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/MdWidgets.LinkView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.LinkView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -1607,7 +1648,9 @@
                         "endLine": 97,
                         "references": {
                             "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
-                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
+                            "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     },
                     "semantic": {
@@ -1626,7 +1669,13 @@
                 "endLine": 98,
                 "references": {
                     "LinkView": "@nav[mkdocs-ts]/MdWidgets.LinkView",
-                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -1686,7 +1735,9 @@
                         "startLine": 109,
                         "endLine": 110,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/MdWidgets.NoteView.children"
+                            "children": "@nav[mkdocs-ts]/MdWidgets.NoteView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -1756,7 +1807,9 @@
                         "startLine": 120,
                         "endLine": 121,
                         "references": {
-                            "connectedCallback": "@nav[mkdocs-ts]/MdWidgets.NoteView.connectedCallback"
+                            "connectedCallback": "@nav[mkdocs-ts]/MdWidgets.NoteView.connectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback"
                         }
                     }
                 },
@@ -1791,7 +1844,8 @@
                         "startLine": 107,
                         "endLine": 108,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/MdWidgets.NoteView.tag"
+                            "tag": "@nav[mkdocs-ts]/MdWidgets.NoteView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -1871,7 +1925,8 @@
                             "NoteView": "@nav[mkdocs-ts]/MdWidgets.NoteView",
                             "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode",
                             "Router": "@nav[mkdocs-ts].Router",
-                            "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions"
+                            "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
+                            "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM"
                         }
                     },
                     "semantic": {
@@ -1918,6 +1973,7 @@
                         "endLine": 211,
                         "references": {
                             "attributeMapper": "@nav[mkdocs-ts]/MdWidgets.NoteView.attributeMapper",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode"
                         }
                     },
@@ -1967,6 +2023,7 @@
                             "fromHTMLElement": "@nav[mkdocs-ts]/MdWidgets.NoteView.fromHTMLElement",
                             "Router": "@nav[mkdocs-ts].Router",
                             "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "NoteView": "@nav[mkdocs-ts]/MdWidgets.NoteView"
                         }
                     },
@@ -1988,7 +2045,16 @@
                     "NoteView": "@nav[mkdocs-ts]/MdWidgets.NoteView",
                     "ExpandableMode": "@nav[mkdocs-ts]/MdWidgets.ExpandableMode",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions"
+                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -2026,7 +2092,9 @@
                 "endLine": 27,
                 "references": {
                     "CodeMirror": "@nav[mkdocs-ts]/MdWidgets.CodeMirror",
-                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor"
+                    "CodeMirrorEditor": "@nav[mkdocs-ts]/MdWidgets.CodeMirrorEditor",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -2174,7 +2242,9 @@
                 "startLine": 10,
                 "endLine": 11,
                 "references": {
-                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper"
+                    "LinkMapper": "@nav[mkdocs-ts]/MdWidgets.LinkMapper",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                 }
             },
             "semantic": {

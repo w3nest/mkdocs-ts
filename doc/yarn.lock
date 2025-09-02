@@ -989,9 +989,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
-"@mkdocs-ts/code-api@^0.2.2":
-  version "0.2.2"
-  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.2.2-1756797835.tgz#cb8bc59e84885e951d86b37ae3241f867cc5ff81"
+"@mkdocs-ts/code-api@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.2.3.tgz#e1c7da31a572664b2d16c6e6cdd3a9919d83b2b7"
+  integrity sha512-9V75bVYy7vkZB/wVImpwHR1ZRttZkWlepfWZmErxKLQHpvQE1snRIgQXOGN4114vg3J4WJ9qIsfZ2gXvY9FVYg==
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
@@ -1000,13 +1001,13 @@
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
 
-"@mkdocs-ts/notebook@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.4.tgz#bc78318ed9be562098d1e10fbe32d81b3c875aa5"
-  integrity sha512-JKSXExERgEiUlKiWMDsoS90kj2OW1bIb2Ot7FWXCFLFKu8OzL0Tgm27nEOlH1s4fyWJiW/mw1nn8FRaYCZOuUA==
+"@mkdocs-ts/notebook@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/notebook/-/notebook-0.1.5.tgz#9cac9fa4b1984d81f4166cd6034b62a7336d08c8"
+  integrity sha512-8rChYjUDvRqt0xHi4bv5wxGf8SR5tfZ5Jq5lsgacnrXz+bcoTbeQGtNoNPIAf/96noIZbalTaGVQuKeQBTdrGQ==
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
-    "@mkdocs-ts/code-api" "^0.2.2"
+    "@mkdocs-ts/code-api" "^0.2.3"
     "@w3nest/ui-tk" "^0.1.7"
     "@w3nest/webpm-client" "^0.1.8"
     esprima "^4.0.1"

@@ -48,8 +48,8 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "^0.2.2",
-        "@mkdocs-ts/notebook": "^0.1.4",
+        "@mkdocs-ts/code-api": "^0.2.3",
+        "@mkdocs-ts/notebook": "^0.1.5",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
@@ -92,8 +92,8 @@
     "webpm": {
         "kind": "webapp",
         "dependencies": {
-            "@mkdocs-ts/code-api": "^0.2.2",
-            "@mkdocs-ts/notebook": "^0.1.4",
+            "@mkdocs-ts/code-api": "^0.2.3",
+            "@mkdocs-ts/notebook": "^0.1.5",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
@@ -109,41 +109,41 @@
         "main": "./app/main.ts",
         "additionalEntries": {},
         "externals": {
-            "@w3nest/ui-tk": [
-                "@w3nest/ui-tk_APIv01"
-            ],
-            "mathjax": [
-                "mathjax_APIv3"
-            ],
             "@w3nest/ui-tk/Badges": [
                 "@w3nest/ui-tk_APIv01/Badges"
-            ],
-            "rxjs": [
-                "rxjs_APIv7"
-            ],
-            "mkdocs-ts": [
-                "mkdocs-ts_APIv05"
-            ],
-            "@w3nest/ui-tk/Mkdocs": [
-                "@w3nest/ui-tk_APIv01/Mkdocs"
-            ],
-            "@mkdocs-ts/notebook/Doc": [
-                "@mkdocs-ts/notebook_APIv01/Doc"
-            ],
-            "@mkdocs-ts/code-api/Doc": [
-                "@mkdocs-ts/code-api_APIv02/Doc"
-            ],
-            "@w3nest/webpm-client": [
-                "@w3nest/webpm-client_APIv01"
             ],
             "rx-vdom": [
                 "rx-vdom_APIv01"
             ],
-            "@mkdocs-ts/notebook": [
-                "@mkdocs-ts/notebook_APIv01"
+            "@w3nest/webpm-client": [
+                "@w3nest/webpm-client_APIv01"
+            ],
+            "@mkdocs-ts/code-api/Doc": [
+                "@mkdocs-ts/code-api_APIv02/Doc"
+            ],
+            "rxjs": [
+                "rxjs_APIv7"
+            ],
+            "@w3nest/ui-tk/Mkdocs": [
+                "@w3nest/ui-tk_APIv01/Mkdocs"
+            ],
+            "@w3nest/ui-tk": [
+                "@w3nest/ui-tk_APIv01"
             ],
             "@mkdocs-ts/code-api": [
                 "@mkdocs-ts/code-api_APIv02"
+            ],
+            "mkdocs-ts": [
+                "mkdocs-ts_APIv05"
+            ],
+            "@mkdocs-ts/notebook/Doc": [
+                "@mkdocs-ts/notebook_APIv01/Doc"
+            ],
+            "@mkdocs-ts/notebook": [
+                "@mkdocs-ts/notebook_APIv01"
+            ],
+            "mathjax": [
+                "mathjax_APIv3"
             ]
         }
     }

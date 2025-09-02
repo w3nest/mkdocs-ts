@@ -79,7 +79,9 @@
                         "startLine": 203,
                         "endLine": 204,
                         "references": {
-                            "children": "@nav[mkdocs-ts].CompositeLayout.children"
+                            "children": "@nav[mkdocs-ts].CompositeLayout.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -149,7 +151,8 @@
                         "startLine": 201,
                         "endLine": 202,
                         "references": {
-                            "tag": "@nav[mkdocs-ts].CompositeLayout.tag"
+                            "tag": "@nav[mkdocs-ts].CompositeLayout.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 }
@@ -217,7 +220,11 @@
                     "LayoutFactory": "@nav[mkdocs-ts].LayoutFactory",
                     "LayoutKindUnion": "@nav[mkdocs-ts].LayoutKindUnion",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "LayoutUnion": "@nav[mkdocs-ts].LayoutUnion"
+                    "LayoutUnion": "@nav[mkdocs-ts].LayoutUnion",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -492,7 +499,8 @@
                         "references": {
                             "executeAsync": "@nav[mkdocs-ts].Context.executeAsync",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Label": "@nav[mkdocs-ts].Label"
+                            "Label": "@nav[mkdocs-ts].Label",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -673,7 +681,8 @@
                     "ContextTrait.exit": "@nav[mkdocs-ts].ContextTrait.exit",
                     "ContextTrait.info": "@nav[mkdocs-ts].ContextTrait.info",
                     "ContextTrait.start": "@nav[mkdocs-ts].ContextTrait.start",
-                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning"
+                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -734,7 +743,8 @@
                         "endLine": 164,
                         "references": {
                             "factory": "@nav[mkdocs-ts].GlobalMarkdownViews.factory",
-                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
+                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 }
@@ -748,7 +758,8 @@
                 "endLine": 200,
                 "references": {
                     "GlobalMarkdownViews": "@nav[mkdocs-ts].GlobalMarkdownViews",
-                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
+                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -826,6 +837,7 @@
                         "endLine": 586,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts].IconFactory.fromHTMLElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "AnyView": "@nav[mkdocs-ts].AnyView"
                         }
                     },
@@ -931,7 +943,8 @@
                         "endLine": 553,
                         "references": {
                             "register": "@nav[mkdocs-ts].IconFactory.register",
-                            "AnyView": "@nav[mkdocs-ts].AnyView"
+                            "AnyView": "@nav[mkdocs-ts].AnyView",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     },
                     "semantic": {
@@ -950,7 +963,9 @@
                 "endLine": 587,
                 "references": {
                     "IconFactory": "@nav[mkdocs-ts].IconFactory",
-                    "AnyView": "@nav[mkdocs-ts].AnyView"
+                    "AnyView": "@nav[mkdocs-ts].AnyView",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -1099,7 +1114,9 @@
                         "startLine": 277,
                         "endLine": 278,
                         "references": {
-                            "children": "@nav[mkdocs-ts].LayoutKindNotFoundView.children"
+                            "children": "@nav[mkdocs-ts].LayoutKindNotFoundView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -1169,7 +1186,8 @@
                         "startLine": 276,
                         "endLine": 277,
                         "references": {
-                            "tag": "@nav[mkdocs-ts].LayoutKindNotFoundView.tag"
+                            "tag": "@nav[mkdocs-ts].LayoutKindNotFoundView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 }
@@ -1182,7 +1200,11 @@
                 "startLine": 274,
                 "endLine": 305,
                 "references": {
-                    "LayoutKindNotFoundView": "@nav[mkdocs-ts].LayoutKindNotFoundView"
+                    "LayoutKindNotFoundView": "@nav[mkdocs-ts].LayoutKindNotFoundView",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -1237,7 +1259,8 @@
                         "startLine": 221,
                         "endLine": 230,
                         "references": {
-                            "next": "@nav[mkdocs-ts].MockBrowser.next"
+                            "next": "@nav[mkdocs-ts].MockBrowser.next",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1319,7 +1342,8 @@
                         "startLine": 209,
                         "endLine": 218,
                         "references": {
-                            "prev": "@nav[mkdocs-ts].MockBrowser.prev"
+                            "prev": "@nav[mkdocs-ts].MockBrowser.prev",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1389,7 +1413,9 @@
                     "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
                     "BrowserInterface.parseUrl": "@nav[mkdocs-ts].BrowserInterface.parseUrl",
                     "BrowserInterface.pushState": "@nav[mkdocs-ts].BrowserInterface.pushState",
-                    "BrowserInterface": "@nav[mkdocs-ts].BrowserInterface"
+                    "BrowserInterface": "@nav[mkdocs-ts].BrowserInterface",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -1540,7 +1566,8 @@
                         "references": {
                             "executeAsync": "@nav[mkdocs-ts].NoContext.executeAsync",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Label": "@nav[mkdocs-ts].Label"
+                            "Label": "@nav[mkdocs-ts].Label",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -1709,7 +1736,8 @@
                     "ContextTrait.exit": "@nav[mkdocs-ts].ContextTrait.exit",
                     "ContextTrait.info": "@nav[mkdocs-ts].ContextTrait.info",
                     "ContextTrait.start": "@nav[mkdocs-ts].ContextTrait.start",
-                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning"
+                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -1912,7 +1940,8 @@
                         "startLine": 229,
                         "endLine": 230,
                         "references": {
-                            "path$": "@nav[mkdocs-ts].Router.path$"
+                            "path$": "@nav[mkdocs-ts].Router.path$",
+                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
                         }
                     }
                 },
@@ -1948,7 +1977,8 @@
                         "endLine": 295,
                         "references": {
                             "pathAliases": "@nav[mkdocs-ts].Router.pathAliases",
-                            "PathAliasValue": "@nav[mkdocs-ts].PathAliasValue"
+                            "PathAliasValue": "@nav[mkdocs-ts].PathAliasValue",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -2090,7 +2120,8 @@
                         "endLine": 245,
                         "references": {
                             "siblings$": "@nav[mkdocs-ts].Router.siblings$",
-                            "Siblings": "@nav[mkdocs-ts].Siblings"
+                            "Siblings": "@nav[mkdocs-ts].Siblings",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     }
                 },
@@ -2127,7 +2158,8 @@
                         "references": {
                             "target$": "@nav[mkdocs-ts].Router.target$",
                             "Target": "@nav[mkdocs-ts].Target",
-                            "UnresolvedTarget": "@nav[mkdocs-ts].UnresolvedTarget"
+                            "UnresolvedTarget": "@nav[mkdocs-ts].UnresolvedTarget",
+                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
                         }
                     }
                 },
@@ -2209,7 +2241,8 @@
                             "BrowserInterface": "@nav[mkdocs-ts].BrowserInterface",
                             "Navigation": "@nav[mkdocs-ts].Navigation",
                             "PathAliasValue": "@nav[mkdocs-ts].PathAliasValue",
-                            "Redirect": "@nav[mkdocs-ts].Redirect"
+                            "Redirect": "@nav[mkdocs-ts].Redirect",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     },
                     "semantic": {
@@ -2352,7 +2385,8 @@
                             "getNav": "@nav[mkdocs-ts].Router.getNav",
                             "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Navigation": "@nav[mkdocs-ts].Navigation"
+                            "Navigation": "@nav[mkdocs-ts].Navigation",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -2400,7 +2434,8 @@
                         "references": {
                             "navigateTo": "@nav[mkdocs-ts].Router.navigateTo",
                             "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
-                            "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
+                            "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -2539,7 +2574,8 @@
                         "startLine": 586,
                         "endLine": 589,
                         "references": {
-                            "scrollTo": "@nav[mkdocs-ts].Router.scrollTo"
+                            "scrollTo": "@nav[mkdocs-ts].Router.scrollTo",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     },
                     "semantic": {
@@ -2585,7 +2621,9 @@
                         "startLine": 566,
                         "endLine": 581,
                         "references": {
-                            "setScrollableElement": "@nav[mkdocs-ts].Router.setScrollableElement"
+                            "setScrollableElement": "@nav[mkdocs-ts].Router.setScrollableElement",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                            "ScrollToOptions": "https://developer.mozilla.org/fr/docs/Web/API/Window/scrollTo"
                         }
                     },
                     "semantic": {
@@ -2613,7 +2651,14 @@
                     "Siblings": "@nav[mkdocs-ts].Siblings",
                     "Target": "@nav[mkdocs-ts].Target",
                     "UnresolvedTarget": "@nav[mkdocs-ts].UnresolvedTarget",
-                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget"
+                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+                    "Subject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+                    "ScrollToOptions": "https://developer.mozilla.org/fr/docs/Web/API/Window/scrollTo"
                 }
             },
             "semantic": {
@@ -3040,7 +3085,8 @@
                         "references": {
                             "executeAsync": "@nav[mkdocs-ts].ContextTrait.executeAsync",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Label": "@nav[mkdocs-ts].Label"
+                            "Label": "@nav[mkdocs-ts].Label",
+                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                         }
                     },
                     "semantic": {
@@ -3214,7 +3260,8 @@
                     "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
                     "Label": "@nav[mkdocs-ts].Label",
                     "Context": "@nav[mkdocs-ts].Context",
-                    "NoContext": "@nav[mkdocs-ts].NoContext"
+                    "NoContext": "@nav[mkdocs-ts].NoContext",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -3631,7 +3678,8 @@
                         "startLine": 599,
                         "endLine": 600,
                         "references": {
-                            "withClass": "@nav[mkdocs-ts].FaIconOptions.withClass"
+                            "withClass": "@nav[mkdocs-ts].FaIconOptions.withClass",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
                         }
                     }
                 },
@@ -3666,7 +3714,9 @@
                         "startLine": 603,
                         "endLine": 604,
                         "references": {
-                            "withStyle": "@nav[mkdocs-ts].FaIconOptions.withStyle"
+                            "withStyle": "@nav[mkdocs-ts].FaIconOptions.withStyle",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                         }
                     }
                 }
@@ -3679,7 +3729,9 @@
                 "startLine": 591,
                 "endLine": 605,
                 "references": {
-                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions"
+                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions",
+                    "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                 }
             },
             "semantic": {
@@ -3774,7 +3826,8 @@
                         "startLine": 142,
                         "endLine": 143,
                         "references": {
-                            "onRendered": "@nav[mkdocs-ts].MdParsingOptions.onRendered"
+                            "onRendered": "@nav[mkdocs-ts].MdParsingOptions.onRendered",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -3809,7 +3862,8 @@
                         "startLine": 43,
                         "endLine": 44,
                         "references": {
-                            "placeholders": "@nav[mkdocs-ts].MdParsingOptions.placeholders"
+                            "placeholders": "@nav[mkdocs-ts].MdParsingOptions.placeholders",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -3880,7 +3934,8 @@
                         "endLine": 90,
                         "references": {
                             "views": "@nav[mkdocs-ts].MdParsingOptions.views",
-                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
+                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 }
@@ -3894,7 +3949,9 @@
                 "endLine": 144,
                 "references": {
                     "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
-                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
+                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4331,7 +4388,8 @@
                         "startLine": 54,
                         "endLine": 55,
                         "references": {
-                            "parameters": "@nav[mkdocs-ts].UrlTarget.parameters"
+                            "parameters": "@nav[mkdocs-ts].UrlTarget.parameters",
+                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                         }
                     }
                 },
@@ -4414,7 +4472,8 @@
                 "startLine": 41,
                 "endLine": 77,
                 "references": {
-                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget"
+                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4451,7 +4510,9 @@
                 "startLine": 11,
                 "endLine": 12,
                 "references": {
-                    "AnyView": "@nav[mkdocs-ts].AnyView"
+                    "AnyView": "@nav[mkdocs-ts].AnyView",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -4887,7 +4948,8 @@
                 "endLine": 464,
                 "references": {
                     "LazyRoutesCb$": "@nav[mkdocs-ts].LazyRoutesCb$",
-                    "LazyRoutesCb": "@nav[mkdocs-ts].LazyRoutesCb"
+                    "LazyRoutesCb": "@nav[mkdocs-ts].LazyRoutesCb",
+                    "Observable": "https://rxjs.dev/guide/observable"
                 }
             },
             "semantic": {
@@ -5187,7 +5249,8 @@
                 "references": {
                     "Redirect": "@nav[mkdocs-ts].Redirect",
                     "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
-                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
+                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
@@ -5235,7 +5298,9 @@
                 "startLine": 370,
                 "endLine": 371,
                 "references": {
-                    "Resolvable": "@nav[mkdocs-ts].Resolvable"
+                    "Resolvable": "@nav[mkdocs-ts].Resolvable",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+                    "Observable": "https://rxjs.dev/guide/observable"
                 }
             },
             "semantic": {
@@ -5283,7 +5348,8 @@
                 "startLine": 389,
                 "endLine": 390,
                 "references": {
-                    "SegmentsRecord": "@nav[mkdocs-ts].SegmentsRecord"
+                    "SegmentsRecord": "@nav[mkdocs-ts].SegmentsRecord",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -5333,7 +5399,8 @@
                 "references": {
                     "StaticRoutes": "@nav[mkdocs-ts].StaticRoutes",
                     "Resolvable": "@nav[mkdocs-ts].Resolvable",
-                    "Navigation": "@nav[mkdocs-ts].Navigation"
+                    "Navigation": "@nav[mkdocs-ts].Navigation",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -5412,7 +5479,8 @@
                     "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
                     "Router": "@nav[mkdocs-ts].Router",
                     "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
-                    "AnyView": "@nav[mkdocs-ts].AnyView"
+                    "AnyView": "@nav[mkdocs-ts].AnyView",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -5450,7 +5518,8 @@
                 "endLine": 16,
                 "references": {
                     "WindowWithStaticConfig": "@nav[mkdocs-ts].WindowWithStaticConfig",
-                    "StaticConfig": "@nav[mkdocs-ts].StaticConfig"
+                    "StaticConfig": "@nav[mkdocs-ts].StaticConfig",
+                    "window": "https://developer.mozilla.org/en-US/docs/Web/API/Window"
                 }
             },
             "semantic": {
@@ -5510,7 +5579,8 @@
                 "endLine": 401,
                 "references": {
                     "Contextual": "@nav[mkdocs-ts].Contextual",
-                    "Label": "@nav[mkdocs-ts].Label"
+                    "Label": "@nav[mkdocs-ts].Label",
+                    "ClassMethodDecoratorContext": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html"
                 }
             },
             "semantic": {
@@ -5568,7 +5638,8 @@
                 "endLine": 646,
                 "references": {
                     "faIcon": "@nav[mkdocs-ts].faIcon",
-                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions"
+                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -5685,7 +5756,8 @@
                 "references": {
                     "parseMd": "@nav[mkdocs-ts].parseMd",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions"
+                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -5733,7 +5805,9 @@
                 "references": {
                     "parseMdFromUrl": "@nav[mkdocs-ts].parseMdFromUrl",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions"
+                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -5826,7 +5900,8 @@
                 "startLine": 441,
                 "endLine": 473,
                 "references": {
-                    "removeEscapedText": "@nav[mkdocs-ts].removeEscapedText"
+                    "removeEscapedText": "@nav[mkdocs-ts].removeEscapedText",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {

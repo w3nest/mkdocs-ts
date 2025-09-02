@@ -129,7 +129,9 @@
                         "startLine": 344,
                         "endLine": 345,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.BookmarksView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.BookmarksView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -199,7 +201,8 @@
                         "startLine": 342,
                         "endLine": 343,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.BookmarksView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.BookmarksView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -277,7 +280,8 @@
                         "endLine": 382,
                         "references": {
                             "BookmarksView": "@nav[mkdocs-ts]/DefaultLayout.BookmarksView",
-                            "Router": "@nav[mkdocs-ts].Router"
+                            "Router": "@nav[mkdocs-ts].Router",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     },
                     "semantic": {
@@ -296,7 +300,12 @@
                 "endLine": 383,
                 "references": {
                     "BookmarksView": "@nav[mkdocs-ts]/DefaultLayout.BookmarksView",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -356,7 +365,9 @@
                         "startLine": 394,
                         "endLine": 395,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.BookmarkView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.BookmarkView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -426,7 +437,8 @@
                         "startLine": 392,
                         "endLine": 393,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.BookmarkView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.BookmarkView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -527,7 +539,11 @@
                     "BookmarkView": "@nav[mkdocs-ts]/DefaultLayout.BookmarkView",
                     "NavNodeResolved": "@nav[mkdocs-ts].NavNodeResolved",
                     "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -587,7 +603,9 @@
                         "startLine": 211,
                         "endLine": 212,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.FooterView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.FooterView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -657,7 +675,8 @@
                         "startLine": 208,
                         "endLine": 209,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.FooterView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.FooterView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 }
@@ -670,7 +689,11 @@
                 "startLine": 207,
                 "endLine": 259,
                 "references": {
-                    "FooterView": "@nav[mkdocs-ts]/DefaultLayout.FooterView"
+                    "FooterView": "@nav[mkdocs-ts]/DefaultLayout.FooterView",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -730,7 +753,9 @@
                         "startLine": 75,
                         "endLine": 76,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.Layout.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.Layout.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -800,7 +825,9 @@
                         "startLine": 87,
                         "endLine": 88,
                         "references": {
-                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.Layout.connectedCallback"
+                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.Layout.connectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback"
                         }
                     }
                 },
@@ -836,7 +863,8 @@
                         "endLine": 82,
                         "references": {
                             "displayModeNav$": "@nav[mkdocs-ts]/DefaultLayout.Layout.displayModeNav$",
-                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     }
                 },
@@ -872,7 +900,8 @@
                         "endLine": 86,
                         "references": {
                             "displayModeToc$": "@nav[mkdocs-ts]/DefaultLayout.Layout.displayModeToc$",
-                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     }
                 },
@@ -907,7 +936,8 @@
                         "startLine": 95,
                         "endLine": 96,
                         "references": {
-                            "onclick": "@nav[mkdocs-ts]/DefaultLayout.Layout.onclick"
+                            "onclick": "@nav[mkdocs-ts]/DefaultLayout.Layout.onclick",
+                            "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent"
                         }
                     }
                 },
@@ -942,7 +972,8 @@
                         "startLine": 74,
                         "endLine": 75,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.Layout.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.Layout.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -1043,7 +1074,15 @@
                     "DefaultLayoutParams": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams",
                     "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
                     "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
-                    "LayoutObserver": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver"
+                    "LayoutObserver": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -1104,7 +1143,8 @@
                         "endLine": 380,
                         "references": {
                             "boxes$": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver.boxes$",
-                            "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox"
+                            "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     }
                 },
@@ -1140,7 +1180,8 @@
                         "endLine": 399,
                         "references": {
                             "displayModeNav$": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver.displayModeNav$",
-                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     }
                 },
@@ -1212,7 +1253,8 @@
                         "endLine": 403,
                         "references": {
                             "displayModeToc$": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver.displayModeToc$",
-                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     }
                 },
@@ -1247,7 +1289,8 @@
                         "startLine": 390,
                         "endLine": 391,
                         "references": {
-                            "pageVisible$": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver.pageVisible$"
+                            "pageVisible$": "@nav[mkdocs-ts]/DefaultLayout.LayoutObserver.pageVisible$",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     }
                 }
@@ -1293,7 +1336,9 @@
                             "BBox$": "@nav[mkdocs-ts]/DefaultLayout.BBox$",
                             "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
                             "DisplayModeOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayModeOptions",
-                            "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
+                            "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     },
                     "semantic": {
@@ -1316,7 +1361,11 @@
                     "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
                     "DisplayModeOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayModeOptions",
                     "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox"
+                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "RxChild": "/apps/@rx-vdom/doc/latest?nav=/api.RxChild"
                 }
             },
             "semantic": {
@@ -1376,7 +1425,9 @@
                         "startLine": 81,
                         "endLine": 82,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -1446,7 +1497,9 @@
                         "startLine": 82,
                         "endLine": 83,
                         "references": {
-                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion.connectedCallback"
+                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion.connectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback"
                         }
                     }
                 },
@@ -1481,7 +1534,8 @@
                         "startLine": 79,
                         "endLine": 80,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 }
@@ -1545,7 +1599,14 @@
                 "references": {
                     "LayoutWithCompanion": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanion",
                     "LayoutWithCompanionParams": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanionParams",
-                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
+                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -1605,7 +1666,9 @@
                         "startLine": 51,
                         "endLine": 52,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.NavFooterView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.NavFooterView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -1675,7 +1738,8 @@
                         "startLine": 49,
                         "endLine": 50,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.NavFooterView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.NavFooterView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -1724,7 +1788,11 @@
                 "endLine": 92,
                 "references": {
                     "NavFooterView": "@nav[mkdocs-ts]/DefaultLayout.NavFooterView",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -1784,7 +1852,9 @@
                         "startLine": 171,
                         "endLine": 172,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -1819,7 +1889,8 @@
                         "startLine": 169,
                         "endLine": 170,
                         "references": {
-                            "class": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.class"
+                            "class": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.class",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
                         }
                     }
                 },
@@ -1889,7 +1960,8 @@
                         "startLine": 173,
                         "endLine": 174,
                         "references": {
-                            "onclick": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.onclick"
+                            "onclick": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.onclick",
+                            "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent"
                         }
                     }
                 },
@@ -1924,7 +1996,8 @@
                         "startLine": 172,
                         "endLine": 173,
                         "references": {
-                            "style": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.style"
+                            "style": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                         }
                     }
                 },
@@ -1959,7 +2032,8 @@
                         "startLine": 167,
                         "endLine": 168,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -2039,7 +2113,8 @@
                             "NavHeaderView": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView",
                             "NavNodeResolved": "@nav[mkdocs-ts].NavNodeResolved",
                             "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader",
-                            "Router": "@nav[mkdocs-ts].Router"
+                            "Router": "@nav[mkdocs-ts].Router",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     },
                     "semantic": {
@@ -2060,7 +2135,15 @@
                     "NavHeaderView": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderView",
                     "NavNodeResolved": "@nav[mkdocs-ts].NavNodeResolved",
                     "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                    "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -2120,7 +2203,9 @@
                         "startLine": 36,
                         "endLine": 37,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.NavigationView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.NavigationView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -2190,7 +2275,8 @@
                         "startLine": 35,
                         "endLine": 36,
                         "references": {
-                            "style": "@nav[mkdocs-ts]/DefaultLayout.NavigationView.style"
+                            "style": "@nav[mkdocs-ts]/DefaultLayout.NavigationView.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                         }
                     }
                 },
@@ -2225,7 +2311,8 @@
                         "startLine": 33,
                         "endLine": 34,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.NavigationView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.NavigationView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -2305,7 +2392,8 @@
                             "NavigationView": "@nav[mkdocs-ts]/DefaultLayout.NavigationView",
                             "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
                             "Router": "@nav[mkdocs-ts].Router",
-                            "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader"
+                            "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     },
                     "semantic": {
@@ -2326,7 +2414,13 @@
                     "NavigationView": "@nav[mkdocs-ts]/DefaultLayout.NavigationView",
                     "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader"
+                    "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -2386,7 +2480,9 @@
                         "startLine": 67,
                         "endLine": 68,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.PageView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.PageView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -2456,7 +2552,9 @@
                         "startLine": 71,
                         "endLine": 72,
                         "references": {
-                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.PageView.connectedCallback"
+                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.PageView.connectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback"
                         }
                     }
                 },
@@ -2491,7 +2589,8 @@
                         "startLine": 65,
                         "endLine": 66,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.PageView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.PageView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -2543,7 +2642,15 @@
                     "Target": "@nav[mkdocs-ts].Target",
                     "Router": "@nav[mkdocs-ts].Router",
                     "NavLayout": "@nav[mkdocs-ts]/DefaultLayout.NavLayout",
-                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
+                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback",
+                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -2603,7 +2710,9 @@
                         "startLine": 279,
                         "endLine": 280,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.TocItemView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.TocItemView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -2673,7 +2782,8 @@
                         "startLine": 278,
                         "endLine": 279,
                         "references": {
-                            "style": "@nav[mkdocs-ts]/DefaultLayout.TocItemView.style"
+                            "style": "@nav[mkdocs-ts]/DefaultLayout.TocItemView.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                         }
                     }
                 },
@@ -2708,7 +2818,8 @@
                         "startLine": 276,
                         "endLine": 277,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TocItemView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TocItemView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -2757,7 +2868,15 @@
                 "endLine": 354,
                 "references": {
                     "TocItemView": "@nav[mkdocs-ts]/DefaultLayout.TocItemView",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "HTMLHeadingElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLHeadingElement",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -2817,7 +2936,9 @@
                         "startLine": 89,
                         "endLine": 90,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.TOCView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.TOCView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -2887,7 +3008,9 @@
                         "startLine": 103,
                         "endLine": 104,
                         "references": {
-                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.TOCView.connectedCallback"
+                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.TOCView.connectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback"
                         }
                     }
                 },
@@ -2922,7 +3045,9 @@
                         "startLine": 104,
                         "endLine": 105,
                         "references": {
-                            "disconnectedCallback": "@nav[mkdocs-ts]/DefaultLayout.TOCView.disconnectedCallback"
+                            "disconnectedCallback": "@nav[mkdocs-ts]/DefaultLayout.TOCView.disconnectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.disconnectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.disconnectedCallback"
                         }
                     }
                 },
@@ -2957,7 +3082,8 @@
                         "startLine": 102,
                         "endLine": 103,
                         "references": {
-                            "indexFirstVisibleHeading$": "@nav[mkdocs-ts]/DefaultLayout.TOCView.indexFirstVisibleHeading$"
+                            "indexFirstVisibleHeading$": "@nav[mkdocs-ts]/DefaultLayout.TOCView.indexFirstVisibleHeading$",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     }
                 },
@@ -3027,7 +3153,8 @@
                         "startLine": 91,
                         "endLine": 92,
                         "references": {
-                            "style": "@nav[mkdocs-ts]/DefaultLayout.TOCView.style"
+                            "style": "@nav[mkdocs-ts]/DefaultLayout.TOCView.style",
+                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
                         }
                     }
                 },
@@ -3062,7 +3189,8 @@
                         "startLine": 87,
                         "endLine": 88,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TOCView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TOCView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -3111,7 +3239,19 @@
                 "endLine": 266,
                 "references": {
                     "TOCView": "@nav[mkdocs-ts]/DefaultLayout.TOCView",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "HTMLHeadingElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLHeadingElement",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback",
+                    "VirtualDOM.disconnectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.disconnectedCallback",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -3171,7 +3311,9 @@
                         "startLine": 380,
                         "endLine": 381,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.TocWrapperView.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.TocWrapperView.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -3241,7 +3383,8 @@
                         "startLine": 377,
                         "endLine": 378,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TocWrapperView.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TocWrapperView.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -3291,7 +3434,14 @@
                 "references": {
                     "TocWrapperView": "@nav[mkdocs-ts]/DefaultLayout.TocWrapperView",
                     "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -3351,7 +3501,9 @@
                         "startLine": 63,
                         "endLine": 64,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -3386,7 +3538,8 @@
                         "startLine": 59,
                         "endLine": 60,
                         "references": {
-                            "class": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton.class"
+                            "class": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton.class",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
                         }
                     }
                 },
@@ -3456,7 +3609,8 @@
                         "startLine": 58,
                         "endLine": 59,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 }
@@ -3499,7 +3653,9 @@
                         "endLine": 123,
                         "references": {
                             "ToggleSidePanelButton": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton",
-                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                            "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     },
                     "semantic": {
@@ -3518,7 +3674,14 @@
                 "endLine": 124,
                 "references": {
                     "ToggleSidePanelButton": "@nav[mkdocs-ts]/DefaultLayout.ToggleSidePanelButton",
-                    "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                    "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -3578,7 +3741,9 @@
                         "startLine": 156,
                         "endLine": 157,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.TopBanner.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.TopBanner.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -3648,7 +3813,9 @@
                         "startLine": 158,
                         "endLine": 159,
                         "references": {
-                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.TopBanner.connectedCallback"
+                            "connectedCallback": "@nav[mkdocs-ts]/DefaultLayout.TopBanner.connectedCallback",
+                            "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                            "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback"
                         }
                     }
                 },
@@ -3718,7 +3885,8 @@
                         "startLine": 154,
                         "endLine": 155,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TopBanner.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TopBanner.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -3769,7 +3937,17 @@
                     "TopBanner": "@nav[mkdocs-ts]/DefaultLayout.TopBanner",
                     "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec"
+                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "DOMRect": "https://developer.mozilla.org/en-US/docs/Web/API/DOMRect",
+                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "RxHTMLElement": "/apps/@rx-vdom/doc/latest?nav=/api.RxHTMLElement",
+                    "VirtualDOM.connectedCallback": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.connectedCallback",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -3829,7 +4007,9 @@
                         "startLine": 274,
                         "endLine": 275,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.TopBannerExpanded.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.TopBannerExpanded.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -3899,7 +4079,8 @@
                         "startLine": 273,
                         "endLine": 274,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TopBannerExpanded.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TopBannerExpanded.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -3949,7 +4130,13 @@
                 "references": {
                     "TopBannerExpanded": "@nav[mkdocs-ts]/DefaultLayout.TopBannerExpanded",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec"
+                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec",
+                    "Observable": "https://rxjs.dev/guide/observable",
+                    "DOMRect": "https://developer.mozilla.org/en-US/docs/Web/API/DOMRect",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -4009,7 +4196,9 @@
                         "startLine": 223,
                         "endLine": 224,
                         "references": {
-                            "children": "@nav[mkdocs-ts]/DefaultLayout.TopBannerMinimized.children"
+                            "children": "@nav[mkdocs-ts]/DefaultLayout.TopBannerMinimized.children",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -4114,7 +4303,8 @@
                         "startLine": 222,
                         "endLine": 223,
                         "references": {
-                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TopBannerMinimized.tag"
+                            "tag": "@nav[mkdocs-ts]/DefaultLayout.TopBannerMinimized.tag",
+                            "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 },
@@ -4165,7 +4355,13 @@
                     "TopBannerMinimized": "@nav[mkdocs-ts]/DefaultLayout.TopBannerMinimized",
                     "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec"
+                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -4225,7 +4421,8 @@
                         "startLine": 277,
                         "endLine": 278,
                         "references": {
-                            "bookmarks$": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams.bookmarks$"
+                            "bookmarks$": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams.bookmarks$",
+                            "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                         }
                     }
                 },
@@ -4261,7 +4458,8 @@
                         "endLine": 265,
                         "references": {
                             "displayOptions": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams.displayOptions",
-                            "DisplayOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayOptions"
+                            "DisplayOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayOptions",
+                            "Partial": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype"
                         }
                     }
                 },
@@ -4369,7 +4567,9 @@
                         "references": {
                             "page": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams.page",
                             "LayoutElementView": "@nav[mkdocs-ts]/DefaultLayout.LayoutElementView",
-                            "AnyView": "@nav[mkdocs-ts].AnyView"
+                            "AnyView": "@nav[mkdocs-ts].AnyView",
+                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                         }
                     }
                 },
@@ -4463,7 +4663,12 @@
                     "Router": "@nav[mkdocs-ts].Router",
                     "NavLayout": "@nav[mkdocs-ts]/DefaultLayout.NavLayout",
                     "NavHeader": "@nav[mkdocs-ts]/DefaultLayout.NavHeader",
-                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec"
+                    "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
+                    "Partial": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype",
+                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -4523,7 +4728,8 @@
                         "startLine": 163,
                         "endLine": 164,
                         "references": {
-                            "actions": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.actions"
+                            "actions": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.actions",
+                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
                         }
                     }
                 },
@@ -4558,7 +4764,8 @@
                         "startLine": 155,
                         "endLine": 156,
                         "references": {
-                            "icon": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.icon"
+                            "icon": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.icon",
+                            "ChildLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildLike"
                         }
                     }
                 },
@@ -4593,7 +4800,8 @@
                         "startLine": 159,
                         "endLine": 160,
                         "references": {
-                            "name": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.name"
+                            "name": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.name",
+                            "ChildLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildLike"
                         }
                     }
                 },
@@ -4628,7 +4836,8 @@
                         "startLine": 151,
                         "endLine": 152,
                         "references": {
-                            "wrapperClass": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.wrapperClass"
+                            "wrapperClass": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec.wrapperClass",
+                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
                         }
                     }
                 }
@@ -4641,7 +4850,10 @@
                 "startLine": 147,
                 "endLine": 165,
                 "references": {
-                    "NavHeaderSpec": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec"
+                    "NavHeaderSpec": "@nav[mkdocs-ts]/DefaultLayout.NavHeaderSpec",
+                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "ChildLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildLike",
+                    "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
                 }
             },
             "semantic": {
@@ -4777,7 +4989,8 @@
                             "footer": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec.footer",
                             "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
                             "Router": "@nav[mkdocs-ts].Router",
-                            "AnyView": "@nav[mkdocs-ts].AnyView"
+                            "AnyView": "@nav[mkdocs-ts].AnyView",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     }
                 },
@@ -4815,7 +5028,8 @@
                             "header": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec.header",
                             "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
                             "Router": "@nav[mkdocs-ts].Router",
-                            "AnyView": "@nav[mkdocs-ts].AnyView"
+                            "AnyView": "@nav[mkdocs-ts].AnyView",
+                            "Observable": "https://rxjs.dev/guide/observable"
                         }
                     }
                 },
@@ -4902,7 +5116,8 @@
                     "TopBannerSpec": "@nav[mkdocs-ts]/DefaultLayout.TopBannerSpec",
                     "AnyView": "@nav[mkdocs-ts].AnyView",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox"
+                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
+                    "Observable": "https://rxjs.dev/guide/observable"
                 }
             },
             "semantic": {
@@ -4939,7 +5154,9 @@
                 "startLine": 353,
                 "endLine": 354,
                 "references": {
-                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox"
+                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
+                    "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys",
+                    "DOMRect": "https://developer.mozilla.org/en-US/docs/Web/API/DOMRect"
                 }
             },
             "semantic": {
@@ -4977,7 +5194,8 @@
                 "endLine": 359,
                 "references": {
                     "BBox$": "@nav[mkdocs-ts]/DefaultLayout.BBox$",
-                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox"
+                    "BBox": "@nav[mkdocs-ts]/DefaultLayout.BBox",
+                    "Observable": "https://rxjs.dev/guide/observable"
                 }
             },
             "semantic": {
@@ -5056,7 +5274,8 @@
                 "references": {
                     "ClientTocView": "@nav[mkdocs-ts]/DefaultLayout.ClientTocView",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "NavLayoutView": "@nav[mkdocs-ts]/DefaultLayout.NavLayoutView"
+                    "NavLayoutView": "@nav[mkdocs-ts]/DefaultLayout.NavLayoutView",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
                 }
             },
             "semantic": {
@@ -5168,7 +5387,8 @@
                 "endLine": 364,
                 "references": {
                     "DisplayModeOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayModeOptions",
-                    "DisplayOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayOptions"
+                    "DisplayOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayOptions",
+                    "Pick": "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys"
                 }
             },
             "semantic": {
@@ -5206,7 +5426,8 @@
                 "endLine": 54,
                 "references": {
                     "DisplayOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayOptions",
-                    "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode"
+                    "DisplayMode": "@nav[mkdocs-ts]/DefaultLayout.DisplayMode",
+                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
                 }
             },
             "semantic": {
@@ -5296,7 +5517,8 @@
                     "AnyView": "@nav[mkdocs-ts].AnyView",
                     "DisplayOptions": "@nav[mkdocs-ts]/DefaultLayout.DisplayOptions",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "NavLayout": "@nav[mkdocs-ts]/DefaultLayout.NavLayout"
+                    "NavLayout": "@nav[mkdocs-ts]/DefaultLayout.NavLayout",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                 }
             },
             "semantic": {
@@ -5334,7 +5556,8 @@
                 "endLine": 44,
                 "references": {
                     "LayoutWithCompanionParams": "@nav[mkdocs-ts]/DefaultLayout.LayoutWithCompanionParams",
-                    "DefaultLayoutParams": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams"
+                    "DefaultLayoutParams": "@nav[mkdocs-ts]/DefaultLayout.DefaultLayoutParams",
+                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject"
                 }
             },
             "semantic": {
@@ -5452,7 +5675,8 @@
                 "references": {
                     "NavLayoutView": "@nav[mkdocs-ts]/DefaultLayout.NavLayoutView",
                     "Resolvable": "@nav[mkdocs-ts].Resolvable",
-                    "AnyView": "@nav[mkdocs-ts].AnyView"
+                    "AnyView": "@nav[mkdocs-ts].AnyView",
+                    "ChildLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildLike"
                 }
             },
             "semantic": {
@@ -5501,7 +5725,8 @@
                 "endLine": 626,
                 "references": {
                     "handleInternalLinkClick": "@nav[mkdocs-ts]/DefaultLayout.handleInternalLinkClick",
-                    "Router": "@nav[mkdocs-ts].Router"
+                    "Router": "@nav[mkdocs-ts].Router",
+                    "MouseEvent": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent"
                 }
             },
             "semantic": {
@@ -5585,7 +5810,11 @@
                 "references": {
                     "tocView": "@nav[mkdocs-ts]/DefaultLayout.tocView",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "TOCView": "@nav[mkdocs-ts]/DefaultLayout.TOCView"
+                    "HTMLHeadingElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLHeadingElement",
+                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
+                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
+                    "TOCView": "@nav[mkdocs-ts]/DefaultLayout.TOCView",
+                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
                 }
             },
             "semantic": {
