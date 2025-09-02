@@ -940,14 +940,15 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mkdocs-ts/code-api@file:.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756790745.tgz":
-  version "0.2.2-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756790745.tgz#0f87439ce017372201adc1cee10d87d92ac9636e"
+"@mkdocs-ts/code-api@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.2.2.tgz#90f80cd02795616673d076feb8be3a266aa21b7a"
+  integrity sha512-Sp2B2hVFcU/2p120o5gSczq3+46qSO0nF1EQEuKKBm2pNXDJGFy8g6SYsU8gzuJs/qg/zHZSq87Rv0ChComaBg==
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
     "@w3nest/webpm-client" "^0.1.5"
-    mkdocs-ts "^0.5.2"
+    mkdocs-ts "^0.5.3"
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
 
@@ -3483,10 +3484,25 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@^0.5.1, mkdocs-ts@^0.5.2:
+mkdocs-ts@^0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.5.2.tgz#1f9e2925197b3ba1d8d99f85123b09b463ca9359"
   integrity sha512-6pJTjO448Ny31OgJG2y1U4KxPHVcgjrZ7ZGHBDlki6+MCmT4ETXV43UZaXSrSEZcBuBSZTNFliCDdDznY1TAEg==
+  dependencies:
+    "@fortawesome/free-brands-svg-icons" "^6.7.2"
+    "@fortawesome/free-regular-svg-icons" "^6.7.2"
+    "@fortawesome/free-solid-svg-icons" "^6.7.2"
+    "@w3nest/rx-tree-views" "^0.2.0"
+    marked "^4.2.3"
+    prism-code-editor "^4.0.0"
+    prismjs "^1.30.0"
+    rx-vdom "^0.1.3"
+    rxjs "^7.5.6"
+
+mkdocs-ts@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/mkdocs-ts/-/mkdocs-ts-0.5.3.tgz#3c135e6858b9116eec2d94715fc977e51cc6e401"
+  integrity sha512-X+x/NabDbQaPwBYg9wVg0SvY02QJe1GCtqlLFgMDXrICsWRMmCCho/KOctg607EycMu++zeVdX5hETP5SCLFEQ==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^6.7.2"
     "@fortawesome/free-regular-svg-icons" "^6.7.2"

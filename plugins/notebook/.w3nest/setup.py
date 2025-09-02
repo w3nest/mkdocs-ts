@@ -19,13 +19,13 @@ project_folder = Path(__file__).parent.parent
 pkg_json = parse_json(project_folder / "package.json")
 
 externals_deps = {
-    "mkdocs-ts": "^0.5.2",
+    "mkdocs-ts": "^0.5.3",
     "rx-vdom": "^0.1.3",
     "rxjs": "^7.5.6",
     "@w3nest/ui-tk": "^0.1.7",
     "esprima": "^4.0.1",
     "@w3nest/webpm-client": "^0.1.8",
-    "@mkdocs-ts/code-api": "^0.2.0",
+    "@mkdocs-ts/code-api": "^0.2.2",
 }
 in_bundle_deps = {
     "prism-code-editor": "^4.0.0",
