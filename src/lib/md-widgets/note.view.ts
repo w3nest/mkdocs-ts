@@ -213,7 +213,7 @@ export class NoteView implements VirtualDOM<'div'> {
             element.getAttribute('title') ??
             element.getAttribute('label') ??
             undefined,
-        content: element.textContent ?? '',
+        content: element.textContent,
         expandable: element.getAttribute('expandable')
             ? element.getAttribute('expandable') === 'true'
             : false,

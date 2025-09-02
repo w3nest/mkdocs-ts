@@ -6,7 +6,6 @@ import {
     RxHTMLElement,
 } from 'rx-vdom'
 import { BehaviorSubject, Subject } from 'rxjs'
-import { layoutStyleBase } from './common'
 
 /**
  * Type definition for the arguments to create a {@link ViewPortOnlyLayout}.

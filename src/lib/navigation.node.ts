@@ -19,6 +19,8 @@ export type AnyView = AnyVirtualDOM | HTMLElement
  * @typeParam TLayout The type defining the layout configuration for the navigation.
  * @typeParam THeader The type defining the header configuration for the navigation.
  * @typeParam WithLeafInfo A boolean flag determining whether the node includes leaf-specific information.
+ *
+ * @useDeclaredType
  */
 export type NavNodeData<
     TLayout,

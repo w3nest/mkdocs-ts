@@ -140,7 +140,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
             e.getAttribute('cell-id') ?? e.getAttribute('id') ?? getCellUid(),
-        content: (e: HTMLElement) => e.textContent ?? '',
+        content: (e: HTMLElement) => e.textContent,
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
@@ -261,7 +261,7 @@ export class MdCellView implements VirtualDOM<'div'>, CellTrait {
                 'js-inlined': (elem) => {
                     return new InlinedCode({
                         cellId,
-                        src: elem.textContent ?? '',
+                        src: elem.textContent,
                         scope,
                         displayFactory,
                         invalidated$: this.invalidated$,

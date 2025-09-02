@@ -87,8 +87,7 @@ export class LinkView implements VirtualDOM<'a'> {
         this.children = [
             {
                 tag: 'i',
-                innerText:
-                    elem.textContent === '' ? target : (elem.textContent ?? ''),
+                innerText: elem.textContent === '' ? target : elem.textContent,
                 class: `${classPrefix ?? ''} ${customClass} pe-1`,
                 style: withStyle ?? {},
             },

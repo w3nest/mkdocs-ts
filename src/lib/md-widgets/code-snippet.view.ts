@@ -232,7 +232,7 @@ export class CodeSnippetView implements VirtualDOM<'div'> {
             element.getAttribute('lineNumbers') == 'true'
                 ? true
                 : false,
-        content: element.textContent ?? '',
+        content: element.textContent,
     })
     /**
      * Construct an instance of CodeSnippetView from an `HTMLElement`.

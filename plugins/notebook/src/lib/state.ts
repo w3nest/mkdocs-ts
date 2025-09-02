@@ -564,7 +564,7 @@ export class State {
                     const uid = Math.floor(Math.random() * Math.pow(10, 6))
                     const cell = new JsCellExecutor({
                         cellId: id ?? `cell-${String(uid)}`,
-                        content$: new BehaviorSubject(elem.textContent ?? ''),
+                        content$: new BehaviorSubject(elem.textContent),
                         state: state,
                         cellAttributes: {
                             reactive,
@@ -579,7 +579,7 @@ export class State {
                     const uid = Math.floor(Math.random() * Math.pow(10, 6))
                     const cell = new PyCellExecutor({
                         cellId: id ?? `cell-${String(uid)}`,
-                        content$: new BehaviorSubject(elem.textContent ?? ''),
+                        content$: new BehaviorSubject(elem.textContent),
                         state: state,
                         cellAttributes: {},
                     })

@@ -56,7 +56,7 @@ export class DeportedOutputsView implements VirtualDOM<'div'> {
      */
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) => e.getAttribute('cell-id'),
-        defaultContent: (e: HTMLElement) => e.textContent ?? '',
+        defaultContent: (e: HTMLElement) => e.textContent,
         fullScreen: (e: HTMLElement) =>
             e.getAttribute('full-screen') === 'true',
         style: (e: HTMLElement) => parseStyle(e.getAttribute('style') ?? ''),

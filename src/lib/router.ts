@@ -627,11 +627,11 @@ export class Router<
         setTimeout(() => {
             ctx.info('Target found, scroll to it.')
             const offset = div.offsetTop
-            const scrollTo = this.scroller
-                ? this.scroller
-                : (p: ScrollToOptions) => {
-                      scrollableElement.scrollTo(p)
-                  }
+            const scrollTo =
+                this.scroller ??
+                ((p: ScrollToOptions) => {
+                    scrollableElement.scrollTo(p)
+                })
             scrollTo({
                 top: div.offsetTop - br.top - 1,
                 left: 0,
@@ -873,8 +873,9 @@ export class Router<
                     },
                     ctx,
                 )
+                const { ...oldProps } = oldNode
                 const newNode = new oldNode.factory({
-                    ...oldNode,
+                    ...oldProps,
                     children,
                 }) as AnyNavNode<TLayout, THeader>
                 this.explorerState.replaceNode(oldNode, newNode)
@@ -1018,9 +1019,7 @@ function getSiblings$<TLayout = unknown, THeader = unknown>(
             if (!next && index < parentChildren.length - 1) {
                 next = parentChildren[index + 1]
             }
-            if (!next) {
-                next = findRightFallback(node)
-            }
+            next ??= findRightFallback(node)
             return {
                 prev,
                 next,

@@ -10,6 +10,7 @@ import * as path from 'path'
 function getScore(s: string) {
     s = s.endsWith('{\n}') ? s.slice(0, -3) : s
     const ignore = [' ', '\n', '\t', ',', ';']
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread
     return [...s]
         .map((char) => {
             if (ignore.includes(char)) {

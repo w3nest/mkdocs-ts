@@ -230,9 +230,7 @@ export class NavHeaderView implements VirtualDOM<'a'> {
                     wrapper: (d) => `${d} mkdocs-NavigationHeader-title`,
                 }),
                 children: [
-                    header?.name
-                        ? header.name
-                        : { tag: 'div', innerText: node.name },
+                    header?.name ?? { tag: 'div', innerText: node.name },
                 ],
             },
             sep(1),

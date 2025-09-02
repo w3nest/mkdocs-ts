@@ -96,7 +96,7 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
     static readonly FromDomAttributes = {
         cellId: (e: HTMLElement) =>
             e.getAttribute('cell-id') ?? e.getAttribute('id') ?? getCellUid(),
-        content: (e: HTMLElement) => e.textContent ?? '',
+        content: (e: HTMLElement) => e.textContent,
         readOnly: (e: HTMLElement) => e.getAttribute('read-only') === 'true',
         lineNumber: (e: HTMLElement) =>
             e.getAttribute('line-number') === 'true',
@@ -210,7 +210,7 @@ export class WorkerCellView implements VirtualDOM<'div'>, CellTrait {
         const { scope } = execArgs
         const capturedIn = this.cellAttributes.capturedIn.reduce(
             (acc, name) => {
-                return { ...acc, [name]: scope.const[name] || scope.let[name] }
+                return { ...acc, [name]: scope.const[name] ?? scope.let[name] }
             },
             {},
         )

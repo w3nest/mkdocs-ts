@@ -24,7 +24,7 @@ export class MkApiExtLink implements VirtualDOM<'a'> {
         this.children = [
             {
                 tag: 'i',
-                innerText: elem.textContent ?? '?',
+                innerText: elem.textContent,
             },
             isExternal
                 ? faIconTyped('fa-external-link-alt', {
@@ -54,7 +54,7 @@ export class MkApiApiLink implements VirtualDOM<'a'> {
         this.children = [
             {
                 tag: 'i',
-                innerText: elem.textContent ?? '',
+                innerText: elem.textContent,
                 class: `mkapi-semantic-flag mkapi-role-${semantic}`,
             },
             faIconTyped('fa-code', {
