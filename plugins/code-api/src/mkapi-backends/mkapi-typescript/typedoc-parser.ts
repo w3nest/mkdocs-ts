@@ -669,18 +669,30 @@ function parseDocumentationElements({
                     // An external link (e.g. 'https://foo/bar')
                     return `<mkapi-ext-link href="${element.target}">${element.text}</mkapi-ext-link>`
                 }
-                // This is a reference to something in node_modules, try to find matching external
+
+                // The link should be a reference to something in node_modules, try to find matching external
                 const name = element.target.qualifiedName
-                const modulePath = element.target.sourceFileName.replace(
-                    'node_modules/',
-                    '',
-                )
-                const tokens = modulePath.split('/')
-                const extLib = modulePath.startsWith('@')
-                    ? `${tokens[0]}/${tokens[1]}`
-                    : tokens[0]
-                const file = modulePath.replace(extLib, '').slice(1)
+                let extLib: string | undefined
+                let file: string | undefined
+                // For old typedoc
+                if ('sourceFileName' in element.target) {
+                    const modulePath = element.target.sourceFileName.replace(
+                        'node_modules/',
+                        '',
+                    )
+                    const tokens = modulePath.split('/')
+                    extLib = modulePath.startsWith('@')
+                        ? `${tokens[0]}/${tokens[1]}`
+                        : tokens[0]
+                    file = modulePath.replace(extLib, '').slice(1)
+                }
+                // For newest typedoc
+                if ('packageName' in element.target) {
+                    extLib = element.target.packageName
+                    file = element.target.packagePath
+                }
                 if (
+                    !extLib ||
                     !projectGlobals.externals ||
                     !(extLib in projectGlobals.externals)
                 ) {
