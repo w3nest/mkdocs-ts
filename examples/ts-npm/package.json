@@ -2,6 +2,7 @@
     "name": "@mkdocs-ts/ex-ts-npm",
     "description": "Example for mkdocs-ts library",
     "version": "0.1.0-wip",
+    "license": "MIT",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/ex-ts-npm#README.md",
     "main": "./dist/@mkdocs-ts/ex-ts-npm.js",

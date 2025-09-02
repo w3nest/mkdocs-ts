@@ -2,6 +2,7 @@
     "name": "@mkdocs-ts/code-api",
     "description": "Code API plugins for mkdocs-ts.",
     "version": "0.2.3",
+    "license": "MIT",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/code-api#README.md",
     "main": "./dist/@mkdocs-ts/code-api.js",

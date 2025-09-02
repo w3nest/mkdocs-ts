@@ -2,6 +2,7 @@
     "name": "mkdocs-ts",
     "description": "A TypeScript library for building dynamic, hierarchical, document-driven applications with customizable layouts and rich content integration.",
     "version": "0.5.3",
+    "license": "MIT",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts#README.md",
     "main": "./dist/mkdocs-ts.js",
