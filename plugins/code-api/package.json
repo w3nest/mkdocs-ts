@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/code-api",
     "description": "Code API plugins for mkdocs-ts.",
-    "version": "0.2.3-wip",
+    "version": "0.2.3",
     "author": "reinisch.gui@gmail.com",
     "homepage": "https://github.com/mkdocs-ts/code-api#README.md",
     "main": "./dist/@mkdocs-ts/code-api.js",
@@ -104,14 +104,14 @@
             "Doc": "./doc/index.ts"
         },
         "externals": {
+            "@w3nest/webpm-client": [
+                "@w3nest/webpm-client_APIv01"
+            ],
             "mkdocs-ts": [
                 "mkdocs-ts_APIv05"
             ],
             "rx-vdom": [
                 "rx-vdom_APIv01"
-            ],
-            "@w3nest/webpm-client": [
-                "@w3nest/webpm-client_APIv01"
             ],
             "@w3nest/http-clients": [
                 "@w3nest/http-clients_APIv01"
