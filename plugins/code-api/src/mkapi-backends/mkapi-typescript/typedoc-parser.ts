@@ -1148,7 +1148,7 @@ function find_references(jsonObject: TypedocNode | TypedocNode[]): {
         type: 'reference'
     }
     interface ExtRef {
-        target: { sourceFileName: string }
+        target: { sourceFileName: string } | { packagePath: string }
         name: string
         package: string
         type: 'reference'
@@ -1169,7 +1169,10 @@ function find_references(jsonObject: TypedocNode | TypedocNode[]): {
             // eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition
             casted.type === 'reference' &&
             typeof casted.target === 'object' &&
-            typeof casted.target.sourceFileName === 'string'
+            (('sourceFileName' in casted.target &&
+                typeof casted.target.sourceFileName === 'string') ||
+                ('packagePath' in casted.target &&
+                    typeof casted.target.packagePath === 'string'))
         )
     }
 
@@ -1184,7 +1187,10 @@ function find_references(jsonObject: TypedocNode | TypedocNode[]): {
             if (isExtRef(obj)) {
                 extReferences.push({
                     package: obj.package,
-                    file: obj.target.sourceFileName,
+                    file:
+                        'packagePath' in obj.target
+                            ? obj.target.packagePath
+                            : obj.target.sourceFileName,
                     name: obj.name,
                 })
             }
