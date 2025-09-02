@@ -79,8 +79,7 @@
                         "startLine": 203,
                         "endLine": 204,
                         "references": {
-                            "children": "@nav[mkdocs-ts].CompositeLayout.children",
-                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                            "children": "@nav[mkdocs-ts].CompositeLayout.children"
                         }
                     }
                 },
@@ -218,9 +217,7 @@
                     "LayoutFactory": "@nav[mkdocs-ts].LayoutFactory",
                     "LayoutKindUnion": "@nav[mkdocs-ts].LayoutKindUnion",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "LayoutUnion": "@nav[mkdocs-ts].LayoutUnion",
-                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
-                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                    "LayoutUnion": "@nav[mkdocs-ts].LayoutUnion"
                 }
             },
             "semantic": {
@@ -495,8 +492,7 @@
                         "references": {
                             "executeAsync": "@nav[mkdocs-ts].Context.executeAsync",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Label": "@nav[mkdocs-ts].Label",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "Label": "@nav[mkdocs-ts].Label"
                         }
                     },
                     "semantic": {
@@ -677,8 +673,7 @@
                     "ContextTrait.exit": "@nav[mkdocs-ts].ContextTrait.exit",
                     "ContextTrait.info": "@nav[mkdocs-ts].ContextTrait.info",
                     "ContextTrait.start": "@nav[mkdocs-ts].ContextTrait.start",
-                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning"
                 }
             },
             "semantic": {
@@ -739,8 +734,7 @@
                         "endLine": 164,
                         "references": {
                             "factory": "@nav[mkdocs-ts].GlobalMarkdownViews.factory",
-                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
                         }
                     }
                 }
@@ -754,8 +748,7 @@
                 "endLine": 200,
                 "references": {
                     "GlobalMarkdownViews": "@nav[mkdocs-ts].GlobalMarkdownViews",
-                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
                 }
             },
             "semantic": {
@@ -833,7 +826,6 @@
                         "endLine": 586,
                         "references": {
                             "fromHTMLElement": "@nav[mkdocs-ts].IconFactory.fromHTMLElement",
-                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
                             "AnyView": "@nav[mkdocs-ts].AnyView"
                         }
                     },
@@ -939,8 +931,7 @@
                         "endLine": 553,
                         "references": {
                             "register": "@nav[mkdocs-ts].IconFactory.register",
-                            "AnyView": "@nav[mkdocs-ts].AnyView",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "AnyView": "@nav[mkdocs-ts].AnyView"
                         }
                     },
                     "semantic": {
@@ -959,9 +950,7 @@
                 "endLine": 587,
                 "references": {
                     "IconFactory": "@nav[mkdocs-ts].IconFactory",
-                    "AnyView": "@nav[mkdocs-ts].AnyView",
-                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "AnyView": "@nav[mkdocs-ts].AnyView"
                 }
             },
             "semantic": {
@@ -1110,8 +1099,7 @@
                         "startLine": 277,
                         "endLine": 278,
                         "references": {
-                            "children": "@nav[mkdocs-ts].LayoutKindNotFoundView.children",
-                            "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike"
+                            "children": "@nav[mkdocs-ts].LayoutKindNotFoundView.children"
                         }
                     }
                 },
@@ -1194,9 +1182,7 @@
                 "startLine": 274,
                 "endLine": 305,
                 "references": {
-                    "LayoutKindNotFoundView": "@nav[mkdocs-ts].LayoutKindNotFoundView",
-                    "ChildrenLike": "/apps/@rx-vdom/doc/latest?nav=/api.ChildrenLike",
-                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                    "LayoutKindNotFoundView": "@nav[mkdocs-ts].LayoutKindNotFoundView"
                 }
             },
             "semantic": {
@@ -1251,8 +1237,7 @@
                         "startLine": 221,
                         "endLine": 230,
                         "references": {
-                            "next": "@nav[mkdocs-ts].MockBrowser.next",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "next": "@nav[mkdocs-ts].MockBrowser.next"
                         }
                     },
                     "semantic": {
@@ -1334,8 +1319,7 @@
                         "startLine": 209,
                         "endLine": 218,
                         "references": {
-                            "prev": "@nav[mkdocs-ts].MockBrowser.prev",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "prev": "@nav[mkdocs-ts].MockBrowser.prev"
                         }
                     },
                     "semantic": {
@@ -1405,9 +1389,7 @@
                     "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
                     "BrowserInterface.parseUrl": "@nav[mkdocs-ts].BrowserInterface.parseUrl",
                     "BrowserInterface.pushState": "@nav[mkdocs-ts].BrowserInterface.pushState",
-                    "BrowserInterface": "@nav[mkdocs-ts].BrowserInterface",
-                    "BehaviorSubject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                    "BrowserInterface": "@nav[mkdocs-ts].BrowserInterface"
                 }
             },
             "semantic": {
@@ -1558,8 +1540,7 @@
                         "references": {
                             "executeAsync": "@nav[mkdocs-ts].NoContext.executeAsync",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Label": "@nav[mkdocs-ts].Label",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "Label": "@nav[mkdocs-ts].Label"
                         }
                     },
                     "semantic": {
@@ -1728,8 +1709,7 @@
                     "ContextTrait.exit": "@nav[mkdocs-ts].ContextTrait.exit",
                     "ContextTrait.info": "@nav[mkdocs-ts].ContextTrait.info",
                     "ContextTrait.start": "@nav[mkdocs-ts].ContextTrait.start",
-                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                    "ContextTrait.warning": "@nav[mkdocs-ts].ContextTrait.warning"
                 }
             },
             "semantic": {
@@ -1932,8 +1912,7 @@
                         "startLine": 229,
                         "endLine": 230,
                         "references": {
-                            "path$": "@nav[mkdocs-ts].Router.path$",
-                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
+                            "path$": "@nav[mkdocs-ts].Router.path$"
                         }
                     }
                 },
@@ -1969,8 +1948,7 @@
                         "endLine": 295,
                         "references": {
                             "pathAliases": "@nav[mkdocs-ts].Router.pathAliases",
-                            "PathAliasValue": "@nav[mkdocs-ts].PathAliasValue",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "PathAliasValue": "@nav[mkdocs-ts].PathAliasValue"
                         }
                     }
                 },
@@ -2112,8 +2090,7 @@
                         "endLine": 245,
                         "references": {
                             "siblings$": "@nav[mkdocs-ts].Router.siblings$",
-                            "Siblings": "@nav[mkdocs-ts].Siblings",
-                            "Observable": "https://rxjs.dev/guide/observable"
+                            "Siblings": "@nav[mkdocs-ts].Siblings"
                         }
                     }
                 },
@@ -2150,8 +2127,7 @@
                         "references": {
                             "target$": "@nav[mkdocs-ts].Router.target$",
                             "Target": "@nav[mkdocs-ts].Target",
-                            "UnresolvedTarget": "@nav[mkdocs-ts].UnresolvedTarget",
-                            "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject"
+                            "UnresolvedTarget": "@nav[mkdocs-ts].UnresolvedTarget"
                         }
                     }
                 },
@@ -2233,8 +2209,7 @@
                             "BrowserInterface": "@nav[mkdocs-ts].BrowserInterface",
                             "Navigation": "@nav[mkdocs-ts].Navigation",
                             "PathAliasValue": "@nav[mkdocs-ts].PathAliasValue",
-                            "Redirect": "@nav[mkdocs-ts].Redirect",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "Redirect": "@nav[mkdocs-ts].Redirect"
                         }
                     },
                     "semantic": {
@@ -2377,8 +2352,7 @@
                             "getNav": "@nav[mkdocs-ts].Router.getNav",
                             "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Navigation": "@nav[mkdocs-ts].Navigation",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "Navigation": "@nav[mkdocs-ts].Navigation"
                         }
                     },
                     "semantic": {
@@ -2426,8 +2400,7 @@
                         "references": {
                             "navigateTo": "@nav[mkdocs-ts].Router.navigateTo",
                             "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
-                            "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
                         }
                     },
                     "semantic": {
@@ -2566,8 +2539,7 @@
                         "startLine": 586,
                         "endLine": 589,
                         "references": {
-                            "scrollTo": "@nav[mkdocs-ts].Router.scrollTo",
-                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                            "scrollTo": "@nav[mkdocs-ts].Router.scrollTo"
                         }
                     },
                     "semantic": {
@@ -2613,9 +2585,7 @@
                         "startLine": 566,
                         "endLine": 581,
                         "references": {
-                            "setScrollableElement": "@nav[mkdocs-ts].Router.setScrollableElement",
-                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                            "ScrollToOptions": "https://developer.mozilla.org/fr/docs/Web/API/Window/scrollTo"
+                            "setScrollableElement": "@nav[mkdocs-ts].Router.setScrollableElement"
                         }
                     },
                     "semantic": {
@@ -2629,9 +2599,9 @@
             "code": {
                 "filePath": "src/lib/router.ts",
                 "declaration": "export class Router<\n    TLayout = unknown,\n    THeader = unknown,\n    TPathAliasKeys extends string = string,\n>",
-                "implementation": "export class Router<\n    TLayout = unknown,\n    THeader = unknown,\n    TPathAliasKeys extends string = string,\n> {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation<TLayout, THeader>\n\n    /**\n     * Debounced time applied when scrolling to specific target is triggered.\n     */\n    public readonly scrollingDebounceTime: number = 100\n\n    /**\n     * Handles navigation redirections.\n     *\n     * These functions are invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * Functions are evaluated in reversed order, if one returns `undefined`, navigation is canceled.\n     *\n     * @param target - The requested target that the user intends to navigate to.\n     * @returns The modified target to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: Redirect[] = [\n        (target) => Promise.resolve(target),\n    ]\n\n    /**\n     * Observable that emit the current page target.\n     */\n    public readonly target$: ReplaySubject<\n        Target<TLayout, THeader> | UnresolvedTarget\n    > = new ReplaySubject<Target<TLayout, THeader> | UnresolvedTarget>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly path$: ReplaySubject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Observable of the previous and next \"sibling\" navigation nodes\n     * relative to the currently active target in the navigation tree.\n     *\n     * The logic works as follows:\n     * - If the current node has children, its first child is the **next** node.\n     * - If not, the next sibling in the parent's children is considered.\n     * - If none exists, the function recursively walks up the tree to find the next available sibling.\n     * - The **prev** sibling is the previous sibling in the parent node’s children,\n     *   or the parent itself if the current node is the first child.\n     *\n     * This is useful for navigation UIs like \"previous/next\" buttons.\n     */\n    public readonly siblings$: Observable<Siblings<TLayout, THeader>>\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<\n        AnyNavNode<TLayout, THeader>\n    >\n\n    public scrollableElement: HTMLElement | undefined\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        Record<string, unknown[]>\n    > = { Warning: {}, Error: {} }\n\n    /**\n     * Storage attribute for user data.\n     */\n    public readonly userStore?: unknown\n\n    /**\n     * Defines path aliases for cleaner and more maintainable navigation references.\n     *\n     * Path aliases let you assign shorthand identifiers to base navigation paths, reducing duplication\n     * and improving clarity—especially when working with modular or deeply nested documentation.\n     *\n     * For example, given the alias mapping (see {@link PathAliasValue} for accepted values format):\n     *\n     * ```ts\n     * {\n     *   utils: '@nav/api/utils',\n     *   core: '@nav/api/core'\n     * }\n     * ```\n     *\n     * You can reference paths in your Markdown or views using the compact syntax:\n     *\n     * ```html\n     * <a href=\"@nav[utils]/formatting\">Formatting Utilities</a>\n     * ```\n     *\n     * The `@nav[utils]/formatting` href will be automatically expanded to\n     * `?nav=/api/utils/formatting` when processed via {@link Router.resolveHRef}.\n     *\n     * This is especially useful for reusing shared modules across projects,\n     * and helps centralize updates to common paths.\n     */\n    public readonly pathAliases: Record<TPathAliasKeys, PathAliasValue>\n\n    private navUpdates: Record<string, LazyRoutesCb<TLayout, THeader>> = {}\n    private navResolved: Record<string, Navigation<TLayout, THeader>> = {}\n\n    /**\n     * Browser client, see {@link WebBrowser} for regular scenario (library running within a tab of a web browser).\n     */\n    public readonly browserClient: BrowserInterface\n\n    public readonly context?: ContextTrait\n    private navParser = new NavParser()\n    private scrollTo$ = new Subject<string | HTMLElement | undefined>()\n    private scroller?: (options: ScrollToOptions) => void\n\n    private navNodeCache: Record<string, Navigation<TLayout, THeader>> = {}\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.pathAliases See {@link Router.pathAliases}.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.browserClient See {@link BrowserInterface}.\n     * @param params.scrollingDebounceTime See {@link Router.scrollingDebounceTime}.\n     * @param params.userStore See {@link Router.userStore}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    constructor(\n        params: {\n            navigation: Navigation<TLayout, THeader>\n            basePath?: string\n            pathAliases?: Record<TPathAliasKeys, PathAliasValue>\n            retryNavPeriod?: number\n            redirects?: Redirect[]\n            browserClient?: (\n                p: {\n                    router: Router\n                    basePath: string\n                },\n                ctx?: ContextTrait,\n            ) => BrowserInterface\n            scrollingDebounceTime?: number\n            userStore?: unknown\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        this.context = ctx\n        this.pathAliases =\n            params.pathAliases ?? ({} as Record<TPathAliasKeys, PathAliasValue>)\n        const context = this.ctx().start('new Router', ['Router'])\n        this.basePath = this.basePath || document.location.pathname\n        this.browserClient = params.browserClient\n            ? params.browserClient({ router: this, basePath: this.basePath })\n            : new WebBrowser({ router: this, basePath: this.basePath }, context)\n\n        const { rootNode, reactiveNavs, promiseNavs } =\n            this.navParser.createRootNode(\n                {\n                    navigation: this.navigation,\n                    router: this,\n                },\n                context,\n            )\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n\n        this.siblings$ = getSiblings$(this)\n        this.bindReactiveNavs(reactiveNavs, context)\n        this.bindPromiseNavs(promiseNavs, context)\n\n        this.target$\n            .pipe(\n                filter((page) => {\n                    return isResolvedTarget(page)\n                }),\n            )\n            .subscribe((page) => {\n                if (page.sectionId === undefined) {\n                    this.scrollTo()\n                }\n            })\n        fireAndForget(this.navigateTo(this.parseUrl(), context))\n\n        const removedNodes$ = this.explorerState.directUpdates$.pipe(\n            map((updates) =>\n                updates.map((update) => update.removedNodes).flat(),\n            ),\n            filter((nodes) => nodes.length > 0),\n        )\n        removedNodes$\n            .pipe(\n                withLatestFrom(this.target$),\n                filter(([nodes, target]) => {\n                    return (\n                        nodes.find((node) =>\n                            target.path.startsWith(node.href),\n                        ) !== undefined\n                    )\n                }),\n            )\n            .subscribe(([, target]) => {\n                context.info('Node parent of current path removed')\n                this.fireNavigateTo(\n                    { ...target, forceReload: true },\n                    undefined,\n                    context,\n                )\n            })\n        const scroll$ =\n            this.scrollingDebounceTime > 0\n                ? this.scrollTo$.pipe(debounceTime(this.scrollingDebounceTime))\n                : this.scrollTo$\n        scroll$.subscribe((target) => {\n            this._scrollTo(target)\n        })\n\n        removedNodes$.subscribe(() => {\n            this.navNodeCache = {}\n        })\n        this.target$.pipe(filter((t) => isResolvedTarget(t))).subscribe((t) => {\n            this.navNodeCache[t.path] = t.node\n            this.scrollTo(t.sectionId)\n        })\n        context.exit()\n    }\n\n    /**\n     * Resolves a custom `@nav[...]` or `@nav/...` style hyperlink into a routable URL understood by the application.\n     *\n     * This method is typically used to transform internal navigation references—possibly containing registered\n     * path aliases—into query-based URLs used for routing.\n     *\n     * - If the `href` starts with `@nav[alias]`, the corresponding alias will be resolved via `pathAliases`.\n     * - If the `href` starts with `@nav`, but no alias is used, the method replaces `@nav` with `?nav=`.\n     * - If the `href` does not start with `@nav`, it is returned unchanged.\n     *\n     * This is useful for writing clean, abstracted links in markdown or HTML that resolve at runtime\n     * to actual application routes.\n     *\n     * @param href - The raw hyperlink string to be resolved.\n     *\n     * @returns The transformed `href` that the router can understand, including any alias substitution.\n     */\n    resolveHRef(href: string): string {\n        const baseURI = document.head.baseURI.split('?')[0]\n        const hrefSanitized = href.replace(baseURI, '')\n\n        if (!hrefSanitized.startsWith('@nav')) {\n            return href\n        }\n        const aliasMatch = /^@nav\\[([^\\]]+)\\]/.exec(hrefSanitized)\n        if (aliasMatch) {\n            const aliasKey = aliasMatch[1]\n            const basePath = this.pathAliases[aliasKey] as undefined | string\n            if (!basePath) {\n                console.error(\n                    `[mkdocs-ts] Navigation alias \"${aliasKey}\" is not registered. `,\n                )\n                return href\n            }\n            if (basePath.startsWith('@nav')) {\n                return hrefSanitized\n                    .replace(`@nav[${aliasKey}]`, basePath)\n                    .replace('@nav', '?nav=')\n            }\n            // External link (http/https)\n            return basePath\n        }\n        return hrefSanitized.replace('@nav', '?nav=')\n    }\n\n    ctx(ctx?: ContextTrait) {\n        if (ctx) {\n            return ctx\n        }\n        return this.context ?? new NoContext()\n    }\n    /**\n     * Returns the current navigation path.\n     */\n    parseUrl(): UrlTarget {\n        return this.browserClient.parseUrl()\n    }\n\n    /**\n     * Fire navigation to given path with no `await`.\n     *\n     * @param target  The path to navigate to.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param onError Callback called if errors happen.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    fireNavigateTo(\n        target: UrlTarget | string,\n        onError?: (err: unknown) => void,\n        ctx?: ContextTrait,\n    ) {\n        fireAndForget(this.navigateTo(target, ctx), onError)\n    }\n\n    /**\n     * Navigate to a specific target.\n     *\n     * @param target The URL target.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        async: true,\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    async navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {\n        ctx = this.ctx(ctx)\n        const originalTarget =\n            typeof target === 'string' ? parseUrl(target) : target\n\n        const redirectTarget = await this.redirects\n            .reverse()\n            .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {\n                const from = await acc\n                return from\n                    ? await redirect(from, ctx)\n                    : Promise.resolve(undefined)\n            }, Promise.resolve(originalTarget))\n\n        if (!redirectTarget) {\n            ctx.info('Redirect returned `undefined`: cancel navigation')\n            return\n        }\n        const path = sanitizeNavPath(redirectTarget.path)\n        const sectionId = redirectTarget.sectionId\n\n        ctx.info('Schedule async nav node retrieval', target)\n        const resolved = await this.getNav(redirectTarget, ctx)\n        if (resolved === 'not-found') {\n            this.target$.next({\n                path,\n                reason: 'NotFound',\n            })\n            return\n        }\n        this.browserClient.pushState({ target: redirectTarget }, ctx)\n        this.path$.next(path)\n\n        this.target$.next({\n            node: resolved,\n            path,\n            sectionId: sectionId === '' ? undefined : sectionId,\n            forceReload: originalTarget.forceReload ? true : false,\n            parameters: redirectTarget.parameters,\n        })\n        await this.expandNavigationTree(path)\n    }\n\n    /**\n     * Set the element in page that can be 'scrolled' to reach target destination's section ID (reference from URL).\n     *\n     * @param element Scrollable element.\n     * @param scroller Callback to override the default `scrollTo` used from `element`. This is useful for instance\n     * when a sticky top-banner is used (an offset has to be added).\n     */\n    setScrollableElement(\n        element: HTMLElement,\n        scroller?: (options: ScrollToOptions) => void,\n    ) {\n        this.scrollableElement = element\n        this.scroller = scroller\n        this.target$\n            .pipe(\n                take(1),\n                filter((target) => 'node' in target),\n            )\n            .subscribe((target) => {\n                this.scrollTo(target.sectionId)\n            })\n    }\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    public scrollTo(target?: string | HTMLElement) {\n        this.scrollTo$.next(target)\n    }\n\n    private _scrollTo(target?: string | HTMLElement) {\n        const ctx = this.ctx()\n        if (\n            !this.scrollableElement ||\n            !('scrollTo' in this.scrollableElement)\n        ) {\n            return\n        }\n        const scrollableElement = this.scrollableElement\n        if (!target) {\n            ctx.info('No target specified, scroll to top.')\n            scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const br = scrollableElement.getBoundingClientRect()\n        const div =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(scrollableElement, target)\n\n        if (!div) {\n            ctx.warning(`Can not scroll to element`, target)\n            return\n        }\n        this.browserClient.pushState(\n            {\n                target: {\n                    ...this.parseUrl(),\n                    sectionId: div.id,\n                    issuer: 'scroll',\n                },\n            },\n            ctx,\n        )\n        setTimeout(() => {\n            ctx.info('Target found, scroll to it.')\n            const offset = div.offsetTop\n            const scrollTo = this.scroller\n                ? this.scroller\n                : (p: ScrollToOptions) => {\n                      scrollableElement.scrollTo(p)\n                  }\n            scrollTo({\n                top: div.offsetTop - br.top - 1,\n                left: 0,\n                behavior: 'smooth',\n            })\n            setTimeout(() => {\n                if (div.offsetTop - offset !== 0) {\n                    scrollTo({\n                        top: div.offsetTop - br.top - 1,\n                        left: 0,\n                        behavior: 'smooth',\n                    })\n                }\n            }, this.scrollingDebounceTime)\n        }, 0)\n    }\n\n    /**\n     * Asynchronously retrieves the navigation node for a given path.\n     * If the node is not immediately available, it will retry for a short period before returning a result.\n     *\n     * - If the node is found, it returns the corresponding `Navigation<TLayout, THeader>` object.\n     * - If the node does not exist, it returns `'not-found'`.\n     * - If the node is still unresolved, it waits and retries periodically.\n     *\n     * @param target The target.\n     * @param ctx Execution context used for logging and tracing.\n     * @returns A `Promise` resolving to the navigation node, or `'not-found'` if the node does not exist.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n        async: true,\n    })\n    async getNav(\n        target: UrlTarget,\n        ctx?: ContextTrait,\n    ): Promise<Navigation<TLayout, THeader> | 'not-found'> {\n        ctx = this.ctx(ctx)\n        const { path, parameters, sectionId } = target\n        if (\n            path in this.navNodeCache &&\n            Object.keys(parameters ?? {}).length === 0\n        ) {\n            ctx.info(\n                `No query parameters & node in cache => return it`,\n                this.navNodeCache[path],\n            )\n            return this.navNodeCache[path]\n        }\n        const nav = timer(0, this.retryNavPeriod).pipe(\n            // Do not use 'switchMap': we wait for the first resolution (which can take more than `this.retryNavPeriod`)\n            mergeMap((i) => {\n                ctx.info(`Attempt 'getNav' #${String(i)}`)\n                const nav = this._getNav({ path }, ctx)\n                if (nav instanceof Observable) {\n                    return nav\n                }\n                return of(nav)\n            }),\n            tap((nav) => {\n                if (nav === 'unresolved') {\n                    console.log('Try to wait...')\n                    this.target$.next({\n                        path,\n                        reason: 'Pending',\n                        sectionId,\n                    })\n                }\n            }),\n            filter((nav) => nav !== 'unresolved'),\n            take(1),\n        )\n        return await firstValueFrom(nav)\n    }\n    /**\n     * Retrieves the navigation node corresponding to a given path as observable (emitting 1 item and closing),\n     * or `not-found` if it does not exist, or `unresolved` if the node is not resolved yet but maybe in a\n     * (hopefully short) future.\n     *\n     * @param path The target path.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n    })\n    private _getNav(\n        {\n            path,\n        }: {\n            path: string\n        },\n        ctx?: ContextTrait,\n    ): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {\n        ctx = this.ctx(ctx)\n        path = sanitizeNavPath(path)\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                ctx.info(`Resolve ${resolvedPath}/${part}`)\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                if (tree.routes === undefined) {\n                    return 'not-found'\n                }\n                const routes = tree.routes\n                if (\n                    typeof routes === 'function' ||\n                    routes instanceof Observable\n                ) {\n                    // the navigation is a catch-all routes\n                    return {\n                        tree:\n                            resolvedPath in this.navUpdates\n                                ? this.navUpdates[resolvedPath]\n                                : routes,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n\n                if (`/${part}` in routes) {\n                    const route = routes[`/${part}`]\n\n                    if (!(route instanceof Promise)) {\n                        return {\n                            tree: route,\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n\n                    const fullPath = sanitizeNavPath(`${resolvedPath}/${part}`)\n                    if (fullPath in this.navResolved) {\n                        return {\n                            tree: this.navResolved[fullPath],\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n                    // a retry in some period of time will be executed\n                    return {\n                        tree: route,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return 'not-found'\n            },\n            { tree: this.navigation, resolvedPath: `/`, keepGoing: true },\n        )\n        if (node === 'not-found') {\n            ctx.info('Navigation node is not found')\n            return 'not-found'\n        }\n        // node.tree: Navigation |  Promise<Navigation> | LazyRoutesCb | LazyRoutesCb$\n        if (node.tree instanceof Observable || node.tree instanceof Promise) {\n            ctx.info('Navigation node is unresolved')\n            // case: Promise<Navigation> or LazyRoutesCb$ -> a retry in some period of time will be executed\n            return 'unresolved'\n        }\n        if (typeof node.tree === 'function') {\n            ctx.info('Navigation node is function for lazy definition')\n            // case: LazyRoutesCb, remove starting '/'\n            const relative =\n                node.resolvedPath === '/'\n                    ? path\n                    : sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const parent = sanitizeNavPath(\n                relative.split('/').slice(0, -1).join('/'),\n            )\n            const parentNav = node.tree({ path: parent, router: this })\n            if (!parentNav) {\n                return 'not-found'\n            }\n            return resolve(parentNav).pipe(\n                mergeMap((resolved) => {\n                    const target = sanitizeNavPath(\n                        relative.split('/').slice(-1)[0],\n                    )\n                    return resolve(resolved[target])\n                }),\n            )\n        }\n        // node.tree: Navigation\n        ctx.info('Navigation node found', node.tree)\n        return of(node.tree)\n    }\n\n    private async expandNavigationTree(path: string) {\n        const ids = pathIds(path)\n        for (const id of ids.slice(0, -1)) {\n            const node = this.explorerState.getNodeResolved(id)\n            this.explorerState.getChildren(node)\n            await firstValueFrom(this.explorerState.getChildren$(node))\n        }\n        const node = this.explorerState.getNodeResolved(ids.slice(-1)[0])\n        this.explorerState.selectNodeAndExpand(node)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n\n    @Contextual()\n    private bindReactiveNavs(\n        reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNodeResolved(href)\n                ctx.info(`Replace Node w/ Observable '${href}'`, oldNode)\n                const children = this.navParser.createLazyChildren$(\n                    {\n                        resolver: resolver,\n                        hrefBase: href,\n                        path: '',\n                        withExplicit: [],\n                        router: this,\n                        depth: 0,\n                    },\n                    ctx,\n                )\n                const newNode = new oldNode.factory({\n                    ...oldNode,\n                    children,\n                }) as AnyNavNode<TLayout, THeader>\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n    }\n    @Contextual()\n    private bindPromiseNavs(\n        promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(promiseNavs).forEach(([href, v]) => {\n            v.then(\n                (nav) => {\n                    this.navResolved[href] = nav\n                    const oldNode = this.explorerState.getNodeResolved(href)\n                    ctx.info(`Replace Node w/ Promise '${href}'`, oldNode)\n                    const { rootNode, reactiveNavs, promiseNavs } =\n                        this.navParser.createRootNode(\n                            {\n                                navigation: nav,\n                                router: this,\n                                hrefBase: href,\n                            },\n                            ctx,\n                        )\n                    this.explorerState.replaceNode(oldNode, rootNode)\n                    this.bindReactiveNavs(reactiveNavs, ctx)\n                    this.bindPromiseNavs(promiseNavs, ctx)\n                },\n                (e: unknown) => {\n                    console.error(e)\n                    throw Error(\n                        `Router.bindPromiseNavs: unable to bind promise navigation on ${href}`,\n                    )\n                },\n            )\n        })\n    }\n}",
+                "implementation": "export class Router<\n    TLayout = unknown,\n    THeader = unknown,\n    TPathAliasKeys extends string = string,\n> {\n    /**\n     * The base path on which the router is defined.\n     *\n     * If the application is served from `https://my-domain/my-app/version` it is `/my-app/version`.\n     */\n    public readonly basePath: string\n\n    /**\n     * When using a dynamic definition of the routes (see {@link Navigation}),\n     * it may be the case that the routes are not yet available when navigating to a page.\n     * Attempt to re-navigate to the page is executed every `retryNavPeriod` second.\n     */\n    public readonly retryNavPeriod: number = 1000\n\n    /**\n     * Definition of the navigation.\n     */\n    public readonly navigation: Navigation<TLayout, THeader>\n\n    /**\n     * Debounced time applied when scrolling to specific target is triggered.\n     */\n    public readonly scrollingDebounceTime: number = 100\n\n    /**\n     * Handles navigation redirections.\n     *\n     * These functions are invoked whenever a specific path is requested for navigation.\n     * It allows modifying the target path before the navigation occurs.\n     *\n     * Functions are evaluated in reversed order, if one returns `undefined`, navigation is canceled.\n     *\n     * @param target - The requested target that the user intends to navigate to.\n     * @returns The modified target to navigate to, or the original path if no changes are needed.\n     *          If `undefined` is returned, the navigation will be canceled.\n     */\n    public readonly redirects: Redirect[] = [\n        (target) => Promise.resolve(target),\n    ]\n\n    /**\n     * Observable that emit the current page target.\n     */\n    public readonly target$: ReplaySubject<\n        Target<TLayout, THeader> | UnresolvedTarget\n    > = new ReplaySubject<Target<TLayout, THeader> | UnresolvedTarget>(1)\n\n    /**\n     * Observable that emit the current navigation path.\n     */\n    public readonly path$: ReplaySubject<string> = new ReplaySubject<string>(1)\n\n    /**\n     * Observable of the previous and next \"sibling\" navigation nodes\n     * relative to the currently active target in the navigation tree.\n     *\n     * The logic works as follows:\n     * - If the current node has children, its first child is the **next** node.\n     * - If not, the next sibling in the parent's children is considered.\n     * - If none exists, the function recursively walks up the tree to find the next available sibling.\n     * - The **prev** sibling is the previous sibling in the parent node’s children,\n     *   or the parent itself if the current node is the first child.\n     *\n     * This is useful for navigation UIs like \"previous/next\" buttons.\n     */\n    public readonly siblings$: Observable<Siblings<TLayout, THeader>>\n\n    /**\n     * Encapsulates the state of the navigation view (node selected, expanded, *etc.*)\n     */\n    public readonly explorerState: ImmutableTree.State<\n        AnyNavNode<TLayout, THeader>\n    >\n\n    public scrollableElement: HTMLElement | undefined\n\n    public readonly htmlUpdated$ = new Subject<unknown>()\n\n    public readonly status: Record<\n        'Warning' | 'Error',\n        Record<string, unknown[]>\n    > = { Warning: {}, Error: {} }\n\n    /**\n     * Storage attribute for user data.\n     */\n    public readonly userStore?: unknown\n\n    /**\n     * Defines path aliases for cleaner and more maintainable navigation references.\n     *\n     * Path aliases let you assign shorthand identifiers to base navigation paths, reducing duplication\n     * and improving clarity—especially when working with modular or deeply nested documentation.\n     *\n     * For example, given the alias mapping (see {@link PathAliasValue} for accepted values format):\n     *\n     * ```ts\n     * {\n     *   utils: '@nav/api/utils',\n     *   core: '@nav/api/core'\n     * }\n     * ```\n     *\n     * You can reference paths in your Markdown or views using the compact syntax:\n     *\n     * ```html\n     * <a href=\"@nav[utils]/formatting\">Formatting Utilities</a>\n     * ```\n     *\n     * The `@nav[utils]/formatting` href will be automatically expanded to\n     * `?nav=/api/utils/formatting` when processed via {@link Router.resolveHRef}.\n     *\n     * This is especially useful for reusing shared modules across projects,\n     * and helps centralize updates to common paths.\n     */\n    public readonly pathAliases: Record<TPathAliasKeys, PathAliasValue>\n\n    private navUpdates: Record<string, LazyRoutesCb<TLayout, THeader>> = {}\n    private navResolved: Record<string, Navigation<TLayout, THeader>> = {}\n\n    /**\n     * Browser client, see {@link WebBrowser} for regular scenario (library running within a tab of a web browser).\n     */\n    public readonly browserClient: BrowserInterface\n\n    public readonly context?: ContextTrait\n    private navParser = new NavParser()\n    private scrollTo$ = new Subject<string | HTMLElement | undefined>()\n    private scroller?: (options: ScrollToOptions) => void\n\n    private navNodeCache: Record<string, Navigation<TLayout, THeader>> = {}\n    /**\n     * Initialize a router instance.\n     *\n     * @param params See corresponding documentation in the class's attributes.\n     * @param params.navigation See {@link Router.navigation}.\n     * @param params.basePath Deprecated should not be used.\n     * @param params.pathAliases See {@link Router.pathAliases}.\n     * @param params.retryNavPeriod See {@link Router.retryNavPeriod}.\n     * @param params.redirects See {@link Router.redirects}.\n     * @param params.browserClient See {@link BrowserInterface}.\n     * @param params.scrollingDebounceTime See {@link Router.scrollingDebounceTime}.\n     * @param params.userStore See {@link Router.userStore}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    constructor(\n        params: {\n            navigation: Navigation<TLayout, THeader>\n            basePath?: string\n            pathAliases?: Record<TPathAliasKeys, PathAliasValue>\n            retryNavPeriod?: number\n            redirects?: Redirect[]\n            browserClient?: (\n                p: {\n                    router: Router\n                    basePath: string\n                },\n                ctx?: ContextTrait,\n            ) => BrowserInterface\n            scrollingDebounceTime?: number\n            userStore?: unknown\n        },\n        ctx?: ContextTrait,\n    ) {\n        Object.assign(this, params)\n        this.context = ctx\n        this.pathAliases =\n            params.pathAliases ?? ({} as Record<TPathAliasKeys, PathAliasValue>)\n        const context = this.ctx().start('new Router', ['Router'])\n        this.basePath = this.basePath || document.location.pathname\n        this.browserClient = params.browserClient\n            ? params.browserClient({ router: this, basePath: this.basePath })\n            : new WebBrowser({ router: this, basePath: this.basePath }, context)\n\n        const { rootNode, reactiveNavs, promiseNavs } =\n            this.navParser.createRootNode(\n                {\n                    navigation: this.navigation,\n                    router: this,\n                },\n                context,\n            )\n        this.explorerState = new ImmutableTree.State({\n            rootNode,\n            expandedNodes: ['/'],\n        })\n\n        this.siblings$ = getSiblings$(this)\n        this.bindReactiveNavs(reactiveNavs, context)\n        this.bindPromiseNavs(promiseNavs, context)\n\n        this.target$\n            .pipe(\n                filter((page) => {\n                    return isResolvedTarget(page)\n                }),\n            )\n            .subscribe((page) => {\n                if (page.sectionId === undefined) {\n                    this.scrollTo()\n                }\n            })\n        fireAndForget(this.navigateTo(this.parseUrl(), context))\n\n        const removedNodes$ = this.explorerState.directUpdates$.pipe(\n            map((updates) =>\n                updates.map((update) => update.removedNodes).flat(),\n            ),\n            filter((nodes) => nodes.length > 0),\n        )\n        removedNodes$\n            .pipe(\n                withLatestFrom(this.target$),\n                filter(([nodes, target]) => {\n                    return (\n                        nodes.find((node) =>\n                            target.path.startsWith(node.href),\n                        ) !== undefined\n                    )\n                }),\n            )\n            .subscribe(([, target]) => {\n                context.info('Node parent of current path removed')\n                this.fireNavigateTo(\n                    { ...target, forceReload: true },\n                    undefined,\n                    context,\n                )\n            })\n        const scroll$ =\n            this.scrollingDebounceTime > 0\n                ? this.scrollTo$.pipe(debounceTime(this.scrollingDebounceTime))\n                : this.scrollTo$\n        scroll$.subscribe((target) => {\n            this._scrollTo(target)\n        })\n\n        removedNodes$.subscribe(() => {\n            this.navNodeCache = {}\n        })\n        this.target$.pipe(filter((t) => isResolvedTarget(t))).subscribe((t) => {\n            this.navNodeCache[t.path] = t.node\n            this.scrollTo(t.sectionId)\n        })\n        context.exit()\n    }\n\n    /**\n     * Resolves a custom `@nav[...]` or `@nav/...` style hyperlink into a routable URL understood by the application.\n     *\n     * This method is typically used to transform internal navigation references—possibly containing registered\n     * path aliases—into query-based URLs used for routing.\n     *\n     * - If the `href` starts with `@nav[alias]`, the corresponding alias will be resolved via `pathAliases`.\n     * - If the `href` starts with `@nav`, but no alias is used, the method replaces `@nav` with `?nav=`.\n     * - If the `href` does not start with `@nav`, it is returned unchanged.\n     *\n     * This is useful for writing clean, abstracted links in markdown or HTML that resolve at runtime\n     * to actual application routes.\n     *\n     * @param href - The raw hyperlink string to be resolved.\n     *\n     * @returns The transformed `href` that the router can understand, including any alias substitution.\n     */\n    resolveHRef(href: string): string {\n        const baseURI = document.head.baseURI.split('?')[0]\n        const hrefSanitized = href.replace(baseURI, '')\n\n        if (!hrefSanitized.startsWith('@nav')) {\n            return href\n        }\n        const aliasMatch = /^@nav\\[([^\\]]+)\\]/.exec(hrefSanitized)\n        if (aliasMatch) {\n            const aliasKey = aliasMatch[1]\n            const basePath = this.pathAliases[aliasKey] as undefined | string\n            if (!basePath) {\n                console.error(\n                    `[mkdocs-ts] Navigation alias \"${aliasKey}\" is not registered. `,\n                )\n                return href\n            }\n            if (basePath.startsWith('@nav')) {\n                return hrefSanitized\n                    .replace(`@nav[${aliasKey}]`, basePath)\n                    .replace('@nav', '?nav=')\n            }\n            // External link (http/https)\n            return basePath\n        }\n        return hrefSanitized.replace('@nav', '?nav=')\n    }\n\n    ctx(ctx?: ContextTrait) {\n        if (ctx) {\n            return ctx\n        }\n        return this.context ?? new NoContext()\n    }\n    /**\n     * Returns the current navigation path.\n     */\n    parseUrl(): UrlTarget {\n        return this.browserClient.parseUrl()\n    }\n\n    /**\n     * Fire navigation to given path with no `await`.\n     *\n     * @param target  The path to navigate to.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param onError Callback called if errors happen.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    fireNavigateTo(\n        target: UrlTarget | string,\n        onError?: (err: unknown) => void,\n        ctx?: ContextTrait,\n    ) {\n        fireAndForget(this.navigateTo(target, ctx), onError)\n    }\n\n    /**\n     * Navigate to a specific target.\n     *\n     * @param target The URL target.\n     * If a string is provided, a {@link UrlTarget} is constructed using {@link parseUrl}.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        async: true,\n        key: (target: UrlTarget | string) =>\n            typeof target === 'string' ? target : target.path,\n    })\n    async navigateTo(target: UrlTarget | string, ctx?: ContextTrait) {\n        ctx = this.ctx(ctx)\n        const originalTarget =\n            typeof target === 'string' ? parseUrl(target) : target\n\n        const redirectTarget = await this.redirects\n            .reverse()\n            .reduce(async (acc: Promise<UrlTarget | undefined>, redirect) => {\n                const from = await acc\n                return from\n                    ? await redirect(from, ctx)\n                    : Promise.resolve(undefined)\n            }, Promise.resolve(originalTarget))\n\n        if (!redirectTarget) {\n            ctx.info('Redirect returned `undefined`: cancel navigation')\n            return\n        }\n        const path = sanitizeNavPath(redirectTarget.path)\n        const sectionId = redirectTarget.sectionId\n\n        ctx.info('Schedule async nav node retrieval', target)\n        const resolved = await this.getNav(redirectTarget, ctx)\n        if (resolved === 'not-found') {\n            this.target$.next({\n                path,\n                reason: 'NotFound',\n            })\n            return\n        }\n        this.browserClient.pushState({ target: redirectTarget }, ctx)\n        this.path$.next(path)\n\n        this.target$.next({\n            node: resolved,\n            path,\n            sectionId: sectionId === '' ? undefined : sectionId,\n            forceReload: originalTarget.forceReload ? true : false,\n            parameters: redirectTarget.parameters,\n        })\n        await this.expandNavigationTree(path)\n    }\n\n    /**\n     * Set the element in page that can be 'scrolled' to reach target destination's section ID (reference from URL).\n     *\n     * @param element Scrollable element.\n     * @param scroller Callback to override the default `scrollTo` used from `element`. This is useful for instance\n     * when a sticky top-banner is used (an offset has to be added).\n     */\n    setScrollableElement(\n        element: HTMLElement,\n        scroller?: (options: ScrollToOptions) => void,\n    ) {\n        this.scrollableElement = element\n        this.scroller = scroller\n        this.target$\n            .pipe(\n                take(1),\n                filter((target) => 'node' in target),\n            )\n            .subscribe((target) => {\n                this.scrollTo(target.sectionId)\n            })\n    }\n    /**\n     * Scroll the main HTML content to focus on an HTML element.\n     *\n     * @param target The target HTML element, or its id.\n     */\n    public scrollTo(target?: string | HTMLElement) {\n        this.scrollTo$.next(target)\n    }\n\n    private _scrollTo(target?: string | HTMLElement) {\n        const ctx = this.ctx()\n        if (\n            !this.scrollableElement ||\n            !('scrollTo' in this.scrollableElement)\n        ) {\n            return\n        }\n        const scrollableElement = this.scrollableElement\n        if (!target) {\n            ctx.info('No target specified, scroll to top.')\n            scrollableElement.scrollTo({\n                top: 0,\n                left: 0,\n            })\n            return\n        }\n        const br = scrollableElement.getBoundingClientRect()\n        const div =\n            target instanceof HTMLElement\n                ? target\n                : findElementById(scrollableElement, target)\n\n        if (!div) {\n            ctx.warning(`Can not scroll to element`, target)\n            return\n        }\n        this.browserClient.pushState(\n            {\n                target: {\n                    ...this.parseUrl(),\n                    sectionId: div.id,\n                    issuer: 'scroll',\n                },\n            },\n            ctx,\n        )\n        setTimeout(() => {\n            ctx.info('Target found, scroll to it.')\n            const offset = div.offsetTop\n            const scrollTo =\n                this.scroller ??\n                ((p: ScrollToOptions) => {\n                    scrollableElement.scrollTo(p)\n                })\n            scrollTo({\n                top: div.offsetTop - br.top - 1,\n                left: 0,\n                behavior: 'smooth',\n            })\n            setTimeout(() => {\n                if (div.offsetTop - offset !== 0) {\n                    scrollTo({\n                        top: div.offsetTop - br.top - 1,\n                        left: 0,\n                        behavior: 'smooth',\n                    })\n                }\n            }, this.scrollingDebounceTime)\n        }, 0)\n    }\n\n    /**\n     * Asynchronously retrieves the navigation node for a given path.\n     * If the node is not immediately available, it will retry for a short period before returning a result.\n     *\n     * - If the node is found, it returns the corresponding `Navigation<TLayout, THeader>` object.\n     * - If the node does not exist, it returns `'not-found'`.\n     * - If the node is still unresolved, it waits and retries periodically.\n     *\n     * @param target The target.\n     * @param ctx Execution context used for logging and tracing.\n     * @returns A `Promise` resolving to the navigation node, or `'not-found'` if the node does not exist.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n        async: true,\n    })\n    async getNav(\n        target: UrlTarget,\n        ctx?: ContextTrait,\n    ): Promise<Navigation<TLayout, THeader> | 'not-found'> {\n        ctx = this.ctx(ctx)\n        const { path, parameters, sectionId } = target\n        if (\n            path in this.navNodeCache &&\n            Object.keys(parameters ?? {}).length === 0\n        ) {\n            ctx.info(\n                `No query parameters & node in cache => return it`,\n                this.navNodeCache[path],\n            )\n            return this.navNodeCache[path]\n        }\n        const nav = timer(0, this.retryNavPeriod).pipe(\n            // Do not use 'switchMap': we wait for the first resolution (which can take more than `this.retryNavPeriod`)\n            mergeMap((i) => {\n                ctx.info(`Attempt 'getNav' #${String(i)}`)\n                const nav = this._getNav({ path }, ctx)\n                if (nav instanceof Observable) {\n                    return nav\n                }\n                return of(nav)\n            }),\n            tap((nav) => {\n                if (nav === 'unresolved') {\n                    console.log('Try to wait...')\n                    this.target$.next({\n                        path,\n                        reason: 'Pending',\n                        sectionId,\n                    })\n                }\n            }),\n            filter((nav) => nav !== 'unresolved'),\n            take(1),\n        )\n        return await firstValueFrom(nav)\n    }\n    /**\n     * Retrieves the navigation node corresponding to a given path as observable (emitting 1 item and closing),\n     * or `not-found` if it does not exist, or `unresolved` if the node is not resolved yet but maybe in a\n     * (hopefully short) future.\n     *\n     * @param path The target path.\n     * @param ctx Execution context used for logging and tracing.\n     */\n    @Contextual({\n        key: ({ path }: { path: string }) => path,\n    })\n    private _getNav(\n        {\n            path,\n        }: {\n            path: string\n        },\n        ctx?: ContextTrait,\n    ): Observable<Navigation<TLayout, THeader>> | 'not-found' | 'unresolved' {\n        ctx = this.ctx(ctx)\n        path = sanitizeNavPath(path)\n        const parts = path\n            .split('/')\n            .slice(1)\n            .filter((d) => d !== '')\n\n        if (parts.length === 0) {\n            return of(this.navigation)\n        }\n        const node = parts.reduce(\n            ({ tree, resolvedPath, keepGoing }, part) => {\n                ctx.info(`Resolve ${resolvedPath}/${part}`)\n                if (!keepGoing) {\n                    return { tree, resolvedPath, keepGoing }\n                }\n                if (tree.routes === undefined) {\n                    return 'not-found'\n                }\n                const routes = tree.routes\n                if (\n                    typeof routes === 'function' ||\n                    routes instanceof Observable\n                ) {\n                    // the navigation is a catch-all routes\n                    return {\n                        tree:\n                            resolvedPath in this.navUpdates\n                                ? this.navUpdates[resolvedPath]\n                                : routes,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n\n                if (`/${part}` in routes) {\n                    const route = routes[`/${part}`]\n\n                    if (!(route instanceof Promise)) {\n                        return {\n                            tree: route,\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n\n                    const fullPath = sanitizeNavPath(`${resolvedPath}/${part}`)\n                    if (fullPath in this.navResolved) {\n                        return {\n                            tree: this.navResolved[fullPath],\n                            resolvedPath: sanitizeNavPath(\n                                `${resolvedPath}/${part}`,\n                            ),\n                            keepGoing: true,\n                        }\n                    }\n                    // a retry in some period of time will be executed\n                    return {\n                        tree: route,\n                        resolvedPath,\n                        keepGoing: false,\n                    }\n                }\n                return 'not-found'\n            },\n            { tree: this.navigation, resolvedPath: `/`, keepGoing: true },\n        )\n        if (node === 'not-found') {\n            ctx.info('Navigation node is not found')\n            return 'not-found'\n        }\n        // node.tree: Navigation |  Promise<Navigation> | LazyRoutesCb | LazyRoutesCb$\n        if (node.tree instanceof Observable || node.tree instanceof Promise) {\n            ctx.info('Navigation node is unresolved')\n            // case: Promise<Navigation> or LazyRoutesCb$ -> a retry in some period of time will be executed\n            return 'unresolved'\n        }\n        if (typeof node.tree === 'function') {\n            ctx.info('Navigation node is function for lazy definition')\n            // case: LazyRoutesCb, remove starting '/'\n            const relative =\n                node.resolvedPath === '/'\n                    ? path\n                    : sanitizeNavPath(path.split(node.resolvedPath)[1])\n            const parent = sanitizeNavPath(\n                relative.split('/').slice(0, -1).join('/'),\n            )\n            const parentNav = node.tree({ path: parent, router: this })\n            if (!parentNav) {\n                return 'not-found'\n            }\n            return resolve(parentNav).pipe(\n                mergeMap((resolved) => {\n                    const target = sanitizeNavPath(\n                        relative.split('/').slice(-1)[0],\n                    )\n                    return resolve(resolved[target])\n                }),\n            )\n        }\n        // node.tree: Navigation\n        ctx.info('Navigation node found', node.tree)\n        return of(node.tree)\n    }\n\n    private async expandNavigationTree(path: string) {\n        const ids = pathIds(path)\n        for (const id of ids.slice(0, -1)) {\n            const node = this.explorerState.getNodeResolved(id)\n            this.explorerState.getChildren(node)\n            await firstValueFrom(this.explorerState.getChildren$(node))\n        }\n        const node = this.explorerState.getNodeResolved(ids.slice(-1)[0])\n        this.explorerState.selectNodeAndExpand(node)\n    }\n\n    /**\n     * Clients need to invoke this function when dynamic change on the current main HTML page have occurred after the\n     * initial rendering. Other views dependening on it (*e.g.* the table of content) will refresh as well.\n     */\n    emitHtmlUpdated() {\n        this.htmlUpdated$.next(true)\n    }\n\n    @Contextual()\n    private bindReactiveNavs(\n        reactiveNavs: Record<string, LazyRoutesCb$<TLayout, THeader>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(reactiveNavs).forEach(([href, v]) => {\n            v.subscribe((resolver) => {\n                this.navUpdates[href] = resolver\n                const oldNode = this.explorerState.getNodeResolved(href)\n                ctx.info(`Replace Node w/ Observable '${href}'`, oldNode)\n                const children = this.navParser.createLazyChildren$(\n                    {\n                        resolver: resolver,\n                        hrefBase: href,\n                        path: '',\n                        withExplicit: [],\n                        router: this,\n                        depth: 0,\n                    },\n                    ctx,\n                )\n                const { ...oldProps } = oldNode\n                const newNode = new oldNode.factory({\n                    ...oldProps,\n                    children,\n                }) as AnyNavNode<TLayout, THeader>\n                this.explorerState.replaceNode(oldNode, newNode)\n            })\n        })\n    }\n    @Contextual()\n    private bindPromiseNavs(\n        promiseNavs: Record<string, Promise<Navigation<TLayout, THeader>>>,\n        ctx?: ContextTrait,\n    ) {\n        ctx = this.ctx(ctx)\n        Object.entries(promiseNavs).forEach(([href, v]) => {\n            v.then(\n                (nav) => {\n                    this.navResolved[href] = nav\n                    const oldNode = this.explorerState.getNodeResolved(href)\n                    ctx.info(`Replace Node w/ Promise '${href}'`, oldNode)\n                    const { rootNode, reactiveNavs, promiseNavs } =\n                        this.navParser.createRootNode(\n                            {\n                                navigation: nav,\n                                router: this,\n                                hrefBase: href,\n                            },\n                            ctx,\n                        )\n                    this.explorerState.replaceNode(oldNode, rootNode)\n                    this.bindReactiveNavs(reactiveNavs, ctx)\n                    this.bindPromiseNavs(promiseNavs, ctx)\n                },\n                (e: unknown) => {\n                    console.error(e)\n                    throw Error(\n                        `Router.bindPromiseNavs: unable to bind promise navigation on ${href}`,\n                    )\n                },\n            )\n        })\n    }\n}",
                 "startLine": 174,
-                "endLine": 919,
+                "endLine": 920,
                 "references": {
                     "Router": "@nav[mkdocs-ts].Router",
                     "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
@@ -2643,14 +2613,7 @@
                     "Siblings": "@nav[mkdocs-ts].Siblings",
                     "Target": "@nav[mkdocs-ts].Target",
                     "UnresolvedTarget": "@nav[mkdocs-ts].UnresolvedTarget",
-                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
-                    "Subject": "https://www.learnrxjs.io/learn-rxjs/subjects/subject",
-                    "ReplaySubject": "https://www.learnrxjs.io/learn-rxjs/subjects/replaysubject",
-                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                    "Observable": "https://rxjs.dev/guide/observable",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
-                    "ScrollToOptions": "https://developer.mozilla.org/fr/docs/Web/API/Window/scrollTo"
+                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget"
                 }
             },
             "semantic": {
@@ -3077,8 +3040,7 @@
                         "references": {
                             "executeAsync": "@nav[mkdocs-ts].ContextTrait.executeAsync",
                             "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                            "Label": "@nav[mkdocs-ts].Label",
-                            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                            "Label": "@nav[mkdocs-ts].Label"
                         }
                     },
                     "semantic": {
@@ -3252,8 +3214,7 @@
                     "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
                     "Label": "@nav[mkdocs-ts].Label",
                     "Context": "@nav[mkdocs-ts].Context",
-                    "NoContext": "@nav[mkdocs-ts].NoContext",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                    "NoContext": "@nav[mkdocs-ts].NoContext"
                 }
             },
             "semantic": {
@@ -3670,8 +3631,7 @@
                         "startLine": 599,
                         "endLine": 600,
                         "references": {
-                            "withClass": "@nav[mkdocs-ts].FaIconOptions.withClass",
-                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike"
+                            "withClass": "@nav[mkdocs-ts].FaIconOptions.withClass"
                         }
                     }
                 },
@@ -3706,9 +3666,7 @@
                         "startLine": 603,
                         "endLine": 604,
                         "references": {
-                            "withStyle": "@nav[mkdocs-ts].FaIconOptions.withStyle",
-                            "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
-                            "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                            "withStyle": "@nav[mkdocs-ts].FaIconOptions.withStyle"
                         }
                     }
                 }
@@ -3721,9 +3679,7 @@
                 "startLine": 591,
                 "endLine": 605,
                 "references": {
-                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions",
-                    "AttributeLike": "/apps/@rx-vdom/doc/latest?nav=/api.AttributeLike",
-                    "CSSAttribute": "/apps/@rx-vdom/doc/latest?nav=/api.CSSAttribute"
+                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions"
                 }
             },
             "semantic": {
@@ -3818,8 +3774,7 @@
                         "startLine": 142,
                         "endLine": 143,
                         "references": {
-                            "onRendered": "@nav[mkdocs-ts].MdParsingOptions.onRendered",
-                            "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                            "onRendered": "@nav[mkdocs-ts].MdParsingOptions.onRendered"
                         }
                     }
                 },
@@ -3854,8 +3809,7 @@
                         "startLine": 43,
                         "endLine": 44,
                         "references": {
-                            "placeholders": "@nav[mkdocs-ts].MdParsingOptions.placeholders",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "placeholders": "@nav[mkdocs-ts].MdParsingOptions.placeholders"
                         }
                     }
                 },
@@ -3926,8 +3880,7 @@
                         "endLine": 90,
                         "references": {
                             "views": "@nav[mkdocs-ts].MdParsingOptions.views",
-                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
                         }
                     }
                 }
@@ -3941,9 +3894,7 @@
                 "endLine": 144,
                 "references": {
                     "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
-                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
-                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator"
                 }
             },
             "semantic": {
@@ -4380,8 +4331,7 @@
                         "startLine": 54,
                         "endLine": 55,
                         "references": {
-                            "parameters": "@nav[mkdocs-ts].UrlTarget.parameters",
-                            "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                            "parameters": "@nav[mkdocs-ts].UrlTarget.parameters"
                         }
                     }
                 },
@@ -4464,8 +4414,7 @@
                 "startLine": 41,
                 "endLine": 77,
                 "references": {
-                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "UrlTarget": "@nav[mkdocs-ts].UrlTarget"
                 }
             },
             "semantic": {
@@ -4502,9 +4451,7 @@
                 "startLine": 11,
                 "endLine": 12,
                 "references": {
-                    "AnyView": "@nav[mkdocs-ts].AnyView",
-                    "AnyVirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.AnyVirtualDOM",
-                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                    "AnyView": "@nav[mkdocs-ts].AnyView"
                 }
             },
             "semantic": {
@@ -4549,8 +4496,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type DynamicRoutes<TLayout, THeader> =\n    | LazyRoutesCb<TLayout, THeader>\n    | LazyRoutesCb$<TLayout, THeader>",
                 "implementation": "",
-                "startLine": 473,
-                "endLine": 474,
+                "startLine": 475,
+                "endLine": 476,
                 "references": {
                     "DynamicRoutes": "@nav[mkdocs-ts].DynamicRoutes",
                     "LazyRoutesCb": "@nav[mkdocs-ts].LazyRoutesCb",
@@ -4858,8 +4805,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutes<TLayout, THeader> = SegmentsRecord<\n    NavNodeData<TLayout, THeader, true>\n>",
                 "implementation": "",
-                "startLine": 400,
-                "endLine": 401,
+                "startLine": 402,
+                "endLine": 403,
                 "references": {
                     "LazyRoutes": "@nav[mkdocs-ts].LazyRoutes",
                     "SegmentsRecord": "@nav[mkdocs-ts].SegmentsRecord",
@@ -4897,8 +4844,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutesCb<TLayout, THeader> = (p: {\n    // The targeted path in the navigation\n    path: string\n    // Router instance\n    router: Router\n}) => LazyRoutesReturn<TLayout, THeader>",
                 "implementation": "",
-                "startLine": 416,
-                "endLine": 417,
+                "startLine": 418,
+                "endLine": 419,
                 "references": {
                     "LazyRoutesCb": "@nav[mkdocs-ts].LazyRoutesCb",
                     "Router": "@nav[mkdocs-ts].Router",
@@ -4936,12 +4883,11 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutesCb$<TLayout, THeader> = Observable<\n    LazyRoutesCb<TLayout, THeader>\n>",
                 "implementation": "",
-                "startLine": 461,
-                "endLine": 462,
+                "startLine": 463,
+                "endLine": 464,
                 "references": {
                     "LazyRoutesCb$": "@nav[mkdocs-ts].LazyRoutesCb$",
-                    "LazyRoutesCb": "@nav[mkdocs-ts].LazyRoutesCb",
-                    "Observable": "https://rxjs.dev/guide/observable"
+                    "LazyRoutesCb": "@nav[mkdocs-ts].LazyRoutesCb"
                 }
             },
             "semantic": {
@@ -4975,8 +4921,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type LazyRoutesReturn<TLayout, THeader> =\n    | Resolvable<LazyRoutes<TLayout, THeader>>\n    | undefined",
                 "implementation": "",
-                "startLine": 407,
-                "endLine": 408,
+                "startLine": 409,
+                "endLine": 410,
                 "references": {
                     "LazyRoutesReturn": "@nav[mkdocs-ts].LazyRoutesReturn",
                     "Resolvable": "@nav[mkdocs-ts].Resolvable",
@@ -5062,8 +5008,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type Navigation<TLayout, THeader> = NavNodeData<TLayout, THeader> & {\n    /**\n     * Children routes of the node.\n     */\n    routes?: StaticRoutes<TLayout, THeader> | DynamicRoutes<TLayout, THeader>\n}",
                 "implementation": "",
-                "startLine": 488,
-                "endLine": 489,
+                "startLine": 490,
+                "endLine": 491,
                 "references": {
                     "Navigation": "@nav[mkdocs-ts].Navigation",
                     "NavNodeData": "@nav[mkdocs-ts].NavNodeData",
@@ -5113,12 +5059,11 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type NavNodeData<\n    TLayout,\n    THeader,\n    WithLeafInfo extends boolean = false,\n> = {\n    /**\n     * The name of the node.\n     */\n    name: string\n    /**\n     * Optional user-defined metadata associated with the node.\n     */\n    metadata?: unknown\n    /**\n     * The header configuration for the node.\n     */\n    header?: THeader\n    /**\n     * The layout configuration for the node.\n     */\n    layout: TLayout\n} & (WithLeafInfo extends true ? { leaf?: boolean } : Record<never, unknown>)",
                 "implementation": "",
-                "startLine": 23,
-                "endLine": 24,
+                "startLine": 25,
+                "endLine": 26,
                 "references": {
                     "NavNodeData": "@nav[mkdocs-ts].NavNodeData",
-                    "NavNodeResolved": "@nav[mkdocs-ts].NavNodeResolved",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "NavNodeResolved": "@nav[mkdocs-ts].NavNodeResolved"
                 }
             },
             "semantic": {
@@ -5200,8 +5145,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type PathSegment<T extends string> = T extends `/${string}/${string}`\n    ? never\n    : T extends `/${string}`\n      ? T extends\n            | `${string}\\\\${string}`\n            | `${string}?${string}`\n            | `${string}#${string}`\n            | `${string}.${string}`\n          ? never\n          : T\n      : never",
                 "implementation": "",
-                "startLine": 537,
-                "endLine": 538,
+                "startLine": 539,
+                "endLine": 540,
                 "references": {
                     "PathSegment": "@nav[mkdocs-ts].PathSegment"
                 }
@@ -5242,8 +5187,7 @@
                 "references": {
                     "Redirect": "@nav[mkdocs-ts].Redirect",
                     "UrlTarget": "@nav[mkdocs-ts].UrlTarget",
-                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                    "ContextTrait": "@nav[mkdocs-ts].ContextTrait"
                 }
             },
             "semantic": {
@@ -5288,12 +5232,10 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type Resolvable<T> = T | Promise<T> | Observable<T>",
                 "implementation": "",
-                "startLine": 368,
-                "endLine": 369,
+                "startLine": 370,
+                "endLine": 371,
                 "references": {
-                    "Resolvable": "@nav[mkdocs-ts].Resolvable",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
-                    "Observable": "https://rxjs.dev/guide/observable"
+                    "Resolvable": "@nav[mkdocs-ts].Resolvable"
                 }
             },
             "semantic": {
@@ -5338,11 +5280,10 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type SegmentsRecord<T> = Record<string, T>",
                 "implementation": "",
-                "startLine": 387,
-                "endLine": 388,
+                "startLine": 389,
+                "endLine": 390,
                 "references": {
-                    "SegmentsRecord": "@nav[mkdocs-ts].SegmentsRecord",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "SegmentsRecord": "@nav[mkdocs-ts].SegmentsRecord"
                 }
             },
             "semantic": {
@@ -5387,13 +5328,12 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export type StaticRoutes<TLayout, THeader> = Record<\n    string,\n    Resolvable<Navigation<TLayout, THeader>>\n>",
                 "implementation": "",
-                "startLine": 452,
-                "endLine": 453,
+                "startLine": 454,
+                "endLine": 455,
                 "references": {
                     "StaticRoutes": "@nav[mkdocs-ts].StaticRoutes",
                     "Resolvable": "@nav[mkdocs-ts].Resolvable",
-                    "Navigation": "@nav[mkdocs-ts].Navigation",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "Navigation": "@nav[mkdocs-ts].Navigation"
                 }
             },
             "semantic": {
@@ -5472,8 +5412,7 @@
                     "ViewGenerator": "@nav[mkdocs-ts].ViewGenerator",
                     "Router": "@nav[mkdocs-ts].Router",
                     "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
-                    "AnyView": "@nav[mkdocs-ts].AnyView",
-                    "HTMLElement": "https://www.typescriptlang.org/docs/handbook/dom-manipulation.html"
+                    "AnyView": "@nav[mkdocs-ts].AnyView"
                 }
             },
             "semantic": {
@@ -5511,8 +5450,7 @@
                 "endLine": 16,
                 "references": {
                     "WindowWithStaticConfig": "@nav[mkdocs-ts].WindowWithStaticConfig",
-                    "StaticConfig": "@nav[mkdocs-ts].StaticConfig",
-                    "window": "https://developer.mozilla.org/en-US/docs/Web/API/Window"
+                    "StaticConfig": "@nav[mkdocs-ts].StaticConfig"
                 }
             },
             "semantic": {
@@ -5572,8 +5510,7 @@
                 "endLine": 401,
                 "references": {
                     "Contextual": "@nav[mkdocs-ts].Contextual",
-                    "Label": "@nav[mkdocs-ts].Label",
-                    "ClassMethodDecoratorContext": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html"
+                    "Label": "@nav[mkdocs-ts].Label"
                 }
             },
             "semantic": {
@@ -5631,8 +5568,7 @@
                 "endLine": 646,
                 "references": {
                     "faIcon": "@nav[mkdocs-ts].faIcon",
-                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions",
-                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                    "FaIconOptions": "@nav[mkdocs-ts].FaIconOptions"
                 }
             },
             "semantic": {
@@ -5749,8 +5685,7 @@
                 "references": {
                     "parseMd": "@nav[mkdocs-ts].parseMd",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
-                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions"
                 }
             },
             "semantic": {
@@ -5798,9 +5733,7 @@
                 "references": {
                     "parseMdFromUrl": "@nav[mkdocs-ts].parseMdFromUrl",
                     "Router": "@nav[mkdocs-ts].Router",
-                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions",
-                    "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
-                    "VirtualDOM": "/apps/@rx-vdom/doc/latest?nav=/api.VirtualDOM"
+                    "MdParsingOptions": "@nav[mkdocs-ts].MdParsingOptions"
                 }
             },
             "semantic": {
@@ -5893,8 +5826,7 @@
                 "startLine": 441,
                 "endLine": 473,
                 "references": {
-                    "removeEscapedText": "@nav[mkdocs-ts].removeEscapedText",
-                    "Record": "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type"
+                    "removeEscapedText": "@nav[mkdocs-ts].removeEscapedText"
                 }
             },
             "semantic": {
@@ -5948,8 +5880,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export function sanitizeNavPath(path: string)",
                 "implementation": "export function sanitizeNavPath(path: string) {\n    return (\n        '/' +\n        path\n            .replace(/^\\/+/, '') // Remove leading slashes\n            .replace(/\\/+/g, '/') // Collapse multiple slashes\n            .replace('/.', '.') // Fix misplaced dot\n            .replace(/\\/+$/, '') // Remove trailing slashes\n    )\n}",
-                "startLine": 503,
-                "endLine": 513,
+                "startLine": 505,
+                "endLine": 515,
                 "references": {
                     "sanitizeNavPath": "@nav[mkdocs-ts].sanitizeNavPath"
                 }
@@ -6005,8 +5937,8 @@
                 "filePath": "src/lib/navigation.node.ts",
                 "declaration": "export function segment<T extends string>(p: PathSegment<T>)",
                 "implementation": "export function segment<T extends string>(p: PathSegment<T>) {\n    return p\n}",
-                "startLine": 559,
-                "endLine": 562,
+                "startLine": 561,
+                "endLine": 564,
                 "references": {
                     "segment": "@nav[mkdocs-ts].segment",
                     "PathSegment": "@nav[mkdocs-ts].PathSegment"
@@ -6025,162 +5957,63 @@
             "name": "index.ts",
             "path": "src/lib/default-layout/index.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "This module gathers views definition.",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "index.ts",
             "path": "src/lib/md-widgets/index.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "This module defines a collection of widgets that can be instantiated directly from Markdown\nsource when using the  function. Widgets are referenced within ,\nwhich maps `tag-name -> implementation` to enable seamless integration into Markdown content.\n\nEach widget provides a static `fromHTMLElement` method that specifies the attributes required for its instantiation.\n\n## Overview\n\nBelow are examples of the available widgets. For detailed documentation on their attributes and behavior,\nrefer to their respective sections. Additionally, you can create custom widgets and register them globally\nfor your application. See the section **New Widgets** for guidance.\n\n\n---\n\n### \n\n<md-cell>\n\n<note level=\"info\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</note>\n</md-cell>\n\n---\n\n### \n\n<md-cell>\n<code-snippet language=\"javascript\" highlightedLines=\"8\">\n\nfunction compute({improbabilityFactor, babelFishCount, vogonPoetryExposure, towelAbsorbency }){\n    console.log(\"Computation complete! The result is 42\");\n    const result =\n        Math.log(improbabilityFactor + 42) +\n        babelFishCount === 1 ? 1 : Math.sqrt(babelFishCount) +\n        vogonPoetryExposure > 1000 ? -42 : vogonPoetryExposure / 100 +\n        towelAbsorbency * (Math.random() + 0.42)\n    return 42;\n}\n</code-snippet>\n</md-cell>\n\n---\n\n### \n\n<md-cell>\n<code-badges version=\"{{mkdocs-version}}\" npm=\"mkdocs-ts\" github=\"w3nest/mkdocs-ts\" license=\"mit\">\n</code-badges>\n</md-cell>\n\n---\n\n### , , , ,\n\n\n<md-cell>\n<ext-link target=\"adams\">D. Adams</ext-link>\n\n<api-link target=\"MdWidgets\"></api-link>\n\n<cross-link target=\"API\">API</cross-link>\n\n<github-link target=\"tutorials.basics.md\">GitHub page </github-link>\n\n</md-cell>\n\n---\n\n## New Widgets\n\nTo extend the functionality of , you can define and register custom widgets globally.\n\n---\n\n### Step 1: Define Implementation\n\n<js-cell>\nconst { MkDocs, TP } = await webpm.install({\n    esm:[\n        'mkdocs-ts#{{mkdocs-version}} as MkDocs',\n        'tweakpane#^4.0.1 as TP',\n    ]\n})\n\nconst customViewExample = (element) => {\n    const pane = new TP.Pane()\n    const getAttr = (name, defaultVal) => parseFloat(element.getAttribute(name) ?? defaultVal )\n    const params = {\n        improbabilityFactor: getAttr('improbabilityFactor', 3),\n        babelFishCount: getAttr('babelFishCount', 1),\n        vogonPoetryExposure: getAttr('vogonPoetryExposure', 250),\n        towelAbsorbency: getAttr('towelAbsorbency', 2),\n    };\n    Object.keys(params).forEach((k) => pane.addBinding(params, k))\n    pane.addButton({ title: 'Compute', label: ''}).on('click', () => computeCb(params));\n    return pane.element\n}\n</js-cell>\n\n---\n\n### Step 2: Register Element\n\n<js-cell>\nMkDocs.GlobalMarkdownViews.factory = {\n    ...MkDocs.GlobalMarkdownViews.factory,\n    'custom-view-example' : (element) => customViewExample(element)\n}\n</js-cell>\n\nSee  for details.\n\n---\n\n### Step 3: Enjoy\n\n<md-cell>\nBelow is the custom view `custom-view-example` instantiated with `improbabilityFactor=5`:\n\n<custom-view-example improbabilityFactor=\"5.00\">\n</custom-view-example>\n</md-cell>",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "composite-layout.view.ts",
             "path": "src/lib/composite-layout.view.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "context.ts",
             "path": "src/lib/context.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "markdown.ts",
             "path": "src/lib/markdown.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "This file gathers entry points related to Mardown parsing.",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "browser.interface.ts",
             "path": "src/lib/browser.interface.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "navigation.node.ts",
             "path": "src/lib/navigation.node.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "router.ts",
             "path": "src/lib/router.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         },
         {
             "name": "static-config.ts",
             "path": "src/lib/static-config.ts",
             "documentation": {
-                "sections": [
-                    {
-                        "semantic": {
-                            "role": "",
-                            "labels": [],
-                            "attributes": {},
-                            "relations": {}
-                        },
-                        "content": "Represents **static** configuration fields that must be accessible **prior** to loading the library through\n`window.mkdocsConfig` (see ).",
-                        "contentType": "markdown"
-                    }
-                ]
+                "sections": []
             }
         }
     ],
