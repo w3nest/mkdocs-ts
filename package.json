@@ -101,20 +101,32 @@
         "main": "./index.ts",
         "additionalEntries": {},
         "externals": {
-            "rx-vdom": [
-                "rx-vdom_APIv01"
+            "prismjs": [
+                "prismjs_APIv1"
             ],
-            "rxjs": [
-                "rxjs_APIv7"
-            ],
-            "marked": [
-                "marked_APIv4"
+            "prismjs/plugins/line-highlight/prism-line-highlight": [
+                "prismjs_APIv1/plugins/line-highlight/prism-line-highlight"
             ],
             "@w3nest/rx-tree-views": [
                 "@w3nest/rx-tree-views_APIv02"
             ],
-            "prismjs": [
-                "prismjs_APIv1"
+            "rx-vdom": [
+                "rx-vdom_APIv01"
+            ],
+            "prismjs/plugins/autoloader/prism-autoloader": [
+                "prismjs_APIv1/plugins/autoloader/prism-autoloader"
+            ],
+            "prismjs/components/prism-core": [
+                "prismjs_APIv1/components/prism-core"
+            ],
+            "marked": [
+                "marked_APIv4"
+            ],
+            "rxjs": [
+                "rxjs_APIv7"
+            ],
+            "prismjs/plugins/line-numbers/prism-line-numbers": [
+                "prismjs_APIv1/plugins/line-numbers/prism-line-numbers"
             ]
         }
     }

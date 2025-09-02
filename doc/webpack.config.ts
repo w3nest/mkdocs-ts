@@ -108,27 +108,25 @@ const webpackConfigApp: webpack.Configuration = {
     },
 }
 
-const webpackConfigSubModules: webpack.Configuration[] = Object.entries(
-    WP_INPUTS.additionalEntries,
-).map(([k, v]: [string, string]) => ({
+const webpackConfigSubModules: webpack.Configuration = {
     ...base,
-    entry: { [k]: v },
-    externals: EXTERNALS_MDL,
     plugins: [
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
-            reportFilename: `../tooling/bundle-analyzer/bundle-analysis-${k}.html`,
+            reportFilename: `../tooling/bundle-analyzer/bundle-analysis-auxiliaries.html`,
             openAnalyzer: false,
         }),
     ],
+    entry: WP_INPUTS.additionalEntries,
+    externals: EXTERNALS_MDL,
     output: {
         ...base.output,
         library: {
-            root: [`${pkgJson.name}_APIv${WP_INPUTS.apiVersion}/${k}`],
+            root: [`${pkgJson.name}_APIv${WP_INPUTS.apiVersion}/[name]`],
             amd: '[name]',
             commonjs: '[name]',
         },
     },
-}))
+}
 
-export default [webpackConfigApp, ...webpackConfigSubModules]
+export default [webpackConfigApp, webpackConfigSubModules]

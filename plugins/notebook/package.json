@@ -110,11 +110,17 @@
             "Doc": "./doc/index.ts"
         },
         "externals": {
+            "@mkdocs-ts/code-api": [
+                "@mkdocs-ts/code-api_APIv02"
+            ],
+            "rxjs/fetch": [
+                "rxjs_APIv7/fetch"
+            ],
+            "esprima": [
+                "esprima_APIv4"
+            ],
             "mkdocs-ts": [
                 "mkdocs-ts_APIv05"
-            ],
-            "rx-vdom": [
-                "rx-vdom_APIv01"
             ],
             "rxjs": [
                 "rxjs_APIv7"
@@ -122,14 +128,14 @@
             "@w3nest/ui-tk": [
                 "@w3nest/ui-tk_APIv01"
             ],
-            "esprima": [
-                "esprima_APIv4"
+            "@w3nest/ui-tk/Trees": [
+                "@w3nest/ui-tk_APIv01/Trees"
             ],
             "@w3nest/webpm-client": [
                 "@w3nest/webpm-client_APIv01"
             ],
-            "@mkdocs-ts/code-api": [
-                "@mkdocs-ts/code-api_APIv02"
+            "rx-vdom": [
+                "rx-vdom_APIv01"
             ]
         }
     },

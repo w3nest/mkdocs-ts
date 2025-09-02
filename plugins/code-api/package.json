@@ -110,14 +110,14 @@
             "rx-vdom": [
                 "rx-vdom_APIv01"
             ],
-            "rxjs": [
-                "rxjs_APIv7"
-            ],
             "@w3nest/http-clients": [
                 "@w3nest/http-clients_APIv01"
             ],
             "@w3nest/webpm-client": [
                 "@w3nest/webpm-client_APIv01"
+            ],
+            "rxjs": [
+                "rxjs_APIv7"
             ]
         }
     }

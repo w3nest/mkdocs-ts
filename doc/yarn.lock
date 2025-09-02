@@ -989,9 +989,9 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
-"@mkdocs-ts/code-api@^0.2.0", "@mkdocs-ts/code-api@file:.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756790347.tgz":
+"@mkdocs-ts/code-api@file:../../../../../.cache/yarn/v6/.tmp/22fb7730832dfd5f0716c84ab76867bb/.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756790745.tgz", "@mkdocs-ts/code-api@file:.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756796042.tgz":
   version "0.2.2-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756790347.tgz#0f87439ce017372201adc1cee10d87d92ac9636e"
+  resolved "file:.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756796042.tgz#c9974cd6a78e5a498d3e36bbef94d279a81b0300"
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
@@ -1000,12 +1000,12 @@
     rx-vdom "^0.1.3"
     rxjs "^7.5.6"
 
-"@mkdocs-ts/notebook@file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1756790347.tgz":
+"@mkdocs-ts/notebook@file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1756796042.tgz":
   version "0.1.4-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1756790347.tgz#28f2bdd7a5d5a333c5afe2bff430be2ffc3fadcf"
+  resolved "file:.local-dependencies/mkdocs-ts-notebook-0.1.4-wip-1756796042.tgz#320465e91e1286a40f82b991d5983fb7c1ace07d"
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
-    "@mkdocs-ts/code-api" "^0.2.0"
+    "@mkdocs-ts/code-api" "file:../../../../../.cache/yarn/v6/.tmp/22fb7730832dfd5f0716c84ab76867bb/.local-dependencies/mkdocs-ts-code-api-0.2.2-wip-1756790745.tgz"
     "@w3nest/ui-tk" "^0.1.7"
     "@w3nest/webpm-client" "^0.1.8"
     esprima "^4.0.1"
@@ -4465,9 +4465,9 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mkdocs-ts@^0.5.1, mkdocs-ts@^0.5.2, "mkdocs-ts@file:.local-dependencies/mkdocs-ts-0.5.3-wip-1756790347.tgz":
+mkdocs-ts@^0.5.1, mkdocs-ts@^0.5.2, "mkdocs-ts@file:.local-dependencies/mkdocs-ts-0.5.3-wip-1756796042.tgz":
   version "0.5.3-wip"
-  resolved "file:.local-dependencies/mkdocs-ts-0.5.3-wip-1756790347.tgz#effd628c30651bcb973d5266e933a9fd733024fd"
+  resolved "file:.local-dependencies/mkdocs-ts-0.5.3-wip-1756796042.tgz#18709bd7e54ab2ceed009469af641a0f7acefd02"
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^6.7.2"
     "@fortawesome/free-regular-svg-icons" "^6.7.2"
