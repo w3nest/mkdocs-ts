@@ -25,7 +25,7 @@ externals_deps = {
     "@w3nest/ui-tk": "^0.1.7",
     "esprima": "^4.0.1",
     "@w3nest/webpm-client": "^0.1.8",
-    "@mkdocs-ts/code-api": "^0.2.2",
+    "@mkdocs-ts/code-api": "^0.2.3",
 }
 in_bundle_deps = {
     "prism-code-editor": "^4.0.0",

@@ -56,7 +56,7 @@
     },
     "dependencies": {
         "@fortawesome/free-solid-svg-icons": "^6.7.2",
-        "@mkdocs-ts/code-api": "^0.2.2",
+        "@mkdocs-ts/code-api": "^0.2.3",
         "@w3nest/ui-tk": "^0.1.7",
         "@w3nest/webpm-client": "^0.1.8",
         "esprima": "^4.0.1",
@@ -93,7 +93,7 @@
     "webpm": {
         "kind": "esm",
         "dependencies": {
-            "@mkdocs-ts/code-api": "^0.2.2",
+            "@mkdocs-ts/code-api": "^0.2.3",
             "@w3nest/ui-tk": "^0.1.7",
             "@w3nest/webpm-client": "^0.1.8",
             "esprima": "^4.0.1",
@@ -110,32 +110,32 @@
             "Doc": "./doc/index.ts"
         },
         "externals": {
-            "mkdocs-ts": [
-                "mkdocs-ts_APIv05"
+            "rxjs/fetch": [
+                "rxjs_APIv7/fetch"
+            ],
+            "@mkdocs-ts/code-api": [
+                "@mkdocs-ts/code-api_APIv02"
             ],
             "esprima": [
                 "esprima_APIv4"
             ],
-            "rx-vdom": [
-                "rx-vdom_APIv01"
+            "@w3nest/ui-tk": [
+                "@w3nest/ui-tk_APIv01"
             ],
             "@w3nest/webpm-client": [
                 "@w3nest/webpm-client_APIv01"
             ],
-            "rxjs/fetch": [
-                "rxjs_APIv7/fetch"
-            ],
-            "@w3nest/ui-tk": [
-                "@w3nest/ui-tk_APIv01"
-            ],
-            "rxjs": [
-                "rxjs_APIv7"
+            "mkdocs-ts": [
+                "mkdocs-ts_APIv05"
             ],
             "@w3nest/ui-tk/Trees": [
                 "@w3nest/ui-tk_APIv01/Trees"
             ],
-            "@mkdocs-ts/code-api": [
-                "@mkdocs-ts/code-api_APIv02"
+            "rxjs": [
+                "rxjs_APIv7"
+            ],
+            "rx-vdom": [
+                "rx-vdom_APIv01"
             ]
         }
     }

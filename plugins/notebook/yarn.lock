@@ -940,10 +940,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mkdocs-ts/code-api@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.2.2.tgz#90f80cd02795616673d076feb8be3a266aa21b7a"
-  integrity sha512-Sp2B2hVFcU/2p120o5gSczq3+46qSO0nF1EQEuKKBm2pNXDJGFy8g6SYsU8gzuJs/qg/zHZSq87Rv0ChComaBg==
+"@mkdocs-ts/code-api@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@mkdocs-ts/code-api/-/code-api-0.2.3.tgz#e1c7da31a572664b2d16c6e6cdd3a9919d83b2b7"
+  integrity sha512-9V75bVYy7vkZB/wVImpwHR1ZRttZkWlepfWZmErxKLQHpvQE1snRIgQXOGN4114vg3J4WJ9qIsfZ2gXvY9FVYg==
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@w3nest/http-clients" "^0.1.5"
