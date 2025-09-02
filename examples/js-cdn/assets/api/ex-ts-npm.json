@@ -142,7 +142,9 @@
                         "startLine": 53,
                         "endLine": 54,
                         "references": {
-                            "children": "@nav[ex-ts-npm].TRexView.children"
+                            "children": "@nav[ex-ts-npm].TRexView.children",
+                            "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                            "VirtualDOM.children": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM.children"
                         }
                     }
                 },
@@ -177,7 +179,8 @@
                         "startLine": 52,
                         "endLine": 53,
                         "references": {
-                            "tag": "@nav[ex-ts-npm].TRexView.tag"
+                            "tag": "@nav[ex-ts-npm].TRexView.tag",
+                            "VirtualDOM.tag": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag"
                         }
                     }
                 }
@@ -190,7 +193,11 @@
                 "startLine": 51,
                 "endLine": 83,
                 "references": {
-                    "TRexView": "@nav[ex-ts-npm].TRexView"
+                    "TRexView": "@nav[ex-ts-npm].TRexView",
+                    "ChildrenLike": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.ChildrenLike",
+                    "VirtualDOM.children": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM.children",
+                    "VirtualDOM.tag": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM.tag",
+                    "VirtualDOM": "https://w3nest.org/apps//@rx-vdom/doc/latest?nav=/api.VirtualDOM"
                 }
             },
             "semantic": {
@@ -227,7 +234,10 @@
                 "startLine": 21,
                 "endLine": 22,
                 "references": {
-                    "AppNav": "@nav[ex-ts-npm].AppNav"
+                    "AppNav": "@nav[ex-ts-npm].AppNav",
+                    "Navigation": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts.Navigation",
+                    "DefaultLayout.NavLayout": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavLayout",
+                    "DefaultLayout.NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
                 }
             },
             "semantic": {
@@ -333,7 +343,8 @@
                 "startLine": 12,
                 "endLine": 17,
                 "references": {
-                    "header": "@nav[ex-ts-npm].header"
+                    "header": "@nav[ex-ts-npm].header",
+                    "NavHeader": "https://w3nest.org/apps//@mkdocs-ts/doc/latest?nav=/api/mkdocs-ts/DefaultLayout.NavHeader"
                 }
             },
             "semantic": {

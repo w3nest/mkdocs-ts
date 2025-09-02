@@ -38,8 +38,8 @@
         }
     },
     "dependencies": {
-        "@mkdocs-ts/code-api": "0.2.2",
-        "@mkdocs-ts/notebook": "0.1.4",
+        "@mkdocs-ts/code-api": "0.2.3",
+        "@mkdocs-ts/notebook": "0.1.5",
         "mkdocs-ts": "0.5.3",
         "rx-vdom": "^0.1.6"
     },
