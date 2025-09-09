@@ -4,7 +4,7 @@
 
 import { ChildrenLike, VirtualDOM, CSSAttribute, EmptyDiv } from 'rx-vdom'
 import { Router } from '../router'
-import { ImmutableTree } from '@w3nest/rx-tree-views'
+import { ImmutableTree } from '@w3nest/ui-tk/Trees'
 import { DisplayOptions, NavHeader } from './common'
 import { NavHeaderView } from './nav-header.view'
 import { BehaviorSubject } from 'rxjs'
@@ -57,7 +57,7 @@ export class NavigationView implements VirtualDOM<'div'> {
         this.children = [
             new ImmutableTree.View({
                 state: this.router.explorerState,
-                headerView: (_, node) => {
+                headerView: ({ node }) => {
                     if (node instanceof NavNodePromise) {
                         return faIconTyped('fa-spinner', { spin: true })
                     }

@@ -26,7 +26,7 @@ import {
     pathIds,
     NavParser,
 } from './navigation.node'
-import { ImmutableTree } from '@w3nest/rx-tree-views'
+import { ImmutableTree } from '@w3nest/ui-tk/Trees'
 import { BrowserInterface, parseUrl, WebBrowser } from './browser.interface'
 import { Contextual, ContextTrait, NoContext } from './context'
 
@@ -878,7 +878,7 @@ export class Router<
                     ...oldProps,
                     children,
                 }) as AnyNavNode<TLayout, THeader>
-                this.explorerState.replaceNode(oldNode, newNode)
+                this.explorerState.replaceNode({ target: oldNode, newNode })
             })
         })
     }
@@ -903,7 +903,10 @@ export class Router<
                             },
                             ctx,
                         )
-                    this.explorerState.replaceNode(oldNode, rootNode)
+                    this.explorerState.replaceNode({
+                        target: oldNode,
+                        newNode: rootNode,
+                    })
                     this.bindReactiveNavs(reactiveNavs, ctx)
                     this.bindPromiseNavs(promiseNavs, ctx)
                 },

@@ -38,7 +38,7 @@
                     "rx-vdom",
                     "rxjs",
                     "marked",
-                    "@w3nest/rx-tree-views",
+                    "@w3nest/ui-tk/Trees",
                     "prismjs/components/prism-core",
                     "prismjs/plugins/autoloader/prism-autoloader",
                     "prismjs/plugins/line-numbers/prism-line-numbers",
@@ -52,7 +52,7 @@
         "@fortawesome/free-brands-svg-icons": "^6.7.2",
         "@fortawesome/free-regular-svg-icons": "^6.7.2",
         "@fortawesome/free-solid-svg-icons": "^6.7.2",
-        "@w3nest/rx-tree-views": "^0.2.0",
+        "@w3nest/ui-tk": "^0.1.9",
         "marked": "^4.2.3",
         "prism-code-editor": "^4.0.0",
         "prismjs": "^1.30.0",
@@ -89,7 +89,7 @@
     "webpm": {
         "kind": "esm",
         "dependencies": {
-            "@w3nest/rx-tree-views": "^0.2.0",
+            "@w3nest/ui-tk": "^0.1.9",
             "marked": "^4.2.3",
             "prismjs": "^1.30.0",
             "rx-vdom": "^0.1.3",
@@ -102,32 +102,35 @@
         "main": "./index.ts",
         "additionalEntries": {},
         "externals": {
-            "prismjs/components/prism-core": [
-                "prismjs_APIv1/components/prism-core"
-            ],
-            "prismjs/plugins/autoloader/prism-autoloader": [
-                "prismjs_APIv1/plugins/autoloader/prism-autoloader"
-            ],
             "prismjs": [
                 "prismjs_APIv1"
             ],
             "prismjs/plugins/line-highlight/prism-line-highlight": [
                 "prismjs_APIv1/plugins/line-highlight/prism-line-highlight"
             ],
+            "prismjs/plugins/line-numbers/prism-line-numbers": [
+                "prismjs_APIv1/plugins/line-numbers/prism-line-numbers"
+            ],
+            "@w3nest/ui-tk": [
+                "@w3nest/ui-tk_APIv01"
+            ],
             "rx-vdom": [
                 "rx-vdom_APIv01"
+            ],
+            "prismjs/plugins/autoloader/prism-autoloader": [
+                "prismjs_APIv1/plugins/autoloader/prism-autoloader"
+            ],
+            "@w3nest/ui-tk/Trees": [
+                "@w3nest/ui-tk_APIv01/Trees"
+            ],
+            "prismjs/components/prism-core": [
+                "prismjs_APIv1/components/prism-core"
             ],
             "rxjs": [
                 "rxjs_APIv7"
             ],
-            "@w3nest/rx-tree-views": [
-                "@w3nest/rx-tree-views_APIv02"
-            ],
             "marked": [
                 "marked_APIv4"
-            ],
-            "prismjs/plugins/line-numbers/prism-line-numbers": [
-                "prismjs_APIv1/plugins/line-numbers/prism-line-numbers"
             ]
         }
     }

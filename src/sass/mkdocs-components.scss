@@ -19,25 +19,25 @@
     border: solid 1px $color-focus;
 }
 
-.mkdocs-NavigationView .rxtree-header {
+.mkdocs-NavigationView .uitk-tree-header {
     border-radius: 3px 10px;
     font-size: 0.9rem;
     border: solid 1px rgba(0, 0, 0, 0);
 }
-.mkdocs-NavigationView .rxtree-header.rxtree-depth-0 {
+.mkdocs-NavigationView .uitk-tree-header.uitk-tree-depth-0 {
     margin-bottom: 1rem;
     font-size: 1.1rem;
 }
-.mkdocs-NavigationView .rxtree-header.rxtree-depth-1 {
+.mkdocs-NavigationView .uitk-tree-header.uitk-tree-depth-1 {
     margin-top: 0.8rem;
     font-size: 1rem;
     font-weight: bolder;
 }
 
-.mkdocs-NavigationView .rxtree-header:hover {
+.mkdocs-NavigationView .uitk-tree-header:hover {
     border: solid 1px $color-focus;
 }
-.mkdocs-NavigationView .rxtree-selected {
+.mkdocs-NavigationView .uitk-tree-selected {
     background-color: rgba(
         red($color-focus),
         green($color-focus),
@@ -45,7 +45,7 @@
         0.75
     );
 }
-.mkdocs-NavigationView .rxtree-selected:hover {
+.mkdocs-NavigationView .uitk-tree-selected:hover {
     background-color: rgba(
         red($color-focus),
         green($color-focus),
@@ -54,10 +54,10 @@
     );
 }
 
-.mkdocs-NavigationView .fv-tree-arianeLine {
+.mkdocs-NavigationView .uitk-tree-arianeLine {
     display: none;
 }
-.mkdocs-NavigationView .fv-tree-expand {
+.mkdocs-NavigationView .uitk-tree-expand {
     display: none !important;
 }
 .mkdocs-NavigationView .mkdocs-ts-expand-nav-node {

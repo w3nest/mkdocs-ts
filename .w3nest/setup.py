@@ -21,7 +21,7 @@ externals_deps = {
     "rx-vdom": "^0.1.3",
     "rxjs": "^7.5.6",
     "marked": "^4.2.3",
-    "@w3nest/rx-tree-views": "^0.2.0",
+    "@w3nest/ui-tk": "^0.1.9",
     "prismjs": "^1.30.0",
 }
 in_bundle_deps = {
@@ -53,7 +53,7 @@ config = ProjectConfig(
                 "rx-vdom",
                 "rxjs",
                 "marked",
-                "@w3nest/rx-tree-views",
+                "@w3nest/ui-tk/Trees",
                 "prismjs/components/prism-core",
                 "prismjs/plugins/autoloader/prism-autoloader",
                 "prismjs/plugins/line-numbers/prism-line-numbers",

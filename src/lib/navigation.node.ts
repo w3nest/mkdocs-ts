@@ -1,4 +1,4 @@
-import { ImmutableTree } from '@w3nest/rx-tree-views'
+import { ImmutableTree } from '@w3nest/ui-tk/Trees'
 import { Router } from './router'
 import { from, map, Observable, of, take, shareReplay } from 'rxjs'
 import { AnyVirtualDOM } from 'rx-vdom'
