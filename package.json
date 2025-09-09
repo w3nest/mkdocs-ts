@@ -1,7 +1,7 @@
 {
     "name": "mkdocs-ts",
     "description": "A TypeScript library for building dynamic, hierarchical, document-driven applications with customizable layouts and rich content integration.",
-    "version": "0.5.4-wip",
+    "version": "0.5.4",
     "author": "reinisch.gui@gmail.com",
     "license": "MIT",
     "homepage": "https://github.com/mkdocs-ts#README.md",
@@ -102,8 +102,23 @@
         "main": "./index.ts",
         "additionalEntries": {},
         "externals": {
+            "@w3nest/ui-tk": [
+                "@w3nest/ui-tk_APIv01"
+            ],
+            "@w3nest/ui-tk/Trees": [
+                "@w3nest/ui-tk_APIv01/Trees"
+            ],
+            "marked": [
+                "marked_APIv4"
+            ],
             "prismjs": [
                 "prismjs_APIv1"
+            ],
+            "prismjs/components/prism-core": [
+                "prismjs_APIv1/components/prism-core"
+            ],
+            "prismjs/plugins/autoloader/prism-autoloader": [
+                "prismjs_APIv1/plugins/autoloader/prism-autoloader"
             ],
             "prismjs/plugins/line-highlight/prism-line-highlight": [
                 "prismjs_APIv1/plugins/line-highlight/prism-line-highlight"
@@ -111,26 +126,11 @@
             "prismjs/plugins/line-numbers/prism-line-numbers": [
                 "prismjs_APIv1/plugins/line-numbers/prism-line-numbers"
             ],
-            "@w3nest/ui-tk": [
-                "@w3nest/ui-tk_APIv01"
-            ],
             "rx-vdom": [
                 "rx-vdom_APIv01"
             ],
-            "prismjs/plugins/autoloader/prism-autoloader": [
-                "prismjs_APIv1/plugins/autoloader/prism-autoloader"
-            ],
-            "@w3nest/ui-tk/Trees": [
-                "@w3nest/ui-tk_APIv01/Trees"
-            ],
-            "prismjs/components/prism-core": [
-                "prismjs_APIv1/components/prism-core"
-            ],
             "rxjs": [
                 "rxjs_APIv7"
-            ],
-            "marked": [
-                "marked_APIv4"
             ]
         }
     }
