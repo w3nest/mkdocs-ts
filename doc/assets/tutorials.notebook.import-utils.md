@@ -199,3 +199,31 @@ const plugWPoolNotifications = async (name, workerPool, view) => {
 }
 
 </js-cell>
+
+## Install Notification
+
+
+This function integrates **real-time notifications** for installation, 
+usually called within the `display` callback of `installWithUI`.
+
+
+<js-cell>
+const displayNotification = async (view) => {
+    const { MkDocs, rxjs } = await webpm.install({
+        esm:[
+            `mkdocs-ts#0.5.4 as MkDocs`, 
+            'rxjs#^7.5.6 as rxjs' 
+        ]
+    })
+    const done$ = view.eventsMgr.event$.pipe(
+        rxjs.filter( (ev) => ev.step === 'InstallDoneEvent')
+    )
+    Views.notify({
+        level: 'warning',
+        content: view,
+        done$
+    })
+}
+</js-cell>
+
+

@@ -29,18 +29,6 @@ The backend used in this example is <api-link target="pyrun_backend"></api-link>
 {{mkdocs-ts}}. However, you can use other interpreters as long as they implement a `POST /run` endpoint that follows
 the <api-link target="InterpreterApi"></api-link> specification.
 
-Let's start with installing {{mkdocs-ts}}:
-
-<js-cell>
-const { MkDocs, rxjs } = await webpm.install({
-    esm:[ 
-         // Both are required only to display a notification
-        `mkdocs-ts#{{mkdocs-version}} as MkDocs`, 
-        'rxjs#^7.5.6 as rxjs' 
-    ]
-})
-display(MkDocs)
-</js-cell>
 
 ## Interpreter Installation
 
@@ -56,12 +44,8 @@ For example, as documented in <api-link target="pyrun_backend"></api-link>, you 
 The following code installs the pyrun_backend interpreter with the `numpy` module:
 
 <js-cell>
+const { displayNotification } = await load("/tutorials/notebook/import-utils")
 const { installWithUI } = await webpm.installViewsModule()
-
-const notif = `This page proceed with installation of **pyrun-backend**.
-
-<install-view></install-view>
-`
 
 const { pyrun } = await installWithUI({
     backends: { 
@@ -76,18 +60,7 @@ const { pyrun } = await installWithUI({
     },
     display: (view) => { 
         display(view)
-        const done$ = view.eventsMgr.event$.pipe(
-            rxjs.filter( (ev) => ev.step === 'InstallDoneEvent')
-        )
-        const content = MkDocs.parseMd({
-            src: notif,
-            views: { 'install-view' : () => view }
-        })
-        Views.notify({
-            level: 'warning',
-            content,
-            done$
-        })
+        displayNotification(view)
     }
 })
 </js-cell>
@@ -241,6 +214,9 @@ parameter change.
 We'll begin by creating sliders for initial velocity and angle, and a reactive variable `reactiveInput`:
 
 <js-cell>
+const { rxjs } = await webpm.install({
+    esm:[ 'rxjs#^7.8.2 as rxjs' ]
+})
 const { LabelRange } = await load("/tutorials/notebook/import-utils");
 
 const angleView = LabelRange({
