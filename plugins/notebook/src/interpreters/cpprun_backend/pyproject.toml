@@ -1,0 +1,59 @@
+[project]
+name = "cpprun_backend"
+version = "0.1.0"
+description = "A C++ interpreter."
+requires-python = "~=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "fastapi>=0.115,<0.116.0",
+    "uvicorn>=0.24,<0.25",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pip-tools",
+    "pip-audit",
+    "pylint",
+    "pycodestyle",
+    "pydocstyle",
+    "isort",
+    "black[d]",
+    "mypy",
+    "pdoc",
+    "build",
+    "twine",
+]
+[build-system]
+requires = [
+    "setuptools>=67.7.2",
+]
+
+[tool.setuptools]
+packages = ["cpprun_backend"]
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint.'MESSAGES CONTROL']
+extension-pkg-whitelist = "pydantic"
+disable = [
+    "too-many-locals",
+    "exec-used",
+    "too-few-public-methods"
+]
+max-line-length = 120
+
+[tool.mypy]
+# ignore_missing_imports = true
+
+[project.scripts]
+run_pyrun_backend = "cpprun_backend.main_docker:main"
+
+[w3nest]
+default-port = 2010
