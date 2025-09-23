@@ -40,6 +40,16 @@ class Configuration:
     Uvicorn log level.
     """
 
+    cling_start: str
+    """
+    Command to start Cling.
+    """
+
+    allow_redefinition_cmd: str
+    """
+    Command to allow variable redefinition in Cling.
+    """
+
     def __str__(self):
         """
         Returns a string representation of the configuration.

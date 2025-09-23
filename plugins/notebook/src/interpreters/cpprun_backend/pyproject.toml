@@ -13,6 +13,7 @@ classifiers = [
 dependencies = [
     "fastapi>=0.115,<0.116.0",
     "uvicorn>=0.24,<0.25",
+    "w3nest_client"
 ]
 
 [project.optional-dependencies]
@@ -37,6 +38,11 @@ requires = [
 [tool.setuptools]
 packages = ["cpprun_backend"]
 
+[tool.setuptools.package-data]
+"cpprun_backend" = [
+    "preload.cpp"
+]
+
 [tool.isort]
 profile = "black"
 
@@ -53,7 +59,7 @@ max-line-length = 120
 # ignore_missing_imports = true
 
 [project.scripts]
-run_pyrun_backend = "cpprun_backend.main_docker:main"
+run_cpprun_backend = "cpprun_backend.main_docker:main"
 
 [w3nest]
 default-port = 2010

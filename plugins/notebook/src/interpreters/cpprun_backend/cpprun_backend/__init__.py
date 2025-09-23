@@ -59,5 +59,5 @@ Both entry points invoke :func:`pyrun_backend.app.start`, using a specific
 :class:`pyrun_backend.environment.Configuration` for setup.
 """
 
-__version__ = "0.2.2"
+__version__ = "0.1.0"
 __default__port__ = 2010

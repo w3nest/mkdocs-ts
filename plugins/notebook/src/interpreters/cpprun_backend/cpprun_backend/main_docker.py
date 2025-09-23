@@ -32,5 +32,7 @@ def main():
             host_name=host_name,
             instance_name=socket.gethostname(),  # Map to container ID by default.
             log_level="debug",
+            cling_start="cling -std=c++17",
+            allow_redefinition_cmd="gCling->allowRedefinition();\n",
         )
     )

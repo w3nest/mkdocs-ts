@@ -40,11 +40,11 @@ RUN useradd --uid 10000 --create-home app && mkdir /opt/app/deps
 # Python backend
 # ----------------------------
 COPY /deps/*.whl /opt/app/deps
-# COPY /dist/cpprun_backend-*.whl /opt/app
+COPY /dist/cpprun_backend-*.whl /opt/app
 
 # Install backend Python wheel
-# RUN pip3 install --no-cache-dir /opt/app/cpprun_backend-*.whl --find-links /opt/app/deps && \
-#    rm /opt/app/pyrun_backend-*.whl && rm /opt/app/deps/*.whl
+RUN pip3 install --no-cache-dir /opt/app/cpprun_backend-*.whl --find-links /opt/app/deps && \
+   rm /opt/app/cpprun_backend-*.whl && rm /opt/app/deps/*.whl
 
 # ----------------------------
 # Frequently changing layer
@@ -65,4 +65,4 @@ EXPOSE 8080
 # ----------------------------
 # Entrypoint
 # ----------------------------
-# ENTRYPOINT ["python3", "-m", "cpprun_backend_main"]
+ENTRYPOINT ["run_cpprun_backend"]

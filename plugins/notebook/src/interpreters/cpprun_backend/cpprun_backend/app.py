@@ -12,7 +12,7 @@ from fastapi import FastAPI
 
 from cpprun_backend import __version__
 from cpprun_backend.environment import Configuration, Environment
-from cpprun_backend.router import router as root_router
+from cpprun_backend.router import router as root_router, start_cling
 
 
 def start(configuration: Configuration) -> None:
@@ -60,13 +60,14 @@ def create_app(configuration: Configuration) -> FastAPI:
         """
         logger = logging.getLogger("uvicorn.error")
         logger.info(Environment.get_config())
+        await start_cling(configuration)
         yield
 
     root_base = "http://localhost"
     app: FastAPI = FastAPI(
-        title="pyrun_backend",
+        title="cpprun_backend",
         # Root path is always served from localhost (using the W3Nest server).
-        root_path=f"{root_base}:{configuration.host_port}/backends/pyrun_backend/{__version__}",
+        root_path=f"{root_base}:{configuration.host_port}/backends/cpprun_backend/{__version__}",
         lifespan=lifespan,
     )
     app.include_router(root_router)
