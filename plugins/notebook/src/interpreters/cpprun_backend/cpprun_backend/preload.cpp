@@ -1,6 +1,7 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstring>
@@ -29,13 +30,11 @@ struct Header {
 };
 
 // Shared memory settings
-const char* shm_name_out = "/cling_vars_out";
-const char* shm_name_in = "/cling_vars_in";
-const size_t shm_size = 65536;  // 64KB, adjust as needed
+const char* shm_name =  "/cling_py_shared";
 
 // Helper: open/create shared memory
-inline void* open_shm_out(int& fd) {
-    fd = shm_open(shm_name_out, O_CREAT | O_RDWR, 0666);
+inline void* open_shm_out(int& fd, size_t shm_size) {
+    fd = shm_open(shm_name, O_CREAT | O_RDWR, 0666);
     if (fd == -1) {
         perror("shm_open");
         return nullptr;
@@ -47,73 +46,78 @@ inline void* open_shm_out(int& fd) {
     void* ptr = mmap(nullptr, shm_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (ptr == MAP_FAILED) {
         perror("mmap");
+        close(fd);
         return nullptr;
     }
     return ptr;
 }
-
 void export_to_shm(double value) {
+    size_t payload_size = sizeof(value);
+    size_t size = sizeof(Header) + payload_size;
+
     int fd;
-    void* ptr = open_shm_out(fd);
-    Header h{TypeCode::TYPE_DOUBLE, 1};
+    void* ptr = open_shm_out(fd, size);
+    if (!ptr) return;
+
+    Header h{TypeCode::TYPE_DOUBLE, static_cast<uint32_t>(payload_size)};
     std::memcpy(ptr, &h, sizeof(h));
-    std::memcpy((char*)ptr + sizeof(h), &value, sizeof(value));
-    munmap(ptr, shm_size);
+    std::memcpy((char*)ptr + sizeof(h), &value, payload_size);
+
+    munmap(ptr, size);
     close(fd);
-    std::cout << "exported_to_shm<double> done" << std::endl;
+    std::cout << "export_to_shm<double> done" << std::endl;
 }
 
+// string
 void export_to_shm(const std::string& str) {
+    size_t payload_size = str.size();
+    size_t size = sizeof(Header) + payload_size;
+
     int fd;
-    void* ptr = open_shm_out(fd);
-    // Header: type = TYPE_STRING, count = string length in bytes
-    Header h{TypeCode::TYPE_STRING, static_cast<uint32_t>(str.size())};
+    void* ptr = open_shm_out(fd, size);
+    if (!ptr) return;
+
+    Header h{TypeCode::TYPE_STRING, static_cast<uint32_t>(payload_size)};
     std::memcpy(ptr, &h, sizeof(h));
+    std::memcpy((char*)ptr + sizeof(h), str.data(), payload_size);
 
-    // Copy string data immediately after header
-    std::memcpy(static_cast<char*>(ptr) + sizeof(h), str.data(), str.size());
-
-    munmap(ptr, shm_size);
+    munmap(ptr, size);
     close(fd);
     std::cout << "export_to_shm<string> done" << std::endl;
 }
 
-
+// vector<double>
 void export_to_shm(const std::vector<double>& vec) {
-    int fd;
-    void* ptr = open_shm_out(fd);
-    if (!ptr){
-        std::cout << "Failed to open_shm" << std::endl;
-        return;
-    }
-    Header h{TypeCode::TYPE_VECTOR_DOUBLE, static_cast<uint32_t>(vec.size())};  // type 3 = vector<double>
-    std::memcpy(ptr, &h, sizeof(h));
-    std::memcpy((char*)ptr + sizeof(h), vec.data(), vec.size() * sizeof(double));
+    size_t payload_size = vec.size() * sizeof(double);
+    size_t size = sizeof(Header) + payload_size;
 
-    munmap(ptr, shm_size);
+    int fd;
+    void* ptr = open_shm_out(fd, size);
+    if (!ptr) return;
+
+    Header h{TypeCode::TYPE_VECTOR_DOUBLE, static_cast<uint32_t>(payload_size)};
+    std::memcpy(ptr, &h, sizeof(h));
+    std::memcpy((char*)ptr + sizeof(h), vec.data(), payload_size);
+
+    munmap(ptr, size);
     close(fd);
     std::cout << "export_to_shm<vector<double>> done" << std::endl;
 }
 
-
+// vector<string>
 void export_to_shm(const std::vector<std::string>& vec) {
-    std::cout << "Initialize export_to_shm<vector<string>>" << std::endl;
+    uint32_t payload_size = 0;
+    for (const auto& s : vec) {
+        payload_size += sizeof(uint32_t); // length prefix
+        payload_size += static_cast<uint32_t>(s.size());
+    }
+    size_t size = sizeof(Header) + payload_size;
 
     int fd;
-    void* ptr = open_shm_out(fd);
-    if (!ptr){
-        std::cout << "Failed to open_shm" << std::endl;
-        return;
-    }
+    void* ptr = open_shm_out(fd, size);
+    if (!ptr) return;
 
-    // Compute total payload size
-    uint32_t total_size = 0;
-    for (const auto& s : vec) {
-        total_size += sizeof(uint32_t);       // length prefix
-        total_size += static_cast<uint32_t>(s.size());  // string data
-    }
-
-    Header h{TypeCode::TYPE_VECTOR_STRING, total_size};
+    Header h{TypeCode::TYPE_VECTOR_STRING, payload_size};
     std::memcpy(ptr, &h, sizeof(h));
 
     char* p = static_cast<char*>(ptr) + sizeof(h);
@@ -125,45 +129,45 @@ void export_to_shm(const std::vector<std::string>& vec) {
         p += len;
     }
 
-    munmap(ptr, shm_size);
+    munmap(ptr, size);
     close(fd);
     std::cout << "export_to_shm<vector<string>> done" << std::endl;
 }
 
-void export_to_shm(std::unique_ptr<nlohmann::json>& j) {
-    int fd;
-    void* ptr = open_shm_out(fd);
-    if (!ptr) {
-        std::cout << "Failed to open shared memory" << std::endl;
-        return;
-    }
-
+// json
+void export_to_shm(const std::unique_ptr<nlohmann::json>& j) {
     std::string s = j->dump();
-    if (s.size() + sizeof(Header) > shm_size) {
-        std::cerr << "JSON too large for shared memory" << std::endl;
-        munmap(ptr, shm_size);
-        close(fd);
-        return;
-    }
+    size_t payload_size = s.size();
+    size_t size = sizeof(Header) + payload_size;
 
-    Header h{TypeCode::TYPE_JSON, static_cast<uint32_t>(s.size())};
+    int fd;
+    void* ptr = open_shm_out(fd, size);
+    if (!ptr) return;
+
+    Header h{TypeCode::TYPE_JSON, static_cast<uint32_t>(payload_size)};
     std::memcpy(ptr, &h, sizeof(h));
-    std::memcpy((char*)ptr + sizeof(h), s.data(), s.size());
+    std::memcpy((char*)ptr + sizeof(h), s.data(), payload_size);
 
-    munmap(ptr, shm_size);
+    munmap(ptr, size);
     close(fd);
     std::cout << "export_to_shm<json> done" << std::endl;
 }
 
 inline void* open_shm_in(int& fd) {
 
-    fd = shm_open("/cling_vars_in", O_RDONLY, 0666);
+    fd = shm_open(shm_name, O_RDONLY, 0666);
     if (fd < 0) {
         perror("shm_open failed");
         return nullptr;
     }
+    struct stat st;
+    if (fstat(fd, &st) < 0) {
+        perror("fstat failed");
+        close(fd);
+        return nullptr;
+    }
 
-    void* ptr = mmap(nullptr, shm_size, PROT_READ, MAP_SHARED, fd, 0);
+    void* ptr = mmap(nullptr, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
     if (ptr == MAP_FAILED) {
         perror("mmap failed");
         close(fd);
@@ -175,9 +179,15 @@ inline void* open_shm_in(int& fd) {
 
 
 inline void close_and_unlink(void* shm_ptr, int fd) {
-    munmap(shm_ptr, shm_size);
+    struct stat st;
+    if (fstat(fd, &st) < 0) {
+        perror("fstat failed");
+        close(fd);
+    }
+
+    munmap(shm_ptr, st.st_size);
     close(fd);
-    shm_unlink(shm_name_in);
+    shm_unlink(shm_name);
 }
 
 // Fixed-size types: int, double, bool
@@ -278,5 +288,3 @@ inline void read_from_shm(std::vector<std::string>& v) { read_vector_string_from
 nlohmann::json json_from_string(const std::string& s) {
     return nlohmann::json::parse(s);
 }
-
-std::cout << "cpprun_backend: Cling initialized" << std::endl;

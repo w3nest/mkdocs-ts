@@ -9,15 +9,6 @@ The router object.
 """
 
 
-cling: ClingHandle | None = None
-
-
-async def start_cling(configuration: Configuration):
-    global cling
-    cling = ClingHandle(configuration=configuration)
-    await cling.start()
-
-
 # ----------------------
 # FastAPI endpoint
 # ----------------------
@@ -36,13 +27,11 @@ async def run_code(
     body: RunBody,
     config: Configuration = Depends(Environment.get_config),
 ) -> RunResponse:
-    global cling
+    cling: ClingHandle = request.app.state.cling
     if not cling:
         raise RuntimeError("Cling is not initialized")
 
     code = body.code
-
-    # Load inputs from files
 
     [captured_out, stdout, stderr] = await cling.execute_block(
         block=code, captured_in=body.capturedIn, captured_out=body.capturedOut
@@ -56,6 +45,5 @@ async def run_code(
 
     return RunResponse(
         output=stdout,
-        # error=ScriptError(kind="AST", message=stderr_text),
         capturedOut=captured_out,
     )
