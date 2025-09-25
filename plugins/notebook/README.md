@@ -2,7 +2,8 @@
 
 Notebook plugins for mkdocs-ts.
 
-<!-- no links provided -->
+## Links 
+
 
 ## Installation, Build, Test
 
@@ -27,8 +28,6 @@ yarn build:prod
 ```
 
 ---
-
-<!-- no specific test configuration documented -->
 
 To run tests:
 
