@@ -31,12 +31,20 @@ import { createEditor } from 'prism-code-editor'
 import 'prism-code-editor/prism/languages/javascript'
 import 'prism-code-editor/prism/languages/python'
 import 'prism-code-editor/prism/languages/markdown'
+import 'prism-code-editor/prism/languages/cpp'
+import 'prism-code-editor/prism/languages/clike'
 import { faIconTyped } from './fa-icons'
 
 /**
  * Accepted language.
  */
-export type Language = 'javascript' | 'markdown' | 'python' | 'unknown'
+export type Language =
+    | 'javascript'
+    | 'markdown'
+    | 'python'
+    | 'cpp'
+    | 'clike'
+    | 'unknown'
 
 /**
  * Represents the view of a cell that will render once the associated cell is registered in the {@link State}.
@@ -359,6 +367,8 @@ export class CellTagsView implements VirtualDOM<'div'> {
             javascript: 'js',
             markdown: 'md',
             python: 'py',
+            cpp: 'cpp',
+            clike: 'clike',
             unknown: '?',
         }
         this.children = [
