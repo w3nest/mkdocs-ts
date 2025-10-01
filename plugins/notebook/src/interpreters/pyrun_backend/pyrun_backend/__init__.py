@@ -21,7 +21,7 @@ The backend is deployed using a `Dockerfile` which specifies a container that ca
 a given python interpreter, python modules as well as system dependencies.
 They are provided respectively using `modules` and `apt` attributes to the `Dockerfile`.
 
-Using `webpm`, they are defined using ̀configurations.${backend_name}.build`:
+Using `webpm`, they are defined using `configurations.${backend_name}.build`:
 
 <code-snippet language="javascript">
 
