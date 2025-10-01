@@ -1,4 +1,4 @@
-import { ChildrenLike, VirtualDOM, CSSAttribute } from 'rx-vdom'
+import { ChildrenLike, VirtualDOM, CSSAttribute, render } from 'rx-vdom'
 
 import { parseMd } from 'mkdocs-ts'
 /**
@@ -45,12 +45,15 @@ export class Text implements VirtualDOM<'div'> {
     ) {
         this.style = options.style ?? {}
         this.class = `${this.class} ${options.class ?? ''}`
-        const div = parseMd({
-            src: text.replace(/\\[()]/g, (match) => {
-                return '\\' + match
-            }),
-            latex: true,
-        })
-        this.children = [div]
+
+        this.connectedCallback = (e) => {
+            const div = parseMd({
+                src: text.replace(/\\[()]/g, (match) => {
+                    return '\\' + match
+                }),
+                latex: true,
+            })
+            e.appendChild(render(div))
+        }
     }
 }
