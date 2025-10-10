@@ -104,7 +104,7 @@ const webpackConfigApp: webpack.Configuration = {
             directory: path.join(__dirname, './'),
         },
         compress: true,
-        port: '{{devServer.port}}',
+        port: '3025',
     },
 }
 
