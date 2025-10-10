@@ -14,6 +14,7 @@ import {
     CellCommonAttributes,
     defaultCellAttributes,
     DeportedOutputsView,
+    installInterpreter,
     InterpreterCellView,
     JsCellExecutor,
     JsCellView,
@@ -343,6 +344,7 @@ export class State {
             let: params.initialScope?.let ?? {},
             const: {
                 Views,
+                installInterpreter,
                 ...(params.initialScope?.const ?? {}),
             },
             python: params.initialScope?.python ?? {},

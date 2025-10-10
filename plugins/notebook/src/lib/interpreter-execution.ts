@@ -9,12 +9,100 @@ import {
     takeUntil,
     tap,
     shareReplay,
+    filter,
 } from 'rxjs'
 import { Output, ExecCellError, Scope } from './state'
 import { InterpreterApi } from './interpreter-cell-view'
+import { CdnEvent, installViewsModule } from '@w3nest/webpm-client'
+import { Views } from '.'
+import { AnyVirtualDOM } from 'rx-vdom'
+import type { InstallView } from '@w3nest/webpm-client/views'
 
 /**
- * Represents the minimal required interface from a backend's client provided by py-youwol.
+ * This helper function is used to install and configure an interpreter
+ * (a backend such as e.g. `cpprun_backend`) for use with {@link InterpreterCellView}.
+ * It can optionally display the installation progress in a cell output and/or as a notification.
+ *
+ * @param _p Configuration object.
+ * @param _p.backend The backend module identifier, including its semantic version range.
+ *   Example: `'cpprun_backend#^0.1.0'`.
+ * @param _p.buildWith (Optional) Build configuration for the interpreter.
+ *   The format and keys depend on the specific interpreter's (see interpreter documentation).
+ * @param _p.display (Optional) A callback used to render the installation UI in the cell output.
+ *   Receives a virtual DOM view as an argument. Typically the cell's `display` function.
+ * @param _p.notification (Optional) If `true`, displays installation progress as a notification.
+ *
+ * @returns A `Promise` that resolves to the installed interpreter client.
+ *
+ */
+export async function installInterpreter({
+    backend,
+    buildWith,
+    display,
+    notification,
+}: {
+    backend: string
+    buildWith?: Record<string, string>
+    display?: (v: AnyVirtualDOM) => void
+    notification?: boolean
+}): Promise<BackendClient> {
+    const { installWithUI } = await installViewsModule()
+
+    const uid = `interpret_${String(Math.floor(Math.random() * 1e6))}`
+    const name = backend.split('#')[0]
+
+    const notifyInstall = (view: InstallView) => {
+        const done$ = view.eventsMgr.event$.pipe(
+            filter((ev: CdnEvent) => ev.step === 'InstallDoneEvent'),
+        )
+        Views.notify({
+            level: 'warning',
+            content: {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        class: 'w-100 text-center my-1',
+                        style: {
+                            fontSize: '1.0rem',
+                            fontWeight: 'bolder',
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                class: 'ms-1',
+                                innerHTML: `Installing interpreter <i>${name} </i>`,
+                            },
+                        ],
+                    },
+                    view,
+                ],
+            },
+            done$,
+        })
+    }
+    const scope = (await installWithUI({
+        backends: {
+            modules: [`${backend} as ${uid}`],
+            configurations: {
+                [name]: {
+                    build: buildWith ?? {},
+                },
+            },
+        },
+        display: (view: InstallView) => {
+            if (display) {
+                display(view)
+            }
+            if (notification) {
+                notifyInstall(view)
+            }
+        },
+    })) as unknown as { [uid]: BackendClient }
+    return scope[uid]
+}
+/**
+ * Represents the minimal required interface from a backend's client provided W3Nest.
  */
 export interface BackendClient {
     /**
