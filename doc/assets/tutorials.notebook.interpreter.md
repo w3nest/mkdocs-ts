@@ -41,27 +41,15 @@ For example, as documented in <api-link target="pyrun_backend"></api-link>, you 
 
 *  `apt`: A list of system packages required by the backend.
 
-The following code installs the pyrun_backend interpreter with the `numpy` module:
+The following code installs the pyrun_backend interpreter with the `numpy` module 
+(see <api-link target="installInterpreter"></api-link>):
 
 <js-cell>
-const { displayNotification } = await load("/tutorials/notebook/import-utils")
-const { installWithUI } = await webpm.installViewsModule()
-
-const { pyrun } = await installWithUI({
-    backends: { 
-        modules:['pyrun_backend#^0.2.1 as pyrun'],
-        configurations: {
-            pyrun_backend: {
-                build: { 
-                    modules:'numpy'
-                }
-            }
-        }
-    },
-    display: (view) => { 
-        display(view)
-        displayNotification(view)
-    }
+const pyrun = await installInterpreter({
+    backend: 'pyrun_backend#^0.2.1',
+    buildWith: { modules:'numpy' },
+    display,
+    notification: true
 })
 </js-cell>
 

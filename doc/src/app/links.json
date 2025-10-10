@@ -56,6 +56,10 @@
             "href": "@nav/api/notebook.InterpreterCellView",
             "withClass": "mkapi-role-class"
         },
+        "installInterpreter": {
+            "href": "@nav/api/notebook.installInterpreter",
+            "withClass": "mkapi-role-function"
+        },
         "InterpreterCellView.FromDomAttributes": {
             "href": "@nav/api/notebook.InterpreterCellView.FromDomAttributes",
             "withClass": "mkapi-role-attribute"
