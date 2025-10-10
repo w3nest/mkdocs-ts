@@ -59,7 +59,7 @@
         "@fortawesome/free-solid-svg-icons": "^6.7.2",
         "@mkdocs-ts/code-api": "^0.2.3",
         "@w3nest/ui-tk": "^0.1.7",
-        "@w3nest/webpm-client": "^0.1.8",
+        "@w3nest/webpm-client": "^0.1.15",
         "esprima": "^4.0.1",
         "mkdocs-ts": "^0.5.3",
         "prism-code-editor": "^4.0.0",
@@ -96,7 +96,7 @@
         "dependencies": {
             "@mkdocs-ts/code-api": "^0.2.3",
             "@w3nest/ui-tk": "^0.1.7",
-            "@w3nest/webpm-client": "^0.1.8",
+            "@w3nest/webpm-client": "^0.1.15",
             "esprima": "^4.0.1",
             "mkdocs-ts": "^0.5.3",
             "rx-vdom": "^0.1.3",
