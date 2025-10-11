@@ -16,7 +16,7 @@ def main():
     The host name and port should be provided as environment variables
     (using `HOST_NAME` and `HOST_PORT` respectively).
 
-    This function is used as script `run_pyrun_backend` entry point within the `project.toml` file.
+    This function is used as script `run_cpprun_backend` entry point within the `project.toml` file.
     """
     host_port = os.getenv("HOST_PORT")
     host_name = os.getenv("HOST_NAME")

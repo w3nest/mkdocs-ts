@@ -91,6 +91,7 @@ export async function apiNav({
             notebook: rootModulesNav.self,
             'mkdocs-ts': rootModulesNav['mkdocs-ts'],
             pyrun_backend: `${rootModulesNav.self}/Interpreters/pyrun_backend`,
+            cpprun_backend: `${rootModulesNav.self}/Interpreters/cpprun_backend`,
         },
         configuration: {
             ...CodeApiModule.configurationTsTypedoc,

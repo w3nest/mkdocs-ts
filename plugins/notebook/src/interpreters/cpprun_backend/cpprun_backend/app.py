@@ -18,7 +18,7 @@ from cpprun_backend.router import router as root_router, ClingHandle
 def start(configuration: Configuration) -> None:
     """
     Start the backend server using the specified configuration:
-    *  Create the application using :func:`pyrun_backend.app.create_app`.
+    *  Create the application using :func:`cpprun_backend.app.create_app`.
     *  Run the application using `uvicorn`.
 
     Parameters:

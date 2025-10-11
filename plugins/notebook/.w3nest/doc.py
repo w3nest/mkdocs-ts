@@ -8,20 +8,38 @@ PROJECT = Path(__file__).parent.parent
 
 print("Generate python API documentation of 'pyrun_backend'")
 
-NAME = "pyrun_backend"
 DST = Path(__file__).parent.parent / "assets" / "api" / "notebook" / "Interpreters"
 
-config = Configuration(
-    external_links=std_links(),
-    out=DST,
-)
-module_path = PROJECT / "src" / "interpreters" / "pyrun_backend" / "pyrun_backend"
+base_path = PROJECT / "src" / "interpreters"
 
 global_doc = cast(
     griffe.Module,
     griffe.load(
-        module_path,
+        base_path / "pyrun_backend" / "pyrun_backend",
         submodules=True,
     ),
 )
-generate_api(global_doc, config)
+generate_api(
+    global_doc,
+    Configuration(
+        external_links=std_links(),
+        out=DST,
+    ),
+)
+
+print("Generate python API documentation of 'cpprun_backend'")
+
+global_doc = cast(
+    griffe.Module,
+    griffe.load(
+        base_path / "cpprun_backend" / "cpprun_backend",
+        submodules=True,
+    ),
+)
+generate_api(
+    global_doc,
+    Configuration(
+        external_links=std_links(),
+        out=DST,
+    ),
+)

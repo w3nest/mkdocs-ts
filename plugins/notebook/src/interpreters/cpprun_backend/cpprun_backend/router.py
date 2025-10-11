@@ -27,6 +27,17 @@ async def run_code(
     body: RunBody,
     config: Configuration = Depends(Environment.get_config),
 ) -> RunResponse:
+    """
+    Run the provided code, optionally given captured input variables and returning the values of captured outputs.
+
+    Parameters:
+        request: Incoming request.
+        body: Body specification.
+        config: Injected configuration.
+
+    Returns:
+        Std outputs and eventual value of captured outputs.
+    """
     cling: ClingHandle = request.app.state.cling
     if not cling:
         raise RuntimeError("Cling is not initialized")

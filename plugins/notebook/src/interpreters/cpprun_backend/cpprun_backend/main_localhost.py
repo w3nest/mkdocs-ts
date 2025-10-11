@@ -33,8 +33,7 @@ def main() -> None:
             host_port=int(args.host_port) if args.host_port else 2000,
             host_name=localhost,
             instance_name=localhost,
-            # docker run -i --rm pyrun-cling cling -std=c++17
-            cling_start="/home/greinisch/Projects/cling-build/bin/cling  -std=c++17",
+            cling_start="~/Projects/cling-build/bin/cling  -std=c++17",
             allow_redefinition_cmd="gClingOpts->AllowRedefinition = 1;\n",
             log_level="debug",
         )
