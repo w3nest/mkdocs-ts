@@ -50,7 +50,7 @@
     },
     "dependencies": {
         "@mkdocs-ts/code-api": "^0.2.3",
-        "@mkdocs-ts/notebook": "^0.1.6",
+        "@mkdocs-ts/notebook": "^0.1.7",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
@@ -94,7 +94,7 @@
         "kind": "webapp",
         "dependencies": {
             "@mkdocs-ts/code-api": "^0.2.3",
-            "@mkdocs-ts/notebook": "^0.1.6",
+            "@mkdocs-ts/notebook": "^0.1.7",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
