@@ -11,9 +11,6 @@ FROM python:${python}-slim
 RUN apt-get update && apt-get install -y \
     clang \
     cmake \
-    libncurses5 \
-    libncurses5-dev \
-    libreadline-dev \
     libstdc++6 \
     wget \
     unzip \
