@@ -70,5 +70,5 @@ Both entry points invoke :func:`cpprun_backend.app.start`, using a specific
 :class:`cpprun_backend.environment.Configuration` for setup.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __default__port__ = 2010
