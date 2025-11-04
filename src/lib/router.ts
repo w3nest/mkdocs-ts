@@ -670,7 +670,7 @@ export class Router<
         ctx?: ContextTrait,
     ): Promise<Navigation<TLayout, THeader> | 'not-found'> {
         ctx = this.ctx(ctx)
-        const { path, parameters, sectionId } = target
+        const { path, parameters } = target
         if (
             path in this.navNodeCache &&
             Object.keys(parameters ?? {}).length === 0
@@ -695,9 +695,8 @@ export class Router<
                 if (nav === 'unresolved') {
                     console.log('Try to wait...')
                     this.target$.next({
-                        path,
+                        ...target,
                         reason: 'Pending',
-                        sectionId,
                     })
                 }
             }),
