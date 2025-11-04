@@ -2,8 +2,8 @@
     "name": "@mkdocs-ts/ex-ts-npm",
     "description": "Example for mkdocs-ts library",
     "version": "0.1.0-wip",
-    "license": "MIT",
     "author": "reinisch.gui@gmail.com",
+    "license": "MIT",
     "homepage": "https://github.com/mkdocs-ts/ex-ts-npm#README.md",
     "main": "./dist/@mkdocs-ts/ex-ts-npm.js",
     "files": [
@@ -40,8 +40,8 @@
     },
     "dependencies": {
         "@mkdocs-ts/code-api": "0.2.3",
-        "@mkdocs-ts/notebook": "0.1.5",
-        "mkdocs-ts": "0.5.3",
+        "@mkdocs-ts/notebook": "0.1.7",
+        "mkdocs-ts": "0.5.5",
         "rx-vdom": "^0.1.6"
     },
     "devDependencies": {

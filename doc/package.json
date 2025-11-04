@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/doc",
     "description": "Documentation app for the project mkdocs-ts.",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "author": "reinisch.gui@gmail.com",
     "license": "MIT",
     "homepage": "https://github.com/mkdocs-ts/doc#README.md",
@@ -54,7 +54,7 @@
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "^0.5.4",
+        "mkdocs-ts": "^0.5.5",
         "rx-vdom": "^0.1.4",
         "rxjs": "^7.5.6"
     },
@@ -98,7 +98,7 @@
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
-            "mkdocs-ts": "^0.5.4",
+            "mkdocs-ts": "^0.5.5",
             "rx-vdom": "^0.1.4",
             "rxjs": "^7.5.6"
         },
