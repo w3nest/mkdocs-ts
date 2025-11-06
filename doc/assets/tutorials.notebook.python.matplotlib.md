@@ -10,59 +10,16 @@ For better separation of concerns, it's often more efficient to handle rendering
 using JavasScript libraries, while keeping only data processing logic in Python cells.
 </note>
 
-Let's start with installing {{mkdocs-ts}}:
-
-<js-cell>
-const version = "{{mkdocs-version}}"
-
-const { MkDocs, rxjs} = await webpm.install({
-    esm:[ 
-         // Both are used to display a notification
-        `mkdocs-ts#${version} as MkDocs`, 
-        'rxjs#^7.5.6 as rxjs' 
-    ]
-})
-display(MkDocs)
-</js-cell>
-
-
 ## Setting Up Matplotlib
 
 To begin, we need to install the necessary packages, including numpy and matplotlib, within the Pyodide runtime:
 
 <js-cell>
-const { installWithUI } = await webpm.installViewsModule()
-const notif = `
-This page proceed with installation of **Pyodide** in the main thread.
-
-Expect the UI to be non-responsive until done. 
-
-An extra delay to warm-up matplotlib is expected after installation completes.
-
-<install-view></install-view>
-`
-
-const { pyodide } = await installWithUI({
-    pyodide: {
-        version: "{{pyodide-version}}",
-        modules: ["numpy", "matplotlib"]
-    },
-    display: (view) => {
-        display(view)
-        const done$ = view.eventsMgr.event$.pipe(
-            rxjs.filter( (ev) => ev.step === 'InstallDoneEvent'),
-            rxjs.delay(1000) 
-        )
-        const content = MkDocs.parseMd({
-            src: notif,
-            views: { 'install-view' : () => view }
-        })
-        Views.notify({
-            level: 'warning',
-            content,
-            done$
-        })
-    }
+const pyodide = await installPyodide({
+    version: "{{pyodide-version}}",
+    modules: ["numpy", "matplotlib"],
+    display,
+    notification: true
 })
 </js-cell>
 
@@ -153,6 +110,9 @@ We provide interactive controls for users to input the initial velocity and laun
 These controls are rendered using custom JavaScript components:
 
 <js-cell>
+const { rxjs } = await webpm.install({
+    esm:['rxjs#^7.5.6 as rxjs']
+})
 const { LabelRange } = await load("/tutorials/notebook/import-utils");
 
 const angleView = LabelRange({

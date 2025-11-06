@@ -48,19 +48,6 @@ interpreter as explained in the <cross-link target="notebook.interpreter">Interp
 </note>
 
 
-Let's start with installing {{mkdocs-ts}}:
-
-<js-cell>
-const { MkDocs, rxjs } = await webpm.install({
-    esm:[ 
-         // Both are used only to display a notification
-        `mkdocs-ts#{{mkdocs-version}} as MkDocs`, 
-        'rxjs#^7.5.6 as rxjs' 
-    ]
-})
-display(MkDocs)
-</js-cell>
-
 ## Example: Projectile Motion
 
 This example demonstrates how to set up and use a Python interpreter to perform calculations related to projectile
@@ -71,35 +58,11 @@ motion. We will use Pyodide to execute Python code directly within the notebook,
 To enable Python execution, we first need to instantiate a Pyodide runtime and install necessary Python modules:
 
 <js-cell>
-const { installWithUI } = await webpm.installViewsModule()
-
-const notif = `
-This page proceed with installation of **Pyodide** in the main thread.
-
-Expect the UI to be non-responsive until done.
-
-<install-view></install-view>
-`
-const { pyodide } = await installWithUI({
-    pyodide: {
-        version: "{{pyodide-version}}",
-        modules: ["numpy"]
-    },
-    display: (view) => { 
-        display(view)
-        const done$ = view.eventsMgr.event$.pipe(
-            rxjs.filter( (ev) => ev.step === 'InstallDoneEvent')
-        )
-        const content = MkDocs.parseMd({
-            src: notif,
-            views: { 'install-view' : () => view }
-        })
-        Views.notify({
-            level: 'warning',
-            content,
-            done$
-        })
-    }
+const pyodide = await installPyodide({
+    version: "{{pyodide-version}}",
+    modules: ["numpy"],
+    display,
+    notification: true
 })
 </js-cell>
 
@@ -138,6 +101,10 @@ def compute(v0: float, angle0: float):
 To create interactive inputs for initial velocity and launch angle, use the `LabelRange` components. These components allow users to adjust the parameters and see updated results dynamically.
 
 <js-cell>
+const { rxjs } = await webpm.install({
+    esm:['rxjs#^7.5.6 as rxjs']
+})
+
 const { LabelRange } = await load("/tutorials/notebook/import-utils");
 
 const angleView = LabelRange({

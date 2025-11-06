@@ -2,7 +2,15 @@ import { display } from './display-utils'
 import { ExecCellError, Scope } from './state'
 import { ExecInput, indent } from './execution-common'
 import { ContextTrait, NoContext } from 'mkdocs-ts'
-import { Observable, Subject, take } from 'rxjs'
+import { filter, Observable, Subject, take } from 'rxjs'
+import { AnyVirtualDOM } from 'rx-vdom'
+import {
+    CdnEvent,
+    installViewsModule,
+    PyodideInputs,
+} from '@w3nest/webpm-client'
+import { InstallView } from '@w3nest/webpm-client/views'
+import { Views } from '.'
 
 export interface PyodideNamespace {
     get: (key: string) => unknown
@@ -12,6 +20,79 @@ export interface Pyodide {
     globals: { get: (key: string) => () => PyodideNamespace }
     runPython: (code: string) => unknown
     registerJsModule: (name: string, mdle: unknown) => void
+}
+
+/**
+ * This helper function is used to install and configure a pyodide environment
+ *
+ * @param _p Configuration object.
+ * @param _p.version Pyodide version.
+ * @param _p.modules Array of Python modules to install.
+ * @param _p.display A callback used to render the installation UI in the cell output.
+ *   Receives a virtual DOM view as an argument. Typically the cell's `display` function.
+ * @param _p.notification If `true`, displays installation progress as a notification.
+ *
+ * @returns A `Promise` that resolves to the pyodide client.
+ *
+ */
+export async function installPyodide({
+    version,
+    modules,
+    display,
+    notification,
+}: {
+    version?: string
+    modules?: string[]
+    display?: (v: AnyVirtualDOM) => void
+    notification?: boolean
+}): Promise<Pyodide> {
+    const { installWithUI } = await installViewsModule()
+
+    const notifyInstall = (view: InstallView) => {
+        const done$ = view.eventsMgr.event$.pipe(
+            filter((ev: CdnEvent) => ev.step === 'InstallDoneEvent'),
+        )
+        Views.notify({
+            level: 'warning',
+            content: {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        class: 'w-100 text-center my-1',
+                        style: {
+                            fontSize: '1.0rem',
+                            fontWeight: 'bolder',
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                class: 'ms-1',
+                                innerHTML: `Installing Pyodide <i>${version ?? 'latest'}</i>`,
+                            },
+                        ],
+                    },
+                    view,
+                ],
+            },
+            done$,
+        })
+    }
+    const { pyodide } = (await installWithUI({
+        pyodide: {
+            modules,
+            version,
+        } as PyodideInputs,
+        display: (view: InstallView) => {
+            if (display) {
+                display(view)
+            }
+            if (notification) {
+                notifyInstall(view)
+            }
+        },
+    })) as unknown as { pyodide: Pyodide }
+    return pyodide
 }
 
 /**

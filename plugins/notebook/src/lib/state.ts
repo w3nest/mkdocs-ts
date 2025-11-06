@@ -15,6 +15,7 @@ import {
     defaultCellAttributes,
     DeportedOutputsView,
     installInterpreter,
+    installPyodide,
     InterpreterCellView,
     JsCellExecutor,
     JsCellView,
@@ -345,6 +346,7 @@ export class State {
             const: {
                 Views,
                 installInterpreter,
+                installPyodide,
                 ...(params.initialScope?.const ?? {}),
             },
             python: params.initialScope?.python ?? {},
