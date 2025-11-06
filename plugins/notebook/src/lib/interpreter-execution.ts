@@ -26,22 +26,25 @@ import type { InstallView } from '@w3nest/webpm-client/views'
  * @param _p Configuration object.
  * @param _p.backend The backend module identifier, including its semantic version range.
  *   Example: `'cpprun_backend#^0.1.0'`.
- * @param _p.buildWith (Optional) Build configuration for the interpreter.
+ * @param _p.dockerfile URL to a `Dockerfile` or its content to be used in place of the default one for installation.
+ * @param _p.buildWith Build configuration for the interpreter.
  *   The format and keys depend on the specific interpreter's (see interpreter documentation).
- * @param _p.display (Optional) A callback used to render the installation UI in the cell output.
+ * @param _p.display A callback used to render the installation UI in the cell output.
  *   Receives a virtual DOM view as an argument. Typically the cell's `display` function.
- * @param _p.notification (Optional) If `true`, displays installation progress as a notification.
+ * @param _p.notification If `true`, displays installation progress as a notification.
  *
  * @returns A `Promise` that resolves to the installed interpreter client.
  *
  */
 export async function installInterpreter({
     backend,
+    dockerfile,
     buildWith,
     display,
     notification,
 }: {
     backend: string
+    dockerfile?: string
     buildWith?: Record<string, string>
     display?: (v: AnyVirtualDOM) => void
     notification?: boolean
@@ -87,6 +90,7 @@ export async function installInterpreter({
             configurations: {
                 [name]: {
                     build: buildWith ?? {},
+                    dockerfile,
                 },
             },
         },
