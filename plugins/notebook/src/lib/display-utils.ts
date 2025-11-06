@@ -2,6 +2,7 @@ import { AnyVirtualDOM, child$, CSSAttribute, RxChild } from 'rx-vdom'
 import { ObjectJs } from '@w3nest/ui-tk/Trees'
 import { Observable, Subject } from 'rxjs'
 import { Output } from './state'
+import { displayW3BackendClient } from './views/display-factory/backend'
 
 /**
  * Renders and displays elements using registered view generators.
@@ -181,6 +182,7 @@ export function defaultDisplayFactory(): DisplayFactory {
                 element instanceof HTMLElement || isVirtualDOM(element),
             view: htmlView,
         },
+        displayW3BackendClient,
     ]
 }
 
