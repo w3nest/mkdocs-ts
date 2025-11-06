@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/notebook",
     "description": "Notebook plugins for mkdocs-ts.",
-    "version": "0.1.8-wip",
+    "version": "0.1.8",
     "author": "reinisch.gui@gmail.com",
     "license": "MIT",
     "homepage": "https://github.com/mkdocs-ts/notebook#README.md",
