@@ -1461,20 +1461,10 @@
     rx-vdom "^0.1.3"
     rxjs "^7.8.1"
 
-"@w3nest/webpm-client@^0.1.15":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.15.tgz#3c4b289b1fecd828fa1d4ba7ef901960668a938d"
-  integrity sha512-cMZvDsczO5d82hynKjahF+ZNElHpZr8c5m/jOkBIIXTwDaYmSHgfB5AP8g1GihYuonpnHYyyYKU9n2a8e39OgQ==
-  dependencies:
-    "@w3nest/http-clients" "^0.1.5"
-    rx-vdom "^0.1.3"
-    rxjs "^7.5.6"
-    semver "^7.3.4"
-
-"@w3nest/webpm-client@^0.1.5", "@w3nest/webpm-client@^0.1.9":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.11.tgz#33972be1063d3078e1f8404eff6547bbad40a21b"
-  integrity sha512-Wuyrvcas4KEIXO1QuUT62Rn7N7l8kUvk78/OcAk/7qjLSN5xaWcn/tbC2iN7Holka3YzHlrkN6QePrkGjV/0Sg==
+"@w3nest/webpm-client@^0.1.16", "@w3nest/webpm-client@^0.1.5", "@w3nest/webpm-client@^0.1.9":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@w3nest/webpm-client/-/webpm-client-0.1.16.tgz#5d29d07d014e6038c57e32065c85e06054d931d7"
+  integrity sha512-P4WkglDt5F7piqVj7LWxi2828nB7HpHwQ3zklG/q1M7D0P+XyQhPwBO/5iAv1jU++U1HfSq7pOpO6GbdlVymzg==
   dependencies:
     "@w3nest/http-clients" "^0.1.5"
     rx-vdom "^0.1.3"

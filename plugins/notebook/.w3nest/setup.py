@@ -24,7 +24,7 @@ externals_deps = {
     "rxjs": "^7.5.6",
     "@w3nest/ui-tk": "^0.1.7",
     "esprima": "^4.0.1",
-    "@w3nest/webpm-client": "^0.1.15",
+    "@w3nest/webpm-client": "^0.1.16",
     "@mkdocs-ts/code-api": "^0.2.3",
 }
 in_bundle_deps = {
@@ -85,6 +85,7 @@ files = [
     "jest.config.ts",
     "webpack.config.ts",
     "typedoc.js",
+    ".gitignore",
 ]
 for file in files:
     copyfile(src=template_folder / file, dst=project_folder / file)
