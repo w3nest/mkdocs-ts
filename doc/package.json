@@ -1,7 +1,7 @@
 {
     "name": "@mkdocs-ts/doc",
     "description": "Documentation app for the project mkdocs-ts.",
-    "version": "0.5.5",
+    "version": "0.5.6-wip",
     "author": "reinisch.gui@gmail.com",
     "license": "MIT",
     "homepage": "https://github.com/mkdocs-ts/doc#README.md",
@@ -50,12 +50,12 @@
     },
     "dependencies": {
         "@mkdocs-ts/code-api": "^0.2.3",
-        "@mkdocs-ts/notebook": "^0.1.7",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.9-wip-1763442751.tgz",
         "@w3nest/ui-tk": "^0.1.1",
         "@w3nest/webpm-client": "^0.1.5",
         "mathjax": "^3.1.4",
-        "mkdocs-ts": "^0.5.5",
-        "rx-vdom": "^0.1.4",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.6-wip-1763442751.tgz",
+        "rx-vdom": "file:.local-dependencies/rx-vdom-0.1.10-wip-1763442751.tgz",
         "rxjs": "^7.5.6"
     },
     "devDependencies": {
@@ -94,11 +94,11 @@
         "kind": "webapp",
         "dependencies": {
             "@mkdocs-ts/code-api": "^0.2.3",
-            "@mkdocs-ts/notebook": "^0.1.7",
+            "@mkdocs-ts/notebook": "^0.1.9",
             "@w3nest/ui-tk": "^0.1.1",
             "@w3nest/webpm-client": "^0.1.5",
             "mathjax": "^3.1.4",
-            "mkdocs-ts": "^0.5.5",
+            "mkdocs-ts": "^0.5.6",
             "rx-vdom": "^0.1.4",
             "rxjs": "^7.5.6"
         },
@@ -147,5 +147,10 @@
                 "rxjs_APIv7"
             ]
         }
+    },
+    "resolutions": {
+        "rx-vdom": "file:.local-dependencies/rx-vdom-0.1.10-wip-1763442751.tgz",
+        "mkdocs-ts": "file:.local-dependencies/mkdocs-ts-0.5.6-wip-1763442751.tgz",
+        "@mkdocs-ts/notebook": "file:.local-dependencies/mkdocs-ts-notebook-0.1.9-wip-1763442751.tgz"
     }
 }
