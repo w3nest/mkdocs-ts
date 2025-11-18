@@ -32,6 +32,11 @@ export type ViewGenerator = (
     options: { router?: Router } & MdParsingOptions,
 ) => AnyView
 
+export interface MdParsingAnnotations {
+    processedContent?: boolean
+    fingerprint?: boolean
+    custom?: (tag: string) => Record<string, string>
+}
 /**
  * Configuration options for parsing Markdown content, using *e.g.* {@link parseMd}.
  */
@@ -140,6 +145,11 @@ export interface MdParsingOptions {
      * @param elem The rendered element.
      */
     onRendered?: (elem: HTMLElement) => void
+
+    /**
+     * Controls annotation fields added to the rendered HTML elements.
+     */
+    annotations?: MdParsingAnnotations
 }
 /**
  * Provides a collection of global Markdown views that can be referenced when using {@link parseMd}.
@@ -259,6 +269,7 @@ export function parseMd({
     preprocessing,
     latex,
     onRendered,
+    annotations,
 }: {
     src: string
     router?: Router
@@ -272,6 +283,7 @@ export function parseMd({
     const { div, replacedViews } = fixedMarkedParseCustomViews({
         input: src,
         views: views,
+        annotations,
     })
 
     // @ts-expect-error Need to find a better way
@@ -377,7 +389,7 @@ export function patchSrc({
             continue
         }
         const rndNumber = Math.floor(Math.random() * Math.pow(10, 6))
-        const id = idGenerator ? idGenerator() : `id_${String(rndNumber)}`
+        const id = idGenerator ? idGenerator() : `auto-id_${String(rndNumber)}_`
         if (line.includes(`</${processor}>`)) {
             const extracted = extractInlinedElem(line, processor, id)
             if (extracted) {
@@ -473,9 +485,11 @@ export function removeEscapedText(src: string): {
 function fixedMarkedParseCustomViews({
     input,
     views,
+    annotations,
 }: {
     input: string
     views: Record<string, ViewGenerator>
+    annotations?: MdParsingAnnotations
 }) {
     /**
      * The library 'marked' parse the innerHTML of HTML elements as markdown,
@@ -492,7 +506,7 @@ function fixedMarkedParseCustomViews({
     const renderer = new Renderer()
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     renderer.code = function (code: string, infostring: string) {
-        const id = `id_${String(Math.floor(Math.random() * Math.pow(10, 6)))}`
+        const id = `auto-id_${String(Math.floor(Math.random() * Math.pow(10, 6)))}_`
         const lang = (infostring || '').trim()
         const content = code
         contents[id] = content
@@ -510,6 +524,10 @@ function fixedMarkedParseCustomViews({
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
     divResult.innerHTML = parse(patchedInput)
+    if (annotations) {
+        annotateMdChildren({ divResult, views, contents, annotations })
+    }
+
     Object.entries(contents).forEach(([id, content]) => {
         const elem = divResult.querySelector(`#${id}`)
         if (!elem) {
@@ -519,12 +537,65 @@ function fixedMarkedParseCustomViews({
             })
             return
         }
-        elem.id = id
     })
 
     return { div: divResult, replacedViews: contents }
 }
 
+export function simpleHash(str: string): string {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash * 31 + str.charCodeAt(i)) | 0
+    }
+    return (hash >>> 0).toString(16)
+}
+
+function annotateMdChildren({
+    divResult,
+    views,
+    contents,
+    annotations,
+}: {
+    divResult: HTMLDivElement
+    views: Record<string, ViewGenerator>
+    contents: Record<string, string>
+    annotations: MdParsingAnnotations
+}) {
+    const fingerprints: Record<string, number> = {}
+    Array.from(divResult.children).forEach((child) => {
+        const htmlSource = child.outerHTML
+
+        if (annotations.fingerprint || annotations.processedContent) {
+            const matches: string[] = []
+            const autoIdMap: Record<string, number> = {}
+            let processedContent = htmlSource.replace(
+                /<([a-zA-Z0-9-]+)\b[^>]*\bid\s*=\s*["'](auto-id_\d+_)["'][^>]*>[\s\S]*?<\/\1>/g,
+                (match, tag, id) => {
+                    if (views[tag]) {
+                        const index = Object.keys(matches).length
+                        matches.push(`ID: ${index} → ${contents[id]}`)
+                        autoIdMap[id] = index
+                        return match.replace(id, `${index}`)
+                    }
+                    return match
+                },
+            )
+            if (matches.length > 0) {
+                processedContent += '\n\nReplacements:\n' + matches.join('\n')
+            }
+            if (annotations.processedContent) {
+                child.setAttribute('data-processedContent', processedContent)
+            }
+            if (annotations.fingerprint) {
+                const fp = simpleHash(processedContent)
+                const indexFp = fingerprints[fp] ?? 0
+                //To debug: child.setAttribute('data-html', html)
+                child.setAttribute('data-fingerprint', `${fp}#${indexFp}`)
+                fingerprints[fp] = indexFp + 1
+            }
+        }
+    })
+}
 /**
  * A registry for managing reusable icon views.
  *
