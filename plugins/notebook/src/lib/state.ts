@@ -35,6 +35,7 @@ import {
     NoContext,
     parseMd,
     MdParsingOptions,
+    simpleHash,
 } from 'mkdocs-ts'
 import { fromFetch } from 'rxjs/fetch'
 import { defaultDisplayFactory, DisplayFactory } from './display-utils'
@@ -113,8 +114,13 @@ export interface CellTrait {
      * Define the implementation of cell execution.
      */
     execute: (args: ExecArgs, ctx?: ContextTrait) => Promise<Scope>
+
+    cellAttributes: unknown
 }
 
+export function cellFingerprint(cell: CellTrait) {
+    return simpleHash(cell.content$.value)
+}
 export function getCellUid(): string {
     const rnd = Math.floor(Math.random() * Math.pow(10, 6))
     return `cell-${String(rnd)}`
@@ -244,7 +250,10 @@ export class State {
     /**
      * Observables over the cell's exiting scopes keyed by the cell's ID.
      */
-    public readonly exitScopes$: Record<string, ReplaySubject<Scope>> = {}
+    public readonly exitScopes$: Record<
+        string,
+        BehaviorSubject<Scope | undefined>
+    > = {}
     /**
      * The factory used to pick up the right mapping between variable and view when `display` is called.
      */
@@ -433,7 +442,9 @@ export class State {
             Object.keys(this.scopes$).length === 0
                 ? new BehaviorSubject<Scope | undefined>(this.initialScope)
                 : new BehaviorSubject<Scope | undefined>(undefined)
-        this.exitScopes$[cell.cellId] = new ReplaySubject<Scope>(1)
+        this.exitScopes$[cell.cellId] = new BehaviorSubject<Scope | undefined>(
+            undefined,
+        )
         cell.content$.subscribe((src) => {
             this.updateSrc({ cellId: cell.cellId, src })
         })
@@ -545,6 +556,7 @@ export class State {
         const index = this.ids.indexOf(afterCellId)
         this.invalidateCells(afterCellId)
         const remainingIds = this.ids.slice(index + 1)
+        this.cellsStatus$[afterCellId].next('ready')
         remainingIds.forEach((id) => {
             this.cellsStatus$[id].next('unready')
             this.scopes$[id].next(undefined)

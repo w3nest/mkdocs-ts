@@ -10,13 +10,14 @@ import {
     executeJs,
     getCellUid,
     executeJs$,
+    ReadOnlyNotebookPage,
 } from '../lib'
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs'
 import * as rxjs from 'rxjs'
 
 /**
  *
- * Represents the execution side of a Javascript cell within a {@link NotebookPage}.
+ * Represents the execution side of a Javascript cell within a {@link ReadOnlyNotebookPage}.
  *
  * This implementation does not provide the views (editor, outputs), it is used as it is when loading separated notebook
  * pages to retrieve exported symbols.
@@ -33,7 +34,7 @@ export class JsCellTest implements CellTrait, VirtualDOM<'div'> {
     public readonly reactive: boolean
 
     public readonly content$: BehaviorSubject<string>
-
+    public readonly cellAttributes = {}
     constructor(params: {
         cellId: string
         content$: BehaviorSubject<string>
@@ -96,7 +97,7 @@ describe('Notebook with js-cell', () => {
                 layout: { tag: 'div' },
             },
         })
-        const page = new NotebookPage({
+        const page = new ReadOnlyNotebookPage({
             router,
             src: `
 <js-cell cell-id="cell1">
@@ -116,12 +117,12 @@ y = y * 2
 
         document.body.append(render(page))
         let scope = await firstValueFrom(page.state.exitScopes$.cell1)
-        expect(scope.const.x).toBe(42)
-        expect(scope.let.y).toBe(42)
+        expect(scope?.const.x).toBe(42)
+        expect(scope?.let.y).toBe(42)
 
         scope = await firstValueFrom(page.state.exitScopes$.cell2)
-        expect(scope.const.x).toBe(42)
-        expect(scope.let.y).toBe(84)
+        expect(scope?.const.x).toBe(42)
+        expect(scope?.let.y).toBe(84)
     })
 
     it('Error re-assign const', async () => {
@@ -131,7 +132,7 @@ y = y * 2
                 layout: { tag: 'div' },
             },
         })
-        const page = new NotebookPage({
+        const page = new ReadOnlyNotebookPage({
             router,
             src: `
 <js-cell cell-id="cell1">
@@ -163,7 +164,7 @@ x = x * 2
                 layout: { tag: 'div' },
             },
         })
-        const page = new NotebookPage({
+        const page = new ReadOnlyNotebookPage({
             router,
             src: `
 <js-cell cell-id="cell1">
@@ -205,7 +206,7 @@ describe('Notebook with reactive js-cell', () => {
                 layout: { tag: 'div' },
             },
         })
-        const page = new NotebookPage({
+        const page = new ReadOnlyNotebookPage({
             router,
             src: `
 <js-cell cell-id="cell1">
@@ -231,17 +232,17 @@ pick(x2)
 
         document.body.append(render(page))
         let scope = await firstValueFrom(page.state.exitScopes$.cell1)
-        expect(scope.const.x).toBeInstanceOf(Observable)
-        expect(scope.let.y).toBe(42)
+        expect(scope?.const.x).toBeInstanceOf(Observable)
+        expect(scope?.let.y).toBe(42)
 
         scope = await firstValueFrom(page.state.exitScopes$.cell2)
-        expect(scope.const.x).toBeInstanceOf(Observable)
-        expect(scope.let.y).toBe(42)
+        expect(scope?.const.x).toBeInstanceOf(Observable)
+        expect(scope?.let.y).toBe(42)
 
         scope = await firstValueFrom(page.state.exitScopes$.cell3)
-        expect(scope.const.x).toBeInstanceOf(Observable)
-        expect(scope.const.x2).toBeInstanceOf(Observable)
-        expect(scope.let.y).toBe(42)
+        expect(scope?.const.x).toBeInstanceOf(Observable)
+        expect(scope?.const.x2).toBeInstanceOf(Observable)
+        expect(scope?.let.y).toBe(42)
 
         const picked = await firstValueFrom(picked$)
         expect(picked).toBe(84)

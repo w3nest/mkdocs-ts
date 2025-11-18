@@ -11,6 +11,7 @@ import {
 import { delay, filter, from, of, take } from 'rxjs'
 import { NotebookStateParameters, State } from './state'
 import { faIconTyped } from './fa-icons'
+import { EditableNotebookPage } from './editable-notebook-page'
 
 /**
  * The common set for attributes of a notebook cell.
@@ -223,10 +224,12 @@ export class NotebookSection implements VirtualDOM<'div'> {
     }
 }
 
+export const NotebookPage = EditableNotebookPage
+
 /**
  * Represents a {@link NotebookSection} that actually defines the whole page content of a document.
  */
-export class NotebookPage extends NotebookSection {
+export class ReadOnlyNotebookPage extends NotebookSection {
     public readonly scrollToDelay = 200
 
     /**
